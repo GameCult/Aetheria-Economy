@@ -193,7 +193,7 @@
             <e p="Utilities.cs" t="Include" />
           </e>
           <e p="ServerShared" t="Include">
-            <e p="ChatApp.Shared.Unity.asmdef" t="Include" />
+            <e p="Economy.Shared.Unity.asmdef" t="Include" />
             <e p="Hubs" t="Include">
               <e p="IChatHub.cs" t="Include" />
               <e p="IChatHubReceiver.cs" t="Include" />
@@ -208,7 +208,7 @@
           </e>
         </e>
       </e>
-      <e p="ChatApp.Shared.Unity.csproj" t="IncludeRecursive" />
+      <e p="Economy.Shared.Unity.csproj" t="IncludeRecursive" />
       <e p="MagicOnion.Abstractions.csproj" t="IncludeRecursive" />
       <e p="MagicOnion.csproj" t="IncludeRecursive" />
       <e p="MagicOnion.Unity.csproj" t="IncludeRecursive" />

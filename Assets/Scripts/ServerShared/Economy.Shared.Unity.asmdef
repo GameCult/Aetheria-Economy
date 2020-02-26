@@ -1,5 +1,5 @@
 {
-    "name": "ChatApp.Shared.Unity",
+    "name": "Economy.Shared.Unity",
     "references": [
         "MessagePack",
         "MagicOnion.Abstractions"
