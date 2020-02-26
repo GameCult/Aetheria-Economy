@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelUserStore">
+    <attachedFolders />
+    <explicitIncludes>
+      <Path>Assets</Path>
+      <Path>Library/PackageCache/com.unity.package-manager-ui@2.0.8</Path>
+      <Path>Library/PackageCache/com.unity.textmeshpro@1.4.1</Path>
+      <Path>Packages</Path>
+      <Path>ProjectSettings</Path>
+    </explicitIncludes>
+    <explicitExcludes>
+      <Path>.git</Path>
+      <Path>.idea</Path>
+      <Path>Library</Path>
+      <Path>Logs</Path>
+      <Path>Server</Path>
+      <Path>Temp</Path>
+      <Path>obj</Path>
+    </explicitExcludes>
+  </component>
+</project>

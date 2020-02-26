@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\rwvens\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\rwvens\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_Economy.820823087.00" t="ExcludeRecursive" />
+    <e p="C:\Users\rwvens\Documents\GitHub\Aetheria-Economy" t="IncludeFlat">
+      <e p="Assets\Scripts\ServerShared\Hubs\IChatHub.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\Hubs\IChatHubReceiver.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\MessagePackObjects\Requests.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\MessagePackObjects\Responses.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\Services\IChatService.cs" t="Include" />
+      <e p="Economy.Server" t="IncludeRecursive">
+        <e p="appsettings.json" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ChatHub.cs" t="Include" />
+        <e p="ChatService.cs" t="Include" />
+        <e p="Economy.Server.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="Economy.Server.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+      </e>
+      <e p="Economy.Shared" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="Economy.Shared.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="Economy.Shared.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="Economy.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

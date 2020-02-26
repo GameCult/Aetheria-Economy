@@ -1,0 +1,78 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\rwvens\\Documents\\GitHub\\Aetheria-Economy\\Economy.Shared\\Economy.Shared.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\rwvens\\Documents\\GitHub\\Aetheria-Economy\\Economy.Shared\\Economy.Shared.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\rwvens\\Documents\\GitHub\\Aetheria-Economy\\Economy.Shared\\Economy.Shared.csproj",
+        "projectName": "Economy.Shared",
+        "projectPath": "C:\\Users\\rwvens\\Documents\\GitHub\\Aetheria-Economy\\Economy.Shared\\Economy.Shared.csproj",
+        "packagesPath": "C:\\Users\\rwvens\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rwvens\\Documents\\GitHub\\Aetheria-Economy\\Economy.Shared\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\rwvens\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "dependencies": {
+            "MagicOnion.Abstractions": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "MagicOnion.MSBuild.Tasks": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "MessagePack.MSBuild.Tasks": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.323, )"
+            },
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.102\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
