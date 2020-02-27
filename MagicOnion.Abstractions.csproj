@@ -60,18 +60,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\Client\IResponseContext.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\ClientStreamingResult.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\CompilerServices\AsyncUnaryResultMethodBuilder.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\DuplexStreamingResult.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\GenerateDefineDebugAttribute.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\IgnoreAttribute.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\IService.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\IStreamingHub.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\Server\Hubs\MethodIdAttribute.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\ServerStreamingResult.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Abstractions\UnaryResult.cs" />
-    <None Include="Assets\Scripts\MagicOnion.Abstractions\MagicOnion.Abstractions.asmdef" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\Client\IResponseContext.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\ClientStreamingResult.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\CompilerServices\AsyncUnaryResultMethodBuilder.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\DuplexStreamingResult.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\GenerateDefineDebugAttribute.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\IgnoreAttribute.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\IService.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\IStreamingHub.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\Server\Hubs\MethodIdAttribute.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\ServerStreamingResult.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Abstractions\UnaryResult.cs" />
+    <None Include="Assets\Scripts\NIH\MagicOnion.Abstractions\MagicOnion.Abstractions.asmdef" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.17f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
     </Reference>

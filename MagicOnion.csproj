@@ -60,33 +60,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\MagicOnion\AsyncLock.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\AsyncStreamReaderExtensions.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Client\ClientFilter.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Client\DynamicClientBuilder.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Client\InterceptInvokeHelper.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Client\MagicOnionClient.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Client\MagicOnionClientBase.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Client\StreamingHubClient.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Client\StreamingHubClientBase.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Client\StreamingHubClientBuilder.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\DynamicArgumentTuple.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\MagicOnionMarshallers.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\MetadataExtensions.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\ReturnStatusException.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Server\Hubs\BroadcasterHelper.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\UnsafeDirectBlitResolver.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\ArrayPoolBufferWriter.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\AsyncLocalShim.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\DynamicAssembly.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\FNV1A32.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\ILGeneratorExtensions.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\ReflectionExtensions.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\ReservedWhenAllPromise.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\TaskCompletionSourceEx.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\TaskEx.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion\Utils\UniqueHashDictionary.cs" />
-    <None Include="Assets\Scripts\MagicOnion\MagicOnion.asmdef" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\AsyncLock.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\AsyncStreamReaderExtensions.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Client\ClientFilter.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Client\DynamicClientBuilder.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Client\InterceptInvokeHelper.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Client\MagicOnionClient.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Client\MagicOnionClientBase.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Client\StreamingHubClient.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Client\StreamingHubClientBase.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Client\StreamingHubClientBuilder.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\DynamicArgumentTuple.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\MagicOnionMarshallers.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\MetadataExtensions.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\ReturnStatusException.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Server\Hubs\BroadcasterHelper.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\UnsafeDirectBlitResolver.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\ArrayPoolBufferWriter.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\AsyncLocalShim.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\DynamicAssembly.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\FNV1A32.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\ILGeneratorExtensions.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\ReflectionExtensions.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\ReservedWhenAllPromise.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\TaskCompletionSourceEx.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\TaskEx.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion\Utils\UniqueHashDictionary.cs" />
+    <None Include="Assets\Scripts\NIH\MagicOnion\MagicOnion.asmdef" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.17f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
     </Reference>

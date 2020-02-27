@@ -60,9 +60,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\MagicOnion.Unity\ChannelExtensions.cs" />
-    <Compile Include="Assets\Scripts\MagicOnion.Unity\UnityDebugLogger.cs" />
-    <None Include="Assets\Scripts\MagicOnion.Unity\MagicOnion.Unity.asmdef" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Unity\ChannelExtensions.cs" />
+    <Compile Include="Assets\Scripts\NIH\MagicOnion.Unity\UnityDebugLogger.cs" />
+    <None Include="Assets\Scripts\NIH\MagicOnion.Unity\MagicOnion.Unity.asmdef" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.17f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
     </Reference>
