@@ -56,3 +56,8 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Server generated files
+/Economy.Server/bin/*
+/Economy.Server/obj/*
+/Economy.Shared/bin/*
+/Economy.Shared/obj/*
