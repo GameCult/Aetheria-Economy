@@ -13,6 +13,7 @@
     <explicitExcludes>
       <Path>.git</Path>
       <Path>.idea</Path>
+      <Path>GameData</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>Server</Path>

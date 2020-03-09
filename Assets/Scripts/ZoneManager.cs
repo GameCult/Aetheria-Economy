@@ -217,20 +217,3 @@ public enum ExpansionType
 	Solar,
 	Binary
 }
-
-[MessagePackObject]
-public class ZoneData : IDatabaseEntry
-{
-	[Inspectable] [Key("entry")]        public DatabaseEntry DatabaseEntry = new DatabaseEntry();
-	[Inspectable] [Key("radius")]       public float         Radius = 500;
-	[Inspectable] [Key("radiusPower")]  public float         RadiusPower = 1.75f;
-	[Inspectable] [Key("mass")]         public float         Mass = 100000;
-	[Inspectable] [Key("massFloor")]    public float         MassFloor = 1;
-	[Inspectable] [Key("sunMass")]      public float         SunMass = 10000;
-	[Inspectable] [Key("gasGiantMass")] public float         GasGiantMass = 2000;
-
-	[InspectableDatabaseLink(typeof(ZoneData))] [Key("wormholes")]
-	public List<Guid> Wormholes = new List<Guid>();
-
-	[IgnoreMember] public DatabaseEntry Entry => DatabaseEntry;
-}

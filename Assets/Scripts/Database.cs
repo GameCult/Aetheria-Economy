@@ -129,17 +129,3 @@ public class Database
         watcher.EnableRaisingEvents = true;
     }
 }
-
-public interface IDatabaseEntry
-{
-    DatabaseEntry Entry { get; }
-}
-
-[Inspectable]
-[MessagePackObject]
-public class DatabaseEntry
-{
-    [Key("id")]          public Guid   ID = Guid.NewGuid();
-    [Inspectable] [Key("name")]        public string Name;
-    [Inspectable] [Key("description")] public string Description;
-}

@@ -14,6 +14,7 @@
       <Path>.idea</Path>
       <Path>Economy.Server</Path>
       <Path>Economy.Shared</Path>
+      <Path>GameData</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>Server</Path>

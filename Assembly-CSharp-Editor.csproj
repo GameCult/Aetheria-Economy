@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Editor\DatabaseEditor.cs" />
     <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\Attributes\BaseAttribute.cs" />
     <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\Attributes\FieldDrawerAttribute.cs" />
     <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\Attributes\IAttribute.cs" />

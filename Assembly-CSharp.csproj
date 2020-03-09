@@ -60,15 +60,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Behaviors.cs" />
     <Compile Include="Assets\Scripts\ChatComponent.cs" />
     <Compile Include="Assets\Scripts\ColorButton.cs" />
     <Compile Include="Assets\Scripts\Database.cs" />
+    <Compile Include="Assets\Scripts\DatabaseItems.cs" />
     <Compile Include="Assets\Scripts\Extensions.cs" />
     <Compile Include="Assets\Scripts\Galaxy.cs" />
     <Compile Include="Assets\Scripts\Generated\MagicOnion.Generated.cs" />
     <Compile Include="Assets\Scripts\Generated\MessagePack.Generated.cs" />
+    <Compile Include="Assets\Scripts\Icons.cs" />
     <Compile Include="Assets\Scripts\InitialSettings.cs" />
-    <Compile Include="Assets\Scripts\NIH\FastNoise.cs" />
+    <Compile Include="Assets\Scripts\ItemInstance.cs" />
     <Compile Include="Assets\Scripts\NIH\LinqFaster\Aggregate.cs" />
     <Compile Include="Assets\Scripts\NIH\LinqFaster\AnyAll.cs" />
     <Compile Include="Assets\Scripts\NIH\LinqFaster\Average.cs" />
@@ -555,30 +558,43 @@
     <Compile Include="Assets\Scripts\NIH\unity-ui-extensions\Scripts\Utilities\UISelectableExtension.cs" />
     <Compile Include="Assets\Scripts\NIH\unity-ui-extensions\Scripts\VR Extensions\VRCursor.cs" />
     <Compile Include="Assets\Scripts\NIH\unity-ui-extensions\Scripts\VR Extensions\VRInputModule.cs" />
+    <Compile Include="Assets\Scripts\NIH\XKCDColors.cs" />
     <Compile Include="Assets\Scripts\Orbit.cs" />
     <Compile Include="Assets\Scripts\PropertiesPanel.cs" />
     <Compile Include="Assets\Scripts\Prototype.cs" />
+    <Compile Include="Assets\Scripts\Targetable.cs" />
+    <Compile Include="Assets\Scripts\UnityFormatters.cs" />
     <Compile Include="Assets\Scripts\ZoneManager.cs" />
+    <Compile Include="Assets\Scripts\ZoneRenderer.cs" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UIAdditive.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UI Particle AddSmooth.shader" />
+    <None Include="Assets\Scripts\NIH\GPU Noise\ClassicNoise3D.cginc" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UI Particle Premultiply Blend.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UISoftAdditive.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UIParticleHidden.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\SoftMaskShader.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UI Particle Add.shader" />
+    <None Include="Assets\Shaders\SimplexBrush.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UI Particle Multiply.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UI Particle Alpha Blend.shader" />
     <None Include="Assets\Shaders\CubicPulseBrush.shader" />
+    <None Include="Assets\Shaders\PowerBrush.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UIImageCrop.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UILinearDodge.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UI Particle VertexLit Blended.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UI Particle AddMultiply.shader" />
+    <None Include="Assets\Shaders\GalaxyMap.shader" />
+    <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoiseGrad2D.cginc" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UI Particle Blend.shader" />
     <None Include="Assets\Scripts\NIH\UniRx\ReadMe.txt" />
+    <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoise2D.cginc" />
     <None Include="Assets\Shaders\Isolines.shader" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UIMultiply.shader" />
+    <None Include="Assets\Scripts\NIH\GPU Noise\ClassicNoise2D.cginc" />
     <None Include="Assets\Scripts\NIH\LinqFaster\readme.txt" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UIScreen.shader" />
+    <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoise3D.cginc" />
+    <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoiseGrad3D.cginc" />
     <None Include="Assets\Scripts\NIH\unity-ui-extensions\Shaders\UI Particle MultiplyDouble.shader" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

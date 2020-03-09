@@ -6,6 +6,10 @@ using System.Linq;
 using UnityEngine;
 using NaughtyAttributes;
 using JM.LinqFaster;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
+using static Unity.Mathematics.noise;
+using static NoiseFbm;
 
 [CreateAssetMenu(menuName = "Aetheria/Galaxy")]
 public class Galaxy : ScriptableObject
@@ -77,12 +81,30 @@ public class StarData
 	public List<string> Names = new List<string>();
 }
 
+public static class NoiseFbm
+{
+	public static float fBm(float2 p, int octaves, float frequency, float offset, float amplitude, float lacunarity, float gain)
+	{
+		float freq = frequency, amp = .5f;
+		float sum = 0;	
+		for(int i = 0; i < octaves; i++) 
+		{
+			sum += snoise(p * freq) * amp;
+			freq *= lacunarity;
+			amp *= gain;
+		}
+		return (sum + offset)*amplitude;
+	}
+}
+
 [Serializable]
 public class GalaxyMapLayerData
 {
 	public float CoreBoost = 1.05f;
 	public float CoreBoostOffset = .1f;
 	public float CoreBoostPower = 2.25f;
+	public float SpokeScale = 1;
+	public float SpokeOffset = 0;
 	public float EdgeReduction = 3;
 	public float NoiseOffset = 0;
 	public float NoiseAmplitude = 1.5f;
@@ -90,25 +112,21 @@ public class GalaxyMapLayerData
 	public float NoiseLacunarity = 2;
 	public int NoiseOctaves = 7;
 	public float NoiseFrequency = 1;
-	public int NoiseSeed = 1337;
-	
-	private FastNoise _noise = new FastNoise();
+	public float NoisePosition = 1337;
 
-	public float Evaluate(Vector2 uv, GalaxyMapData galaxy)
+	public float Evaluate(float2 uv, GalaxyMapData galaxy)
 	{
-		_noise.SetFractalGain(NoiseGain);
-		_noise.SetFractalLacunarity(NoiseLacunarity);
-		_noise.SetFractalOctaves(NoiseOctaves);
-		_noise.SetFrequency(NoiseFrequency);
-		_noise.SetSeed(NoiseSeed);
-		
-		Func<Vector2, Vector2> offset = v => Vector2.one / 2 - v;
-		Func<Vector2, float> circle = v => (.5f - v.magnitude) * 2;
-		Func<Vector2, Vector2> twist = v => v.Rotate(Mathf.Pow(v.magnitude*2,galaxy.TwistPower)*galaxy.Twist);
-		Func<Vector2, float> spokes = v => Mathf.Sin(Mathf.Atan2(-v.y,v.x)*galaxy.Arms);
-		var c = circle(offset(uv));
-		return Mathf.Clamp01((Mathf.Lerp(spokes(twist(offset(uv))) - EdgeReduction * offset(uv).magnitude, 1,
-			    Mathf.Pow(c + CoreBoostOffset, CoreBoostPower) * CoreBoost) - (_noise.GetPerlin(uv.x,uv.y)+NoiseOffset) * NoiseAmplitude) * Mathf.Clamp01(c));
+		float2 offset = -float2(.5f, .5f)+uv;
+		float circle = (.5f-length(offset))*2;
+		float angle = pow(length(offset)*2,galaxy.TwistPower) * galaxy.Twist;
+		float2 twist = float2(offset.x*cos(angle) - offset.y*sin(angle), offset.x*sin(angle) + offset.y*cos(angle));
+		float atan = atan2(twist.y,twist.x);
+		float spokes = sin(atan*galaxy.Arms) * SpokeScale + SpokeOffset;
+		float noise = fBm(uv + float2(NoisePosition), NoiseOctaves, NoiseFrequency, NoiseOffset, NoiseAmplitude, NoiseLacunarity, NoiseGain);
+		float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle + CoreBoostOffset, CoreBoostPower) * CoreBoost);
+		float gal = max(shape - noise * saturate(circle), 0);
+
+		return gal;
 	}
 }
 

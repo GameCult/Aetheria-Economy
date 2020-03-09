@@ -9,6 +9,8 @@ using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+using static Unity.Mathematics.math;
+
 public static class Extensions
 {
 	public static void BroadcastMessageExt<T>(this GameObject go, string methodName, object value = null, SendMessageOptions options = SendMessageOptions.RequireReceiver)
@@ -39,6 +41,15 @@ public static class Extensions
 		}
 	}
 	
+	private static Dictionary<Type,Type[]> InterfaceClasses = new Dictionary<Type, Type[]>();
+	public static Type[] GetAllInterfaceClasses(this Type type)
+	{
+		if (InterfaceClasses.ContainsKey(type))
+			return InterfaceClasses[type];
+		return InterfaceClasses[type] = AppDomain.CurrentDomain.GetAssemblies()
+			.SelectMany(ass => ass.GetTypes()).Where(t => t.IsClass && t.GetInterfaces().Contains(type)).ToArray();
+	}
+	
 	public static bool IsDefault<T>(this T value) where T : struct
 	{
 		bool isDefault = value.Equals(default(T));
@@ -53,16 +64,6 @@ public static class Extensions
 		result.Apply();
 
 		return result;
-	}
-
-	public static Vector2 Flatland(this Vector3 v)
-	{
-		return new Vector2(v.x, v.z);
-	}
-
-	public static Vector3 Flatland(this Vector2 v)
-	{
-		return new Vector3(v.x, 0, v.y);
 	}
 	
 	public static string SplitCamelCase( this string str )
@@ -95,5 +96,39 @@ public static class Extensions
 	{
 		return baseType.GetInterfaces().Any(interfaceType.Equals);
 	}
-	
+
+	private static readonly Dictionary<ICraftedItemInstance, float> Quality = new Dictionary<ICraftedItemInstance, float>();
+	public static float CompoundQuality(this ICraftedItemInstance item)
+	{
+		if (Quality.ContainsKey(item)) return Quality[item];
+		
+		var quality = item.CraftedQuality;
+			
+		var craftedIngredients = item.CraftedIngredients.Where(i => i is ICraftedItemInstance).ToArray();
+		if (craftedIngredients.Length > 0)
+		{
+			quality *= craftedIngredients.Cast<ICraftedItemInstance>().Average(CompoundQuality);
+		}
+
+		Quality[item] = quality;
+
+		return Quality[item];
+	}
+
+	private static readonly Dictionary<ICraftable, int> Tier = new Dictionary<ICraftable, int>();
+	public static int ItemTier(this ICraftable item)
+	{
+		if (Tier.ContainsKey(item)) return Tier[item];
+
+		Tier[item] = item.CraftingIngredients.Keys.Max(ci => (Database.Get<IItem>(ci) as ICraftable)?.ItemTier() ?? 0);
+		
+		return Tier[item];
+	}
+
+	public static float Performance(this IEquippable item, float temperature)
+	{
+		return saturate(item.Equippable.HeatPerformanceCurve.Evaluate(saturate(
+			(temperature - item.Equippable.MinimumTemperature) /
+			(item.Equippable.MaximumTemperature - item.Equippable.MinimumTemperature))));
+	}
 }

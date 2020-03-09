@@ -72,31 +72,41 @@
 				// sample the texture
 				half h = -tex2D(_MainTex, IN.uv).r;
 				float4 col = float4(0,0,0,0);
+				float blend = smoothstep(_StartHeight, _StartHeight + _HeightRange / 32, -h);
+				
+				// Calculate the direction in which the surface is facing
+				float2 plan = calcGrad(IN.uv, h);
+				
+				float planmag = length(plan);
 				
 				// Loop over isolines, computing a pseudo distance field for a number of height values
 				float spacing = _HeightRange / 20;
 				for (int i = 0; i < 20; i++) {
 					float isoline = abs(h - _StartHeight + (i*spacing));
-					float2 isograd = float2(ddx_fine(isoline), ddy_fine(isoline));
-					float isomag = length(isograd);
-					col += (1-smoothstep(_LineWidth * _ScreenParams.y, _LineWidth * _ScreenParams.y * _LineFade, isoline / (isomag))) * _Color; // Isoline
+					//float2 isograd = float2(ddx(isoline), ddy(isoline));
+					//float isomag = length(isograd);
+					col += (1-smoothstep(_LineWidth * _ScreenParams.y, _LineWidth * _ScreenParams.y * _LineFade, isoline / planmag)) * _Color * blend; // Isoline
 				}
 				
-				// Calculate the direction in which the surface is facing
-				float2 plan = normalize(calcGrad(IN.uv, h));
-				
-				// 
 				float angle = atan2(plan.y,plan.x) / 3.1415926536 + 1;
+				
+				float2 plannorm = normalize(plan);
+				float2 plan2uv = IN.uv + float2(-plannorm.y * _MainTex_TexelSize.x, plannorm.x * _MainTex_TexelSize.y);
+				float2 plan2 = calcGrad(plan2uv, -tex2D(_MainTex, plan2uv).r);
+				float angle2 = atan2(plan2.y,plan2.x) / 3.1415926536 + 1;
+				float angmag = abs(angle-angle2);
+				angmag = min(angmag,0.05);
+				//angmag = clamp(angmag,0.005,0.05);
 				
 				// Loop over isoangles
 				for (float i = 0.5; i < 13; i++) {
 				    float isoline = abs(angle - i / 6.0);// ;
-					float2 isograd = float2(ddx_fine(isoline), ddy_fine(isoline));
-					float isomag = length(isograd);
-					float blend = smoothstep(-2,-10,h)*smoothstep(0.04,0.083333,angle)*smoothstep(1.96,1.916667,angle);
-					col += (1-smoothstep(_AngleWidth * _ScreenParams.y, _AngleWidth * _ScreenParams.y * _AngleFade, isoline / (isomag))) * _AngleColor * blend; // Isoline
+					//float2 isograd = float2(ddx_fine(isoline), ddy_fine(isoline));
+					//float isomag = min(length(isograd),0.025); // isomag is huge over atan2 boundary so clamp it to avoid false positives
+					col += (1-smoothstep(_AngleWidth * _ScreenParams.y, _AngleWidth * _ScreenParams.y * _AngleFade, isoline / (angmag))) * _AngleColor * blend; // Isoline
 				}
                 
+                //return float4(1,0,0,1);
 				return col;
 			}
 			ENDCG
