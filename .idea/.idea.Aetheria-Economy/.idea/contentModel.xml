@@ -964,6 +964,10 @@
             <e p="XKCDColors.cs" t="Include" />
           </e>
           <e p="Orbit.cs" t="Include" />
+          <e p="PoissonDiskSampling" t="Include">
+            <e p="PoissonDiskSampling.cs" t="Include" />
+            <e p="Test.cs" t="Include" />
+          </e>
           <e p="PropertiesPanel.cs" t="Include" />
           <e p="Prototype.cs" t="Include" />
           <e p="ServerShared" t="Include">

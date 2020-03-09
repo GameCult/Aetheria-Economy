@@ -56,8 +56,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AngleFade: 8
-    - _AngleWidth: 0.001
+    - _AngleFade: 30
+    - _AngleWidth: 0.0001
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -65,9 +65,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HeightRange: 100
-    - _LineFade: 8
-    - _LineWidth: 0.001
+    - _HeightRange: 150.2
+    - _LineFade: 30
+    - _LineWidth: 0.0001
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -79,6 +79,6 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _AngleColor: {r: 0.053221796, g: 0.49056602, b: 0.29599926, a: 1}
-    - _Color: {r: 0.062299743, g: 0.2874376, b: 0.5283019, a: 1}
+    - _AngleColor: {r: 0.029527554, g: 0.15, b: 0.10984253, a: 1}
+    - _Color: {r: 0.071093746, g: 0.16406254, b: 0.35, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
