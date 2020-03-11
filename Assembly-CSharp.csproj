@@ -561,8 +561,6 @@
     <Compile Include="Assets\Scripts\NIH\unity-ui-extensions\Scripts\VR Extensions\VRInputModule.cs" />
     <Compile Include="Assets\Scripts\NIH\XKCDColors.cs" />
     <Compile Include="Assets\Scripts\Orbit.cs" />
-    <Compile Include="Assets\Scripts\PoissonDiskSampling\PoissonDiskSampling.cs" />
-    <Compile Include="Assets\Scripts\PoissonDiskSampling\Test.cs" />
     <Compile Include="Assets\Scripts\PropertiesPanel.cs" />
     <Compile Include="Assets\Scripts\Prototype.cs" />
     <Compile Include="Assets\Scripts\Targetable.cs" />
