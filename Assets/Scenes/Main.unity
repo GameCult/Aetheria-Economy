@@ -122,7 +122,6 @@ GameObject:
   m_Component:
   - component: {fileID: 408552541}
   - component: {fileID: 408552540}
-  - component: {fileID: 408552539}
   - component: {fileID: 408552538}
   m_Layer: 0
   m_Name: Gravity Camera
@@ -146,14 +145,6 @@ MonoBehaviour:
   BackgroundMaterial: {fileID: 2100000, guid: 90cead50364300d47bb35194fb52c117, type: 2}
   GravityTexture: {fileID: 0}
   GravityRenderer: {fileID: 1956833085}
---- !u!81 &408552539
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 408552537}
-  m_Enabled: 1
 --- !u!20 &408552540
 Camera:
   m_ObjectHideFlags: 0

@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\Icons.cs" />
     <Compile Include="Assets\Scripts\InitialSettings.cs" />
     <Compile Include="Assets\Scripts\ItemInstance.cs" />
+    <Compile Include="Assets\Scripts\MarkovNameGenerator.cs" />
     <Compile Include="Assets\Scripts\NIH\LinqFaster\Aggregate.cs" />
     <Compile Include="Assets\Scripts\NIH\LinqFaster\AnyAll.cs" />
     <Compile Include="Assets\Scripts\NIH\LinqFaster\Average.cs" />
@@ -834,6 +835,9 @@
     </Reference>
     <Reference Include="Google.Protobuf">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types">
+      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Microsoft.SqlServer.Types.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.17f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
