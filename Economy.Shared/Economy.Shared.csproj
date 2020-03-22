@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 	
 	<ItemGroup>
@@ -12,6 +13,7 @@
 		<PackageReference Include="MagicOnion.Abstractions" Version="3.0.0" />
 		<PackageReference Include="MagicOnion.MSBuild.Tasks" Version="3.0.0" PrivateAssets="All" />
 		<PackageReference Include="MessagePack.MSBuild.Tasks" Version="2.0.323" PrivateAssets="All" />
+		<PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
 	</ItemGroup>
 
 	<Target Name="GenerateMessagePack" AfterTargets="Compile">

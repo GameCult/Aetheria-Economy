@@ -26,7 +26,6 @@ public class Targetable : MonoBehaviour
 
     void Start()
     {
-        Ship = GetComponent<Ship>();
     }
 
     void Health(float health)
@@ -41,9 +40,9 @@ public class Targetable : MonoBehaviour
             var shield = Ship.GetEquipped(HardpointType.Shield);
             if (shield != null)
             {
-                var shieldData = shield.ItemData as Shield;
-                var shieldedDamage = points * saturate(shieldData.Shielding.Evaluate(shield, Ship));
-                Ship.AddHeat(shieldedDamage / shieldData.Efficiency.Evaluate(shield, Ship));
+                var shieldData = shield.ItemData as ShieldData;
+                var shieldedDamage = points * saturate(Ship.Context.Evaluate(shieldData.Shielding, shield, Ship));
+                Ship.AddHeat(shieldedDamage / Ship.Context.Evaluate(shieldData.Efficiency, shield, Ship));
                 Ship.Hull.Durability -= points - shieldedDamage;
             }
             else Ship.Hull.Durability -= points;

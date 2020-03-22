@@ -36,6 +36,10 @@
         "MagicOnion.Hosting": {
           "target": "Package",
           "version": "[3.0.9, )"
+        },
+        "RethinkDb.Driver.Linq": {
+          "target": "Package",
+          "version": "[2.3.150, )"
         }
       },
       "imports": [

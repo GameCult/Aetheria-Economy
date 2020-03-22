@@ -2,7 +2,8 @@
     "name": "Economy.Shared.Unity",
     "references": [
         "MessagePack",
-        "MagicOnion.Abstractions"
+        "MagicOnion.Abstractions",
+        "Unity.Mathematics"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

@@ -4,11 +4,48 @@
     <e p="C:\Users\rwvens\.Rider2019.3\system\extResources" t="IncludeRecursive" />
     <e p="C:\Users\rwvens\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_Economy.820823087.00" t="ExcludeRecursive" />
     <e p="C:\Users\rwvens\Documents\GitHub\Aetheria-Economy" t="IncludeFlat">
-      <e p="Assets\Scripts\ServerShared\Hubs\IChatHub.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Hubs\IChatHubReceiver.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\MessagePackObjects\Requests.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\MessagePackObjects\Responses.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Services\IChatService.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\Attributes.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\DatabaseCache.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\DatabaseItems.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\Enums.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\Extensions.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\GameContext.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\GlobalData.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\Hubs" t="Include">
+        <e p="IChatHub.cs" t="Include" />
+        <e p="IChatHubReceiver.cs" t="Include" />
+      </e>
+      <e p="Assets\Scripts\ServerShared\ItemBehaviors\Afterburner.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\ItemBehaviors\Behaviors.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\ItemBehaviors\Cannon.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\ItemBehaviors\Launcher.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\ItemBehaviors\Reactor.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\ItemBehaviors\Sensor.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\ItemData.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\ItemInstance.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\MessagePackObjects" t="Include">
+        <e p="Requests.cs" t="Include" />
+        <e p="Responses.cs" t="Include" />
+      </e>
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\AttributesManager.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\Exceptions\JsonKnownTypesException.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonDiscriminatorAttribute.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonDiscriminatorSettings.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownThisTypeAttribute.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypeAttribute.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesContractResolver.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesConverter.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesDictionaryManager.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettings.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettingsManager.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\Utils\Mapper.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\OrbitInstance.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\Services" t="Include">
+        <e p="IChatService.cs" t="Include" />
+      </e>
+      <e p="Assets\Scripts\ServerShared\Ship.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\ZoneData.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\ZoneGenerator.cs" t="Include" />
       <e p="Economy.Server" t="IncludeRecursive">
         <e p="appsettings.json" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
@@ -33,6 +70,97 @@
               <e p="Economy.Shared.AssemblyInfo.cs" t="Include" />
             </e>
           </e>
+        </e>
+        <e p="Unity.Mathematics" t="Include">
+          <e p="bool2.gen.cs" t="Include" />
+          <e p="bool2x2.gen.cs" t="Include" />
+          <e p="bool2x3.gen.cs" t="Include" />
+          <e p="bool2x4.gen.cs" t="Include" />
+          <e p="bool3.gen.cs" t="Include" />
+          <e p="bool3x2.gen.cs" t="Include" />
+          <e p="bool3x3.gen.cs" t="Include" />
+          <e p="bool3x4.gen.cs" t="Include" />
+          <e p="bool4.gen.cs" t="Include" />
+          <e p="bool4x2.gen.cs" t="Include" />
+          <e p="bool4x3.gen.cs" t="Include" />
+          <e p="bool4x4.gen.cs" t="Include" />
+          <e p="double2.gen.cs" t="Include" />
+          <e p="double2x2.gen.cs" t="Include" />
+          <e p="double2x3.gen.cs" t="Include" />
+          <e p="double2x4.gen.cs" t="Include" />
+          <e p="double3.gen.cs" t="Include" />
+          <e p="double3x2.gen.cs" t="Include" />
+          <e p="double3x3.gen.cs" t="Include" />
+          <e p="double3x4.gen.cs" t="Include" />
+          <e p="double4.gen.cs" t="Include" />
+          <e p="double4x2.gen.cs" t="Include" />
+          <e p="double4x3.gen.cs" t="Include" />
+          <e p="double4x4.gen.cs" t="Include" />
+          <e p="float2.gen.cs" t="Include" />
+          <e p="float2x2.gen.cs" t="Include" />
+          <e p="float2x3.gen.cs" t="Include" />
+          <e p="float2x4.gen.cs" t="Include" />
+          <e p="float3.gen.cs" t="Include" />
+          <e p="float3x2.gen.cs" t="Include" />
+          <e p="float3x3.gen.cs" t="Include" />
+          <e p="float3x4.gen.cs" t="Include" />
+          <e p="float4.gen.cs" t="Include" />
+          <e p="float4x2.gen.cs" t="Include" />
+          <e p="float4x3.gen.cs" t="Include" />
+          <e p="float4x4.gen.cs" t="Include" />
+          <e p="half.cs" t="Include" />
+          <e p="half2.gen.cs" t="Include" />
+          <e p="half3.gen.cs" t="Include" />
+          <e p="half4.gen.cs" t="Include" />
+          <e p="int2.gen.cs" t="Include" />
+          <e p="int2x2.gen.cs" t="Include" />
+          <e p="int2x3.gen.cs" t="Include" />
+          <e p="int2x4.gen.cs" t="Include" />
+          <e p="int3.gen.cs" t="Include" />
+          <e p="int3x2.gen.cs" t="Include" />
+          <e p="int3x3.gen.cs" t="Include" />
+          <e p="int3x4.gen.cs" t="Include" />
+          <e p="int4.gen.cs" t="Include" />
+          <e p="int4x2.gen.cs" t="Include" />
+          <e p="int4x3.gen.cs" t="Include" />
+          <e p="int4x4.gen.cs" t="Include" />
+          <e p="math.cs" t="Include" />
+          <e p="matrix.cs" t="Include" />
+          <e p="matrix.gen.cs" t="Include" />
+          <e p="Noise" t="Include">
+            <e p="cellular2D.cs" t="Include" />
+            <e p="cellular2x2.cs" t="Include" />
+            <e p="cellular2x2x2.cs" t="Include" />
+            <e p="cellular3D.cs" t="Include" />
+            <e p="classicnoise2D.cs" t="Include" />
+            <e p="classicnoise3D.cs" t="Include" />
+            <e p="classicnoise4D.cs" t="Include" />
+            <e p="common.cs" t="Include" />
+            <e p="LICENSE" t="Include" />
+            <e p="noise2D.cs" t="Include" />
+            <e p="noise3D.cs" t="Include" />
+            <e p="noise3Dgrad.cs" t="Include" />
+            <e p="noise4D.cs" t="Include" />
+            <e p="psrdnoise2D.cs" t="Include" />
+            <e p="README" t="Include" />
+          </e>
+          <e p="PropertyAttributes.cs" t="Include" />
+          <e p="quaternion.cs" t="Include" />
+          <e p="random.cs" t="Include" />
+          <e p="rigid_transform.cs" t="Include" />
+          <e p="uint2.gen.cs" t="Include" />
+          <e p="uint2x2.gen.cs" t="Include" />
+          <e p="uint2x3.gen.cs" t="Include" />
+          <e p="uint2x4.gen.cs" t="Include" />
+          <e p="uint3.gen.cs" t="Include" />
+          <e p="uint3x2.gen.cs" t="Include" />
+          <e p="uint3x3.gen.cs" t="Include" />
+          <e p="uint3x4.gen.cs" t="Include" />
+          <e p="uint4.gen.cs" t="Include" />
+          <e p="uint4x2.gen.cs" t="Include" />
+          <e p="uint4x3.gen.cs" t="Include" />
+          <e p="uint4x4.gen.cs" t="Include" />
+          <e p="Unity.Mathematics.asmdef" t="Include" />
         </e>
       </e>
       <e p="Economy.sln" t="IncludeFlat" />

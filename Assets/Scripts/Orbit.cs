@@ -52,7 +52,7 @@ public class Orbit : MonoBehaviour
 
 //		var p = _phase + time / (Period / (Mathf.PI * 2));
 		
-		var pos = Evaluate(Phase + time / Period);
+		var pos = OrbitInstance.Evaluate(Phase + time / Period);
 
         transform.position = new Vector3(Target.position.x + Distance * pos.x,
 											transform.position.y,
@@ -67,10 +67,4 @@ public class Orbit : MonoBehaviour
     {
         Target = parent;
     }
-
-	public static float2 Evaluate(float phase)
-	{
-		phase *= (Mathf.PI * 2);
-		return new float2(sin(phase), cos(phase));
-	}
 }

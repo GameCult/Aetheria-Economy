@@ -233,7 +233,6 @@ namespace UniRx
     {
         readonly static HashSet<Type> YieldInstructionTypes = new HashSet<Type>
         {
-            typeof(WWW),
             typeof(WaitForEndOfFrame),
             typeof(WaitForFixedUpdate),
             typeof(WaitForSeconds),

@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using RethinkDb.Driver;
 
 namespace ChatApp.Server
 {
@@ -13,6 +15,9 @@ namespace ChatApp.Server
     {
         static async Task Main(string[] args)
         {
+            var connection = RethinkDb.Driver.RethinkDB.R.Connection().Hostname("asgard.gamecult.games")
+                .Port(RethinkDBConstants.DefaultPort).Timeout(60).Connect();
+            
             GrpcEnvironment.SetLogger(new Grpc.Core.Logging.ConsoleLogger());
 
             await MagicOnionHost.CreateDefaultBuilder()

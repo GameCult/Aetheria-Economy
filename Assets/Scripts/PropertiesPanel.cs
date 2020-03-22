@@ -55,7 +55,7 @@ public class PropertiesPanel : MonoBehaviour
 
 	public void Inspect(object obj, FieldInfo field, bool inspectablesOnly = false, bool readWrite = false)
 	{
-		var inspectable = field.GetCustomAttribute<InspectableAttribute>();
+		var inspectable = field.GetCustomAttribute<InspectableFieldAttribute>();
 		if (inspectable == null && inspectablesOnly) return;
 		var type = field.FieldType;
 		
@@ -98,9 +98,9 @@ public class PropertiesPanel : MonoBehaviour
 			else
 				Inspect(field.Name.SplitCamelCase(), () => (string) field.GetValue(obj));
 		}
-		else if (field.FieldType == typeof(Color)) Inspect(field.Name, () => (Color) field.GetValue(obj), c => field.SetValue(obj, c));
+		//else if (field.FieldType == typeof(Color)) Inspect(field.Name, () => (Color) field.GetValue(obj), c => field.SetValue(obj, c));
 		else if (field.FieldType == typeof(bool)) Inspect(field.Name, () => (bool) field.GetValue(obj), b => field.SetValue(obj, b));
-		else if (type.GetCustomAttribute<InspectableAttribute>() != null)
+		else if (type.GetCustomAttribute<InspectableFieldAttribute>() != null)
 		{
 			if(!_propertyFields.Any() || !_propertyFields.Last().gameObject.name.ToUpper().Contains("DIVIDER"))
 				_propertyFields.Add(Divider.Instantiate<Prototype>());
@@ -178,15 +178,15 @@ public class PropertiesPanel : MonoBehaviour
 		RefreshPropertyValues += (sender, args) => slider.value = read();
 	}
 	
-	public void Inspect(string name, Func<Color> read, Action<Color> write)
-	{
-		var colorFieldInstance = ColorField.Instantiate<Prototype>();
-		_propertyFields.Add(colorFieldInstance);
-		colorFieldInstance.transform.Find("Label").GetComponent<TextMeshProUGUI>().text = name;
-		var colorButton = colorFieldInstance.GetComponentInChildren<ColorButton>();
-		colorButton.OnColorChanged.AddListener(col => write(col));
-		RefreshPropertyValues += (sender, args) => colorButton.GetComponent<Image>().color = read();
-	}
+	// public void Inspect(string name, Func<Color> read, Action<Color> write)
+	// {
+	// 	var colorFieldInstance = ColorField.Instantiate<Prototype>();
+	// 	_propertyFields.Add(colorFieldInstance);
+	// 	colorFieldInstance.transform.Find("Label").GetComponent<TextMeshProUGUI>().text = name;
+	// 	var colorButton = colorFieldInstance.GetComponentInChildren<ColorButton>();
+	// 	colorButton.OnColorChanged.AddListener(col => write(col));
+	// 	RefreshPropertyValues += (sender, args) => colorButton.GetComponent<Image>().color = read();
+	// }
 	
 	public void Inspect(string name, Func<bool> read, Action<bool> write)
 	{
@@ -212,47 +212,5 @@ public class PropertiesPanel : MonoBehaviour
 	public void RefreshValues()
 	{
 		RefreshPropertyValues?.Invoke(this, EventArgs.Empty);
-	}
-}
-
-public class InspectableAttribute : Attribute { }
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectableTextAttribute : InspectableAttribute { }
-
-[AttributeUsage(AttributeTargets.Field)]
-public class TemperatureInspectableAttribute : InspectableAttribute { }
-
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectableDatabaseLinkAttribute : InspectableAttribute
-{
-	public readonly Type EntryType;
-
-	public InspectableDatabaseLinkAttribute(Type entryType)
-	{
-		EntryType = entryType;
-	}
-}
-
-[AttributeUsage(AttributeTargets.Field)]
-public class RangedFloatInspectableAttribute : InspectableAttribute
-{
-	public readonly float Min, Max;
-
-	public RangedFloatInspectableAttribute(float min, float max)
-	{
-		Min = min;
-		Max = max;
-	}
-}
-
-[AttributeUsage(AttributeTargets.Field)]
-public class RangedIntInspectableAttribute : InspectableAttribute
-{
-	public readonly int Min, Max;
-
-	public RangedIntInspectableAttribute(int min, int max)
-	{
-		Min = min;
-		Max = max;
 	}
 }
