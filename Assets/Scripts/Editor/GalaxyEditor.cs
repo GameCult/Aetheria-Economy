@@ -219,8 +219,9 @@ public class GalaxyEditor : Editor
 						}
 						RenderLinks();
 					}
-					if (GUILayout.Button("Save Star Links"))
+					if (GUILayout.Button("Save Star Data"))
 					{
+						galaxy.MapData.Stars = _stars.Select(s => new StarData {Position = s}).ToList();
 						foreach (var star in galaxy.MapData.Stars)
 						{
 							star.Links.Clear();
