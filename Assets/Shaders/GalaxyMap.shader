@@ -20,10 +20,10 @@
 		NoiseGain("NoiseGain", Float) = 1
 		NoiseLacunarity("NoiseLacunarity", Float) = 2
 		NoiseFrequency("NoiseFrequency", Float) = 1
-		GlowOffset("GlowOffset", Float) = 1
-		GlowAmount("GlowAmount", Float) = 1
-		GlowPower("GlowPower", Float) = 1
-		StarBoost("StarBoost", Float) = 1
+		GlowOffset("GlowOffset", Float) = 0
+		GlowAmount("GlowAmount", Float) = 0
+		GlowPower("GlowPower", Float) = 0
+		StarBoost("StarBoost", Float) = 0
          
          // required for UI.Mask
          _StencilComp ("Stencil Comparison", Float) = 8
@@ -127,13 +127,13 @@
 			    float angle = pow(length(offset)*2,TwistPower) * Twist;
 			    float2 twist = float2(offset.x*cos(angle) - offset.y*sin(angle), offset.x*sin(angle) + offset.y*cos(angle));
 			    float atan = atan2(twist.y,twist.x);
-			    float spokes = sin(atan*Arms) * SpokeScale + SpokeOffset;
+			    float spokes = (sin(atan*Arms) + SpokeOffset) * SpokeScale;
 			    float noise = fBm(i.uv + NoisePosition.xx, 7);
 			    float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle + CoreBoostOffset, CoreBoostPower) * CoreBoost);
 			    float gal = max(shape - noise * clamp(circle,0,1), 0);
 			    float glow = (pow(circle,GlowPower) + GlowOffset) * GlowAmount;
 			    float stars = tex2D(_MainTex, i.uv2) * clamp(shape*StarBoost, 0, 1);
-				fixed4 col = fixed4(gal*_CloudColor.rgb + glow*_GlowColor.rgb + stars.xxx,1);
+				fixed4 col = fixed4(gal*_CloudColor.rgb + glow*_GlowColor.rgb + stars.xxx, 1);
 				return col;
 			}
 			ENDCG

@@ -15,7 +15,6 @@ using static NoiseFbm;
 public class Galaxy : ScriptableObject
 {
 	public GalaxyMapData MapData;
-	public List<ContinentData> NameDatabase;
 }
 
 [Serializable]
@@ -28,7 +27,7 @@ public class GalaxyMapData
 	[HideInInspector]
 	public GalaxyMapLayerData StarDensity;
 	[HideInInspector]
-	public List<GalaxyMapLayerData> CultureDensities = new List<GalaxyMapLayerData>();
+	public Dictionary<string,GalaxyMapLayerData> ResourceDensities = new Dictionary<string, GalaxyMapLayerData>();
 	//[HideInInspector]
 	public List<StarData> Stars = new List<StarData>();
 }
@@ -77,8 +76,6 @@ public class StarData
 {
 	public Vector2 Position;
 	public List<int> Links = new List<int>();
-	public string NameSource;
-	public List<string> Names = new List<string>();
 }
 
 public static class NoiseFbm
@@ -121,7 +118,7 @@ public class GalaxyMapLayerData
 		float angle = pow(length(offset)*2,galaxy.TwistPower) * galaxy.Twist;
 		float2 twist = float2(offset.x*cos(angle) - offset.y*sin(angle), offset.x*sin(angle) + offset.y*cos(angle));
 		float atan = atan2(twist.y,twist.x);
-		float spokes = sin(atan*galaxy.Arms) * SpokeScale + SpokeOffset;
+		float spokes = (sin(atan*galaxy.Arms) + SpokeOffset) * SpokeScale;
 		float noise = fBm(uv + float2(NoisePosition), NoiseOctaves, NoiseFrequency, NoiseOffset, NoiseAmplitude, NoiseLacunarity, NoiseGain);
 		float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle + CoreBoostOffset, CoreBoostPower) * CoreBoost);
 		float gal = max(shape - noise * saturate(circle), 0);
@@ -254,7 +251,8 @@ public static class VoronoiLinkExtensions
 			int lastCount = members.Count;
 			// For each member, add all vertices that are connected to it via a line but are not already a member
 			foreach (Vertex2 m in members.ToArray())
-				members.AddRange(data.Where(l => l.point1 == m).Select(l => l.point2).Concat(data.Where(l => l.point2 == m).Select(l => l.point1))
+				members.AddRange(data.Where(l => l.point1 == m).Select(l => l.point2)
+					.Concat(data.Where(l => l.point2 == m).Select(l => l.point1))
 					.Where(n => !members.Contains(n)));
 			// If we have stopped finding neighbors, stop traversing
 			if (members.Count == lastCount)
