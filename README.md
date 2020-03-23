@@ -7,7 +7,7 @@ Previously I have built prototypes of the ARPG gameplay, [here's a video of the 
 
 As a result, the current focus is on the economy system, and building a client-server architecture for the networked simulation of a persistent universe. The goal is to create an RTS client, allowing players to take the role of a corporation, where they can define roles for their population, gather resources, build infrastructure, research new technology and produce items in order to make as much money as possible.
 
-Once we have built a persistent universe with a dynamic economy, we will begin building an ARPG client allowing the player to take control of a single ship and engage in fast-paced combat, questing and trading.
+Once we have built a persistent universe with a dynamic economy, we will begin rebuilding the ARPG client allowing the player to take control of a single ship and engage in fast-paced combat, questing and trading.
 
 ## Architecture
 
