@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
  using System.Reactive.Linq;
+ using System.Security.Cryptography;
  using System.Text.RegularExpressions;
 using Isopoh.Cryptography.Argon2;
 using LiteNetLib;
@@ -29,6 +30,7 @@ using Microsoft.Extensions.Logging;
     private Stopwatch _timer;
     private Random _random = new Random();
     private DatabaseCache _database;
+    private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 
     private float Time => (float)_timer.Elapsed.TotalSeconds;
 
@@ -37,7 +39,7 @@ using Microsoft.Extensions.Logging;
 
     public MasterServer(DatabaseCache cache)
     {
-        
+        _database = cache;
     }
 
     public void ClearMessageListeners()
@@ -112,80 +114,67 @@ using Microsoft.Extensions.Logging;
                     peer.Send(new LoginSuccessMessage {Session = _users[peer.Id].SessionGuid});
                     return;
                 }
-                
-                var register = message as RegisterMessage;
-                if (register != null)
+
+                switch (message)
                 {
-    
-                    if (!IsValidUsername(register.Name))
-                    {
+                    case RegisterMessage register when !IsValidUsername(register.Name):
                         peer.Send(new ErrorMessage {Error = "Username Invalid"});
                         return;
-                    }
-                    if (!IsValidEmail(register.Email))
-                    {
+                    case RegisterMessage register when !IsValidEmail(register.Email):
                         peer.Send(new ErrorMessage {Error = "Email Invalid"});
                         return;
-                    }
-                    if (8 < register.Password.Length && register.Password.Length < 32)
-                    {
+                    case RegisterMessage register when 8 < register.Password.Length && register.Password.Length < 32:
                         peer.Send(new ErrorMessage {Error = "Password Invalid"});
                         return;
-                    }
-    
-                    peer.Send(new LoginSuccessMessage {Session = Guid.NewGuid()});
+                    case RegisterMessage register:
+                    {
+                        peer.Send(new LoginSuccessMessage {Session = Guid.NewGuid()});
 
-                    guid = Guid.NewGuid();
+                        guid = Guid.NewGuid();
                     
-                    var newUserData = new Player
-                    {
-                        ID = guid,
-                        Email = register.Email,
-                        Password = Argon2.Hash(register.Password),
-                        Username = register.Name
-                    };
-                    _database.Add(newUserData);
+                        var newUserData = new Player
+                        {
+                            ID = guid,
+                            Email = register.Email,
+                            Password = Argon2.Hash(register.Password),
+                            Username = register.Name
+                        };
+                        _database.Add(newUserData);
     
-                    _sessions[guid] = new Session {Data = newUserData, LastUpdate = DateTime.Now};
-                    _users[peer.Id].SessionGuid = guid;
-                }
-
-                var verify = message as VerifyMessage;
-                if (verify != null)
-                {
-                    if (_sessions.ContainsKey(verify.Session))
-                    {
+                        _sessions[guid] = new Session {Data = newUserData, LastUpdate = DateTime.Now};
+                        _users[peer.Id].SessionGuid = guid;
+                        break;
+                    }
+                    case VerifyMessage verify when _sessions.ContainsKey(verify.Session):
                         _users[peer.Id].SessionGuid = verify.Session;
                         peer.Send(new LoginSuccessMessage {Session = verify.Session});
                         return;
-                    }
-                }
-    
-                var login = message as LoginMessage;
-                if (login != null)
-                {
-                    var auth = login.Email;
-
-                    var pass = login.Password;
-                    var userData = _database.GetAll<Player>().FirstOrDefault(x => x.Email == auth);
-
-                    if (userData == null)
+                    case LoginMessage login:
                     {
-                        peer.Send(new ErrorMessage {Error = "Email Not Found"});
-                        return;
+                        var auth = login.Email;
+
+                        var pass = login.Password;
+                        var userData = _database.GetAll<Player>().FirstOrDefault(x => x.Email == auth);
+
+                        if (userData == null)
+                        {
+                            peer.Send(new ErrorMessage {Error = "Email Not Found"});
+                            return;
+                        }
+
+                        if (!Argon2.Verify(userData.Password, pass))
+                        {
+                            peer.Send(new ErrorMessage {Error = "Password Wrong"});
+                            return;
+                        }
+
+                        guid = Guid.NewGuid();
+                        peer.Send(new LoginSuccessMessage {Session = guid});
+
+                        _sessions.Add(guid, new Session { Data = userData, LastUpdate = DateTime.Now });
+                        _users[peer.Id].SessionGuid = guid;
+                        break;
                     }
-
-                    if (!Argon2.Verify(userData.Password, pass))
-                    {
-                        peer.Send(new ErrorMessage {Error = "Password Wrong"});
-                        return;
-                    }
-
-                    guid = Guid.NewGuid();
-                    peer.Send(new LoginSuccessMessage {Session = guid});
-
-                    _sessions.Add(guid, new Session { Data = userData, LastUpdate = DateTime.Now });
-                    _users[peer.Id].SessionGuid = guid;
                 }
             }
             else

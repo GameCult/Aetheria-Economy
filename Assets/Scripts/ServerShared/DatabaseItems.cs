@@ -58,6 +58,9 @@ public class Player : DatabaseEntry, INamedEntry
     [JsonProperty("username")] [Key(3)]
     public string Username;
     
+    [JsonProperty("salt")] [Key(4)]
+    public string Salt;
+    
     [IgnoreMember] public string EntryName
     {
         get => Username;
