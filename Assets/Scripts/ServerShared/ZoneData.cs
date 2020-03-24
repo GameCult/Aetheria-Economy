@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
+using Unity.Mathematics;
 
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
@@ -11,19 +12,19 @@ public class ZoneData : DatabaseEntry, INamedEntry
     [JsonProperty("name")] [Key(1)]
     public string Name;
     
-    [JsonProperty("radius")] [Key(2)]
-    public float Radius = 500;
+    [JsonProperty("position")] [Key(2)]
+    public float2 Position = 500;
 
-    [JsonProperty("wormholes")] [Key(4)]
+    [JsonProperty("wormholes")] [Key(3)]
     public List<Guid> Wormholes = new List<Guid>();
     
-    [JsonProperty("stations")] [Key(3)]
+    [JsonProperty("stations")] [Key(4)]
     public List<Guid> Stations = new List<Guid>();
     
-    [JsonProperty("planets")] [Key(4)]
+    [JsonProperty("planets")] [Key(5)]
     public List<Guid> Planets = new List<Guid>();
     
-    [JsonProperty("orbits")] [Key(5)]
+    [JsonProperty("orbits")] [Key(6)]
     public List<Guid> Orbits = new List<Guid>();
     
     [IgnoreMember] public string EntryName

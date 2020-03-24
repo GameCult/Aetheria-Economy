@@ -647,7 +647,7 @@ public class DatabaseInspector : EditorWindow
 
     public void OnGUI()
     {
-        _labelStyle = new GUIStyle(EditorStyles.centeredGreyMiniLabel) {normal = {textColor = Color.black}};
+        _labelStyle = new GUIStyle(EditorStyles.centeredGreyMiniLabel) {normal = {textColor = EditorGUIUtility.isProSkin?Color.white:Color.black}};
         
         Event current = Event.current;
         EventType currentEventType = current.type;
@@ -684,12 +684,12 @@ public class DatabaseInspector : EditorWindow
             // {
             //     DatabaseCache.Duplicate(entry);
             // }
-            // if (GUILayout.Button("Delete Entry"))
-            // {
-            //     DatabaseCache.Delete(entry);
-            //     entry = null;
-            //     return;
-            // }
+            if (GUILayout.Button("Delete Entry"))
+            {
+                DatabaseCache.Delete(entry);
+                entry = null;
+                return;
+            }
         }
         
         using (var h = new EditorGUILayout.HorizontalScope())

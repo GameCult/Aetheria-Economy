@@ -78,6 +78,9 @@ public class DatabaseListView : EditorWindow
 
     void OnEnable()
     {
+        // Add Unity.Mathematics serialization support to RethinkDB Driver
+        Converter.Serializer.Converters.Add(new MathJsonConverter());
+        
         // Create database cache
         _databaseCache = new DatabaseCache();
         _databaseCache.OnDataUpdateLocal += _ => Repaint();
@@ -141,12 +144,17 @@ public class DatabaseListView : EditorWindow
                 Debug.Log("Connected to RethinkDB");
         
                 // When entries are changed locally, push the changes to RethinkDB
-                _databaseCache.OnDataUpdateLocal +=
-                    entry =>
-                    {
-                        Debug.Log($"Uploading entry to RethinkDB: {entry.ID}");
-                        R.Db("Aetheria").Table("Items").Replace(entry).RunAsync(_connection);
-                    };
+                _databaseCache.OnDataUpdateLocal += entry =>
+                {
+                    Debug.Log($"Uploading entry to RethinkDB: {entry.ID}");
+                    R.Db("Aetheria").Table("Items").Replace(entry).RunAsync(_connection);
+                };
+
+                _databaseCache.OnDataDeleteLocal += entry =>
+                {
+                    Debug.Log($"Deleting entry from RethinkDB: {entry.ID}");
+                    R.Db("Aetheria").Table("Items").Get(entry).Delete().RunAsync(_connection);
+                };
         
                 // Get all item data from RethinkDB
                 Task.Run(async () =>
@@ -233,7 +241,7 @@ public class DatabaseListView : EditorWindow
                         GUILayout.Space(20);
                         GUILayout.Label("New " + _itemTypes[i].Name);
                         var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
+                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, EditorGUIUtility.isProSkin?Color.white:Color.black, 0, 0);
                     }
                 }
             }
@@ -282,7 +290,7 @@ public class DatabaseListView : EditorWindow
                     GUILayout.Space(10);
                     GUILayout.Label("New " + _entryTypes[i].Name);
                     var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
+                    GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, EditorGUIUtility.isProSkin?Color.white:Color.black, 0, 0);
                 }
             }
         }

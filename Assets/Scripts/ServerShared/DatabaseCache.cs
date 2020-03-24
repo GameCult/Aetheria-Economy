@@ -8,6 +8,8 @@ public class DatabaseCache
 {
     public event Action<DatabaseEntry> OnDataUpdateLocal;
     public event Action<DatabaseEntry> OnDataUpdateRemote;
+    public event Action<DatabaseEntry> OnDataDeleteLocal;
+    
 
     public Action<string> Logger = Console.WriteLine;
 
@@ -64,5 +66,16 @@ public class DatabaseCache
     public IEnumerable<T> GetAll<T>()
     {
         return _types[typeof(T)].Values.Cast<T>();
+    }
+
+    public void Delete(DatabaseEntry entry)
+    {
+        _entries.Remove(entry.ID);
+        foreach (var type in _types.Values)
+        {
+            type.Remove(entry.ID);
+        }
+
+        OnDataDeleteLocal?.Invoke(entry);
     }
 }

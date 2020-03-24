@@ -24,7 +24,7 @@ public class ZoneGenerator
 //	public float GasGiantMass = 2000;
 //	public float RadiusPower = 1.75f;
 
-	public static Planet[] GenerateEntities(GameContext context, ZoneData data, float mass)
+	public static Planet[] GenerateEntities(GameContext context, ZoneData data, float mass, float radius)
 	{
 		var random = new Random();
 		random.InitState(unchecked((uint)data.Name.GetHashCode()));
@@ -34,7 +34,7 @@ public class ZoneGenerator
 			Random = random,
 			Context = context,
 			Mass = mass, 
-			ChildDistanceMaximum = data.Radius,
+			ChildDistanceMaximum = radius,
 			ChildDistanceMinimum = context.PlanetRadius(mass)
 		};
 

@@ -1,16 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using MIConvexHull;
-using UniRx;
-using UnityEngine;
+using Microsoft.SqlServer.Types;
+using Newtonsoft.Json;
+using RethinkDb.Driver;
+using RethinkDb.Driver.Net;
 using UnityEditor;
+using UnityEngine;
+using static UnityEditor.EditorGUILayout;
+using Random = UnityEngine.Random;
 
 [CustomEditor(typeof(Galaxy))]
 public class GalaxyEditor : Editor
 {
-	private int _width = 0;
+	private static readonly RethinkDB R = RethinkDB.R;
+	
+	private int _width;
 	private bool _showResourceMaps;
 	private GalaxyMapLayerData _currentLayer;
 	private string _currentLayerName = "Star Density";
@@ -18,6 +24,7 @@ public class GalaxyEditor : Editor
 	private int _hilbertOrder = 6;
 	private ulong _hilbertIndex;
 	private int _starCount = 1;
+	private float _minStarDistance = .01f;
 	private float _maxLinkLength = .1f;
 	private float _linkFilter = .5f;
 	private IEnumerable<Vector2> _stars = new Vector2[0];
@@ -31,6 +38,7 @@ public class GalaxyEditor : Editor
 	private Texture2D _linkTex;
 	private Material _galaxyMat;
 	private Material _transparent;
+	private Connection _connection;
 
 	private void OnEnable()
 	{
@@ -40,6 +48,8 @@ public class GalaxyEditor : Editor
 		_width = Screen.width;
 		_starTex = new Texture2D(_width,_width, TextureFormat.ARGB32, false);
 		_linkTex = new Texture2D(_width,_width, TextureFormat.ARGB32, false);
+		// var galaxy = target as Galaxy;
+		// _stars = galaxy.MapData.Stars.Select(s => s.Position);
 	}
 
 	public override void OnInspectorGUI()
@@ -75,39 +85,39 @@ public class GalaxyEditor : Editor
 		_galaxyMat.SetFloat("NoiseGain", _currentLayer.NoiseGain);
 		_galaxyMat.SetFloat("NoiseLacunarity", _currentLayer.NoiseLacunarity);
 		_galaxyMat.SetFloat("NoiseFrequency", _currentLayer.NoiseFrequency);
-		var rect = EditorGUILayout.GetControlRect(false, _width);
+		var rect = GetControlRect(false, _width);
 		EditorGUI.DrawPreviewTexture(rect, _white, _galaxyMat);
 		if(_drawLinks)
 			EditorGUI.DrawPreviewTexture(rect, _linkTex, _transparent);
 		if(_drawStars)
 			EditorGUI.DrawPreviewTexture(rect, _starTex, _transparent);
 		
-		_drawStars = EditorGUILayout.ToggleLeft($"Display {_stars.Count()} Stars", _drawStars);
-		_drawResource = EditorGUILayout.ToggleLeft("Display Resources", _drawResource);
-		_drawLinks = EditorGUILayout.ToggleLeft($"Display {_starLinks.Count} Links", _drawLinks);
+		_drawStars = ToggleLeft($"Display {_stars.Count()} Stars", _drawStars);
+		_drawResource = ToggleLeft("Display Resources", _drawResource);
+		_drawLinks = ToggleLeft($"Display {_starLinks.Count} Links", _drawLinks);
 		
 		GUILayout.Space(10);
 		
 		// Show default inspector property editor
 		DrawDefaultInspector ();
 
-		EditorGUILayout.BeginVertical("Box");
+		BeginVertical("Box");
 		EditorGUI.indentLevel++;
 		GUILayout.Label(_currentLayerName);
 		Inspect(_currentLayer);
 		EditorGUI.indentLevel--;
-		EditorGUILayout.EndVertical();
+		EndVertical();
 		
-		EditorGUILayout.BeginVertical("Box");
+		BeginVertical("Box");
 		EditorGUI.indentLevel++;
-		_showResourceMaps = EditorGUILayout.Foldout(_showResourceMaps, "Resource Density Maps");
+		_showResourceMaps = Foldout(_showResourceMaps, "Resource Density Maps");
 		if (_showResourceMaps)
 		{
 			EditorGUI.indentLevel++;
 			foreach (var resourceDensity in galaxy.MapData.ResourceDensities.ToArray())
 			{
-				EditorGUILayout.BeginHorizontal();
-				var newName = EditorGUILayout.DelayedTextField(resourceDensity.Key);
+				BeginHorizontal();
+				var newName = DelayedTextField(resourceDensity.Key);
 				if (newName != resourceDensity.Key)
 				{
 					galaxy.MapData.ResourceDensities.Remove(resourceDensity.Key);
@@ -118,7 +128,7 @@ public class GalaxyEditor : Editor
 					_currentLayerName = resourceDensity.Key;
 					_currentLayer = resourceDensity.Value;
 				}
-				EditorGUILayout.EndHorizontal();
+				EndHorizontal();
 			}
 			EditorGUI.indentLevel--;
 			if (GUILayout.Button("Add New Resource"))
@@ -132,21 +142,24 @@ public class GalaxyEditor : Editor
 			_currentLayer = galaxy.MapData.StarDensity;
 		}
 		EditorGUI.indentLevel--;
-		EditorGUILayout.EndVertical();
+		EndVertical();
 		
-		EditorGUILayout.BeginVertical("Box");
+		BeginVertical("Box");
 		EditorGUI.indentLevel++;
-		_showStarEditor = EditorGUILayout.Foldout(_showStarEditor, "Star Tools");
+		_showStarEditor = Foldout(_showStarEditor, "Star Tools");
 		if (_showStarEditor)
 		{
-			_hilbertOrder = EditorGUILayout.IntField("Hilbert Order", _hilbertOrder);
-			_starCount = EditorGUILayout.IntField("Star Count", _starCount);
+			_hilbertOrder = IntField("Hilbert Order", _hilbertOrder);
+			_starCount = IntField("Star Count", _starCount);
 			//_hilbertIndex = (ulong) EditorGUILayout.IntField("Hilbert Index", (int) _hilbertIndex);
 			if (GUILayout.Button("Evaluate Hilbert Curve"))
 			{
 				var points = EvaluateHilbert(_hilbertOrder,false);
 				Debug.Log($"Hilbert curve has {points.Count()} points, resolution {Mathf.RoundToInt(points.Max(p=>p.x))+1}");
 			}
+
+			_minStarDistance = FloatField("Minimum Star Distance", _minStarDistance);
+			
 			if (GUILayout.Button("Generate Stars"))
 			{
 				var points = EvaluateHilbert(_hilbertOrder).ToArray();
@@ -155,14 +168,14 @@ public class GalaxyEditor : Editor
 				while (stars.Count < _starCount && bail < 10)
 				{
 					var accum = 0f;
-					foreach (var hp in points.Select(p=>p+UnityEngine.Random.insideUnitCircle * ((points[0]-points[1]).magnitude/2)))
+					foreach (var hp in points.Select(p=>p+Random.insideUnitCircle * ((points[0]-points[1]).magnitude/2)))
 					{
 						var den = galaxy.MapData.StarDensity.Evaluate(hp, galaxy.MapData);
 						if(!float.IsNaN(den))
-							accum += den * UnityEngine.Random.value;
+							accum += den * Random.value;
 //						else
 //							Debug.Log($"Density at ({hp.x},{hp.y}) is NaN");
-						if (accum > 1)
+						if (accum > 1 && (!stars.Any() || stars.Min(s=>(s-hp).magnitude) > _minStarDistance) )
 						{
 							stars.Add(hp);
 							accum = 0;
@@ -177,7 +190,7 @@ public class GalaxyEditor : Editor
 			}
 			if (_stars.Any())
 			{
-				_maxLinkLength = EditorGUILayout.FloatField("Max Link Length", _maxLinkLength);
+				_maxLinkLength = FloatField("Max Link Length", _maxLinkLength);
 				if (GUILayout.Button("Generate Star Links"))
 				{
 					_voronoiMesh = VoronoiMesh<Vertex2, Cell2, VoronoiEdge<Vertex2, Cell2>>.Create(_stars.Select(s=>new Vertex2(s.x,s.y)).ToList());
@@ -195,7 +208,7 @@ public class GalaxyEditor : Editor
 				}
 				if (_starLinks.Any())
 				{
-					_linkFilter = EditorGUILayout.FloatField("Link Filter Percentage", _linkFilter);
+					_linkFilter = FloatField("Link Filter Percentage", _linkFilter);
 					if (GUILayout.Button("Filter Star Links"))
 					{
 						var bail = 0;
@@ -203,7 +216,7 @@ public class GalaxyEditor : Editor
 						var deadLinks = new List<VoronoiLink>();
 						for (int i = 0; i < count && bail < count*10; bail++)
 						{
-							var link = _starLinks.ElementAt(UnityEngine.Random.Range(0, _starLinks.Count));
+							var link = _starLinks.ElementAt(Random.Range(0, _starLinks.Count));
 							
 							if (deadLinks.Contains(link)) continue;
 							
@@ -231,11 +244,55 @@ public class GalaxyEditor : Editor
 								.Select(sl => galaxy.MapData.Stars.IndexOf(galaxy.MapData.Stars.First(s => (sl.point1.ToVector2() - s.Position).sqrMagnitude < float.Epsilon))));
 						}
 					}
+					
+					if (GUILayout.Button("Connect to RethinkDB"))
+						_connection = R.Connection().Hostname(EditorPrefs.GetString("RethinkDB.URL")).Port(RethinkDBConstants.DefaultPort).Timeout(60).Connect();
+					EditorGUI.BeginDisabledGroup(_connection == null);
+
+					if (GUILayout.Button("Drop Galaxy Table"))
+						R.Db("Aetheria").TableDrop("Galaxy").Run(_connection);
+
+					if (GUILayout.Button("Create Galaxy Table"))
+						R.Db("Aetheria").TableCreate("Galaxy").Run(_connection);
+					
+					EditorGUI.BeginDisabledGroup(!galaxy.MapData.Stars.Any());
+					
+					if (GUILayout.Button("Upload Star Data"))
+					{
+						Converter.Serializer.Converters.Add(new MathJsonConverter());
+						JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+						{
+							Converters = new List<JsonConverter>
+							{
+								new MathJsonConverter(),
+								Converter.DateTimeConverter,
+								Converter.BinaryConverter,
+								Converter.GroupingConverter,
+								Converter.PocoExprConverter
+							}
+						};
+						var starIDs = new Dictionary<StarData, Guid>();
+						foreach (var star in galaxy.MapData.Stars)
+							starIDs[star] = Guid.NewGuid();
+						foreach (var star in galaxy.MapData.Stars)
+						{
+							R.Db("Aetheria").Table("Galaxy").Insert(new ZoneData
+							{
+								ID = starIDs[star],
+								Name = starIDs[star].ToString().Substring(0, 8),
+								Wormholes = star.Links.Select(i => starIDs[galaxy.MapData.Stars[i]]).ToList()
+							}).Run(_connection);
+						}
+					}
+					
+					EditorGUI.EndDisabledGroup();
+					
+					EditorGUI.EndDisabledGroup();
 				}
 			}
 		}
 		EditorGUI.indentLevel--;
-		EditorGUILayout.EndVertical();
+		EndVertical();
 		
 		
 		EditorUtility.SetDirty(target);
@@ -249,7 +306,7 @@ public class GalaxyEditor : Editor
 		uint max = 0;
 		while (x != 0 || y != 0)
 		{
-			Microsoft.SqlServer.Types.SpaceFillingCurve.ReverseHilbert(order, i, out x, out y);
+			SpaceFillingCurve.ReverseHilbert(order, i, out x, out y);
 			points.Add(new Vector2(x, y));
 			if (x > max)
 				max = x;
@@ -260,18 +317,18 @@ public class GalaxyEditor : Editor
 
 	void Inspect(GalaxyMapLayerData layer)
 	{
-		layer.EdgeReduction = EditorGUILayout.FloatField("Edge Reduction", layer.EdgeReduction);
-		layer.CoreBoost = EditorGUILayout.FloatField("Core Boost", layer.CoreBoost);
-		layer.CoreBoostOffset = EditorGUILayout.FloatField("Core Boost Offset", layer.CoreBoostOffset);
-		layer.CoreBoostPower = EditorGUILayout.FloatField("Core Boost Power", layer.CoreBoostPower);
-		layer.NoiseOffset = EditorGUILayout.FloatField("Noise Offset", layer.NoiseOffset);
-		layer.NoiseAmplitude = EditorGUILayout.FloatField("Noise Amplitude", layer.NoiseAmplitude);
-		layer.NoiseGain = EditorGUILayout.FloatField("Noise Gain", layer.NoiseGain);
-		layer.NoiseLacunarity = EditorGUILayout.FloatField("Noise Lacunarity", layer.NoiseLacunarity);
-		layer.NoiseOctaves = EditorGUILayout.IntField("Noise Octaves", layer.NoiseOctaves);
-		layer.NoiseFrequency = EditorGUILayout.FloatField("Noise Frequency", layer.NoiseFrequency);
-		layer.SpokeOffset = EditorGUILayout.FloatField("Spoke Offset", layer.SpokeOffset);
-		layer.SpokeScale = EditorGUILayout.FloatField("Spoke Scale", layer.SpokeScale);
+		layer.EdgeReduction = FloatField("Edge Reduction", layer.EdgeReduction);
+		layer.CoreBoost = FloatField("Core Boost", layer.CoreBoost);
+		layer.CoreBoostOffset = FloatField("Core Boost Offset", layer.CoreBoostOffset);
+		layer.CoreBoostPower = FloatField("Core Boost Power", layer.CoreBoostPower);
+		layer.NoiseOffset = FloatField("Noise Offset", layer.NoiseOffset);
+		layer.NoiseAmplitude = FloatField("Noise Amplitude", layer.NoiseAmplitude);
+		layer.NoiseGain = FloatField("Noise Gain", layer.NoiseGain);
+		layer.NoiseLacunarity = FloatField("Noise Lacunarity", layer.NoiseLacunarity);
+		layer.NoiseOctaves = IntField("Noise Octaves", layer.NoiseOctaves);
+		layer.NoiseFrequency = FloatField("Noise Frequency", layer.NoiseFrequency);
+		layer.SpokeOffset = FloatField("Spoke Offset", layer.SpokeOffset);
+		layer.SpokeScale = FloatField("Spoke Scale", layer.SpokeScale);
 	}
 	
 	int UvToIndex(Vector2 v) => (int) (v.y * _width) * _width + (int) (v.x * _width);
@@ -285,7 +342,7 @@ public class GalaxyEditor : Editor
 		}
 		foreach (var l in _starLinks)
 		{
-			var pixelCount = Mathf.Max((int) (Mathf.Abs((float) (l.point1.x - l.point2.x)) * _width), (int) (Mathf.Abs((float) (l.point1.y - l.point2.y)) * _width));
+			var pixelCount = Mathf.Max((int) (Mathf.Abs(l.point1.x - l.point2.x) * _width), (int) (Mathf.Abs(l.point1.y - l.point2.y) * _width));
 			//Debug.Log($"Marching across {pixelCount} pixels!");
 			for(int i=0;i<pixelCount;i++)
 				pixels[UvToIndex(Vector2.Lerp(l.point1.ToVector2(),l.point2.ToVector2(),(float)i/pixelCount))] = XKCDColors.OrangeRed;
