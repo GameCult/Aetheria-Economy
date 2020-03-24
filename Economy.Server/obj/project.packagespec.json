@@ -33,13 +33,17 @@
   "frameworks": {
     "netcoreapp3.1": {
       "dependencies": {
-        "MagicOnion.Hosting": {
+        "Isopoh.Cryptography.Argon2": {
           "target": "Package",
-          "version": "[3.0.9, )"
+          "version": "[1.1.3, )"
         },
-        "RethinkDb.Driver.Linq": {
+        "MessagePack": {
           "target": "Package",
-          "version": "[2.3.150, )"
+          "version": "[2.1.90, )"
+        },
+        "System.Reactive.Linq": {
+          "target": "Package",
+          "version": "[4.3.2, )"
         }
       },
       "imports": [

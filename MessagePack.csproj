@@ -414,12 +414,6 @@
     <Reference Include="Grpc.Core.Api">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
     </Reference>
-    <Reference Include="RethinkDb.Driver">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/RethinkDb.Driver.dll</HintPath>
-    </Reference>
-    <Reference Include="RethinkDb.Driver.Linq">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/RethinkDb.Driver.Linq.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>

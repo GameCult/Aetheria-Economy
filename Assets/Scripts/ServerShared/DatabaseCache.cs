@@ -6,9 +6,10 @@ using MessagePack;
 
 public class DatabaseCache
 {
+    public event Action<DatabaseEntry> OnDataInsertLocal;
     public event Action<DatabaseEntry> OnDataUpdateLocal;
-    public event Action<DatabaseEntry> OnDataUpdateRemote;
     public event Action<DatabaseEntry> OnDataDeleteLocal;
+    public event Action<DatabaseEntry> OnDataUpdateRemote;
     
 
     public Action<string> Logger = Console.WriteLine;
@@ -25,6 +26,7 @@ public class DatabaseCache
     {
         if (entry != null)
         {
+            var exists = _entries.ContainsKey(entry.ID);
             _entries[entry.ID] = entry;
             var type = entry.GetType();
             var types = type.FindInterfaces((_, __) => true, null).Append(type);
@@ -34,10 +36,16 @@ public class DatabaseCache
                     _types[t] = new Dictionary<Guid, DatabaseEntry>();
                 _types[t][entry.ID] = entry;
             }
-            if(remote)
+
+            if (remote)
                 OnDataUpdateRemote?.Invoke(entry);
             else
-                OnDataUpdateLocal?.Invoke(entry);
+            {
+                if (exists)
+                    OnDataUpdateLocal?.Invoke(entry);
+                else
+                    OnDataInsertLocal?.Invoke(entry);
+            }
         }
     }
 

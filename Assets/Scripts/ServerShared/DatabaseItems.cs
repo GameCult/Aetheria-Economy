@@ -47,13 +47,22 @@ public abstract class DatabaseEntry
 
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
-public class Player : DatabaseEntry
+public class Player : DatabaseEntry, INamedEntry
 {
     [JsonProperty("email")] [Key(1)]
     public string Email;
     
     [JsonProperty("password")] [Key(2)]
     public string Password;
+    
+    [JsonProperty("username")] [Key(3)]
+    public string Username;
+    
+    [IgnoreMember] public string EntryName
+    {
+        get => Username;
+        set => Username = value;
+    }
 }
 
 [MessagePackObject]

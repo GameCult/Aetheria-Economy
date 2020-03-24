@@ -39,19 +39,18 @@
       "frameworks": {
         "netstandard2.0": {
           "dependencies": {
-            "MagicOnion.Abstractions": {
+            "MessagePack": {
               "target": "Package",
-              "version": "[3.0.0, )"
-            },
-            "MagicOnion.MSBuild.Tasks": {
-              "suppressParent": "All",
-              "target": "Package",
-              "version": "[3.0.0, )"
+              "version": "[2.1.90, )"
             },
             "MessagePack.MSBuild.Tasks": {
               "suppressParent": "All",
               "target": "Package",
               "version": "[2.0.323, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[5.0.0-preview.1.20120.4, )"
             },
             "NETStandard.Library": {
               "suppressParent": "All",
@@ -62,6 +61,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[10.0.3, )"
+            },
+            "Remotion.Linq": {
+              "target": "Package",
+              "version": "[2.2.0, )"
             }
           },
           "imports": [

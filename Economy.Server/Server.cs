@@ -1,0 +1,246 @@
+﻿﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+ using System.Reactive.Linq;
+ using System.Text.RegularExpressions;
+using Isopoh.Cryptography.Argon2;
+using LiteNetLib;
+using MessagePack;
+using Microsoft.Extensions.Logging;
+
+ public class MasterServer
+ {
+     public ILogger Logger = null;
+    
+    private const string EmailPattern =
+        @"^([0-9a-zA-Z]" + //Start with a digit or alphabetical
+        @"([\+\-_\.][0-9a-zA-Z]+)*" + // No continuous or ending +-_. chars in email
+        @")+" +
+        @"@(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]*\.)+[a-zA-Z0-9]{2,17})$";
+
+    private const string UsernamePattern = @"^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$";
+    private Dictionary<Type, NotAnActionCollection> _messageCallbacks = new Dictionary<Type, NotAnActionCollection>();
+    private Dictionary<long, User> _users = new Dictionary<long, User>();
+    private Dictionary<Guid, Session> _sessions = new Dictionary<Guid, Session>();
+    private List<User> _readyPlayers = new List<User>();
+    public NetManager NetManager;
+    private Stopwatch _timer;
+    private Random _random = new Random();
+    private DatabaseCache _database;
+
+    private float Time => (float)_timer.Elapsed.TotalSeconds;
+
+    public bool IsValidEmail(string email) => Regex.IsMatch(email, EmailPattern);
+    public bool IsValidUsername(string name) => Regex.IsMatch(name, UsernamePattern);
+
+    public MasterServer(DatabaseCache cache)
+    {
+        
+    }
+
+    public void ClearMessageListeners()
+    {
+        _messageCallbacks.Clear();
+    }
+
+    public void AddMessageListener<T>(Action<T> callback) where T : Message
+    {
+        if (!_messageCallbacks.ContainsKey(typeof(T)))
+            _messageCallbacks[typeof(T)] = new ActionCollection<T>();
+        ((ActionCollection<T>)_messageCallbacks[typeof(T)]).Add(callback);
+    }
+
+    public void Stop()
+    {
+        NetManager.Stop();
+    }
+
+    public void Start()
+    {
+        _timer = new Stopwatch();
+        _timer.Start();
+
+        EventBasedNetListener listener = new EventBasedNetListener();
+        NetManager = new NetManager(listener)
+        {
+//            UnsyncedEvents = true,
+//            MergeEnabled = true,
+//            NatPunchEnabled = true,
+//            DiscoveryEnabled = true
+        };
+        NetManager.Start(3075);
+
+        listener.NetworkErrorEvent += (point, code) => Logger.Log(LogLevel.Debug, $"{point.Address}: Error {code}");
+
+        listener.PeerConnectedEvent += peer =>
+        {
+            Logger.Log(LogLevel.Debug, $"User Connected: {peer.EndPoint}"); // Show peer ip
+            _users[peer.Id] = new User {Peer = peer};
+        };
+
+        listener.PeerDisconnectedEvent += (peer, info) =>
+        {
+            Logger.Log(LogLevel.Debug, $"User Disconnected: {peer.EndPoint}"); // Show peer ip
+
+//            foreach (var verifiedUser in _users.Values.Where(IsVerified))
+//                verifiedUser.Peer.Send("PlayerLeft", SessionData(verifiedUser.Peer).Username);
+
+            _users.Remove(peer.Id);
+        };
+
+        listener.NetworkLatencyUpdateEvent += (peer, latency) =>
+        {
+//            Logger($"Received Ping: {latency}");
+            _users[peer.Id].Latency = latency;
+        };
+
+        listener.NetworkReceiveEvent += (peer, reader, method) =>
+        {
+            var message = MessagePackSerializer.Deserialize<Message>(reader.RawData);
+            Logger.Log(LogLevel.Debug, $"Received message: {MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(reader.RawData))}");
+            message.Peer = peer;
+            var user = _users[peer.Id];
+            Guid guid;
+            var type = message.GetType();
+
+            if (type == typeof(LoginMessage) || type == typeof(RegisterMessage) || type == typeof(VerifyMessage))
+            {
+                if (IsVerified(user))
+                {
+                    peer.Send(new LoginSuccessMessage {Session = _users[peer.Id].SessionGuid});
+                    return;
+                }
+                
+                var register = message as RegisterMessage;
+                if (register != null)
+                {
+    
+                    if (!IsValidUsername(register.Name))
+                    {
+                        peer.Send(new ErrorMessage {Error = "Username Invalid"});
+                        return;
+                    }
+                    if (!IsValidEmail(register.Email))
+                    {
+                        peer.Send(new ErrorMessage {Error = "Email Invalid"});
+                        return;
+                    }
+                    if (8 < register.Password.Length && register.Password.Length < 32)
+                    {
+                        peer.Send(new ErrorMessage {Error = "Password Invalid"});
+                        return;
+                    }
+    
+                    peer.Send(new LoginSuccessMessage {Session = Guid.NewGuid()});
+
+                    guid = Guid.NewGuid();
+                    
+                    var newUserData = new Player
+                    {
+                        ID = guid,
+                        Email = register.Email,
+                        Password = Argon2.Hash(register.Password),
+                        Username = register.Name
+                    };
+                    _database.Add(newUserData);
+    
+                    _sessions[guid] = new Session {Data = newUserData, LastUpdate = DateTime.Now};
+                    _users[peer.Id].SessionGuid = guid;
+                }
+
+                var verify = message as VerifyMessage;
+                if (verify != null)
+                {
+                    if (_sessions.ContainsKey(verify.Session))
+                    {
+                        _users[peer.Id].SessionGuid = verify.Session;
+                        peer.Send(new LoginSuccessMessage {Session = verify.Session});
+                        return;
+                    }
+                }
+    
+                var login = message as LoginMessage;
+                if (login != null)
+                {
+                    var auth = login.Email;
+
+                    var pass = login.Password;
+                    var userData = _database.GetAll<Player>().FirstOrDefault(x => x.Email == auth);
+
+                    if (userData == null)
+                    {
+                        peer.Send(new ErrorMessage {Error = "Email Not Found"});
+                        return;
+                    }
+
+                    if (!Argon2.Verify(userData.Password, pass))
+                    {
+                        peer.Send(new ErrorMessage {Error = "Password Wrong"});
+                        return;
+                    }
+
+                    guid = Guid.NewGuid();
+                    peer.Send(new LoginSuccessMessage {Session = guid});
+
+                    _sessions.Add(guid, new Session { Data = userData, LastUpdate = DateTime.Now });
+                    _users[peer.Id].SessionGuid = guid;
+                }
+            }
+            else
+            {
+                if (IsVerified(user))
+                {
+                    if (_messageCallbacks.ContainsKey(type))
+                        typeof(ActionCollection<>).MakeGenericType(new[] {type}).GetMethod("Invoke")
+                            .Invoke(_messageCallbacks[type], new object[] {message});
+                    else Logger.Log(LogLevel.Warning, $"Received {type.Name} message but no one is listening for it so I'll just leave it here ¯\\_(ツ)_/¯\n{MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(reader.RawData))}");
+                    _sessions[_users[peer.Id].SessionGuid].LastUpdate = DateTime.Now;
+                }
+                else
+                    peer.Send(new ErrorMessage {Error = "User Not Verified"});
+            }
+        };
+
+        AddMessageListener<ChatMessage>(message =>
+        {
+            foreach (var verifiedUser in _users.Values.Where(IsVerified))
+                verifiedUser.Peer.Send(new ChatBroadcastMessage{User = SessionData(message.Peer).Username, Text = message.Text});
+        });
+        
+        AddMessageListener<ChangeNameMessage>(message =>
+        {
+            SessionData(message.Peer).Username = message.Name;
+            _database.Add(SessionData(message.Peer));
+        });
+
+        Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(30)).Subscribe(_ =>
+        {
+            foreach (var s in _sessions.ToArray())
+            {
+                if (DateTime.Now.Subtract(s.Value.LastUpdate).TotalSeconds > s.Value.DurationSeconds)
+                    _sessions.Remove(s.Key);
+            }
+        });
+    }
+
+    private bool IsVerified(User u) => _sessions.ContainsKey(u.SessionGuid);
+
+    public Player SessionData(NetPeer peer) => IsVerified(_users[peer.Id])?_sessions[_users[peer.Id].SessionGuid].Data:null;
+}
+
+ public class Session
+{
+    public DateTime LastUpdate;
+    public Player Data;
+    public float DurationSeconds;
+}
+
+public class User
+{
+    public NetPeer Peer;
+    public int Latency;
+    public Guid SessionGuid;
+    public float Tardiness;
+}

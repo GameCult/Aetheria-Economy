@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
 using UniRx;
@@ -79,7 +80,18 @@ public class DatabaseListView : EditorWindow
     void OnEnable()
     {
         // Add Unity.Mathematics serialization support to RethinkDB Driver
-        Converter.Serializer.Converters.Add(new MathJsonConverter());
+        //Converter.Serializer.Converters.Add(new MathJsonConverter());
+        JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+        {
+            Converters = new List<JsonConverter>
+            {
+                new MathJsonConverter(),
+                Converter.DateTimeConverter,
+                Converter.BinaryConverter,
+                Converter.GroupingConverter,
+                Converter.PocoExprConverter
+            }
+        };
         
         // Create database cache
         _databaseCache = new DatabaseCache();
@@ -144,16 +156,22 @@ public class DatabaseListView : EditorWindow
                 Debug.Log("Connected to RethinkDB");
         
                 // When entries are changed locally, push the changes to RethinkDB
-                _databaseCache.OnDataUpdateLocal += entry =>
+                _databaseCache.OnDataUpdateLocal += async entry =>
                 {
-                    Debug.Log($"Uploading entry to RethinkDB: {entry.ID}");
-                    R.Db("Aetheria").Table("Items").Replace(entry).RunAsync(_connection);
+                    var result = await R.Db("Aetheria").Table("Items").Update(entry).RunAsync(_connection);
+                    Debug.Log($"Uploaded entry to RethinkDB: {entry.ID} result: {result}");
+                };
+                
+                _databaseCache.OnDataInsertLocal += async entry =>
+                {
+                    var result = await R.Db("Aetheria").Table("Items").Insert(entry).RunAsync(_connection);
+                    Debug.Log($"Inserted entry to RethinkDB: {entry.ID} result: {result}");
                 };
 
-                _databaseCache.OnDataDeleteLocal += entry =>
+                _databaseCache.OnDataDeleteLocal += async entry =>
                 {
-                    Debug.Log($"Deleting entry from RethinkDB: {entry.ID}");
-                    R.Db("Aetheria").Table("Items").Get(entry).Delete().RunAsync(_connection);
+                    var result = await R.Db("Aetheria").Table("Items").Get(entry.ID).Delete().RunAsync(_connection);
+                    Debug.Log($"Deleted entry from RethinkDB: {entry.ID} result: {result}");
                 };
         
                 // Get all item data from RethinkDB
@@ -176,9 +194,13 @@ public class DatabaseListView : EditorWindow
                     while (await result.MoveNextAsync())
                     {
                         var change = result.Current;
-                        var entry = change.NewValue;
-                        Debug.Log($"Received change to entry from RethinkDB: {entry.ID}");
-                        _databaseCache.Add(entry, true);
+                        if(change.OldValue == null)
+                            Debug.Log($"Received change from RethinkDB (Entry Created): {change.NewValue.ID}");
+                        else if(change.NewValue == null)
+                            Debug.Log($"Received change from RethinkDB (Entry Deleted): {change.OldValue.ID}");
+                        else
+                            Debug.Log($"Received change from RethinkDB: {change.NewValue.ID}");
+                        _databaseCache.Add(change.NewValue, true);
                     }
                 }).WrapErrors();
             }

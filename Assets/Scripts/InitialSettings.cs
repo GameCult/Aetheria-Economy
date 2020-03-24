@@ -11,8 +11,7 @@ namespace Assets.Scripts
         {
             // NOTE: Currently, CompositeResolver doesn't work on Unity IL2CPP build. Use StaticCompositeResolver instead of it.
             StaticCompositeResolver.Instance.Register(
-                MagicOnion.Resolvers.MagicOnionResolver.Instance,
-                MessagePack.Resolvers.GeneratedResolver.Instance,
+                MathResolver.Instance,
                 BuiltinResolver.Instance,
                 PrimitiveObjectResolver.Instance
             );

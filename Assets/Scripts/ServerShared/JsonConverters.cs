@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Unity.Mathematics;
-using UnityEngine;
 using static Unity.Mathematics.math;
 
 public class MathJsonConverter : JsonConverter
 {
-
     private readonly Dictionary<Type, Action<JsonWriter, object>> _writers;
     private readonly Dictionary<Type, Func<JArray, object>> _readers;
 

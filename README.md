@@ -11,7 +11,7 @@ Once we have built a persistent universe with a dynamic economy, we will begin r
 
 ## Architecture
 
-There are two solutions in this repository. One is a Unity project containing the desktop client for Aetheria, and the other is a .NET Core server application intended to run on Linux cloud servers. There is some code shared between them, located at [Assets/Scripts/ServerShared](Assets/Scripts/ServerShared), defining a common protocol and data serialization format. Client-Server communication is implemented using [MagicOnion](https://github.com/Cysharp/MagicOnion), an RPC framework that transmits [MessagePack](https://github.com/neuecc/MessagePack-CSharp) over the wire.
+There are two solutions in this repository. One is a Unity project containing the desktop client for Aetheria, and the other is a .NET Core server application intended to run on Linux cloud servers. There is some code shared between them, located at [Assets/Scripts/ServerShared](Assets/Scripts/ServerShared), defining a common protocol and data serialization format. Client-Server communication is implemented using [LiteNetLib](https://github.com/RevenantX/LiteNetLib), a reliable UDP transport library which we use to transmit [MessagePack](https://github.com/neuecc/MessagePack-CSharp) over the wire.
 
 Aetheria uses [RethinkDB](https://rethinkdb.com/) for data persistence. To make this possible, all persistent data is marked with attributes for both MessagePack and [JSON.Net](https://www.newtonsoft.com/json) serialization. During operation, the client does not communicate with the database server directly, only the game server does that; the game server caches data relevant to the game and sends it to the clients.
 

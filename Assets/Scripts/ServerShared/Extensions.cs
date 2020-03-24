@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using LiteNetLib;
 using MessagePack;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
@@ -38,6 +39,10 @@ public static class Extensions
         return Quality[item];
     }
 
+    public static void Send<T>(this NetPeer peer, T message, DeliveryMethod method = DeliveryMethod.ReliableOrdered) where T : Message
+    {
+        peer.Send(MessagePackSerializer.Serialize(message as Message), method);
+    }
 
     public static float Performance(this EquippableItemData itemData, float temperature)
     {

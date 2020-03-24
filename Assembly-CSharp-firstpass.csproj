@@ -312,12 +312,6 @@
     <Reference Include="Grpc.Core.Api">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
     </Reference>
-    <Reference Include="RethinkDb.Driver">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/RethinkDb.Driver.dll</HintPath>
-    </Reference>
-    <Reference Include="RethinkDb.Driver.Linq">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/RethinkDb.Driver.Linq.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -686,18 +680,6 @@
     <ProjectReference Include="Economy.Shared.Unity.csproj">
       <Project>{A62B36C2-E9DE-B992-0779-F5FCF5968986}</Project>
       <Name>Economy.Shared.Unity</Name>
-    </ProjectReference>
-    <ProjectReference Include="MagicOnion.csproj">
-      <Project>{8646472B-6F4E-DCCA-A987-99E48366FF7F}</Project>
-      <Name>MagicOnion</Name>
-    </ProjectReference>
-    <ProjectReference Include="MagicOnion.Unity.csproj">
-      <Project>{B83AC090-25E2-7BA3-4612-A18BBB80B3E6}</Project>
-      <Name>MagicOnion.Unity</Name>
-    </ProjectReference>
-    <ProjectReference Include="MagicOnion.Abstractions.csproj">
-      <Project>{7A90811F-E771-FAB4-C8B5-EA6DF36C4D19}</Project>
-      <Name>MagicOnion.Abstractions</Name>
     </ProjectReference>
     <ProjectReference Include="MessagePack.csproj">
       <Project>{21EF11C5-27DC-3D88-B027-9A4B6F36BAE4}</Project>

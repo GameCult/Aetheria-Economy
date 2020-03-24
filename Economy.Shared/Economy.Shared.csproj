@@ -10,18 +10,19 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<PackageReference Include="MagicOnion.Abstractions" Version="3.0.0" />
-		<PackageReference Include="MagicOnion.MSBuild.Tasks" Version="3.0.0" PrivateAssets="All" />
+		<PackageReference Include="MessagePack" Version="2.1.90" />
 		<PackageReference Include="MessagePack.MSBuild.Tasks" Version="2.0.323" PrivateAssets="All" />
+		<PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0-preview.1.20120.4" />
 		<PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+		<PackageReference Include="Remotion.Linq" Version="2.2.0" />
 	</ItemGroup>
 
-	<Target Name="GenerateMessagePack" AfterTargets="Compile">
-		<MessagePackGenerator Input=".\Economy.Shared.csproj" Output="..\Assets\Scripts\Generated\MessagePack.Generated.cs" />
-	</Target>
-	
-	<Target Name="GenerateMagicOnion" AfterTargets="Compile">
-		<MagicOnionGenerator Input=".\Economy.Shared.csproj" Output="..\Assets\Scripts\Generated\MagicOnion.Generated.cs" />
-	</Target>
+<!--	<Target Name="GenerateMessagePack" AfterTargets="Compile">-->
+<!--		<MessagePackGenerator -->
+<!--				Input=".\Economy.Shared.csproj" -->
+<!--				Output="..\Assets\Scripts\Generated\MessagePack.Generated.cs"-->
+<!--				ResolverName="MathResolver"-->
+<!--		/>-->
+<!--	</Target>-->
 
 </Project>

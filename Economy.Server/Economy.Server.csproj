@@ -6,8 +6,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MagicOnion.Hosting" Version="3.0.9" />
-      <PackageReference Include="RethinkDb.Driver.Linq" Version="2.3.150" />
+      <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.1.3" />
+      <PackageReference Include="MessagePack" Version="2.1.90" />
+      <PackageReference Include="System.Reactive.Linq" Version="4.3.2" />
     </ItemGroup>
 
     <ItemGroup>
