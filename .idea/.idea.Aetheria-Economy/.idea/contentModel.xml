@@ -46,6 +46,7 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
+          <e p="BackgroundRenderer.cs" t="Include" />
           <e p="CultClient.cs" t="Include" />
           <e p="Editor" t="Include">
             <e p="DatabaseInspector.cs" t="Include" />
@@ -1089,21 +1090,22 @@
             <e p="ZoneGenerator.cs" t="Include" />
           </e>
           <e p="Switch_state.cs" t="Include" />
+          <e p="TabActivator.cs" t="Include" />
+          <e p="TabButton.cs" t="Include" />
+          <e p="TabGroup.cs" t="Include" />
           <e p="Targetable.cs" t="Include" />
           <e p="UnityExtensions.cs" t="Include" />
           <e p="UnityFormatters.cs" t="Include" />
           <e p="ZoneRenderer.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
+          <e p="Background.shader" t="Include" />
           <e p="CubicPulseBrush.shader" t="Include" />
           <e p="GalaxyMap.shader" t="Include" />
           <e p="Isolines.shader" t="Include" />
           <e p="PowerBrush.shader" t="Include" />
           <e p="SimplexBrush.shader" t="Include" />
         </e>
-        <e p="TabActivator.cs" t="Include" />
-        <e p="TabButton.cs" t="Include" />
-        <e p="TabGroup.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Fonts" t="Include">
             <e p="LiberationSans - OFL.txt" t="Include" />
