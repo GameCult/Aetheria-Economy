@@ -57,14 +57,18 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Distortion: 0.5
+    - Gain: 0.1
+    - Gather: -1
+    - GatherWavelength: 2
     - NoiseAmplitude: 0.5
-    - NoiseFrequency: 0.3
-    - NoiseGain: 0.6
-    - NoiseLacunarity: 2.5
-    - NoiseOffset: 0.35
+    - NoiseFrequency: 0.2
+    - NoiseGain: 0.66
+    - NoiseLacunarity: 2.25
+    - NoiseOffset: 0.5
     - NoisePosition: 0
-    - Parallax: -0.2
-    - ScrollSpeed: 2
+    - Parallax: -0.1
+    - ParallaxLacunarity: 2
+    - ScrollSpeed: 1
     - Speed: 5
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -86,7 +90,7 @@ Material:
     m_Colors:
     - ParallaxDirection: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Color1: {r: 0, g: 0.12804878, b: 0.25, a: 1}
-    - _Color2: {r: 0.15, g: 0, b: 0.0077922107, a: 1}
-    - _Color3: {r: 0, g: 0.05, b: 0.028846158, a: 1}
+    - _Color1: {r: 0, g: 0.2587719, b: 0.5, a: 1}
+    - _Color2: {r: 0.252, g: 0.057832334, b: 0.0141119985, a: 1}
+    - _Color3: {r: 0.008918005, g: 0.091000006, b: 0.053115997, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
