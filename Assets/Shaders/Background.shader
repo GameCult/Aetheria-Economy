@@ -14,9 +14,12 @@
 		Speed("Speed", Float) = 1
 		ScrollSpeed("ScrollSpeed", Float) = 1
 		Distortion("Distortion", Float) = 1
+		ParallaxLacunarity("ParallaxLacunarity", Float) = 2
 		ParallaxDirection("ParallaxDirection", Vector) = (0,0,0,0)
 		Parallax("Parallax", Float) = 1
-		
+		Gather("Gather", Float) = 1
+		Gain("Gain", Float) = 1
+		GatherWavelength("GatherWavelength", Float) = 1
     }
     SubShader
     {
@@ -59,8 +62,12 @@
 	        float Speed;
 	        float ScrollSpeed;
 	        float Distortion;
+	        float ParallaxLacunarity;
 	        float2 ParallaxDirection;
 	        float Parallax;
+	        float Gather;
+	        float GatherWavelength;
+	        float Gain;
 
             v2f vert (appdata v)
             {
@@ -76,10 +83,10 @@
                 float freq = NoiseFrequency, amp = .5;
                 float parallax = Parallax;
                 float sum = 0;	
-                for(int i = 0; i < 4; i++) 
+                for(int i = 0; i < 6; i++) 
                 {
                     sum += snoise(p * freq + Parallax * ParallaxDirection) * amp;
-                    parallax /= NoiseLacunarity;
+                    parallax /= ParallaxLacunarity;
                     freq *= NoiseLacunarity;
                     amp *= NoiseGain;
                 }
@@ -92,10 +99,10 @@
                 float freq = NoiseFrequency, amp = .5;
                 float parallax = Parallax;
                 float2 sum = 0;	
-                for(int i = 0; i < 4; i++) 
+                for(int i = 0; i < 5; i++) 
                 {
                     sum += snoise_grad(p * freq + Parallax * ParallaxDirection) * amp;
-                    parallax /= NoiseLacunarity;
+                    parallax /= ParallaxLacunarity;
                     freq *= NoiseLacunarity;
                     amp *= NoiseGain;
                 }
@@ -118,7 +125,8 @@
                 float2 offset2 = mul(float3(fbmgrad(offsetuv1),1), rot2).xy;
                 float2 offsetuv2 = i.uv + offset2 * Distortion * .5 + float2(0,_Time.x*ScrollSpeed*.5);
                 float noise2 = abs(fbm(offsetuv1));
-                return float4(noise1*_Color1.rgb+abs(noise0-noise1)*_Color2.rgb + abs(noise0-noise2) * _Color3.rgb, 1);
+                float gather = pow(.5+snoise(offset1 * (NoiseFrequency / GatherWavelength))/2, Gather);
+                return float4((noise1*_Color1.rgb+abs(noise0-noise1)*_Color2.rgb + abs(noise0-noise2) * _Color3.rgb) * gather * Gain, 1);
             }
             ENDCG
         }

@@ -5,12 +5,14 @@
 		_MainTex ("Texture", 2D) = "white" {}
 		_Color ("Color", Color) = (.5,.5,.5,1)
 		_AngleColor ("Angle Color", Color) = (.5,.5,.5,1)
+		_DangerColor ("Danger Color", Color) = (.5,.5,.5,1)
 		_StartHeight("Start Height", Float) = 0
 		_HeightRange("Height Range", Float) = 100
 		_LineWidth("Line Width", Float) = .1
 		_LineFade("Line Fade", Float) = .1
 		_AngleWidth("Angle Width", Float) = .1
 		_AngleFade("Angle Fade", Float) = .1
+		_DangerSteepness("Danger Steepness", Float) = .1
 	}
 	SubShader
 	{
@@ -46,12 +48,14 @@
             float4 _MainTex_TexelSize;
 			float4 _Color;
 			float4 _AngleColor;
+			float4 _DangerColor;
 			float _StartHeight;
 			float _HeightRange;
 			float _LineWidth;
 			float _LineFade;
 			float _AngleWidth;
 			float _AngleFade;
+			float _DangerSteepness;
 			
 			v2f vert (appdata v)
 			{
@@ -80,13 +84,15 @@
 				
 				float planmag = length(plan);
 				
+				float dangerblend = smoothstep(0,_DangerSteepness,planmag);
+				
 				// Loop over isolines, computing a pseudo distance field for a number of height values
 				float spacing = _HeightRange / 20;
 				for (int i = 0; i < 20; i++) {
 					float isoline = abs(h - _StartHeight + (i*spacing));
 					//float2 isograd = float2(ddx(isoline), ddy(isoline));
 					//float isomag = length(isograd);
-					col += (1-smoothstep(_LineWidth * _ScreenParams.y, _LineWidth * _ScreenParams.y * _LineFade, isoline / planmag)) * _Color * blend; // Isoline
+					col += (1-smoothstep(_LineWidth * _ScreenParams.y, _LineWidth * _ScreenParams.y * _LineFade, isoline / planmag)) * lerp(_Color,_DangerColor,dangerblend) * blend; // Isoline
 				}
 				
 				float angle = atan2(plan.y,plan.x) / 3.1415926536 + 1;
@@ -104,7 +110,7 @@
 				    float isoline = abs(angle - i / 6.0);// ;
 					//float2 isograd = float2(ddx_fine(isoline), ddy_fine(isoline));
 					//float isomag = min(length(isograd),0.025); // isomag is huge over atan2 boundary so clamp it to avoid false positives
-					col += (1-smoothstep(_AngleWidth * _ScreenParams.y, _AngleWidth * _ScreenParams.y * _AngleFade, isoline / (angmag))) * _AngleColor * blend; // Isoline
+					col += (1-smoothstep(_AngleWidth * _ScreenParams.y, _AngleWidth * _ScreenParams.y * _AngleFade, isoline / (angmag))) * lerp(_AngleColor,_DangerColor,dangerblend) * blend; // Isoline
 				}
                 
                 //return float4(1,0,0,1);
