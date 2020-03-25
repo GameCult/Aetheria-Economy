@@ -63,6 +63,7 @@ Material:
     - NoiseLacunarity: 2.5
     - NoiseOffset: 0.35
     - NoisePosition: 0
+    - Parallax: -0.2
     - ScrollSpeed: 2
     - Speed: 5
     - _BumpScale: 1
@@ -83,6 +84,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
+    - ParallaxDirection: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Color1: {r: 0, g: 0.12804878, b: 0.25, a: 1}
     - _Color2: {r: 0.15, g: 0, b: 0.0077922107, a: 1}

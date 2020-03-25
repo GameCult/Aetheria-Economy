@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\DragHandler.cs" />
     <Compile Include="Assets\Scripts\BackgroundRenderer.cs" />
     <Compile Include="Assets\Scripts\CultClient.cs" />
     <Compile Include="Assets\Scripts\Galaxy.cs" />

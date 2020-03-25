@@ -14,6 +14,8 @@
 		Speed("Speed", Float) = 1
 		ScrollSpeed("ScrollSpeed", Float) = 1
 		Distortion("Distortion", Float) = 1
+		ParallaxDirection("ParallaxDirection", Vector) = (0,0,0,0)
+		Parallax("Parallax", Float) = 1
 		
     }
     SubShader
@@ -57,6 +59,8 @@
 	        float Speed;
 	        float ScrollSpeed;
 	        float Distortion;
+	        float2 ParallaxDirection;
+	        float Parallax;
 
             v2f vert (appdata v)
             {
@@ -70,10 +74,12 @@
             float fbm(float2 p)
             {
                 float freq = NoiseFrequency, amp = .5;
+                float parallax = Parallax;
                 float sum = 0;	
                 for(int i = 0; i < 4; i++) 
                 {
-                    sum += snoise(p * freq) * amp;
+                    sum += snoise(p * freq + Parallax * ParallaxDirection) * amp;
+                    parallax /= NoiseLacunarity;
                     freq *= NoiseLacunarity;
                     amp *= NoiseGain;
                 }
@@ -84,10 +90,12 @@
             float2 fbmgrad(float2 p)
             {
                 float freq = NoiseFrequency, amp = .5;
+                float parallax = Parallax;
                 float2 sum = 0;	
                 for(int i = 0; i < 4; i++) 
                 {
-                    sum += snoise_grad(p * freq) * amp;
+                    sum += snoise_grad(p * freq + Parallax * ParallaxDirection) * amp;
+                    parallax /= NoiseLacunarity;
                     freq *= NoiseLacunarity;
                     amp *= NoiseGain;
                 }

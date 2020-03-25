@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ZoneRenderer : MonoBehaviour
 {
+    public Camera FollowCamera;
     public Material BackgroundMaterial;
     public RenderTexture GravityTexture;
     public MeshRenderer GravityRenderer;
@@ -20,6 +21,7 @@ public class ZoneRenderer : MonoBehaviour
 
     private void OnPreRender()
     {
+        _camera.transform.position = FollowCamera.transform.position;
         if (Screen.width != _resX || Screen.height != _resY)
         {
             _resX = Screen.width;
