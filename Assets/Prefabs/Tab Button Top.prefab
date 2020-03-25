@@ -10,8 +10,14 @@ PrefabInstance:
     - target: {fileID: 3856099931455214244, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_Name
-      value: Tab Button
+      value: Tab Button Top
       objectReference: {fileID: 0}
+    - target: {fileID: 5084245071935710148, guid: b93e36d73a071274d8e9225e077ce92a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 95f2fb99a63015245b80380d621574fe,
+        type: 3}
     - target: {fileID: 5318229203699776728, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -117,5 +123,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 6620917632164000384, guid: b93e36d73a071274d8e9225e077ce92a,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: cb44e107d81bc9140ac00c28ab8daa41,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b93e36d73a071274d8e9225e077ce92a, type: 3}
