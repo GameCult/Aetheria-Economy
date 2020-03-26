@@ -5,6 +5,7 @@ using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 
+[RethinkTable("Galaxy")]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
 public class ZoneData : DatabaseEntry, INamedEntry
@@ -34,6 +35,7 @@ public class ZoneData : DatabaseEntry, INamedEntry
     }
 }
 
+[RethinkTable("Galaxy")]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
 public class Station : DatabaseEntry, INamedEntry
@@ -57,6 +59,9 @@ public class Station : DatabaseEntry, INamedEntry
     [JsonProperty("selling")] [Key(6)]
     public Dictionary<Guid, float> SellPrices = new Dictionary<Guid, float>();
     
+    [JsonProperty("zone")] [Key(7)]
+    public Guid Zone;
+    
     [IgnoreMember] public string EntryName
     {
         get => Name;
@@ -64,6 +69,7 @@ public class Station : DatabaseEntry, INamedEntry
     }
 }
 
+[RethinkTable("Galaxy")]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
 public class PlanetData : DatabaseEntry, INamedEntry
@@ -77,6 +83,9 @@ public class PlanetData : DatabaseEntry, INamedEntry
     [JsonProperty("mass")] [Key(3)]
     public float Mass;
     
+    [JsonProperty("zone")] [Key(4)]
+    public Guid Zone;
+    
     [IgnoreMember] public string EntryName
     {
         get => Name;
@@ -84,6 +93,7 @@ public class PlanetData : DatabaseEntry, INamedEntry
     }
 }
 
+[RethinkTable("Galaxy")]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
 public class OrbitData : DatabaseEntry
@@ -99,4 +109,7 @@ public class OrbitData : DatabaseEntry
     
     [JsonProperty("period")] [Key(4)]
     public float Period;
+    
+    [JsonProperty("zone")] [Key(5)]
+    public Guid Zone;
 }

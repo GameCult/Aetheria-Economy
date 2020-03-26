@@ -22,14 +22,14 @@ using Microsoft.Extensions.Logging;
         @"@(([0-9a-zA-Z][-\w]*[0-9a-zA-Z]*\.)+[a-zA-Z0-9]{2,17})$";
 
     private const string UsernamePattern = @"^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$";
-    private Dictionary<Type, NotAnActionCollection> _messageCallbacks = new Dictionary<Type, NotAnActionCollection>();
-    private Dictionary<long, User> _users = new Dictionary<long, User>();
-    private Dictionary<Guid, Session> _sessions = new Dictionary<Guid, Session>();
+    private readonly Dictionary<Type, NotAnActionCollection> _messageCallbacks = new Dictionary<Type, NotAnActionCollection>();
+    private readonly Dictionary<long, User> _users = new Dictionary<long, User>();
+    private readonly Dictionary<Guid, Session> _sessions = new Dictionary<Guid, Session>();
     private List<User> _readyPlayers = new List<User>();
-    public NetManager NetManager;
+    private NetManager _netManager;
     private Stopwatch _timer;
     private Random _random = new Random();
-    private DatabaseCache _database;
+    private readonly DatabaseCache _database;
     private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 
     private float Time => (float)_timer.Elapsed.TotalSeconds;
@@ -56,7 +56,7 @@ using Microsoft.Extensions.Logging;
 
     public void Stop()
     {
-        NetManager.Stop();
+        _netManager.Stop();
     }
 
     public void Start()
@@ -65,14 +65,14 @@ using Microsoft.Extensions.Logging;
         _timer.Start();
 
         EventBasedNetListener listener = new EventBasedNetListener();
-        NetManager = new NetManager(listener)
+        _netManager = new NetManager(listener)
         {
 //            UnsyncedEvents = true,
 //            MergeEnabled = true,
 //            NatPunchEnabled = true,
 //            DiscoveryEnabled = true
         };
-        NetManager.Start(3075);
+        _netManager.Start(3075);
 
         listener.NetworkErrorEvent += (point, code) => Logger.Log(LogLevel.Debug, $"{point.Address}: Error {code}");
 
@@ -123,9 +123,6 @@ using Microsoft.Extensions.Logging;
                     case RegisterMessage register when !IsValidEmail(register.Email):
                         peer.Send(new ErrorMessage {Error = "Email Invalid"});
                         return;
-                    case RegisterMessage register when 8 < register.Password.Length && register.Password.Length < 32:
-                        peer.Send(new ErrorMessage {Error = "Password Invalid"});
-                        return;
                     case RegisterMessage register:
                     {
                         peer.Send(new LoginSuccessMessage {Session = Guid.NewGuid()});
@@ -136,7 +133,7 @@ using Microsoft.Extensions.Logging;
                         {
                             ID = guid,
                             Email = register.Email,
-                            Password = Argon2.Hash(register.Password),
+                            Password = Argon2.Hash(register.Password, null, memoryCost: 16384),
                             Username = register.Name
                         };
                         _database.Add(newUserData);
@@ -151,18 +148,17 @@ using Microsoft.Extensions.Logging;
                         return;
                     case LoginMessage login:
                     {
-                        var auth = login.Email;
-
-                        var pass = login.Password;
-                        var userData = _database.GetAll<Player>().FirstOrDefault(x => x.Email == auth);
+                        var isEmail = IsValidEmail(login.Auth);
+                        var userData = _database.GetAll<Player>().FirstOrDefault(x =>
+                            (isEmail ? x.Email : x.Username) == login.Auth);
 
                         if (userData == null)
                         {
-                            peer.Send(new ErrorMessage {Error = "Email Not Found"});
+                            peer.Send(new ErrorMessage {Error = isEmail ? "Email Not Found" : "Username Not Found"});
                             return;
                         }
 
-                        if (!Argon2.Verify(userData.Password, pass))
+                        if (!Argon2.Verify(userData.Password, login.Password))
                         {
                             peer.Send(new ErrorMessage {Error = "Password Wrong"});
                             return;

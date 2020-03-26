@@ -28,8 +28,8 @@ public class PingMessage : Message
 [MessagePackObject]
 public class LoginMessage : Message
 {
-    [Key(0)] public string Email;
-    [Key(1)] public string Password;
+    [Key(0)] public string Auth;
+    [Key(1)] public byte[] Password;
 }
 
 [MessagePackObject]
@@ -37,7 +37,7 @@ public class RegisterMessage : Message
 {
     [Key(0)] public string Name;
     [Key(1)] public string Email;
-    [Key(2)] public string Password;
+    [Key(2)] public byte[] Password;
 }
 
 [MessagePackObject]

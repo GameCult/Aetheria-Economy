@@ -10,6 +10,17 @@ public class NameAttribute : Attribute
     }
 }
 
+[AttributeUsage(AttributeTargets.Class)]
+public class RethinkTableAttribute : Attribute
+{
+    public string TableName;
+
+    public RethinkTableAttribute(string tableName)
+    {
+        TableName = tableName;
+    }
+}
+
 public class UpdateOrderAttribute : Attribute
 {
     public int Order;

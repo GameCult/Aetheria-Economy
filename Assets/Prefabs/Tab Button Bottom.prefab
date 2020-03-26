@@ -340,8 +340,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 4
-    m_Right: 4
+    m_Left: 0
+    m_Right: 0
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
@@ -363,7 +363,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StateDamping: 10
-  Tab: {fileID: 0}
   Fill: {fileID: 6620917632164000384}
   Outline: {fileID: 5084245071935710148}
   Label: {fileID: 4750078953547169287}
@@ -385,6 +384,7 @@ MonoBehaviour:
     FillColor: {r: 0, g: 0.4180913, b: 1, a: 0.7490196}
     OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     LayoutPadding: 32
+  Tab: {fileID: 0}
 --- !u!1 &6976631978676041201
 GameObject:
   m_ObjectHideFlags: 0

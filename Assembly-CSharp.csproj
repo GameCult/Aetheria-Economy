@@ -61,8 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\DragHandler.cs" />
+    <Compile Include="Assets\LoginScreen.cs" />
     <Compile Include="Assets\Scripts\BackgroundRenderer.cs" />
     <Compile Include="Assets\Scripts\CultClient.cs" />
+    <Compile Include="Assets\Scripts\FlatButton.cs" />
     <Compile Include="Assets\Scripts\Galaxy.cs" />
     <Compile Include="Assets\Scripts\Icons.cs" />
     <Compile Include="Assets\Scripts\InitialSettings.cs" />
@@ -388,8 +390,6 @@
     <Compile Include="Assets\Scripts\Orbit.cs" />
     <Compile Include="Assets\Scripts\PropertiesPanel.cs" />
     <Compile Include="Assets\Scripts\Prototype.cs" />
-    <Compile Include="Assets\Scripts\Scr_Log_In.cs" />
-    <Compile Include="Assets\Scripts\Switch_state.cs" />
     <Compile Include="Assets\Scripts\TabActivator.cs" />
     <Compile Include="Assets\Scripts\TabButton.cs" />
     <Compile Include="Assets\Scripts\TabGroup.cs" />
@@ -397,6 +397,7 @@
     <Compile Include="Assets\Scripts\UnityExtensions.cs" />
     <Compile Include="Assets\Scripts\UnityFormatters.cs" />
     <Compile Include="Assets\Scripts\ZoneRenderer.cs" />
+    <None Include="Assets\Shaders\AdditiveUI.shader" />
     <None Include="Assets\Shaders\Background.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />

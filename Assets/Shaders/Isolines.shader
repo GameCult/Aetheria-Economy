@@ -84,7 +84,7 @@
 				
 				float planmag = length(plan);
 				
-				float dangerblend = smoothstep(0,_DangerSteepness,planmag);
+				float dangerblend = smoothstep(0,_DangerSteepness * 600, planmag * _ScreenParams.y);
 				
 				// Loop over isolines, computing a pseudo distance field for a number of height values
 				float spacing = _HeightRange / 20;
@@ -102,7 +102,7 @@
 				float2 plan2 = calcGrad(plan2uv, -tex2D(_MainTex, plan2uv).r);
 				float angle2 = atan2(plan2.y,plan2.x) / 3.1415926536 + 1;
 				float angmag = abs(angle-angle2);
-				angmag = min(angmag,0.05);
+				angmag = min(angmag,0.025);
 				//angmag = clamp(angmag,0.005,0.05);
 				
 				// Loop over isoangles

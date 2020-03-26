@@ -19,12 +19,12 @@ public class TabGroup : MonoBehaviour
             {
                 if (_currentButton != null)
                 {
-                    _currentButton.CurrentState = TabButtonState.Unselected;
+                    _currentButton.CurrentState = FlatButtonState.Unselected;
                     _currentButton.Tab.gameObject.SetActive(false);
                 }
 
                 _currentButton = thisButton;
-                _currentButton.CurrentState = TabButtonState.Selected;
+                _currentButton.CurrentState = FlatButtonState.Selected;
                 _currentButton.Tab.gameObject.SetActive(true);
                 OnTabChange?.Invoke(_currentButton);
             };

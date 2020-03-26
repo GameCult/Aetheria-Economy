@@ -45,6 +45,7 @@ public abstract class DatabaseEntry
     [IgnoreMember] public GameContext Context { get; set; }
 }
 
+[RethinkTable("Users")]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
 public class Player : DatabaseEntry, INamedEntry
@@ -58,8 +59,8 @@ public class Player : DatabaseEntry, INamedEntry
     [JsonProperty("username")] [Key(3)]
     public string Username;
     
-    [JsonProperty("salt")] [Key(4)]
-    public string Salt;
+    [JsonProperty("corporation")] [Key(4)]
+    public Guid Corporation;
     
     [IgnoreMember] public string EntryName
     {
@@ -68,6 +69,7 @@ public class Player : DatabaseEntry, INamedEntry
     }
 }
 
+[RethinkTable("Galaxy")]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
 public class Corporation : DatabaseEntry, INamedEntry
