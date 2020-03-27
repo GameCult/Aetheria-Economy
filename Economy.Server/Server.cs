@@ -100,8 +100,9 @@ using Microsoft.Extensions.Logging;
 
         listener.NetworkReceiveEvent += (peer, reader, method) =>
         {
-            var message = MessagePackSerializer.Deserialize<Message>(reader.RawData);
-            Logger.Log(LogLevel.Debug, $"Received message: {MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(reader.RawData))}");
+            var bytes = reader.GetRemainingBytes();
+            var message = MessagePackSerializer.Deserialize<Message>(bytes);
+            Logger.Log(LogLevel.Debug, $"Received message: {MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(bytes))}");
             message.Peer = peer;
             var user = _users[peer.Id];
             Guid guid;
@@ -180,14 +181,12 @@ using Microsoft.Extensions.Logging;
                     if (_messageCallbacks.ContainsKey(type))
                         typeof(ActionCollection<>).MakeGenericType(new[] {type}).GetMethod("Invoke")
                             .Invoke(_messageCallbacks[type], new object[] {message});
-                    else Logger.Log(LogLevel.Warning, $"Received {type.Name} message but no one is listening for it so I'll just leave it here ¯\\_(ツ)_/¯\n{MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(reader.RawData))}");
+                    else Logger.Log(LogLevel.Warning, $"Received {type.Name} message but no one is listening for it so I'll just leave it here ¯\\_(ツ)_/¯\n{MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(bytes))}");
                     _sessions[_users[peer.Id].SessionGuid].LastUpdate = DateTime.Now;
                 }
                 else
                     peer.Send(new ErrorMessage {Error = "User Not Verified"});
             }
-            
-            Logger.LogInformation("LiteNetLib is now open to new connections. Please be gentle.");
         };
 
         AddMessageListener<ChatMessage>(message =>
@@ -210,6 +209,8 @@ using Microsoft.Extensions.Logging;
                     _sessions.Remove(s.Key);
             }
         });
+            
+        Logger.LogInformation("LiteNetLib is now open to new connections. Please be gentle.");
     }
 
     private bool IsVerified(User u) => _sessions.ContainsKey(u.SessionGuid);

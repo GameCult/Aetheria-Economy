@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using LiteNetLib;
 using MessagePack;
+using MessagePack.Resolvers;
 using UniRx;
 using UnityEngine;
 
@@ -88,6 +89,15 @@ public static class CultClient {
 
     public static void Connect(string host = "localhost", int port = 3075)
     {
+        // Set extensions to default resolver.
+        var resolver = CompositeResolver.Create(
+            MathResolver.Instance,
+            NativeGuidResolver.Instance,
+            StandardResolver.Instance
+        );
+        var options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
+        MessagePackSerializer.DefaultOptions = options;
+        
         EventBasedNetListener listener = new EventBasedNetListener();
         _client = new NetManager(listener)
         {
@@ -100,8 +110,9 @@ public static class CultClient {
         listener.NetworkErrorEvent += (point, code) => Logger($"{point.Address}: Error {code}");
         listener.NetworkReceiveEvent += (peer, reader, method) =>
         {
-            Logger($"Received message: {MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(reader.RawData))}");
-            var message = MessagePackSerializer.Deserialize<Message>(reader.RawData);
+            var bytes = reader.GetRemainingBytes();
+            Logger($"Received message: {MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(bytes))}");
+            var message = MessagePackSerializer.Deserialize<Message>(bytes);
             var type = message.GetType();
             
             if (!Verified)
@@ -123,7 +134,7 @@ public static class CultClient {
             else
                 Logger(
                     $"Received {type.Name} message but no one is listening for it so I'll just leave it here " +
-                    $"¯\\_(ツ)_/¯\n{MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(reader.RawData))}");
+                    $"¯\\_(ツ)_/¯\n{MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(bytes))}");
 
         };
         
