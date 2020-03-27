@@ -1,22 +1,35 @@
+# Aetheria
 This repository is the home of Aetheria, a sci-fi hybrid ARPG/RTS MMO about a group of corporations colonizing a hostile alien galaxy, with a satirical narrative critiquing late-stage capitalism.
-
-
 
 ## Table of Contents
 
-[toc]
+1. [Game Design](#Game Design)
+2. [Previous Work](#Previous Work)
+3. [Current Work](#Current Work)
+4. [Architecture](#Architecture)
+5. [Contributing](#Contributing)
+    - [Getting the Files](#Getting the Files)
+    - [Choosing a Task](#Choosing a Task)
+    - [Codebase Concepts](#Codebase Concepts)
+    - [Database Editor Tools](#Database Editor Tools)
+    - [Connecting to RethinkDB](#Connecting to RethinkDB)
+    - [Editing Items](#Editing Items)
+6. [Galaxy Editor](#Galaxy Editor)
+    - [Map Layer Data](#Map Layer Data)
+    - [Star Tools](#Star Tools)
+7. [Contact Us](#Contact Us)
 
-## Aetheria
 
-### Game Design
+
+## Game Design
 
 The ARPG game design document is available [here](https://docs.google.com/document/d/1iULu1WsbuQoUM3c87XkGseb1P-8R5xlruoiyg03TsSE/edit?usp=sharing), while the RTS gameplay is documented [here](https://docs.google.com/document/d/1U3uGFqQboAiFJ_Y-nUOGpyixbXUHRbc5DiCuB59GM4w/edit?usp=sharing). The goal is to essentially create two games which both take place in the same persistent universe, allowing players with vastly different preferences to struggle together for the survival of mankind. Each instance of the game lasts until the inevitable destruction of the entire population at the hands of aliens, after which the universe resets. Each loop is designed to last up to a couple of months, during which the hostility of the aliens steadily increases until the players are unable to hold back the tide.
 
-### Previous Work
+## Previous Work
 
 The concept for Aetheria goes back many years, during which I have steadily acquired my current skill with the primary objective of becoming competent enough to realize my vision. Previously I have built prototypes of the ARPG gameplay, [here's a video of the most recent one](https://www.youtube.com/watch?v=PNwVGtvefCg). While it included stations, AI opponents, multiple ships and a complex loadout system which simulates heat transfer between all of the ship's hardpoints with temperature affecting the performance of each item differently, the world was rather static and empty.
 
-### Current Work
+## Current Work
 
 As a result of lessons learned, the current focus is on the economy system, and building a client-server architecture for the networked simulation of a persistent universe. The goal is to create an RTS client, allowing players to take the role of a corporation, where they can define roles for their population, gather resources, build infrastructure, research new technology and produce items in order to make as much money as possible.
 
@@ -38,7 +51,9 @@ In order to checkout the project, you need a git client (Github's zip download w
 
 We are organizing according to an [Agile development](https://en.wikipedia.org/wiki/Agile_software_development) schedule, with the progress of each sprint being tracked on its own board in the [Github Projects tab](https://github.com/rwvens/Aetheria-Economy/projects). If you wish to take on a task from the board, please contact us to become an official contributor so that the task can be assigned to you directly. Some issues are not on the sprint schedule, those are ideal for developers who want to jump in but are shy about joining.
 
-Codebase Concepts
+### Codebase Concepts
+
+All objects stored in the database inherit from DatabaseEntry. More coming soon.
 
 ### Database Editor Tools
 
