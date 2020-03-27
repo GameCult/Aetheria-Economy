@@ -24,30 +24,14 @@
 		GlowAmount("GlowAmount", Float) = 0
 		GlowPower("GlowPower", Float) = 0
 		StarBoost("StarBoost", Float) = 0
-         
-         // required for UI.Mask
-         _StencilComp ("Stencil Comparison", Float) = 8
-         _Stencil ("Stencil ID", Float) = 0
-         _StencilOp ("Stencil Operation", Float) = 0
-         _StencilWriteMask ("Stencil Write Mask", Float) = 255
-         _StencilReadMask ("Stencil Read Mask", Float) = 255
-         _ColorMask ("Color Mask", Float) = 15
+		GalaxyAmplitude("GalaxyAmplitude", Float) = 1
 	}
 	SubShader
 	{
-		Tags { "RenderType"="Opaque" }
+	    Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" }
 		LOD 100
-		
-         // required for UI.Mask
-         Stencil
-         {
-             Ref [_Stencil]
-             Comp [_StencilComp]
-             Pass [_StencilOp] 
-             ReadMask [_StencilReadMask]
-             WriteMask [_StencilWriteMask]
-         }
-          ColorMask [_ColorMask]
+        Blend One One
+	    Cull Off Lighting Off ZWrite Off
 
 		Pass
 		{
@@ -96,6 +80,7 @@
 	        float GlowAmount;
 	        float GlowPower;
 	        float StarBoost;
+	        float GalaxyAmplitude;
 			
 			v2f vert (appdata v)
 			{
@@ -130,11 +115,11 @@
 			    float spokes = (sin(atan*Arms) + SpokeOffset) * SpokeScale;
 			    float noise = fBm(i.uv + NoisePosition.xx, 7);
 			    float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle + CoreBoostOffset, CoreBoostPower) * CoreBoost);
-			    float gal = max(shape - noise * clamp(circle,0,1), 0);
+			    float gal = max(shape - noise * clamp(circle,0,1), 0) * GalaxyAmplitude;
 			    float glow = (pow(circle,GlowPower) + GlowOffset) * GlowAmount;
 			    float stars = tex2D(_MainTex, i.uv2) * clamp(shape*StarBoost, 0, 1);
 				fixed4 col = fixed4(gal*_CloudColor.rgb + glow*_GlowColor.rgb + stars.xxx, 1);
-				return col;
+				return col; 
 			}
 			ENDCG
 		}

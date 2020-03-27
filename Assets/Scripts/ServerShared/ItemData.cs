@@ -36,6 +36,7 @@ public abstract class ItemData : DatabaseEntry, INamedEntry
     }
 }
 
+[RethinkTable("Items")]
 [Inspectable]
 [MessagePackObject]
 public class SimpleCommodityData : ItemData {}
@@ -54,6 +55,7 @@ public abstract class CraftedItemData : ItemData
     public Dictionary<Guid, int> Ingredients = new Dictionary<Guid, int>();
 }
 
+[RethinkTable("Items")]
 [Inspectable]
 [MessagePackObject]
 public class CompoundCommodityData : CraftedItemData {}
@@ -123,6 +125,7 @@ public abstract class EquippableItemData : CraftedItemData
     }
 }
 
+[RethinkTable("Items")]
 [Inspectable]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
@@ -133,6 +136,7 @@ public class GearData : EquippableItemData
     [IgnoreMember] public override HardpointType HardpointType => Hardpoint;
 }
 
+[RethinkTable("Items")]
 [Inspectable]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
@@ -165,6 +169,7 @@ public class HullData : EquippableItemData
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Hull;
 }
 
+[RethinkTable("Items")]
 [InspectableField]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
@@ -174,6 +179,7 @@ public class HardpointData
     public HardpointType Type;
 }
 
+[RethinkTable("Items")]
 [Inspectable]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
@@ -188,6 +194,7 @@ public class ShieldData : EquippableItemData
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Shield;
 }
 
+[RethinkTable("Items")]
 [Inspectable]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]

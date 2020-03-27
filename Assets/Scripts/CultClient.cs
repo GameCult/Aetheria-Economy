@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using LiteNetLib;
@@ -33,9 +34,9 @@ public static class CultClient {
                 Logger($"Sending message {MessagePackSerializer.SerializeToJson(m as Message)}");
                 _peer.Send(m as Message);
             }
-            else Logger("Cannot send message, client is not verified!");
+            else OnError?.Invoke("Cannot send, client is not verified!");
         }
-        else Logger("Cannot send message, client is not connected!");
+        else OnError?.Invoke("Cannot send, client is not connected!");
     }
 
     public static void ClearMessageListeners()
@@ -52,25 +53,37 @@ public static class CultClient {
 
     public static void Login(string auth, string password)
     {
-        if (8 < password.Length && password.Length < 32)
-            Send(new LoginMessage
-            {
-                Auth = auth,
-                Password = _hasher.ComputeHash(Encoding.UTF8.GetBytes(password))
-            });
-        else Logger("Invalid Password");
+        if (auth.Length>0)
+        {
+            if (8 <= password.Length && password.Length < 32)
+                Send(new LoginMessage
+                {
+                    Auth = auth,
+                    Password = _hasher.ComputeHash(Encoding.UTF8.GetBytes(password))
+                });
+            else OnError?.Invoke("Password Invalid: needs to be at least 8 characters");
+        }
+        else OnError?.Invoke("Email/Username Empty");
     }
 
     public static void Register(string email, string username, string password)
     {
-        if (8 < password.Length && password.Length < 32)
-            Send(new RegisterMessage
+        if (email.Length > 0)
+        {
+            if (username.Length > 0)
             {
-                Email = email,
-                Name = username,
-                Password = _hasher.ComputeHash(Encoding.UTF8.GetBytes(password))
-            });
-        else Logger("Invalid Password");
+                if (8 <= password.Length && password.Length < 32)
+                    Send(new RegisterMessage
+                    {
+                        Email = email,
+                        Name = username,
+                        Password = _hasher.ComputeHash(Encoding.UTF8.GetBytes(password))
+                    });
+                else OnError?.Invoke("Password Invalid: needs to be at least 8 characters");
+            }
+            else OnError?.Invoke("Username Empty");
+        }
+        else OnError?.Invoke("Email Empty");
     }
 
     public static void Connect(string host = "localhost", int port = 3075)

@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
 
+[RethinkTable("Galaxy")]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
 public class GlobalData : DatabaseEntry
 {
     [InspectableField] [JsonProperty("targetPersistenceDuration")] [Key(1)]
-    public float TargetPersistenceDuration;
+    public float TargetPersistenceDuration = 3;
     
     [InspectableField] [JsonProperty("heatRadiationPower")] [Key(2)]
-    public float HeatRadiationPower;
+    public float HeatRadiationPower = 1;
     
     [InspectableField] [JsonProperty("heatRadiationMultiplier")] [Key(3)]
-    public float HeatRadiationMultiplier;
+    public float HeatRadiationMultiplier = 1;
 
     [InspectableField] [JsonProperty("radiusPower")] [Key(4)]
     public float RadiusPower = 1.75f;

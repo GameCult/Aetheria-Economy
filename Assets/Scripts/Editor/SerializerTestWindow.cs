@@ -52,6 +52,8 @@ public class SerializerTestWindow : EditorWindow
             }
         };
         
+        Converter.Serializer.Converters.Add(new MathJsonConverter());
+        
         // Set extensions to default resolver.
         var resolver = CompositeResolver.Create(
             MathResolver.Instance,
@@ -60,8 +62,6 @@ public class SerializerTestWindow : EditorWindow
         );
         var options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
         MessagePackSerializer.DefaultOptions = options;
-        
-        Converter.Serializer.Converters.Add(new MathJsonConverter());
         
         if (GUILayout.Button("Print MsgPack JSON"))
             Debug.Log(MessagePackSerializer.SerializeToJson(obj, options));

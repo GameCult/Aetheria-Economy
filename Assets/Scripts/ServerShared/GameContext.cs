@@ -6,11 +6,22 @@ using static Unity.Mathematics.math;
 
 public class GameContext
 {
-    private DatabaseCache _databaseCache;
+    private DatabaseCache _cache;
     
-    public GlobalData GlobalData => _databaseCache.GetAll<GlobalData>().FirstOrDefault();
+    public GlobalData GlobalData => _cache.GetAll<GlobalData>().FirstOrDefault();
     
     private readonly Dictionary<CraftedItemData, int> Tier = new Dictionary<CraftedItemData, int>();
+
+    public GameContext(DatabaseCache cache)
+    {
+        _cache = cache;
+        var globalData = _cache.GetAll<GlobalData>().FirstOrDefault();
+        if (globalData == null)
+        {
+            globalData = new GlobalData();
+            _cache.Add(globalData);
+        }
+    }
     
     public float PlanetRadius(float mass)
     {
@@ -21,29 +32,29 @@ public class GameContext
     {
         if (Tier.ContainsKey(itemData)) return Tier[itemData];
 
-        Tier[itemData] = itemData.Ingredients.Keys.Max(ci => _databaseCache.Get<ItemData>(ci) is CraftedItemData craftableIngredient ? ItemTier(craftableIngredient) : 0);
+        Tier[itemData] = itemData.Ingredients.Keys.Max(ci => _cache.Get<ItemData>(ci) is CraftedItemData craftableIngredient ? ItemTier(craftableIngredient) : 0);
 		
         return Tier[itemData];
     }
 
     public ItemData GetData(ItemInstance item)
     {
-        return _databaseCache.Get<ItemData>(item.Data);
+        return _cache.Get<ItemData>(item.Data);
     }
 
     public SimpleCommodityData GetData(SimpleCommodity item)
     {
-        return _databaseCache.Get<SimpleCommodityData>(item.Data);
+        return _cache.Get<SimpleCommodityData>(item.Data);
     }
 
     public CraftedItemData GetData(CraftedItemInstance item)
     {
-        return _databaseCache.Get<CraftedItemData>(item.Data);
+        return _cache.Get<CraftedItemData>(item.Data);
     }
 
     public EquippableItemData GetData(Gear gear)
     {
-        return _databaseCache.Get<EquippableItemData>(gear.Data);
+        return _cache.Get<EquippableItemData>(gear.Data);
     }
 
     public float GetMass(ItemInstance item)
@@ -128,7 +139,7 @@ public class GameContext
     
     public SimpleCommodity CreateInstance(Guid data, int count)
     {
-        var item = _databaseCache.Get<SimpleCommodityData>(data);
+        var item = _cache.Get<SimpleCommodityData>(data);
         if (item != null)
             return new SimpleCommodity
             {
@@ -142,7 +153,7 @@ public class GameContext
     
     public CraftedItemInstance CreateInstance(Guid data, float quality)
     {
-        var item = _databaseCache.Get<CraftedItemData>(data);
+        var item = _cache.Get<CraftedItemData>(data);
         if (item == null)
         {
             throw new InvalidOperationException("Attempted to create crafted item instance using missing or incorrect item id");
@@ -150,7 +161,7 @@ public class GameContext
 
         var ingredients = item.Ingredients.SelectMany(ci =>
             {
-                var ingredient = _databaseCache.Get(ci.Key);
+                var ingredient = _cache.Get(ci.Key);
                 return ingredient is SimpleCommodityData
                     ? (IEnumerable<ItemInstance>) new[] {CreateInstance(ci.Key, ci.Value)}
                     : Enumerable.Range(0, ci.Value).Select(i => CreateInstance(ci.Key, quality));

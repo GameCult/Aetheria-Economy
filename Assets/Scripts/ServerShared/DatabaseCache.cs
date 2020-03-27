@@ -76,7 +76,7 @@ public class DatabaseCache
         return _types[typeof(T)].Values.Cast<T>();
     }
 
-    public void Delete(DatabaseEntry entry)
+    public void Delete(DatabaseEntry entry, bool remote = false)
     {
         _entries.Remove(entry.ID);
         foreach (var type in _types.Values)
@@ -84,6 +84,7 @@ public class DatabaseCache
             type.Remove(entry.ID);
         }
 
-        OnDataDeleteLocal?.Invoke(entry);
+        if (!remote)
+            OnDataDeleteLocal?.Invoke(entry);
     }
 }

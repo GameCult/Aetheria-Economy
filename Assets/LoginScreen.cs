@@ -18,10 +18,10 @@ public class LoginScreen : MonoBehaviour
     
     void Start()
     {
-        Error.text = "";
+        Error.text = " ";
         LoginButton.CurrentState = FlatButtonState.Selected;
         CultClient.AddMessageListener<LoginSuccessMessage>(success => SceneManager.LoadScene("Main"));
-        CultClient.AddMessageListener<ErrorMessage>(error => Error.text = error.Error);
+        CultClient.OnError += s => Error.text = s;
         RegisterButton.OnClick += _ =>
         {
             if (_registering)

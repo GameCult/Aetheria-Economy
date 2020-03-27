@@ -1,6 +1,7 @@
 using MessagePack;
 using Newtonsoft.Json;
 
+[RethinkTable("Items")]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]
 public class ReactorBehaviorData : IItemBehaviorData

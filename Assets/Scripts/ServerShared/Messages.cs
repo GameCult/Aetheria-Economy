@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using LiteNetLib;
 using MessagePack;
+using Unity.Mathematics;
 
 [Union(0,typeof(PingMessage))]
 [Union(1,typeof(LoginMessage))]
@@ -75,4 +76,35 @@ public class ChatBroadcastMessage : Message
 public class ChangeNameMessage : Message
 {
     [Key(0)] public string Name;
+}
+
+[MessagePackObject]
+public class GalaxyRequestMessage : Message { }
+
+[MessagePackObject]
+public class GalaxyResponseMessage : Message
+{
+    [Key(0)] public GalaxyResponseZone[] Zones;
+}
+
+[MessagePackObject]
+public class GalaxyResponseZone
+{
+    [Key(0)] public Guid ZoneID;
+    [Key(1)] public Guid[] Links;
+    [Key(2)] public string Name;
+    [Key(3)] public float2 Position;
+}
+
+[MessagePackObject]
+public class ZoneRequestMessage : Message
+{
+    [Key(0)] public Guid ZoneID;
+}
+
+[MessagePackObject]
+public class ZoneResponseMessage : Message
+{
+    [Key(0)] public ZoneData Zone;
+    [Key(1)] public DatabaseEntry[] Contents;
 }

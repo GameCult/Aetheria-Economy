@@ -2,6 +2,7 @@
 using MessagePack;
 using Newtonsoft.Json;
 
+[RethinkTable("Items")]
 [InspectableField]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]

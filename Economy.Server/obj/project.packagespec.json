@@ -41,6 +41,18 @@
           "target": "Package",
           "version": "[2.1.90, )"
         },
+        "Microsoft.Extensions.Logging.Console": {
+          "target": "Package",
+          "version": "[5.0.0-preview.1.20120.4, )"
+        },
+        "Serilog.Extensions.Logging": {
+          "target": "Package",
+          "version": "[3.0.2-dev-10272, )"
+        },
+        "Serilog.Sinks.File": {
+          "target": "Package",
+          "version": "[5.0.0-dev-00864, )"
+        },
         "System.Reactive.Linq": {
           "target": "Package",
           "version": "[4.3.2, )"

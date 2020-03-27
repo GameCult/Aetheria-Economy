@@ -1108,6 +1108,7 @@
           <e p="PowerBrush.shader" t="Include" />
           <e p="SimplexBrush.shader" t="Include" />
         </e>
+        <e p="StrategyGameManager.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Fonts" t="Include">
             <e p="LiberationSans - OFL.txt" t="Include" />

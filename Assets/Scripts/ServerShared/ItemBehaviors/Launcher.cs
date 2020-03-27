@@ -4,6 +4,7 @@ using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 
+[RethinkTable("Items")]
 [InspectableField]
 [MessagePackObject]
 [JsonObject(MemberSerialization.OptIn)]

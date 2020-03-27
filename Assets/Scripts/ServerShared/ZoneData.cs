@@ -99,7 +99,7 @@ public class PlanetData : DatabaseEntry, INamedEntry
 public class OrbitData : DatabaseEntry
 {
     [JsonProperty("parent")] [Key(1)]
-    public Guid Parent;
+    public Guid? Parent;
     
     [JsonProperty("distance")] [Key(2)]
     public float Distance;

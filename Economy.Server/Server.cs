@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
  public class MasterServer
  {
-     public ILogger Logger = null;
+    public ILogger Logger = null;
     
     private const string EmailPattern =
         @"^([0-9a-zA-Z]" + //Start with a digit or alphabetical
@@ -160,7 +160,7 @@ using Microsoft.Extensions.Logging;
 
                         if (!Argon2.Verify(userData.Password, login.Password))
                         {
-                            peer.Send(new ErrorMessage {Error = "Password Wrong"});
+                            peer.Send(new ErrorMessage {Error = "Password Incorrect"});
                             return;
                         }
 
