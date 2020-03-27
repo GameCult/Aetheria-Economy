@@ -1,6 +1,8 @@
 # Aetheria
 This repository is the home of Aetheria, a sci-fi hybrid ARPG/RTS MMO about a group of corporations colonizing a hostile alien galaxy, with a satirical narrative critiquing late-stage capitalism.
 
+<img src="https://i.ibb.co/XxvYPfH/Unity-nr8ih-BUJ75.jpg" style="zoom:50%;" /> <img src="https://i.ibb.co/Twbwk4M/screen-3056x1720-2018-11-18-18-23-01.png" style="zoom:50%;" />
+
 ## Table of Contents
 
 1. [Game Design](#Game-Design)
