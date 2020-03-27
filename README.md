@@ -3,21 +3,21 @@ This repository is the home of Aetheria, a sci-fi hybrid ARPG/RTS MMO about a gr
 
 ## Table of Contents
 
-1. [Game Design](#Game Design)
-2. [Previous Work](#Previous Work)
-3. [Current Work](#Current Work)
+1. [Game Design](#Game-Design)
+2. [Previous Work](#Previous-Work)
+3. [Current Work](#Current-Work)
 4. [Architecture](#Architecture)
 5. [Contributing](#Contributing)
-    - [Getting the Files](#Getting the Files)
-    - [Choosing a Task](#Choosing a Task)
-    - [Codebase Concepts](#Codebase Concepts)
-    - [Database Editor Tools](#Database Editor Tools)
-    - [Connecting to RethinkDB](#Connecting to RethinkDB)
-    - [Editing Items](#Editing Items)
-6. [Galaxy Editor](#Galaxy Editor)
-    - [Map Layer Data](#Map Layer Data)
-    - [Star Tools](#Star Tools)
-7. [Contact Us](#Contact Us)
+    - [Getting the Files](#Getting-the-Files)
+    - [Choosing a Task](#Choosing-a-Task)
+    - [Codebase Concepts](#Codebase-Concepts)
+    - [Database Editor Tools](#Database-Editor-Tools)
+    - [Connecting to RethinkDB](#Connecting-to-RethinkDB)
+    - [Editing Items](#Editing-Items)
+6. [Galaxy Editor](#Galaxy-Editor)
+    - [Map Layer Data](#Map-Layer-Data)
+    - [Star Tools](#Star-Tools)
+7. [Contact Us](#Contact-Us)
 
 
 
