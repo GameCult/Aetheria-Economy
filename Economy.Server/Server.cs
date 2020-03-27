@@ -74,6 +74,8 @@ using Microsoft.Extensions.Logging;
 
         listener.NetworkErrorEvent += (point, code) => Logger.Log(LogLevel.Debug, $"{point.Address}: Error {code}");
 
+        listener.ConnectionRequestEvent += request => request.AcceptIfKey("aetheria-cc65a44d");
+
         listener.PeerConnectedEvent += peer =>
         {
             Logger.Log(LogLevel.Debug, $"User Connected: {peer.EndPoint}"); // Show peer ip
