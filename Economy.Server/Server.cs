@@ -184,6 +184,8 @@ using Microsoft.Extensions.Logging;
                 else
                     peer.Send(new ErrorMessage {Error = "User Not Verified"});
             }
+            
+            Logger.LogInformation("LiteNetLib is now open to new connections. Please be gentle.");
         };
 
         AddMessageListener<ChatMessage>(message =>
