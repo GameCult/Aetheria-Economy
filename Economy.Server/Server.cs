@@ -67,10 +67,8 @@ using Microsoft.Extensions.Logging;
         EventBasedNetListener listener = new EventBasedNetListener();
         _netManager = new NetManager(listener)
         {
-//            UnsyncedEvents = true,
-//            MergeEnabled = true,
-//            NatPunchEnabled = true,
-//            DiscoveryEnabled = true
+            UnsyncedEvents = true,
+            NatPunchEnabled = true,
         };
         _netManager.Start(3075);
 

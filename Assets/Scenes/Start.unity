@@ -1767,6 +1767,18 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &1323369352 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4451361956630297308, guid: cde91a528214ecc4081092fcad3cc981,
+    type: 3}
+  m_PrefabInstance: {fileID: 1323369348}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323369350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1557138400
 GameObject:
   m_ObjectHideFlags: 0
@@ -2189,6 +2201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoginButton: {fileID: 307958568}
   RegisterButton: {fileID: 1081417164}
+  Server: {fileID: 1323369352}
   EmailUsername: {fileID: 801471838}
   Email: {fileID: 660015790}
   Username: {fileID: 603582396}

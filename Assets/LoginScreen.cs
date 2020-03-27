@@ -8,6 +8,7 @@ public class LoginScreen : MonoBehaviour
 {
     public FlatButton LoginButton;
     public FlatButton RegisterButton;
+    public TMP_InputField Server;
     public TMP_InputField EmailUsername;
     public TMP_InputField Email;
     public TMP_InputField Username;
@@ -18,6 +19,7 @@ public class LoginScreen : MonoBehaviour
     
     void Start()
     {
+        CultClient.Connect(Server.text);
         Error.text = " ";
         LoginButton.CurrentState = FlatButtonState.Selected;
         CultClient.AddMessageListener<LoginSuccessMessage>(success => SceneManager.LoadScene("Main"));

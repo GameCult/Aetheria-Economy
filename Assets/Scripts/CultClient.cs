@@ -92,8 +92,7 @@ public static class CultClient {
         _client = new NetManager(listener)
         {
 //            UnsyncedEvents = true,
-//            MergeEnabled = true,
-//            NatPunchEnabled = true
+            NatPunchEnabled = true
         };
         _client.Start(3074);
         _peer = _client.Connect(host, port, "aetheria-cc65a44d");

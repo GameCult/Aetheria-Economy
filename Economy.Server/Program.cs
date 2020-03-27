@@ -89,9 +89,9 @@ namespace ChatApp.Server
             };
         
             // Get data from RethinkDB
-            GetTable("Items", connection, cache);
-            GetTable("Galaxy", connection, cache);
-            GetTable("Users", connection, cache);
+            await GetTable("Items", connection, cache);
+            await GetTable("Galaxy", connection, cache);
+            await GetTable("Users", connection, cache);
             
             // Subscribe to changes from RethinkDB
             SubscribeTable("Items", connection, cache);
@@ -223,19 +223,16 @@ namespace ChatApp.Server
             });
         }
 
-        private static void GetTable(string table, Connection connection, DatabaseCache cache)
+        private static async Task GetTable(string table, Connection connection, DatabaseCache cache)
         {
-            Task.Run(async () =>
+            var result = await R.Db("Aetheria").Table(table).RunCursorAsync<DatabaseEntry>(connection);
+            while (await result.MoveNextAsync())
             {
-                var result = await R.Db("Aetheria").Table(table).RunCursorAsync<DatabaseEntry>(connection);
-                while (await result.MoveNextAsync())
-                {
-                    var entry = result.Current;
-                    _logger.Log(LogLevel.Information,
-                        $"Received {table} entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
-                    cache.Add(entry, true);
-                }
-            });
+                var entry = result.Current;
+                _logger.Log(LogLevel.Information,
+                    $"Received {table} entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
+                cache.Add(entry, true);
+            }
         }
     }
 }

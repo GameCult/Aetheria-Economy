@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Galaxy Background
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: Galaxy
+  m_Shader: {fileID: 4800000, guid: 73bb08f97646de94f864b995369f37c2, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -56,7 +56,28 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Arms: 4
+    - CoreBoost: 1
+    - CoreBoostOffset: 0
+    - CoreBoostPower: 1
+    - EdgeReduction: 5
+    - GalaxyAmplitude: 0.33
+    - GlowAmount: 0.5
+    - GlowOffset: 0
+    - GlowPower: 2
+    - NoiseAmplitude: 0.25
+    - NoiseFrequency: 1
+    - NoiseGain: 1
+    - NoiseLacunarity: 2
+    - NoiseOffset: 0
+    - NoisePosition: 0
+    - SpokeOffset: 0.96
+    - SpokeScale: 1
+    - StarBoost: 0
+    - Twist: 4.54
+    - TwistPower: 2
     - _BumpScale: 1
+    - _ColorMask: 15
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -70,8 +91,15 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
+    - _CloudColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
