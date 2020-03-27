@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -66,6 +67,8 @@ public class DatabaseCache
 	
     public T Get<T>(Guid guid) where T : DatabaseEntry
     {
+        if (!_types.ContainsKey(typeof(T)))
+            return null;
         DatabaseEntry entry;
         _types[typeof(T)].TryGetValue(guid, out entry);
         return (T) entry;
@@ -73,7 +76,7 @@ public class DatabaseCache
 
     public IEnumerable<T> GetAll<T>()
     {
-        return _types[typeof(T)].Values.Cast<T>();
+        return !_types.ContainsKey(typeof(T)) ? Enumerable.Empty<T>() : _types[typeof(T)].Values.Cast<T>();
     }
 
     public void Delete(DatabaseEntry entry, bool remote = false)
