@@ -88,8 +88,8 @@
 				
 				// Loop over isolines, computing a pseudo distance field for a number of height values
 				float spacing = _HeightRange / 20;
-				for (int i = 0; i < 20; i++) {
-					float isoline = abs(h - _StartHeight + (i*spacing));
+				for (int ih = 0; ih < 20; ih++) {
+					float isoline = abs(h - _StartHeight + (ih*spacing));
 					//float2 isograd = float2(ddx(isoline), ddy(isoline));
 					//float isomag = length(isograd);
 					col += (1-smoothstep(_LineWidth * _ScreenParams.y, _LineWidth * _ScreenParams.y * _LineFade, isoline / planmag)) * lerp(_Color,_DangerColor,dangerblend) * blend; // Isoline
@@ -106,8 +106,8 @@
 				//angmag = clamp(angmag,0.005,0.05);
 				
 				// Loop over isoangles
-				for (float i = 0.5; i < 13; i++) {
-				    float isoline = abs(angle - i / 6.0);// ;
+				for (float ia = 0.5; ia < 13; ia++) {
+				    float isoline = abs(angle - ia / 6.0);// ;
 					//float2 isograd = float2(ddx_fine(isoline), ddy_fine(isoline));
 					//float isomag = min(length(isograd),0.025); // isomag is huge over atan2 boundary so clamp it to avoid false positives
 					col += (1-smoothstep(_AngleWidth * _ScreenParams.y, _AngleWidth * _ScreenParams.y * _AngleFade, isoline / (angmag))) * lerp(_AngleColor,_DangerColor,dangerblend) * blend; // Isoline

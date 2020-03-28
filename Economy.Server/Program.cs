@@ -116,7 +116,9 @@ namespace ChatApp.Server
                             Position = zd.Position,
                             ZoneID = zd.ID,
                             Links = zd.Wormholes.ToArray()
-                        }).ToArray()
+                        }).ToArray(),
+                    GlobalData = context.GlobalData,
+                    StarDensity = cache.Get<GalaxyMapLayerData>(context.GlobalData.MapLayers["StarDensity"])
                 }));
             
             server.AddMessageListener<ZoneRequestMessage>(zoneRequest =>

@@ -30,7 +30,7 @@ public class DatabaseCache
             var exists = _entries.ContainsKey(entry.ID);
             _entries[entry.ID] = entry;
             var type = entry.GetType();
-            var types = type.FindInterfaces((_, __) => true, null).Append(type);
+            var types = type.GetParentTypes();
             foreach (var t in types)
             {
                 if(!_types.ContainsKey(t))

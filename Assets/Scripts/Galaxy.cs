@@ -9,7 +9,6 @@ using JM.LinqFaster;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;
-using static NoiseFbm;
 
 [CreateAssetMenu(menuName = "Aetheria/Galaxy")]
 public class Galaxy : ScriptableObject
@@ -20,15 +19,13 @@ public class Galaxy : ScriptableObject
 [Serializable]
 public class GalaxyMapData
 {
-	public int Arms = 4;
-	public float Twist = 10;
-	public float TwistPower = 2;
+	public GlobalData GlobalData = new GlobalData() {ID = Guid.NewGuid()};
 	
 	[HideInInspector]
-	public GalaxyMapLayerData StarDensity;
+	 public GalaxyMapLayerData StarDensity;
+	 [HideInInspector]
+	 public Dictionary<string,GalaxyMapLayerData> ResourceDensities = new Dictionary<string, GalaxyMapLayerData>();
 	[HideInInspector]
-	public Dictionary<string,GalaxyMapLayerData> ResourceDensities = new Dictionary<string, GalaxyMapLayerData>();
-	//[HideInInspector]
 	public List<StarData> Stars = new List<StarData>();
 }
 
@@ -76,104 +73,6 @@ public class StarData
 {
 	public Vector2 Position;
 	public List<int> Links = new List<int>();
-}
-
-public static class NoiseFbm
-{
-	public static float fBm(float2 p, int octaves, float frequency, float offset, float amplitude, float lacunarity, float gain)
-	{
-		float freq = frequency, amp = .5f;
-		float sum = 0;	
-		for(int i = 0; i < octaves; i++) 
-		{
-			sum += snoise(p * freq) * amp;
-			freq *= lacunarity;
-			amp *= gain;
-		}
-		return (sum + offset)*amplitude;
-	}
-}
-
-[Serializable]
-public class GalaxyMapLayerData
-{
-	public float CoreBoost = 1.05f;
-	public float CoreBoostOffset = .1f;
-	public float CoreBoostPower = 2.25f;
-	public float SpokeScale = 1;
-	public float SpokeOffset = 0;
-	public float EdgeReduction = 3;
-	public float NoiseOffset = 0;
-	public float NoiseAmplitude = 1.5f;
-	public float NoiseGain = .7f;
-	public float NoiseLacunarity = 2;
-	public int NoiseOctaves = 7;
-	public float NoiseFrequency = 1;
-	public float NoisePosition = 1337;
-
-	public float Evaluate(float2 uv, GalaxyMapData galaxy)
-	{
-		float2 offset = -float2(.5f, .5f)+uv;
-		float circle = (.5f-length(offset))*2;
-		float angle = pow(length(offset)*2,galaxy.TwistPower) * galaxy.Twist;
-		float2 twist = float2(offset.x*cos(angle) - offset.y*sin(angle), offset.x*sin(angle) + offset.y*cos(angle));
-		float atan = atan2(twist.y,twist.x);
-		float spokes = (sin(atan*galaxy.Arms) + SpokeOffset) * SpokeScale;
-		float noise = fBm(uv + float2(NoisePosition), NoiseOctaves, NoiseFrequency, NoiseOffset, NoiseAmplitude, NoiseLacunarity, NoiseGain);
-		float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle + CoreBoostOffset, CoreBoostPower) * CoreBoost);
-		float gal = max(shape - noise * saturate(circle), 0);
-
-		return gal;
-	}
-}
-
-public static class Vector2Extension {
-     
-	public static Vector2 Rotate(this Vector2 v, float degrees) {
-		float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
-		float cos = Mathf.Cos(degrees * Mathf.Deg2Rad);
-         
-		float tx = v.x;
-		float ty = v.y;
-		v.x = (cos * tx) - (sin * ty);
-		v.y = (sin * tx) + (cos * ty);
-		return v;
-	}
-}
-
-[Serializable]
-public class NameData
-{
-	public Dictionary<string, Dictionary<string, List<string>>> Names = new Dictionary<string, Dictionary<string, List<string>>>();
-
-	public void Add(string dataString)
-	{
-		//Debug.Log("Adding " + dataString);
-		var all = dataString.Split(',');
-		var name = all[0].Split(" -.".ToCharArray(),StringSplitOptions.RemoveEmptyEntries).OrderByDescending(s=>s.Length).First();
-		var region = all[1].Split('/');
-		var continent = region[0];
-		var capital = region[1];
-		if(!Names.ContainsKey(continent))
-			Names[continent] = new Dictionary<string, List<string>>();
-		if(!Names[continent].ContainsKey(capital))
-			Names[continent][capital] = new List<string>();
-		Names[continent][capital].Add(name);
-	}
-}
-
-[Serializable]
-public class ContinentData
-{
-	public string Name;
-	public List<RegionData> Regions;
-}
-
-[Serializable]
-public class RegionData
-{
-	public string Name;
-	public List<string> Towns;
 }
 
 public class VoronoiLink

@@ -13,6 +13,11 @@ using Unity.Mathematics;
 [Union(5,typeof(LoginSuccessMessage))]
 [Union(6,typeof(ChatMessage))]
 [Union(7,typeof(ChatBroadcastMessage))]
+[Union(8,typeof(ChangeNameMessage))]
+[Union(9,typeof(GalaxyRequestMessage))]
+[Union(10,typeof(GalaxyResponseMessage))]
+[Union(11,typeof(ZoneRequestMessage))]
+[Union(12,typeof(ZoneResponseMessage))]
 [MessagePackObject]
 public abstract class Message
 {
@@ -79,12 +84,17 @@ public class ChangeNameMessage : Message
 }
 
 [MessagePackObject]
-public class GalaxyRequestMessage : Message { }
+public class GalaxyRequestMessage : Message
+{
+    //[Key(0)] public int RequiredByMessagePack;
+}
 
 [MessagePackObject]
 public class GalaxyResponseMessage : Message
 {
     [Key(0)] public GalaxyResponseZone[] Zones;
+    [Key(1)] public GalaxyMapLayerData StarDensity;
+    [Key(2)] public GlobalData GlobalData;
 }
 
 [MessagePackObject]

@@ -102,7 +102,9 @@ using Microsoft.Extensions.Logging;
         {
             var bytes = reader.GetRemainingBytes();
             var message = MessagePackSerializer.Deserialize<Message>(bytes);
-            Logger.Log(LogLevel.Debug, $"Received message: {MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(bytes))}");
+            Logger.Log(LogLevel.Information, $"Received message: {MessagePackSerializer.ConvertToJson(new ReadOnlyMemory<byte>(bytes))}");
+            if (message == null)
+                return;
             message.Peer = peer;
             var user = _users[peer.Id];
             Guid guid;

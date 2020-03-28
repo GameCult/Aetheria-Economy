@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using static UnityEditor.EditorGUILayout;
 using Random = UnityEngine.Random;
+using static Unity.Mathematics.math;
 
 [CustomEditor(typeof(Galaxy))]
 public class GalaxyEditor : Editor
@@ -69,10 +70,9 @@ public class GalaxyEditor : Editor
 		}
 		
 		GUILayout.Label("Preview", EditorStyles.boldLabel);
-		_galaxyMat.SetFloat("Arms", galaxy.MapData.Arms);
-		_galaxyMat.SetFloat("Twist", galaxy.MapData.Twist);
-		_galaxyMat.SetFloat("TwistPower", galaxy.MapData.TwistPower);
-		_galaxyMat.SetFloat("Arms", galaxy.MapData.Arms);
+		_galaxyMat.SetFloat("Arms", galaxy.MapData.GlobalData.Arms);
+		_galaxyMat.SetFloat("Twist", galaxy.MapData.GlobalData.Twist);
+		_galaxyMat.SetFloat("TwistPower", galaxy.MapData.GlobalData.TwistPower);
 		_galaxyMat.SetFloat("SpokeOffset", _currentLayer.SpokeOffset);
 		_galaxyMat.SetFloat("SpokeScale", _currentLayer.SpokeScale);
 		_galaxyMat.SetFloat("CoreBoost", _currentLayer.CoreBoost);
@@ -170,9 +170,9 @@ public class GalaxyEditor : Editor
 					var accum = 0f;
 					foreach (var hp in points.Select(p=>p+Random.insideUnitCircle * ((points[0]-points[1]).magnitude/2)))
 					{
-						var den = galaxy.MapData.StarDensity.Evaluate(hp, galaxy.MapData);
+						var den = galaxy.MapData.StarDensity.Evaluate(hp, galaxy.MapData.GlobalData);
 						if(!float.IsNaN(den))
-							accum += den * Random.value;
+							accum += saturate(den) * Random.value;
 //						else
 //							Debug.Log($"Density at ({hp.x},{hp.y}) is NaN");
 						if (accum > 1 && (!stars.Any() || stars.Min(s=>(s-hp).magnitude) > _minStarDistance) )
@@ -283,6 +283,16 @@ public class GalaxyEditor : Editor
 								Wormholes = star.Links.Select(i => starIDs[galaxy.MapData.Stars[i]]).ToList()
 							}).Run(_connection);
 						}
+
+						galaxy.MapData.GlobalData.MapLayers["StarDensity"] = galaxy.MapData.StarDensity.ID = Guid.NewGuid();
+						R.Db("Aetheria").Table("Galaxy").Insert(galaxy.MapData.StarDensity).Run(_connection);
+						foreach (var kvp in galaxy.MapData.ResourceDensities)
+						{
+							galaxy.MapData.GlobalData.MapLayers[kvp.Key] = kvp.Value.ID = Guid.NewGuid();
+							R.Db("Aetheria").Table("Galaxy").Insert(kvp.Value).Run(_connection);
+						}
+						
+						R.Db("Aetheria").Table("Galaxy").Insert(galaxy.MapData.GlobalData).Run(_connection);
 					}
 					
 					EditorGUI.EndDisabledGroup();
@@ -321,6 +331,7 @@ public class GalaxyEditor : Editor
 		layer.CoreBoost = FloatField("Core Boost", layer.CoreBoost);
 		layer.CoreBoostOffset = FloatField("Core Boost Offset", layer.CoreBoostOffset);
 		layer.CoreBoostPower = FloatField("Core Boost Power", layer.CoreBoostPower);
+		layer.NoisePosition = FloatField("Noise Position", layer.NoisePosition);
 		layer.NoiseOffset = FloatField("Noise Offset", layer.NoiseOffset);
 		layer.NoiseAmplitude = FloatField("Noise Amplitude", layer.NoiseAmplitude);
 		layer.NoiseGain = FloatField("Noise Gain", layer.NoiseGain);

@@ -31,8 +31,8 @@ public class SerializerTestWindow : EditorWindow
 
     public void OnGUI()
     {
-        var obj = new ShieldData() {ID = Guid.NewGuid(), Name = "Bar" , HeatPerformanceCurve = new []{float4(0,0,0,0), float4(1,1,1,1)}} as DatabaseEntry;
-        
+        //var obj = new ShieldData() {ID = Guid.NewGuid(), Name = "Bar" , HeatPerformanceCurve = new []{float4(0,0,0,0), float4(1,1,1,1)}} as DatabaseEntry;
+        var obj = new GalaxyRequestMessage() as Message;
         // JsonSerializer serializer = new JsonSerializer();
         // serializer.Converters.Add(new MathJsonConverter());
         // serializer.Converters.Add(Converter.DateTimeConverter);

@@ -40,8 +40,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: df727952d18c6994bbee94fa8a5a4443, type: 3}
+        m_Scale: {x: 8, y: 8}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -56,25 +56,25 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Arms: 4
+    - Arms: 2
     - CoreBoost: 1
     - CoreBoostOffset: 0
-    - CoreBoostPower: 1
+    - CoreBoostPower: 1.5
     - EdgeReduction: 5
-    - GalaxyAmplitude: 0.33
+    - GalaxyAmplitude: 0.4
     - GlowAmount: 0.5
     - GlowOffset: 0
-    - GlowPower: 2
-    - NoiseAmplitude: 0.25
+    - GlowPower: 3
+    - NoiseAmplitude: 2
     - NoiseFrequency: 1
-    - NoiseGain: 1
-    - NoiseLacunarity: 2
+    - NoiseGain: 0.85
+    - NoiseLacunarity: 3
     - NoiseOffset: 0
-    - NoisePosition: 0
-    - SpokeOffset: 0.96
-    - SpokeScale: 1
-    - StarBoost: 0
-    - Twist: 4.54
+    - NoisePosition: -2.1
+    - SpokeOffset: 0.25
+    - SpokeScale: 1.75
+    - StarBoost: 2
+    - Twist: -3.5
     - TwistPower: 2
     - _BumpScale: 1
     - _ColorMask: 15
@@ -99,7 +99,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _CloudColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudColor: {r: 0.643, g: 0.7932566, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 0.94633335, g: 1, b: 0.678, a: 1}

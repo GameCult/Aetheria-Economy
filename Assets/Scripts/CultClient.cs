@@ -33,7 +33,7 @@ public static class CultClient {
             if (Verified || m is LoginMessage || m is RegisterMessage || m is VerifyMessage)
             {
                 Logger($"Sending message {MessagePackSerializer.SerializeToJson(m as Message)}");
-                _peer.Send(m as Message);
+                _peer.Send(m);
             }
             else OnError?.Invoke("Cannot send, client is not verified!");
         }

@@ -109,11 +109,12 @@
 			{
 			    float2 offset = -(.5).xx+i.uv;
 			    float circle = (.5-length(offset))*2;
+			    clip(circle);
 			    float angle = pow(length(offset)*2,TwistPower) * Twist;
 			    float2 twist = float2(offset.x*cos(angle) - offset.y*sin(angle), offset.x*sin(angle) + offset.y*cos(angle));
 			    float atan = atan2(twist.y,twist.x);
 			    float spokes = (sin(atan*Arms) + SpokeOffset) * SpokeScale;
-			    float noise = fBm(i.uv + NoisePosition.xx, 7);
+			    float noise = fBm(i.uv + NoisePosition.xx, 8);
 			    float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle + CoreBoostOffset, CoreBoostPower) * CoreBoost);
 			    float gal = max(shape - noise * clamp(circle,0,1), 0) * GalaxyAmplitude;
 			    float glow = (pow(circle,GlowPower) + GlowOffset) * GlowAmount;
