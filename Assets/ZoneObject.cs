@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class GravityObject : MonoBehaviour
+public class ZoneObject : MonoBehaviour
 {
     public MeshRenderer GravityMesh;
 

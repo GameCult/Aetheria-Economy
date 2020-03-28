@@ -368,12 +368,13 @@ MonoBehaviour:
   Label: {fileID: 4750078953547169287}
   LabelLayout: {fileID: 323497596060304149}
   CurrentState: 0
+  DisableClickWhenSelected: 1
   UnselectedAppearance:
     FillColor: {r: 0, g: 0.4180913, b: 1, a: 0.15294118}
     OutlineColor: {r: 0.20084397, g: 0.5982815, b: 0.797, a: 1}
     LayoutPadding: 32
   SelectedAppearance:
-    FillColor: {r: 0, g: 0.4180913, b: 1, a: 0.5019608}
+    FillColor: {r: 1, g: 0.44583336, b: 0.050000012, a: 0.65882355}
     OutlineColor: {r: 0.8, g: 0.9333333, b: 1, a: 1}
     LayoutPadding: 64
   HoverAppearance:

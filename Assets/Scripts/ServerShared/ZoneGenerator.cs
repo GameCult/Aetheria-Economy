@@ -39,6 +39,7 @@ public class ZoneGenerator
 		};
 
 		// There is some chance of generating a rosette or binary system
+		// Probabilities which are fixed for the entire galaxy are in GlobalData, contained in the GameContext
 		var rosette = random.NextFloat() < context.GlobalData.RosetteProbability;
 		
 		if (rosette)
@@ -115,6 +116,9 @@ public class ZoneGenerator
 	}
 }
 
+// All orbiting bodies are referred to here as "Planets"
+// This goes back to the original etymology for the word planet, which is traveler,
+// Because they were objects we observed to move in the sky instead of remaining fixed like the stars
 public class Planet
 {
 	public Random Random;
@@ -126,9 +130,10 @@ public class Planet
 	public float ChildDistanceMinimum;
 	public float ChildDistanceMaximum;
 	public bool Empty = false;
-	public List<Planet> Children = new List<Planet>();
+	public List<Planet> Children = new List<Planet>(); // Planets orbiting this one are referred to as children
 	public Planet Parent;
 
+	// Recursively gather all planets in the hierarchy
 	public IEnumerable<Planet> AllPlanets()
 	{
 		return new[]{this}.Concat(Children.SelectMany(c=>c.AllPlanets()));

@@ -21,12 +21,18 @@ public class StrategyGameManager : MonoBehaviour
     public Texture2D OrbitalSprite;
     public Texture2D SunSprite;
     public Texture2D WormholeSprite;
+    public Color SelectedColor;
+    public Color UnselectedColor;
 
     private DatabaseCache _cache;
     private GameContext _context;
     private GalaxyResponseMessage _galaxy;
     private TabButton _currentTab;
     private bool _galaxyPopulated;
+    private Guid _selectedZone;
+    private GalaxyZone _selectedGalaxyZone;
+    private ZoneResponseMessage _zone;
+    private Dictionary<Guid, ZoneObject> _zoneObjects = new Dictionary<Guid, ZoneObject>();
     
     void Start()
     {
@@ -43,6 +49,7 @@ public class StrategyGameManager : MonoBehaviour
             _galaxy = galaxy;
             if (_currentTab == GalaxyTabButton && !_galaxyPopulated)
             {
+                _context = new GameContext();
                 PopulateGalaxy();
             }
         });
@@ -79,7 +86,16 @@ public class StrategyGameManager : MonoBehaviour
             linkedZones.Add(zone.ZoneID);
             var instance = GalaxyZonePrototype.Instantiate<Transform>();
             instance.position = float3((Vector2) zone.Position - Vector2.one * .5f,0) * GalaxyScale;
-            instance.GetComponent<GalaxyZone>().Label.text = zone.Name;
+            var instanceZone = instance.GetComponent<GalaxyZone>();
+            instanceZone.Label.text = zone.Name;
+            instance.GetComponent<ClickableCollider>().OnClick += _ =>
+            {
+                if (_selectedGalaxyZone != null)
+                    _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
+                _selectedGalaxyZone = instanceZone;
+                _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
+                _selectedZone = zone.ZoneID;
+            };
             foreach (var linkedZone in zone.Links.Where(l=>!linkedZones.Contains(l)))
             {
                 var link = GalaxyZoneLinkPrototype.Instantiate<Transform>();

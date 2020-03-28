@@ -9,10 +9,13 @@ This repository is the home of Aetheria, a sci-fi hybrid ARPG/RTS MMO about a gr
 2. [Previous Work](#Previous-Work)
 3. [Current Work](#Current-Work)
 4. [Architecture](#Architecture)
+    - [Project Structure](#Project-Structure)
+    - [Third Party Libraries](#Third-Party-Libraries)
+    - [Programming Paradigms](#Programming-Paradigms)
+    - [Data Structures](#Data-Structures)
 5. [Contributing](#Contributing)
     - [Getting the Files](#Getting-the-Files)
     - [Choosing a Task](#Choosing-a-Task)
-    - [Codebase Concepts](#Codebase-Concepts)
     - [Database Editor Tools](#Database-Editor-Tools)
     - [Connecting to RethinkDB](#Connecting-to-RethinkDB)
     - [Editing Items](#Editing-Items)
@@ -26,7 +29,7 @@ This repository is the home of Aetheria, a sci-fi hybrid ARPG/RTS MMO about a gr
 
 ## Game Design
 
-The ARPG game design document is available [here](https://docs.google.com/document/d/1iULu1WsbuQoUM3c87XkGseb1P-8R5xlruoiyg03TsSE/edit?usp=sharing), while the RTS gameplay is documented [here](https://docs.google.com/document/d/1U3uGFqQboAiFJ_Y-nUOGpyixbXUHRbc5DiCuB59GM4w/edit?usp=sharing). The goal is to essentially create two games which both take place in the same persistent universe, allowing players with vastly different preferences to struggle together for the survival of mankind. Each instance of the game lasts until the inevitable destruction of the entire population at the hands of aliens, after which the universe resets. Each loop is designed to last up to a couple of months, during which the hostility of the aliens steadily increases until the players are unable to hold back the tide.
+The ARPG game design document is available [here](https://docs.google.com/document/d/1iULu1WsbuQoUM3c87XkGseb1P-8R5xlruoiyg03TsSE/edit?usp=sharing), while the RTS gameplay is documented [here](https://docs.google.com/document/d/1U3uGFqQboAiFJ_Y-nUOGpyixbXUHRbc5DiCuB59GM4w/edit?usp=sharing). There's also a document explaining how some of the shaders work [here](https://docs.google.com/document/d/1AFycvCtW6hA1jkKq1ZmYd3k6_uEWaaCqcZ4fYj4vU6A/edit?usp=sharing). The goal is to essentially create two games which both take place in the same persistent universe, allowing players with vastly different preferences to struggle together for the survival of mankind. Each instance of the game lasts until the inevitable destruction of the entire population at the hands of aliens, after which the universe resets. Each loop is designed to last up to a couple of months, during which the hostility of the aliens steadily increases until the players are unable to hold back the tide.
 
 ## Previous Work
 
@@ -40,9 +43,23 @@ Once we have built a persistent universe with a dynamic economy, we will begin r
 
 ## Architecture
 
-There are two solutions in this repository. One is a Unity project containing the desktop client for Aetheria, and the other is a .NET Core application intended to run on Linux cloud servers. There is some code shared between them, located at [Assets/Scripts/ServerShared](Assets/Scripts/ServerShared), defining a common protocol and data serialization format. Client-Server communication is implemented using [LiteNetLib](https://github.com/RevenantX/LiteNetLib), a reliable UDP transport library which we use to transmit [MessagePack](https://github.com/neuecc/MessagePack-CSharp) over the wire.
+### Project Structure
+
+There are two solutions in this repository. One is a Unity project containing the desktop client for Aetheria, and the other is a .NET Core application intended to run on Linux cloud servers. There is some code shared between them, located at [Assets/Scripts/ServerShared](Assets/Scripts/ServerShared), defining a common protocol and data serialization format.
+
+### Third Party Libraries
+
+Client-Server communication is implemented using [LiteNetLib](https://github.com/RevenantX/LiteNetLib), a reliable UDP transport library which we use to transmit [MessagePack](https://github.com/neuecc/MessagePack-CSharp) over the wire.
 
 Aetheria uses [RethinkDB](https://rethinkdb.com/) for data persistence. To make this possible, all persistent data is marked with attributes for both MessagePack and [JSON.Net](https://www.newtonsoft.com/json) serialization. During operation, the client does not communicate with the database server directly, only the game server does that; the game server caches data relevant to the game and sends it to the clients.
+
+### Programming Paradigms
+
+The codebase makes heavy use of C#'s [Language Integrated Queries (LINQ)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/), allowing for the concise representation of operations that modify or filter collections. Asynchronous stream processing is often performed using the [functional reactive programming](http://reactivex.io/) paradigm, which is achieved using [Microsoft's Reactive Extensions](https://github.com/dotnet/reactive) on the server and [Reactive Extensions for Unity](https://github.com/neuecc/UniRx). Combining Observables with LINQ allows for extremely powerful expressions of the programmer's intent.
+
+### Data Structures
+
+All of the state which is persisted to the database inherits from the DatabaseEntry class, which uses a GUID as each entry's primary key. Whenever a reference to a database entry must be held, it should be stored as a GUID and when needed, retrieved directly from the DatabaseCache held by the GameContext. References  to Database Entries *should never be stored directly!* This is because the contents of entries can be updated in realtime by the database, causing changes to be pushed to the DatabaseCache and any previously existing DatabaseEntry instances will be outdated and invalid, potentially carrying stale data.
 
 ## Contributing
 
@@ -50,13 +67,11 @@ Aetheria uses [RethinkDB](https://rethinkdb.com/) for data persistence. To make 
 
 In order to checkout the project, you need a git client (Github's zip download will not work!). You also need to have installed [Git LFS (Large File Storage)](https://git-lfs.github.com/). This is necessary because assets in gamedev projects can get rather large, and Git is essentially a text versioning system that does not by itself support that use case well.
 
+When you have synced with the repository, you can open the project using Unity. The project was created with Unity 2018.4.17f1 LTS, and while it may work with newer or older versions, that cannot be guaranteed. You can open the project by opening the root of this repository either directly with the Unity Editor, or using [Unity Hub](https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe), which will also take care of downloading the correct version of the Editor.
+
 ### Choosing a Task
 
 We are organizing according to an [Agile development](https://en.wikipedia.org/wiki/Agile_software_development) schedule, with the progress of each sprint being tracked on its own board in the [Github Projects tab](https://github.com/rwvens/Aetheria-Economy/projects). If you wish to take on a task from the board, please contact us to become an official contributor so that the task can be assigned to you directly. Some issues are not on the sprint schedule, those are ideal for developers who want to jump in but are shy about joining.
-
-### Codebase Concepts
-
-All objects stored in the database inherit from DatabaseEntry. More coming soon.
 
 ### Testing Locally
 

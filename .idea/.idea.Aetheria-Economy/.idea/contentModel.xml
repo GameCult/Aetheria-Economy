@@ -9,9 +9,10 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="ClickableCollider.cs" t="Include" />
+        <e p="ClickRaycaster.cs" t="Include" />
         <e p="DragHandler.cs" t="Include" />
         <e p="GalaxyZone.cs" t="Include" />
-        <e p="GravityObject.cs" t="Include" />
         <e p="LoginScreen.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
@@ -56,6 +57,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="BackgroundRenderer.cs" t="Include" />
+          <e p="ClickCatcher.cs" t="Include" />
           <e p="CultClient.cs" t="Include" />
           <e p="Editor" t="Include">
             <e p="DatabaseInspector.cs" t="Include" />
@@ -1144,6 +1146,7 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="ZoneObject.cs" t="Include" />
       </e>
       <e p="Economy.Shared.Unity.csproj" t="IncludeRecursive" />
       <e p="MessagePack.csproj" t="IncludeRecursive" />

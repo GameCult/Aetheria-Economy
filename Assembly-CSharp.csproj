@@ -60,11 +60,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ClickableCollider.cs" />
+    <Compile Include="Assets\ClickRaycaster.cs" />
     <Compile Include="Assets\DragHandler.cs" />
     <Compile Include="Assets\GalaxyZone.cs" />
-    <Compile Include="Assets\GravityObject.cs" />
     <Compile Include="Assets\LoginScreen.cs" />
     <Compile Include="Assets\Scripts\BackgroundRenderer.cs" />
+    <Compile Include="Assets\Scripts\ClickCatcher.cs" />
     <Compile Include="Assets\Scripts\CultClient.cs" />
     <Compile Include="Assets\Scripts\FlatButton.cs" />
     <Compile Include="Assets\Scripts\Galaxy.cs" />
@@ -400,6 +402,7 @@
     <Compile Include="Assets\Scripts\UnityFormatters.cs" />
     <Compile Include="Assets\Scripts\ZoneRenderer.cs" />
     <Compile Include="Assets\StrategyGameManager.cs" />
+    <Compile Include="Assets\ZoneObject.cs" />
     <None Include="Assets\Shaders\AdditiveUI.shader" />
     <None Include="Assets\Shaders\Background.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
