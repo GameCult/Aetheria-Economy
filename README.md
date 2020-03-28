@@ -16,6 +16,7 @@ This repository is the home of Aetheria, a sci-fi hybrid ARPG/RTS MMO about a gr
     - [Database Editor Tools](#Database-Editor-Tools)
     - [Connecting to RethinkDB](#Connecting-to-RethinkDB)
     - [Editing Items](#Editing-Items)
+    - [Testing Locally](#Testing-Locally)
 6. [Galaxy Editor](#Galaxy-Editor)
     - [Map Layer Data](#Map-Layer-Data)
     - [Star Tools](#Star-Tools)
@@ -60,6 +61,10 @@ All objects stored in the database inherit from DatabaseEntry. More coming soon.
 ### Database Editor Tools
 
 In order to facilitate the creation and maintenance of game data, there is a Unity editor utility which communicates directly with RethinkDB. You can access the tools by selecting Window/Aetheria Database Tools in Unity's menu. This will cause two windows to appear, the Database List View and the Database Inspector.
+
+### Testing Locally
+
+If midgard.gamecult.games is not currently up, you can always build and run the economy server yourself, and connect to it by typing localhost into the main menu.
 
 #### Connecting to RethinkDB
 
