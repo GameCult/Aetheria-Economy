@@ -18,5 +18,6 @@ public class DragHandler : MonoBehaviour
             Camera.transform.position -= (Vector3)((Vector2) newPosition - _previousPosition);
         }
 
+        Camera.orthographicSize *= 1 + Input.mouseScrollDelta.y * Scaling;
     }
 }

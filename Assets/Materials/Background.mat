@@ -57,8 +57,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Distortion: 0.5
-    - Gain: 0.33
-    - Gather: -0.25
+    - Gain: 0.1
+    - Gather: -0.5
     - GatherWavelength: 1
     - NoiseAmplitude: 0.5
     - NoiseFrequency: 0.2
@@ -66,7 +66,7 @@ Material:
     - NoiseLacunarity: 2.75
     - NoiseOffset: 1
     - NoisePosition: 0
-    - Parallax: 0.1
+    - Parallax: 0
     - ParallaxLacunarity: 2
     - ScrollSpeed: 1
     - Speed: 5

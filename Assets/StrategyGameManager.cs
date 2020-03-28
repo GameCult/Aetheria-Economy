@@ -24,7 +24,7 @@ public class StrategyGameManager : MonoBehaviour
 
     private DatabaseCache _cache;
     private GameContext _context;
-    private Dictionary<Guid, GalaxyResponseZone> _galaxy;
+    private GalaxyResponseMessage _galaxy;
     private TabButton _currentTab;
     private bool _galaxyPopulated;
     
@@ -33,58 +33,61 @@ public class StrategyGameManager : MonoBehaviour
         PrimaryTabGroup.OnTabChange += button =>
         {
             _currentTab = button;
-            if (button == GalaxyTabButton)
+            if (button == GalaxyTabButton && !_galaxyPopulated)
             {
-                
+                PopulateGalaxy();
             }
         };
         CultClient.AddMessageListener<GalaxyResponseMessage>(galaxy =>
         {
-            _galaxy = galaxy.Zones.ToDictionary(z=>z.ZoneID);
+            _galaxy = galaxy;
             if (_currentTab == GalaxyTabButton && !_galaxyPopulated)
             {
-                _galaxyPopulated = true;
-                
-                GalaxyBackground.transform.localScale = Vector3.one * GalaxyScale;
-                
-                var galaxyMat = GalaxyBackground.material;
-                galaxyMat.SetFloat("Arms", galaxy.GlobalData.Arms);
-                galaxyMat.SetFloat("Twist", galaxy.GlobalData.Twist);
-                galaxyMat.SetFloat("TwistPower", galaxy.GlobalData.TwistPower);
-                galaxyMat.SetFloat("SpokeOffset", galaxy.StarDensity.SpokeOffset);
-                galaxyMat.SetFloat("SpokeScale", galaxy.StarDensity.SpokeScale);
-                galaxyMat.SetFloat("CoreBoost", galaxy.StarDensity.CoreBoost);
-                galaxyMat.SetFloat("CoreBoostOffset", galaxy.StarDensity.CoreBoostOffset);
-                galaxyMat.SetFloat("CoreBoostPower", galaxy.StarDensity.CoreBoostPower);
-                galaxyMat.SetFloat("EdgeReduction", galaxy.StarDensity.EdgeReduction);
-                galaxyMat.SetFloat("NoisePosition", galaxy.StarDensity.NoisePosition);
-                galaxyMat.SetFloat("NoiseAmplitude", galaxy.StarDensity.NoiseAmplitude);
-                galaxyMat.SetFloat("NoiseOffset", galaxy.StarDensity.NoiseOffset);
-                galaxyMat.SetFloat("NoiseGain", galaxy.StarDensity.NoiseGain);
-                galaxyMat.SetFloat("NoiseLacunarity", galaxy.StarDensity.NoiseLacunarity);
-                galaxyMat.SetFloat("NoiseFrequency", galaxy.StarDensity.NoiseFrequency);
-                
-                var linkedZones = new List<Guid>();
-                foreach (var zone in galaxy.Zones)
-                {
-                    var instance = GalaxyZonePrototype.Instantiate<Transform>();
-                    instance.position = float3((Vector2) zone.Position - Vector2.one * (GalaxyScale * .5f),0) * GalaxyScale;
-                    foreach (var linkedZone in zone.Links.Where(l=>linkedZones.Contains(l)))
-                    {
-                        var link = GalaxyZoneLinkPrototype.Instantiate<Transform>();
-                        var diff = _galaxy[linkedZone].Position - zone.Position;
-                        link.position = instance.position + Vector3.forward*.1f;
-                        link.rotation = Quaternion.Euler(0,0,atan2(diff.y, diff.x) * Mathf.Rad2Deg);
-                        link.localScale = new Vector3(length(diff) * GalaxyScale, 1, 1);
-                    }
-                }
+                PopulateGalaxy();
             }
         });
         CultClient.Send(new GalaxyRequestMessage());
     }
 
-    void Update()
+    void PopulateGalaxy()
     {
+        _galaxyPopulated = true;
         
+        GalaxyBackground.transform.localScale = Vector3.one * GalaxyScale;
+        
+        var galaxyMat = GalaxyBackground.material;
+        galaxyMat.SetFloat("Arms", _galaxy.GlobalData.Arms);
+        galaxyMat.SetFloat("Twist", _galaxy.GlobalData.Twist);
+        galaxyMat.SetFloat("TwistPower", _galaxy.GlobalData.TwistPower);
+        galaxyMat.SetFloat("SpokeOffset", _galaxy.StarDensity.SpokeOffset);
+        galaxyMat.SetFloat("SpokeScale", _galaxy.StarDensity.SpokeScale);
+        galaxyMat.SetFloat("CoreBoost", _galaxy.StarDensity.CoreBoost);
+        galaxyMat.SetFloat("CoreBoostOffset", _galaxy.StarDensity.CoreBoostOffset);
+        galaxyMat.SetFloat("CoreBoostPower", _galaxy.StarDensity.CoreBoostPower);
+        galaxyMat.SetFloat("EdgeReduction", _galaxy.StarDensity.EdgeReduction);
+        galaxyMat.SetFloat("NoisePosition", _galaxy.StarDensity.NoisePosition);
+        galaxyMat.SetFloat("NoiseAmplitude", _galaxy.StarDensity.NoiseAmplitude);
+        galaxyMat.SetFloat("NoiseOffset", _galaxy.StarDensity.NoiseOffset);
+        galaxyMat.SetFloat("NoiseGain", _galaxy.StarDensity.NoiseGain);
+        galaxyMat.SetFloat("NoiseLacunarity", _galaxy.StarDensity.NoiseLacunarity);
+        galaxyMat.SetFloat("NoiseFrequency", _galaxy.StarDensity.NoiseFrequency);
+        
+        var zones = _galaxy.Zones.ToDictionary(z=>z.ZoneID);
+        var linkedZones = new List<Guid>();
+        foreach (var zone in _galaxy.Zones)
+        {
+            linkedZones.Add(zone.ZoneID);
+            var instance = GalaxyZonePrototype.Instantiate<Transform>();
+            instance.position = float3((Vector2) zone.Position - Vector2.one * .5f,0) * GalaxyScale;
+            instance.GetComponent<GalaxyZone>().Label.text = zone.Name;
+            foreach (var linkedZone in zone.Links.Where(l=>!linkedZones.Contains(l)))
+            {
+                var link = GalaxyZoneLinkPrototype.Instantiate<Transform>();
+                var diff = zones[linkedZone].Position - zone.Position;
+                link.position = instance.position + Vector3.forward*.1f;
+                link.rotation = Quaternion.Euler(0,0,atan2(diff.y, diff.x) * Mathf.Rad2Deg);
+                link.localScale = new Vector3(length(diff) * GalaxyScale, 1, 1);
+            }
+        }
     }
 }

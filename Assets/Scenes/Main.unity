@@ -10119,7 +10119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 519420031}
-  Scaling: 0
+  Scaling: -0.025
 --- !u!4 &565356062
 Transform:
   m_ObjectHideFlags: 0
@@ -10141,7 +10141,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 565356060}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f60c7818169f95468915fbca3ef4773, type: 3}
   m_Name: 
@@ -11095,7 +11095,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TabGroup: {fileID: 143833105}
-  TabButton: {fileID: 618245060}
+  TabButton: {fileID: 646091942}
 --- !u!1 &602701097
 GameObject:
   m_ObjectHideFlags: 0
@@ -21646,7 +21646,7 @@ MonoBehaviour:
   GalaxyZonePrototype: {fileID: 559120531}
   GalaxyZoneLinkPrototype: {fileID: 899487252}
   GalaxyBackground: {fileID: 1938745697}
-  GalaxyScale: 1000
+  GalaxyScale: 100
   ZoneObjectPrototype: {fileID: 1007041026}
   PlanetSprite: {fileID: 2800000, guid: 0d2acbd593b7fd349b0b26b4844733ef, type: 3}
   GasGiantSprite: {fileID: 2800000, guid: 39505115515c61f4db3c5c5397a5ba49, type: 3}

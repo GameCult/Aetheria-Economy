@@ -280,7 +280,8 @@ public class GalaxyEditor : Editor
 							{
 								ID = starIDs[star],
 								Name = starIDs[star].ToString().Substring(0, 8),
-								Wormholes = star.Links.Select(i => starIDs[galaxy.MapData.Stars[i]]).ToList()
+								Wormholes = star.Links.Select(i => starIDs[galaxy.MapData.Stars[i]]).ToList(),
+								Position = star.Position
 							}).Run(_connection);
 						}
 

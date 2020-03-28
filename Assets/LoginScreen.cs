@@ -19,13 +19,14 @@ public class LoginScreen : MonoBehaviour
     
     void Start()
     {
-        CultClient.Connect(Server.text);
         Error.text = " ";
         LoginButton.CurrentState = FlatButtonState.Selected;
         CultClient.AddMessageListener<LoginSuccessMessage>(success => SceneManager.LoadScene("Main"));
         CultClient.OnError += s => Error.text = s;
         RegisterButton.OnClick += _ =>
         {
+            if(!CultClient.Connected)
+                CultClient.Connect(Server.text);
             if (_registering)
             {
                 CultClient.Register(Email.text, Username.text, Password.text);
@@ -42,6 +43,8 @@ public class LoginScreen : MonoBehaviour
         };
         LoginButton.OnClick += _ =>
         {
+            if(!CultClient.Connected)
+                CultClient.Connect(Server.text);
             if (_registering)
             {
                 _registering = false;

@@ -94,6 +94,8 @@ public static class Extensions
             yield break;
         }
 
+        yield return type;
+
         // return all implemented or inherited interfaces
         foreach (var i in type.GetInterfaces())
         {
