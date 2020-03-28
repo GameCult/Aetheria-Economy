@@ -115,7 +115,7 @@ namespace ChatApp.Server
                             Name = zd.Name,
                             Position = zd.Position,
                             ZoneID = zd.ID,
-                            Links = zd.Wormholes.ToArray()
+                            Links = zd.Wormholes?.ToArray() ?? Array.Empty<Guid>()
                         }).ToArray(),
                     GlobalData = context.GlobalData,
                     StarDensity = cache.Get<GalaxyMapLayerData>(context.GlobalData.MapLayers["StarDensity"])
@@ -128,7 +128,7 @@ namespace ChatApp.Server
                 // Zone has not been populated, generate the contents now!
                 if (!zone.Planets.Any())
                 {
-                    var planets = ZoneGenerator.GenerateEntities(context, zone, 10000, 2000);
+                    var planets = ZoneGenerator.GenerateEntities(context, zone, 100000, 2000);
                     
                     // Create collections to map between zone generator output and database entries
                     var orbitMap = new Dictionary<Planet, OrbitData>();

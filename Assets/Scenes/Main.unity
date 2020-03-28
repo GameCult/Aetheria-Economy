@@ -21645,7 +21645,7 @@ MonoBehaviour:
   ZoneTabButton: {fileID: 618245060}
   GalaxyZonePrototype: {fileID: 559120531}
   GalaxyZoneLinkPrototype: {fileID: 899487252}
-  GalaxyBackground: {fileID: 0}
+  GalaxyBackground: {fileID: 1938745697}
   GalaxyScale: 1000
   ZoneObjectPrototype: {fileID: 1007041026}
   PlanetSprite: {fileID: 2800000, guid: 0d2acbd593b7fd349b0b26b4844733ef, type: 3}

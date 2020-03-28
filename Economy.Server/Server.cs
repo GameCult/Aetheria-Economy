@@ -107,7 +107,6 @@ using Microsoft.Extensions.Logging;
                 return;
             message.Peer = peer;
             var user = _users[peer.Id];
-            Guid guid;
             var type = message.GetType();
 
             if (type == typeof(LoginMessage) || type == typeof(RegisterMessage) || type == typeof(VerifyMessage))
@@ -118,6 +117,7 @@ using Microsoft.Extensions.Logging;
                     return;
                 }
 
+                Guid sessionGuid;
                 switch (message)
                 {
                     case RegisterMessage register when !IsValidUsername(register.Name):
@@ -128,21 +128,20 @@ using Microsoft.Extensions.Logging;
                         return;
                     case RegisterMessage register:
                     {
-                        peer.Send(new LoginSuccessMessage {Session = Guid.NewGuid()});
-
-                        guid = Guid.NewGuid();
+                        sessionGuid = Guid.NewGuid();
+                        peer.Send(new LoginSuccessMessage {Session = sessionGuid});
                     
                         var newUserData = new Player
                         {
-                            ID = guid,
+                            ID = Guid.NewGuid(),
                             Email = register.Email,
                             Password = Argon2.Hash(register.Password, null, memoryCost: 16384),
                             Username = register.Name
                         };
                         _database.Add(newUserData);
     
-                        _sessions[guid] = new Session {Data = newUserData, LastUpdate = DateTime.Now};
-                        _users[peer.Id].SessionGuid = guid;
+                        _sessions[sessionGuid] = new Session {Data = newUserData, LastUpdate = DateTime.Now};
+                        _users[peer.Id].SessionGuid = sessionGuid;
                         break;
                     }
                     case VerifyMessage verify when _sessions.ContainsKey(verify.Session):
@@ -167,11 +166,11 @@ using Microsoft.Extensions.Logging;
                             return;
                         }
 
-                        guid = Guid.NewGuid();
-                        peer.Send(new LoginSuccessMessage {Session = guid});
+                        sessionGuid = Guid.NewGuid();
+                        peer.Send(new LoginSuccessMessage {Session = sessionGuid});
 
-                        _sessions.Add(guid, new Session { Data = userData, LastUpdate = DateTime.Now });
-                        _users[peer.Id].SessionGuid = guid;
+                        _sessions.Add(sessionGuid, new Session { Data = userData, LastUpdate = DateTime.Now });
+                        _users[peer.Id].SessionGuid = sessionGuid;
                         break;
                     }
                 }
