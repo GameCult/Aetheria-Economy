@@ -60,17 +60,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ClickableCollider.cs" />
-    <Compile Include="Assets\ClickRaycaster.cs" />
-    <Compile Include="Assets\DragHandler.cs" />
-    <Compile Include="Assets\GalaxyZone.cs" />
-    <Compile Include="Assets\LoginScreen.cs" />
-    <Compile Include="Assets\Scripts\BackgroundRenderer.cs" />
-    <Compile Include="Assets\Scripts\ClickCatcher.cs" />
     <Compile Include="Assets\Scripts\CultClient.cs" />
-    <Compile Include="Assets\Scripts\FlatButton.cs" />
     <Compile Include="Assets\Scripts\Galaxy.cs" />
-    <Compile Include="Assets\Scripts\Icons.cs" />
     <Compile Include="Assets\Scripts\InitialSettings.cs" />
     <Compile Include="Assets\Scripts\MarkovNameGenerator.cs" />
     <Compile Include="Assets\Scripts\NIH\LinqFaster\Aggregate.cs" />
@@ -391,18 +382,26 @@
     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityWinRTBridge\Thread.cs" />
     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityWinRTBridge\ThreadPoolScheduler_UnityWinRT.cs" />
     <Compile Include="Assets\Scripts\NIH\XKCDColors.cs" />
-    <Compile Include="Assets\Scripts\Orbit.cs" />
-    <Compile Include="Assets\Scripts\PropertiesPanel.cs" />
     <Compile Include="Assets\Scripts\Prototype.cs" />
-    <Compile Include="Assets\Scripts\TabActivator.cs" />
-    <Compile Include="Assets\Scripts\TabButton.cs" />
-    <Compile Include="Assets\Scripts\TabGroup.cs" />
+    <Compile Include="Assets\Scripts\StrategyGameManager.cs" />
     <Compile Include="Assets\Scripts\Targetable.cs" />
+    <Compile Include="Assets\Scripts\UI\BackgroundRenderer.cs" />
+    <Compile Include="Assets\Scripts\UI\ClickableCollider.cs" />
+    <Compile Include="Assets\Scripts\UI\ClickCatcher.cs" />
+    <Compile Include="Assets\Scripts\UI\ClickRaycaster.cs" />
+    <Compile Include="Assets\Scripts\UI\DragHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\FlatButton.cs" />
+    <Compile Include="Assets\Scripts\UI\GalaxyZone.cs" />
+    <Compile Include="Assets\Scripts\UI\Icons.cs" />
+    <Compile Include="Assets\Scripts\UI\LoginScreen.cs" />
+    <Compile Include="Assets\Scripts\UI\PropertiesPanel.cs" />
+    <Compile Include="Assets\Scripts\UI\TabActivator.cs" />
+    <Compile Include="Assets\Scripts\UI\TabButton.cs" />
+    <Compile Include="Assets\Scripts\UI\TabGroup.cs" />
+    <Compile Include="Assets\Scripts\UI\ZoneObject.cs" />
+    <Compile Include="Assets\Scripts\UI\ZoneRenderer.cs" />
     <Compile Include="Assets\Scripts\UnityExtensions.cs" />
     <Compile Include="Assets\Scripts\UnityFormatters.cs" />
-    <Compile Include="Assets\Scripts\ZoneRenderer.cs" />
-    <Compile Include="Assets\StrategyGameManager.cs" />
-    <Compile Include="Assets\ZoneObject.cs" />
     <None Include="Assets\Shaders\AdditiveUI.shader" />
     <None Include="Assets\Shaders\Background.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
@@ -419,6 +418,7 @@
     <None Include="Assets\Shaders\GalaxyMap.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoiseGrad2D.cginc" />
+    <None Include="Assets\Shaders\Clouds.shader" />
     <None Include="Assets\Scripts\NIH\UniRx\ReadMe.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />

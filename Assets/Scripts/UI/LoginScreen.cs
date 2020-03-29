@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -59,5 +60,26 @@ public class LoginScreen : MonoBehaviour
                 CultClient.Login(EmailUsername.text, Password.text);
             }
         };
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.Return))
+        {
+            if (Server.isFocused)
+            {
+                if(_registering)
+                    Email.Select();
+                else EmailUsername.Select();
+            }
+            else if (EmailUsername.isFocused)
+                Password.Select();
+            else if (Email.isFocused)
+                Username.Select();
+            else if (Username.isFocused)
+                Password.Select();
+            else if (Password.isFocused && Input.GetKeyDown(KeyCode.Return))
+                (_registering ? RegisterButton : LoginButton).OnPointerClick(null);
+        }
     }
 }

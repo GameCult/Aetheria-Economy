@@ -429,7 +429,6 @@
           </e>
         </e>
       </e>
-      <e p="Assets\Scripts\ServerShared\OrbitInstance.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\Ship.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\ZoneData.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\ZoneGenerator.cs" t="Include" />

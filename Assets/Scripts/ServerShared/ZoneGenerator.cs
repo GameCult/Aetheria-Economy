@@ -159,7 +159,7 @@ public class Planet
 		var p0 = new float2(0, dist);
 		
 		// Position of second child
-		var p1 = OrbitInstance.Evaluate(1.0f / vertices) * dist;
+		var p1 = OrbitData.Evaluate(1.0f / vertices) * dist;
 		
 		// Maximum child distance is half the distance to the neighbor minus the neighbor's radius
 		var p0ChildDist = distance(p0, p1) * proportion - Context.PlanetRadius(sharedMass * (1 - proportion));
@@ -217,10 +217,13 @@ public class Planet
 			masses[i] = masses[i] / massTotal * Mass * massFraction;
 
 		// Map child distances to range between minimum and maximum
-		var oldDistances = (float[]) distances.Clone();
-		for (var i = 0; i < count; i++)
-			distances[i] = lerp(ChildDistanceMinimum, ChildDistanceMaximum,
-				(oldDistances[i] - oldDistances[0]) / (oldDistances[count - 1] - oldDistances[0])) + Context.PlanetRadius(masses[i]);
+		if (count > 1)
+		{
+			var oldDistances = (float[]) distances.Clone();
+			for (var i = 0; i < count; i++)
+				distances[i] = lerp(ChildDistanceMinimum, ChildDistanceMaximum,
+					(oldDistances[i] - oldDistances[0]) / (oldDistances[count - 1] - oldDistances[0])) + Context.PlanetRadius(masses[i]);
+		}
 		
 		for (var i = 0; i < count; i++)
 		{

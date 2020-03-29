@@ -202,14 +202,14 @@ using Microsoft.Extensions.Logging;
             _database.Add(SessionData(message.Peer));
         });
 
-        Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(30)).Subscribe(_ =>
-        {
-            foreach (var s in _sessions.ToArray())
-            {
-                if (DateTime.Now.Subtract(s.Value.LastUpdate).TotalSeconds > s.Value.DurationSeconds)
-                    _sessions.Remove(s.Key);
-            }
-        });
+        // Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(30)).Subscribe(_ =>
+        // {
+        //     foreach (var s in _sessions.ToArray())
+        //     {
+        //         if (DateTime.Now.Subtract(s.Value.LastUpdate).TotalSeconds > s.Value.DurationSeconds)
+        //             _sessions.Remove(s.Key);
+        //     }
+        // });
             
         Logger.LogInformation("LiteNetLib is now open to new connections. Please be gentle.");
     }

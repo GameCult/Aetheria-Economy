@@ -7,14 +7,12 @@ using UnityEngine.EventSystems;
 
 public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-	public bool EnableMouse => PointerIsInside && !_catching;
+	//public bool EnableMouse => PointerIsInside && !_catching;
 	public bool PointerIsInside { get; private set; }
 	
-	public PointerEnterEvent OnEnter = new PointerEnterEvent();
-	public PointerExitEvent OnExit = new PointerExitEvent();
-
-	private bool _catching;
-	private UnityEvent _catchClick;
+	public event Action<PointerEventData> OnEnter;
+	public event Action<PointerEventData> OnExit;
+	public event Action<PointerEventData> OnClick;
 
 	public static ClickCatcher Background
 	{
@@ -27,43 +25,23 @@ public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	}
 
 	private static ClickCatcher _background;
-
-	public UnityEvent Catch()
-	{
-		_catching = true;
-		_catchClick = new UnityEvent();
-		return _catchClick;
-	}
-
-	public void Release()
-	{
-		_catching = false;
-	}
 	
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		//Debug.Log("Pointer Entered");
-		OnEnter.Invoke();
+		OnEnter?.Invoke(eventData);
 		PointerIsInside = true;
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		//Debug.Log("Pointer Exited");
-		OnExit.Invoke();
+		OnExit?.Invoke(eventData);
 		PointerIsInside = false;
 	}
 
 	public void OnPointerClick(PointerEventData eventData)
 	{
-		if (!_catching) return;
-		
-		_catchClick.Invoke();
-		_catching = false;
+		OnClick?.Invoke(eventData);
 	}
-	
-	[Serializable]
-	public class PointerEnterEvent : UnityEvent { }
-	[Serializable]
-	public class PointerExitEvent : UnityEvent { }
 }

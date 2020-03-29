@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Background
-  m_Shader: {fileID: 4800000, guid: 7a1e6fc0f6159b44eacd456c2a308968, type: 3}
+  m_Shader: {fileID: 4800000, guid: 118cb8aabcab89b4fbd939f5c9b71d91, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -57,19 +57,20 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - Distortion: 0.5
+    - FadeDistance: 100
     - Gain: 0.1
     - Gather: -0.5
     - GatherWavelength: 1
-    - NoiseAmplitude: 0.5
-    - NoiseFrequency: 0.2
-    - NoiseGain: 0.66
-    - NoiseLacunarity: 2.75
-    - NoiseOffset: 1
+    - NoiseAmplitude: 0.8
+    - NoiseFrequency: 0.1
+    - NoiseGain: 0.75
+    - NoiseLacunarity: 3
+    - NoiseOffset: 0.28
     - NoisePosition: 0
-    - Parallax: 0
+    - Parallax: -0.05
     - ParallaxLacunarity: 2
     - ScrollSpeed: 1
-    - Speed: 5
+    - Speed: 2
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -88,8 +89,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - ParallaxDirection: {r: 0.3442049, g: -0.57971084, b: -10, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - ParallaxDirection: {r: 0, g: 0, b: 0, a: 0}
+    - _Color: {r: 0.07913792, g: 0.23741385, b: 0.315, a: 1}
     - _Color1: {r: 0, g: 0.2587719, b: 0.5, a: 1}
     - _Color2: {r: 0.25, g: 0.11145834, b: 0.012500003, a: 1}
     - _Color3: {r: 0.1, g: 0.099829406, b: 0.010000003, a: 1}

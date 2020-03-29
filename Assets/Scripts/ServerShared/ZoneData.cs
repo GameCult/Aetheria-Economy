@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 [RethinkTable("Galaxy")]
 [MessagePackObject]
@@ -27,6 +28,12 @@ public class ZoneData : DatabaseEntry, INamedEntry
     
     [JsonProperty("orbits")] [Key(6)]
     public List<Guid> Orbits = new List<Guid>();
+    
+    [JsonProperty("radius")] [Key(7)]
+    public float Radius = 2000;
+
+    [JsonProperty("visited")] [Key(8)]
+    public bool Visited;
     
     [IgnoreMember] public string EntryName
     {
@@ -86,6 +93,9 @@ public class PlanetData : DatabaseEntry, INamedEntry
     [JsonProperty("zone")] [Key(4)]
     public Guid Zone;
     
+    [JsonProperty("radius")] [Key(5)]
+    public float GravityRadius;
+    
     [IgnoreMember] public string EntryName
     {
         get => Name;
@@ -99,7 +109,7 @@ public class PlanetData : DatabaseEntry, INamedEntry
 public class OrbitData : DatabaseEntry
 {
     [JsonProperty("parent")] [Key(1)]
-    public Guid? Parent;
+    public Guid Parent;
     
     [JsonProperty("distance")] [Key(2)]
     public float Distance;
@@ -112,4 +122,10 @@ public class OrbitData : DatabaseEntry
     
     [JsonProperty("zone")] [Key(5)]
     public Guid Zone;
+
+    public static float2 Evaluate(float phase)
+    {
+        phase *= (PI * 2);
+        return new float2(sin(phase), cos(phase));
+    }
 }

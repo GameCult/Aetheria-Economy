@@ -435,7 +435,6 @@
     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\QueryHelper.cs" />
     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\StringHelper.cs" />
     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\TaskHelper.cs" />
-    <Compile Include="Assets\Scripts\ServerShared\OrbitInstance.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Ship.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ZoneData.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ZoneGenerator.cs" />

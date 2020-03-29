@@ -77,8 +77,22 @@ namespace ChatApp.Server
             cache.OnDataInsertLocal += async entry =>
             {
                 var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
-                var result = await R.Db("Aetheria").Table(table).Insert(entry).RunAsync(connection);
-                _logger.Log(LogLevel.Information, $"Inserted entry to RethinkDB: {entry.ID} result: {result}");
+                var inserted = false;
+                for (int i = 0; i < 5 && !inserted; i++)
+                {
+                    try
+                    {
+                        var result = await R.Db("Aetheria").Table(table).Insert(entry).RunAsync(connection);
+                        _logger.Log(LogLevel.Information, $"Inserted entry to RethinkDB: {entry.ID} result: {result}");
+                        inserted = true;
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e,e.Message);
+                    }
+                }
+                if(!inserted)
+                    _logger.LogError("Failed to insert after 5 attempts!");
             };
             
             cache.OnDataDeleteLocal += async entry =>
@@ -126,9 +140,9 @@ namespace ChatApp.Server
                 var zone = cache.Get<ZoneData>(zoneRequest.ZoneID);
                 
                 // Zone has not been populated, generate the contents now!
-                if (!zone.Planets.Any())
+                if (!zone.Visited)
                 {
-                    var planets = ZoneGenerator.GenerateEntities(context, zone, 100000, 2000);
+                    var planets = ZoneGenerator.GenerateEntities(context, zone, 100000, zone.Radius);
                     
                     // Create collections to map between zone generator output and database entries
                     var orbitMap = new Dictionary<Planet, OrbitData>();
@@ -154,7 +168,7 @@ namespace ChatApp.Server
                     foreach (var data in orbitData)
                         data.Parent = orbitInverseMap[data].Parent != null
                             ? orbitMap[orbitInverseMap[data].Parent].ID
-                            : (Guid?) null;
+                            : Guid.Empty;
                     
                     foreach (var data in orbitData) cache.Add(data);
                     
@@ -165,7 +179,8 @@ namespace ChatApp.Server
                             Mass = planet.Mass,
                             ID = Guid.NewGuid(),
                             Orbit = orbitMap[planet].ID,
-                            Zone = zone.ID
+                            Zone = zone.ID,
+                            GravityRadius = planet.ChildDistanceMaximum * 1.5f
                         };
                         planetDatum.Name = planetDatum.ID.ToString().Substring(0, 8);
                         return planetDatum;
@@ -175,6 +190,7 @@ namespace ChatApp.Server
 
                     zone.Planets = planetData.Select(pd => pd.ID).ToList();
                     zone.Orbits = orbitData.Select(od => od.ID).ToList();
+                    zone.Visited = true;
                     cache.Add(zone);
                 }
                 zoneRequest.Peer.Send(

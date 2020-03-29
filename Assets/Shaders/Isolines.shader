@@ -84,7 +84,7 @@
 				
 				float planmag = length(plan);
 				
-				float dangerblend = smoothstep(0,_DangerSteepness * 600, planmag * _ScreenParams.y);
+				float dangerblend = smoothstep(0,_DangerSteepness * 600, planmag * _ScreenParams.y / unity_OrthoParams.y);
 				
 				// Loop over isolines, computing a pseudo distance field for a number of height values
 				float spacing = _HeightRange / 20;

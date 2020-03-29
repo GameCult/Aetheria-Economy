@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Zone
-  m_Shader: {fileID: 4800000, guid: 0ec0ecdb30ff1614698ae885ebcd873d, type: 3}
+  m_Name: Background 1
+  m_Shader: {fileID: 4800000, guid: 118cb8aabcab89b4fbd939f5c9b71d91, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -56,19 +56,29 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AngleFade: 30
-    - _AngleWidth: 0.0001
+    - Distortion: 0.5
+    - FadeDistance: 100
+    - Gain: 0.1
+    - Gather: -0.5
+    - GatherWavelength: 1
+    - NoiseAmplitude: 0.7
+    - NoiseFrequency: 0.15
+    - NoiseGain: 0.75
+    - NoiseLacunarity: 3
+    - NoiseOffset: 0
+    - NoisePosition: 0
+    - Parallax: -0.05
+    - ParallaxLacunarity: 2
+    - ScrollSpeed: 1
+    - Speed: 2
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _DangerSteepness: 0.02
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _Frequency: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _HeightRange: 37.3
-    - _LineFade: 30
-    - _LineWidth: 0.0001
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -76,11 +86,12 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StartHeight: 0
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _AngleColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Color: {r: 0.1507389, g: 0.4522169, b: 0.6, a: 1}
-    - _DangerColor: {r: 1, g: 0.3473333, b: 0.020999968, a: 1}
+    - ParallaxDirection: {r: 0, g: 0, b: 0, a: 0}
+    - _Color: {r: 0.357, g: 0.15959999, b: 0.018199999, a: 1}
+    - _Color1: {r: 0, g: 0.2587719, b: 0.5, a: 1}
+    - _Color2: {r: 0.25, g: 0.11145834, b: 0.012500003, a: 1}
+    - _Color3: {r: 0.1, g: 0.099829406, b: 0.010000003, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

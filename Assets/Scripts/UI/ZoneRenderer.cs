@@ -6,7 +6,6 @@ using UnityEngine;
 public class ZoneRenderer : MonoBehaviour
 {
     public Camera FollowCamera;
-    public Material BackgroundMaterial;
     public RenderTexture GravityTexture;
     public MeshRenderer GravityRenderer;
     
@@ -26,7 +25,7 @@ public class ZoneRenderer : MonoBehaviour
         {
             _resX = Screen.width;
             _resY = Screen.height;
-            _ratio = (float) _resY / _resX;
+            _ratio = (float) _resX / _resY;
             if (GravityTexture != null)
             {
                 GravityTexture?.Release();
@@ -34,11 +33,12 @@ public class ZoneRenderer : MonoBehaviour
             GravityTexture = new RenderTexture(_resX, _resY, 0, RenderTextureFormat.RFloat);
         }
         
-        BackgroundMaterial.mainTexture = GravityTexture;
+        GravityRenderer.material.mainTexture = GravityTexture;
 
+        var size = _camera.orthographicSize = FollowCamera.orthographicSize;
+        
         GravityRenderer.transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-        var size = _camera.orthographicSize;
-        GravityRenderer.transform.localScale = new Vector3(size * 4, size * 4 * _ratio, 1);
+        GravityRenderer.transform.localScale = new Vector3(size * 2 * _ratio, size * 2, 1);
         
         _camera.targetTexture = GravityTexture;
     }

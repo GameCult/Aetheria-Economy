@@ -9,11 +9,6 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="ClickableCollider.cs" t="Include" />
-        <e p="ClickRaycaster.cs" t="Include" />
-        <e p="DragHandler.cs" t="Include" />
-        <e p="GalaxyZone.cs" t="Include" />
-        <e p="LoginScreen.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">
@@ -56,8 +51,6 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
-          <e p="BackgroundRenderer.cs" t="Include" />
-          <e p="ClickCatcher.cs" t="Include" />
           <e p="CultClient.cs" t="Include" />
           <e p="Editor" t="Include">
             <e p="DatabaseInspector.cs" t="Include" />
@@ -66,9 +59,7 @@
             <e p="GalaxyEditor.cs" t="Include" />
             <e p="SerializerTestWindow.cs" t="Include" />
           </e>
-          <e p="FlatButton.cs" t="Include" />
           <e p="Galaxy.cs" t="Include" />
-          <e p="Icons.cs" t="Include" />
           <e p="InitialSettings.cs" t="Include" />
           <e p="MarkovNameGenerator.cs" t="Include" />
           <e p="NIH" t="Include">
@@ -665,8 +656,6 @@
             </e>
             <e p="XKCDColors.cs" t="Include" />
           </e>
-          <e p="Orbit.cs" t="Include" />
-          <e p="PropertiesPanel.cs" t="Include" />
           <e p="Prototype.cs" t="Include" />
           <e p="ServerShared" t="Include">
             <e p="ActionCollection.cs" t="Include" />
@@ -1095,29 +1084,42 @@
                 </e>
               </e>
             </e>
-            <e p="OrbitInstance.cs" t="Include" />
             <e p="Ship.cs" t="Include" />
             <e p="ZoneData.cs" t="Include" />
             <e p="ZoneGenerator.cs" t="Include" />
           </e>
-          <e p="TabActivator.cs" t="Include" />
-          <e p="TabButton.cs" t="Include" />
-          <e p="TabGroup.cs" t="Include" />
+          <e p="StrategyGameManager.cs" t="Include" />
           <e p="Targetable.cs" t="Include" />
+          <e p="UI" t="Include">
+            <e p="BackgroundRenderer.cs" t="Include" />
+            <e p="ClickableCollider.cs" t="Include" />
+            <e p="ClickCatcher.cs" t="Include" />
+            <e p="ClickRaycaster.cs" t="Include" />
+            <e p="DragHandler.cs" t="Include" />
+            <e p="FlatButton.cs" t="Include" />
+            <e p="GalaxyZone.cs" t="Include" />
+            <e p="Icons.cs" t="Include" />
+            <e p="LoginScreen.cs" t="Include" />
+            <e p="PropertiesPanel.cs" t="Include" />
+            <e p="TabActivator.cs" t="Include" />
+            <e p="TabButton.cs" t="Include" />
+            <e p="TabGroup.cs" t="Include" />
+            <e p="ZoneObject.cs" t="Include" />
+            <e p="ZoneRenderer.cs" t="Include" />
+          </e>
           <e p="UnityExtensions.cs" t="Include" />
           <e p="UnityFormatters.cs" t="Include" />
-          <e p="ZoneRenderer.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
           <e p="AdditiveUI.shader" t="Include" />
           <e p="Background.shader" t="Include" />
+          <e p="Clouds.shader" t="Include" />
           <e p="CubicPulseBrush.shader" t="Include" />
           <e p="GalaxyMap.shader" t="Include" />
           <e p="Isolines.shader" t="Include" />
           <e p="PowerBrush.shader" t="Include" />
           <e p="SimplexBrush.shader" t="Include" />
         </e>
-        <e p="StrategyGameManager.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Fonts" t="Include">
             <e p="LiberationSans - OFL.txt" t="Include" />
@@ -1146,7 +1148,6 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
-        <e p="ZoneObject.cs" t="Include" />
       </e>
       <e p="Economy.Shared.Unity.csproj" t="IncludeRecursive" />
       <e p="MessagePack.csproj" t="IncludeRecursive" />
