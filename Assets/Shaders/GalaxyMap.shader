@@ -115,7 +115,7 @@
 			    float atan = atan2(twist.y,twist.x);
 			    float spokes = (sin(atan*Arms) + SpokeOffset) * SpokeScale;
 			    float noise = fBm(i.uv + NoisePosition.xx, 8);
-			    float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle + CoreBoostOffset, CoreBoostPower) * CoreBoost);
+			    float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle, CoreBoostPower) * CoreBoost + CoreBoostOffset);
 			    float gal = max(shape - noise * clamp(circle,0,1), 0) * GalaxyAmplitude;
 			    float glow = (pow(circle,GlowPower) + GlowOffset) * GlowAmount;
 			    float stars = tex2D(_MainTex, i.uv2) * clamp(shape*StarBoost, 0, 1);

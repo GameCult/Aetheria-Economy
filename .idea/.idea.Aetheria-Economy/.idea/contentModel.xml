@@ -1109,6 +1109,7 @@
           </e>
           <e p="UnityExtensions.cs" t="Include" />
           <e p="UnityFormatters.cs" t="Include" />
+          <e p="ZoneGeneratorTest.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
           <e p="AdditiveUI.shader" t="Include" />

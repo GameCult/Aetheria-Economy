@@ -10,6 +10,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;
 
+[Serializable]
 [CreateAssetMenu(menuName = "Aetheria/Galaxy")]
 public class Galaxy : ScriptableObject
 {
@@ -22,9 +23,9 @@ public class GalaxyMapData
 	public GlobalData GlobalData = new GlobalData() {ID = Guid.NewGuid()};
 	
 	[HideInInspector]
-	 public GalaxyMapLayerData StarDensity;
-	 [HideInInspector]
-	 public Dictionary<string,GalaxyMapLayerData> ResourceDensities = new Dictionary<string, GalaxyMapLayerData>();
+	public GalaxyMapLayerData StarDensity;
+	[HideInInspector]
+	public List<GalaxyMapLayerData> ResourceDensities = new List<GalaxyMapLayerData>();
 	[HideInInspector]
 	public List<StarData> Stars = new List<StarData>();
 }

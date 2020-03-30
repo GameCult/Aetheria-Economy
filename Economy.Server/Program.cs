@@ -142,55 +142,18 @@ namespace ChatApp.Server
                 // Zone has not been populated, generate the contents now!
                 if (!zone.Visited)
                 {
-                    var planets = ZoneGenerator.GenerateEntities(context, zone, 100000, zone.Radius);
-                    
-                    // Create collections to map between zone generator output and database entries
-                    var orbitMap = new Dictionary<Planet, OrbitData>();
-                    var orbitInverseMap = new Dictionary<OrbitData, Planet>();
-                    
-                    // Create orbit database entries
-                    var orbitData = planets.Select(planet =>
-                    {
-                        var data = new OrbitData()
-                        {
-                            ID = Guid.NewGuid(),
-                            Distance = planet.Distance,
-                            Period = planet.Period,
-                            Phase = planet.Phase,
-                            Zone = zone.ID
-                        };
-                        orbitMap[planet] = data;
-                        orbitInverseMap[data] = planet;
-                        return data;
-                    }).ToArray();
-
-                    // Link OrbitData parents to database GUIDs
-                    foreach (var data in orbitData)
-                        data.Parent = orbitInverseMap[data].Parent != null
-                            ? orbitMap[orbitInverseMap[data].Parent].ID
-                            : Guid.Empty;
-                    
-                    foreach (var data in orbitData) cache.Add(data);
-                    
-                    var planetData = planets.Select(planet =>
-                    {
-                        var planetDatum = new PlanetData
-                        {
-                            Mass = planet.Mass,
-                            ID = Guid.NewGuid(),
-                            Orbit = orbitMap[planet].ID,
-                            Zone = zone.ID,
-                            GravityRadius = planet.ChildDistanceMaximum * 1.5f
-                        };
-                        planetDatum.Name = planetDatum.ID.ToString().Substring(0, 8);
-                        return planetDatum;
-                    }).ToArray();
-                    
-                    foreach (var data in planetData) cache.Add(data);
-
-                    zone.Planets = planetData.Select(pd => pd.ID).ToList();
-                    zone.Orbits = orbitData.Select(od => od.ID).ToList();
                     zone.Visited = true;
+                    OrbitData[] orbits;
+                    PlanetData[] planets;
+                    ZoneGenerator.GenerateZone(
+                        context: context, 
+                        zone: zone, 
+                        mass: cache.Get<GalaxyMapLayerData>(context.GlobalData.MapLayers["Mass"]), 
+                        radius: cache.Get<GalaxyMapLayerData>(context.GlobalData.MapLayers["Radius"]), 
+                        orbitData: out orbits, 
+                        planetData: out planets);
+                    cache.AddAll(orbits);
+                    cache.AddAll(planets);
                     cache.Add(zone);
                 }
                 zoneRequest.Peer.Send(
@@ -236,7 +199,6 @@ namespace ChatApp.Server
                             $"Received change from RethinkDB {table} table: {change.NewValue.GetType()} {(change.NewValue as INamedEntry)?.EntryName ?? ""}:{change.NewValue.ID}");
                         cache.Add(change.NewValue, true);
                     }
-
                 }
             });
         }

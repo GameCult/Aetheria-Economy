@@ -13,6 +13,7 @@
 		_AngleWidth("Angle Width", Float) = .1
 		_AngleFade("Angle Fade", Float) = .1
 		_DangerSteepness("Danger Steepness", Float) = .1
+		_ClipDistance("Clip Distance", Float) = 10
 	}
 	SubShader
 	{
@@ -40,6 +41,7 @@
 			struct v2f
 			{
 				float2 uv : TEXCOORD0;
+				float2 uvw : TEXCOORD1;
 				float4 vertex : SV_POSITION;
 			};
 
@@ -56,12 +58,14 @@
 			float _AngleWidth;
 			float _AngleFade;
 			float _DangerSteepness;
+			float _ClipDistance;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.uvw = mul (unity_ObjectToWorld, v.vertex).xy;
 				return o;
 			}
 			
@@ -74,6 +78,7 @@
 			
 			fixed4 frag (v2f IN) : SV_Target
 			{
+			    clip(1-length(IN.uvw)/_ClipDistance);
 				// sample the texture
 				half h = -tex2D(_MainTex, IN.uv).r;
 				float4 col = float4(0,0,0,0);
@@ -92,7 +97,7 @@
 					float isoline = abs(h - _StartHeight + (ih*spacing));
 					//float2 isograd = float2(ddx(isoline), ddy(isoline));
 					//float isomag = length(isograd);
-					col += (1-smoothstep(_LineWidth * _ScreenParams.y, _LineWidth * _ScreenParams.y * _LineFade, isoline / planmag)) * lerp(_Color,_DangerColor,dangerblend) * blend; // Isoline
+					col += (1-smoothstep(_LineWidth, _LineWidth * _LineFade, isoline / planmag)) * lerp(_Color,_DangerColor,dangerblend) * blend; // Isoline
 				}
 				
 				float angle = atan2(plan.y,plan.x) / 3.1415926536 + 1;
@@ -110,7 +115,7 @@
 				    float isoline = abs(angle - ia / 6.0);// ;
 					//float2 isograd = float2(ddx_fine(isoline), ddy_fine(isoline));
 					//float isomag = min(length(isograd),0.025); // isomag is huge over atan2 boundary so clamp it to avoid false positives
-					col += (1-smoothstep(_AngleWidth * _ScreenParams.y, _AngleWidth * _ScreenParams.y * _AngleFade, isoline / (angmag))) * lerp(_AngleColor,_DangerColor,dangerblend) * blend; // Isoline
+					col += (1-smoothstep(_AngleWidth, _AngleWidth * _AngleFade, isoline / (angmag))) * lerp(_AngleColor,_DangerColor,dangerblend) * blend; // Isoline
 				}
                 
                 //return float4(1,0,0,1);

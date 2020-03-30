@@ -114,26 +114,20 @@ public class GalaxyEditor : Editor
 		if (_showResourceMaps)
 		{
 			EditorGUI.indentLevel++;
-			foreach (var resourceDensity in galaxy.MapData.ResourceDensities.ToArray())
+			foreach (var resourceDensity in galaxy.MapData.ResourceDensities)
 			{
 				BeginHorizontal();
-				var newName = DelayedTextField(resourceDensity.Key);
-				if (newName != resourceDensity.Key)
-				{
-					galaxy.MapData.ResourceDensities.Remove(resourceDensity.Key);
-					galaxy.MapData.ResourceDensities[newName] = resourceDensity.Value;
-				}
+				resourceDensity.Name = DelayedTextField(resourceDensity.Name);
 				if (GUILayout.Button("Inspect"))
 				{
-					_currentLayerName = resourceDensity.Key;
-					_currentLayer = resourceDensity.Value;
+					_currentLayer = resourceDensity;
 				}
 				EndHorizontal();
 			}
 			EditorGUI.indentLevel--;
 			if (GUILayout.Button("Add New Resource"))
 			{
-				galaxy.MapData.ResourceDensities["New Resource"] = new GalaxyMapLayerData();
+				galaxy.MapData.ResourceDensities.Add(new GalaxyMapLayerData(){Name = "New Resource"});
 			}
 		}
 		else if(_currentLayer != galaxy.MapData.StarDensity)
@@ -287,10 +281,10 @@ public class GalaxyEditor : Editor
 
 						galaxy.MapData.GlobalData.MapLayers["StarDensity"] = galaxy.MapData.StarDensity.ID = Guid.NewGuid();
 						R.Db("Aetheria").Table("Galaxy").Insert(galaxy.MapData.StarDensity).Run(_connection);
-						foreach (var kvp in galaxy.MapData.ResourceDensities)
+						foreach (var data in galaxy.MapData.ResourceDensities)
 						{
-							galaxy.MapData.GlobalData.MapLayers[kvp.Key] = kvp.Value.ID = Guid.NewGuid();
-							R.Db("Aetheria").Table("Galaxy").Insert(kvp.Value).Run(_connection);
+							galaxy.MapData.GlobalData.MapLayers[data.Name] = data.ID = Guid.NewGuid();
+							R.Db("Aetheria").Table("Galaxy").Insert(data).Run(_connection);
 						}
 						
 						R.Db("Aetheria").Table("Galaxy").Insert(galaxy.MapData.GlobalData).Run(_connection);

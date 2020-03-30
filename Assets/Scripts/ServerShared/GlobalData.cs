@@ -61,6 +61,35 @@ public class GlobalData : DatabaseEntry
     
     [InspectableField] [JsonProperty("mapLayers")] [Key(16)]
     public Dictionary<string, Guid> MapLayers = new Dictionary<string, Guid>();
+    
+    [InspectableField] [JsonProperty("zoneRadiusMin")] [Key(17)]
+    public float MinimumZoneRadius = 500;
+    
+    [InspectableField] [JsonProperty("zoneRadiusMax")] [Key(18)]
+    public float MaximumZoneRadius = 2000;
+    
+    [InspectableField] [JsonProperty("zoneMassMin")] [Key(19)]
+    public float MinimumZoneMass = 10000;
+    
+    [InspectableField] [JsonProperty("zoneMassMax")] [Key(20)]
+    public float MaximumZoneMass = 100000;
+    
+    [InspectableField] [JsonProperty("orbitPeriodExponent")] [Key(21)]
+    public float OrbitPeriodExponent = 1.5f;
+    
+    [InspectableField] [JsonProperty("orbitPeriodMultiplier")] [Key(22)]
+    public float OrbitPeriodMultiplier = 1f;
+    
+    [InspectableField] [JsonProperty("gravityRadiusExponent")] [Key(23)]
+    public float GravityRadiusExponent = 1.5f;
+    
+    [InspectableField] [JsonProperty("gravityRadiusMultiplier")] [Key(24)]
+    public float GravityRadiusMultiplier = 1f;
+    
+    public float PlanetRadius(float mass)
+    {
+        return pow(mass, 1 / RadiusPower);
+    }
 }
 
 [Serializable]
@@ -108,6 +137,8 @@ public class GalaxyMapLayerData : DatabaseEntry
     [InspectableField] [JsonProperty("noisePosition")] [Key(13)]
     public float NoisePosition = 1337;
 
+    [IgnoreMember] public string Name;
+
     public float Evaluate(float2 uv, GlobalData data)
     {
         float2 offset = -float2(.5f, .5f)+uv;
@@ -117,7 +148,7 @@ public class GalaxyMapLayerData : DatabaseEntry
         float atan = atan2(t.y,t.x);
         float spokes = (sin(atan*data.Arms) + SpokeOffset) * SpokeScale;
         float noise = fBm(uv + float2(NoisePosition), NoiseOctaves, NoiseFrequency, NoiseOffset, NoiseAmplitude, NoiseLacunarity, NoiseGain);
-        float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle + CoreBoostOffset, CoreBoostPower) * CoreBoost);
+        float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle, CoreBoostPower) * CoreBoost) + CoreBoostOffset;
         float gal = max(shape - noise * saturate(circle), 0);
 
         return gal;

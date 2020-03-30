@@ -14,11 +14,13 @@ public class BackgroundRenderer : MonoBehaviour
     private Material _material;
     private Material _material2;
     private float _depth;
+    private float _depth2;
 
     private void Start()
     {
         _camera = GetComponent<Camera>();
         _depth = Background.position.z;
+        _depth2 = Background2.position.z;
         _material = Background.GetComponent<MeshRenderer>().material;
         _material2 = Background2.GetComponent<MeshRenderer>().material;
     }
@@ -28,7 +30,8 @@ public class BackgroundRenderer : MonoBehaviour
         _material.SetVector("ParallaxDirection", transform.position);
         _material2.SetVector("ParallaxDirection", transform.position);
         _ratio = (float) Screen.width / Screen.height;
-        Background2.position = Background.position = new Vector3(transform.position.x, transform.position.y, _depth);
+        Background.position = new Vector3(transform.position.x, transform.position.y, _depth);
+        Background2.position = new Vector3(transform.position.x, transform.position.y, _depth2);
         var size = _camera.orthographicSize;
         Background2.localScale = Background.localScale = new Vector3(size * 2 * _ratio, size * 2, 1);
     }

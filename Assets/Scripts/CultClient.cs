@@ -22,6 +22,8 @@ public static class CultClient {
     private static Dictionary<Type, NotAnActionCollection> _messageCallbacks = new Dictionary<Type, NotAnActionCollection>();
     private static Guid _token;
     private static MD5 _hasher = MD5.Create();
+    private static string _lastHost;
+    private static int _lastPort;
 
     public static bool Verified => _token != Guid.Empty;
     public static bool Connected => _client != null;
@@ -89,6 +91,8 @@ public static class CultClient {
 
     public static void Connect(string host = "localhost", int port = 3075)
     {
+        _lastHost = host;
+        _lastPort = port;
         // Set extensions to default resolver.
         var resolver = CompositeResolver.Create(
             MathResolver.Instance,
@@ -142,12 +146,15 @@ public static class CultClient {
         {
             Logger($"Peer {peer.EndPoint.Address}:{peer.EndPoint.Port} connected.");
             _peer = peer;
+            if(Verified)
+                peer.Send(new VerifyMessage{Session = _token});
         };
         
         listener.PeerDisconnectedEvent += (peer, info) =>
         {
             Logger($"Peer {peer.EndPoint.Address}:{peer.EndPoint.Port} disconnected: {info.Reason}.");
             _peer = null;
+            Connect(_lastHost, _lastPort);
         };
         
         listener.NetworkLatencyUpdateEvent +=

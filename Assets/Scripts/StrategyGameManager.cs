@@ -215,7 +215,7 @@ public class StrategyGameManager : MonoBehaviour
                 _zoneObjects[planet.ID] = planetObject;
                 planetObject.Label.text = planet.Name;
                 planetObject.GravityMesh.gameObject.SetActive(true);
-                planetObject.GravityMesh.transform.localScale = Vector3.one * (planet.GravityRadius * 2 * ZoneSizeScale);
+                planetObject.GravityMesh.transform.localScale = Vector3.one * (pow(planet.Mass,_context.GlobalData.GravityRadiusExponent) * _context.GlobalData.GravityRadiusMultiplier * ZoneSizeScale);
                 var depth = pow(planet.Mass, ZoneMassPower) * ZoneMassScale;
                 if (depth > zoneDepth)
                     zoneDepth = depth;

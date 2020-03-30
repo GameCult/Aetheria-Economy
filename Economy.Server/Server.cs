@@ -141,6 +141,8 @@ using Microsoft.Extensions.Logging;
                         _database.Add(newUserData);
     
                         _sessions[sessionGuid] = new Session {Data = newUserData, LastUpdate = DateTime.Now};
+                        if (!_users.ContainsKey(peer.Id))
+                            return;
                         _users[peer.Id].SessionGuid = sessionGuid;
                         break;
                     }
@@ -170,6 +172,9 @@ using Microsoft.Extensions.Logging;
                         peer.Send(new LoginSuccessMessage {Session = sessionGuid});
 
                         _sessions.Add(sessionGuid, new Session { Data = userData, LastUpdate = DateTime.Now });
+                        // TODO: Intermittent: users getting disconnected before getting here, check that key exists!
+                        if (!_users.ContainsKey(peer.Id))
+                            return;
                         _users[peer.Id].SessionGuid = sessionGuid;
                         break;
                     }

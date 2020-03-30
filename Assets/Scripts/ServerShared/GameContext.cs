@@ -23,11 +23,6 @@ public class GameContext
         }
     }
     
-    public float PlanetRadius(float mass)
-    {
-        return pow(mass, 1 / GlobalData.RadiusPower);
-    }
-    
     public int ItemTier(CraftedItemData itemData)
     {
         if (Tier.ContainsKey(itemData)) return Tier[itemData];

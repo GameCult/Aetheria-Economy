@@ -41,6 +41,14 @@ ExportedObj/
 *.opendb
 *.VC.db
 
+# Unity3D generate project files
+Aetheria-Economy.sln
+Assembly-CSharp.csproj
+Assembly-CSharp-Editor.csproj
+Assembly-CSharp-firstpass.csproj
+Economy.Shared.Unity.csproj
+MessagePack.csproj
+
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta

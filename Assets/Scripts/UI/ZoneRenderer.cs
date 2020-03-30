@@ -37,7 +37,7 @@ public class ZoneRenderer : MonoBehaviour
 
         var size = _camera.orthographicSize = FollowCamera.orthographicSize;
         
-        GravityRenderer.transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        GravityRenderer.transform.position = new Vector3(transform.position.x, transform.position.y, .25f);
         GravityRenderer.transform.localScale = new Vector3(size * 2 * _ratio, size * 2, 1);
         
         _camera.targetTexture = GravityTexture;
