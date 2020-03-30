@@ -93,6 +93,9 @@ public class PlanetData : DatabaseEntry, INamedEntry
     [JsonProperty("zone")] [Key(4)]
     public Guid Zone;
     
+    [JsonProperty("belt")] [Key(5)]
+    public bool Belt;
+    
     // [JsonProperty("radius")] [Key(5)]
     // public float GravityRadius;
     

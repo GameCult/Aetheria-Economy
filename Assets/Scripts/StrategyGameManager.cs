@@ -29,8 +29,8 @@ public class StrategyGameManager : MonoBehaviour
     public float ZoneSizeScale = .01f;
     public float ZoneMassScale = .01f;
     public float ZoneMassPower = .5f;
-    public float ZoneOrbitSpeed = 10;
     public MeshRenderer ZoneBackground;
+    public MeshRenderer ZoneBoundary;
 
     private DatabaseCache _cache;
     private GameContext _context;
@@ -47,6 +47,8 @@ public class StrategyGameManager : MonoBehaviour
     private Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
     private Vector3 _galaxyCameraPos = -Vector3.forward;
     private float _galaxyOrthoSize = 50;
+    private Material _boundaryMaterial;
+    private Material _backgroundMaterial;
     
     void Start()
     {
@@ -94,6 +96,9 @@ public class StrategyGameManager : MonoBehaviour
                 Camera.transform.position = -Vector3.forward;
             }
         };
+        
+        _boundaryMaterial = ZoneBoundary.material;
+        _backgroundMaterial = ZoneBackground.material;
     }
 
     private void Update()
@@ -126,7 +131,7 @@ public class StrategyGameManager : MonoBehaviour
         {
             var orbitData = _cache.Get<OrbitData>(orbit);
             _orbitPositions[orbit] = GetOrbitPosition(orbitData.Parent) + (orbitData.Period < .01f ? float2.zero : 
-                                     OrbitData.Evaluate(Time.time * ZoneOrbitSpeed / orbitData.Period + orbitData.Phase) *
+                                     OrbitData.Evaluate(Time.time / orbitData.Period + orbitData.Phase) *
                                      orbitData.Distance);
         }
 
@@ -215,7 +220,9 @@ public class StrategyGameManager : MonoBehaviour
                 _zoneObjects[planet.ID] = planetObject;
                 planetObject.Label.text = planet.Name;
                 planetObject.GravityMesh.gameObject.SetActive(true);
-                planetObject.GravityMesh.transform.localScale = Vector3.one * (pow(planet.Mass,_context.GlobalData.GravityRadiusExponent) * _context.GlobalData.GravityRadiusMultiplier * ZoneSizeScale);
+                planetObject.GravityMesh.transform.localScale =
+                    Vector3.one * (pow(planet.Mass, _context.GlobalData.GravityRadiusExponent) *
+                                   _context.GlobalData.GravityRadiusMultiplier * ZoneSizeScale);
                 var depth = pow(planet.Mass, ZoneMassPower) * ZoneMassScale;
                 if (depth > zoneDepth)
                     zoneDepth = depth;
@@ -226,12 +233,15 @@ public class StrategyGameManager : MonoBehaviour
                     PlanetSprite);
             }
         }
-        ZoneBackground.material.SetFloat("_HeightRange", zoneDepth);
+        var radius = (_zoneResponse.Zone.Radius * ZoneSizeScale * 2);
+        _backgroundMaterial.SetFloat("_ClipDistance", radius);
+        _backgroundMaterial.SetFloat("_HeightRange", zoneDepth + _boundaryMaterial.GetFloat("_Depth"));
+        ZoneBoundary.transform.localScale = Vector3.one * radius;
         
         foreach (var wormhole in _zoneResponse.Zone.Wormholes)
         {
             var otherZone = _galaxyResponseZones[wormhole];
-            var wormholeObject = Instantiate(ZoneObjectPrefab);
+            var wormholeObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
             _wormholes.Add(wormholeObject);
             var direction = otherZone.Position - _zoneResponse.Zone.Position;
             wormholeObject.transform.position = (Vector2) (normalize(direction) * _zoneResponse.Zone.Radius * .95f * ZoneSizeScale);

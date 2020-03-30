@@ -62,9 +62,9 @@ Material:
     - CoreBoostPower: 1.5
     - EdgeReduction: 5
     - GalaxyAmplitude: 0.4
-    - GlowAmount: 0.5
+    - GlowAmount: 0.2
     - GlowOffset: 0
-    - GlowPower: 3
+    - GlowPower: 0.75
     - NoiseAmplitude: 2
     - NoiseFrequency: 1
     - NoiseGain: 0.75

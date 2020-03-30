@@ -22,6 +22,15 @@ public class GlobalData : DatabaseEntry
     
     [InspectableField] [JsonProperty("heatRadiationMultiplier")] [Key(3)]
     public float HeatRadiationMultiplier = 1;
+    
+    [InspectableField] [JsonProperty("galaxyArms")] [Key(13)]
+    public int Arms = 4;
+    
+    [InspectableField] [JsonProperty("galaxyTwist")] [Key(14)]
+    public float Twist = 10;
+    
+    [InspectableField] [JsonProperty("galaxyTwistPower")] [Key(15)]
+    public float TwistPower = 2;
 
     [InspectableField] [JsonProperty("radiusPower")] [Key(4)]
     public float RadiusPower = 1.75f;
@@ -50,15 +59,6 @@ public class GlobalData : DatabaseEntry
     [InspectableField] [JsonProperty("rosetteProbability")] [Key(12)]
     public float RosetteProbability = .25f;
     
-    [InspectableField] [JsonProperty("galaxyArms")] [Key(13)]
-    public int Arms = 4;
-    
-    [InspectableField] [JsonProperty("galaxyTwist")] [Key(14)]
-    public float Twist = 10;
-    
-    [InspectableField] [JsonProperty("galaxyTwistPower")] [Key(15)]
-    public float TwistPower = 2;
-    
     [InspectableField] [JsonProperty("mapLayers")] [Key(16)]
     public Dictionary<string, Guid> MapLayers = new Dictionary<string, Guid>();
     
@@ -85,6 +85,15 @@ public class GlobalData : DatabaseEntry
     
     [InspectableField] [JsonProperty("gravityRadiusMultiplier")] [Key(24)]
     public float GravityRadiusMultiplier = 1f;
+    
+    [InspectableField] [JsonProperty("beltProbability")] [Key(25)]
+    public float BeltProbability = .05f;
+    
+    [InspectableField] [JsonProperty("beltMassCeiling")] [Key(25)]
+    public float BeltMassCeiling = 500f;
+    
+    [InspectableField] [JsonProperty("beltMassRatio")] [Key(26)]
+    public float BeltMassRatio = 100f;
     
     public float PlanetRadius(float mass)
     {

@@ -146,7 +146,7 @@ namespace ChatApp.Server
                     OrbitData[] orbits;
                     PlanetData[] planets;
                     ZoneGenerator.GenerateZone(
-                        context: context, 
+                        global: context.GlobalData, 
                         zone: zone, 
                         mass: cache.Get<GalaxyMapLayerData>(context.GlobalData.MapLayers["Mass"]), 
                         radius: cache.Get<GalaxyMapLayerData>(context.GlobalData.MapLayers["Radius"]), 

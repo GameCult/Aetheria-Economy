@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using MessagePack;
 using Unity.Mathematics;
-using UnityEngine;
+//using UnityEngine;
 // TODO: USE THIS EVERYWHERE
 using static Unity.Mathematics.math;
 using Random = Unity.Mathematics.Random;
@@ -32,7 +32,7 @@ public class ZoneGenerator
 		
 		var zoneMass = lerp(global.MinimumZoneMass, global.MaximumZoneMass, mass.Evaluate(zone.Position, global));
 		
-		Debug.Log($"Generating zone at position {zone.Position} with radius {zoneRadius} and mass {zoneMass}");
+		//Debug.Log($"Generating zone at position {zone.Position} with radius {zoneRadius} and mass {zoneMass}");
 		
 		var planets = GenerateEntities(global, zone, zoneMass, zoneRadius);
         
@@ -69,7 +69,8 @@ public class ZoneGenerator
                 Mass = planet.Mass,
                 ID = Guid.NewGuid(),
                 Orbit = orbitMap[planet].ID,
-                Zone = zone.ID
+                Zone = zone.ID,
+                Belt = planet.Belt
             };
             planetDatum.Name = planetDatum.ID.ToString().Substring(0, 8);
             return planetDatum;
@@ -144,17 +145,21 @@ public class ZoneGenerator
 
 		// Get all children that are above the satellite creation mass floor and not rosette members
 		var satelliteCandidates = rosette
-			? root.AllPlanets().Where(p => p.Parent != root && p.Mass > global.SatelliteCreationMassFloor)
-			: root.AllPlanets().Where(p => p.Mass > global.SatelliteCreationMassFloor);
-			
+			? root.AllPlanets().Where(p => p != root && p.Parent != root && p.Mass > global.SatelliteCreationMassFloor)
+			: root.AllPlanets().Where(p => p != root && p.Mass > global.SatelliteCreationMassFloor);
+
+		var binaries = new List<Planet>();
 		foreach (var planet in satelliteCandidates)
 		{
 			// There's a chance of generating satellites for each qualified planet
 			if (random.NextFloat() < global.SatelliteCreationProbability)
 			{
 				// Sometimes the satellite is so massive that it forms a binary system (like Earth!)
-				if(random.NextFloat() < global.BinaryCreationProbability)
+				if (random.NextFloat() < global.BinaryCreationProbability)
+				{
 					planet.ExpandRosette(2);
+					binaries.AddRange(planet.Children);
+				}
 				// Otherwise, terrestrial planets get a couple satellites while gas giants get many
 				else planet.ExpandSolar(
 					count: planet.Mass < global.GasGiantMass ? random.NextInt(1,3) : random.NextInt(4,10), 
@@ -166,6 +171,14 @@ public class ZoneGenerator
 					massFraction: .15f); // Planetary satellites are not nearly as massive as planets themselves
 			}
 		}
+
+		// Get all children that are below the belt creation mass floor and not rosette members, also exclude binaries
+		var beltCandidates = rosette
+			? root.AllPlanets().Where(p => p != root && p.Parent != root && p.Mass < global.BeltMassCeiling && !binaries.Contains(p))
+			: root.AllPlanets().Where(p => p != root && p.Mass < global.BeltMassCeiling && !binaries.Contains(p));
+		foreach(var planet in beltCandidates)
+			if (random.NextFloat() < global.BeltProbability)
+				planet.Belt = true;
 
 		return root.AllPlanets().ToArray();
 	}
@@ -185,6 +198,7 @@ public class Planet
 	public float ChildDistanceMinimum;
 	public float ChildDistanceMaximum;
 	public bool Empty = false;
+	public bool Belt = false;
 	public List<Planet> Children = new List<Planet>(); // Planets orbiting this one are referred to as children
 	public Planet Parent;
 
@@ -198,7 +212,7 @@ public class Planet
 	// https://en.wikipedia.org/wiki/Klemperer_rosette
 	public void ExpandRosette(int vertices)
 	{
-		Debug.Log("Expanding Rosette");
+		//Debug.Log("Expanding Rosette");
 		
 		// Rosette children replace the parent, parent orbital node is left empty
 		Empty = true;
@@ -245,7 +259,7 @@ public class Planet
 	// Create children that mimic the distribution of planetary masses in the solar system
 	public void ExpandSolar(int count, float massMulMin, float massMulMax, float distMulMin, float distMulMax, float jupiterJump, float massFraction)
 	{
-		Debug.Log("Expanding Solar");
+		//Debug.Log("Expanding Solar");
 		// Expansion is impossible when child space is full
 		if (count == 0 || ChildDistanceMaximum < ChildDistanceMinimum)
 			return;
