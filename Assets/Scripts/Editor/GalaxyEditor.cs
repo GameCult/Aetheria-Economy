@@ -122,6 +122,10 @@ public class GalaxyEditor : Editor
 				{
 					_currentLayer = resourceDensity;
 				}
+				if (GUILayout.Button("Copy"))
+				{
+					galaxy.MapData.ResourceDensities.Add(resourceDensity.Copy());
+				}
 				EndHorizontal();
 			}
 			EditorGUI.indentLevel--;

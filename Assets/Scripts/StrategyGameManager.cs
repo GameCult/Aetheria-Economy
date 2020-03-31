@@ -18,6 +18,7 @@ public class StrategyGameManager : MonoBehaviour
     public MeshRenderer GalaxyBackground;
     public float GalaxyScale;
     public ZoneObject ZoneObjectPrefab;
+    public ParticleSystem BeltPrefab;
     public Transform ZoneRoot;
     public Texture2D PlanetSprite;
     public Texture2D GasGiantSprite;
@@ -42,7 +43,9 @@ public class StrategyGameManager : MonoBehaviour
     private GalaxyZone _selectedGalaxyZone;
     private ZoneResponseMessage _zoneResponse;
     private Dictionary<Guid, GalaxyResponseZone> _galaxyResponseZones;
+    private Dictionary<Guid, GalaxyZone> _galaxyZoneObjects = new Dictionary<Guid, GalaxyZone>();
     private Dictionary<Guid, ZoneObject> _zoneObjects = new Dictionary<Guid, ZoneObject>();
+    private Dictionary<Guid, ParticleSystem> _zoneBelts = new Dictionary<Guid, ParticleSystem>();
     private List<ZoneObject> _wormholes = new List<ZoneObject>();
     private Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
     private Vector3 _galaxyCameraPos = -Vector3.forward;
@@ -117,6 +120,13 @@ public class StrategyGameManager : MonoBehaviour
                 
                 planet.Value.transform.position = (Vector2) GetOrbitPosition(planetData.Orbit) * ZoneSizeScale;
             }
+
+            foreach (var belt in _zoneBelts)
+            {
+                var planetData = _cache.Get<PlanetData>(belt.Key);
+                
+                belt.Value.transform.position = float3(GetOrbitPosition(_cache.Get<OrbitData>(planetData.Orbit).Parent) * ZoneSizeScale, .15f);
+            }
         }
     }
 
@@ -175,6 +185,7 @@ public class StrategyGameManager : MonoBehaviour
             var instance = GalaxyZonePrototype.Instantiate<Transform>();
             instance.position = float3((Vector2) zone.Position - Vector2.one * .5f,0) * GalaxyScale;
             var instanceZone = instance.GetComponent<GalaxyZone>();
+            _galaxyZoneObjects[zone.ZoneID] = instanceZone;
             instanceZone.Label.text = zone.Name;
             instanceZone.Background.GetComponent<ClickableCollider>().OnClick += (_, pointer) =>
             {
@@ -208,6 +219,8 @@ public class StrategyGameManager : MonoBehaviour
         _zoneObjects.Clear();
         foreach (var zoneObject in _wormholes) Destroy(zoneObject.gameObject); //zoneObject.GetComponent<Prototype>().ReturnToPool();
         _wormholes.Clear();
+        foreach (var belt in _zoneBelts.Values) Destroy(belt.gameObject);
+        _zoneBelts.Clear();
 
         _populatedZone = _selectedZone;
 
@@ -216,21 +229,42 @@ public class StrategyGameManager : MonoBehaviour
         {
             if (entry is PlanetData planet)
             {
-                var planetObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
-                _zoneObjects[planet.ID] = planetObject;
-                planetObject.Label.text = planet.Name;
-                planetObject.GravityMesh.gameObject.SetActive(true);
-                planetObject.GravityMesh.transform.localScale =
-                    Vector3.one * (pow(planet.Mass, _context.GlobalData.GravityRadiusExponent) *
-                                   _context.GlobalData.GravityRadiusMultiplier * ZoneSizeScale);
-                var depth = pow(planet.Mass, ZoneMassPower) * ZoneMassScale;
-                if (depth > zoneDepth)
-                    zoneDepth = depth;
-                planetObject.GravityMesh.material.SetFloat("_Depth", depth);
-                planetObject.Icon.material.SetTexture("_MainTex",
-                    planet.Mass > _context.GlobalData.SunMass ? SunSprite :
-                    planet.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
-                    PlanetSprite);
+                if (!planet.Belt)
+                {
+                    var planetObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
+                    _zoneObjects[planet.ID] = planetObject;
+                    planetObject.Label.text = planet.Name;
+                    planetObject.GravityMesh.gameObject.SetActive(true);
+                    planetObject.GravityMesh.transform.localScale =
+                        Vector3.one * (pow(planet.Mass, _context.GlobalData.GravityRadiusExponent) *
+                                       _context.GlobalData.GravityRadiusMultiplier * 2 * ZoneSizeScale);
+                    var depth = pow(planet.Mass, ZoneMassPower) * ZoneMassScale;
+                    if (depth > zoneDepth)
+                        zoneDepth = depth;
+                    planetObject.GravityMesh.material.SetFloat("_Depth", depth);
+                    planetObject.Icon.material.SetTexture("_MainTex",
+                        planet.Mass > _context.GlobalData.SunMass ? SunSprite :
+                        planet.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
+                        PlanetSprite);
+                }
+                else
+                {
+                    var beltObject = Instantiate(BeltPrefab, transform);
+                    _zoneBelts[planet.ID] = beltObject;
+                    var orbit = _cache.Get<OrbitData>(planet.Orbit);
+                    var beltEmission = beltObject.emission;
+                    beltEmission.rateOverTime = 
+                        new ParticleSystem.MinMaxCurve(
+                            pow(planet.Mass,_context.GlobalData.BeltMassExponent)
+                            / _context.GlobalData.BeltMassRatio * orbit.Distance);
+                    var beltShape = beltObject.shape;
+                    beltShape.radius = orbit.Distance * ZoneSizeScale;
+                    beltShape.donutRadius = orbit.Distance * ZoneSizeScale / 2;
+                    var beltVelocity = beltObject.velocityOverLifetime;
+                    beltVelocity.orbitalZ = orbit.Distance * ZoneSizeScale / orbit.Period;
+                    beltObject.Simulate(60);
+                    beltObject.Play();
+                }
             }
         }
         var radius = (_zoneResponse.Zone.Radius * ZoneSizeScale * 2);
@@ -248,6 +282,20 @@ public class StrategyGameManager : MonoBehaviour
             wormholeObject.GravityMesh.gameObject.SetActive(false);
             wormholeObject.Icon.material.SetTexture("_MainTex", WormholeSprite);
             wormholeObject.Label.text = otherZone.Name;
+            wormholeObject.Icon.GetComponent<ClickableCollider>().OnClick += (_, pointer) =>
+            {
+                // If the user double clicks on a wormhole, switch to that zone
+                if (pointer.clickCount == 2)
+                {
+                    _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
+                    if(_selectedZone != wormhole)
+                        CultClient.Send(new ZoneRequestMessage{ZoneID = wormhole});
+                    _selectedZone = wormhole;
+                    _selectedGalaxyZone = _galaxyZoneObjects[wormhole];
+                    _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
+                    
+                }
+            };
         }
     }
 }

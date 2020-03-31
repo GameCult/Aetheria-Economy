@@ -89,11 +89,14 @@ public class GlobalData : DatabaseEntry
     [InspectableField] [JsonProperty("beltProbability")] [Key(25)]
     public float BeltProbability = .05f;
     
-    [InspectableField] [JsonProperty("beltMassCeiling")] [Key(25)]
+    [InspectableField] [JsonProperty("beltMassCeiling")] [Key(26)]
     public float BeltMassCeiling = 500f;
     
-    [InspectableField] [JsonProperty("beltMassRatio")] [Key(26)]
+    [InspectableField] [JsonProperty("beltMassRatio")] [Key(27)]
     public float BeltMassRatio = 100f;
+    
+    [InspectableField] [JsonProperty("beltMassExponent")] [Key(28)]
+    public float BeltMassExponent = 100f;
     
     public float PlanetRadius(float mass)
     {

@@ -176,8 +176,8 @@ public class ZoneGenerator
 		var beltCandidates = rosette
 			? root.AllPlanets().Where(p => p != root && p.Parent != root && p.Mass < global.BeltMassCeiling && !binaries.Contains(p))
 			: root.AllPlanets().Where(p => p != root && p.Mass < global.BeltMassCeiling && !binaries.Contains(p));
-		foreach(var planet in beltCandidates)
-			if (random.NextFloat() < global.BeltProbability)
+		foreach(var planet in beltCandidates.Reverse())
+			if (random.NextFloat() < global.BeltProbability && !planet.Parent.Children.Any(p=>p.Belt))
 				planet.Belt = true;
 
 		return root.AllPlanets().ToArray();

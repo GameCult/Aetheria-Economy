@@ -75,7 +75,7 @@ public class ZoneGeneratorTest : MonoBehaviour
         {
             var planetData = _cache.Get<PlanetData>(belt.Key);
                 
-            belt.Value.transform.position = (Vector2) GetOrbitPosition(_cache.Get<OrbitData>(planetData.Orbit).Parent) * ZoneSizeScale;
+            belt.Value.transform.position = float3(GetOrbitPosition(_cache.Get<OrbitData>(planetData.Orbit).Parent) * ZoneSizeScale, .15f);
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -140,12 +140,14 @@ public class ZoneGeneratorTest : MonoBehaviour
                 _zoneBelts[planet.ID] = beltObject;
                 var orbit = _cache.Get<OrbitData>(planet.Orbit);
                 var beltEmission = beltObject.emission;
-                beltEmission.rateOverTime = new ParticleSystem.MinMaxCurve(planet.Mass / Galaxy.MapData.GlobalData.BeltMassRatio * orbit.Distance);
+                beltEmission.rateOverTime = new ParticleSystem.MinMaxCurve(pow(planet.Mass,Galaxy.MapData.GlobalData.BeltMassExponent) / Galaxy.MapData.GlobalData.BeltMassRatio * orbit.Distance);
                 var beltShape = beltObject.shape;
                 beltShape.radius = orbit.Distance * ZoneSizeScale;
                 beltShape.donutRadius = orbit.Distance * ZoneSizeScale / 2;
                 var beltVelocity = beltObject.velocityOverLifetime;
-                beltVelocity.orbitalZ = orbit.Distance * ZoneSizeScale * PI / orbit.Period * ZoneOrbitSpeed;
+                beltVelocity.orbitalZ = orbit.Distance * ZoneSizeScale / orbit.Period * ZoneOrbitSpeed;
+                beltObject.Simulate(60);
+                beltObject.Play();
             }
         }
 
