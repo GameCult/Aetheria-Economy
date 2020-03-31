@@ -55,6 +55,7 @@ public class StrategyGameManager : MonoBehaviour
     
     void Start()
     {
+        _galaxyOrthoSize = GalaxyScale / 2;
         _cache = new DatabaseCache();
         
         // Request galaxy description from the server
@@ -249,7 +250,7 @@ public class StrategyGameManager : MonoBehaviour
                 }
                 else
                 {
-                    var beltObject = Instantiate(BeltPrefab, transform);
+                    var beltObject = Instantiate(BeltPrefab, ZoneRoot);
                     _zoneBelts[planet.ID] = beltObject;
                     var orbit = _cache.Get<OrbitData>(planet.Orbit);
                     var beltEmission = beltObject.emission;

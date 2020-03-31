@@ -21746,7 +21746,7 @@ MonoBehaviour:
   GalaxyZonePrototype: {fileID: 559120531}
   GalaxyZoneLinkPrototype: {fileID: 899487252}
   GalaxyBackground: {fileID: 1938745697}
-  GalaxyScale: 100
+  GalaxyScale: 50
   ZoneObjectPrefab: {fileID: 5321404118521994133, guid: f9521191d31952a42a76632d158de0d3,
     type: 3}
   BeltPrefab: {fileID: 3696484618621710612, guid: de2171f0e78642f48ac4cb15f3c012c5,
