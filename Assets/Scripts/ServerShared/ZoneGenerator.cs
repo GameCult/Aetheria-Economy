@@ -12,25 +12,27 @@ using Random = Unity.Mathematics.Random;
 
 public class ZoneGenerator
 {
-//	public float BinaryFloor = 100;
-//	public float BinaryProbability = .1f;
-//	public float MassPowerMinimum = 1.35f;
-//	public float MassPowerMaximum = 1.75f;
-//	public float DistancePowerMinimum = 1.35f;
-//	public float DistancePowerMaximum = 1.75f;
-//	public float Radius = 500;
-//	public float Mass = 100000;
-//	public float MassFloor = 1;
-//	public float SunMass = 10000;
-//	public float GasGiantMass = 2000;
-//	public float RadiusPower = 1.75f;
 
-	public static void GenerateZone(GlobalData global, ZoneData zone, GalaxyMapLayerData mass, GalaxyMapLayerData radius, out OrbitData[] orbitData, out PlanetData[] planetData)
+	public static void GenerateZone(
+		GlobalData global,
+		ZoneData zone,
+		IEnumerable<GalaxyMapLayerData> mapLayers,
+		IEnumerable<SimpleCommodityData> resources,
+		out OrbitData[] orbitData,
+		out PlanetData[] planetsData)
 	{
-		var zoneRadius = lerp(global.MinimumZoneRadius, global.MaximumZoneRadius, radius.Evaluate(zone.Position, global));
+		var zoneRadius = lerp(global.MinimumZoneRadius,
+			global.MaximumZoneRadius,
+			mapLayers.First(m => m.Name == "Radius")
+				.Evaluate(zone.Position,
+					global));
 		zone.Radius = zoneRadius;
 		
-		var zoneMass = lerp(global.MinimumZoneMass, global.MaximumZoneMass, mass.Evaluate(zone.Position, global));
+		var zoneMass = lerp(global.MinimumZoneMass,
+			global.MaximumZoneMass,
+			mapLayers.First(m => m.Name == "Mass")
+				.Evaluate(zone.Position,
+					global));
 		
 		//Debug.Log($"Generating zone at position {zone.Position} with radius {zoneRadius} and mass {zoneMass}");
 		
@@ -62,21 +64,45 @@ public class ZoneGenerator
                 ? orbitMap[orbitInverseMap[data].Parent].ID
                 : Guid.Empty;
         
-        planetData = planets.Where(p=>!p.Empty).Select(planet =>
+        // Cache resource densities
+        var resourceMaps = mapLayers.ToDictionary(m => m.ID, m => m.Evaluate(zone.Position, global));
+        
+        var random = new Random();
+        
+        planetsData = planets.Where(p=>!p.Empty).Select(planet =>
         {
-            var planetDatum = new PlanetData
+            var planetData = new PlanetData
             {
                 Mass = planet.Mass,
                 ID = Guid.NewGuid(),
                 Orbit = orbitMap[planet].ID,
                 Zone = zone.ID,
-                Belt = planet.Belt
+                Belt = planet.Belt,
+                Resources = resources
+		            // Filter resources where the body type matches the current planet
+	                .Where(r =>
+						((planet.Belt ? BodyType.Asteroid : 
+						planet.Mass > global.SunMass ? BodyType.Sun :
+						planet.Mass > global.GasGiantMass ? BodyType.GasGiant :
+						planet.Mass > global.PlanetMass ? BodyType.Planet : BodyType.Planetoid) & r.ResourceBodyType) != 0)
+		            // NextUnbounded is our extension function containing resource placement formula
+		            // Obtain bias variable by multiplying all resource maps together
+	                .Select(r => new
+	                {
+		                resource = r, 
+		                quantity = random.NextUnbounded(
+			                r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]), 
+			                r.ResourceDensityBiasPower)
+	                })
+		            // Only include resources above a minimum quantity
+	                .Where(r => r.resource.ResourceFloor < r.quantity)
+	                .ToDictionary(r => r.resource.ID, r => r.quantity)
             };
-            planetDatum.Name = planetDatum.ID.ToString().Substring(0, 8);
-            return planetDatum;
+            planetData.Name = planetData.ID.ToString().Substring(0, 8);
+            return planetData;
         }).ToArray();
 
-        zone.Planets = planetData.Select(pd => pd.ID).ToList();
+        zone.Planets = planetsData.Select(pd => pd.ID).ToList();
         zone.Orbits = orbitData.Select(od => od.ID).ToList();
 	}
 
@@ -105,7 +131,7 @@ public class ZoneGenerator
 		
 			// Create a small number of less massive "captured" planets orbiting past the rosette
 			root.ExpandSolar(
-				count: random.NextInt(1,5), 
+				count: (int)(random.NextFloat(1, 3) * random.NextFloat(1, 2)), 
 				massMulMin: .6f, 
 				massMulMax: .8f, 
 				distMulMin: 1.25f, 
@@ -119,7 +145,7 @@ public class ZoneGenerator
 				var m = p.Mass / averageChildMass;
 				// Give each child in the rosette its own mini solar system
 				p.ExpandSolar(
-					count: (int) (m * 5), 
+					count: (int) (random.NextFloat() * random.NextFloat() * m * 5 + 1), 
 					massMulMin: 0.75f, 
 					massMulMax: 2.5f, 
 					distMulMin: 1 + m * .25f,

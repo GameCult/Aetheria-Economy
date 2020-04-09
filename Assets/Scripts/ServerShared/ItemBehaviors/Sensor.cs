@@ -2,23 +2,20 @@
 using MessagePack;
 using Newtonsoft.Json;
 
-[RethinkTable("Items")]
-[InspectableField]
-[MessagePackObject]
-[JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class SensorBehaviorData : IItemBehaviorData
 {
-    [InspectableField] [JsonProperty("radiance")] [Key(0)]
-    public PerformanceStat Radiance;
+    [InspectableField, JsonProperty("radiance"), Key(0)]  
+    public PerformanceStat Radiance = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("masking")] [Key(1)]
-    public PerformanceStat RadianceMasking;
+    [InspectableField, JsonProperty("masking"), Key(1)]  
+    public PerformanceStat RadianceMasking = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("sensitivity")] [Key(2)]
-    public PerformanceStat Sensitivity;
+    [InspectableField, JsonProperty("sensitivity"), Key(2)]  
+    public PerformanceStat Sensitivity = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("range")] [Key(3)]
-    public PerformanceStat Range;
+    [InspectableField, JsonProperty("range"), Key(3)]  
+    public PerformanceStat Range = new PerformanceStat();
     
     public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
     {
@@ -42,6 +39,10 @@ public class SensorBehavior : IItemBehavior
         Ship = ship;
         Item = item;
         Context = context;
+    }
+
+    public void Initialize()
+    {
     }
 
     public void Update(float delta)

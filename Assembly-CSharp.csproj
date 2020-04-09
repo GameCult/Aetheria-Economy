@@ -384,7 +384,6 @@
     <Compile Include="Assets\Scripts\NIH\XKCDColors.cs" />
     <Compile Include="Assets\Scripts\Prototype.cs" />
     <Compile Include="Assets\Scripts\StrategyGameManager.cs" />
-    <Compile Include="Assets\Scripts\Targetable.cs" />
     <Compile Include="Assets\Scripts\UI\BackgroundRenderer.cs" />
     <Compile Include="Assets\Scripts\UI\ClickableCollider.cs" />
     <Compile Include="Assets\Scripts\UI\ClickCatcher.cs" />
@@ -654,8 +653,17 @@
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.17f1/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.SqlServer.Types">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq">
+      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Buffers">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
@@ -677,15 +685,6 @@
     </Reference>
     <Reference Include="Grpc.Core.Api">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Remotion.Linq">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.17f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

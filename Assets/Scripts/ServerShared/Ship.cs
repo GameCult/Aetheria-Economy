@@ -27,7 +27,9 @@ public class Ship : DatabaseEntry
     [IgnoreMember] public float Temperature;
     [IgnoreMember] public float Charge;
     // [IgnoreMember] public Targetable Target;
+    [IgnoreMember] public float2 Position;
     [IgnoreMember] public float2 Direction;
+    [IgnoreMember] public float2 Velocity;
     [IgnoreMember] public Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     
     private HullData _hullData;
@@ -49,6 +51,20 @@ public class Ship : DatabaseEntry
         if (data != null)
             return Context.GetData(data.Item) as T;
         return null;
+    }
+
+    public IEnumerable<T> GetBehaviors<T>() where T : class, IItemBehavior
+    {
+        foreach (var behavior in ItemBehaviors)
+            if (behavior is T b)
+                yield return b;
+    }
+
+    public IEnumerable<T> GetBehaviorData<T>() where T : class, IItemBehaviorData
+    {
+        foreach (var behavior in ItemBehaviors)
+            if (behavior.Data is T b)
+                yield return b;
     }
 
     public void AddHeat(float heat)
@@ -193,3 +209,4 @@ public class Ship : DatabaseEntry
     //
     // }
 }
+

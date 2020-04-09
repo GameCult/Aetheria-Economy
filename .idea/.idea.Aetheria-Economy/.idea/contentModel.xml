@@ -660,6 +660,7 @@
           <e p="ServerShared" t="Include">
             <e p="ActionCollection.cs" t="Include" />
             <e p="Attributes.cs" t="Include" />
+            <e p="BlueprintData.cs" t="Include" />
             <e p="DatabaseCache.cs" t="Include" />
             <e p="DatabaseItems.cs" t="Include" />
             <e p="Economy.Shared.Unity.asmdef" t="Include" />
@@ -674,6 +675,10 @@
               <e p="Launcher.cs" t="Include" />
               <e p="Reactor.cs" t="Include" />
               <e p="Sensor.cs" t="Include" />
+              <e p="Shield.cs" t="Include" />
+              <e p="Thruster.cs" t="Include" />
+              <e p="Turning.cs" t="Include" />
+              <e p="Weapon.cs" t="Include" />
             </e>
             <e p="ItemData.cs" t="Include" />
             <e p="ItemInstance.cs" t="Include" />
@@ -1089,7 +1094,6 @@
             <e p="ZoneGenerator.cs" t="Include" />
           </e>
           <e p="StrategyGameManager.cs" t="Include" />
-          <e p="Targetable.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="BackgroundRenderer.cs" t="Include" />
             <e p="ClickableCollider.cs" t="Include" />

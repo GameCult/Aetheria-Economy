@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UniRx;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 using static Unity.Mathematics.math;
+using static UnityEditor.EditorGUILayout;
+using Object = UnityEngine.Object;
 
 public class DatabaseInspector : EditorWindow
 {
@@ -28,6 +28,8 @@ public class DatabaseInspector : EditorWindow
     private string[] _hardpointTypes;
     private const int width = 100;
     private const int labelWidth = 20;
+
+    public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
     // Set instance on reloading the window, else it gets lost after script reload (due to PlayMode changes, ...).
     public DatabaseInspector()
@@ -104,7 +106,10 @@ public class DatabaseInspector : EditorWindow
             else 
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (int) value));
         }
-        else if (type.IsEnum) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (int) field.GetValue(obj), Enum.GetNames(field.FieldType)));
+        else if (type.IsEnum)
+            field.SetValue(obj,
+                Inspect(field.Name.SplitCamelCase(), (int) field.GetValue(obj), Enum.GetNames(field.FieldType),
+                    type.GetCustomAttributes<FlagsAttribute>().Any()));
         //else if (field.FieldType == typeof(Color)) Inspect(field.Name, () => (Color) field.GetValue(obj), c => field.SetValue(obj, c));
         else if (type == typeof(bool)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (bool) value));
         else if (type == typeof(string))
@@ -119,8 +124,8 @@ public class DatabaseInspector : EditorWindow
         else if (type == typeof(PerformanceStat)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (PerformanceStat) value, obj as CraftedItemData));
         else if (type == typeof(PerformanceStat[]))
         {
-            EditorGUILayout.LabelField(field.Name.SplitCamelCase(), EditorStyles.boldLabel);
-            using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+            LabelField(field.Name.SplitCamelCase(), EditorStyles.boldLabel);
+            using (new VerticalScope(GUI.skin.box))
             {
                 var stats = (PerformanceStat[]) value;
                 var damageTypes = Enum.GetNames(typeof(DamageType));
@@ -143,24 +148,86 @@ public class DatabaseInspector : EditorWindow
             var dict = (Dictionary<Guid, float>) field.GetValue(obj);
             Inspect(field.Name.SplitCamelCase(), ref dict);
         }
+        else if (type == typeof(List<BlueprintStatEffect>))
+        {
+            var list = (List<BlueprintStatEffect>) field.GetValue(obj);
+            if(list==null) field.SetValue(obj, list = new List<BlueprintStatEffect>());
+            
+            var blueprint = obj as BlueprintData;
+            var blueprintItem = DatabaseCache.Get(blueprint.Item);
+            if (blueprintItem is EquippableItemData equippableBlueprintItem)
+            {
+                Space();
+                LabelField(field.Name.SplitCamelCase(), EditorStyles.boldLabel);
+
+                using (var v = new VerticalScope(GUI.skin.box))
+                {
+                    var ingredients = blueprint.Ingredients.Keys
+                        .Select(i => DatabaseCache.Get(i))
+                        .Where(i => i is CraftedItemData)
+                        .Cast<CraftedItemData>().ToArray();
+                    var ingredientNames = ingredients.Select(i => i.Name).ToArray();
+                    foreach (var effect in list)
+                    {
+                        using (var v2 = new VerticalScope(_list.ListItemStyle))
+                        {
+                            using (var h = new HorizontalScope())
+                            {
+                                GUILayout.Label("Ingredient", GUILayout.Width(width));
+                                if(ingredients.Length==0)
+                                    GUILayout.Label("No Ingredients!");
+                                else
+                                {
+                                    var selectedIngredientIndex =
+                                        Array.FindIndex(ingredients, item => item.ID == effect.Ingredient);
+                                    if (selectedIngredientIndex == -1)
+                                    {
+                                        selectedIngredientIndex = 0;
+                                        GUI.changed = true;
+                                    }
+                                    var newSelection = Popup(selectedIngredientIndex, ingredientNames);
+                                    if (newSelection != selectedIngredientIndex)
+                                        GUI.changed = true;
+                                    effect.Ingredient = ingredients[newSelection].ID;
+                                }
+                            }
+                            
+                            Inspect(ref effect.StatReference, equippableBlueprintItem);
+                        }
+                        
+                    }
+
+                    using (var h = new HorizontalScope(_list.ListItemStyle))
+                    {
+                        GUILayout.Label($"Add new Stat Effect", GUILayout.ExpandWidth(true));
+                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                        if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                        {
+                            list.Add(new BlueprintStatEffect());
+                        }
+                    }
+                }
+            }
+        }
         else if (type == typeof(List<Guid>) && link != null)
         {
             var list = (List<Guid>) field.GetValue(obj);
-            if(list==null) field.SetValue(obj, (list = new List<Guid>()));
+            if(list==null) field.SetValue(obj, list = new List<Guid>());
             Inspect(field.Name.SplitCamelCase(), ref list, link.EntryType);
         }
         else if (type == typeof(Guid) && link != null) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (Guid) value, link.EntryType));
         else if (type.GetCustomAttribute<InspectableFieldAttribute>() != null)
         {
-            EditorGUILayout.Space();
-            using (new EditorGUILayout.HorizontalScope())
+            Space();
+            using (new HorizontalScope())
             {
-                EditorGUILayout.LabelField(field.Name.SplitCamelCase(), EditorStyles.boldLabel);
+                LabelField(field.Name.SplitCamelCase(), EditorStyles.boldLabel);
                 if (type.IsInterface)
                 {
                     var subTypes = type.GetAllInterfaceClasses();
                     var selected = value != null ? Array.IndexOf(subTypes, value.GetType()) + 1 : 0;
-                    var newSelection = EditorGUILayout.Popup(selected,
+                    var newSelection = Popup(selected,
                         subTypes.Select(t => t.Name.SplitCamelCase()).Prepend("None").ToArray());
                     if(newSelection != selected)
                         field.SetValue(obj, value = newSelection==0?null:Activator.CreateInstance(subTypes[newSelection-1]));
@@ -173,8 +240,8 @@ public class DatabaseInspector : EditorWindow
             var listType = field.FieldType.GenericTypeArguments[0];
             if (listType.GetCustomAttribute<InspectableFieldAttribute>() != null)
             {
-                EditorGUILayout.Space();
-                using (new EditorGUILayout.VerticalScope(GUI.skin.box))
+                Space();
+                using (new VerticalScope(GUI.skin.box))
                 {
                     var list = (IList) field.GetValue(obj);
                     if (list == null)
@@ -184,16 +251,16 @@ public class DatabaseInspector : EditorWindow
                     }
                     foreach (var o in list)
                     {
-                        using (new EditorGUILayout.VerticalScope(_list.ListItemStyle))
+                        using (new VerticalScope(_list.ListItemStyle))
                         {
-                            using (new EditorGUILayout.HorizontalScope())
+                            using (new HorizontalScope())
                             {
                                 GUILayout.Label(o.GetType().Name.SplitCamelCase(), EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
 
-                                var rect = EditorGUILayout.GetControlRect(false,
+                                var rect = GetControlRect(false,
                                     GUILayout.Width(EditorGUIUtility.singleLineHeight));
                                 GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
-                                    Color.black, 0, 0);
+                                    LabelColor, 0, 0);
                                 if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
                                 {
                                     list.Remove(o);
@@ -201,16 +268,16 @@ public class DatabaseInspector : EditorWindow
                                 }
                             }
                             
-                            EditorGUILayout.Space();
+                            Space();
 
                             Inspect(o, inspectablesOnly);
                         }
                     }
-                    using (new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
+                    using (new HorizontalScope(_list.ListItemStyle))
                     {
                         GUILayout.Label($"Add new {listType.Name}", GUILayout.ExpandWidth(true));
-                        var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
+                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                         if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
                         {
                             if (listType.IsInterface)
@@ -236,8 +303,8 @@ public class DatabaseInspector : EditorWindow
             }
             else if (typeof(Object).IsAssignableFrom(listType))
             {
-                EditorGUILayout.Space();
-                using (var v = new EditorGUILayout.VerticalScope(GUI.skin.box))
+                Space();
+                using (var v = new VerticalScope(GUI.skin.box))
                 {
                     var list = (IList) field.GetValue(obj);
                     if (list == null)
@@ -247,20 +314,20 @@ public class DatabaseInspector : EditorWindow
                     }
                     
                     if(list.Count==0)
-                        using (new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
+                        using (new HorizontalScope(_list.ListItemStyle))
                             GUILayout.Label($"Add a {listType.Name} by dragging from the project hierarchy.");
                     
                     foreach (var oo in list)
                     {
                         var o = (Object) oo;
-                        using (new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
+                        using (new HorizontalScope(_list.ListItemStyle))
                         {
                             GUILayout.Label(o.name.SplitCamelCase(), EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
 
-                            var rect = EditorGUILayout.GetControlRect(false,
+                            var rect = GetControlRect(false,
                                 GUILayout.Width(EditorGUIUtility.singleLineHeight));
                             GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
-                                Color.black, 0, 0);
+                                LabelColor, 0, 0);
                             if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
                             {
                                 list.Remove(o);
@@ -291,10 +358,10 @@ public class DatabaseInspector : EditorWindow
         }
         else if (typeof(Object).IsAssignableFrom(type))
         {
-            using (new EditorGUILayout.HorizontalScope())
+            using (new HorizontalScope())
             {
                 GUILayout.Label(field.Name.SplitCamelCase(), GUILayout.Width(width));
-                field.SetValue(obj, EditorGUILayout.ObjectField((Object)field.GetValue(obj),type,false));
+                field.SetValue(obj, ObjectField((Object)field.GetValue(obj),type,false));
             }
         }
 //        else if (type == typeof(AudioClip))
@@ -310,44 +377,44 @@ public class DatabaseInspector : EditorWindow
 
     public bool Inspect(string label, bool value)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            return EditorGUILayout.Toggle(value);
+            return Toggle(value);
         }
     }
 
     public float Inspect(string label, float value)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            return EditorGUILayout.DelayedFloatField(value);
+            return DelayedFloatField(value);
         }
     }
     
     public string Inspect(string label, string value, bool area = false)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
             if(area)
-                return EditorGUILayout.TextArea(value,GUILayout.MaxWidth(300));
-            return EditorGUILayout.DelayedTextField(value);
+                return TextArea(value,GUILayout.MaxWidth(300));
+            return DelayedTextField(value);
         }
     }
     
     public float InspectTemperature(string label, float value)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
             GUILayout.Label("°K", _labelStyle, GUILayout.Width(labelWidth));
-            value = EditorGUILayout.DelayedFloatField(value);//, GUILayout.ExpandWidth(false)
+            value = DelayedFloatField(value);//, GUILayout.ExpandWidth(false)
             GUILayout.Label("°C", _labelStyle, GUILayout.Width(labelWidth));
-            value = EditorGUILayout.DelayedFloatField(value - 273.15f) + 273.15f;
+            value = DelayedFloatField(value - 273.15f) + 273.15f;
             GUILayout.Label("°F", _labelStyle, GUILayout.Width(labelWidth));
-            value = (EditorGUILayout.DelayedFloatField((value - 273.15f) * 1.8f + 32) - 32) / 1.8f + 273.15f;
+            value = (DelayedFloatField((value - 273.15f) * 1.8f + 32) - 32) / 1.8f + 273.15f;
                 
             return value;
         }
@@ -355,55 +422,79 @@ public class DatabaseInspector : EditorWindow
 
     public float Inspect(string label, float value, float min, float max)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            return EditorGUILayout.Slider(value, min, max);
+            return Slider(value, min, max);
         }
     }
 
     public int Inspect(string label, int value)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            return EditorGUILayout.DelayedIntField(value);
+            return DelayedIntField(value);
         }
     }
 
     public int Inspect(string label, int value, int min, int max)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            return EditorGUILayout.IntSlider(value, min, max);
+            return IntSlider(value, min, max);
         }
     }
 
-    public int Inspect(string label, int value, string[] enumOptions)
+    public int Inspect(string label, int value, string[] enumOptions, bool flags)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        if (flags)
         {
-            GUILayout.Label(label, GUILayout.Width(width));
-            return EditorGUILayout.Popup(value, enumOptions);
+            Space();
+            LabelField(label, EditorStyles.boldLabel);
+            using (var v = new VerticalScope(GUI.skin.box))
+            {
+                for (var i = 1; i < enumOptions.Length; i++)
+                {
+                    using (var h = new HorizontalScope())
+                    {
+                        GUILayout.Label(enumOptions[i], GUILayout.Width(width));
+                        var set = Toggle(1 << i == (1 << i & value));
+                        if (set)
+                            value |= 1 << i;
+                        else value &= ~(1 << i);
+                    }
+                }
+            }
+
+            return value;
+        }
+        else
+        {
+            using (var h = new HorizontalScope())
+            {
+                GUILayout.Label(label, GUILayout.Width(width));
+                return Popup(value, enumOptions);
+            }
         }
     }
 
     public string InspectGameObject(string label, string value)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            return AssetDatabase.GetAssetPath(EditorGUILayout.ObjectField(AssetDatabase.LoadAssetAtPath<GameObject>(value), typeof(GameObject), false));
+            return AssetDatabase.GetAssetPath(ObjectField(AssetDatabase.LoadAssetAtPath<GameObject>(value), typeof(GameObject), false));
         }
     }
 
     public GameObject Inspect(string label, GameObject value)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            return (GameObject) EditorGUILayout.ObjectField(value, typeof(GameObject), false);
+            return (GameObject) ObjectField(value, typeof(GameObject), false);
         }
     }
 
@@ -412,10 +503,10 @@ public class DatabaseInspector : EditorWindow
         var val = value != null && value.Length > 0
             ? new AnimationCurve(value.Select(v => new Keyframe(v.x, v.y, v.z, v.w)).ToArray())
             : new AnimationCurve();
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            val = EditorGUILayout.CurveField(val, Color.yellow, new Rect(0, 0, 1, 1));
+            val = CurveField(val, Color.yellow, new Rect(0, 0, 1, 1));
         }
 
         return val.keys.Select(k => float4(k.time, k.value, k.inTangent, k.outTangent)).ToArray();
@@ -423,12 +514,12 @@ public class DatabaseInspector : EditorWindow
 
     public AnimationCurve Inspect(string label, AnimationCurve value)
     {
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
             if (value == null)
                 value = new AnimationCurve();
-            value = EditorGUILayout.CurveField(value, Color.yellow, new Rect(0, 0, 1, 1));
+            value = CurveField(value, Color.yellow, new Rect(0, 0, 1, 1));
         }
 
         return value;
@@ -436,9 +527,9 @@ public class DatabaseInspector : EditorWindow
 
     public Guid Inspect(string label, Guid value, Type entryType)
     {
-        EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+        LabelField(label, EditorStyles.boldLabel);
         var valueEntry = DatabaseCache.Get(value);
-        using (var h = new EditorGUILayout.HorizontalScope(GUI.skin.box))
+        using (var h = new HorizontalScope(GUI.skin.box))
         {
             GUILayout.Label((valueEntry as INamedEntry)?.EntryName ?? valueEntry?.ID.ToString() ?? $"Assign a {entryType.Name} by dragging from the list panel.");
                 
@@ -447,10 +538,10 @@ public class DatabaseInspector : EditorWindow
                 var guid = (Guid) DragAndDrop.GetGenericData("Item");
                 var dragEntry = DatabaseCache.Get(guid);
                 if(Event.current.type == EventType.DragUpdated)
-                    DragAndDrop.visualMode = dragEntry != null && dragEntry.GetType()==entryType ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
+                    DragAndDrop.visualMode = dragEntry != null && entryType.IsInstanceOfType(dragEntry) ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
                 else if(Event.current.type == EventType.DragPerform)
                 {
-                    if (guid != Guid.Empty && dragEntry.GetType()==entryType)
+                    if (guid != Guid.Empty && entryType.IsInstanceOfType(dragEntry))
                     {
                         DragAndDrop.AcceptDrag();
                         GUI.changed = true;
@@ -465,27 +556,27 @@ public class DatabaseInspector : EditorWindow
     
     public void Inspect(string label, ref Dictionary<Guid,int> value)
     {
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+        Space();
+        LabelField(label, EditorStyles.boldLabel);
 
-        using (var v = new EditorGUILayout.VerticalScope(GUI.skin.box))
+        using (var v = new VerticalScope(GUI.skin.box))
         {
             if (value.Count == 0)
             {
-                using (var h = new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
+                using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
                     GUILayout.Label("Nothing Here! Add an item by dragging from the list panel.");
                 }
             }
             foreach (var ingredient in value.ToArray())
             {
-                using (var h = new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
+                using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
                     GUILayout.Label(DatabaseCache.Get<ItemData>(ingredient.Key).Name);
-                    value[ingredient.Key] = EditorGUILayout.DelayedIntField(value[ingredient.Key], GUILayout.Width(50));
+                    value[ingredient.Key] = DelayedIntField(value[ingredient.Key], GUILayout.Width(50));
                     
-                    var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
+                    var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                     if (GUI.Button(rect, GUIContent.none, GUIStyle.none) || value[ingredient.Key]==0)
                         value.Remove(ingredient.Key);
                 }
@@ -511,27 +602,27 @@ public class DatabaseInspector : EditorWindow
     
     public void Inspect(string label, ref Dictionary<Guid,float> value)
     {
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+        Space();
+        LabelField(label, EditorStyles.boldLabel);
 
-        using (var v = new EditorGUILayout.VerticalScope(GUI.skin.box))
+        using (var v = new VerticalScope(GUI.skin.box))
         {
             if (value.Count == 0)
             {
-                using (var h = new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
+                using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
                     GUILayout.Label("Nothing Here! Add an item by dragging from the list panel.");
                 }
             }
             foreach (var ingredient in value.ToArray())
             {
-                using (var h = new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
+                using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
                     GUILayout.Label(DatabaseCache.Get(ingredient.Key).ID.ToString());
-                    value[ingredient.Key] = EditorGUILayout.DelayedFloatField(value[ingredient.Key], GUILayout.Width(50));
+                    value[ingredient.Key] = DelayedFloatField(value[ingredient.Key], GUILayout.Width(50));
                     
-                    var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
+                    var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                     if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
                         value.Remove(ingredient.Key);
                 }
@@ -557,28 +648,39 @@ public class DatabaseInspector : EditorWindow
     
     public void Inspect(string label, ref List<Guid> value, Type entryType)
     {
-        EditorGUILayout.Space();
-        EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
+        Space();
+        LabelField(label, EditorStyles.boldLabel);
 
-        using (var v = new EditorGUILayout.VerticalScope(GUI.skin.box))
+        using (var v = new VerticalScope(GUI.skin.box))
         {
             if (value.Count == 0)
             {
-                using (var h = new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
+                using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
                     GUILayout.Label($"Nothing Here! Add a {entryType.Name} by dragging from the list panel.");
                 }
             }
-            foreach (var ingredient in value.ToArray())
+            foreach (var guid in value.ToArray())
             {
-                using (var h = new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
+                using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
-                    GUILayout.Label((DatabaseCache.Get(ingredient) as INamedEntry)?.EntryName ?? DatabaseCache.Get(ingredient).ID.ToString());
+                    var entry = DatabaseCache.Get(guid);
+                    if (entry == null)
+                    {
+                        value.Remove(guid);
+                        GUI.changed = true;
+                    }
+                    else
+                    {
+                        GUILayout.Label((entry as INamedEntry)?.EntryName ?? entry.ID.ToString());
                     
-                    var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
-                    if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
-                        value.Remove(ingredient);
+                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                        GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                        if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                        {
+                            value.Remove(guid);
+                        }
+                    }
                 }
             }
 
@@ -600,46 +702,101 @@ public class DatabaseInspector : EditorWindow
             }
         }
     }
+
+    public void Inspect(ref StatReference effect, EquippableItemData item)
+    {
+        using (new VerticalScope())
+        {
+            var behaviorNames = item.Behaviors.Select(b => b.GetType().Name).ToArray();
+            var selectedBehaviorIndex = Array.IndexOf(behaviorNames, effect.Behavior);
+            if (selectedBehaviorIndex == -1)
+            {
+                selectedBehaviorIndex = 0;
+                GUI.changed = true;
+            }
+            using (new HorizontalScope())
+            {
+                GUILayout.Label("Behavior", GUILayout.Width(width));
+                if(behaviorNames.Length==0)
+                    GUILayout.Label("No Behaviors!");
+                else
+                {
+                    var newSelection = Popup(selectedBehaviorIndex, behaviorNames);
+                    if (newSelection != selectedBehaviorIndex)
+                        GUI.changed = true;
+                    effect.Behavior = behaviorNames[newSelection];
+                }
+            }
+
+            using (new HorizontalScope())
+            {
+                GUILayout.Label("Stat", GUILayout.Width(width));
+                if(behaviorNames.Length==0)
+                    GUILayout.Label("No Behaviors!");
+                else
+                {
+                    var stats = item.Behaviors[selectedBehaviorIndex].GetType().GetFields()
+                        .Where(f => f.FieldType == typeof(PerformanceStat)).ToArray();
+                    if(stats.Length==0)
+                        GUILayout.Label("No Stats!");
+                    else
+                    {
+                        var statNames = stats.Select(s => s.Name).ToArray();
+                        var selectedStatIndex = Array.IndexOf(statNames, effect.Stat);
+                        if (selectedStatIndex == -1)
+                        {
+                            selectedStatIndex = 0;
+                            GUI.changed = true;
+                        }
+                        var newSelection = Popup(selectedStatIndex, statNames);
+                        if (newSelection != selectedStatIndex)
+                            GUI.changed = true;
+                        effect.Stat = statNames[newSelection];
+                    }
+                }
+            }
+        }
+    }
     
     public PerformanceStat Inspect(string label, PerformanceStat value, CraftedItemData crafted)
     {
-        using (new EditorGUILayout.VerticalScope())
+        using (new VerticalScope())
         {
-            using (new EditorGUILayout.HorizontalScope())
+            using (new HorizontalScope())
             {
                 GUILayout.Label(label, GUILayout.Width(width));
                 GUILayout.Label("Min", _labelStyle, GUILayout.Width(labelWidth));
-                value.Min = EditorGUILayout.DelayedFloatField(value.Min);
+                value.Min = DelayedFloatField(value.Min);
                 GUILayout.Label("Max", _labelStyle, GUILayout.Width(labelWidth + 5));
-                value.Max = EditorGUILayout.DelayedFloatField(value.Max);
+                value.Max = DelayedFloatField(value.Max);
             }
 
-            using (new EditorGUILayout.HorizontalScope())
+            using (new HorizontalScope())
             {
                 GUILayout.Label("", GUILayout.Width(width));
                 GUILayout.Label("H", _labelStyle);
-                value.HeatDependent = EditorGUILayout.Toggle(value.HeatDependent);
+                value.HeatDependent = Toggle(value.HeatDependent);
                 GUILayout.Label("D", _labelStyle);
-                value.DurabilityDependent = EditorGUILayout.Toggle(value.DurabilityDependent);
+                value.DurabilityDependent = Toggle(value.DurabilityDependent);
                 GUILayout.Label("QEx", _labelStyle, GUILayout.Width(labelWidth + 5));
-                value.QualityExponent = EditorGUILayout.DelayedFloatField(value.QualityExponent);
+                value.QualityExponent = DelayedFloatField(value.QualityExponent);
             }
 
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                GUILayout.Label("", GUILayout.Width(width));
-                GUILayout.Label("Ingredient", GUILayout.ExpandWidth(false));
-                var ingredients = crafted.Ingredients.Keys.Select(DatabaseCache.Get).Where(i => i is CraftedItemData).Cast<CraftedItemData>().ToList();
-                var ingredient = value.Ingredient != null ? DatabaseCache.Get(value.Ingredient.Value) as CraftedItemData : null;
-                var names = ingredients.Select(i => i.Name).Append("None").ToArray();
-                var selected = value.Ingredient == null || !crafted.Ingredients.ContainsKey(value.Ingredient.Value)
-                    ? names.Length - 1
-                    : ingredients.IndexOf(ingredient);
-                var selection = EditorGUILayout.Popup(selected, names);
-                value.Ingredient = selection == names.Length - 1 ? (Guid?) null : ingredients[selection].ID;
-            }
+            // using (new HorizontalScope())
+            // {
+            //     GUILayout.Label("", GUILayout.Width(width));
+            //     GUILayout.Label("Ingredient", GUILayout.ExpandWidth(false));
+            //     var ingredients = crafted.Ingredients.Keys.Select(DatabaseCache.Get).Where(i => i is CraftedItemData).Cast<CraftedItemData>().ToList();
+            //     var ingredient = value.Ingredient != null ? DatabaseCache.Get(value.Ingredient.Value) as CraftedItemData : null;
+            //     var names = ingredients.Select(i => i.Name).Append("None").ToArray();
+            //     var selected = value.Ingredient == null || !crafted.Ingredients.ContainsKey(value.Ingredient.Value)
+            //         ? names.Length - 1
+            //         : ingredients.IndexOf(ingredient);
+            //     var selection = Popup(selected, names);
+            //     value.Ingredient = selection == names.Length - 1 ? (Guid?) null : ingredients[selection].ID;
+            // }
 
-            EditorGUILayout.Space();
+            Space();
 
             return value;
         }
@@ -647,7 +804,7 @@ public class DatabaseInspector : EditorWindow
 
     public void OnGUI()
     {
-        _labelStyle = new GUIStyle(EditorStyles.centeredGreyMiniLabel) {normal = {textColor = EditorGUIUtility.isProSkin?Color.white:Color.black}};
+        _labelStyle = new GUIStyle(EditorStyles.centeredGreyMiniLabel) {normal = {textColor = LabelColor}};
         
         Event current = Event.current;
         EventType currentEventType = current.type;
@@ -658,11 +815,11 @@ public class DatabaseInspector : EditorWindow
         
         if (entry==null)
         {
-            EditorGUILayout.LabelField($"{(_list.SelectedItem==Guid.Empty?"No Entry Selected":"Selected Entry Not Found in Database")}\n{_list.SelectedItem}");
+            LabelField($"{(_list.SelectedItem==Guid.Empty?"No Entry Selected":"Selected Entry Not Found in Database")}\n{_list.SelectedItem}");
             return;
         }
         
-        _view = EditorGUILayout.BeginScrollView(
+        _view = BeginScrollView(
             _view, 
             false,
             false,
@@ -676,7 +833,7 @@ public class DatabaseInspector : EditorWindow
 
         var dataEntry = entry;
         
-        using (new EditorGUILayout.HorizontalScope())
+        using (new HorizontalScope())
         {
             if(GUILayout.Button("Print JSON"))
                 Debug.Log(entry.ToJson());
@@ -692,10 +849,10 @@ public class DatabaseInspector : EditorWindow
             }
         }
         
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
             GUILayout.Label("ID");
-            EditorGUILayout.LabelField(dataEntry.ID.ToString());
+            LabelField(dataEntry.ID.ToString());
         }
 
         Inspect(entry, true);
@@ -704,7 +861,7 @@ public class DatabaseInspector : EditorWindow
         var hull = entry as HullData;
         if (hull != null)
         {
-            EditorGUILayout.Space();
+            Space();
 
             // TODO: Hull Hardpoints Inspector
             
@@ -828,7 +985,7 @@ public class DatabaseInspector : EditorWindow
             DatabaseCache.Add(entry);
         }
             
-        EditorGUILayout.EndScrollView();
+        EndScrollView();
 
     }
 }

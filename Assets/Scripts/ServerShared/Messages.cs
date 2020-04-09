@@ -5,20 +5,11 @@ using LiteNetLib;
 using MessagePack;
 using Unity.Mathematics;
 
-[Union(0,typeof(PingMessage))]
-[Union(1,typeof(LoginMessage))]
-[Union(2,typeof(RegisterMessage))]
-[Union(3,typeof(VerifyMessage))]
-[Union(4,typeof(ErrorMessage))]
-[Union(5,typeof(LoginSuccessMessage))]
-[Union(6,typeof(ChatMessage))]
-[Union(7,typeof(ChatBroadcastMessage))]
-[Union(8,typeof(ChangeNameMessage))]
-[Union(9,typeof(GalaxyRequestMessage))]
-[Union(10,typeof(GalaxyResponseMessage))]
-[Union(11,typeof(ZoneRequestMessage))]
-[Union(12,typeof(ZoneResponseMessage))]
-[MessagePackObject]
+[Union(0, typeof(PingMessage)), Union(1, typeof(LoginMessage)), Union(2, typeof(RegisterMessage)),
+ Union(3, typeof(VerifyMessage)), Union(4, typeof(ErrorMessage)), Union(5, typeof(LoginSuccessMessage)),
+ Union(6, typeof(ChatMessage)), Union(7, typeof(ChatBroadcastMessage)), Union(8, typeof(ChangeNameMessage)),
+ Union(9, typeof(GalaxyRequestMessage)), Union(10, typeof(GalaxyResponseMessage)),
+ Union(11, typeof(ZoneRequestMessage)), Union(12, typeof(ZoneResponseMessage)), MessagePackObject]
 public abstract class Message
 {
     [IgnoreMember] public NetPeer Peer;

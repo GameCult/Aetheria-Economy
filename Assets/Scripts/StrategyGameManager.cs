@@ -67,7 +67,7 @@ public class StrategyGameManager : MonoBehaviour
             _galaxy = galaxy;
             _galaxyResponseZones = _galaxy.Zones.ToDictionary(z => z.ZoneID);
             _cache.Add(_galaxy.GlobalData, true);
-            _context = new GameContext(_cache);
+            _context = new GameContext(_cache, Debug.Log);
             if (_currentTab == GalaxyTabButton && !_galaxyPopulated) PopulateGalaxy();
         });
         
@@ -142,7 +142,7 @@ public class StrategyGameManager : MonoBehaviour
         {
             var orbitData = _cache.Get<OrbitData>(orbit);
             _orbitPositions[orbit] = GetOrbitPosition(orbitData.Parent) + (orbitData.Period < .01f ? float2.zero : 
-                                     OrbitData.Evaluate(Time.time / orbitData.Period + orbitData.Phase) *
+                                     OrbitData.Evaluate(Time.time / -orbitData.Period + orbitData.Phase) *
                                      orbitData.Distance);
         }
 

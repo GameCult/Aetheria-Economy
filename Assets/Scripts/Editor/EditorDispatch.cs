@@ -35,8 +35,8 @@ public static class EditorDispatcher
 
             timer.Stop();
 
-            if (dispatchCount > 0)
-            UnityEngine.Debug.Log(string.Format("[EditorDispatcher] Dispatched {0} calls in {1}ms", dispatchCount, timer.Elapsed.TotalMilliseconds));
+//            if (dispatchCount > 0)
+//            UnityEngine.Debug.Log(string.Format("[EditorDispatcher] Dispatched {0} calls in {1}ms", dispatchCount, timer.Elapsed.TotalMilliseconds));
 
             // todo some logic for disconnecting update when the queue is empty
         }

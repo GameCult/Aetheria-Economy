@@ -11,6 +11,7 @@ using static Unity.Mathematics.noise;
 
 public interface IItemBehavior
 {
+    void Initialize();
     void Update(float delta);
     void FixedUpdate(float delta);
     Ship Ship { get; }
@@ -25,15 +26,19 @@ public interface IActivatedItemBehavior : IItemBehavior
     void Deactivate();
 }
 
-[InspectableField]
-[Union(0, typeof(CannonBehaviorData))]
-[Union(1, typeof(LauncherBehaviorData))]
-[Union(2, typeof(ReactorBehaviorData))]
+public interface IAnalogItemBehavior : IItemBehavior
+{
+    void SetAxis(float value);
+}
+
+[InspectableField, 
+ Union(0, typeof(CannonBehaviorData)), 
+ Union(1, typeof(LauncherBehaviorData)),
+ Union(2, typeof(ReactorBehaviorData)), 
+ Union(4, typeof(AfterburnerBehaviorData)), 
+ Union(5, typeof(SensorBehaviorData)),
+ JsonConverter(typeof(JsonKnownTypesConverter<IItemBehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 // [Union(3, typeof(PlusUltraBehaviorData))]
-[Union(4, typeof(AfterburnerBehaviorData))]
-[Union(5, typeof(SensorBehaviorData))]
-[JsonConverter(typeof(JsonKnownTypesConverter<IItemBehaviorData>))]
-[JsonObject(MemberSerialization.OptIn)]
 public interface IItemBehaviorData
 {
     IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item);

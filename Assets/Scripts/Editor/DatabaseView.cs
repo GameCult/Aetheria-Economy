@@ -44,6 +44,8 @@ public class DatabaseListView : EditorWindow
     private string _connectionString;
     private const float LineHeight = 20;
 
+    public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
+
     // Set instance on reloading the window, else it gets lost after script reload (due to PlayMode changes, ...).
     public DatabaseListView()
     {
@@ -158,26 +160,61 @@ public class DatabaseListView : EditorWindow
                 // When entries are changed locally, push the changes to RethinkDB
                 _databaseCache.OnDataUpdateLocal += async entry =>
                 {
-                    var result = await R.Db("Aetheria").Table("Items").Update(entry).RunAsync(_connection);
+                    var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
+                    var result = await R
+                        .Db("Aetheria")
+                        .Table(table)
+                        .Update(entry)
+                        .RunAsync(_connection);
                     Debug.Log($"Uploaded entry to RethinkDB: {entry.ID} result: {result}");
                 };
                 
                 _databaseCache.OnDataInsertLocal += async entry =>
                 {
-                    var result = await R.Db("Aetheria").Table("Items").Insert(entry).RunAsync(_connection);
+                    var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
+                    var result = await R
+                        .Db("Aetheria")
+                        .Table(table)
+                        .Insert(entry)
+                        .RunAsync(_connection);
                     Debug.Log($"Inserted entry to RethinkDB: {entry.ID} result: {result}");
                 };
 
                 _databaseCache.OnDataDeleteLocal += async entry =>
                 {
-                    var result = await R.Db("Aetheria").Table("Items").Get(entry.ID).Delete().RunAsync(_connection);
+                    var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
+                    var result = await R
+                        .Db("Aetheria")
+                        .Table(table)
+                        .Get(entry.ID)
+                        .Delete()
+                        .RunAsync(_connection);
                     Debug.Log($"Deleted entry from RethinkDB: {entry.ID} result: {result}");
                 };
         
                 // Get all item data from RethinkDB
                 Task.Run(async () =>
                 {
-                    var result = await R.Db("Aetheria").Table("Items").RunCursorAsync<DatabaseEntry>(_connection);
+                    var result = await R
+                        .Db("Aetheria")
+                        .Table("Items")
+                        .RunCursorAsync<DatabaseEntry>(_connection);
+                    while (await result.MoveNextAsync())
+                    {
+                        var entry = result.Current;
+                        Debug.Log($"Received entry from RethinkDB: {entry.ID}");
+                        _databaseCache.Add(entry, true);
+                    }
+                }).WrapErrors();
+        
+                // Get all galaxy map layer data from RethinkDB
+                Task.Run(async () =>
+                {
+                    var result = await R
+                        .Db("Aetheria")
+                        .Table("Galaxy")
+                        .Filter(o => o["$type"]==typeof(GalaxyMapLayerData).Name)
+                        .RunCursorAsync<DatabaseEntry>(_connection);
                     while (await result.MoveNextAsync())
                     {
                         var entry = result.Current;
@@ -189,7 +226,10 @@ public class DatabaseListView : EditorWindow
                 // Subscribe to changes from RethinkDB
                 Task.Run(async () =>
                 {
-                    var result = await R.Db("Aetheria").Table("Items").Changes()
+                    var result = await R
+                        .Db("Aetheria")
+                        .Table("Items")
+                        .Changes()
                         .RunChangesAsync<DatabaseEntry>(_connection);
                     while (await result.MoveNextAsync())
                     {
@@ -228,7 +268,7 @@ public class DatabaseListView : EditorWindow
                 {
                     GUILayout.Space(10);
                     _gearFoldouts[i] = EditorGUILayout.Foldout(_gearFoldouts[i],
-                        ((NameAttribute) _itemTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? _itemTypes[i].Name,
+                        ((NameAttribute) _itemTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? FormatTypeName(_itemTypes[i].Name),
                         true);
                 }
                 if (_gearFoldouts[i])
@@ -263,7 +303,7 @@ public class DatabaseListView : EditorWindow
                         GUILayout.Space(20);
                         GUILayout.Label("New " + _itemTypes[i].Name);
                         var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, EditorGUIUtility.isProSkin?Color.white:Color.black, 0, 0);
+                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                     }
                 }
             }
@@ -275,7 +315,7 @@ public class DatabaseListView : EditorWindow
             using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
             {
                 _entryFoldouts[i] = EditorGUILayout.Foldout(_entryFoldouts[i],
-                    ((NameAttribute) _entryTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? _entryTypes[i].Name,
+                    ((NameAttribute) _entryTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? FormatTypeName(_entryTypes[i].Name),
                     true);
             }
 
@@ -312,7 +352,7 @@ public class DatabaseListView : EditorWindow
                     GUILayout.Space(10);
                     GUILayout.Label("New " + _entryTypes[i].Name);
                     var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, EditorGUIUtility.isProSkin?Color.white:Color.black, 0, 0);
+                    GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                 }
             }
         }
@@ -395,6 +435,13 @@ public class DatabaseListView : EditorWindow
         // HACK: This ensures none of the controls in this window can be focused (usually from clicking foldouts)
         //GUI.SetNextControlName("");
         //GUI.FocusControl("");
+    }
+
+    private string FormatTypeName(string typeName)
+    {
+        return (typeName.EndsWith("Data")
+            ? typeName.Substring(0, typeName.Length - 4)
+            : typeName).SplitCamelCase();
     }
 
     private void CreateItem(Type type)

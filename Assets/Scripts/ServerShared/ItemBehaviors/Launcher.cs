@@ -4,72 +4,38 @@ using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 
-[RethinkTable("Items")]
-[InspectableField]
-[MessagePackObject]
-[JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class LauncherBehaviorData : IItemBehaviorData
 {
-    // [MessagePackFormatter(typeof(UnityGameObjectFormatter))]
-    // [Inspectable] [Key("missile")]         public GameObject            MissilePrefab;
-    // [MessagePackFormatter(typeof(ClipListFormatter))]
-    // [Inspectable] [Key("sounds")]         public List<AudioClip>       Sounds;
-    // [MessagePackFormatter(typeof(UnityAudioClipFormatter))]
-    // [Inspectable] [Key("beepSound")]      public AudioClip             BeepSound;
-    // [Inspectable] [Key("beepCount")]      public int                   Beeps;
-    [InspectableField] [JsonProperty("damageType")] [Key(0)]
-    public DamageType DamageType;
+    [InspectablePrefab, JsonProperty("missile"), Key(9)]  
+    public string MissilePrefab;
 
-    [InspectableField] [JsonProperty("burstCount")] [Key(1)]
-    public int BurstCount;
-
-    [InspectableField] [JsonProperty("burstTime")] [Key(2)]
-    public PerformanceStat BurstTime;
-
-    [InspectableField] [JsonProperty("range")] [Key(3)]
-    public PerformanceStat Range;
-
-    [InspectableAnimationCurve] [JsonProperty("guidance")] [Key(4)]
+    [InspectableAnimationCurve, JsonProperty("guidance"), Key(10)]  
     public float4[] GuidanceCurve;
 
-    [InspectableAnimationCurve] [JsonProperty("thrustCurve")] [Key(5)]
+    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(11)]  
     public float4[] ThrustCurve;
 
-    [InspectableAnimationCurve] [JsonProperty("liftCurve")] [Key(6)]
+    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(12)]  
     public float4[] LiftCurve;
 
-    [InspectableField] [JsonProperty("thrust")] [Key(7)]
-    public PerformanceStat Thrust;
+    [InspectableField, JsonProperty("thrust"), Key(13)]  
+    public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("deflection")] [Key(8)]
-    public float Deflection;
+    [InspectableField, JsonProperty("lockAngle"), Key(14)]  
+    public float LockAngle;
 
-    [InspectableField] [JsonProperty("lockOnBuffer")] [Key(9)]
-    public float LockOnDegrees;
-
-    [InspectableField] [JsonProperty("frequency")] [Key(10)]
+    [InspectableField, JsonProperty("frequency"), Key(15)]  
     public float DodgeFrequency;
 
-    [InspectableField] [JsonProperty("visibility")] [Key(11)]
-    public PerformanceStat Visibility;
+    [InspectableField, JsonProperty("launchSpeed"), Key(16)]  
+    public PerformanceStat LaunchSpeed = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("launchSpeed")] [Key(12)]
-    public PerformanceStat LaunchSpeed;
+    [InspectableField, JsonProperty("missileSpeed"), Key(17)]  
+    public PerformanceStat MissileSpeed = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("missileSpeed")] [Key(13)]
-    public PerformanceStat MissileSpeed;
-
-    [InspectableField] [JsonProperty("cooldown")] [Key(14)]
-    public PerformanceStat Cooldown;
-
-    [InspectableField] [JsonProperty("lockOnTime")] [Key(15)]
-    public PerformanceStat LockOnTime;
-
-    [InspectableField] [JsonProperty("damage")] [Key(16)]
-    public PerformanceStat Damage;
-
-    [InspectableField] [JsonProperty("heat")] [Key(17)]
-    public PerformanceStat Heat;
+    [InspectableField, JsonProperty("lockOnTime"), Key(18)]
+    public PerformanceStat LockOnTime = new PerformanceStat();
 
     public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
     {
@@ -152,6 +118,10 @@ public class LauncherBehavior : IActivatedItemBehavior
         // }
         // _locking = false;
         // _lockingTimer = 1;
+    }
+
+    public void Initialize()
+    {
     }
 
     public void Update(float delta)

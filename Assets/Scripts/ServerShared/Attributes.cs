@@ -82,3 +82,13 @@ public class RangedIntInspectableAttribute : InspectableFieldAttribute
         Max = max;
     }
 }
+
+public class InspectableTypeAttribute : InspectableFieldAttribute
+{
+    public readonly Type Type;
+
+    public InspectableTypeAttribute(Type type)
+    {
+        Type = type;
+    }
+}

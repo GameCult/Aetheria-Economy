@@ -57,7 +57,7 @@ public class ZoneGeneratorTest : MonoBehaviour
     void Start()
     {
         _cache = new DatabaseCache();
-        _context = new GameContext(_cache);
+        _context = new GameContext(_cache, Debug.Log);
         _boundaryMaterial = ZoneBoundary.material;
     }
 
@@ -105,10 +105,10 @@ public class ZoneGeneratorTest : MonoBehaviour
         ZoneGenerator.GenerateZone(
             global: Galaxy.MapData.GlobalData, 
             zone: zone, 
-            mass: Galaxy.MapData.ResourceDensities.First(m=>m.Name=="Mass"),
-            radius: Galaxy.MapData.ResourceDensities.First(m=>m.Name=="Radius"),
+            mapLayers: Galaxy.MapData.ResourceDensities,
+            resources: Array.Empty<SimpleCommodityData>(),
             orbitData: out orbits, 
-            planetData: out planets);
+            planetsData: out planets);
         _cache.AddAll(orbits);
         _cache.AddAll(planets);
         _cache.Add(zone);

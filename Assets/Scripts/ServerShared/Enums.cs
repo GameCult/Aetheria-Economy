@@ -1,3 +1,5 @@
+using System;
+
 public enum LauncherCaliber
 {
     Micro,
@@ -29,4 +31,15 @@ public enum DamageType
     Thermal,
     Optical,
     Ionizing
+}
+
+[Flags]
+public enum BodyType
+{
+    None = 0,
+    Asteroid = 1 << 0,
+    Planetoid = 1 << 1,
+    Planet = 1 << 2,
+    GasGiant = 1 << 3,
+    Sun = 1 << 4
 }

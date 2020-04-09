@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using MessagePack.Resolvers;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RethinkDb.Driver;
+using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Net;
 using Serilog;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -118,7 +121,9 @@ namespace ChatApp.Server
             };
             server.Start();
             
-            var context = new GameContext(cache);
+            var context = new GameContext(cache, s=>_logger.Log(LogLevel.Information, s));
+
+            var mapLayers = cache.GetAll<GalaxyMapLayerData>().ToDictionary(m => m.Name);
             
             server.AddMessageListener<GalaxyRequestMessage>(galaxyRequest => galaxyRequest.Peer.Send(
                 new GalaxyResponseMessage
@@ -132,7 +137,7 @@ namespace ChatApp.Server
                             Links = zd.Wormholes?.ToArray() ?? Array.Empty<Guid>()
                         }).ToArray(),
                     GlobalData = context.GlobalData,
-                    StarDensity = cache.Get<GalaxyMapLayerData>(context.GlobalData.MapLayers["StarDensity"])
+                    StarDensity = mapLayers["StarDensity"]
                 }));
             
             server.AddMessageListener<ZoneRequestMessage>(zoneRequest =>
@@ -148,10 +153,10 @@ namespace ChatApp.Server
                     ZoneGenerator.GenerateZone(
                         global: context.GlobalData, 
                         zone: zone, 
-                        mass: cache.Get<GalaxyMapLayerData>(context.GlobalData.MapLayers["Mass"]), 
-                        radius: cache.Get<GalaxyMapLayerData>(context.GlobalData.MapLayers["Radius"]), 
+                        mapLayers: mapLayers.Values, 
+                        resources: cache.GetAll<SimpleCommodityData>(), 
                         orbitData: out orbits, 
-                        planetData: out planets);
+                        planetsData: out planets);
                     cache.AddAll(orbits);
                     cache.AddAll(planets);
                     cache.Add(zone);
@@ -165,6 +170,11 @@ namespace ChatApp.Server
                             .Concat(zone.Stations.Select(id=>cache.Get(id))).ToArray()
                     });
             });
+
+            Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).SubscribeOn(NewThreadScheduler.Default).Subscribe(_ =>
+                {
+                    _logger.Log(LogLevel.Information, R.Now().Run<DateTime>(connection).ToString() as string);
+                });
 
             while (true)
             {

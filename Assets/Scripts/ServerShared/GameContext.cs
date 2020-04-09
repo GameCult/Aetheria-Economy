@@ -6,15 +6,17 @@ using static Unity.Mathematics.math;
 
 public class GameContext
 {
+    private Action<string> _logger;
     private DatabaseCache _cache;
     
     public GlobalData GlobalData => _cache.GetAll<GlobalData>().FirstOrDefault();
     
-    private readonly Dictionary<CraftedItemData, int> Tier = new Dictionary<CraftedItemData, int>();
+    // private readonly Dictionary<CraftedItemData, int> Tier = new Dictionary<CraftedItemData, int>();
 
-    public GameContext(DatabaseCache cache)
+    public GameContext(DatabaseCache cache, Action<string> logger)
     {
         _cache = cache;
+        _logger = logger;
         var globalData = _cache.GetAll<GlobalData>().FirstOrDefault();
         if (globalData == null)
         {
@@ -23,14 +25,14 @@ public class GameContext
         }
     }
     
-    public int ItemTier(CraftedItemData itemData)
-    {
-        if (Tier.ContainsKey(itemData)) return Tier[itemData];
-
-        Tier[itemData] = itemData.Ingredients.Keys.Max(ci => _cache.Get<ItemData>(ci) is CraftedItemData craftableIngredient ? ItemTier(craftableIngredient) : 0);
-		
-        return Tier[itemData];
-    }
+    // public int ItemTier(CraftedItemData itemData)
+    // {
+    //     if (Tier.ContainsKey(itemData)) return Tier[itemData];
+    //
+    //     Tier[itemData] = itemData.Ingredients.Keys.Max(ci => _cache.Get<ItemData>(ci) is CraftedItemData craftableIngredient ? ItemTier(craftableIngredient) : 0);
+		  //
+    //     return Tier[itemData];
+    // }
 
     public ItemData GetData(ItemInstance item)
     {
@@ -80,21 +82,70 @@ public class GameContext
         return 0;
     }
 
+    private Dictionary<BlueprintStatEffect, PerformanceStat> AffectedStats =
+        new Dictionary<BlueprintStatEffect, PerformanceStat>();
+
+    public PerformanceStat GetAffectedStat(BlueprintData blueprint, BlueprintStatEffect effect)
+    {
+        // We've already cached this effect's stat, return it directly
+        if (AffectedStats.ContainsKey(effect)) return AffectedStats[effect];
+        
+        // Get the data for the item the blueprint is for, return null if not found or not equippable
+        var blueprintItem = _cache.Get<EquippableItemData>(blueprint.Item);
+        if (blueprintItem == null)
+        {
+            _logger($"Attempted to get stat effect but Blueprint {blueprint.ID} is not for an equippable item!");
+            return AffectedStats[effect] = null;
+        }
+        
+        // Get the first behavior of the type specified in the blueprint stat effect, return null if not found
+        var effectBehavior =
+            blueprintItem.Behaviors.FirstOrDefault(b => b.GetType().Name == effect.StatReference.Behavior);
+        if (effectBehavior == null)
+        {
+            _logger($"Attempted to get stat effect for Blueprint {blueprint.ID} but stat references missing behavior \"{effect.StatReference.Behavior}\"!");
+            return AffectedStats[effect] = null;
+        }
+        
+        // Get the first field in the behavior matching the name specified in the stat effect, return null if not found
+        var type = effectBehavior.GetType();
+        var field = type.GetField(effect.StatReference.Stat);
+        if (field == null)
+        {
+            _logger($"Attempted to get stat effect for Blueprint {blueprint.ID} but behavior {effect.StatReference.Behavior} does not have a stat named \"{effect.StatReference.Stat}\"!");
+            return AffectedStats[effect] = null;
+        }
+        
+        // Finally we've confirmed the stat effect is valid, return the affected stat
+        return AffectedStats[effect] = field.GetValue(effectBehavior) as PerformanceStat;
+    }
+
     // Determine quality of either the item itself or the specific ingredient this stat depends on
     public float Quality(PerformanceStat stat, Gear item)
     {
-        Guid? ingredientID = stat.Ingredient;
+        
+        var activeEffects = item.Blueprint.StatEffects.Where(x => GetAffectedStat(item.Blueprint, x) == stat).ToArray();
         float quality;
-        if (ingredientID == null)
+        if (!activeEffects.Any())
             quality = item.CompoundQuality();
         else
         {
-            var ingredientInstance =
-                item.Ingredients.FirstOrDefault(i => i.Data == ingredientID) as CraftedItemInstance;
-            if (ingredientInstance == null)
-                throw new InvalidOperationException(
-                    $"Item {item.ID} has invalid crafting ingredients!");
-            quality = ingredientInstance.CompoundQuality();
+            var ingredients = item.Ingredients.Where(i => activeEffects.Any(e => e.Ingredient == i.Data)).ToArray();
+            if(ingredients.Length != activeEffects.Length)
+            {
+                _logger($"Item {item.ID} does not have the ingredients specified by the stat effects of its blueprint!");
+                return 0;
+            }
+
+            float sum = 0;
+            foreach (var i in ingredients)
+            {
+                if (i is CraftedItemInstance ci)
+                    sum += ci.CompoundQuality();
+                else _logger($"Blueprint stat effect for item {item.ID} specifies invalid (non crafted) ingredient!");
+            }
+
+            quality = sum / ingredients.Length;
         }
 
         return quality;
@@ -143,7 +194,8 @@ public class GameContext
                 ID = Guid.NewGuid()
             };
         
-        throw new InvalidOperationException("Attempted to create Simple Commodity instance using missing or incorrect item id");
+        _logger("Attempted to create Simple Commodity instance using missing or incorrect item id");
+        return null;
     }
     
     public CraftedItemInstance CreateInstance(Guid data, float quality)
@@ -151,10 +203,18 @@ public class GameContext
         var item = _cache.Get<CraftedItemData>(data);
         if (item == null)
         {
-            throw new InvalidOperationException("Attempted to create crafted item instance using missing or incorrect item id");
+            _logger("Attempted to create crafted item instance using missing or incorrect item id!");
+            return null;
         }
 
-        var ingredients = item.Ingredients.SelectMany(ci =>
+        var blueprint = _cache.GetAll<BlueprintData>().FirstOrDefault(b => b.Item == data);
+        if (blueprint == null)
+        {
+            _logger("Attempted to create crafted item instance which has no blueprint!");
+            return null;
+        }
+        
+        var ingredients = blueprint.Ingredients.SelectMany(ci =>
             {
                 var ingredient = _cache.Get(ci.Key);
                 return ingredient is SimpleCommodityData

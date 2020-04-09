@@ -283,11 +283,12 @@ public class GalaxyEditor : Editor
 							}).Run(_connection);
 						}
 
-						galaxy.MapData.GlobalData.MapLayers["StarDensity"] = galaxy.MapData.StarDensity.ID = Guid.NewGuid();
+						//galaxy.MapData.GlobalData.MapLayers["StarDensity"] = galaxy.MapData.StarDensity.ID = Guid.NewGuid();
+						galaxy.MapData.StarDensity.Name = "StarDensity";
 						R.Db("Aetheria").Table("Galaxy").Insert(galaxy.MapData.StarDensity).Run(_connection);
 						foreach (var data in galaxy.MapData.ResourceDensities)
 						{
-							galaxy.MapData.GlobalData.MapLayers[data.Name] = data.ID = Guid.NewGuid();
+							// galaxy.MapData.GlobalData.MapLayers[data.Name] = data.ID = Guid.NewGuid();
 							R.Db("Aetheria").Table("Galaxy").Insert(data).Run(_connection);
 						}
 						

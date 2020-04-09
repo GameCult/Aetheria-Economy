@@ -6,6 +6,7 @@
     <e p="C:\Users\rwvens\Documents\GitHub\Aetheria-Economy" t="IncludeFlat">
       <e p="Assets\Scripts\ServerShared\ActionCollection.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\Attributes.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\BlueprintData.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\DatabaseCache.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\DatabaseItems.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\Enums.cs" t="Include" />
@@ -19,6 +20,10 @@
         <e p="Launcher.cs" t="Include" />
         <e p="Reactor.cs" t="Include" />
         <e p="Sensor.cs" t="Include" />
+        <e p="Shield.cs" t="Include" />
+        <e p="Thruster.cs" t="Include" />
+        <e p="Turning.cs" t="Include" />
+        <e p="Weapon.cs" t="Include" />
       </e>
       <e p="Assets\Scripts\ServerShared\ItemData.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\ItemInstance.cs" t="Include" />

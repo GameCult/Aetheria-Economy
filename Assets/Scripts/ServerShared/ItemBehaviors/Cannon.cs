@@ -1,53 +1,20 @@
 using MessagePack;
 using Newtonsoft.Json;
 
-[RethinkTable("Items")]
-[InspectableField]
-[MessagePackObject]
-[JsonObject(MemberSerialization.OptIn)]
-public class CannonBehaviorData : IItemBehaviorData
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class CannonBehaviorData : WeaponBehaviorData, IItemBehaviorData
 {
-    [InspectablePrefab] [JsonProperty("bullet")] [Key(0)]
+    [InspectablePrefab, JsonProperty("bullet"), Key(9)]  
     public string BulletPrefab;
-    
-    [InspectableField] [JsonProperty("damageType")] [Key(1)]
-    public DamageType DamageType;
 
-    [InspectableField] [JsonProperty("burstCount")] [Key(2)]
-    public int BurstCount;
+    [InspectableField, JsonProperty("spread"), Key(10)]  
+    public PerformanceStat Spread = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("burstTime")] [Key(3)]
-    public PerformanceStat BurstTime;
-
-    [InspectableField] [JsonProperty("bulletRange")] [Key(4)]
-    public PerformanceStat Range;
-
-    [InspectableField] [JsonProperty("spread")] [Key(5)]
-    public PerformanceStat Spread;
-
-    [InspectableField] [JsonProperty("bulletInherit")] [Key(6)]
+    [InspectableField, JsonProperty("bulletInherit"), Key(11)]  
     public float Inherit;
 
-    [InspectableField] [JsonProperty("deflection")] [Key(7)]
-    public float Deflection;
-
-    [InspectableField] [JsonProperty("visibility")] [Key(8)]
-    public PerformanceStat Visibility;
-
-    [InspectableField] [JsonProperty("visibilityDecay")] [Key(9)]
-    public PerformanceStat VisibilityDecay;
-
-    [InspectableField] [JsonProperty("bulletVelocity")] [Key(10)]
-    public PerformanceStat Velocity;
-
-    [InspectableField] [JsonProperty("cooldown")] [Key(11)]
-    public PerformanceStat Cooldown;
-
-    [InspectableField] [JsonProperty("damage")] [Key(12)]
-    public PerformanceStat Damage;
-
-    [InspectableField] [JsonProperty("heat")] [Key(13)]
-    public PerformanceStat Heat;
+    [InspectableField, JsonProperty("bulletVelocity"), Key(12)]  
+    public PerformanceStat Velocity = new PerformanceStat();
     
     public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
     {
@@ -112,6 +79,10 @@ public class CannonBehavior : IActivatedItemBehavior
     public void Deactivate()
     {
         _firing = false;
+    }
+
+    public void Initialize()
+    {
     }
 
     public void Update(float delta)

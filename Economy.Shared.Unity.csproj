@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\ServerShared\ActionCollection.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\BlueprintData.cs" />
     <Compile Include="Assets\Scripts\ServerShared\DatabaseCache.cs" />
     <Compile Include="Assets\Scripts\ServerShared\DatabaseItems.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Enums.cs" />
@@ -74,6 +75,10 @@
     <Compile Include="Assets\Scripts\ServerShared\ItemBehaviors\Launcher.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ItemBehaviors\Reactor.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ItemBehaviors\Sensor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ItemBehaviors\Shield.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ItemBehaviors\Thruster.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ItemBehaviors\Turning.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ItemBehaviors\Weapon.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ItemData.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ItemInstance.cs" />
     <Compile Include="Assets\Scripts\ServerShared\JsonConverters.cs" />
@@ -673,8 +678,17 @@
     <Reference Include="UnityEditor.WindowsStandalone.Extensions">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.17f1/Editor/Data/PlaybackEngines/windowsstandalonesupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.SqlServer.Types">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Linq">
+      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Buffers">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
@@ -699,15 +713,6 @@
     </Reference>
     <Reference Include="Grpc.Core.Api">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Remotion.Linq">
-      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.17f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

@@ -1,25 +1,23 @@
 using MessagePack;
 using Newtonsoft.Json;
 
-[RethinkTable("Items")]
-[MessagePackObject]
-[JsonObject(MemberSerialization.OptIn)]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ReactorBehaviorData : IItemBehaviorData
 {
-    [InspectableField] [JsonProperty("charge")] [Key(0)]
-    public PerformanceStat Charge;
+    [InspectableField, JsonProperty("charge"), Key(0)]  
+    public PerformanceStat Charge = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("capacitance")] [Key(1)]
-    public PerformanceStat Capacitance;
+    [InspectableField, JsonProperty("capacitance"), Key(1)]  
+    public PerformanceStat Capacitance = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("efficiency")] [Key(2)]
-    public PerformanceStat Efficiency;
+    [InspectableField, JsonProperty("efficiency"), Key(2)]  
+    public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("overload")] [Key(3)]
-    public PerformanceStat OverloadEfficiency;
+    [InspectableField, JsonProperty("overload"), Key(3)]  
+    public PerformanceStat OverloadEfficiency = new PerformanceStat();
 
-    [InspectableField] [JsonProperty("underload")] [Key(4)]
-    public PerformanceStat UnderloadRecovery;
+    [InspectableField, JsonProperty("underload"), Key(4)]  
+    public PerformanceStat UnderloadRecovery = new PerformanceStat();
     
     public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
     {
@@ -66,6 +64,10 @@ public class ReactorBehavior : IItemBehavior
             Ship.Charge = 0;
         }
 
+    }
+
+    public void Initialize()
+    {
     }
 
     public void Update(float delta)
