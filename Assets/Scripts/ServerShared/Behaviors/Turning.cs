@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class TurningBehaviorData : IItemBehaviorData
+public class TurningData : IBehaviorData
 {
     [InspectableField, JsonProperty("torque"), Key(0)]  
     public PerformanceStat Torque = new PerformanceStat();
@@ -15,29 +15,29 @@ public class TurningBehaviorData : IItemBehaviorData
     [InspectableField, JsonProperty("heat"), Key(2)]  
     public PerformanceStat Heat = new PerformanceStat();
     
-    public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
+    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new TurningBehavior(context, this, ship, item);
+        return new Turning(context, this, entity, item);
     }
 }
 
-public class TurningBehavior : IAnalogItemBehavior
+public class Turning : IAnalogBehavior
 {
-    public Ship Ship { get; }
+    public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IItemBehaviorData Data => _data;
+    public IBehaviorData Data => _data;
     
-    private TurningBehaviorData _data;
+    private TurningData _data;
     
     private float _turning;
 
-    public TurningBehavior(GameContext context, TurningBehaviorData data, Ship ship, Gear item)
+    public Turning(GameContext context, TurningData data, Entity entity, Gear item)
     {
         Context = context;
         _data = data;
-        Ship = ship;
+        Entity = entity;
         Item = item;
     }
     
@@ -46,19 +46,14 @@ public class TurningBehavior : IAnalogItemBehavior
         _turning = clamp(value, -1, 1);
     }
 
-    public void FixedUpdate(float delta)
-    {
-
-    }
-
     public void Initialize()
     {
     }
 
     public void Update(float delta)
     {
-        Ship.Direction = mul(Ship.Direction, Unity.Mathematics.float2x2.Rotate(_turning * Context.Evaluate(_data.Torque, Item, Ship) * delta));
-        Ship.AddHeat(abs(_turning) * Context.Evaluate(_data.Heat, Item, Ship) * delta);
-        Ship.VisibilitySources[this] = abs(_turning) * Context.Evaluate(_data.Visibility, Item, Ship);
+        Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_turning * Context.Evaluate(_data.Torque, Item, Entity) * delta));
+        Entity.AddHeat(abs(_turning) * Context.Evaluate(_data.Heat, Item, Entity) * delta);
+        Entity.VisibilitySources[this] = abs(_turning) * Context.Evaluate(_data.Visibility, Item, Entity);
     }
 }

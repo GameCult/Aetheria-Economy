@@ -660,26 +660,31 @@
           <e p="ServerShared" t="Include">
             <e p="ActionCollection.cs" t="Include" />
             <e p="Attributes.cs" t="Include" />
-            <e p="BlueprintData.cs" t="Include" />
-            <e p="DatabaseCache.cs" t="Include" />
-            <e p="DatabaseItems.cs" t="Include" />
-            <e p="Economy.Shared.Unity.asmdef" t="Include" />
-            <e p="Enums.cs" t="Include" />
-            <e p="Extensions.cs" t="Include" />
-            <e p="GameContext.cs" t="Include" />
-            <e p="GlobalData.cs" t="Include" />
-            <e p="ItemBehaviors" t="Include">
+            <e p="Behaviors" t="Include">
               <e p="Afterburner.cs" t="Include" />
               <e p="Behaviors.cs" t="Include" />
               <e p="Cannon.cs" t="Include" />
               <e p="Launcher.cs" t="Include" />
+              <e p="Radiator.cs" t="Include" />
               <e p="Reactor.cs" t="Include" />
+              <e p="Reflector.cs" t="Include" />
               <e p="Sensor.cs" t="Include" />
               <e p="Shield.cs" t="Include" />
               <e p="Thruster.cs" t="Include" />
               <e p="Turning.cs" t="Include" />
+              <e p="VelocityConversion.cs" t="Include" />
+              <e p="VelocityLimit.cs" t="Include" />
               <e p="Weapon.cs" t="Include" />
             </e>
+            <e p="BlueprintData.cs" t="Include" />
+            <e p="DatabaseCache.cs" t="Include" />
+            <e p="DatabaseItems.cs" t="Include" />
+            <e p="Economy.Shared.Unity.asmdef" t="Include" />
+            <e p="Entity.cs" t="Include" />
+            <e p="Enums.cs" t="Include" />
+            <e p="Extensions.cs" t="Include" />
+            <e p="GameContext.cs" t="Include" />
+            <e p="GlobalData.cs" t="Include" />
             <e p="ItemData.cs" t="Include" />
             <e p="ItemInstance.cs" t="Include" />
             <e p="JsonConverters.cs" t="Include" />

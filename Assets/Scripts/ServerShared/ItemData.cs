@@ -94,7 +94,7 @@ public abstract class EquippableItemData : CraftedItemData
     public PerformanceStat HeatExponent = new PerformanceStat();
 
     [InspectableField, JsonProperty("behaviors"), Key(13)]  
-    public List<IItemBehaviorData> Behaviors = new List<IItemBehaviorData>();
+    public List<IBehaviorData> Behaviors = new List<IBehaviorData>();
     
     [IgnoreMember]
     public abstract HardpointType HardpointType { get; }
@@ -143,25 +143,10 @@ public class HullData : EquippableItemData
     [InspectableField, JsonProperty("hullCapacity"), Key(14)]  
     public PerformanceStat Capacity = new PerformanceStat();
 
-    [InspectableField, JsonProperty("traction"), Key(15)]  
-    public PerformanceStat Traction = new PerformanceStat();
-
-    [InspectableField, JsonProperty("topSpeed"), Key(16)]  
-    public PerformanceStat TopSpeed = new PerformanceStat();
-
-    [InspectableField, JsonProperty("emissivity"), Key(17)]  
-    public PerformanceStat Emissivity = new PerformanceStat();
-
-    [InspectableField, JsonProperty("crossSection"), Key(18)]  
-    public PerformanceStat CrossSection = new PerformanceStat();
-
-    [InspectableField, JsonProperty("hardpoints"), Key(19)]  
+    [InspectableField, JsonProperty("hardpoints"), Key(15)]  
     public List<HardpointData> Hardpoints = new List<HardpointData>();
 
-    [InspectableAnimationCurve, JsonProperty("visibility"), Key(20)]  
-    public float4[] VisibilityCurve;
-
-    [InspectablePrefab, JsonProperty("prefab"), Key(21)]  
+    [InspectablePrefab, JsonProperty("prefab"), Key(16)]  
     public string Prefab;
 
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Hull;
@@ -193,30 +178,30 @@ public class PerformanceStat
 
     // [JsonProperty("ingredient"), Key(5)]  public Guid? Ingredient;
     
-    [IgnoreMember] private Dictionary<Ship,Dictionary<IItemBehavior,float>> _scaleModifiers;
-    [IgnoreMember] private Dictionary<Ship,Dictionary<IItemBehavior,float>> _constantModifiers;
+    [IgnoreMember] private Dictionary<Entity,Dictionary<IBehavior,float>> _scaleModifiers;
+    [IgnoreMember] private Dictionary<Entity,Dictionary<IBehavior,float>> _constantModifiers;
 
     [IgnoreMember]
-    private Dictionary<Ship, Dictionary<IItemBehavior, float>> ScaleModifiers =>
-        _scaleModifiers ?? (_scaleModifiers = new Dictionary<Ship, Dictionary<IItemBehavior, float>>());
+    private Dictionary<Entity, Dictionary<IBehavior, float>> ScaleModifiers =>
+        _scaleModifiers ?? (_scaleModifiers = new Dictionary<Entity, Dictionary<IBehavior, float>>());
 
     [IgnoreMember]
-    private Dictionary<Ship, Dictionary<IItemBehavior, float>> ConstantModifiers =>
-        _constantModifiers ?? (_constantModifiers = new Dictionary<Ship, Dictionary<IItemBehavior, float>>());
+    private Dictionary<Entity, Dictionary<IBehavior, float>> ConstantModifiers =>
+        _constantModifiers ?? (_constantModifiers = new Dictionary<Entity, Dictionary<IBehavior, float>>());
 
-    public Dictionary<IItemBehavior, float> GetScaleModifiers(Ship ship)
+    public Dictionary<IBehavior, float> GetScaleModifiers(Entity entity)
     {
-        if(!ScaleModifiers.ContainsKey(ship))
-            ScaleModifiers[ship] = new Dictionary<IItemBehavior, float>();
+        if(!ScaleModifiers.ContainsKey(entity))
+            ScaleModifiers[entity] = new Dictionary<IBehavior, float>();
 
-        return ScaleModifiers[ship];
+        return ScaleModifiers[entity];
     }
 
-    public Dictionary<IItemBehavior, float> GetConstantModifiers(Ship ship)
+    public Dictionary<IBehavior, float> GetConstantModifiers(Entity entity)
     {
-        if(!ConstantModifiers.ContainsKey(ship))
-            ConstantModifiers[ship] = new Dictionary<IItemBehavior, float>();
+        if(!ConstantModifiers.ContainsKey(entity))
+            ConstantModifiers[entity] = new Dictionary<IBehavior, float>();
 
-        return ConstantModifiers[ship];
+        return ConstantModifiers[entity];
     }
 }

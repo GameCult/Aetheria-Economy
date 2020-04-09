@@ -2,7 +2,7 @@ using MessagePack;
 using Newtonsoft.Json;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class CannonBehaviorData : WeaponBehaviorData, IItemBehaviorData
+public class CannonData : WeaponData, IBehaviorData
 {
     [InspectablePrefab, JsonProperty("bullet"), Key(9)]  
     public string BulletPrefab;
@@ -16,27 +16,27 @@ public class CannonBehaviorData : WeaponBehaviorData, IItemBehaviorData
     [InspectableField, JsonProperty("bulletVelocity"), Key(12)]  
     public PerformanceStat Velocity = new PerformanceStat();
     
-    public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
+    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new CannonBehavior(context, this, ship, item);
+        return new Cannon(context, this, entity, item);
     }
 }
 
-public class CannonBehavior : IActivatedItemBehavior
+public class Cannon : IActivatedBehavior
 {
     private bool _firing;
     private float _cooldown; // normalized
-    private CannonBehaviorData _cannon;
-    public Ship Ship { get; }
+    private CannonData _cannon;
+    public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
     private float _firingVisibility;
 
-    public CannonBehavior(GameContext context, CannonBehaviorData c, Ship ship, Gear item)
+    public Cannon(GameContext context, CannonData c, Entity entity, Gear item)
     {
         Context = context;
         _cannon = c;
-        Ship = ship;
+        Entity = entity;
         Item = item;
     }
     
@@ -87,18 +87,15 @@ public class CannonBehavior : IActivatedItemBehavior
 
     public void Update(float delta)
     {
-        _cooldown -= delta / Context.Evaluate(_cannon.Cooldown, Item, Ship);
+        _cooldown -= delta / Context.Evaluate(_cannon.Cooldown, Item, Entity);
 
+        _firingVisibility *= Context.Evaluate(_cannon.VisibilityDecay, Item, Entity);
+        
         if (_firingVisibility < 0.01f)
         {
-            Ship.VisibilitySources.Remove(this);
+            Entity.VisibilitySources.Remove(this);
         }
     }
-
-    public void FixedUpdate(float delta)
-    {
-        _firingVisibility *= Context.Evaluate(_cannon.VisibilityDecay, Item, Ship);
-    }
     
-    public IItemBehaviorData Data => _cannon;
+    public IBehaviorData Data => _cannon;
 }

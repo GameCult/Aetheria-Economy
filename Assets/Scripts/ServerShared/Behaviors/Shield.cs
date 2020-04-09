@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class ShieldBehaviorData : IItemBehaviorData
+public class ShieldData : IBehaviorData
 {
     [InspectableField, JsonProperty("efficiency"), Key(0)]  
     public PerformanceStat Efficiency = new PerformanceStat();
@@ -12,34 +12,30 @@ public class ShieldBehaviorData : IItemBehaviorData
     [InspectableField, JsonProperty("shielding"), Key(1)]  
     public PerformanceStat Shielding = new PerformanceStat();
     
-    public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
+    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new ShieldBehavior(context, this, ship, item);
+        return new Shield(context, this, entity, item);
     }
 }
 
-public class ShieldBehavior : IItemBehavior
+public class Shield : IBehavior
 {
-    public Ship Ship { get; }
+    public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IItemBehaviorData Data => _data;
+    public IBehaviorData Data => _data;
     
-    private ShieldBehaviorData _data;
+    private ShieldData _data;
 
-    public ShieldBehavior(GameContext context, ShieldBehaviorData data, Ship ship, Gear item)
+    public Shield(GameContext context, ShieldData data, Entity entity, Gear item)
     {
         Context = context;
         _data = data;
-        Ship = ship;
+        Entity = entity;
         Item = item;
         
         // TODO: Detect hits on Ship, keep a list of callbacks that modify the hit by reference
-    }
-
-    public void FixedUpdate(float delta)
-    {
     }
 
     public void Initialize()

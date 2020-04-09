@@ -3,7 +3,7 @@ using MessagePack;
 using Newtonsoft.Json;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class SensorBehaviorData : IItemBehaviorData
+public class SensorData : IBehaviorData
 {
     [InspectableField, JsonProperty("radiance"), Key(0)]  
     public PerformanceStat Radiance = new PerformanceStat();
@@ -17,26 +17,26 @@ public class SensorBehaviorData : IItemBehaviorData
     [InspectableField, JsonProperty("range"), Key(3)]  
     public PerformanceStat Range = new PerformanceStat();
     
-    public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
+    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new SensorBehavior(context, this, ship, item);
+        return new Sensor(context, this, entity, item);
     }
 }
 
-public class SensorBehavior : IItemBehavior
+public class Sensor : IBehavior
 {
-    private SensorBehaviorData _data;
+    private SensorData _data;
 
-    public Ship Ship { get; }
+    public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IItemBehaviorData Data => _data;
+    public IBehaviorData Data => _data;
 
-    public SensorBehavior(GameContext context, SensorBehaviorData data, Ship ship, Gear item)
+    public Sensor(GameContext context, SensorData data, Entity entity, Gear item)
     {
         _data = data;
-        Ship = ship;
+        Entity = entity;
         Item = item;
         Context = context;
     }
@@ -64,9 +64,5 @@ public class SensorBehavior : IItemBehavior
         //
         // Hardpoint.Ship.VisibilitySources[this] = _data.Radiance.Evaluate(Hardpoint) / _data.RadianceMasking.Evaluate(Hardpoint);
         // TODO: Handle Active Detection / Visibility From Reflected Radiance
-    }
-
-    public void FixedUpdate(float delta)
-    {
     }
 }

@@ -32,6 +32,17 @@ public class UpdateOrderAttribute : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Class)]
+public class EntityTypeRestrictionAttribute : Attribute
+{
+    public readonly Type Type;
+
+    public EntityTypeRestrictionAttribute(Type type)
+    {
+        Type = type;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Class)]
 public class InspectableAttribute : Attribute { }
 
 public class InspectableFieldAttribute : Attribute { }

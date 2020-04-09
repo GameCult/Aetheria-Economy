@@ -61,6 +61,22 @@ The codebase makes heavy use of C#'s [Language Integrated Queries (LINQ)](https:
 
 All of the state which is persisted to the database inherits from the DatabaseEntry class, which uses a GUID as each entry's primary key. Whenever a reference to a database entry must be held, it should be stored as a GUID and when needed, retrieved directly from the DatabaseCache held by the GameContext. References  to Database Entries *should never be stored directly!* This is because the contents of entries can be updated in realtime by the database, causing changes to be pushed to the DatabaseCache and any previously existing DatabaseEntry instances will be outdated and invalid, potentially carrying stale data.
 
+#### Equipment
+
+Items in the game which can be equipped are defined as subclasses of EquippableItemData, including the HullData class which defines a space ship, station or turret, and the GearData class which defines anything that can be equipped onto a Hull.
+
+#### Behaviors
+
+Equippable Items can hold any number of Behaviors, which define the functionality of that item in game. Everything from radiating heat into space to moving a ship, firing a weapon or boosting the stats of another item is defined as a Behavior.
+
+#### Performance Stats
+
+While some stats are fixed, others can vary according to the condition the item is in. Such stats are PerformanceStats. These can vary depending on the item's remaining durability, the current temperature of the item, and the quality with which it was crafted.
+
+#### Blueprints
+
+In order to make an item craftable in-game, that item needs to be associated with one or more Blueprints. A Blueprint defines the ingredients (or components) necessary to build an item. In addition, specific ingredients can be associated with particular PerformanceStats for the resulting item's Behaviors, allowing a single item to be crafted in various ways, with its final stats varying in accordance with the supply chain and quality control of the manufacturer.
+
 ## Contributing
 
 ### Getting the Files

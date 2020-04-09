@@ -165,17 +165,17 @@ public class GameContext
     }
 
     // Returns stat using ship temperature and modifiers
-    public float Evaluate(PerformanceStat stat, Gear item, Ship ship)
+    public float Evaluate(PerformanceStat stat, Gear item, Entity entity)
     {
         var itemData = GetData(item);
 
-        var heat = !stat.HeatDependent ? 1 : pow(itemData.Performance(ship.Temperature), Evaluate(itemData.HeatExponent,item));
+        var heat = !stat.HeatDependent ? 1 : pow(itemData.Performance(entity.Temperature), Evaluate(itemData.HeatExponent,item));
         var durability = !stat.DurabilityDependent ? 1 : pow(item.Durability / itemData.Durability, Evaluate(itemData.DurabilityExponent,item));
         var quality = pow(Quality(stat, item), stat.QualityExponent);
 
-        var scaleModifier = stat.GetScaleModifiers(ship).Values.Aggregate(1.0f, (current, mod) => current * mod);
+        var scaleModifier = stat.GetScaleModifiers(entity).Values.Aggregate(1.0f, (current, mod) => current * mod);
 
-        var constantModifier = stat.GetConstantModifiers(ship).Values.Sum();
+        var constantModifier = stat.GetConstantModifiers(entity).Values.Sum();
 
         var result = lerp(stat.Min, stat.Max, heat * durability * quality) * scaleModifier + constantModifier;
         if (float.IsNaN(result))

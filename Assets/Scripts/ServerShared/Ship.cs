@@ -8,7 +8,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 [MessagePackObject]
-public class Ship : DatabaseEntry
+public class Ship : Entity
 {
     [Key("hull")] 
     public Gear Hull;
@@ -19,26 +19,17 @@ public class Ship : DatabaseEntry
     
     // [Key("bindings")]   public Dictionary<KeyCode,Guid>    Bindings = new Dictionary<KeyCode,Guid>();
     //[IgnoreMember] public int HullHardpointCount;
-    [IgnoreMember] public Dictionary<Guid, IActivatedItemBehavior[]> ItemBindings;
-    [IgnoreMember] public IItemBehavior[] ItemBehaviors;
 
-    [IgnoreMember] public bool ForceThrust;
     // [IgnoreMember] public Dictionary<Targetable, float> Contacts = new Dictionary<Targetable, float>();
-    [IgnoreMember] public float Temperature;
-    [IgnoreMember] public float Charge;
     // [IgnoreMember] public Targetable Target;
-    [IgnoreMember] public float2 Position;
-    [IgnoreMember] public float2 Direction;
     [IgnoreMember] public float2 Velocity;
-    [IgnoreMember] public Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     
     private HullData _hullData;
-    private bool _hydrated = false;
 
-    [IgnoreMember] public float Mass { get; private set; }
-    [IgnoreMember] public float SpecificHeat { get; private set; }
-
-    //[IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
+    
+    public Ship(GameContext context, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo) : base(context, items, cargo)
+    {
+    }
 
     public Gear GetEquipped(HardpointType type)
     {
@@ -53,53 +44,15 @@ public class Ship : DatabaseEntry
         return null;
     }
 
-    public IEnumerable<T> GetBehaviors<T>() where T : class, IItemBehavior
-    {
-        foreach (var behavior in ItemBehaviors)
-            if (behavior is T b)
-                yield return b;
-    }
-
-    public IEnumerable<T> GetBehaviorData<T>() where T : class, IItemBehaviorData
-    {
-        foreach (var behavior in ItemBehaviors)
-            if (behavior.Data is T b)
-                yield return b;
-    }
-
-    public void AddHeat(float heat)
-    {
-        Temperature += heat / SpecificHeat;
-    }
-
     public void Hydrate()
     {
         GenerateBehaviors();
-        
-        Mass = Hull.Mass + 
-               Hardpoints.Sum(hp => hp.Item?.Mass ?? 0) + 
-               Cargo.Sum(ii => ii.Mass);
-        
-        SpecificHeat = Hull.HeatCapacity +
-               Hardpoints.Sum(hp => hp.Item?.HeatCapacity ?? 0) +
-               Cargo.Sum(ii => ii.HeatCapacity);
 
         //HullHardpointCount = Hardpoints.Count(hp => hp.HardpointData.Type == HardpointType.Hull);
-        _hydrated = true;
     }
 
     private void GenerateBehaviors()
     {
-        ItemBehaviors = Hardpoints.Where(hp=>hp.Item!=null)
-            .Where(hp=>hp.Item.ItemData.Behaviors?.Any()??false)
-            .SelectMany(hp => hp.Item.ItemData.Behaviors
-                .Select(bd => bd.CreateInstance(Context, this, hp.Item)))
-            .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToArray();
-        
-        ItemBindings = ItemBehaviors
-            .Where(b => b is IActivatedItemBehavior)
-            .GroupBy(b => b.Item.ID, (guid, behaviors) => new {guid, behaviors})
-            .ToDictionary(g => g.guid, g => g.behaviors.Cast<IActivatedItemBehavior>().ToArray());
     }
 
     // public void GenerateBindings()
@@ -162,8 +115,9 @@ public class Ship : DatabaseEntry
     //         }
     // }
 
-    public void FixedUpdate(float delta)
+    public override void Update(float delta)
     {
+        base.Update(delta);
         // foreach (var kvp in Contacts.ToArray())
         //     if (kvp.Key == null || Time.time - kvp.Value > GlobalData.Instance.TargetPersistenceDuration)
         //     {
@@ -171,30 +125,6 @@ public class Ship : DatabaseEntry
         //         if (kvp.Key == Target)
         //             Target = null;
         //     }
-
-        if (_hydrated)
-        {
-            var hull = Hull.ItemData;
-            
-            var rad = pow(Temperature, Context.GlobalData.HeatRadiationPower) * Context.GlobalData.HeatRadiationMultiplier;
-            Temperature -= rad * delta;
-            VisibilitySources[this] = rad;
-            
-            foreach(var behavior in ItemBehaviors)
-                behavior.FixedUpdate(delta);
-
-            foreach (var hardpoint in Hardpoints)
-            {
-                if (hardpoint.Item.ItemData.Performance(Temperature) < .01f)
-                    hardpoint.Item.Durability -= delta;
-            }
-        }
-    }
-
-    public void Update(float delta)
-    {
-        foreach(var behavior in ItemBehaviors)
-            behavior.Update(delta);
     }
 
     // public void UpdateInput(float delta)

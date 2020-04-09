@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class LauncherBehaviorData : IItemBehaviorData
+public class LauncherData : IBehaviorData
 {
     [InspectablePrefab, JsonProperty("missile"), Key(9)]  
     public string MissilePrefab;
@@ -37,30 +37,30 @@ public class LauncherBehaviorData : IItemBehaviorData
     [InspectableField, JsonProperty("lockOnTime"), Key(18)]
     public PerformanceStat LockOnTime = new PerformanceStat();
 
-    public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
+    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new LauncherBehavior(context, this, ship, item);
+        return new Launcher(context, this, entity, item);
     }
 }
 
-public class LauncherBehavior : IActivatedItemBehavior
+public class Launcher : IActivatedBehavior
 {
     private bool _locking;
     private float _lockingTimer;
     private float _cooldown; // normalized
     private bool _locked;
     
-    private LauncherBehaviorData _launcher;
-    public Ship Ship { get; }
+    private LauncherData _launcher;
+    public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
     private float _firingVisibility;
 
-    public LauncherBehavior(GameContext context, LauncherBehaviorData m, Ship ship, Gear item)
+    public Launcher(GameContext context, LauncherData m, Entity entity, Gear item)
     {
         Context = context;
         _launcher  = m;
-        Ship = ship;
+        Entity = entity;
         Item = item;
         // _audio = hp.Proxy.GetComponent<AudioSource>();
         // if(_audio==null)
@@ -160,13 +160,7 @@ public class LauncherBehavior : IActivatedItemBehavior
         //     Hardpoint.Ship.Visibility += _firingVisibility;
         //     _firingVisibility = 0;
         // }
-        
-      
-    }
-
-    public void FixedUpdate(float delta)
-    {
     }
     
-    public IItemBehaviorData Data => _launcher;
+    public IBehaviorData Data => _launcher;
 }

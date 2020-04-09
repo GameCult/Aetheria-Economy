@@ -3,8 +3,8 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class ThrusterBehaviorData : IItemBehaviorData
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(typeof(Ship))]
+public class ThrusterData : IBehaviorData
 {
     [InspectableField, JsonProperty("thrust"), Key(0)]  
     public PerformanceStat Thrust = new PerformanceStat();
@@ -18,29 +18,29 @@ public class ThrusterBehaviorData : IItemBehaviorData
     [InspectableField, JsonProperty("heat"), Key(3)]  
     public PerformanceStat Heat = new PerformanceStat();
     
-    public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
+    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new ThrusterBehavior(context, this, ship, item);
+        return new Thruster(context, this, entity, item);
     }
 }
 
-public class ThrusterBehavior : IAnalogItemBehavior
+public class Thruster : IAnalogBehavior
 {
-    public Ship Ship { get; }
+    public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IItemBehaviorData Data => _data;
+    public IBehaviorData Data => _data;
     
-    private ThrusterBehaviorData _data;
+    private ThrusterData _data;
     
     private float _thrust;
 
-    public ThrusterBehavior(GameContext context, ThrusterBehaviorData data, Ship ship, Gear item)
+    public Thruster(GameContext context, ThrusterData data, Entity entity, Gear item)
     {
         Context = context;
         _data = data;
-        Ship = ship;
+        Entity = entity;
         Item = item;
     }
     
@@ -49,19 +49,14 @@ public class ThrusterBehavior : IAnalogItemBehavior
         _thrust = saturate(value);
     }
 
-    public void FixedUpdate(float delta)
-    {
-
-    }
-
     public void Initialize()
     {
     }
 
     public void Update(float delta)
     {
-        Ship.Velocity += _thrust * Context.Evaluate(_data.Thrust, Item, Ship) * delta;
-        Ship.AddHeat(_thrust * Context.Evaluate(_data.Heat, Item, Ship) * delta);
-        Ship.VisibilitySources[this] = _thrust * Context.Evaluate(_data.Visibility, Item, Ship);
+        ((Ship) Entity).Velocity += _thrust * Context.Evaluate(_data.Thrust, Item, Entity) * delta;
+        Entity.AddHeat(_thrust * Context.Evaluate(_data.Heat, Item, Entity) * delta);
+        Entity.VisibilitySources[this] = _thrust * Context.Evaluate(_data.Visibility, Item, Entity);
     }
 }

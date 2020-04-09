@@ -5,7 +5,7 @@ using MessagePack;
 using Newtonsoft.Json;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class AfterburnerBehaviorData : IItemBehaviorData
+public class AfterburnerData : IBehaviorData
 {
     [InspectableField, JsonProperty("thrust"), Key(0)]  
     public PerformanceStat ThrustModifier = new PerformanceStat();
@@ -16,55 +16,50 @@ public class AfterburnerBehaviorData : IItemBehaviorData
     [InspectableField, JsonProperty("torque"), Key(2)]  
     public PerformanceStat TorqueModifier = new PerformanceStat();
     
-    public IItemBehavior CreateInstance(GameContext context, Ship ship, Gear item)
+    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new AfterburnerBehavior(context, this, ship, item);
+        return new Afterburner(context, this, entity, item);
     }
 }
 
-public class AfterburnerBehavior : IActivatedItemBehavior
+public class Afterburner : IActivatedBehavior
 {
-    private List<Dictionary<IItemBehavior,float>> _modifiers = new List<Dictionary<IItemBehavior, float>>();
-    private AfterburnerBehaviorData _data;
-    private ThrusterBehaviorData[] _thrusters;
+    private List<Dictionary<IBehavior,float>> _modifiers = new List<Dictionary<IBehavior, float>>();
+    private AfterburnerData _data;
+    private Thruster _thruster;
 
-    public Ship Ship { get; }
+    public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IItemBehaviorData Data => _data;
+    public IBehaviorData Data => _data;
 
-    public AfterburnerBehavior(GameContext context, AfterburnerBehaviorData data, Ship ship, Gear item)
+    public Afterburner(GameContext context, AfterburnerData data, Entity entity, Gear item)
     {
         Context = context;
         _data = data;
-        Ship = ship;
+        Entity = entity;
         Item = item;
     }
 
     public void Initialize()
     {
-        _thrusters = Ship.GetBehaviorData<ThrusterBehaviorData>().ToArray();
+        _thruster = Entity.GetBehaviors<Thruster>().FirstOrDefault();
     }
 
     public void Update(float delta)
     {
     }
-
-    public void FixedUpdate(float delta)
-    {
-    }
     
     public void Activate()
     {
-        if (_thrusters.Length == 0) return;
+        if (_thruster == null) return;
         
-        foreach (var thruster in _thrusters)
-        {
-            var thrustMod = thruster.Thrust.GetScaleModifiers(Ship);
-            thrustMod.Add(this,Context.Evaluate(_data.ThrustModifier,Item, Ship));
-            _modifiers.Add(thrustMod);
-        }
+        var thrustMod = ((ThrusterData) _thruster.Data).Thrust.GetScaleModifiers(Entity);
+        thrustMod.Add(this,Context.Evaluate(_data.ThrustModifier,Item, Entity));
+        _modifiers.Add(thrustMod);
+
+        Entity.AxisOverrides[_thruster] = 1;
         
         // var speedMod = (Ship.Hull.ItemData as HullData).TopSpeed.GetScaleModifiers(Ship);
         // _modifiers.Add(speedMod);
@@ -73,13 +68,11 @@ public class AfterburnerBehavior : IActivatedItemBehavior
         // var torqueMod = (Ship.GetEquipped(HardpointType.Thruster).ItemData as ThrusterData).Torque.GetScaleModifiers(Ship);
         // _modifiers.Add(torqueMod);
         // torqueMod.Add(this,Context.Evaluate(_data.TorqueModifier,Item, Ship));
-        
-        Ship.ForceThrust = true;
     }
 
     public void Deactivate()
     {
-        Ship.ForceThrust = false;
+        Entity.AxisOverrides.Remove(_thruster);
         foreach (var mod in _modifiers)
         {
             mod.Remove(this);

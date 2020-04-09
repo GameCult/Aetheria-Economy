@@ -1,9 +1,9 @@
 using MessagePack;
 using Newtonsoft.Json;
 
-[Union(0, typeof(CannonBehaviorData)),
- Union(1, typeof(LauncherBehaviorData))]
-public abstract class WeaponBehaviorData
+[Union(0, typeof(CannonData)),
+ Union(1, typeof(LauncherData))]
+public abstract class WeaponData
 {
     [InspectableField, JsonProperty("damageType"), Key(0)]
     public DamageType DamageType;
