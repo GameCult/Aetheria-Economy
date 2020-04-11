@@ -410,6 +410,9 @@
     <Reference Include="Grpc.Core.Api">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
     </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
+    </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.4.17f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
     </Reference>

@@ -34,9 +34,9 @@ public class UpdateOrderAttribute : Attribute
 [AttributeUsage(AttributeTargets.Class)]
 public class EntityTypeRestrictionAttribute : Attribute
 {
-    public readonly Type Type;
+    public readonly HullType Type;
 
-    public EntityTypeRestrictionAttribute(Type type)
+    public EntityTypeRestrictionAttribute(HullType type)
     {
         Type = type;
     }

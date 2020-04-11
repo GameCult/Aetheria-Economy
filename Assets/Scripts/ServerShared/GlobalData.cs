@@ -8,7 +8,7 @@ using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;
 using static NoiseFbm;
 
-[Serializable, RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[Inspectable, Serializable, RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GlobalData : DatabaseEntry
 {
     [InspectableField, JsonProperty("targetPersistenceDuration"), Key(1)]  

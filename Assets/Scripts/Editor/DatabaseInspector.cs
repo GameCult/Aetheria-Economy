@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using MessagePack;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
@@ -28,6 +29,9 @@ public class DatabaseInspector : EditorWindow
     private string[] _hardpointTypes;
     private const int width = 100;
     private const int labelWidth = 20;
+    private Material _galaxyMat;
+    private Texture2D _white;
+    private GUIStyle _warning;
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
@@ -61,13 +65,65 @@ public class DatabaseInspector : EditorWindow
         DatabaseCache.OnDataUpdateRemote += _ => EditorDispatcher.Dispatch(Repaint);
         wantsMouseMove = true;
         _hardpointTypes = Enum.GetNames(typeof(HardpointType));
+        _galaxyMat = new Material(Shader.Find("Unlit/GalaxyMap"));
+        _white = Color.white.ToTexture();
+        _warning = new GUIStyle(EditorStyles.boldLabel);
+        _warning.normal.textColor = Color.red;
     }
     
     public void Inspect(object obj, bool inspectablesOnly = false)
     {
-        foreach (var field in obj.GetType().GetFields())
+        foreach (var field in obj.GetType().GetFields().OrderBy(f=>f.GetCustomAttribute<KeyAttribute>()?.IntKey ?? 0))
         {
             Inspect(obj, field, inspectablesOnly);
+        }
+
+        if (obj is GalaxyMapLayerData mapLayer)
+        {
+            var global = DatabaseCache.GetAll<GlobalData>().FirstOrDefault();
+            if (global != null)
+            {
+                GUILayout.Label("Preview", EditorStyles.boldLabel);
+                _galaxyMat.SetFloat("Arms", global.Arms);
+                _galaxyMat.SetFloat("Twist", global.Twist);
+                _galaxyMat.SetFloat("TwistPower", global.TwistPower);
+                _galaxyMat.SetFloat("SpokeOffset", mapLayer.SpokeOffset);
+                _galaxyMat.SetFloat("SpokeScale", mapLayer.SpokeScale);
+                _galaxyMat.SetFloat("CoreBoost", mapLayer.CoreBoost);
+                _galaxyMat.SetFloat("CoreBoostOffset", mapLayer.CoreBoostOffset);
+                _galaxyMat.SetFloat("CoreBoostPower", mapLayer.CoreBoostPower);
+                _galaxyMat.SetFloat("EdgeReduction", mapLayer.EdgeReduction);
+                _galaxyMat.SetFloat("NoisePosition", mapLayer.NoisePosition);
+                _galaxyMat.SetFloat("NoiseAmplitude", mapLayer.NoiseAmplitude);
+                _galaxyMat.SetFloat("NoiseOffset", mapLayer.NoiseOffset);
+                _galaxyMat.SetFloat("NoiseGain", mapLayer.NoiseGain);
+                _galaxyMat.SetFloat("NoiseLacunarity", mapLayer.NoiseLacunarity);
+                _galaxyMat.SetFloat("NoiseFrequency", mapLayer.NoiseFrequency);
+                var rect = GetControlRect(false, Screen.width);
+                EditorGUI.DrawPreviewTexture(rect, _white, _galaxyMat);
+            }
+        }
+        
+        if (obj is EquippableItemData equippableItemData)
+        {
+            var restricted = false;
+            var doubleRestricted = false;
+            HullType type = HullType.Ship;
+            foreach (var behavior in equippableItemData.Behaviors)
+            {
+                var restriction = behavior.GetType().GetCustomAttribute<EntityTypeRestrictionAttribute>();
+                if (restriction != null)
+                {
+                    if (restricted && restriction.Type != type)
+                        doubleRestricted = true;
+                    restricted = true;
+                    type = restriction.Type;
+                }
+            }
+            if(doubleRestricted)
+                GUILayout.Label("ITEM UNEQUIPPABLE: BEHAVIOR HULL TYPE CONFLICT", _warning);
+            else if (restricted)
+                GUILayout.Label($"Item restricted by behavior to hull type {Enum.GetName(typeof(HullType), type)}", EditorStyles.boldLabel);
         }
     }
     
@@ -255,6 +311,7 @@ public class DatabaseInspector : EditorWindow
                         {
                             using (new HorizontalScope())
                             {
+                                //if (listType.IsInterface)
                                 GUILayout.Label(o.GetType().Name.SplitCamelCase(), EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
 
                                 var rect = GetControlRect(false,
@@ -399,7 +456,7 @@ public class DatabaseInspector : EditorWindow
         {
             GUILayout.Label(label, GUILayout.Width(width));
             if(area)
-                return TextArea(value,GUILayout.MaxWidth(300));
+                return TextArea(value,GUILayout.Width(position.width-width-10), GUILayout.Height(100));
             return DelayedTextField(value);
         }
     }
@@ -565,7 +622,7 @@ public class DatabaseInspector : EditorWindow
             {
                 using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
-                    GUILayout.Label("Nothing Here! Add an item by dragging from the list panel.");
+                    GUILayout.Label("Drag from list to add item");
                 }
             }
             foreach (var ingredient in value.ToArray())
@@ -611,7 +668,7 @@ public class DatabaseInspector : EditorWindow
             {
                 using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
-                    GUILayout.Label("Nothing Here! Add an item by dragging from the list panel.");
+                    GUILayout.Label("Drag from list to add item");
                 }
             }
             foreach (var ingredient in value.ToArray())
@@ -657,7 +714,7 @@ public class DatabaseInspector : EditorWindow
             {
                 using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
-                    GUILayout.Label($"Nothing Here! Add a {entryType.Name} by dragging from the list panel.");
+                    GUILayout.Label($"Drag from list to add {entryType.Name}");
                 }
             }
             foreach (var guid in value.ToArray())

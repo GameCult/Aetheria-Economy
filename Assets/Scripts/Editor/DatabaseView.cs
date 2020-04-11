@@ -207,13 +207,13 @@ public class DatabaseListView : EditorWindow
                     }
                 }).WrapErrors();
         
-                // Get all galaxy map layer data from RethinkDB
+                // Get globaldata and all galaxy map layer data from RethinkDB
                 Task.Run(async () =>
                 {
                     var result = await R
                         .Db("Aetheria")
                         .Table("Galaxy")
-                        .Filter(o => o["$type"]==typeof(GalaxyMapLayerData).Name)
+                        .Filter(o => o["$type"]==typeof(GalaxyMapLayerData).Name || o["$type"]==typeof(GlobalData).Name)
                         .RunCursorAsync<DatabaseEntry>(_connection);
                     while (await result.MoveNextAsync())
                     {

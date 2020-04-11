@@ -43,3 +43,10 @@ public enum BodyType
     GasGiant = 1 << 3,
     Sun = 1 << 4
 }
+
+public enum HullType
+{
+    Ship,
+    Station,
+    Turret
+}

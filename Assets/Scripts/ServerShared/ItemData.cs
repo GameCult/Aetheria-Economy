@@ -16,15 +16,18 @@ public abstract class ItemData : DatabaseEntry, INamedEntry
 {
     [InspectableField, JsonProperty("name"), Key(1)]  
     public string Name;
+    
+    [InspectableText, JsonProperty("description"), Key(2)]  
+    public string Description;
 
-    [InspectableField, JsonProperty("mass"), Key(2)]  
+    [InspectableField, JsonProperty("mass"), Key(3)]  
     public float Mass;
 
-    [InspectableField, JsonProperty("size"), Key(3)]  
+    [InspectableField, JsonProperty("size"), Key(4)]  
     public float Size;
 
     // Heat needed to change temperature of 1 gram by 1 degree
-    [InspectableField, JsonProperty("specificHeat"), Key(4)]  
+    [InspectableField, JsonProperty("specificHeat"), Key(5)]  
     public float SpecificHeat;
     
     [IgnoreMember] public string EntryName
@@ -38,19 +41,19 @@ public abstract class ItemData : DatabaseEntry, INamedEntry
 public class SimpleCommodityData : ItemData
 {
     // Types of body where this resource can be found
-    [InspectableField, JsonProperty("resourceBodyType"), Key(5)]  
+    [InspectableField, JsonProperty("resourceBodyType"), Key(6)]  
     public BodyType ResourceBodyType;
 
     // Link to map(s) controlling density of resource, multiplied together when more than one
-    [InspectableDatabaseLink(typeof(GalaxyMapLayerData)), JsonProperty("resourceDensity"), Key(6)]  
+    [InspectableDatabaseLink(typeof(GalaxyMapLayerData)), JsonProperty("resourceDensity"), Key(7)]  
     public List<Guid> ResourceDensity = new List<Guid>();
 
     // Controls the bias power variable during resource placement
-    [InspectableField, JsonProperty("resourceDensityBiasPower"), Key(7)]
+    [InspectableField, JsonProperty("resourceDensityBiasPower"), Key(8)]
     public float ResourceDensityBiasPower = 5;
 
     // Minimum amount of resources needed for presence to register
-    [InspectableField, JsonProperty("resourceFloor"), Key(8)]
+    [InspectableField, JsonProperty("resourceFloor"), Key(9)]
     public float ResourceFloor = 10f;
 }
 
@@ -149,13 +152,16 @@ public class HullData : EquippableItemData
     [InspectablePrefab, JsonProperty("prefab"), Key(16)]  
     public string Prefab;
 
+    [InspectableField, JsonProperty("hullType"), Key(17)]
+    public HullType HullType;
+
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Hull;
 }
 
 [RethinkTable("Items"), InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HardpointData
 {
-    [JsonProperty("type"), Key(0)]  public HardpointType Type;
+    [InspectableField, JsonProperty("type"), Key(0)]  public HardpointType Type;
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]

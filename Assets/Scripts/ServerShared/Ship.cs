@@ -14,8 +14,6 @@ public class Ship : Entity
     public Gear Hull;
     [Key("hardpoints")] 
     public List<Hardpoint> Hardpoints = new List<Hardpoint>();
-    [Key("cargo")] 
-    public List<ItemInstance> Cargo = new List<ItemInstance>();
     
     // [Key("bindings")]   public Dictionary<KeyCode,Guid>    Bindings = new Dictionary<KeyCode,Guid>();
     //[IgnoreMember] public int HullHardpointCount;
@@ -31,29 +29,29 @@ public class Ship : Entity
     {
     }
 
-    public Gear GetEquipped(HardpointType type)
-    {
-        return Hardpoints.FirstOrDefault(hp => hp.HardpointData.Type == type)?.Item;
-    }
-
-    public T GetEquipped<T>() where T : EquippableItemData
-    {
-        var data = Hardpoints.FirstOrDefault(hp => Context.GetData(hp.Item) is T);
-        if (data != null)
-            return Context.GetData(data.Item) as T;
-        return null;
-    }
-
-    public void Hydrate()
-    {
-        GenerateBehaviors();
-
-        //HullHardpointCount = Hardpoints.Count(hp => hp.HardpointData.Type == HardpointType.Hull);
-    }
-
-    private void GenerateBehaviors()
-    {
-    }
+    // public Gear GetEquipped(HardpointType type)
+    // {
+    //     return Hardpoints.FirstOrDefault(hp => hp.HardpointData.Type == type)?.Item;
+    // }
+    //
+    // public T GetEquipped<T>() where T : EquippableItemData
+    // {
+    //     var data = Hardpoints.FirstOrDefault(hp => Context.GetData(hp.Item) is T);
+    //     if (data != null)
+    //         return Context.GetData(data.Item) as T;
+    //     return null;
+    // }
+    //
+    // public void Hydrate()
+    // {
+    //     GenerateBehaviors();
+    //
+    //     //HullHardpointCount = Hardpoints.Count(hp => hp.HardpointData.Type == HardpointType.Hull);
+    // }
+    //
+    // private void GenerateBehaviors()
+    // {
+    // }
 
     // public void GenerateBindings()
     // {

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(typeof(Ship))]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship)]
 public class ThrusterData : IBehaviorData
 {
     [InspectableField, JsonProperty("thrust"), Key(0)]  
