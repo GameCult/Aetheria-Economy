@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using NaughtyAttributes;
 using JM.LinqFaster;
+using QuickGraph;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;

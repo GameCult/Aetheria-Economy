@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using GraphSharp.Algorithms.Layout;
@@ -25,9 +26,15 @@ public class TechTreeTest : MonoBehaviour
     public Prototype Tech;
     public Prototype Link;
     public Prototype RadialLink;
+    public Prototype Arrow;
     public LayoutAlgorithm Algorithm;
     public int TechCount = 50;
     public int SeedTechs = 5;
+    public int RollingWindowSize = 50;
+    public bool EliminateIslands = false;
+    // public float MultipleDependencyProbability = .25f;
+    // public int MaxDependencyDistance = 4;
+    // public int MaxDependencyTierDifference = 2;
     
     [Section("Kamada-Kawai")]
     public float DisconnectedMultiplier;
@@ -41,6 +48,8 @@ public class TechTreeTest : MonoBehaviour
     public float WidthPerHeight;
     public int PositionMode;
     public bool Radial;
+    public bool MinimizeEdgeLength;
+    public bool OptimizeWidth;
     
     [Section("Radial")]
     public int Sections;
@@ -49,11 +58,31 @@ public class TechTreeTest : MonoBehaviour
     public float Scale = 1;
     public int LinkPoints = 16;
     public int LinkDepth = 5;
+    public float LinkTargetDistance = .75f;
     public int RingDepth = 6;
+    public float ArrowDepth = 3;
+    
+    [Section("Colors")]
+    public float Saturation = .95f;
+    public float HueMin = 0;
+    public float HueMax = 1;
+    public float Brightness = 1;
+    public float RingInnerSaturation;
+    public float RingOuterSaturation;
+    public float RingInnerBrightness;
+    public float RingOuterBrightness;
+    public int RingColorKeys;
+    public float FillOpacity = .25f;
+    public float GlowOpacity = .5f;
+    public Material TechFillMaterial;
+    public Material TechGlowMaterial;
+    public Material TechArrowMaterial;
+    public Material TechLinkMaterial;
 
     private List<Prototype> _ringInstances = new List<Prototype>();
     private List<Prototype> _techInstances = new List<Prototype>();
     private List<Prototype> _linkInstances = new List<Prototype>();
+    private List<Prototype> _arrowInstances = new List<Prototype>();
     private Texture2D[] _icons;
     
     void Start()
@@ -77,6 +106,9 @@ public class TechTreeTest : MonoBehaviour
         
         foreach (var instance in _linkInstances) instance.ReturnToPool();
         _linkInstances.Clear();
+        
+        foreach (var instance in _arrowInstances) instance.ReturnToPool();
+        _arrowInstances.Clear();
 
         var vertices = new List<IntVertex>();
         var edges = new List<Edge<IntVertex>>();
@@ -86,7 +118,7 @@ public class TechTreeTest : MonoBehaviour
         {
             var vertex = new IntVertex(i);
             vertices.Add(vertex);
-            if(i>loose) edges.Add(new Edge<IntVertex>(vertices[Random.Range(0,i-1)], vertex));
+            if(i>loose) edges.Add(new Edge<IntVertex>(vertices[Random.Range(max(0,i-RollingWindowSize),i-1)], vertex));
         }
         foreach (var vertex in vertices.Where(v=>!edges.Any(e=>e.Source!=v&&e.Target!=v)))
         {
@@ -101,13 +133,82 @@ public class TechTreeTest : MonoBehaviour
         // }
         var islands = new Dictionary<IntVertex, int>();
         var islandCount = graph.WeaklyConnectedComponents(islands);
-        if(islandCount>1)
-            for (int i = 1; i < islandCount; i++)
-            {
-                var i1 = islands.Where(x => x.Value == i - 1).Select(x=>x.Key).ToArray();
-                var i2 = islands.Where(x => x.Value == i).Select(x=>x.Key).ToArray();
-                edges.Add(new Edge<IntVertex>(i1[Random.Range(0,i1.Length-1)],i2[Random.Range(0,i2.Length-1)]));
-            }
+        var islandsInverse = islands
+            .GroupBy(i => i.Value)
+            .ToDictionary(
+                i => i.Key, 
+                i => i.Select(g => g.Key).ToArray());
+        
+        //  var vertexTiers = new Dictionary<IntVertex, int>();
+        //  foreach (var island in islandsInverse.Values)
+        //  {
+        //      vertexTiers[island[0]] = 0;
+        //      foreach (var vertex in island.Skip(1))
+        //      {
+        //          vertexTiers[vertex] = edges.FindPath(vertex, island[0], (v1, v2) => 1).Count();
+        //          // var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
+        //          // if (tryGetPath(island[0], out var path))
+        //          // {
+        //          //     vertexTiers[vertex] = path.Count();
+        //          // }
+        //          // else Debug.Log("Path to root not found?");
+        //      }
+        //  }
+        //
+        // foreach (var island in islandsInverse.Values)
+        // {
+        //     foreach (var vertex in island.Skip(1))
+        //     {
+        //         //var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
+        //         //var ancestors = island.Take(Array.IndexOf(island, vertex) - 1);
+        //         var possibleDependencies = island.Where(v =>
+        //         {
+        //             return v != vertex &&
+        //                    vertexTiers[v] < vertexTiers[vertex] &&
+        //                    abs(vertexTiers[v] - vertexTiers[vertex]) < MaxDependencyTierDifference &&
+        //                    edges.FindPath(vertex, v, (v1, v2) => 1).Count() < MaxDependencyDistance;
+        //             // if (v != vertex && tryGetPath(v, out var path))
+        //             // {
+        //             //     return path.Count() > 1 && path.Count() < MaxDependencyDistance;
+        //             // }
+        //             //
+        //             // return false;
+        //         }).ToArray();
+        //         var dependencies = new List<int>();
+        //         while (dependencies.Count < possibleDependencies.Length && Random.value < MultipleDependencyProbability)
+        //         {
+        //             var depIndex = Random.Range(0, possibleDependencies.Length);
+        //             dependencies.Add(depIndex);
+        //             edges.Add(new Edge<IntVertex>(possibleDependencies[depIndex], vertex));
+        //         }
+        //         // while (Random.value < MultipleDependencyProbability)
+        //         // {
+        //         //     var index = Array.IndexOf(island, vertex);
+        //         //     int depIndex;
+        //         //     int tries = 0;
+        //         //     do
+        //         //     {
+        //         //         depIndex = Random.Range(max(0, index - MultipleDependencyRollingWindow), index);
+        //         //     } while (tries < 10 && dependencies.Contains(depIndex));
+        //         //
+        //         //     if (tries < 10)
+        //         //         edges.Add(new Edge<IntVertex>(island[depIndex], vertex));
+        //         //     else break;
+        //         // }
+        //     }
+        // }
+
+        if (EliminateIslands)
+        {
+            if(islandCount>1)
+                for (int i = 1; i < islandCount; i++)
+                {
+                    var i1 = islands.Where(x => x.Value == i - 1).Select(x=>x.Key).ToArray();
+                    var i2 = islands.Where(x => x.Value == i).Select(x=>x.Key).ToArray();
+                    edges.Add(new Edge<IntVertex>(i1[Random.Range(0,i1.Length-1)],i2[Random.Range(0,i2.Length-1)]));
+                }
+        }
+        
         graph = edges.ToBidirectionalGraph<IntVertex,Edge<IntVertex>>();
 
         LayoutAlgorithmBase<IntVertex, Edge<IntVertex>, BidirectionalGraph<IntVertex, Edge<IntVertex>>> layout = 
@@ -121,8 +222,8 @@ public class TechTreeTest : MonoBehaviour
                 {
                     EdgeRouting = SugiyamaEdgeRoutings.Traditional,
                     LayerDistance = LayerDistance,
-                    MinimizeEdgeLength = true,
-                    OptimizeWidth = true,
+                    MinimizeEdgeLength = MinimizeEdgeLength,
+                    OptimizeWidth = OptimizeWidth,
                     VertexDistance = VertexDistance,
                     PositionMode = PositionMode,
                     WidthPerHeight = WidthPerHeight
@@ -147,12 +248,55 @@ public class TechTreeTest : MonoBehaviour
             });
         layout.Compute();
         IDictionary<IntVertex, float2> positions = layout.VertexPositions;
+        var islandCenters = islandsInverse.ToDictionary(i => i.Key,
+            i => i.Value.Aggregate(float2(0, 0), (total, v) => total + positions[v]) / i.Value.Length);
 
         Rect bounds = Rect.MinMaxRect(
             layout.VertexPositions.Values.Min(v=>v.x),
             layout.VertexPositions.Values.Min(v=>v.y),
             layout.VertexPositions.Values.Max(v=>v.x),
             layout.VertexPositions.Values.Max(v=>v.y));
+        
+        var islandColors = islandCenters.ToDictionary(
+            i=>i.Key,
+            i=>Color.HSVToRGB(HueMin + (HueMax - HueMin) * Rect.PointToNormalized(bounds, i.Value).x, Saturation, Brightness));
+
+        var islandFillMaterials = islandColors.ToDictionary(i => i.Key, i =>
+        {
+            var mat = new Material(TechFillMaterial);
+            var col = i.Value;
+            col.a = FillOpacity;
+            mat.SetColor("_TintColor", col);
+            return mat;
+        });
+
+        var islandGlowMaterials = islandColors.ToDictionary(i => i.Key, i =>
+        {
+            var mat = new Material(TechGlowMaterial);
+            var col = i.Value;
+            col.a = GlowOpacity;
+            mat.SetColor("_TintColor", col);
+            return mat;
+        });
+
+        var islandArrowMaterials = islandColors.ToDictionary(i => i.Key, i =>
+        {
+            var mat = new Material(TechArrowMaterial);
+            var col = i.Value;
+            col.a = 1;
+            mat.SetColor("_TintColor", col);
+            return mat;
+        });
+
+        var islandLinkMaterials = islandColors.ToDictionary(i => i.Key, i =>
+        {
+            var mat = new Material(TechLinkMaterial);
+            var col = i.Value;
+            col.a = 1;
+            mat.SetColor("_TintColor", col);
+            return mat;
+        });
+        
         if (Algorithm == LayoutAlgorithm.Sugiyama && Radial)
         {
             int tiers = Mathf.RoundToInt(bounds.height / LayerDistance);
@@ -177,6 +321,19 @@ public class TechTreeTest : MonoBehaviour
 
                 ring.positionCount = Sections;
                 ring.SetPositions(ringPositions);
+                var tierLerp = (float) i / (tiers / 2 - 1);
+                ring.colorGradient = new Gradient
+                {
+                    alphaKeys = new []{new GradientAlphaKey(1,0), new GradientAlphaKey(1,1)},
+                    colorKeys = Enumerable.Range(0,RingColorKeys).Select(x=>
+                    {
+                        var ringLerp = (float) x / (RingColorKeys - 1);
+                        return new GradientColorKey(
+                            Color.HSVToRGB(HueMin + (HueMax - HueMin) * ringLerp,
+                                lerp(RingInnerSaturation, RingOuterSaturation, tierLerp),
+                                lerp(RingInnerBrightness, RingOuterBrightness, tierLerp)), ringLerp);
+                    }).ToArray()
+                };
                 
                 _ringInstances.Add(ring.GetComponent<Prototype>());
             }
@@ -193,7 +350,12 @@ public class TechTreeTest : MonoBehaviour
             var tech = Tech.Instantiate<TechNode>();
             tech.transform.position = (Vector2) positions[vertex];
             tech.Label.text = $"{vertex.N}";
+            var gradient = tech.Label.colorGradient;
+            gradient.bottomLeft = gradient.bottomRight = islandColors[islands[vertex]];
+            tech.Label.colorGradient = gradient;
             tech.Icon.material.SetTexture("_MainTex", _icons[Random.Range(0,_icons.Length-1)]);
+            tech.Fill.material = islandFillMaterials[islands[vertex]];
+            tech.Glow.material = islandGlowMaterials[islands[vertex]];
             _techInstances.Add(tech.GetComponent<Prototype>());
         }
 
@@ -202,19 +364,35 @@ public class TechTreeTest : MonoBehaviour
             foreach (var edge in edges)
             {
                 var link = RadialLink.Instantiate<LineRenderer>();
+                link.material = islandLinkMaterials[islands[edge.Source]];
                 link.positionCount = LinkPoints;
                 var p1r = length(positions[edge.Source]);
                 var p2r = length(positions[edge.Target]);
                 var p1a = (atan2(positions[edge.Source].y, positions[edge.Source].x) + PI * 2.5f) % (PI * 2);
                 var p2a = (atan2(positions[edge.Target].y, positions[edge.Target].x) + PI * 2.5f) % (PI * 2);
+                var p1 = float2(sin(p1a) * p1r, -cos(p1a) * p1r);
+                var p2 = float2(sin(p2a) * p2r, -cos(p2a) * p2r);
+                var dist = length(p2 - p1);
+                var distProp = (dist - LinkTargetDistance) / dist;
+                var dir = new float2();
+                var lastPos = new float2();
                 link.SetPositions(Enumerable.Range(0,LinkPoints).Select(i=>
                 {
-                    var lerp = (float) i / (LinkPoints-1);
-                    var angle = math.lerp(p1a, p2a, ease_out_quad(lerp));
+                    var lerp = (float) i / (LinkPoints-1) * distProp;
+                    var angle = math.lerp(p1a, p2a, (lerp));
                     var radius = math.lerp(p1r, p2r, lerp);
-                    return new Vector3(sin(angle) * radius, -cos(angle) * radius, LinkDepth);
+                    var pos = float2(sin(angle) * radius, -cos(angle) * radius);
+                    dir = normalize(pos - lastPos);
+                    lastPos = pos;
+                    return (Vector3) float3(lastPos, LinkDepth);
                 }).ToArray());
                 _linkInstances.Add(link.GetComponent<Prototype>());
+
+                var arrow = Arrow.Instantiate<TechArrow>();
+                arrow.transform.position = new Vector3(lastPos.x, lastPos.y, ArrowDepth);
+                arrow.transform.rotation = Quaternion.Euler(0,0,atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+                arrow.Icon.material = islandArrowMaterials[islands[edge.Source]];
+                _arrowInstances.Add(arrow.GetComponent<Prototype>());
             }
         }
         else

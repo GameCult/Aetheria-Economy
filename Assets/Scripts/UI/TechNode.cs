@@ -7,4 +7,6 @@ public class TechNode : MonoBehaviour
 {
     public TextMeshPro Label;
     public MeshRenderer Icon;
+    public MeshRenderer Fill;
+    public MeshRenderer Glow;
 }

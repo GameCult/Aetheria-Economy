@@ -1,5 +1,5 @@
 # Aetheria
-This repository is the home of Aetheria, a sci-fi hybrid ARPG/RTS MMO about a group of corporations colonizing a hostile alien galaxy, with a satirical narrative critiquing late-stage capitalism.
+This repository is the home of Aetheria, an economy focused RTS MMO where you control the production, research, supply chains and actions of a corporation tasked with colonizing an alien galaxy. Control over your minions is indirect, like in Rimworld, and gameplay takes place over months as your production and tasks continue acting on the world even when you're offline.
 
 <img src="https://i.ibb.co/XxvYPfH/Unity-nr8ih-BUJ75.jpg" style="zoom:50%;" /> <img src="https://i.ibb.co/Twbwk4M/screen-3056x1720-2018-11-18-18-23-01.png" style="zoom:50%;" />
 

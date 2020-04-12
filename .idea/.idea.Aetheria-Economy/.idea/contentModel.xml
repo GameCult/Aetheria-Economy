@@ -1278,6 +1278,7 @@
             <e p="TabActivator.cs" t="Include" />
             <e p="TabButton.cs" t="Include" />
             <e p="TabGroup.cs" t="Include" />
+            <e p="TechArrow.cs" t="Include" />
             <e p="TechNode.cs" t="Include" />
             <e p="ZoneObject.cs" t="Include" />
             <e p="ZoneRenderer.cs" t="Include" />

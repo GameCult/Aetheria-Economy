@@ -524,6 +524,7 @@
     <Compile Include="Assets\Scripts\UI\TabActivator.cs" />
     <Compile Include="Assets\Scripts\UI\TabButton.cs" />
     <Compile Include="Assets\Scripts\UI\TabGroup.cs" />
+    <Compile Include="Assets\Scripts\UI\TechArrow.cs" />
     <Compile Include="Assets\Scripts\UI\TechNode.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneObject.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneRenderer.cs" />
