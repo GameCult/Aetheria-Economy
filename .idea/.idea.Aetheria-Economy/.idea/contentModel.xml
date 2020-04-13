@@ -409,6 +409,620 @@
               <e p="Vertex2.cs" t="Include" />
               <e p="Vertex3.cs" t="Include" />
             </e>
+            <e p="MSAGL" t="Include">
+              <e p="Core" t="Include">
+                <e p="AlgorithmBase.cs" t="Include" />
+                <e p="CancelToken.cs" t="Include" />
+                <e p="DataStructures" t="Include">
+                  <e p="BinaryHeapPriorityQueue.cs" t="Include" />
+                  <e p="BinaryHeapWithComparer.cs" t="Include" />
+                  <e p="CollectionUtilities.cs" t="Include" />
+                  <e p="GenericBinaryHeapPriorityQueue.cs" t="Include" />
+                  <e p="GenericBinaryHeapPriorityQueueWithTimestamp.cs" t="Include" />
+                  <e p="GenericHeapElement.cs" t="Include" />
+                  <e p="GenericHeapElementWithTimestamp.cs" t="Include" />
+                  <e p="RBTree" t="Include">
+                    <e p="ComparerOnDelegate.cs" t="Include" />
+                    <e p="DefaultComperer.cs" t="Include" />
+                    <e p="RBColor.cs" t="Include" />
+                    <e p="RBNode.cs" t="Include" />
+                    <e p="RBTree.cs" t="Include" />
+                    <e p="RBTreeEnumerator.cs" t="Include" />
+                  </e>
+                  <e p="RealNumberSpan.cs" t="Include" />
+                  <e p="Set.cs" t="Include" />
+                  <e p="Size.cs" t="Include" />
+                  <e p="SymmetricTuple.cs" t="Include" />
+                </e>
+                <e p="Geometry" t="Include">
+                  <e p="ApproximateComparer.cs" t="Include" />
+                  <e p="CompassVector.cs" t="Include" />
+                  <e p="ConvexHull" t="Include">
+                    <e p="ConvexHull.cs" t="Include" />
+                    <e p="HullPoint.cs" t="Include" />
+                    <e p="HullPointComparer.cs" t="Include" />
+                    <e p="HullStack.cs" t="Include" />
+                  </e>
+                  <e p="Curves" t="Include">
+                    <e p="ClosestPointOnCurve.cs" t="Include" />
+                    <e p="CubicBezierSegment.cs" t="Include" />
+                    <e p="CurvatureDerivative.cs" t="Include" />
+                    <e p="Curve.cs" t="Include" />
+                    <e p="CurveFactory.cs" t="Include" />
+                    <e p="CurveLengthAndParams.cs" t="Include" />
+                    <e p="CurveTangent.cs" t="Include" />
+                    <e p="Ellipse.cs" t="Include" />
+                    <e p="ICurve.cs" t="Include" />
+                    <e p="IFunction.cs" t="Include" />
+                    <e p="IntersectionInfo.cs" t="Include" />
+                    <e p="LinearSystem2.cs" t="Include" />
+                    <e p="LineSegment.cs" t="Include" />
+                    <e p="MinDistCurveCurve.cs" t="Include" />
+                    <e p="Parallelogram.cs" t="Include" />
+                    <e p="ParallelogramBinaryTreeNode.cs" t="Include" />
+                    <e p="ParallelogramInternalTreeNode.cs" t="Include" />
+                    <e p="ParallelogramLeaf.cs" t="Include" />
+                    <e p="ParallelogramNode.cs" t="Include" />
+                    <e p="ParallelogramNodeOverICurve.cs" t="Include" />
+                    <e p="PenetrationDepth.cs" t="Include" />
+                    <e p="PlaneTransformation.cs" t="Include" />
+                    <e p="PointLocation.cs" t="Include" />
+                    <e p="Polyline.cs" t="Include" />
+                    <e p="PolylineIterator.cs" t="Include" />
+                    <e p="PolylinePoint.cs" t="Include" />
+                    <e p="RootFinder.cs" t="Include" />
+                    <e p="RoundedRect.cs" t="Include" />
+                  </e>
+                  <e p="Direction.cs" t="Include" />
+                  <e p="MinEnclosingDisc" t="Include">
+                    <e p="Disc.cs" t="Include" />
+                    <e p="MinimumEnclosingDisc.cs" t="Include" />
+                  </e>
+                  <e p="MultidimensionalScaling.cs" t="Include" />
+                  <e p="OverlapRemoval" t="Include">
+                    <e p="BorderInfo.cs" t="Include" />
+                    <e p="ConstraintGenerator.cs" t="Include" />
+                    <e p="OverlapRemovalCluster.cs" t="Include" />
+                    <e p="OverlapRemovalClusterEvent.cs" t="Include" />
+                    <e p="OverlapRemovalClusterScanLine.cs" t="Include" />
+                    <e p="OverlapRemovalGlobalConfiguration.cs" t="Include" />
+                    <e p="OverlapRemovalNode.cs" t="Include" />
+                    <e p="OverlapRemovalParameters.cs" t="Include" />
+                    <e p="RectangularClusterBoundary.cs" t="Include" />
+                  </e>
+                  <e p="Point.cs" t="Include" />
+                  <e p="PointNodesList.cs" t="Include" />
+                  <e p="PointPair.cs" t="Include" />
+                  <e p="Rectangle.cs" t="Include" />
+                  <e p="RectanglePacking" t="Include">
+                    <e p="ColumnPacking.cs" t="Include" />
+                    <e p="OptimalColumnPacking.cs" t="Include" />
+                    <e p="OptimalPacking.cs" t="Include" />
+                    <e p="OptimalRectanglePacking.cs" t="Include" />
+                    <e p="Packing.cs" t="Include" />
+                    <e p="PackingConstants.cs" t="Include" />
+                    <e p="RectanglePacking.cs" t="Include" />
+                    <e p="RectangleToPack.cs" t="Include" />
+                  </e>
+                  <e p="RTree" t="Include">
+                    <e p="HitTestBehavior.cs" t="Include" />
+                    <e p="IntervalNode.cs" t="Include" />
+                    <e p="IntervalNodeUtils.cs" t="Include" />
+                    <e p="IntervalRTree.cs" t="Include" />
+                    <e p="RectangleNode.cs" t="Include" />
+                    <e p="RectangleNodeUtils.cs" t="Include" />
+                    <e p="RTree.cs" t="Include" />
+                  </e>
+                  <e p="Site.cs" t="Include" />
+                  <e p="SmoothedPolyline.cs" t="Include" />
+                  <e p="TriangleOrientation.cs" t="Include" />
+                </e>
+                <e p="GraphAlgorithms" t="Include">
+                  <e p="BasicGraph.cs" t="Include" />
+                  <e p="CycleRemoval" t="Include">
+                    <e p="ConnectedComponentCalculator.cs" t="Include" />
+                    <e p="CycleRemoval.cs" t="Include" />
+                    <e p="CycleRemovalWithConstraints.cs" t="Include" />
+                    <e p="GraphForCycleRemoval.cs" t="Include" />
+                    <e p="NodeInfo.cs" t="Include" />
+                  </e>
+                  <e p="IEdge.cs" t="Include" />
+                  <e p="IntPair.cs" t="Include" />
+                  <e p="MinimumSpanningTreeByPrim.cs" t="Include" />
+                  <e p="TopologicalSort.cs" t="Include" />
+                </e>
+                <e p="Layout" t="Include">
+                  <e p="Arrowhead.cs" t="Include" />
+                  <e p="Arrowheads.cs" t="Include" />
+                  <e p="Cluster.cs" t="Include" />
+                  <e p="CurvePort.cs" t="Include" />
+                  <e p="Edge.cs" t="Include" />
+                  <e p="EdgeCollection.cs" t="Include" />
+                  <e p="EdgeGeometry.cs" t="Include" />
+                  <e p="EdgeLabelPlacement.cs" t="Include" />
+                  <e p="FloatingPort.cs" t="Include" />
+                  <e p="GeometryGraph.cs" t="Include" />
+                  <e p="GeometryObject.cs" t="Include" />
+                  <e p="GraphConnectedComponents.cs" t="Include" />
+                  <e p="HookUpAnywhereFromInsidePort.cs" t="Include" />
+                  <e p="IdealEdgeLengthSettings.cs" t="Include" />
+                  <e p="ILabeledObject.cs" t="Include" />
+                  <e p="IObstacle.cs" t="Include" />
+                  <e p="IsOpenChangeEventArgs.cs" t="Include" />
+                  <e p="Label.cs" t="Include" />
+                  <e p="LabelPlacementResult.cs" t="Include" />
+                  <e p="LayoutAlgorithmHelpers.cs" t="Include" />
+                  <e p="LayoutAlgorithmSettings.cs" t="Include" />
+                  <e p="LayoutChangeEventArgs.cs" t="Include" />
+                  <e p="LgInfoBase.cs" t="Include" />
+                  <e p="LgNodeInfo.cs" t="Include" />
+                  <e p="LgNodeInfoKind.cs" t="Include" />
+                  <e p="MultiLocationFloatingPort.cs" t="Include" />
+                  <e p="Node.cs" t="Include" />
+                  <e p="NodeCollection.cs" t="Include" />
+                  <e p="PackingMethod.cs" t="Include" />
+                  <e p="Port.cs" t="Include" />
+                  <e p="PortEntry.cs" t="Include" />
+                  <e p="PortEntryOnCurve.cs" t="Include" />
+                  <e p="PortObstacle.cs" t="Include" />
+                  <e p="ProximityOverlapRemoval" t="Include">
+                    <e p="ConjugateGradient" t="Include">
+                      <e p="LinearSystemSolver.cs" t="Include" />
+                      <e p="SparseMatrix.cs" t="Include" />
+                      <e p="Vector.cs" t="Include" />
+                    </e>
+                    <e p="IOverlapRemoval.cs" t="Include" />
+                    <e p="MST" t="Include">
+                      <e p="GTreeOverlapRemoval.cs" t="Include" />
+                      <e p="MstLineSweeper.cs" t="Include" />
+                      <e p="MstOnDelaunayTriangulation.cs" t="Include" />
+                    </e>
+                    <e p="OverlapRemovalMethod.cs" t="Include" />
+                    <e p="OverlapRemovalSettings.cs" t="Include" />
+                    <e p="ProximityOverlapRemoval.cs" t="Include" />
+                    <e p="StressEnergy" t="Include">
+                      <e p="ExampleStressMajorization.cs" t="Include" />
+                      <e p="MaxIterationMethod.cs" t="Include" />
+                      <e p="NodeVoting.cs" t="Include" />
+                      <e p="SolvingMethod.cs" t="Include" />
+                      <e p="StressMajorization.cs" t="Include" />
+                      <e p="StressMajorizationSettings.cs" t="Include" />
+                      <e p="UpdateMethod.cs" t="Include" />
+                      <e p="Vote.cs" t="Include" />
+                      <e p="VoteBlock.cs" t="Include" />
+                    </e>
+                  </e>
+                  <e p="RectangleObstacle.cs" t="Include" />
+                  <e p="RelativeFloatingPort.cs" t="Include" />
+                  <e p="SimpleIntEdge.cs" t="Include" />
+                </e>
+                <e p="ParallelUtilities.cs" t="Include" />
+                <e p="ProgressChangedEventArgs.cs" t="Include" />
+                <e p="ProjectionSolver" t="Include">
+                  <e p="Block.cs" t="Include" />
+                  <e p="BlockVector.cs" t="Include" />
+                  <e p="Constraint.cs" t="Include" />
+                  <e p="ConstraintVector.cs" t="Include" />
+                  <e p="DfDvNode.cs" t="Include" />
+                  <e p="GlobalConfiguration.cs" t="Include" />
+                  <e p="ISolverShell.cs" t="Include" />
+                  <e p="Parameters.cs" t="Include" />
+                  <e p="QPSC.cs" t="Include" />
+                  <e p="Solution.cs" t="Include" />
+                  <e p="Solver.cs" t="Include" />
+                  <e p="SolverAlgorithm.cs" t="Include" />
+                  <e p="SolverShell.cs" t="Include" />
+                  <e p="UniformOneDimensionalSolver.cs" t="Include" />
+                  <e p="UniformSolverVar.cs" t="Include" />
+                  <e p="Variable.cs" t="Include" />
+                  <e p="ViolationCache.cs" t="Include" />
+                </e>
+                <e p="Routing" t="Include">
+                  <e p="BundlingSettings.cs" t="Include" />
+                  <e p="EdgeRoutingMode.cs" t="Include" />
+                  <e p="EdgeRoutingSettings.cs" t="Include" />
+                </e>
+              </e>
+              <e p="DebugHelpers" t="Include">
+                <e p="CurveSerializer.cs" t="Include" />
+                <e p="DebugCurve.cs" t="Include" />
+                <e p="DebugCurveCollection.cs" t="Include" />
+                <e p="DebugEllipse.cs" t="Include" />
+                <e p="DebugGraphics.cs" t="Include" />
+                <e p="DebugRectangle.cs" t="Include" />
+                <e p="DebugShape.cs" t="Include" />
+                <e p="DevTrace.cs" t="Include" />
+                <e p="IDebugGraphics.cs" t="Include" />
+                <e p="Persistence" t="Include">
+                  <e p="CharStreamElement.cs" t="Include" />
+                  <e p="ClusterWithChildLists.cs" t="Include" />
+                  <e p="CurveStream.cs" t="Include" />
+                  <e p="CurveStreamElement.cs" t="Include" />
+                  <e p="DoubleStreamElement.cs" t="Include" />
+                  <e p="GeometryGraphReader.cs" t="Include" />
+                  <e p="GeometryGraphWriter.cs" t="Include" />
+                  <e p="GeometryToken.cs" t="Include" />
+                </e>
+                <e p="Show.cs" t="Include" />
+                <e p="ShowDatabase.cs" t="Include" />
+                <e p="ShowDebugCurves.cs" t="Include" />
+                <e p="ShowDebugCurvesEnumeration.cs" t="Include" />
+                <e p="Timer.cs" t="Include" />
+              </e>
+              <e p="GlobalSuppressions.cs" t="Include" />
+              <e p="GraphmapsWithMesh" t="Include">
+                <e p="Angle.cs" t="Include" />
+                <e p="ComponentCollection.cs" t="Include" />
+                <e p="DijkstraAlgo.cs" t="Include" />
+                <e p="LocalModifications.cs" t="Include" />
+                <e p="MeshCreator.cs" t="Include" />
+                <e p="MeshGraph.cs" t="Include" />
+                <e p="MsaglUtilities.cs" t="Include" />
+                <e p="Network.cs" t="Include" />
+                <e p="PlanarGraphUtilities.cs" t="Include" />
+                <e p="PointSet.cs" t="Include" />
+                <e p="PointToSegmentDistance.cs" t="Include" />
+                <e p="SteinerTree.cs" t="Include" />
+                <e p="Tiling.cs" t="Include" />
+              </e>
+              <e p="Layout" t="Include">
+                <e p="Incremental" t="Include">
+                  <e p="AxisSolver.cs" t="Include" />
+                  <e p="EdgeConstraintGenerator.cs" t="Include" />
+                  <e p="FastIncrementalLayout.cs" t="Include" />
+                  <e p="FastIncrementalLayoutSettings.cs" t="Include" />
+                  <e p="Feasibility.cs" t="Include" />
+                  <e p="FiEdge.cs" t="Include" />
+                  <e p="FiNode.cs" t="Include" />
+                  <e p="HorizontalSeparationConstraint.cs" t="Include" />
+                  <e p="IConstraint.cs" t="Include" />
+                  <e p="LockPosition.cs" t="Include" />
+                  <e p="MaxSeparationConstraint.cs" t="Include" />
+                  <e p="MinSeparationConstraint.cs" t="Include" />
+                  <e p="Multipole" t="Include">
+                    <e p="KDTree.cs" t="Include" />
+                    <e p="MultipoleCoefficients.cs" t="Include" />
+                  </e>
+                  <e p="ProcrustesCircleConstraint.cs" t="Include" />
+                  <e p="Relayout.cs" t="Include" />
+                  <e p="StickConstraint.cs" t="Include" />
+                  <e p="VerticalSeparationConstraint.cs" t="Include" />
+                </e>
+                <e p="Initial" t="Include">
+                  <e p="InitialLayout.cs" t="Include" />
+                  <e p="InitialLayoutByCluster.cs" t="Include" />
+                  <e p="InitialLayoutHelpers.cs" t="Include" />
+                </e>
+                <e p="LargeGraphLayout" t="Include">
+                  <e p="DeviceIndependedZoomCalculatorForNodes.cs" t="Include" />
+                  <e p="EdgePicker.cs" t="Include" />
+                  <e p="Interval.cs" t="Include" />
+                  <e p="IZoomLevelCalculator.cs" t="Include" />
+                  <e p="LevelCalculator.cs" t="Include" />
+                  <e p="LgCellInfo.cs" t="Include" />
+                  <e p="LgData.cs" t="Include" />
+                  <e p="LgEdgeInfo.cs" t="Include" />
+                  <e p="LgInteractor.cs" t="Include" />
+                  <e p="LgLayoutSettings.cs" t="Include" />
+                  <e p="LgLevel.cs" t="Include" />
+                  <e p="LgNodeCollection.cs" t="Include" />
+                  <e p="LgPathRouter.cs" t="Include" />
+                  <e p="LgSkeletonLevel.cs" t="Include" />
+                  <e p="NodeRailLevelCalculator" t="Include">
+                    <e p="GreedyNodeRailLevelCalculator.cs" t="Include" />
+                  </e>
+                  <e p="Rail.cs" t="Include" />
+                  <e p="RailGraph.cs" t="Include" />
+                  <e p="RouteSimplifier.cs" t="Include" />
+                  <e p="ShortestPartRouterForLg.cs" t="Include" />
+                  <e p="SimpleEdgeCollection.cs" t="Include" />
+                  <e p="SimpleNodeCollection.cs" t="Include" />
+                </e>
+                <e p="Layered" t="Include">
+                  <e p="Anchor.cs" t="Include" />
+                  <e p="Balancing.cs" t="Include" />
+                  <e p="DataBase.cs" t="Include" />
+                  <e p="EdgePathsInserter.cs" t="Include" />
+                  <e p="FlatEdgeRouter.cs" t="Include" />
+                  <e p="HierarchyCalculator.cs" t="Include" />
+                  <e p="HorizontalConstraintsForSugiyama.cs" t="Include" />
+                  <e p="IntEdge.cs" t="Include" />
+                  <e p="LayerArrays.cs" t="Include" />
+                  <e p="LayerCalculator.cs" t="Include" />
+                  <e p="LayerEdge.cs" t="Include" />
+                  <e p="LayeredLayout.cs" t="Include" />
+                  <e p="LayeredLayoutEngine.cs" t="Include" />
+                  <e p="Layering" t="Include">
+                    <e p="LongestPathLayering.cs" t="Include" />
+                    <e p="NetworkSimplex.cs" t="Include" />
+                  </e>
+                  <e p="LayerInserter.cs" t="Include" />
+                  <e p="NetworkEdge.cs" t="Include" />
+                  <e p="NetworkSimplexForGeneralGraph.cs" t="Include" />
+                  <e p="Ordering" t="Include">
+                    <e p="AdjacentSwaps.cs" t="Include" />
+                    <e p="AdjacentSwapsWithConstraints.cs" t="Include" />
+                    <e p="ConstrainedOrdering.cs" t="Include" />
+                    <e p="ConstrainedOrderMeasure.cs" t="Include" />
+                    <e p="EdgeComparerBySource.cs" t="Include" />
+                    <e p="EdgeComparerByTarget.cs" t="Include" />
+                    <e p="LayerInfo.cs" t="Include" />
+                    <e p="MetroMapOrdering.cs" t="Include" />
+                    <e p="Ordering.cs" t="Include" />
+                    <e p="OrderingMeasure.cs" t="Include" />
+                    <e p="SweepMode.cs" t="Include" />
+                  </e>
+                  <e p="ProperLayeredGraph.cs" t="Include" />
+                  <e p="RecoveryLayerCalculator.cs" t="Include" />
+                  <e p="RecoveryLayeredLayoutEngine.cs" t="Include" />
+                  <e p="RefinerBetweenTwoLayers.cs" t="Include" />
+                  <e p="Routing.cs" t="Include" />
+                  <e p="SmoothedPolylineCalculator.cs" t="Include" />
+                  <e p="SugiyamaLayoutLogger.cs" t="Include" />
+                  <e p="SugiyamaLayoutSettings.cs" t="Include" />
+                  <e p="TwoLayerFlatEdgeRouter.cs" t="Include" />
+                  <e p="VertexEnumerators.cs" t="Include" />
+                  <e p="VerticalConstraintsForSugiyama.cs" t="Include" />
+                  <e p="XCoordsWithAlignment.cs" t="Include" />
+                  <e p="XLayoutGraph.cs" t="Include" />
+                </e>
+                <e p="MDS" t="Include">
+                  <e p="AllPairsDistances.cs" t="Include" />
+                  <e p="MDSGraphLayout.cs" t="Include" />
+                  <e p="MDSLayoutSettings.cs" t="Include" />
+                  <e p="PivotDistances.cs" t="Include" />
+                  <e p="PivotMDS.cs" t="Include" />
+                  <e p="SingleSourceDistances.cs" t="Include" />
+                  <e p="Transform.cs" t="Include" />
+                </e>
+                <e p="OverlapRemovalFixedSegments" t="Include">
+                  <e p="FakeBitmap.cs" t="Include" />
+                  <e p="OverlapRemovalFixedSegmentsBitmap.cs" t="Include" />
+                  <e p="OverlapRemovalFixedSegmentsMst.cs" t="Include" />
+                  <e p="PixelPoint.cs" t="Include" />
+                  <e p="RectSegIntersection.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Miscellaneous" t="Include">
+                <e p="ConstrainedSkeleton" t="Include">
+                  <e p="SteinerCdt.cs" t="Include" />
+                </e>
+                <e p="Constraints" t="Include">
+                  <e p="AlignmentConstraint.cs" t="Include" />
+                </e>
+                <e p="LayoutEditing" t="Include">
+                  <e p="BumperPusher.cs" t="Include" />
+                  <e p="EdgeRestoreData.cs" t="Include" />
+                  <e p="GraphRestoreData.cs" t="Include" />
+                  <e p="IncrementalDragger.cs" t="Include" />
+                  <e p="LabelFixture.cs" t="Include" />
+                  <e p="LabelRestoreData.cs" t="Include" />
+                  <e p="NodeRestoreData.cs" t="Include" />
+                  <e p="ObstacleCalculator.cs" t="Include" />
+                  <e p="RestoreData.cs" t="Include" />
+                  <e p="RestoreHelper.cs" t="Include" />
+                  <e p="RouterBetweenTwoNodes.cs" t="Include" />
+                  <e p="WeightedEdge.cs" t="Include" />
+                </e>
+                <e p="LayoutHelpers.cs" t="Include" />
+                <e p="MultiScale" t="Include">
+                  <e p="MultiScaleLayout.cs" t="Include" />
+                </e>
+                <e p="NonOverlappingBoundaries" t="Include">
+                  <e p="AllPairsNonOverlappingBoundaries.cs" t="Include" />
+                  <e p="ProximityQuery.cs" t="Include" />
+                </e>
+                <e p="Phylo" t="Include">
+                  <e p="PhyloEdge.cs" t="Include" />
+                  <e p="PhyloTree.cs" t="Include" />
+                  <e p="PhyloTreeLayoutCalclulation.cs" t="Include" />
+                </e>
+                <e p="Ranking" t="Include">
+                  <e p="Centrality.cs" t="Include" />
+                  <e p="RankingLayout.cs" t="Include" />
+                  <e p="RankingLayoutSettings.cs" t="Include" />
+                </e>
+                <e p="RegularGrid" t="Include">
+                  <e p="GridTraversal.cs" t="Include" />
+                </e>
+                <e p="Routing" t="Include">
+                  <e p="ShortestPathTree.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Routing" t="Include">
+                <e p="ClusterBoundaryPort.cs" t="Include" />
+                <e p="ConstrainedDelaunayTriangulation" t="Include">
+                  <e p="Cdt.cs" t="Include" />
+                  <e p="CdtEdge.cs" t="Include" />
+                  <e p="CdtFront.cs" t="Include" />
+                  <e p="CdtFrontElement.cs" t="Include" />
+                  <e p="CdtSite.cs" t="Include" />
+                  <e p="CdtSweeper.cs" t="Include" />
+                  <e p="CdtTriangle.cs" t="Include" />
+                  <e p="EdgeInserter.cs" t="Include" />
+                  <e p="EdgeTracer.cs" t="Include" />
+                  <e p="PerimeterEdge.cs" t="Include" />
+                  <e p="ThreeArray.cs" t="Include" />
+                </e>
+                <e p="Corner.cs" t="Include" />
+                <e p="InteractiveEdgeRouter.cs" t="Include" />
+                <e p="InteractiveObstacleCalculator.cs" t="Include" />
+                <e p="MultiEdgeRouter.cs" t="Include" />
+                <e p="MultipleSourceMultipleTargetsShortestPathOnVisibilityGraph.cs" t="Include" />
+                <e p="NodeKind.cs" t="Include" />
+                <e p="PreGraph.cs" t="Include" />
+                <e p="Rectilinear" t="Include">
+                  <e p="AxisCoordinateEvent.cs" t="Include" />
+                  <e p="BasicObstacleSide.cs" t="Include" />
+                  <e p="BasicReflectionEvent.cs" t="Include" />
+                  <e p="BasicVertexEvent.cs" t="Include" />
+                  <e p="CloseVertexEvent.cs" t="Include" />
+                  <e p="Clump.cs" t="Include" />
+                  <e p="EnumeratorWrapper.cs" t="Include" />
+                  <e p="EventQueue.cs" t="Include" />
+                  <e p="FreePoint.cs" t="Include" />
+                  <e p="FullVisibilityGraphGenerator.cs" t="Include" />
+                  <e p="GroupBoundaryCrossing.cs" t="Include" />
+                  <e p="GroupBoundaryCrossingMap.cs" t="Include" />
+                  <e p="HighBendVertexEvent.cs" t="Include" />
+                  <e p="HighObstacleSide.cs" t="Include" />
+                  <e p="HighReflectionEvent.cs" t="Include" />
+                  <e p="LookaheadScan.cs" t="Include" />
+                  <e p="LowBendVertexEvent.cs" t="Include" />
+                  <e p="LowObstacleSide.cs" t="Include" />
+                  <e p="LowReflectionEvent.cs" t="Include" />
+                  <e p="MsmtRectilinearPath.cs" t="Include" />
+                  <e p="NeighborSides.cs" t="Include" />
+                  <e p="Nudging" t="Include">
+                    <e p="AxisEdge.cs" t="Include" />
+                    <e p="AxisEdgeHighPointEvent.cs" t="Include" />
+                    <e p="AxisEdgeLowPointEvent.cs" t="Include" />
+                    <e p="AxisEdgesContainer.cs" t="Include" />
+                    <e p="CombinatorialNudger.cs" t="Include" />
+                    <e p="FreeSpaceFinder.cs" t="Include" />
+                    <e p="LinkedPoint.cs" t="Include" />
+                    <e p="LinkedPointSplitter.cs" t="Include" />
+                    <e p="LongestNudgedSegment.cs" t="Include" />
+                    <e p="Nudger.cs" t="Include" />
+                    <e p="Path.cs" t="Include" />
+                    <e p="PathEdge.cs" t="Include" />
+                    <e p="PathMerger.cs" t="Include" />
+                    <e p="PathRefiner.cs" t="Include" />
+                    <e p="PointByDelegateComparer.cs" t="Include" />
+                    <e p="PointProjection.cs" t="Include" />
+                    <e p="SegWithIndex.cs" t="Include" />
+                    <e p="SpaceCalculationEvent.cs" t="Include" />
+                    <e p="StaircaseRemover.cs" t="Include" />
+                  </e>
+                  <e p="Obstacle.cs" t="Include" />
+                  <e p="ObstaclePort.cs" t="Include" />
+                  <e p="ObstaclePortEntrance.cs" t="Include" />
+                  <e p="ObstacleTree.cs" t="Include" />
+                  <e p="OpenVertexEvent.cs" t="Include" />
+                  <e p="OverlapConvexHull.cs" t="Include" />
+                  <e p="PointAndCrossings.cs" t="Include" />
+                  <e p="PointAndCrossingsList.cs" t="Include" />
+                  <e p="PointComparer.cs" t="Include" />
+                  <e p="PortManager.cs" t="Include" />
+                  <e p="RectilinearEdgeRouter.cs" t="Include" />
+                  <e p="RectilinearInteractiveEditor.cs" t="Include" />
+                  <e p="RectilinearScanLine.cs" t="Include" />
+                  <e p="ScanDirection.cs" t="Include" />
+                  <e p="ScanSegment.cs" t="Include" />
+                  <e p="ScanSegmentTree.cs" t="Include" />
+                  <e p="ScanSegmentVector.cs" t="Include" />
+                  <e p="ScanSegmentVectorItem.cs" t="Include" />
+                  <e p="SegmentIntersector.cs" t="Include" />
+                  <e p="SparseVisibilityGraphGenerator.cs" t="Include" />
+                  <e p="SpliceUtility.cs" t="Include" />
+                  <e p="SsstRectilinearPath.cs" t="Include" />
+                  <e p="StaticGraphUtility.cs" t="Include" />
+                  <e p="TransientGraphUtility.cs" t="Include" />
+                  <e p="VertexEntry.cs" t="Include" />
+                  <e p="VisibilityGraphGenerator.cs" t="Include" />
+                  <e p="VisibilityVertexRectilinear.cs" t="Include" />
+                  <e p="WaypointPort.cs" t="Include" />
+                </e>
+                <e p="RelativeShape.cs" t="Include" />
+                <e p="RelaxedPolylinePoint.cs" t="Include" />
+                <e p="Shape.cs" t="Include" />
+                <e p="ShapeCreator.cs" t="Include" />
+                <e p="ShapeCreatorForRoutingToParents.cs" t="Include" />
+                <e p="ShapeObstacleCalculator.cs" t="Include" />
+                <e p="SingleSourceMultipleTargetsShortestPathOnVisibilityGraph.cs" t="Include" />
+                <e p="SingleSourceSingleTargetShortestPathOnVisibilityGraph.cs" t="Include" />
+                <e p="Spline" t="Include">
+                  <e p="Bundling" t="Include">
+                    <e p="BundleBase.cs" t="Include" />
+                    <e p="BundleBasesCalculator.cs" t="Include" />
+                    <e p="BundleInfo.cs" t="Include" />
+                    <e p="BundleRouter.cs" t="Include" />
+                    <e p="BundlingStatus.cs" t="Include" />
+                    <e p="CdtIntersections.cs" t="Include" />
+                    <e p="CdtThreader.cs" t="Include" />
+                    <e p="ChannelFlag.cs" t="Include" />
+                    <e p="CostCalculator.cs" t="Include" />
+                    <e p="EdgeNudger.cs" t="Include" />
+                    <e p="FlipCollapser.cs" t="Include" />
+                    <e p="FlipSwitcher.cs" t="Include" />
+                    <e p="GeneralMetroMapOrdering.cs" t="Include" />
+                    <e p="HubDebugger.cs" t="Include" />
+                    <e p="HubRadiiCalculator.cs" t="Include" />
+                    <e p="IMetroMapOrderingAlgorithm.cs" t="Include" />
+                    <e p="IntersectionCache.cs" t="Include" />
+                    <e p="Intersections.cs" t="Include" />
+                    <e p="LinearMetroMapOrdering.cs" t="Include" />
+                    <e p="MetroGraphData.cs" t="Include" />
+                    <e p="MetroLine.cs" t="Include" />
+                    <e p="MetroNodeInfo.cs" t="Include" />
+                    <e p="NodePositionsAdjuster.cs" t="Include" />
+                    <e p="OrientedHubSegment.cs" t="Include" />
+                    <e p="PathFixer.cs" t="Include" />
+                    <e p="PointPairOrder.cs" t="Include" />
+                    <e p="SdBoneEdge.cs" t="Include" />
+                    <e p="SdShortestPath.cs" t="Include" />
+                    <e p="SdVertex.cs" t="Include" />
+                    <e p="SimulatedAnnealing.cs" t="Include" />
+                    <e p="Station.cs" t="Include" />
+                    <e p="StationEdgeInfo.cs" t="Include" />
+                    <e p="TimeMeasurer.cs" t="Include" />
+                  </e>
+                  <e p="ConeSpanner" t="Include">
+                    <e p="BrokenConeSide.cs" t="Include" />
+                    <e p="Cone.cs" t="Include" />
+                    <e p="ConeClosureEvent.cs" t="Include" />
+                    <e p="ConeLeftSide.cs" t="Include" />
+                    <e p="ConeRightSide.cs" t="Include" />
+                    <e p="ConeSide.cs" t="Include" />
+                    <e p="ConeSideComparer.cs" t="Include" />
+                    <e p="ConeSpanner.cs" t="Include" />
+                    <e p="ConeSpannerForPortLocations.cs" t="Include" />
+                    <e p="IConeSweeper.cs" t="Include" />
+                    <e p="LeftIntersectionEvent.cs" t="Include" />
+                    <e p="LeftObstacleSide.cs" t="Include" />
+                    <e p="LeftVertexEvent.cs" t="Include" />
+                    <e p="LineSweeper.cs" t="Include" />
+                    <e p="LineSweeperForPortLocations.cs" t="Include" />
+                    <e p="LowestVertexEvent.cs" t="Include" />
+                    <e p="ObstacleSide.cs" t="Include" />
+                    <e p="PortLocationEvent.cs" t="Include" />
+                    <e p="RightIntersectionEvent.cs" t="Include" />
+                    <e p="RightObstacleSide.cs" t="Include" />
+                    <e p="RightVertexEvent.cs" t="Include" />
+                    <e p="SweepEvent.cs" t="Include" />
+                    <e p="VertexEvent.cs" t="Include" />
+                  </e>
+                </e>
+                <e p="SplineRouter.cs" t="Include" />
+                <e p="StraightLineEdges.cs" t="Include" />
+                <e p="TightLooseCouple.cs" t="Include" />
+                <e p="Visibility" t="Include">
+                  <e p="ActiveDiagonalComparerWithRay.cs" t="Include" />
+                  <e p="ActiveEdgeComparerWithRay.cs" t="Include" />
+                  <e p="BimodalSequence.cs" t="Include" />
+                  <e p="Diagonal.cs" t="Include" />
+                  <e p="InteractiveTangentVisibilityGraphCalculator.cs" t="Include" />
+                  <e p="LineSweeperBase.cs" t="Include" />
+                  <e p="ObstacleSideComparer.cs" t="Include" />
+                  <e p="PointVisibilityCalculator.cs" t="Include" />
+                  <e p="Polygon.cs" t="Include" />
+                  <e p="PortObstacleEvent.cs" t="Include" />
+                  <e p="SegmentBase.cs" t="Include" />
+                  <e p="Stem.cs" t="Include" />
+                  <e p="StemStartPointComparer.cs" t="Include" />
+                  <e p="Tangent.cs" t="Include" />
+                  <e p="TangentPair.cs" t="Include" />
+                  <e p="TangentVisibilityGraphCalculator.cs" t="Include" />
+                  <e p="TollFreeVisibilityEdge.cs" t="Include" />
+                  <e p="UnimodalSequence.cs" t="Include" />
+                  <e p="VisibilityEdge.cs" t="Include" />
+                  <e p="VisibilityGraph.cs" t="Include" />
+                  <e p="VisibilityKind.cs" t="Include" />
+                  <e p="VisibilityVertex.cs" t="Include" />
+                </e>
+              </e>
+              <e p="ValidateArg.cs" t="Include" />
+            </e>
             <e p="NaughtyAttributes" t="Include">
               <e p="Scripts" t="Include">
                 <e p="Core" t="Include">
@@ -1258,12 +1872,12 @@
             </e>
             <e p="Rect.cs" t="Include" />
             <e p="Ship.cs" t="Include" />
-            <e p="Technology.cs" t="Include" />
             <e p="ZoneData.cs" t="Include" />
             <e p="ZoneGenerator.cs" t="Include" />
           </e>
           <e p="StrategyGameManager.cs" t="Include" />
           <e p="TechTreeTest.cs" t="Include" />
+          <e p="TechTreeTestMsagl.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="BackgroundRenderer.cs" t="Include" />
             <e p="ClickableCollider.cs" t="Include" />

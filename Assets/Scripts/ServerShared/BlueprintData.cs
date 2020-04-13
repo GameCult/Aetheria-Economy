@@ -12,7 +12,7 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("name"), Key(1)]  
     public string Name;
     
-    [InspectableField, JsonProperty("ingredients"), Key(2)]  
+    [InspectableDatabaseLink(typeof(ItemData)), JsonProperty("ingredients"), Key(2)]  
     public Dictionary<Guid, int> Ingredients = new Dictionary<Guid, int>();
 
     [InspectableDatabaseLink(typeof(CraftedItemData)), JsonProperty("item"), Key(3)]  
@@ -22,10 +22,19 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     public int Quantity;
 
     [InspectableField, JsonProperty("difficulty"), Key(5)]
-    public int Difficulty;
+    public float Difficulty;
 
-    [InspectableField, JsonProperty("statEffects"), Key(6)]
+    [InspectableField, JsonProperty("quality"), Key(6)]
+    public float Quality;
+
+    [InspectableField, JsonProperty("statEffects"), Key(7)]
     public List<BlueprintStatEffect> StatEffects = new List<BlueprintStatEffect>();
+
+    [InspectableField, JsonProperty("researchTime"), Key(8)]
+    public float ResearchTime;
+    
+    [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("researchDependencies"), Key(9)]  
+    public Dictionary<Guid, int> Dependencies = new Dictionary<Guid, int>();
     
     [IgnoreMember] public string EntryName
     {

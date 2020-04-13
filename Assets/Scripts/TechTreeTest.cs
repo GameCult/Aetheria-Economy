@@ -5,6 +5,11 @@ using System.Linq;
 using GraphSharp.Algorithms.Layout;
 using GraphSharp.Algorithms.Layout.Simple.FDP;
 using GraphSharp.Algorithms.Layout.Simple.Hierarchical;
+using Microsoft.Msagl.Core.Geometry;
+using Microsoft.Msagl.Core.Geometry.Curves;
+using Microsoft.Msagl.Core.Layout;
+using Microsoft.Msagl.Layout.Incremental;
+using Microsoft.Msagl.Layout.Layered;
 using NaughtyAttributes;
 using QuickGraph;
 using QuickGraph.Algorithms;
@@ -16,7 +21,16 @@ using static Unity.Mathematics.math;
 public enum LayoutAlgorithm
 {
     KamadaKawai,
-    Sugiyama
+    Sugiyama,
+    MSAGL
+}
+
+public enum EliminateIslandMode
+{
+    None,
+    Random,
+    JoinLeaves,
+    RandomLeaf
 }
 
 public class TechTreeTest : MonoBehaviour
@@ -31,10 +45,11 @@ public class TechTreeTest : MonoBehaviour
     public int TechCount = 50;
     public int SeedTechs = 5;
     public int RollingWindowSize = 50;
-    public bool EliminateIslands = false;
-    // public float MultipleDependencyProbability = .25f;
-    // public int MaxDependencyDistance = 4;
-    // public int MaxDependencyTierDifference = 2;
+    public EliminateIslandMode EliminateIslands = EliminateIslandMode.None;
+    public bool MultipleDependencies;
+    public float MultipleDependencyProbability = .25f;
+    public int MaxDependencyDistance = 4;
+    public int MaxDependencyTierDifference = 2;
     
     [Section("Kamada-Kawai")]
     public float DisconnectedMultiplier;
@@ -50,6 +65,8 @@ public class TechTreeTest : MonoBehaviour
     public bool Radial;
     public bool MinimizeEdgeLength;
     public bool OptimizeWidth;
+    
+    //[Section("MSAGL")]
     
     [Section("Radial")]
     public int Sections;
@@ -138,78 +155,87 @@ public class TechTreeTest : MonoBehaviour
             .ToDictionary(
                 i => i.Key, 
                 i => i.Select(g => g.Key).ToArray());
-        
-        //  var vertexTiers = new Dictionary<IntVertex, int>();
-        //  foreach (var island in islandsInverse.Values)
-        //  {
-        //      vertexTiers[island[0]] = 0;
-        //      foreach (var vertex in island.Skip(1))
-        //      {
-        //          vertexTiers[vertex] = edges.FindPath(vertex, island[0], (v1, v2) => 1).Count();
-        //          // var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
-        //          // if (tryGetPath(island[0], out var path))
-        //          // {
-        //          //     vertexTiers[vertex] = path.Count();
-        //          // }
-        //          // else Debug.Log("Path to root not found?");
-        //      }
-        //  }
-        //
-        // foreach (var island in islandsInverse.Values)
-        // {
-        //     foreach (var vertex in island.Skip(1))
-        //     {
-        //         //var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
-        //         //var ancestors = island.Take(Array.IndexOf(island, vertex) - 1);
-        //         var possibleDependencies = island.Where(v =>
-        //         {
-        //             return v != vertex &&
-        //                    vertexTiers[v] < vertexTiers[vertex] &&
-        //                    abs(vertexTiers[v] - vertexTiers[vertex]) < MaxDependencyTierDifference &&
-        //                    edges.FindPath(vertex, v, (v1, v2) => 1).Count() < MaxDependencyDistance;
-        //             // if (v != vertex && tryGetPath(v, out var path))
-        //             // {
-        //             //     return path.Count() > 1 && path.Count() < MaxDependencyDistance;
-        //             // }
-        //             //
-        //             // return false;
-        //         }).ToArray();
-        //         var dependencies = new List<int>();
-        //         while (dependencies.Count < possibleDependencies.Length && Random.value < MultipleDependencyProbability)
-        //         {
-        //             var depIndex = Random.Range(0, possibleDependencies.Length);
-        //             dependencies.Add(depIndex);
-        //             edges.Add(new Edge<IntVertex>(possibleDependencies[depIndex], vertex));
-        //         }
-        //         // while (Random.value < MultipleDependencyProbability)
-        //         // {
-        //         //     var index = Array.IndexOf(island, vertex);
-        //         //     int depIndex;
-        //         //     int tries = 0;
-        //         //     do
-        //         //     {
-        //         //         depIndex = Random.Range(max(0, index - MultipleDependencyRollingWindow), index);
-        //         //     } while (tries < 10 && dependencies.Contains(depIndex));
-        //         //
-        //         //     if (tries < 10)
-        //         //         edges.Add(new Edge<IntVertex>(island[depIndex], vertex));
-        //         //     else break;
-        //         // }
-        //     }
-        // }
 
-        if (EliminateIslands)
+        if (MultipleDependencies)
+        {
+            var vertexTiers = new Dictionary<IntVertex, int>();
+            foreach (var island in islandsInverse.Values)
+            {
+                vertexTiers[island[0]] = 0;
+                foreach (var vertex in island.Skip(1))
+                {
+                    vertexTiers[vertex] = edges.FindPath(vertex, island[0], (v1, v2) => 1).Count();
+                    // var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
+                    // if (tryGetPath(island[0], out var path))
+                    // {
+                    //     vertexTiers[vertex] = path.Count();
+                    // }
+                    // else Debug.Log("Path to root not found?");
+                }
+            }
+            
+            foreach (var island in islandsInverse.Values)
+            {
+                foreach (var vertex in island.Skip(1))
+                {
+                    //var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
+                    //var ancestors = island.Take(Array.IndexOf(island, vertex) - 1);
+                    var possibleDependencies = island.Where(v =>
+                    {
+                        var dist = edges.FindPath(vertex, v, (v1, v2) => 1).Count();
+                        return v != vertex &&
+                               vertexTiers[v] < vertexTiers[vertex] &&
+                               abs(vertexTiers[v] - vertexTiers[vertex]) < MaxDependencyTierDifference &&
+                               dist < MaxDependencyDistance && dist > 2;
+                        // if (v != vertex && tryGetPath(v, out var path))
+                        // {
+                        //     return path.Count() > 1 && path.Count() < MaxDependencyDistance;
+                        // }
+                        //
+                        // return false;
+                    }).ToArray();
+                    var dependencies = new List<int>();
+                    while (dependencies.Count < possibleDependencies.Length && Random.value < MultipleDependencyProbability)
+                    {
+                        var depIndex = Random.Range(0, possibleDependencies.Length);
+                        dependencies.Add(depIndex);
+                        edges.Add(new Edge<IntVertex>(possibleDependencies[depIndex], vertex));
+                    }
+                    // while (Random.value < MultipleDependencyProbability)
+                    // {
+                    //     var index = Array.IndexOf(island, vertex);
+                    //     int depIndex;
+                    //     int tries = 0;
+                    //     do
+                    //     {
+                    //         depIndex = Random.Range(max(0, index - MultipleDependencyRollingWindow), index);
+                    //     } while (tries < 10 && dependencies.Contains(depIndex));
+                    //
+                    //     if (tries < 10)
+                    //         edges.Add(new Edge<IntVertex>(island[depIndex], vertex));
+                    //     else break;
+                    // }
+                }
+            }
+        }
+
+        if (EliminateIslands!=EliminateIslandMode.None)
         {
             if(islandCount>1)
                 for (int i = 1; i < islandCount; i++)
                 {
                     var i1 = islands.Where(x => x.Value == i - 1).Select(x=>x.Key).ToArray();
                     var i2 = islands.Where(x => x.Value == i).Select(x=>x.Key).ToArray();
-                    edges.Add(new Edge<IntVertex>(i1[Random.Range(0,i1.Length-1)],i2[Random.Range(0,i2.Length-1)]));
+                    if(EliminateIslands==EliminateIslandMode.JoinLeaves)
+                        edges.Add(new Edge<IntVertex>(i1.Last(), i2.Last()));
+                    else if(EliminateIslands==EliminateIslandMode.Random)
+                        edges.Add(new Edge<IntVertex>(i1[Random.Range(0,i1.Length-1)],i2[Random.Range(0,i2.Length-1)]));
+                    else if(EliminateIslands==EliminateIslandMode.RandomLeaf)
+                        edges.Add(new Edge<IntVertex>(i1.Last(),i2[Random.Range(0,i2.Length-1)]));
                 }
+            graph = edges.ToBidirectionalGraph<IntVertex,Edge<IntVertex>>();
         }
         
-        graph = edges.ToBidirectionalGraph<IntVertex,Edge<IntVertex>>();
 
         LayoutAlgorithmBase<IntVertex, Edge<IntVertex>, BidirectionalGraph<IntVertex, Edge<IntVertex>>> layout = 
             (Algorithm == LayoutAlgorithm.Sugiyama) ?
@@ -259,7 +285,7 @@ public class TechTreeTest : MonoBehaviour
         
         var islandColors = islandCenters.ToDictionary(
             i=>i.Key,
-            i=>Color.HSVToRGB(HueMin + (HueMax - HueMin) * Rect.PointToNormalized(bounds, i.Value).x, Saturation, Brightness));
+            i=>Color.HSVToRGB(lerp(HueMin, HueMax, Algorithm == LayoutAlgorithm.Sugiyama ? Rect.PointToNormalized(bounds, i.Value).x : Random.value), Saturation, Brightness));
 
         var islandFillMaterials = islandColors.ToDictionary(i => i.Key, i =>
         {
@@ -399,14 +425,22 @@ public class TechTreeTest : MonoBehaviour
         {
             foreach (var edge in edges)
             {
-                var link = Link.Instantiate<Transform>();
-                link.position = (Vector2) positions[edge.Source];
+                var link = Link.Instantiate<TechArrow>();
+                link.Icon.material = islandLinkMaterials[islands[edge.Source]];
+                link.transform.position = float3(positions[edge.Source], LinkDepth);
                 var diff = positions[edge.Target] - positions[edge.Source];
-                link.rotation = Quaternion.Euler(0,0,atan2(diff.y, diff.x) * Mathf.Rad2Deg);
-                link.localScale = new Vector3(length(diff), 1, 1);
+                link.transform.rotation = Quaternion.Euler(0,0,atan2(diff.y, diff.x) * Mathf.Rad2Deg);
+                link.transform.localScale = new Vector3(length(diff) - LinkTargetDistance, 1, 1);
                 _linkInstances.Add(link.GetComponent<Prototype>());
+
+                var arrow = Arrow.Instantiate<TechArrow>();
+                arrow.transform.position = float3(positions[edge.Source] + normalize(positions[edge.Target] - positions[edge.Source]) * (length(diff) - LinkTargetDistance), ArrowDepth);
+                arrow.transform.rotation = Quaternion.Euler(0,0,atan2(diff.y, diff.x) * Mathf.Rad2Deg);
+                arrow.Icon.material = islandArrowMaterials[islands[edge.Source]];
+                _arrowInstances.Add(arrow.GetComponent<Prototype>());
             }
         }
+
     }
     
     float ease_in_quad(float x) {

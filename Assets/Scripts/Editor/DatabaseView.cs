@@ -164,7 +164,8 @@ public class DatabaseListView : EditorWindow
                     var result = await R
                         .Db("Aetheria")
                         .Table(table)
-                        .Update(entry)
+                        .Get(entry.ID)
+                        .Replace(entry)
                         .RunAsync(_connection);
                     Debug.Log($"Uploaded entry to RethinkDB: {entry.ID} result: {result}");
                 };

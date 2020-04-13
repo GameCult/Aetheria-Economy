@@ -69,7 +69,7 @@ public static class Extensions
 
     private static Random? _random;
     private static Random Random => (Random) (_random ?? (_random = new Random(1337)));
-    //public static T RandomElement<T>(this IEnumerable<T> enumerable) => enumerable.ElementAt(Random.NextInt(0, enumerable.Count()));
+    public static T RandomElement<T>(this IEnumerable<T> enumerable) => enumerable.ElementAt(Random.NextInt(0, enumerable.Count()));
     public static float NextUnbounded(this Random random) => 1 / (1 - random.NextFloat()) - 1;
     public static float NextUnbounded(this Random random, float bias, float power) => 1 / (1 - pow(random.NextFloat(), 1 - pow(clamp(bias,0,.99f), 1 / power))) - 1;
 	

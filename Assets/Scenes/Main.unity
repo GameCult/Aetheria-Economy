@@ -7880,7 +7880,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 435654366}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0ae6f9307731b8f469a018c69d95d2ba, type: 3}
   m_Name: 
@@ -11412,12 +11412,12 @@ PrefabInstance:
     - target: {fileID: 3856099931455214244, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_Name
-      value: Zone
+      value: Sector
       objectReference: {fileID: 0}
     - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_text
-      value: Zone
+      value: Sector
       objectReference: {fileID: 0}
     - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
@@ -11427,7 +11427,7 @@ PrefabInstance:
     - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
@@ -11449,6 +11449,11 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
+        type: 3}
+      propertyPath: m_subTextObjects.Array.data[1]
+      value: 
+      objectReference: {fileID: 105783976}
     - target: {fileID: 5318229203699776728, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -11562,7 +11567,7 @@ PrefabInstance:
     - target: {fileID: 6493174789768221420, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 68.3
+      value: 78.765
       objectReference: {fileID: 0}
     - target: {fileID: 6493174789768221420, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
@@ -14296,6 +14301,7 @@ GameObject:
   - component: {fileID: 712278634}
   - component: {fileID: 712278633}
   - component: {fileID: 712278632}
+  - component: {fileID: 712278635}
   m_Layer: 0
   m_Name: Tech View
   m_TagString: Untagged
@@ -14310,7 +14316,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712278631}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6270ad993ac7b944786c936b7b058263, type: 3}
   m_Name: 
@@ -14322,24 +14328,28 @@ MonoBehaviour:
   RadialLink: {fileID: 1417816149}
   Arrow: {fileID: 1083812776}
   Algorithm: 1
-  TechCount: 1000
-  SeedTechs: 15
-  RollingWindowSize: 50
+  TechCount: 200
+  SeedTechs: 10
+  RollingWindowSize: 20
   EliminateIslands: 0
-  DisconnectedMultiplier: 2
+  MultipleDependencies: 0
+  MultipleDependencyProbability: 0.5
+  MaxDependencyDistance: 4
+  MaxDependencyTierDifference: 2
+  DisconnectedMultiplier: 4
   K: 0.25
-  LengthFactor: 1
-  Iterations: 100
+  LengthFactor: 2
+  Iterations: 1000
   LayerDistance: 1
-  VertexDistance: 0.1
+  VertexDistance: 1
   WidthPerHeight: 1
   PositionMode: -1
   Radial: 1
-  MinimizeEdgeLength: 0
-  OptimizeWidth: 0
+  MinimizeEdgeLength: 1
+  OptimizeWidth: 1
   Sections: 360
   PaddingRadians: 3.14
-  StartTier: 10
+  StartTier: 4
   Scale: 2
   LinkPoints: 32
   LinkDepth: 5
@@ -14347,7 +14357,7 @@ MonoBehaviour:
   RingDepth: 6
   ArrowDepth: 3
   Saturation: 0.95
-  HueMin: 0.5
+  HueMin: 0
   HueMax: 1
   Brightness: 1
   RingInnerSaturation: 1
@@ -14394,6 +14404,56 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &712278635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712278631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d47bb1c8e9ce08e41877db523d91a2f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IconsPath: Sprites/Icons/Tech
+  Ring: {fileID: 680383218}
+  Tech: {fileID: 586612708}
+  RadialLink: {fileID: 1417816149}
+  Arrow: {fileID: 1083812776}
+  TechCount: 500
+  SeedTechs: 15
+  RollingWindowSize: 100
+  Radial: 1
+  MultipleDependencyProbability: 0.15
+  DependencyDepth: 2
+  DependencyAncestorDepth: 4
+  PackingMethod: 0
+  Sections: 360
+  PaddingRadians: 3.14
+  StartTier: 12
+  Scale: 2
+  LinkPoints: 16
+  LinkDepth: 5
+  LinkTargetDistance: 0.75
+  RingDepth: 6
+  ArrowDepth: 3
+  LayerDistance: 1.25
+  Saturation: 0.95
+  HueMin: 0
+  HueMax: 1
+  Brightness: 1
+  RingInnerSaturation: 1
+  RingOuterSaturation: 0.25
+  RingInnerBrightness: 1
+  RingOuterBrightness: 0.25
+  RingColorKeys: 8
+  FillOpacity: 0.3
+  GlowOpacity: 0.6
+  TechFillMaterial: {fileID: 2100000, guid: c3c13ba00125fdf4c92bd96210dc7230, type: 2}
+  TechGlowMaterial: {fileID: 2100000, guid: 1426b25e088759647b77658321197be7, type: 2}
+  TechArrowMaterial: {fileID: 2100000, guid: 2a2ec810cb24ddb4d869e73fe8a1510a, type: 2}
+  TechLinkMaterial: {fileID: 2100000, guid: 67e23cda35beab546a57003dd2d33de1, type: 2}
 --- !u!1 &716116810
 GameObject:
   m_ObjectHideFlags: 0
@@ -22522,7 +22582,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1126386499}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c1faf0a46b9cf24498cd5ec93c34c71, type: 3}
   m_Name: 
@@ -38510,6 +38570,11 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
+        type: 3}
+      propertyPath: m_subTextObjects.Array.data[1]
+      value: 
+      objectReference: {fileID: 426675036}
     - target: {fileID: 5318229203699776728, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -39972,6 +40037,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1941419274}
   - component: {fileID: 1941419275}
+  - component: {fileID: 1941419276}
   m_Layer: 0
   m_Name: Link
   m_TagString: Untagged
@@ -40006,6 +40072,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1281fe44325f9b548aa42dc331b17266, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1941419276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941419273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54298fa75eb6304489e19a84af3413f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 1813193646}
 --- !u!1 &1944537660
 GameObject:
   m_ObjectHideFlags: 0
@@ -43547,9 +43626,7 @@ PrefabInstance:
     - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_text
-      value: 'Corporation
-
-'
+      value: Corporation
       objectReference: {fileID: 0}
     - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
@@ -43559,7 +43636,7 @@ PrefabInstance:
     - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
@@ -43581,6 +43658,16 @@ PrefabInstance:
       propertyPath: m_subTextObjects.Array.data[1]
       value: 
       objectReference: {fileID: 650897775}
+    - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4750078953547169287, guid: b93e36d73a071274d8e9225e077ce92a,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5318229203699776728, guid: b93e36d73a071274d8e9225e077ce92a,
         type: 3}
       propertyPath: m_LocalPosition.x
