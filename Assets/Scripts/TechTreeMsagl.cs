@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-public class TechTreeTestMsagl : MonoBehaviour
+public class TechTreeMsagl : MonoBehaviour
 {
     [Section("Assets")]
     public string IconsPath;
@@ -69,6 +69,8 @@ public class TechTreeTestMsagl : MonoBehaviour
     private List<Prototype> _arrowInstances = new List<Prototype>();
     private Texture2D[] _icons;
     
+    public BlueprintData[] Blueprints { get; set; }
+    
     void Start()
     {
         _icons = Resources.LoadAll<Texture2D>(IconsPath);
@@ -76,7 +78,7 @@ public class TechTreeTestMsagl : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(TestMode && Input.GetKeyDown(KeyCode.Space))
             GenerateTechs();
     }
     
@@ -111,7 +113,7 @@ public class TechTreeTestMsagl : MonoBehaviour
         return region;
     }
 
-    void GenerateTechs()
+    public void GenerateTechs()
     {
         foreach (var instance in _ringInstances) instance.ReturnToPool();
         _ringInstances.Clear();
@@ -126,32 +128,53 @@ public class TechTreeTestMsagl : MonoBehaviour
         _arrowInstances.Clear();
         
         var graph = new GeometryGraph();
-        
-        for (int i = 0; i < TechCount; i++)
+
+        if (TestMode)
         {
-            var node = NewNode(i);
-            graph.Nodes.Add(node);
-            if(i>SeedTechs) graph.Edges.Add(new Edge(graph.Nodes[Random.Range(max(0,i-RollingWindowSize),i-1)], node));
+            for (int i = 0; i < TechCount; i++)
+            {
+                var node = NewNode(i);
+                graph.Nodes.Add(node);
+                if(i>SeedTechs) graph.Edges.Add(new Edge(graph.Nodes[Random.Range(max(0,i-RollingWindowSize),i-1)], node));
+            }
+            foreach (var vertex in graph.Nodes.Where(v=>!graph.Edges.Any(e=>e.Source==v||e.Target==v)))
+            {
+                graph.Edges.Add(new Edge(vertex, graph.Nodes[Random.Range(0,TechCount-1)]));
+            }
         }
-        foreach (var vertex in graph.Nodes.Where(v=>!graph.Edges.Any(e=>e.Source==v||e.Target==v)))
+        else
         {
-            graph.Edges.Add(new Edge(vertex, graph.Nodes[Random.Range(0,TechCount-1)]));
+            var nodeMap = new Dictionary<BlueprintData, Node>();
+            foreach (var blueprint in Blueprints)
+            {
+                var node = NewNode(blueprint);
+                nodeMap[blueprint] = node;
+                graph.Nodes.Add(node);
+            }
+
+            foreach (var targetBlueprint in Blueprints)
+            {
+                //foreach(var sourceBlueprint in Blueprints.Where(sb => targetBlueprint.Dependencies.Any(dep=>sb.ID==dep)))
+            }
         }
 
         var islands = graph.GetClusteredConnectedComponents();
         var islandMap =
             graph.Nodes.ToDictionary(n => n, n => islands.Find(c => c.Nodes.Any(cn => cn.UserData == n)));
-        
-        foreach (var island in islands)
+
+        if (TestMode)
         {
-            foreach (var node in island.Nodes)
+            foreach (var island in islands)
             {
-                var region = GetRegion(island, node, DependencyAncestorDepth, DependencyDepth);
-                while (Random.value < MultipleDependencyProbability && region.Count > 0)
+                foreach (var node in island.Nodes)
                 {
-                    var dependency = region.RandomElement();
-                    graph.Edges.Add(new Edge(dependency.UserData as Node, node.UserData as Node));
-                    region.Remove(dependency);
+                    var region = GetRegion(island, node, DependencyAncestorDepth, DependencyDepth);
+                    while (Random.value < MultipleDependencyProbability && region.Count > 0)
+                    {
+                        var dependency = region.RandomElement();
+                        graph.Edges.Add(new Edge(dependency.UserData as Node, node.UserData as Node));
+                        region.Remove(dependency);
+                    }
                 }
             }
         }

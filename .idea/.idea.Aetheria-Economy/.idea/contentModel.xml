@@ -1876,8 +1876,8 @@
             <e p="ZoneGenerator.cs" t="Include" />
           </e>
           <e p="StrategyGameManager.cs" t="Include" />
+          <e p="TechTreeMsagl.cs" t="Include" />
           <e p="TechTreeTest.cs" t="Include" />
-          <e p="TechTreeTestMsagl.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="BackgroundRenderer.cs" t="Include" />
             <e p="ClickableCollider.cs" t="Include" />

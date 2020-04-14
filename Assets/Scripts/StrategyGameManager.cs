@@ -13,6 +13,8 @@ public class StrategyGameManager : MonoBehaviour
     public TabGroup PrimaryTabGroup;
     public TabButton GalaxyTabButton;
     public TabButton ZoneTabButton;
+    public TabButton TechTabButton;
+    public TechTreeMsagl TechTree;
     public Prototype GalaxyZonePrototype;
     public Prototype GalaxyZoneLinkPrototype;
     public MeshRenderer GalaxyBackground;
@@ -52,6 +54,7 @@ public class StrategyGameManager : MonoBehaviour
     private float _galaxyOrthoSize = 50;
     private Material _boundaryMaterial;
     private Material _backgroundMaterial;
+    private bool _techLayoutGenerated;
     
     void Start()
     {
@@ -98,6 +101,15 @@ public class StrategyGameManager : MonoBehaviour
                 if (_populatedZone != _selectedZone && _zoneResponse?.Zone.ID == _selectedZone)
                     PopulateZone();
                 Camera.transform.position = -Vector3.forward;
+            }
+
+            if (_currentTab == TechTabButton)
+            {
+                if (!_techLayoutGenerated)
+                {
+                    TechTree.Blueprints = _cache.GetAll<BlueprintData>().ToArray();
+                    TechTree.GenerateTechs();
+                }
             }
         };
         

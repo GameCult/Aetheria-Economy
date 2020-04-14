@@ -1020,8 +1020,8 @@
     <Compile Include="Assets\Scripts\NIH\XKCDColors.cs" />
     <Compile Include="Assets\Scripts\Prototype.cs" />
     <Compile Include="Assets\Scripts\StrategyGameManager.cs" />
+    <Compile Include="Assets\Scripts\TechTreeMsagl.cs" />
     <Compile Include="Assets\Scripts\TechTreeTest.cs" />
-    <Compile Include="Assets\Scripts\TechTreeTestMsagl.cs" />
     <Compile Include="Assets\Scripts\UI\BackgroundRenderer.cs" />
     <Compile Include="Assets\Scripts\UI\ClickableCollider.cs" />
     <Compile Include="Assets\Scripts\UI\ClickCatcher.cs" />

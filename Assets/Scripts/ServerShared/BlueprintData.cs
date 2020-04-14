@@ -34,7 +34,7 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     public float ResearchTime;
     
     [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("researchDependencies"), Key(9)]  
-    public Dictionary<Guid, int> Dependencies = new Dictionary<Guid, int>();
+    public List<Guid> Dependencies = new List<Guid>();
     
     [IgnoreMember] public string EntryName
     {
