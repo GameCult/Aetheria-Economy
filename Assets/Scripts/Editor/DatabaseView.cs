@@ -274,7 +274,7 @@ public class DatabaseListView : EditorWindow
                 }
                 if (_gearFoldouts[i])
                 {
-                    foreach (var item in items.Where(e=>e.GetType()==_itemTypes[i]))
+                    foreach (var item in items.Where(e=>e.GetType()==_itemTypes[i]).OrderBy(item=>item.Name))
                     {
                         var style = ListItemStyle;
                         var selected = SelectedItem == item.ID;
@@ -323,7 +323,7 @@ public class DatabaseListView : EditorWindow
             if (_entryFoldouts[i])
             {
                 int index = 0;
-                foreach (var entry in entries.Where(e=>e.GetType()==_entryTypes[i]))
+                foreach (var entry in entries.Where(e=>e.GetType()==_entryTypes[i]).OrderBy(entry=>entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString()))
                 {
                     index++;
                     var style = ListItemStyle;

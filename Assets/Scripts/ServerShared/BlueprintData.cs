@@ -21,8 +21,8 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("quantity"), Key(4)]
     public int Quantity;
 
-    [InspectableField, JsonProperty("difficulty"), Key(5)]
-    public float Difficulty;
+    [InspectableField, JsonProperty("productionTime"), Key(5)]
+    public float ProductionTime;
 
     [InspectableField, JsonProperty("quality"), Key(6)]
     public float Quality;
