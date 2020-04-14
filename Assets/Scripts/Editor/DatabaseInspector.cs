@@ -246,6 +246,16 @@ public class DatabaseInspector : EditorWindow
                                         GUI.changed = true;
                                     effect.Ingredient = ingredients[newSelection].ID;
                                 }
+                                
+                                var rect = GetControlRect(false,
+                                    GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                                GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
+                                    LabelColor, 0, 0);
+                                if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                                {
+                                    list.Remove(effect);
+                                    break;
+                                }
                             }
                             
                             Inspect(ref effect.StatReference, equippableBlueprintItem);

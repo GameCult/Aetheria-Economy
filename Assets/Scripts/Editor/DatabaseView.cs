@@ -244,6 +244,11 @@ public class DatabaseListView : EditorWindow
                         _databaseCache.Add(change.NewValue, true);
                     }
                 }).WrapErrors();
+
+                Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).Subscribe(_ =>
+                {
+                    Debug.Log(R.Now().Run<DateTime>(_connection).ToString() as string);
+                });
             }
         }
         GUILayout.Space(5);

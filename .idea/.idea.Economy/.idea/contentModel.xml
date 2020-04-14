@@ -6,20 +6,22 @@
     <e p="C:\Users\rwvens\Documents\GitHub\Aetheria-Economy" t="IncludeFlat">
       <e p="Assets\Scripts\ServerShared\ActionCollection.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\Attributes.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Afterburner.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Cannon.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Launcher.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Radiator.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Reactor.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Reflector.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Sensor.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Shield.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Thruster.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Turning.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\VelocityConversion.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\VelocityLimit.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\Behaviors\Weapon.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\Behaviors" t="Include">
+        <e p="Afterburner.cs" t="Include" />
+        <e p="Behaviors.cs" t="Include" />
+        <e p="Cannon.cs" t="Include" />
+        <e p="Launcher.cs" t="Include" />
+        <e p="Radiator.cs" t="Include" />
+        <e p="Reactor.cs" t="Include" />
+        <e p="Reflector.cs" t="Include" />
+        <e p="Sensor.cs" t="Include" />
+        <e p="Shield.cs" t="Include" />
+        <e p="Thruster.cs" t="Include" />
+        <e p="Turning.cs" t="Include" />
+        <e p="VelocityConversion.cs" t="Include" />
+        <e p="VelocityLimit.cs" t="Include" />
+        <e p="Weapon.cs" t="Include" />
+      </e>
       <e p="Assets\Scripts\ServerShared\BlueprintData.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\DatabaseCache.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\DatabaseItems.cs" t="Include" />
@@ -28,7 +30,6 @@
       <e p="Assets\Scripts\ServerShared\Extensions.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\GameContext.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\GlobalData.cs" t="Include" />
-      <e p="Assets\Scripts\ServerShared\ItemBehaviors" t="Include" />
       <e p="Assets\Scripts\ServerShared\ItemData.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\ItemInstance.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\JsonConverters.cs" t="Include" />
@@ -438,6 +439,7 @@
           </e>
         </e>
       </e>
+      <e p="Assets\Scripts\ServerShared\Rect.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\Ship.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\ZoneData.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\ZoneGenerator.cs" t="Include" />
