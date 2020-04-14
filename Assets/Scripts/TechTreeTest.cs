@@ -156,68 +156,68 @@ public class TechTreeTest : MonoBehaviour
                 i => i.Key, 
                 i => i.Select(g => g.Key).ToArray());
 
-        if (MultipleDependencies)
-        {
-            var vertexTiers = new Dictionary<IntVertex, int>();
-            foreach (var island in islandsInverse.Values)
-            {
-                vertexTiers[island[0]] = 0;
-                foreach (var vertex in island.Skip(1))
-                {
-                    vertexTiers[vertex] = edges.FindPath(vertex, island[0], (v1, v2) => 1).Count();
-                    // var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
-                    // if (tryGetPath(island[0], out var path))
-                    // {
-                    //     vertexTiers[vertex] = path.Count();
-                    // }
-                    // else Debug.Log("Path to root not found?");
-                }
-            }
-            
-            foreach (var island in islandsInverse.Values)
-            {
-                foreach (var vertex in island.Skip(1))
-                {
-                    //var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
-                    //var ancestors = island.Take(Array.IndexOf(island, vertex) - 1);
-                    var possibleDependencies = island.Where(v =>
-                    {
-                        var dist = edges.FindPath(vertex, v, (v1, v2) => 1).Count();
-                        return v != vertex &&
-                               vertexTiers[v] < vertexTiers[vertex] &&
-                               abs(vertexTiers[v] - vertexTiers[vertex]) < MaxDependencyTierDifference &&
-                               dist < MaxDependencyDistance && dist > 2;
-                        // if (v != vertex && tryGetPath(v, out var path))
-                        // {
-                        //     return path.Count() > 1 && path.Count() < MaxDependencyDistance;
-                        // }
-                        //
-                        // return false;
-                    }).ToArray();
-                    var dependencies = new List<int>();
-                    while (dependencies.Count < possibleDependencies.Length && Random.value < MultipleDependencyProbability)
-                    {
-                        var depIndex = Random.Range(0, possibleDependencies.Length);
-                        dependencies.Add(depIndex);
-                        edges.Add(new Edge<IntVertex>(possibleDependencies[depIndex], vertex));
-                    }
-                    // while (Random.value < MultipleDependencyProbability)
-                    // {
-                    //     var index = Array.IndexOf(island, vertex);
-                    //     int depIndex;
-                    //     int tries = 0;
-                    //     do
-                    //     {
-                    //         depIndex = Random.Range(max(0, index - MultipleDependencyRollingWindow), index);
-                    //     } while (tries < 10 && dependencies.Contains(depIndex));
-                    //
-                    //     if (tries < 10)
-                    //         edges.Add(new Edge<IntVertex>(island[depIndex], vertex));
-                    //     else break;
-                    // }
-                }
-            }
-        }
+        // if (MultipleDependencies)
+        // {
+        //     var vertexTiers = new Dictionary<IntVertex, int>();
+        //     foreach (var island in islandsInverse.Values)
+        //     {
+        //         vertexTiers[island[0]] = 0;
+        //         foreach (var vertex in island.Skip(1))
+        //         {
+        //             vertexTiers[vertex] = edges.FindPath(vertex, island[0], (v1, v2) => 1).Count();
+        //             // var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
+        //             // if (tryGetPath(island[0], out var path))
+        //             // {
+        //             //     vertexTiers[vertex] = path.Count();
+        //             // }
+        //             // else Debug.Log("Path to root not found?");
+        //         }
+        //     }
+        //     
+        //     foreach (var island in islandsInverse.Values)
+        //     {
+        //         foreach (var vertex in island.Skip(1))
+        //         {
+        //             //var tryGetPath = graph.ShortestPathsDijkstra(edge => 1, vertex);
+        //             //var ancestors = island.Take(Array.IndexOf(island, vertex) - 1);
+        //             var possibleDependencies = island.Where(v =>
+        //             {
+        //                 var dist = edges.FindPath(vertex, v, (v1, v2) => 1).Count();
+        //                 return v != vertex &&
+        //                        vertexTiers[v] < vertexTiers[vertex] &&
+        //                        abs(vertexTiers[v] - vertexTiers[vertex]) < MaxDependencyTierDifference &&
+        //                        dist < MaxDependencyDistance && dist > 2;
+        //                 // if (v != vertex && tryGetPath(v, out var path))
+        //                 // {
+        //                 //     return path.Count() > 1 && path.Count() < MaxDependencyDistance;
+        //                 // }
+        //                 //
+        //                 // return false;
+        //             }).ToArray();
+        //             var dependencies = new List<int>();
+        //             while (dependencies.Count < possibleDependencies.Length && Random.value < MultipleDependencyProbability)
+        //             {
+        //                 var depIndex = Random.Range(0, possibleDependencies.Length);
+        //                 dependencies.Add(depIndex);
+        //                 edges.Add(new Edge<IntVertex>(possibleDependencies[depIndex], vertex));
+        //             }
+        //             // while (Random.value < MultipleDependencyProbability)
+        //             // {
+        //             //     var index = Array.IndexOf(island, vertex);
+        //             //     int depIndex;
+        //             //     int tries = 0;
+        //             //     do
+        //             //     {
+        //             //         depIndex = Random.Range(max(0, index - MultipleDependencyRollingWindow), index);
+        //             //     } while (tries < 10 && dependencies.Contains(depIndex));
+        //             //
+        //             //     if (tries < 10)
+        //             //         edges.Add(new Edge<IntVertex>(island[depIndex], vertex));
+        //             //     else break;
+        //             // }
+        //         }
+        //     }
+        // }
 
         if (EliminateIslands!=EliminateIslandMode.None)
         {

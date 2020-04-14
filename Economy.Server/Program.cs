@@ -140,6 +140,12 @@ namespace ChatApp.Server
                     StarDensity = mapLayers["StarDensity"]
                 }));
             
+            server.AddMessageListener<BlueprintsRequestMessage>(blueprintRequest => blueprintRequest.Peer.Send(
+                new BlueprintsResponseMessage
+                {
+                    Blueprints = cache.GetAll<BlueprintData>().ToArray()
+                }));
+            
             server.AddMessageListener<ZoneRequestMessage>(zoneRequest =>
             {
                 var zone = cache.Get<ZoneData>(zoneRequest.ZoneID);

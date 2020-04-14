@@ -4593,13 +4593,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 258993626}
-    characterCount: 13
+    characterCount: 0
     spriteCount: 0
-    spaceCount: 2
-    wordCount: 2
+    spaceCount: 0
+    wordCount: 0
     linkCount: 0
-    lineCount: 1
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
@@ -14421,6 +14421,7 @@ MonoBehaviour:
   Tech: {fileID: 586612708}
   RadialLink: {fileID: 1417816149}
   Arrow: {fileID: 1083812776}
+  TestMode: 0
   TechCount: 500
   SeedTechs: 15
   RollingWindowSize: 100
@@ -14431,7 +14432,7 @@ MonoBehaviour:
   PackingMethod: 0
   Sections: 360
   PaddingRadians: 3.14
-  StartTier: 12
+  StartTier: 3
   Scale: 2
   LinkPoints: 16
   LinkDepth: 5
@@ -17572,13 +17573,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 904172350}
-    characterCount: 2
+    characterCount: 0
     spriteCount: 0
     spaceCount: 0
-    wordCount: 1
+    wordCount: 0
     linkCount: 0
-    lineCount: 1
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
@@ -22582,7 +22583,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1126386499}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c1faf0a46b9cf24498cd5ec93c34c71, type: 3}
   m_Name: 
@@ -22591,6 +22592,8 @@ MonoBehaviour:
   PrimaryTabGroup: {fileID: 143833105}
   GalaxyTabButton: {fileID: 646091942}
   ZoneTabButton: {fileID: 618245060}
+  TechTabButton: {fileID: 1250888060}
+  TechTree: {fileID: 712278635}
   GalaxyZonePrototype: {fileID: 559120531}
   GalaxyZoneLinkPrototype: {fileID: 899487252}
   GalaxyBackground: {fileID: 1938745697}

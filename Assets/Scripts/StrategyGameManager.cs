@@ -64,6 +64,9 @@ public class StrategyGameManager : MonoBehaviour
         // Request galaxy description from the server
         CultClient.Send(new GalaxyRequestMessage());
         
+        // Request blueprints from the server
+        CultClient.Send(new BlueprintsRequestMessage());
+        
         // Listen for the server's galaxy description
         CultClient.AddMessageListener<GalaxyResponseMessage>(galaxy =>
         {
@@ -73,6 +76,8 @@ public class StrategyGameManager : MonoBehaviour
             _context = new GameContext(_cache, Debug.Log);
             if (_currentTab == GalaxyTabButton && !_galaxyPopulated) PopulateGalaxy();
         });
+        
+        CultClient.AddMessageListener<BlueprintsResponseMessage>(response => _cache.AddAll(response.Blueprints, true));
         
         // Listen for zone descriptions from the server
         CultClient.AddMessageListener<ZoneResponseMessage>(zone =>

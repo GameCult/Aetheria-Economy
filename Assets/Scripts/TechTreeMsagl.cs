@@ -128,6 +128,8 @@ public class TechTreeMsagl : MonoBehaviour
         _arrowInstances.Clear();
         
         var graph = new GeometryGraph();
+        
+        var settings = new SugiyamaLayoutSettings();
 
         if (TestMode)
         {
@@ -154,7 +156,18 @@ public class TechTreeMsagl : MonoBehaviour
 
             foreach (var targetBlueprint in Blueprints)
             {
-                //foreach(var sourceBlueprint in Blueprints.Where(sb => targetBlueprint.Dependencies.Any(dep=>sb.ID==dep)))
+                foreach (var sourceBlueprint in Blueprints.Where(sb =>
+                    targetBlueprint.Dependencies.Any(dep => sb.ID == dep)))
+                {
+                    graph.Edges.Add(new Edge(nodeMap[sourceBlueprint], nodeMap[targetBlueprint]));
+                    var splitName = sourceBlueprint.Name.Split(' ');
+                    if (splitName.Length > 1)
+                    {
+                        var nameStart = string.Join(" ", splitName.Take(splitName.Length - 1));
+                        if(targetBlueprint.Name.StartsWith(nameStart))
+                            settings.AddSameLayerNeighbors(nodeMap[sourceBlueprint], nodeMap[targetBlueprint]);
+                    }
+                }
             }
         }
 
@@ -178,8 +191,6 @@ public class TechTreeMsagl : MonoBehaviour
                 }
             }
         }
-        
-        var settings = new SugiyamaLayoutSettings();
         
         var islandsBySize = islands.OrderByDescending(i => i.Nodes.Count);
         var largestIsland = islandsBySize.First();
@@ -294,7 +305,7 @@ public class TechTreeMsagl : MonoBehaviour
         {
             var tech = Tech.Instantiate<TechNode>();
             tech.transform.position = (Vector2) positions[vertex];
-            tech.Label.text = $"{(int) vertex.UserData}";
+            tech.Label.text = $"{(TestMode ? ((int) vertex.UserData).ToString() : ((BlueprintData) vertex.UserData).ID.ToString().Substring(0,2))}";
             var gradient = tech.Label.colorGradient;
             gradient.bottomLeft = gradient.bottomRight = islandColors[islandMap[vertex]];
             tech.Label.colorGradient = gradient;
