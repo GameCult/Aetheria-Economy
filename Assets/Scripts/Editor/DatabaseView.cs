@@ -16,6 +16,7 @@ using UnityEngine.Serialization;
 // TODO: USE THIS EVERYWHERE
 using static Unity.Mathematics.math;
 using Object = UnityEngine.Object;
+using static UnityEditor.EditorGUILayout;
 
 public class DatabaseListView : EditorWindow
 {
@@ -43,6 +44,7 @@ public class DatabaseListView : EditorWindow
     private bool[] _entryFoldouts;
     private string _connectionString;
     private const float LineHeight = 20;
+    private Vector2 _view;
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
@@ -143,6 +145,16 @@ public class DatabaseListView : EditorWindow
     {
         Event currentEvent = Event.current;
         EventType currentEventType = currentEvent.type;
+        
+        _view = BeginScrollView(
+            _view, 
+            false,
+            false,
+            GUIStyle.none,
+            GUI.skin.verticalScrollbar,
+            GUI.skin.scrollView,
+            GUILayout.Width(EditorGUIUtility.currentViewWidth),
+            GUILayout.ExpandHeight(true));
 
         if (currentEventType == EventType.DragUpdated)
             // Indicate that we don't accept drags ourselves
@@ -362,85 +374,8 @@ public class DatabaseListView : EditorWindow
                 }
             }
         }
-        
-//        EditorGUILayout.BeginHorizontal(ListItemStyle);
-//        _commoditiesFoldout = EditorGUILayout.Foldout(_commoditiesFoldout, "Commodities", true);
-//        EditorGUILayout.EndHorizontal();
-//        if (_commoditiesFoldout)
-//        {
-//            using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
-//            {
-//                GUILayout.Space(10);
-//                _simpleFoldout = EditorGUILayout.Foldout(_simpleFoldout, "Simple", true);
-//            }
-//            if (_simpleFoldout)
-//            {
-//                foreach (var item in Database.Items.Values.Where(e=>e.GetType()==typeof(ItemData)).Cast<ItemData>())
-//                {
-//                    var style = ListItemStyle;
-//                    var selected = SelectedItem == item.ID;
-//                    using (var h = new EditorGUILayout.HorizontalScope(selected?_selectedStyle:style))
-//                    {
-//                        if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-//                            select(item);
-//                        GUILayout.Space(20);
-//                        GUILayout.Label(item.Name, selected ? EditorStyles.whiteLabel : GUI.skin.label);
-//                    }
-//                }
-//                
-//                using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
-//                {
-//                    if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-//                        CreateItem(typeof(ItemData));
-//                    GUILayout.Space(20);
-//                    var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-//                    GUI.DrawTexture(rect, GlobalData.Instance.plus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
-//                    GUILayout.Label("New Simple Commodity");
-//                }
-//            }
-//
-//            using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
-//            {
-//                GUILayout.Space(10);
-//                _compoundFoldout = EditorGUILayout.Foldout(_compoundFoldout, "Compound", true);
-//            }
-//            if (_compoundFoldout)
-//            {
-//                foreach (var item in Database.Items.Values.Where(e=>e.GetType()==typeof(CraftedItem)).Cast<CraftedItem>())
-//                {
-//                    var style = ListItemStyle;
-//                    var selected = SelectedItem == item.GetId();
-//                    using (var h = new EditorGUILayout.HorizontalScope(selected?_selectedStyle:style))
-//                    {
-//                        if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-//                            select(item);
-//                        GUILayout.Space(20);
-//                        GUILayout.Label(item.Item.Name, selected ? EditorStyles.whiteLabel : GUI.skin.label);
-//                    }
-//                }
-//
-//                using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
-//                {
-//                    if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-//                        CreateItem(typeof(CraftedItem));
-//                    GUILayout.Space(20);
-//                    var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-//                    GUI.DrawTexture(rect, GlobalData.Instance.plus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
-//                    GUILayout.Label("New Compound Commodity");
-//                }
-//            }
-//        }
-//        EditorGUILayout.BeginHorizontal(ListItemStyle);
-//        _consumablesFoldout = EditorGUILayout.Foldout(_consumablesFoldout, "Consumables", true);
-//        EditorGUILayout.EndHorizontal();
-//        if (_consumablesFoldout)
-//        {
-//            
-//        }
-        
-        // HACK: This ensures none of the controls in this window can be focused (usually from clicking foldouts)
-        //GUI.SetNextControlName("");
-        //GUI.FocusControl("");
+            
+        EndScrollView();
     }
 
     private string FormatTypeName(string typeName)

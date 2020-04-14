@@ -20,8 +20,9 @@ public class TechTreeTestMsagl : MonoBehaviour
     public Prototype Tech;
     public Prototype RadialLink;
     public Prototype Arrow;
-    
+
     [Section("Graph Generation")]
+    public bool TestMode = false;
     public int TechCount = 50;
     public int SeedTechs = 5;
     public int RollingWindowSize = 50;

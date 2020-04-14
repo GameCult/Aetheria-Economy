@@ -605,11 +605,12 @@ public class DatabaseInspector : EditorWindow
             {
                 var guid = (Guid) DragAndDrop.GetGenericData("Item");
                 var dragEntry = DatabaseCache.Get(guid);
+                var dragValid = dragEntry != null && entryType.IsInstanceOfType(dragEntry) && dragEntry != entry;
                 if(Event.current.type == EventType.DragUpdated)
-                    DragAndDrop.visualMode = dragEntry != null && entryType.IsInstanceOfType(dragEntry) ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
+                    DragAndDrop.visualMode = dragValid ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
                 else if(Event.current.type == EventType.DragPerform)
                 {
-                    if (guid != Guid.Empty && entryType.IsInstanceOfType(dragEntry))
+                    if (dragValid)
                     {
                         DragAndDrop.AcceptDrag();
                         GUI.changed = true;
@@ -763,11 +764,12 @@ public class DatabaseInspector : EditorWindow
             {
                 var guid = DragAndDrop.GetGenericData("Item");
                 var dragObj = DragAndDrop.GetGenericData("Item") is Guid ? DatabaseCache.Get((Guid) guid) : null;
+                var dragValid = entryType.IsInstanceOfType(dragObj) && dragObj != entry;
                 if(Event.current.type == EventType.DragUpdated)
-                    DragAndDrop.visualMode = entryType.IsInstanceOfType(dragObj) ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
+                    DragAndDrop.visualMode = dragValid ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
                 else if(Event.current.type == EventType.DragPerform)
                 {
-                    if (entryType.IsInstanceOfType(dragObj))
+                    if (dragValid)
                     {
                         DragAndDrop.AcceptDrag();
                         value.Add((Guid) guid);
