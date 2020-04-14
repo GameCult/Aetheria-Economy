@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using MessagePack;
+using Newtonsoft.Json;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
@@ -920,6 +921,13 @@ public class DatabaseInspector : EditorWindow
                 DatabaseCache.Delete(entry);
                 entry = null;
                 return;
+            }
+
+            if (GUILayout.Button("Clone Entry"))
+            {
+                var copy = JsonConvert.DeserializeObject<DatabaseEntry>(JsonConvert.SerializeObject(entry));
+                copy.ID = Guid.NewGuid();
+                DatabaseCache.Add(copy);
             }
         }
         
