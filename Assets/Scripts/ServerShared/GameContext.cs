@@ -7,22 +7,86 @@ using static Unity.Mathematics.math;
 public class GameContext
 {
     private Action<string> _logger;
-    private DatabaseCache _cache;
-    
-    public GlobalData GlobalData => _cache.GetAll<GlobalData>().FirstOrDefault();
-    
+
+    private Dictionary<BlueprintStatEffect, PerformanceStat> AffectedStats =
+        new Dictionary<BlueprintStatEffect, PerformanceStat>();
+
+    private double _time;
+    private float _deltaTime;
+
+    public GlobalData GlobalData => Cache.GetAll<GlobalData>().FirstOrDefault();
+    public DatabaseCache Cache { get; }
+
+    public double Time
+    {
+        get => _time;
+        set
+        {
+            _deltaTime = (float) (value - _time);
+            _time = value;
+        }
+    }
+
+    private Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>> ZoneContents = new Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>>();
+
     // private readonly Dictionary<CraftedItemData, int> Tier = new Dictionary<CraftedItemData, int>();
 
     public GameContext(DatabaseCache cache, Action<string> logger)
     {
-        _cache = cache;
+        Cache = cache;
         _logger = logger;
-        var globalData = _cache.GetAll<GlobalData>().FirstOrDefault();
+        var globalData = Cache.GetAll<GlobalData>().FirstOrDefault();
         if (globalData == null)
         {
             globalData = new GlobalData();
-            _cache.Add(globalData);
+            Cache.Add(globalData);
         }
+    }
+
+    public void Log(string s)
+    {
+        _logger(s);
+    }
+
+    public Dictionary<DatabaseEntry, Entity> InitializeZone(Guid zoneID)
+    {
+        var contents = new Dictionary<DatabaseEntry, Entity>();
+
+        var zoneData = Cache.Get<ZoneData>(zoneID);
+        
+        var planetsData = zoneData.Planets.Select(id => Cache.Get<PlanetData>(id)).ToArray();
+        var planetEntities = planetsData.ToDictionary(p => p,
+            p => new OrbitalEntity(this, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), p.Orbit));
+        foreach(var kvp in planetEntities)
+            contents.Add(kvp.Key, kvp.Value);
+
+        var stationsData = zoneData.Stations.Select(id => Cache.Get<StationData>(id));
+        var stationEntities = stationsData.ToDictionary(s => s,
+            s => new OrbitalEntity(this, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), s.Parent));
+        foreach(var kvp in stationEntities)
+            contents.Add(kvp.Key, kvp.Value);
+        
+        ZoneContents.Add(zoneData, contents);
+        
+        return contents;
+    }
+
+    public void Update()
+    {
+        foreach (var kvp in ZoneContents)
+        {
+            var zone = kvp.Key;
+            var entities = kvp.Value.Values;
+            foreach (var entity in entities)
+            {
+                entity.Update(_deltaTime);
+            }
+        }
+    }
+
+    public void UnloadZone(ZoneData zone)
+    {
+        ZoneContents.Remove(zone);
     }
     
     // public int ItemTier(CraftedItemData itemData)
@@ -36,22 +100,22 @@ public class GameContext
 
     public ItemData GetData(ItemInstance item)
     {
-        return _cache.Get<ItemData>(item.Data);
+        return Cache.Get<ItemData>(item.Data);
     }
 
     public SimpleCommodityData GetData(SimpleCommodity item)
     {
-        return _cache.Get<SimpleCommodityData>(item.Data);
+        return Cache.Get<SimpleCommodityData>(item.Data);
     }
 
     public CraftedItemData GetData(CraftedItemInstance item)
     {
-        return _cache.Get<CraftedItemData>(item.Data);
+        return Cache.Get<CraftedItemData>(item.Data);
     }
 
     public EquippableItemData GetData(Gear gear)
     {
-        return _cache.Get<EquippableItemData>(gear.Data);
+        return Cache.Get<EquippableItemData>(gear.Data);
     }
 
     public float GetMass(ItemInstance item)
@@ -82,16 +146,13 @@ public class GameContext
         return 0;
     }
 
-    private Dictionary<BlueprintStatEffect, PerformanceStat> AffectedStats =
-        new Dictionary<BlueprintStatEffect, PerformanceStat>();
-
     public PerformanceStat GetAffectedStat(BlueprintData blueprint, BlueprintStatEffect effect)
     {
         // We've already cached this effect's stat, return it directly
         if (AffectedStats.ContainsKey(effect)) return AffectedStats[effect];
         
         // Get the data for the item the blueprint is for, return null if not found or not equippable
-        var blueprintItem = _cache.Get<EquippableItemData>(blueprint.Item);
+        var blueprintItem = Cache.Get<EquippableItemData>(blueprint.Item);
         if (blueprintItem == null)
         {
             _logger($"Attempted to get stat effect but Blueprint {blueprint.ID} is not for an equippable item!");
@@ -99,25 +160,25 @@ public class GameContext
         }
         
         // Get the first behavior of the type specified in the blueprint stat effect, return null if not found
-        var effectBehavior =
+        var effectObject = effect.StatReference.Behavior == blueprintItem.Name ? (object) blueprintItem : 
             blueprintItem.Behaviors.FirstOrDefault(b => b.GetType().Name == effect.StatReference.Behavior);
-        if (effectBehavior == null)
+        if (effectObject == null)
         {
             _logger($"Attempted to get stat effect for Blueprint {blueprint.ID} but stat references missing behavior \"{effect.StatReference.Behavior}\"!");
             return AffectedStats[effect] = null;
         }
         
         // Get the first field in the behavior matching the name specified in the stat effect, return null if not found
-        var type = effectBehavior.GetType();
+        var type = effectObject.GetType();
         var field = type.GetField(effect.StatReference.Stat);
         if (field == null)
         {
-            _logger($"Attempted to get stat effect for Blueprint {blueprint.ID} but behavior {effect.StatReference.Behavior} does not have a stat named \"{effect.StatReference.Stat}\"!");
+            _logger($"Attempted to get stat effect for Blueprint {blueprint.ID} but object {effect.StatReference.Behavior} does not have a stat named \"{effect.StatReference.Stat}\"!");
             return AffectedStats[effect] = null;
         }
         
         // Finally we've confirmed the stat effect is valid, return the affected stat
-        return AffectedStats[effect] = field.GetValue(effectBehavior) as PerformanceStat;
+        return AffectedStats[effect] = field.GetValue(effectObject) as PerformanceStat;
     }
 
     // Determine quality of either the item itself or the specific ingredient this stat depends on
@@ -170,7 +231,7 @@ public class GameContext
         var itemData = GetData(item);
 
         var heat = !stat.HeatDependent ? 1 : pow(itemData.Performance(entity.Temperature), Evaluate(itemData.HeatExponent,item));
-        var durability = !stat.DurabilityDependent ? 1 : pow(item.Durability / itemData.Durability, Evaluate(itemData.DurabilityExponent,item));
+        var durability = !stat.DurabilityDependent ? 1 : pow(item.Durability / Evaluate(itemData.Durability, item), Evaluate(itemData.DurabilityExponent,item));
         var quality = pow(Quality(stat, item), stat.QualityExponent);
 
         var scaleModifier = stat.GetScaleModifiers(entity).Values.Aggregate(1.0f, (current, mod) => current * mod);
@@ -185,7 +246,7 @@ public class GameContext
     
     public SimpleCommodity CreateInstance(Guid data, int count)
     {
-        var item = _cache.Get<SimpleCommodityData>(data);
+        var item = Cache.Get<SimpleCommodityData>(data);
         if (item != null)
             return new SimpleCommodity
             {
@@ -200,14 +261,14 @@ public class GameContext
     
     public CraftedItemInstance CreateInstance(Guid data, float quality)
     {
-        var item = _cache.Get<CraftedItemData>(data);
+        var item = Cache.Get<CraftedItemData>(data);
         if (item == null)
         {
             _logger("Attempted to create crafted item instance using missing or incorrect item id!");
             return null;
         }
 
-        var blueprint = _cache.GetAll<BlueprintData>().FirstOrDefault(b => b.Item == data);
+        var blueprint = Cache.GetAll<BlueprintData>().FirstOrDefault(b => b.Item == data);
         if (blueprint == null)
         {
             _logger("Attempted to create crafted item instance which has no blueprint!");
@@ -216,7 +277,7 @@ public class GameContext
         
         var ingredients = blueprint.Ingredients.SelectMany(ci =>
             {
-                var ingredient = _cache.Get(ci.Key);
+                var ingredient = Cache.Get(ci.Key);
                 return ingredient is SimpleCommodityData
                     ? (IEnumerable<ItemInstance>) new[] {CreateInstance(ci.Key, ci.Value)}
                     : Enumerable.Range(0, ci.Value).Select(i => CreateInstance(ci.Key, quality));
@@ -225,15 +286,16 @@ public class GameContext
         
         if (item is EquippableItemData equippableItemData)
         {
-            return new Gear
+            var newGear = new Gear
             {
                 Context = this,
                 Data = data,
-                Durability = equippableItemData.Durability,
                 ID = Guid.NewGuid(),
                 Ingredients = ingredients,
                 Quality = quality
             };
+            newGear.Durability = Evaluate(equippableItemData.Durability, newGear);
+            return newGear;
         }
 
         return new CompoundCommodity

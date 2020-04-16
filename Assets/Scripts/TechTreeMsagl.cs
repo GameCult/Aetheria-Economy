@@ -73,6 +73,12 @@ public class TechTreeMsagl : MonoBehaviour
     
     void Start()
     {
+        if(TestMode)
+            Initialize();
+    }
+
+    public void Initialize()
+    {
         _icons = Resources.LoadAll<Texture2D>(IconsPath);
     }
 
@@ -159,17 +165,20 @@ public class TechTreeMsagl : MonoBehaviour
                 foreach (var sourceBlueprint in Blueprints.Where(sb =>
                     targetBlueprint.Dependencies.Any(dep => sb.ID == dep)))
                 {
-                    graph.Edges.Add(new Edge(nodeMap[sourceBlueprint], nodeMap[targetBlueprint]));
+                    var edge = new Edge(nodeMap[sourceBlueprint], nodeMap[targetBlueprint]);
+                    graph.Edges.Add(edge);
                     var splitName = sourceBlueprint.Name.Split(' ');
                     if (splitName.Length > 1)
                     {
                         var nameStart = string.Join(" ", splitName.Take(splitName.Length - 1));
                         if(targetBlueprint.Name.StartsWith(nameStart))
-                            settings.AddSameLayerNeighbors(nodeMap[sourceBlueprint], nodeMap[targetBlueprint]);
+                            edge.Weight *= 10;
                     }
                 }
             }
         }
+
+        settings.BrandesThreshold = 9999;
 
         var islands = graph.GetClusteredConnectedComponents();
         var islandMap =

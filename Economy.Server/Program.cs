@@ -157,11 +157,11 @@ namespace ChatApp.Server
                     OrbitData[] orbits;
                     PlanetData[] planets;
                     ZoneGenerator.GenerateZone(
-                        global: context.GlobalData, 
-                        zone: zone, 
-                        mapLayers: mapLayers.Values, 
-                        resources: cache.GetAll<SimpleCommodityData>(), 
-                        orbitData: out orbits, 
+                        global: context.GlobalData,
+                        zone: zone,
+                        mapLayers: mapLayers.Values,
+                        resources: cache.GetAll<SimpleCommodityData>(),
+                        orbitData: out orbits,
                         planetsData: out planets);
                     cache.AddAll(orbits);
                     cache.AddAll(planets);

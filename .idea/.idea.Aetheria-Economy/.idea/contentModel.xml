@@ -1439,8 +1439,8 @@
             <e p="Behaviors" t="Include">
               <e p="Afterburner.cs" t="Include" />
               <e p="Behaviors.cs" t="Include" />
-              <e p="Cannon.cs" t="Include" />
               <e p="Launcher.cs" t="Include" />
+              <e p="ProjectileWeapon.cs" t="Include" />
               <e p="Radiator.cs" t="Include" />
               <e p="Reactor.cs" t="Include" />
               <e p="Reflector.cs" t="Include" />
@@ -1464,6 +1464,7 @@
             <e p="ItemData.cs" t="Include" />
             <e p="ItemInstance.cs" t="Include" />
             <e p="JsonConverters.cs" t="Include" />
+            <e p="Locomotion.cs" t="Include" />
             <e p="MathFormatters.cs" t="Include" />
             <e p="MathResolver.cs" t="Include" />
             <e p="Messages.cs" t="Include" />
@@ -1870,6 +1871,7 @@
                 </e>
               </e>
             </e>
+            <e p="OrbitalEntity.cs" t="Include" />
             <e p="Rect.cs" t="Include" />
             <e p="Ship.cs" t="Include" />
             <e p="ZoneData.cs" t="Include" />

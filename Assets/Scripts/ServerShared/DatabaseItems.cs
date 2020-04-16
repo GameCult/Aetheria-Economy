@@ -30,7 +30,7 @@ public interface INamedEntry
  Union(11, typeof(Player)), 
  Union(12, typeof(Corporation)),
  Union(13, typeof(Ship)), 
- Union(14, typeof(Station)), 
+ Union(14, typeof(StationData)), 
  Union(15, typeof(OrbitData)), 
  Union(16, typeof(PlanetData)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]

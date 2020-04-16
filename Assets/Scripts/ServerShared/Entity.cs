@@ -14,6 +14,7 @@ public class Entity
     public float Energy;
     public float2 Position;
     public float2 Direction;
+    public float2 Velocity;
     
     protected readonly GameContext Context;
     protected readonly List<IBehavior> Behaviors;

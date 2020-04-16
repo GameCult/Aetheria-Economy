@@ -34,6 +34,7 @@ public class StrategyGameManager : MonoBehaviour
     public float ZoneMassPower = .5f;
     public MeshRenderer ZoneBackground;
     public MeshRenderer ZoneBoundary;
+    public bool TestMode;
 
     private DatabaseCache _cache;
     private GameContext _context;
@@ -43,13 +44,11 @@ public class StrategyGameManager : MonoBehaviour
     private Guid _populatedZone;
     private Guid _selectedZone;
     private GalaxyZone _selectedGalaxyZone;
-    private ZoneResponseMessage _zoneResponse;
     private Dictionary<Guid, GalaxyResponseZone> _galaxyResponseZones;
     private Dictionary<Guid, GalaxyZone> _galaxyZoneObjects = new Dictionary<Guid, GalaxyZone>();
-    private Dictionary<Guid, ZoneObject> _zoneObjects = new Dictionary<Guid, ZoneObject>();
-    private Dictionary<Guid, ParticleSystem> _zoneBelts = new Dictionary<Guid, ParticleSystem>();
+    private Dictionary<OrbitalEntity, ZoneObject> _zoneObjects = new Dictionary<OrbitalEntity, ZoneObject>();
+    private Dictionary<OrbitalEntity, ParticleSystem> _zoneBelts = new Dictionary<OrbitalEntity, ParticleSystem>();
     private List<ZoneObject> _wormholes = new List<ZoneObject>();
-    private Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
     private Vector3 _galaxyCameraPos = -Vector3.forward;
     private float _galaxyOrthoSize = 50;
     private Material _boundaryMaterial;
@@ -60,36 +59,41 @@ public class StrategyGameManager : MonoBehaviour
     {
         _galaxyOrthoSize = GalaxyScale / 2;
         _cache = new DatabaseCache();
-        
-        // Request galaxy description from the server
-        CultClient.Send(new GalaxyRequestMessage());
-        
-        // Request blueprints from the server
-        CultClient.Send(new BlueprintsRequestMessage());
-        
-        // Listen for the server's galaxy description
-        CultClient.AddMessageListener<GalaxyResponseMessage>(galaxy =>
+
+        if (TestMode)
         {
-            _galaxy = galaxy;
-            _galaxyResponseZones = _galaxy.Zones.ToDictionary(z => z.ZoneID);
-            _cache.Add(_galaxy.GlobalData, true);
-            _context = new GameContext(_cache, Debug.Log);
-            if (_currentTab == GalaxyTabButton && !_galaxyPopulated) PopulateGalaxy();
-        });
-        
-        CultClient.AddMessageListener<BlueprintsResponseMessage>(response => _cache.AddAll(response.Blueprints, true));
-        
-        // Listen for zone descriptions from the server
-        CultClient.AddMessageListener<ZoneResponseMessage>(zone =>
+            
+        }
+        else
         {
-            _zoneResponse = zone;
+            // Request galaxy description from the server
+            CultClient.Send(new GalaxyRequestMessage());
+        
+            // Request blueprints from the server
+            CultClient.Send(new BlueprintsRequestMessage());
+        
+            // Listen for the server's galaxy description
+            CultClient.AddMessageListener<GalaxyResponseMessage>(galaxy =>
+            {
+                _galaxy = galaxy;
+                _galaxyResponseZones = _galaxy.Zones.ToDictionary(z => z.ZoneID);
+                _cache.Add(_galaxy.GlobalData, true);
+                _context = new GameContext(_cache, Debug.Log);
+                if (_currentTab == GalaxyTabButton && !_galaxyPopulated) PopulateGalaxy();
+            });
+        
+            CultClient.AddMessageListener<BlueprintsResponseMessage>(response => _cache.AddAll(response.Blueprints, true));
+        
+            // Listen for zone descriptions from the server
+            CultClient.AddMessageListener<ZoneResponseMessage>(zone =>
+            {
+                // Cache zone data and contents
+                _cache.Add(zone.Zone);
+                foreach (var entry in zone.Contents) _cache.Add(entry);
             
-            // Cache zone data and contents
-            _cache.Add(zone.Zone);
-            foreach (var entry in zone.Contents) _cache.Add(entry);
-            
-            if (_currentTab == ZoneTabButton && _populatedZone != zone.Zone.ID) PopulateZone();
-        });
+                if (_currentTab == ZoneTabButton && _populatedZone != zone.Zone.ID) PopulateZone();
+            });
+        }
         
         PrimaryTabGroup.OnTabChange += button =>
         {
@@ -103,7 +107,7 @@ public class StrategyGameManager : MonoBehaviour
 
             if (_currentTab == ZoneTabButton)
             {
-                if (_populatedZone != _selectedZone && _zoneResponse?.Zone.ID == _selectedZone)
+                if (_populatedZone != _selectedZone)
                     PopulateZone();
                 Camera.transform.position = -Vector3.forward;
             }
@@ -112,6 +116,7 @@ public class StrategyGameManager : MonoBehaviour
             {
                 if (!_techLayoutGenerated)
                 {
+                    TechTree.Initialize();
                     TechTree.Blueprints = _cache.GetAll<BlueprintData>().ToArray();
                     TechTree.GenerateTechs();
                 }
@@ -124,6 +129,8 @@ public class StrategyGameManager : MonoBehaviour
 
     private void Update()
     {
+        _context.Time = Time.time;
+        _context.Update();
         if (_currentTab == GalaxyTabButton)
         {
             _galaxyCameraPos = Camera.transform.position;
@@ -131,45 +138,16 @@ public class StrategyGameManager : MonoBehaviour
         }
         if (_currentTab == ZoneTabButton && _populatedZone == _selectedZone)
         {
-            _orbitPositions.Clear();
             foreach (var planet in _zoneObjects)
             {
-                var planetData = _cache.Get<PlanetData>(planet.Key);
-                
-                planet.Value.transform.position = (Vector2) GetOrbitPosition(planetData.Orbit) * ZoneSizeScale;
+                planet.Value.transform.position = (Vector2) planet.Key.Position * ZoneSizeScale;
             }
 
             foreach (var belt in _zoneBelts)
             {
-                var planetData = _cache.Get<PlanetData>(belt.Key);
-                
-                belt.Value.transform.position = float3(GetOrbitPosition(_cache.Get<OrbitData>(planetData.Orbit).Parent) * ZoneSizeScale, .15f);
+                belt.Value.transform.position = float3(belt.Key.Position * ZoneSizeScale, .15f);
             }
         }
-    }
-
-    // Determine orbital position recursively, caching parent positions to avoid repeated calculations
-    private float2 GetOrbitPosition(Guid orbit)
-    {
-        // Root orbit is fixed at center
-        if(orbit==Guid.Empty)
-            return float2.zero;
-        
-        if (!_orbitPositions.ContainsKey(orbit))
-        {
-            var orbitData = _cache.Get<OrbitData>(orbit);
-            _orbitPositions[orbit] = GetOrbitPosition(orbitData.Parent) + (orbitData.Period < .01f ? float2.zero : 
-                                     OrbitData.Evaluate(Time.time / -orbitData.Period + orbitData.Phase) *
-                                     orbitData.Distance);
-        }
-
-        var position = _orbitPositions[orbit];
-        if (float.IsNaN(position.x))
-        {
-            Debug.Log("Orbit position is NaN, something went very wrong!");
-            return float2.zero;
-        }
-        return _orbitPositions[orbit];
     }
 
     void PopulateGalaxy()
@@ -240,40 +218,48 @@ public class StrategyGameManager : MonoBehaviour
         foreach (var belt in _zoneBelts.Values) Destroy(belt.gameObject);
         _zoneBelts.Clear();
 
+        if(_populatedZone!=Guid.Empty)
+            _context.UnloadZone(_cache.Get<ZoneData>(_populatedZone));
+        
         _populatedZone = _selectedZone;
 
+        var zoneData = _cache.Get<ZoneData>(_populatedZone);
+        var zoneContents = _context.InitializeZone(_populatedZone);
+        
         float zoneDepth = 0;
-        foreach (var entry in _zoneResponse.Contents)
+
+        foreach (var kvp in zoneContents)
         {
-            if (entry is PlanetData planet)
+            var entity = kvp.Value;
+            if (kvp.Key is PlanetData planetData)
             {
-                if (!planet.Belt)
+                if (!planetData.Belt)
                 {
                     var planetObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
-                    _zoneObjects[planet.ID] = planetObject;
-                    planetObject.Label.text = planet.Name;
+                    _zoneObjects[entity as OrbitalEntity] = planetObject;
+                    planetObject.Label.text = planetData.Name;
                     planetObject.GravityMesh.gameObject.SetActive(true);
                     planetObject.GravityMesh.transform.localScale =
-                        Vector3.one * (pow(planet.Mass, _context.GlobalData.GravityRadiusExponent) *
+                        Vector3.one * (pow(planetData.Mass, _context.GlobalData.GravityRadiusExponent) *
                                        _context.GlobalData.GravityRadiusMultiplier * 2 * ZoneSizeScale);
-                    var depth = pow(planet.Mass, ZoneMassPower) * ZoneMassScale;
+                    var depth = pow(planetData.Mass, ZoneMassPower) * ZoneMassScale;
                     if (depth > zoneDepth)
                         zoneDepth = depth;
                     planetObject.GravityMesh.material.SetFloat("_Depth", depth);
                     planetObject.Icon.material.SetTexture("_MainTex",
-                        planet.Mass > _context.GlobalData.SunMass ? SunSprite :
-                        planet.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
+                        planetData.Mass > _context.GlobalData.SunMass ? SunSprite :
+                        planetData.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
                         PlanetSprite);
                 }
                 else
                 {
                     var beltObject = Instantiate(BeltPrefab, ZoneRoot);
-                    _zoneBelts[planet.ID] = beltObject;
-                    var orbit = _cache.Get<OrbitData>(planet.Orbit);
+                    var orbit = _cache.Get<OrbitData>(planetData.Orbit);
+                    _zoneBelts[entity as OrbitalEntity] = beltObject;
                     var beltEmission = beltObject.emission;
                     beltEmission.rateOverTime = 
                         new ParticleSystem.MinMaxCurve(
-                            pow(planet.Mass,_context.GlobalData.BeltMassExponent)
+                            pow(planetData.Mass,_context.GlobalData.BeltMassExponent)
                             / _context.GlobalData.BeltMassRatio * orbit.Distance);
                     var beltShape = beltObject.shape;
                     beltShape.radius = orbit.Distance * ZoneSizeScale;
@@ -285,18 +271,19 @@ public class StrategyGameManager : MonoBehaviour
                 }
             }
         }
-        var radius = (_zoneResponse.Zone.Radius * ZoneSizeScale * 2);
+
+        var radius = (zoneData.Radius * ZoneSizeScale * 2);
         _backgroundMaterial.SetFloat("_ClipDistance", radius);
         _backgroundMaterial.SetFloat("_HeightRange", zoneDepth + _boundaryMaterial.GetFloat("_Depth"));
         ZoneBoundary.transform.localScale = Vector3.one * radius;
         
-        foreach (var wormhole in _zoneResponse.Zone.Wormholes)
+        foreach (var wormhole in zoneData.Wormholes)
         {
             var otherZone = _galaxyResponseZones[wormhole];
             var wormholeObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
             _wormholes.Add(wormholeObject);
-            var direction = otherZone.Position - _zoneResponse.Zone.Position;
-            wormholeObject.transform.position = (Vector2) (normalize(direction) * _zoneResponse.Zone.Radius * .95f * ZoneSizeScale);
+            var direction = otherZone.Position - zoneData.Position;
+            wormholeObject.transform.position = (Vector2) (normalize(direction) * zoneData.Radius * .95f * ZoneSizeScale);
             wormholeObject.GravityMesh.gameObject.SetActive(false);
             wormholeObject.Icon.material.SetTexture("_MainTex", WormholeSprite);
             wormholeObject.Label.text = otherZone.Name;

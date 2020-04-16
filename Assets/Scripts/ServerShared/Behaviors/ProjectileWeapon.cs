@@ -2,7 +2,7 @@ using MessagePack;
 using Newtonsoft.Json;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class CannonData : WeaponData, IBehaviorData
+public class ProjectileWeaponData : WeaponData, IBehaviorData
 {
     [InspectablePrefab, JsonProperty("bullet"), Key(9)]  
     public string BulletPrefab;
@@ -18,31 +18,31 @@ public class CannonData : WeaponData, IBehaviorData
     
     public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new Cannon(context, this, entity, item);
+        return new ProjectileWeapon(context, this, entity, item);
     }
 }
 
-public class Cannon : IActivatedBehavior
+public class ProjectileWeapon : IActivatedBehavior
 {
     private bool _firing;
     private float _cooldown; // normalized
-    private CannonData _cannon;
+    private ProjectileWeaponData _projectileWeapon;
     public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
     private float _firingVisibility;
 
-    public Cannon(GameContext context, CannonData c, Entity entity, Gear item)
+    public ProjectileWeapon(GameContext context, ProjectileWeaponData c, Entity entity, Gear item)
     {
         Context = context;
-        _cannon = c;
+        _projectileWeapon = c;
         Entity = entity;
         Item = item;
     }
     
     public void Activate()
     {
-//        Debug.Log("Activating Cannon");
+//        Debug.Log("Activating ProjectileWeapon");
 //         _firing = true;
 //         Observable.EveryUpdate().TakeWhile(_ => _firing).Subscribe(_ =>
 //         {
@@ -51,8 +51,8 @@ public class Cannon : IActivatedBehavior
 //             {
 //                 _cooldown = 1;
 //                 Fire(0);
-//                 if(_cannon.BurstCount>1)
-//                     Observable.Interval(TimeSpan.FromSeconds(_cannon.BurstTime.Evaluate(Hardpoint) / (_cannon.BurstCount-1))).Take(_cannon.BurstCount-1)
+//                 if(_projectileWeapon.BurstCount>1)
+//                     Observable.Interval(TimeSpan.FromSeconds(_projectileWeapon.BurstTime.Evaluate(Hardpoint) / (_projectileWeapon.BurstCount-1))).Take(_projectileWeapon.BurstCount-1)
 //                     .Subscribe(l => Fire(l+1));
 //             }
 //         });
@@ -60,19 +60,19 @@ public class Cannon : IActivatedBehavior
 
     private void Fire(long b)
     {
-        // _firingVisibility += _cannon.Visibility.Evaluate(Hardpoint);
-        // Hardpoint.Temperature += _cannon.Heat.Evaluate(Hardpoint) / Hardpoint.HeatCapacity;
-        // var inst = GameObject.Instantiate(_cannon.BulletPrefab).transform;
+        // _firingVisibility += _projectileWeapon.Visibility.Evaluate(Hardpoint);
+        // Hardpoint.Temperature += _projectileWeapon.Heat.Evaluate(Hardpoint) / Hardpoint.HeatCapacity;
+        // var inst = GameObject.Instantiate(_projectileWeapon.BulletPrefab).transform;
         // Physics.IgnoreCollision(Hardpoint.Ship.Ship.GetComponent<Collider>(), inst.GetComponent<Collider>());
         // var bullet = inst.GetComponent<Bullet>();
         // bullet.Target = Hardpoint.Ship.Ship.Target;
         // bullet.Source = Hardpoint.Ship.Ship.Hitpoints;
-        // bullet.Lifetime = _cannon.Range.Evaluate(Hardpoint) / _cannon.Velocity.Evaluate(Hardpoint);
-        // bullet.Damage = _cannon.Damage.Evaluate(Hardpoint);
+        // bullet.Lifetime = _projectileWeapon.Range.Evaluate(Hardpoint) / _projectileWeapon.Velocity.Evaluate(Hardpoint);
+        // bullet.Damage = _projectileWeapon.Damage.Evaluate(Hardpoint);
         // inst.position = Hardpoint.Proxy.position;
         // inst.rotation = Hardpoint.Proxy.rotation;
-        // inst.GetComponent<Rigidbody>().velocity = _cannon.Velocity.Evaluate(Hardpoint) * Vector3.RotateTowards(-inst.forward, Hardpoint.Ship.Ship.Direction, _cannon.Deflection * Mathf.Deg2Rad, 1);
-        // Hardpoint.Ship.Ship.AudioSource.PlayOneShot(_cannon.Sounds.RandomElement());
+        // inst.GetComponent<Rigidbody>().velocity = _projectileWeapon.Velocity.Evaluate(Hardpoint) * Vector3.RotateTowards(-inst.forward, Hardpoint.Ship.Ship.Direction, _projectileWeapon.Deflection * Mathf.Deg2Rad, 1);
+        // Hardpoint.Ship.Ship.AudioSource.PlayOneShot(_projectileWeapon.Sounds.RandomElement());
 //        Debug.Log($"Firing bullet {b}");
     }
 
@@ -87,9 +87,9 @@ public class Cannon : IActivatedBehavior
 
     public void Update(float delta)
     {
-        _cooldown -= delta / Context.Evaluate(_cannon.Cooldown, Item, Entity);
+        _cooldown -= delta / Context.Evaluate(_projectileWeapon.Cooldown, Item, Entity);
 
-        _firingVisibility *= Context.Evaluate(_cannon.VisibilityDecay, Item, Entity);
+        _firingVisibility *= Context.Evaluate(_projectileWeapon.VisibilityDecay, Item, Entity);
         
         if (_firingVisibility < 0.01f)
         {
@@ -97,5 +97,5 @@ public class Cannon : IActivatedBehavior
         }
     }
     
-    public IBehaviorData Data => _cannon;
+    public IBehaviorData Data => _projectileWeapon;
 }

@@ -9,8 +9,8 @@
       <e p="Assets\Scripts\ServerShared\Behaviors" t="Include">
         <e p="Afterburner.cs" t="Include" />
         <e p="Behaviors.cs" t="Include" />
-        <e p="Cannon.cs" t="Include" />
         <e p="Launcher.cs" t="Include" />
+        <e p="ProjectileWeapon.cs" t="Include" />
         <e p="Radiator.cs" t="Include" />
         <e p="Reactor.cs" t="Include" />
         <e p="Reflector.cs" t="Include" />
@@ -33,6 +33,7 @@
       <e p="Assets\Scripts\ServerShared\ItemData.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\ItemInstance.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\JsonConverters.cs" t="Include" />
+      <e p="Assets\Scripts\ServerShared\Locomotion.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\MathFormatters.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\MathResolver.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\Messages.cs" t="Include" />
@@ -439,6 +440,7 @@
           </e>
         </e>
       </e>
+      <e p="Assets\Scripts\ServerShared\OrbitalEntity.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\Rect.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\Ship.cs" t="Include" />
       <e p="Assets\Scripts\ServerShared\ZoneData.cs" t="Include" />

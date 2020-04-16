@@ -20,10 +20,8 @@ public class Ship : Entity
 
     // [IgnoreMember] public Dictionary<Targetable, float> Contacts = new Dictionary<Targetable, float>();
     // [IgnoreMember] public Targetable Target;
-    [IgnoreMember] public float2 Velocity;
     
     private HullData _hullData;
-
     
     public Ship(GameContext context, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo) : base(context, items, cargo)
     {

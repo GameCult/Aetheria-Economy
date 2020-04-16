@@ -41,7 +41,7 @@ public class ZoneData : DatabaseEntry, INamedEntry
 }
 
 [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class Station : DatabaseEntry, INamedEntry
+public class StationData : DatabaseEntry, INamedEntry
 {
     [JsonProperty("name"), Key(1)]
     public string Name;
@@ -90,7 +90,7 @@ public class PlanetData : DatabaseEntry, INamedEntry
     [JsonProperty("belt"), Key(5)]
     public bool Belt;
 
-    [JsonProperty("resources"), Key(5)]
+    [JsonProperty("resources"), Key(6)]
     public Dictionary<Guid, float> Resources = new Dictionary<Guid, float>();
     
     // [JsonProperty("radius")] [Key(5)]

@@ -784,7 +784,7 @@ public class DatabaseInspector : EditorWindow
     {
         using (new VerticalScope())
         {
-            var behaviorNames = item.Behaviors.Select(b => b.GetType().Name).ToArray();
+            var behaviorNames = new []{item.Name}.Concat(item.Behaviors.Select(b => b.GetType().Name)).ToArray();
             var selectedBehaviorIndex = Array.IndexOf(behaviorNames, effect.Behavior);
             if (selectedBehaviorIndex == -1)
             {
@@ -794,42 +794,32 @@ public class DatabaseInspector : EditorWindow
             using (new HorizontalScope())
             {
                 GUILayout.Label("Behavior", GUILayout.Width(width));
-                if(behaviorNames.Length==0)
-                    GUILayout.Label("No Behaviors!");
-                else
-                {
-                    var newSelection = Popup(selectedBehaviorIndex, behaviorNames);
-                    if (newSelection != selectedBehaviorIndex)
-                        GUI.changed = true;
-                    effect.Behavior = behaviorNames[newSelection];
-                }
+                var newSelection = Popup(selectedBehaviorIndex, behaviorNames);
+                if (newSelection != selectedBehaviorIndex)
+                    GUI.changed = true;
+                effect.Behavior = behaviorNames[newSelection];
             }
 
             using (new HorizontalScope())
             {
                 GUILayout.Label("Stat", GUILayout.Width(width));
-                if(behaviorNames.Length==0)
-                    GUILayout.Label("No Behaviors!");
+                var stats = (selectedBehaviorIndex == 0 ? item.GetType() : item.Behaviors[selectedBehaviorIndex-1].GetType()).GetFields()
+                    .Where(f => f.FieldType == typeof(PerformanceStat)).ToArray();
+                if(stats.Length==0)
+                    GUILayout.Label("No Stats!");
                 else
                 {
-                    var stats = item.Behaviors[selectedBehaviorIndex].GetType().GetFields()
-                        .Where(f => f.FieldType == typeof(PerformanceStat)).ToArray();
-                    if(stats.Length==0)
-                        GUILayout.Label("No Stats!");
-                    else
+                    var statNames = stats.Select(s => s.Name).ToArray();
+                    var selectedStatIndex = Array.IndexOf(statNames, effect.Stat);
+                    if (selectedStatIndex == -1)
                     {
-                        var statNames = stats.Select(s => s.Name).ToArray();
-                        var selectedStatIndex = Array.IndexOf(statNames, effect.Stat);
-                        if (selectedStatIndex == -1)
-                        {
-                            selectedStatIndex = 0;
-                            GUI.changed = true;
-                        }
-                        var newSelection = Popup(selectedStatIndex, statNames);
-                        if (newSelection != selectedStatIndex)
-                            GUI.changed = true;
-                        effect.Stat = statNames[newSelection];
+                        selectedStatIndex = 0;
+                        GUI.changed = true;
                     }
+                    var newSelection = Popup(selectedStatIndex, statNames);
+                    if (newSelection != selectedStatIndex)
+                        GUI.changed = true;
+                    effect.Stat = statNames[newSelection];
                 }
             }
         }
