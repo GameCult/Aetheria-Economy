@@ -56,7 +56,7 @@ public class GameContext
         
         var planetsData = zoneData.Planets.Select(id => Cache.Get<PlanetData>(id)).ToArray();
         var planetEntities = planetsData.ToDictionary(p => p,
-            p => new OrbitalEntity(this, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), p.Orbit));
+            p => new OrbitalEntity(this, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), p.Belt ? Cache.Get<OrbitData>(p.Orbit).Parent : p.Orbit));
         foreach(var kvp in planetEntities)
             contents.Add(kvp.Key, kvp.Value);
 
@@ -73,6 +73,7 @@ public class GameContext
 
     public void Update()
     {
+        OrbitalEntity.ClearOrbits();
         foreach (var kvp in ZoneContents)
         {
             var zone = kvp.Key;

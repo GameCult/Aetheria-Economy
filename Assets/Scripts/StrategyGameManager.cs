@@ -107,7 +107,7 @@ public class StrategyGameManager : MonoBehaviour
 
             if (_currentTab == ZoneTabButton)
             {
-                if (_populatedZone != _selectedZone)
+                if (_populatedZone != _selectedZone && _cache.Get<ZoneData>(_selectedZone) != null)
                     PopulateZone();
                 Camera.transform.position = -Vector3.forward;
             }
@@ -129,8 +129,11 @@ public class StrategyGameManager : MonoBehaviour
 
     private void Update()
     {
-        _context.Time = Time.time;
-        _context.Update();
+        if (_context != null)
+        {
+            _context.Time = Time.time;
+            _context.Update();
+        }
         if (_currentTab == GalaxyTabButton)
         {
             _galaxyCameraPos = Camera.transform.position;
