@@ -123,7 +123,7 @@ namespace ChatApp.Server
             
             var context = new GameContext(cache, s=>_logger.Log(LogLevel.Information, s));
 
-            var mapLayers = cache.GetAll<GalaxyMapLayerData>().ToDictionary(m => m.Name);
+            context.MapLayers = cache.GetAll<GalaxyMapLayerData>().ToDictionary(m => m.Name);
             
             server.AddMessageListener<GalaxyRequestMessage>(galaxyRequest => galaxyRequest.Peer.Send(
                 new GalaxyResponseMessage
@@ -137,7 +137,7 @@ namespace ChatApp.Server
                             Links = zd.Wormholes?.ToArray() ?? Array.Empty<Guid>()
                         }).ToArray(),
                     GlobalData = context.GlobalData,
-                    StarDensity = mapLayers["StarDensity"]
+                    StarDensity = context.MapLayers["StarDensity"]
                 }));
             
             server.AddMessageListener<BlueprintsRequestMessage>(blueprintRequest => blueprintRequest.Peer.Send(
@@ -159,7 +159,7 @@ namespace ChatApp.Server
                     ZoneGenerator.GenerateZone(
                         global: context.GlobalData,
                         zone: zone,
-                        mapLayers: mapLayers.Values,
+                        mapLayers: context.MapLayers.Values,
                         resources: cache.GetAll<SimpleCommodityData>(),
                         orbitData: out orbits,
                         planetsData: out planets);

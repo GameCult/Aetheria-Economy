@@ -1,0 +1,6 @@
+Empty Galaxy
+r.db('Aetheria').table('Galaxy').filter({$type:'ZoneData'}).update({visited: false})
+r.db('Aetheria').table('Galaxy').filter({$type:'ZoneData'}).update({orbits: [ ]})
+r.db('Aetheria').table('Galaxy').filter({$type:'ZoneData'}).update({planets: [ ]})
+r.db('Aetheria').table('Galaxy').filter({$type:'OrbitData'}).delete()
+r.db('Aetheria').table('Galaxy').filter({$type:'PlanetData'}).delete()

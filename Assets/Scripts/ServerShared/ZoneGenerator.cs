@@ -5,8 +5,6 @@ using System.Globalization;
 using System.Linq;
 using MessagePack;
 using Unity.Mathematics;
-//using UnityEngine;
-// TODO: USE THIS EVERYWHERE
 using static Unity.Mathematics.math;
 using Random = Unity.Mathematics.Random;
 
@@ -67,7 +65,7 @@ public class ZoneGenerator
         // Cache resource densities
         var resourceMaps = mapLayers.ToDictionary(m => m.ID, m => m.Evaluate(zone.Position, global));
         
-        var random = new Random();
+        var random = new Random((uint) (DateTime.Now.Ticks%uint.MaxValue));
         
         planetsData = planets.Where(p=>!p.Empty).Select(planet =>
         {

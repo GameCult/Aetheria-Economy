@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -83,20 +84,6 @@ public class DatabaseListView : EditorWindow
 
     void OnEnable()
     {
-        // Add Unity.Mathematics serialization support to RethinkDB Driver
-        //Converter.Serializer.Converters.Add(new MathJsonConverter());
-        JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-        {
-            Converters = new List<JsonConverter>
-            {
-                new MathJsonConverter(),
-                Converter.DateTimeConverter,
-                Converter.BinaryConverter,
-                Converter.GroupingConverter,
-                Converter.PocoExprConverter
-            }
-        };
-        
         // Create database cache
         _databaseCache = new DatabaseCache();
         _databaseCache.OnDataUpdateLocal += _ => Repaint();
@@ -166,101 +153,12 @@ public class DatabaseListView : EditorWindow
             if (GUILayout.Button("Connect"))
             {
                 EditorPrefs.SetString("RethinkDB.URL", _connectionString);
-                _connection = R.Connection().Hostname(_connectionString).Port(RethinkDBConstants.DefaultPort).Timeout(60).Connect();
-                Debug.Log("Connected to RethinkDB");
-        
-                // When entries are changed locally, push the changes to RethinkDB
-                _databaseCache.OnDataUpdateLocal += async entry =>
-                {
-                    var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
-                    var result = await R
-                        .Db("Aetheria")
-                        .Table(table)
-                        .Get(entry.ID)
-                        .Replace(entry)
-                        .RunAsync(_connection);
-                    Debug.Log($"Uploaded entry to RethinkDB: {entry.ID} result: {result}");
-                };
-                
-                _databaseCache.OnDataInsertLocal += async entry =>
-                {
-                    var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
-                    var result = await R
-                        .Db("Aetheria")
-                        .Table(table)
-                        .Insert(entry)
-                        .RunAsync(_connection);
-                    Debug.Log($"Inserted entry to RethinkDB: {entry.ID} result: {result}");
-                };
+                _connection = RethinkConnection.RethinkConnect(_databaseCache, _connectionString);
+            }
 
-                _databaseCache.OnDataDeleteLocal += async entry =>
-                {
-                    var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
-                    var result = await R
-                        .Db("Aetheria")
-                        .Table(table)
-                        .Get(entry.ID)
-                        .Delete()
-                        .RunAsync(_connection);
-                    Debug.Log($"Deleted entry from RethinkDB: {entry.ID} result: {result}");
-                };
-        
-                // Get all item data from RethinkDB
-                Task.Run(async () =>
-                {
-                    var result = await R
-                        .Db("Aetheria")
-                        .Table("Items")
-                        .RunCursorAsync<DatabaseEntry>(_connection);
-                    while (await result.MoveNextAsync())
-                    {
-                        var entry = result.Current;
-                        Debug.Log($"Received entry from RethinkDB: {entry.ID}");
-                        _databaseCache.Add(entry, true);
-                    }
-                }).WrapErrors();
-        
-                // Get globaldata and all galaxy map layer data from RethinkDB
-                Task.Run(async () =>
-                {
-                    var result = await R
-                        .Db("Aetheria")
-                        .Table("Galaxy")
-                        .Filter(o => o["$type"]==typeof(GalaxyMapLayerData).Name || o["$type"]==typeof(GlobalData).Name)
-                        .RunCursorAsync<DatabaseEntry>(_connection);
-                    while (await result.MoveNextAsync())
-                    {
-                        var entry = result.Current;
-                        Debug.Log($"Received entry from RethinkDB: {entry.ID}");
-                        _databaseCache.Add(entry, true);
-                    }
-                }).WrapErrors();
-        
-                // Subscribe to changes from RethinkDB
-                Task.Run(async () =>
-                {
-                    var result = await R
-                        .Db("Aetheria")
-                        .Table("Items")
-                        .Changes()
-                        .RunChangesAsync<DatabaseEntry>(_connection);
-                    while (await result.MoveNextAsync())
-                    {
-                        var change = result.Current;
-                        if(change.OldValue == null)
-                            Debug.Log($"Received change from RethinkDB (Entry Created): {change.NewValue.ID}");
-                        else if(change.NewValue == null)
-                            Debug.Log($"Received change from RethinkDB (Entry Deleted): {change.OldValue.ID}");
-                        else
-                            Debug.Log($"Received change from RethinkDB: {change.NewValue.ID}");
-                        _databaseCache.Add(change.NewValue, true);
-                    }
-                }).WrapErrors();
-
-                Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).Subscribe(_ =>
-                {
-                    Debug.Log(R.Now().Run<DateTime>(_connection).ToString() as string);
-                });
+            if (GUILayout.Button("Save"))
+            {
+                _databaseCache.Save(new DirectoryInfo(Application.dataPath).Parent.FullName);
             }
         }
         GUILayout.Space(5);

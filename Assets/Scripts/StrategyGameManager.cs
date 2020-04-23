@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using RethinkDb.Driver.Net;
 using UnityEngine;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
+using Random = UnityEngine.Random;
 
 public class StrategyGameManager : MonoBehaviour
 {
@@ -20,8 +23,10 @@ public class StrategyGameManager : MonoBehaviour
     public MeshRenderer GalaxyBackground;
     public float GalaxyScale;
     public ZoneObject ZoneObjectPrefab;
+    public ZoneShip ZoneShipPrefab;
     public ParticleSystem BeltPrefab;
     public Transform ZoneRoot;
+    public Texture2D PlanetoidSprite;
     public Texture2D PlanetSprite;
     public Texture2D GasGiantSprite;
     public Texture2D OrbitalSprite;
@@ -38,7 +43,7 @@ public class StrategyGameManager : MonoBehaviour
 
     private DatabaseCache _cache;
     private GameContext _context;
-    private GalaxyResponseMessage _galaxy;
+    // private GalaxyResponseMessage _galaxyResponse;
     private TabButton _currentTab;
     private bool _galaxyPopulated;
     private Guid _populatedZone;
@@ -48,12 +53,14 @@ public class StrategyGameManager : MonoBehaviour
     private Dictionary<Guid, GalaxyZone> _galaxyZoneObjects = new Dictionary<Guid, GalaxyZone>();
     private Dictionary<OrbitalEntity, ZoneObject> _zoneObjects = new Dictionary<OrbitalEntity, ZoneObject>();
     private Dictionary<OrbitalEntity, ParticleSystem> _zoneBelts = new Dictionary<OrbitalEntity, ParticleSystem>();
+    private Dictionary<Ship, ZoneShip> _zoneShips = new Dictionary<Ship, ZoneShip>();
     private List<ZoneObject> _wormholes = new List<ZoneObject>();
     private Vector3 _galaxyCameraPos = -Vector3.forward;
     private float _galaxyOrthoSize = 50;
     private Material _boundaryMaterial;
     private Material _backgroundMaterial;
     private bool _techLayoutGenerated;
+    private Connection _connection;
     
     void Start()
     {
@@ -62,7 +69,18 @@ public class StrategyGameManager : MonoBehaviour
 
         if (TestMode)
         {
-            
+            _cache.Load(new DirectoryInfo(Application.dataPath).Parent.FullName);
+            _context = new GameContext(_cache, Debug.Log);
+            TechTree.Context = _context;
+            _context.MapLayers = _cache.GetAll<GalaxyMapLayerData>().ToDictionary(ml => ml.Name);
+            _galaxyResponseZones = _cache.GetAll<ZoneData>()
+                .ToDictionary(z => z.ID, z => new GalaxyResponseZone
+                {
+                    Links = z.Wormholes.ToArray(),
+                    Name = z.Name,
+                    Position = z.Position,
+                    ZoneID = z.ID
+                });
         }
         else
         {
@@ -75,10 +93,11 @@ public class StrategyGameManager : MonoBehaviour
             // Listen for the server's galaxy description
             CultClient.AddMessageListener<GalaxyResponseMessage>(galaxy =>
             {
-                _galaxy = galaxy;
-                _galaxyResponseZones = _galaxy.Zones.ToDictionary(z => z.ZoneID);
-                _cache.Add(_galaxy.GlobalData, true);
+                _galaxyResponseZones = galaxy.Zones.ToDictionary(z => z.ZoneID);
+                _cache.Add(galaxy.GlobalData, true);
                 _context = new GameContext(_cache, Debug.Log);
+                TechTree.Context = _context;
+                _context.MapLayers["StarDensity"] = galaxy.StarDensity;
                 if (_currentTab == GalaxyTabButton && !_galaxyPopulated) PopulateGalaxy();
             });
         
@@ -129,6 +148,32 @@ public class StrategyGameManager : MonoBehaviour
 
     private void Update()
     {
+        if (TestMode)
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                var zoneData = _cache.Get<ZoneData>(_populatedZone);
+                var thrusterData = _cache.GetAll<GearData>().FirstOrDefault(g => g.Behaviors.Any(b => b is ThrusterData));
+                var thruster = _context.CreateInstance(thrusterData.ID, .9f) as Gear;
+                var hullData = _cache.GetAll<HullData>().FirstOrDefault(h => h.Name == "Fighter");
+                var hull = _context.CreateInstance(hullData.ID, .9f) as Gear;
+                var entity = new Ship(_context, hull, new []{thruster}, Enumerable.Empty<ItemInstance>());
+                var shipData = new ShipData // TODO: Better database entry for ships?
+                {
+                    ID = Guid.NewGuid()
+                };
+                _context.ZoneContents[zoneData][shipData] = entity;
+                _context.Agents.Add(new AgentController(_context, zoneData, entity));
+                var zoneShip = Instantiate(ZoneShipPrefab, ZoneRoot);
+                zoneShip.Label.text = $"Ship {_zoneShips.Count}";
+                _zoneShips[entity] = zoneShip;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space) && _currentTab == ZoneTabButton)
+            {
+                PopulateZone();
+            }
+        }
         if (_context != null)
         {
             _context.Time = Time.time;
@@ -143,12 +188,18 @@ public class StrategyGameManager : MonoBehaviour
         {
             foreach (var planet in _zoneObjects)
             {
-                planet.Value.transform.position = (Vector2) planet.Key.Position * ZoneSizeScale;
+                planet.Value.transform.position = float3(planet.Key.Position * ZoneSizeScale, .1f);
             }
 
             foreach (var belt in _zoneBelts)
             {
                 belt.Value.transform.position = float3(belt.Key.Position * ZoneSizeScale, .15f);
+            }
+
+            foreach (var ship in _zoneShips)
+            {
+                ship.Value.transform.position = float3(ship.Key.Position * ZoneSizeScale, .05f);
+                ship.Value.Icon.transform.up = (Vector2) ship.Key.Direction;
             }
         }
     }
@@ -160,25 +211,25 @@ public class StrategyGameManager : MonoBehaviour
         GalaxyBackground.transform.localScale = Vector3.one * GalaxyScale;
         
         var galaxyMat = GalaxyBackground.material;
-        galaxyMat.SetFloat("Arms", _galaxy.GlobalData.Arms);
-        galaxyMat.SetFloat("Twist", _galaxy.GlobalData.Twist);
-        galaxyMat.SetFloat("TwistPower", _galaxy.GlobalData.TwistPower);
-        galaxyMat.SetFloat("SpokeOffset", _galaxy.StarDensity.SpokeOffset);
-        galaxyMat.SetFloat("SpokeScale", _galaxy.StarDensity.SpokeScale);
-        galaxyMat.SetFloat("CoreBoost", _galaxy.StarDensity.CoreBoost);
-        galaxyMat.SetFloat("CoreBoostOffset", _galaxy.StarDensity.CoreBoostOffset);
-        galaxyMat.SetFloat("CoreBoostPower", _galaxy.StarDensity.CoreBoostPower);
-        galaxyMat.SetFloat("EdgeReduction", _galaxy.StarDensity.EdgeReduction);
-        galaxyMat.SetFloat("NoisePosition", _galaxy.StarDensity.NoisePosition);
-        galaxyMat.SetFloat("NoiseAmplitude", _galaxy.StarDensity.NoiseAmplitude);
-        galaxyMat.SetFloat("NoiseOffset", _galaxy.StarDensity.NoiseOffset);
-        galaxyMat.SetFloat("NoiseGain", _galaxy.StarDensity.NoiseGain);
-        galaxyMat.SetFloat("NoiseLacunarity", _galaxy.StarDensity.NoiseLacunarity);
-        galaxyMat.SetFloat("NoiseFrequency", _galaxy.StarDensity.NoiseFrequency);
+        galaxyMat.SetFloat("Arms", _context.GlobalData.Arms);
+        galaxyMat.SetFloat("Twist", _context.GlobalData.Twist);
+        galaxyMat.SetFloat("TwistPower", _context.GlobalData.TwistPower);
+        galaxyMat.SetFloat("SpokeOffset", _context.MapLayers["StarDensity"].SpokeOffset);
+        galaxyMat.SetFloat("SpokeScale", _context.MapLayers["StarDensity"].SpokeScale);
+        galaxyMat.SetFloat("CoreBoost", _context.MapLayers["StarDensity"].CoreBoost);
+        galaxyMat.SetFloat("CoreBoostOffset", _context.MapLayers["StarDensity"].CoreBoostOffset);
+        galaxyMat.SetFloat("CoreBoostPower", _context.MapLayers["StarDensity"].CoreBoostPower);
+        galaxyMat.SetFloat("EdgeReduction", _context.MapLayers["StarDensity"].EdgeReduction);
+        galaxyMat.SetFloat("NoisePosition", _context.MapLayers["StarDensity"].NoisePosition);
+        galaxyMat.SetFloat("NoiseAmplitude", _context.MapLayers["StarDensity"].NoiseAmplitude);
+        galaxyMat.SetFloat("NoiseOffset", _context.MapLayers["StarDensity"].NoiseOffset);
+        galaxyMat.SetFloat("NoiseGain", _context.MapLayers["StarDensity"].NoiseGain);
+        galaxyMat.SetFloat("NoiseLacunarity", _context.MapLayers["StarDensity"].NoiseLacunarity);
+        galaxyMat.SetFloat("NoiseFrequency", _context.MapLayers["StarDensity"].NoiseFrequency);
         
-        var zones = _galaxy.Zones.ToDictionary(z=>z.ZoneID);
+        // var zones = _galaxyResponse.Zones.ToDictionary(z=>z.ZoneID);
         var linkedZones = new List<Guid>();
-        foreach (var zone in _galaxy.Zones)
+        foreach (var zone in _galaxyResponseZones.Values)
         {
             linkedZones.Add(zone.ZoneID);
             var instance = GalaxyZonePrototype.Instantiate<Transform>();
@@ -203,7 +254,7 @@ public class StrategyGameManager : MonoBehaviour
             foreach (var linkedZone in zone.Links.Where(l=>!linkedZones.Contains(l)))
             {
                 var link = GalaxyZoneLinkPrototype.Instantiate<Transform>();
-                var diff = zones[linkedZone].Position - zone.Position;
+                var diff = _galaxyResponseZones[linkedZone].Position - zone.Position;
                 link.position = instance.position + Vector3.forward*.1f;
                 link.rotation = Quaternion.Euler(0,0,atan2(diff.y, diff.x) * Mathf.Rad2Deg);
                 link.localScale = new Vector3(length(diff) * GalaxyScale, 1, 1);
@@ -220,13 +271,38 @@ public class StrategyGameManager : MonoBehaviour
         _wormholes.Clear();
         foreach (var belt in _zoneBelts.Values) Destroy(belt.gameObject);
         _zoneBelts.Clear();
+        foreach (var ship in _zoneShips.Values) Destroy(ship.gameObject);
+        _zoneShips.Clear();
 
         if(_populatedZone!=Guid.Empty)
             _context.UnloadZone(_cache.Get<ZoneData>(_populatedZone));
         
         _populatedZone = _selectedZone;
 
-        var zoneData = _cache.Get<ZoneData>(_populatedZone);
+        ZoneData zoneData = _cache.Get<ZoneData>(_populatedZone);
+
+        if (TestMode && !zoneData.Visited)
+        {
+            float2 position;
+            do
+            {
+                position = float2(Random.value, Random.value);
+            } while (_context.MapLayers["StarDensity"].Evaluate(position, _context.GlobalData) < .1f);
+        
+            OrbitData[] orbits;
+            PlanetData[] planets;
+            ZoneGenerator.GenerateZone(
+                global: _context.GlobalData,
+                zone: zoneData,
+                mapLayers: _context.MapLayers.Values,
+                resources: _cache.GetAll<SimpleCommodityData>(),
+                orbitData: out orbits,
+                planetsData: out planets);
+            _cache.AddAll(orbits);
+            _cache.AddAll(planets);
+            zoneData.Visited = true;
+        }
+        
         var zoneContents = _context.InitializeZone(_populatedZone);
         
         float zoneDepth = 0;
@@ -252,7 +328,8 @@ public class StrategyGameManager : MonoBehaviour
                     planetObject.Icon.material.SetTexture("_MainTex",
                         planetData.Mass > _context.GlobalData.SunMass ? SunSprite :
                         planetData.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
-                        PlanetSprite);
+                        planetData.Mass > _context.GlobalData.PlanetMass ? PlanetSprite :
+                        PlanetoidSprite);
                 }
                 else
                 {
@@ -296,9 +373,11 @@ public class StrategyGameManager : MonoBehaviour
                 if (pointer.clickCount == 2)
                 {
                     _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
-                    if(_selectedZone != wormhole)
+                    if(_selectedZone != wormhole && !TestMode)
                         CultClient.Send(new ZoneRequestMessage{ZoneID = wormhole});
                     _selectedZone = wormhole;
+                    if(TestMode)
+                        PopulateZone();
                     _selectedGalaxyZone = _galaxyZoneObjects[wormhole];
                     _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
                     

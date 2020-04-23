@@ -11,15 +11,12 @@ public class DatabaseCache
     public event Action<DatabaseEntry> OnDataUpdateLocal;
     public event Action<DatabaseEntry> OnDataDeleteLocal;
     public event Action<DatabaseEntry> OnDataUpdateRemote;
-    
 
     public Action<string> Logger = Console.WriteLine;
 
     private readonly Dictionary<Guid, DatabaseEntry> _entries = new Dictionary<Guid, DatabaseEntry>();
 
     private readonly Dictionary<Type, Dictionary<Guid, DatabaseEntry>> _types = new Dictionary<Type, Dictionary<Guid, DatabaseEntry>>();
-	
-    private DirectoryInfo _dir;
 
     public IEnumerable<DatabaseEntry> AllEntries => _entries.Values;
 
@@ -89,5 +86,20 @@ public class DatabaseCache
 
         if (!remote)
             OnDataDeleteLocal?.Invoke(entry);
+    }
+
+    public void Load(string path)
+    {
+        RegisterResolver.Register();
+        var bytes = File.ReadAllBytes(Path.Combine(path, "AetherDB.msgpack"));
+        var entries = MessagePackSerializer.Deserialize<DatabaseEntry[]>(bytes);
+        AddAll(entries);
+    }
+
+    public void Save(string path)
+    {
+        RegisterResolver.Register();
+        var entries = AllEntries.ToArray();
+        File.WriteAllBytes(Path.Combine(path, "AetherDB.msgpack"), MessagePackSerializer.Serialize(entries));
     }
 }

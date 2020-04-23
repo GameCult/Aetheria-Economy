@@ -10,7 +10,7 @@ public class OrbitalEntity : Entity
     private Guid _orbitData;
     private static Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
     
-    public OrbitalEntity(GameContext context, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo, Guid orbit) : base(context, items, cargo)
+    public OrbitalEntity(GameContext context, Gear hull, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo, Guid orbit) : base(context, hull, items, cargo)
     {
         _orbitData = orbit;
     }

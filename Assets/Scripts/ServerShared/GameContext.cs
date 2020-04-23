@@ -6,6 +6,10 @@ using static Unity.Mathematics.math;
 
 public class GameContext
 {
+    public List<AgentController> Agents = new List<AgentController>();
+    public Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>> ZoneContents = new Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>>();
+    public Dictionary<string, GalaxyMapLayerData> MapLayers = new Dictionary<string, GalaxyMapLayerData>();
+    
     private Action<string> _logger;
 
     private Dictionary<BlueprintStatEffect, PerformanceStat> AffectedStats =
@@ -13,8 +17,9 @@ public class GameContext
 
     private double _time;
     private float _deltaTime;
+    private GlobalData _globalData;
 
-    public GlobalData GlobalData => Cache.GetAll<GlobalData>().FirstOrDefault();
+    public GlobalData GlobalData => _globalData ?? (_globalData = Cache.GetAll<GlobalData>().FirstOrDefault());
     public DatabaseCache Cache { get; }
 
     public double Time
@@ -27,25 +32,28 @@ public class GameContext
         }
     }
 
-    private Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>> ZoneContents = new Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>>();
-
     // private readonly Dictionary<CraftedItemData, int> Tier = new Dictionary<CraftedItemData, int>();
 
     public GameContext(DatabaseCache cache, Action<string> logger)
     {
         Cache = cache;
         _logger = logger;
-        var globalData = Cache.GetAll<GlobalData>().FirstOrDefault();
-        if (globalData == null)
-        {
-            globalData = new GlobalData();
-            Cache.Add(globalData);
-        }
+        // var globalData = Cache.GetAll<GlobalData>().FirstOrDefault();
+        // if (globalData == null)
+        // {
+        //     globalData = new GlobalData();
+        //     Cache.Add(globalData);
+        // }
     }
 
     public void Log(string s)
     {
         _logger(s);
+    }
+
+    public IEnumerable<Entity> ZoneEntities(ZoneData zone)
+    {
+        return ZoneContents[zone].Values;
     }
 
     public Dictionary<DatabaseEntry, Entity> InitializeZone(Guid zoneID)
@@ -56,13 +64,13 @@ public class GameContext
         
         var planetsData = zoneData.Planets.Select(id => Cache.Get<PlanetData>(id)).ToArray();
         var planetEntities = planetsData.ToDictionary(p => p,
-            p => new OrbitalEntity(this, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), p.Belt ? Cache.Get<OrbitData>(p.Orbit).Parent : p.Orbit));
+            p => new OrbitalEntity(this, null, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), p.Belt ? Cache.Get<OrbitData>(p.Orbit).Parent : p.Orbit));
         foreach(var kvp in planetEntities)
             contents.Add(kvp.Key, kvp.Value);
 
         var stationsData = zoneData.Stations.Select(id => Cache.Get<StationData>(id));
         var stationEntities = stationsData.ToDictionary(s => s,
-            s => new OrbitalEntity(this, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), s.Parent));
+            s => new OrbitalEntity(this, null, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), s.Parent));
         foreach(var kvp in stationEntities)
             contents.Add(kvp.Key, kvp.Value);
         
@@ -73,6 +81,10 @@ public class GameContext
 
     public void Update()
     {
+        foreach (var agent in Agents)
+        {
+            agent.Update(_deltaTime);
+        }
         OrbitalEntity.ClearOrbits();
         foreach (var kvp in ZoneContents)
         {
@@ -293,7 +305,8 @@ public class GameContext
                 Data = data,
                 ID = Guid.NewGuid(),
                 Ingredients = ingredients,
-                Quality = quality
+                Quality = quality,
+                Blueprint = blueprint
             };
             newGear.Durability = Evaluate(equippableItemData.Durability, newGear);
             return newGear;
@@ -305,7 +318,8 @@ public class GameContext
             Data = data,
             ID = Guid.NewGuid(),
             Ingredients = ingredients,
-            Quality = quality
+            Quality = quality,
+            Blueprint = blueprint
         };
     }
 }

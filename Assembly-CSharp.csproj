@@ -1019,6 +1019,7 @@
     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityWinRTBridge\ThreadPoolScheduler_UnityWinRT.cs" />
     <Compile Include="Assets\Scripts\NIH\XKCDColors.cs" />
     <Compile Include="Assets\Scripts\Prototype.cs" />
+    <Compile Include="Assets\Scripts\RethinkConnection.cs" />
     <Compile Include="Assets\Scripts\StrategyGameManager.cs" />
     <Compile Include="Assets\Scripts\TechTreeMsagl.cs" />
     <Compile Include="Assets\Scripts\TechTreeTest.cs" />
@@ -1039,6 +1040,7 @@
     <Compile Include="Assets\Scripts\UI\TechNode.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneObject.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneRenderer.cs" />
+    <Compile Include="Assets\Scripts\UI\ZoneShip.cs" />
     <Compile Include="Assets\Scripts\UnityExtensions.cs" />
     <Compile Include="Assets\Scripts\UnityFormatters.cs" />
     <Compile Include="Assets\Scripts\ZoneGeneratorTest.cs" />

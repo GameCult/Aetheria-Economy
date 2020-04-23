@@ -54,17 +54,10 @@ public class SerializerTestWindow : EditorWindow
         
         Converter.Serializer.Converters.Add(new MathJsonConverter());
         
-        // Set extensions to default resolver.
-        var resolver = CompositeResolver.Create(
-            MathResolver.Instance,
-            NativeGuidResolver.Instance,
-            StandardResolver.Instance
-        );
-        var options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
-        MessagePackSerializer.DefaultOptions = options;
+        RegisterResolver.Register();
         
         if (GUILayout.Button("Print MsgPack JSON"))
-            Debug.Log(MessagePackSerializer.SerializeToJson(obj, options));
+            Debug.Log(MessagePackSerializer.SerializeToJson(obj));
 
         //var writer = new StringWriter();
         if (GUILayout.Button("Print Newtonsoft JSON"))

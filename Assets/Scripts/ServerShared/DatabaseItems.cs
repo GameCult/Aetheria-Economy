@@ -22,17 +22,20 @@ public interface INamedEntry
  Union(1, typeof(CompoundCommodityData)),
  Union(2, typeof(GearData)), 
  Union(3, typeof(HullData)), 
- Union(6, typeof(SimpleCommodity)), 
- Union(7, typeof(CompoundCommodity)), 
- Union(8, typeof(Gear)),
+ Union(4, typeof(SimpleCommodity)), 
+ Union(5, typeof(CompoundCommodity)), 
+ Union(6, typeof(Gear)),
+ Union(7, typeof(BlueprintData)),
+ Union(8, typeof(GalaxyMapLayerData)),
  Union(9, typeof(GlobalData)), 
  Union(10, typeof(ZoneData)), 
  Union(11, typeof(Player)), 
  Union(12, typeof(Corporation)),
- Union(13, typeof(Ship)), 
+ Union(13, typeof(ShipData)), 
  Union(14, typeof(StationData)), 
  Union(15, typeof(OrbitData)), 
  Union(16, typeof(PlanetData)),
+ // Union(17, typeof(ShipData)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 //[Union(21, typeof(ContractData))]
 //[Union(22, typeof(Station))]
@@ -70,4 +73,10 @@ public class Corporation : DatabaseEntry, INamedEntry
         get => Name;
         set => Name = value;
     }
+}
+
+[RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class ShipData : DatabaseEntry
+{
+    
 }

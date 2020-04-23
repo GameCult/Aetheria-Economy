@@ -13,31 +13,36 @@ public class Entity
     public float Temperature;
     public float Energy;
     public float2 Position;
-    public float2 Direction;
+    public float2 Direction = float2(0,1);
     public float2 Velocity;
+    public Dictionary<Guid, List<IActivatedBehavior>> Bindings;
+    public Dictionary<IAnalogBehavior, float> Axes;
     
     protected readonly GameContext Context;
     protected readonly List<IBehavior> Behaviors;
-    protected readonly Dictionary<Guid, List<IActivatedBehavior>> Bindings;
-    protected readonly Dictionary<IAnalogBehavior, float> Axes;
     protected readonly List<Gear> Items;
     protected readonly List<ItemInstance> Cargo;
+    
+    protected Gear Hull;
 
     public float Mass { get; private set; }
     public float SpecificHeat { get; private set; }
     public float Visibility => VisibilitySources.Values.Sum();
 
-    public Entity(GameContext context, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo)
+    public Entity(GameContext context, Gear hull, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo)
     {
         Context = context;
 
         Items = items.ToList();
         Cargo = cargo.ToList();
+        Hull = hull;
         
-        Mass = Items.Sum(i => i.Mass) + 
+        Mass = hull?.Mass ?? 0 + 
+               Items.Sum(i => i.Mass) + 
                Cargo.Sum(ii => ii.Mass);
         
-        SpecificHeat = Items.Sum(i => i.HeatCapacity) +
+        SpecificHeat = (hull?.HeatCapacity ?? 0) + 
+                       Items.Sum(i => i.HeatCapacity) +
                        Cargo.Sum(ii => ii.HeatCapacity);
         
         Behaviors = Items

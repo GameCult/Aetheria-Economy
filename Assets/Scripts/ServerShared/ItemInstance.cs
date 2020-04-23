@@ -12,8 +12,11 @@ using Unity.Mathematics;
 // TODO: USE THIS EVERYWHERE
 using static Unity.Mathematics.math;
 
-[Union(0, typeof(SimpleCommodity)), Union(1, typeof(CompoundCommodity)), Union(2, typeof(Gear)),
- JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<ItemInstance>))]
+[Union(0, typeof(SimpleCommodity)), 
+ Union(1, typeof(CompoundCommodity)), 
+ Union(2, typeof(Gear)),
+ JsonObject(MemberSerialization.OptIn), 
+ JsonConverter(typeof(JsonKnownTypesConverter<ItemInstance>))]
 public abstract class ItemInstance : DatabaseEntry
 {
     [JsonProperty("data"), Key(1)]  public Guid Data;
@@ -22,7 +25,9 @@ public abstract class ItemInstance : DatabaseEntry
     public float HeatCapacity => Context.GetHeatCapacity(this);
 }
 
-[Union(0, typeof(CompoundCommodity)), Union(1, typeof(Gear)), JsonObject(MemberSerialization.OptIn),
+[Union(0, typeof(CompoundCommodity)), 
+ Union(1, typeof(Gear)), 
+ JsonObject(MemberSerialization.OptIn),
  JsonConverter(typeof(JsonKnownTypesConverter<CraftedItemInstance>))]
 public abstract class CraftedItemInstance : ItemInstance
 {

@@ -9,13 +9,10 @@ public class ThrusterData : IBehaviorData
     [InspectableField, JsonProperty("thrust"), Key(0)]  
     public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField, JsonProperty("torque"), Key(1)]  
-    public PerformanceStat Torque = new PerformanceStat();
-
-    [InspectableField, JsonProperty("visibility"), Key(2)]  
+    [InspectableField, JsonProperty("visibility"), Key(1)]  
     public PerformanceStat Visibility = new PerformanceStat();
 
-    [InspectableField, JsonProperty("heat"), Key(3)]  
+    [InspectableField, JsonProperty("heat"), Key(2)]  
     public PerformanceStat Heat = new PerformanceStat();
     
     public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -55,7 +52,7 @@ public class Thruster : IAnalogBehavior
 
     public void Update(float delta)
     {
-        ((Ship) Entity).Velocity += _thrust * Context.Evaluate(_data.Thrust, Item, Entity) * delta;
+        Entity.Velocity += Entity.Direction * _thrust * Context.Evaluate(_data.Thrust, Item, Entity) / Entity.Mass * delta;
         Entity.AddHeat(_thrust * Context.Evaluate(_data.Heat, Item, Entity) * delta);
         Entity.VisibilitySources[this] = _thrust * Context.Evaluate(_data.Visibility, Item, Entity);
     }

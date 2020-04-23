@@ -61,6 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ServerShared\ActionCollection.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\AgentBehavior.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\AgentController.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\EntityAgent.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\Locomotion.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Afterburner.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />
@@ -87,7 +91,6 @@
     <Compile Include="Assets\Scripts\ServerShared\ItemData.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ItemInstance.cs" />
     <Compile Include="Assets\Scripts\ServerShared\JsonConverters.cs" />
-    <Compile Include="Assets\Scripts\ServerShared\Locomotion.cs" />
     <Compile Include="Assets\Scripts\ServerShared\MathFormatters.cs" />
     <Compile Include="Assets\Scripts\ServerShared\MathResolver.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Messages.cs" />
@@ -448,6 +451,7 @@
     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\TaskHelper.cs" />
     <Compile Include="Assets\Scripts\ServerShared\OrbitalEntity.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Rect.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\RegisterResolver.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Ship.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ZoneData.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ZoneGenerator.cs" />

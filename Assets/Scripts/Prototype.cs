@@ -85,6 +85,7 @@ public class Prototype : MonoBehaviour {
 		}
 			
 		_originalPrototype.AddToPool(this);
+		OnReturnToPool = null;
 	}
 
 	public T GetOriginal<T>()

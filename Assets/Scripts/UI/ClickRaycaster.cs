@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ClickRaycaster : MonoBehaviour
 {
+    public event Action OnClickMiss;
     public Camera RayCamera;
     private ClickCatcher _clickCatcher;
     
@@ -19,6 +21,7 @@ public class ClickRaycaster : MonoBehaviour
                 var clickable = hit.collider.GetComponent<ClickableCollider>();
                 if (clickable != null)
                     clickable.Click(pointer);
+                else OnClickMiss?.Invoke();
             }
         };
     }

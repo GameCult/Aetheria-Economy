@@ -21,9 +21,7 @@ public class Ship : Entity
     // [IgnoreMember] public Dictionary<Targetable, float> Contacts = new Dictionary<Targetable, float>();
     // [IgnoreMember] public Targetable Target;
     
-    private HullData _hullData;
-    
-    public Ship(GameContext context, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo) : base(context, items, cargo)
+    public Ship(GameContext context, Gear hull, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo) : base(context, hull, items, cargo)
     {
     }
 
@@ -113,6 +111,7 @@ public class Ship : Entity
 
     public override void Update(float delta)
     {
+        Position += Velocity * delta;
         base.Update(delta);
         // foreach (var kvp in Contacts.ToArray())
         //     if (kvp.Key == null || Time.time - kvp.Value > GlobalData.Instance.TargetPersistenceDuration)

@@ -7,6 +7,7 @@ using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Core.Layout;
 using Microsoft.Msagl.Layout.Layered;
 using NaughtyAttributes;
+using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using Unity.Mathematics;
@@ -20,6 +21,18 @@ public class TechTreeMsagl : MonoBehaviour
     public Prototype Tech;
     public Prototype RadialLink;
     public Prototype Arrow;
+
+    [Section("UI Links")]
+    public RectTransform PropertiesPanel;
+    public TextMeshProUGUI TechName;
+    public TextMeshProUGUI Quality;
+    public TextMeshProUGUI ProductionTime;
+    public TextMeshProUGUI Produces;
+    public TextMeshProUGUI ResearchTime;
+    public Prototype RequirementPrototype;
+    public Prototype DependencyPrototype;
+    public Prototype DescendantPrototype;
+    public ClickRaycaster ClickRaycaster;
 
     [Section("Graph Generation")]
     public bool TestMode = false;
@@ -63,11 +76,14 @@ public class TechTreeMsagl : MonoBehaviour
     public Material TechArrowMaterial;
     public Material TechLinkMaterial;
 
+    public GameContext Context;
+
     private List<Prototype> _ringInstances = new List<Prototype>();
     private List<Prototype> _techInstances = new List<Prototype>();
     private List<Prototype> _linkInstances = new List<Prototype>();
     private List<Prototype> _arrowInstances = new List<Prototype>();
     private Texture2D[] _icons;
+    private List<Prototype> _propertyInstances = new List<Prototype>();
     
     public BlueprintData[] Blueprints { get; set; }
     
@@ -75,6 +91,7 @@ public class TechTreeMsagl : MonoBehaviour
     {
         if(TestMode)
             Initialize();
+        ClickRaycaster.OnClickMiss += () => PropertiesPanel.gameObject.SetActive(false);
     }
 
     public void Initialize()
@@ -193,7 +210,7 @@ public class TechTreeMsagl : MonoBehaviour
                     var region = GetRegion(island, node, DependencyAncestorDepth, DependencyDepth);
                     while (Random.value < MultipleDependencyProbability && region.Count > 0)
                     {
-                        var dependency = region.RandomElement();
+                        var dependency = region[Random.Range(0,region.Count)];
                         graph.Edges.Add(new Edge(dependency.UserData as Node, node.UserData as Node));
                         region.Remove(dependency);
                     }
@@ -205,7 +222,7 @@ public class TechTreeMsagl : MonoBehaviour
         var largestIsland = islandsBySize.First();
         foreach (var island in islandsBySize.Skip(1))
             settings.VerticalConstraints.SameLayerConstraints.Insert(new Tuple<Node, Node>(
-                largestIsland.Nodes.RandomElement().UserData as Node, island.Nodes.RandomElement().UserData as Node));
+                largestIsland.Nodes[Random.Range(0,largestIsland.Nodes.Count)].UserData as Node, island.Nodes[Random.Range(0,island.Nodes.Count)].UserData as Node));
         
         settings.PackingMethod = PackingMethod;
         settings.Transformation = PlaneTransformation.Rotation(PI);
@@ -321,6 +338,38 @@ public class TechTreeMsagl : MonoBehaviour
             tech.Icon.material.SetTexture("_MainTex", _icons[Random.Range(0,_icons.Length-1)]);
             tech.Fill.material = islandFillMaterials[islandMap[vertex]];
             tech.Glow.material = islandGlowMaterials[islandMap[vertex]];
+            if (!TestMode)
+                tech.Fill.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
+                {
+                    foreach (var instance in _propertyInstances) instance.ReturnToPool();
+                    var blueprint = (BlueprintData) vertex.UserData;
+                    PropertiesPanel.gameObject.SetActive(true);
+                    TechName.text = blueprint.Name;
+                    Quality.text = $"{Mathf.RoundToInt(blueprint.Quality * 100)}%";
+                    ProductionTime.text = $"{blueprint.ProductionTime:0.##} MH";
+                    Produces.text = $"{blueprint.Quantity} {Context.Cache.Get<ItemData>(blueprint.Item).Name}";
+                    ResearchTime.text = $"{blueprint.ResearchTime:0.##} MH";
+                    foreach (var ingredient in blueprint.Ingredients)
+                    {
+                        var ingredientData = Context.Cache.Get<ItemData>(ingredient.Key);
+                        var ingredientInstance = RequirementPrototype.Instantiate<Prototype>();
+                        ingredientInstance.GetComponentInChildren<TextMeshProUGUI>().text = $"{ingredient.Value} {ingredientData.Name}";
+                        _propertyInstances.Add(ingredientInstance);
+                    }
+                    foreach (var dependency in blueprint.Dependencies)
+                    {
+                        var dependencyBlueprint = Context.Cache.Get<BlueprintData>(dependency);
+                        var dependencyInstance = DependencyPrototype.Instantiate<Prototype>();
+                        dependencyInstance.GetComponentInChildren<TextMeshProUGUI>().text = dependencyBlueprint.Name;
+                        _propertyInstances.Add(dependencyInstance);
+                    }
+                    foreach (var descendant in graph.Edges.Where(e=>e.Source==vertex).Select(e=>(BlueprintData) e.Target.UserData))
+                    {
+                        var descendantInstance = DescendantPrototype.Instantiate<Prototype>();
+                        descendantInstance.GetComponentInChildren<TextMeshProUGUI>().text = descendant.Name;
+                        _propertyInstances.Add(descendantInstance);
+                    }
+                };
             _techInstances.Add(tech.GetComponent<Prototype>());
         }
         
