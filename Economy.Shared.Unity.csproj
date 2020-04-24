@@ -65,6 +65,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentController.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\EntityAgent.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\Locomotion.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\VelocityMatch.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Afterburner.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />

@@ -52,7 +52,7 @@ public class Turning : IAnalogBehavior
 
     public void Update(float delta)
     {
-        Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_turning * Context.Evaluate(_data.Torque, Item, Entity) * delta));
+        Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_turning * Context.Evaluate(_data.Torque, Item, Entity) / Entity.Mass * delta));
         Entity.AddHeat(abs(_turning) * Context.Evaluate(_data.Heat, Item, Entity) * delta);
         Entity.VisibilitySources[this] = abs(_turning) * Context.Evaluate(_data.Visibility, Item, Entity);
     }

@@ -5,14 +5,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, /*IPointerUpHandler, IPointerDownHandler,*/ IPointerClickHandler
 {
 	//public bool EnableMouse => PointerIsInside && !_catching;
 	public bool PointerIsInside { get; private set; }
+	public float ClickTime = .5f;
 	
 	public event Action<PointerEventData> OnEnter;
 	public event Action<PointerEventData> OnExit;
 	public event Action<PointerEventData> OnClick;
+
+	private float downTime;
 
 	public static ClickCatcher Background
 	{
@@ -39,6 +42,17 @@ public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 		OnExit?.Invoke(eventData);
 		PointerIsInside = false;
 	}
+
+	// public void OnPointerUp(PointerEventData eventData)
+	// {
+	// 	if(Time.time - downTime < ClickTime)
+	// 		OnClick?.Invoke(eventData);
+	// }
+	//
+	// public void OnPointerDown(PointerEventData eventData)
+	// {
+	// 	downTime = Time.time;
+	// }
 
 	public void OnPointerClick(PointerEventData eventData)
 	{

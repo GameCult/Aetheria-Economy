@@ -1441,6 +1441,7 @@
               <e p="AgentController.cs" t="Include" />
               <e p="EntityAgent.cs" t="Include" />
               <e p="Locomotion.cs" t="Include" />
+              <e p="VelocityMatch.cs" t="Include" />
             </e>
             <e p="Attributes.cs" t="Include" />
             <e p="Behaviors" t="Include">

@@ -8,4 +8,5 @@ public class ZoneShip : MonoBehaviour
     public MeshRenderer Icon;
 
     public TextMeshPro Label;
+    public Transform Thruster;
 }

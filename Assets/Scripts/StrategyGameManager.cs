@@ -200,6 +200,9 @@ public class StrategyGameManager : MonoBehaviour
             {
                 ship.Value.transform.position = float3(ship.Key.Position * ZoneSizeScale, .05f);
                 ship.Value.Icon.transform.up = (Vector2) ship.Key.Direction;
+                var thrusterScale = ship.Value.Thruster.localScale;
+                thrusterScale.x = ship.Key.Axes.First(kvp => kvp.Key is Thruster).Value;
+                ship.Value.Thruster.localScale = thrusterScale;
             }
         }
     }

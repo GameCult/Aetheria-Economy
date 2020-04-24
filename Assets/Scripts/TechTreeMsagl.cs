@@ -29,13 +29,16 @@ public class TechTreeMsagl : MonoBehaviour
     public TextMeshProUGUI ProductionTime;
     public TextMeshProUGUI Produces;
     public TextMeshProUGUI ResearchTime;
-    public Prototype RequirementPrototype;
-    public Prototype DependencyPrototype;
-    public Prototype DescendantPrototype;
+    public RectTransform RequirementParent;
+    public RectTransform DependencyParent;
+    public RectTransform DescendantParent;
+    public RectTransform RequirementPrefab;
+    public RectTransform DependencyPrefab;
+    public RectTransform DescendantPrefab;
     public ClickRaycaster ClickRaycaster;
 
     [Section("Graph Generation")]
-    public bool TestMode = false;
+    public bool TestMode;
     public int TechCount = 50;
     public int SeedTechs = 5;
     public int RollingWindowSize = 50;
@@ -83,7 +86,7 @@ public class TechTreeMsagl : MonoBehaviour
     private List<Prototype> _linkInstances = new List<Prototype>();
     private List<Prototype> _arrowInstances = new List<Prototype>();
     private Texture2D[] _icons;
-    private List<Prototype> _propertyInstances = new List<Prototype>();
+    private List<RectTransform> _propertyInstances = new List<RectTransform>();
     
     public BlueprintData[] Blueprints { get; set; }
     
@@ -341,7 +344,8 @@ public class TechTreeMsagl : MonoBehaviour
             if (!TestMode)
                 tech.Fill.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
                 {
-                    foreach (var instance in _propertyInstances) instance.ReturnToPool();
+                    foreach (var instance in _propertyInstances) Destroy(instance.gameObject);
+                    _propertyInstances.Clear();
                     var blueprint = (BlueprintData) vertex.UserData;
                     PropertiesPanel.gameObject.SetActive(true);
                     TechName.text = blueprint.Name;
@@ -352,20 +356,21 @@ public class TechTreeMsagl : MonoBehaviour
                     foreach (var ingredient in blueprint.Ingredients)
                     {
                         var ingredientData = Context.Cache.Get<ItemData>(ingredient.Key);
-                        var ingredientInstance = RequirementPrototype.Instantiate<Prototype>();
+                        var ingredientInstance = Instantiate(RequirementPrefab, RequirementParent);
                         ingredientInstance.GetComponentInChildren<TextMeshProUGUI>().text = $"{ingredient.Value} {ingredientData.Name}";
                         _propertyInstances.Add(ingredientInstance);
                     }
                     foreach (var dependency in blueprint.Dependencies)
                     {
                         var dependencyBlueprint = Context.Cache.Get<BlueprintData>(dependency);
-                        var dependencyInstance = DependencyPrototype.Instantiate<Prototype>();
+                        var dependencyInstance = Instantiate(DependencyPrefab, DependencyParent);
                         dependencyInstance.GetComponentInChildren<TextMeshProUGUI>().text = dependencyBlueprint.Name;
                         _propertyInstances.Add(dependencyInstance);
                     }
-                    foreach (var descendant in graph.Edges.Where(e=>e.Source==vertex).Select(e=>(BlueprintData) e.Target.UserData))
+                    foreach (var descendant in Blueprints.Where(bp =>
+                        bp.Dependencies.Any(dep => blueprint.ID == dep)))
                     {
-                        var descendantInstance = DescendantPrototype.Instantiate<Prototype>();
+                        var descendantInstance = Instantiate(DescendantPrefab, DescendantParent);
                         descendantInstance.GetComponentInChildren<TextMeshProUGUI>().text = descendant.Name;
                         _propertyInstances.Add(descendantInstance);
                     }

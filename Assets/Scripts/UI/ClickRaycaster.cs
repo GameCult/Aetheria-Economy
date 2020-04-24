@@ -21,8 +21,8 @@ public class ClickRaycaster : MonoBehaviour
                 var clickable = hit.collider.GetComponent<ClickableCollider>();
                 if (clickable != null)
                     clickable.Click(pointer);
-                else OnClickMiss?.Invoke();
             }
+            else OnClickMiss?.Invoke();
         };
     }
 }

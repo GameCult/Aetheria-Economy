@@ -23,7 +23,7 @@ public class Entity
     protected readonly List<Gear> Items;
     protected readonly List<ItemInstance> Cargo;
     
-    protected Gear Hull;
+    public Gear Hull { get; }
 
     public float Mass { get; private set; }
     public float SpecificHeat { get; private set; }
@@ -44,8 +44,10 @@ public class Entity
         SpecificHeat = (hull?.HeatCapacity ?? 0) + 
                        Items.Sum(i => i.HeatCapacity) +
                        Cargo.Sum(ii => ii.HeatCapacity);
+
+        var activeItems = hull == null ? Items : Items.Append(hull);
         
-        Behaviors = Items
+        Behaviors = activeItems
             .Where(i=>i.ItemData.Behaviors?.Any()??false)
             .SelectMany(i => i.ItemData.Behaviors
                 .Select(bd => bd.CreateInstance(Context, this, i)))
