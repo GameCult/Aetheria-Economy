@@ -81,9 +81,9 @@ In order to make an item craftable in-game, that item needs to be associated wit
 
 ### Getting the Files
 
-In order to checkout the project, you need a git client (Github's zip download will not work!). You also need to have installed [Git LFS (Large File Storage)](https://git-lfs.github.com/). This is necessary because assets in gamedev projects can get rather large, and Git is essentially a text versioning system that does not by itself support that use case well.
+In order to checkout the project, you need a git client (Github's zip download will not work!). You also need to have installed [Git LFS (Large File Storage)](https://git-lfs.github.com/). This is necessary because assets in gamedev projects can get rather large, and Git is essentially a text versioning system that does not by itself support that use case well. After installing LFS you'll need a Git client. I recommend [Github Desktop](https://desktop.github.com/), which has a nice simplified workflow and integrates with the site. For more advanced users, there's nothing wrong with using the command line or a more comprehensive client like [GitKraken](https://www.gitkraken.com/), but beginners beware that it's easy to shoot yourself in the foot that way.
 
-When you have synced with the repository, you can open the project using Unity. The project was created with Unity 2018.4.17f1 LTS, and while it may work with newer or older versions, that cannot be guaranteed. You can open the project by opening the root of this repository either directly with the Unity Editor, or using [Unity Hub](https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe), which will also take care of downloading the correct version of the Editor.
+When you have synced with the repository, you can open the project using Unity. The project uses Unity 2018 LTS, and while it may work with newer or older versions, that cannot be guaranteed. You can open the project by opening the root of this repository either directly with the Unity Editor, or using [Unity Hub](https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe), which will also take care of downloading the correct version of the Editor.
 
 ### Choosing a Task
 

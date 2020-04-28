@@ -35,6 +35,9 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     
     [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("researchDependencies"), Key(9)]  
     public List<Guid> Dependencies = new List<Guid>();
+
+    [InspectableDatabaseLink(typeof(CraftedItemData)), JsonProperty("factoryItem"), Key(11)]  
+    public Guid FactoryItem;
     
     [IgnoreMember] public string EntryName
     {

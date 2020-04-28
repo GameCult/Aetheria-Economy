@@ -223,11 +223,11 @@ public static class Extensions
     
     public static float AngleDiff(this float2 a, float2 b)
     {
-        var directionAngle = atan2(b.y, b.x) / PI;
-        var currentAngle = atan2(a.y, a.x) / PI;
+        var directionAngle = atan2(b.y, b.x);
+        var currentAngle = atan2(a.y, a.x);
         var d1 = directionAngle - currentAngle;
-        var d2 = directionAngle - 2 - currentAngle;
-        var d3 = directionAngle + 2 - currentAngle;
+        var d2 = directionAngle - 2 * PI - currentAngle;
+        var d3 = directionAngle + 2 * PI - currentAngle;
         return abs(d1) < abs(d2) ? abs(d1) < abs(d3) ? d1 : d3 : abs(d2) < abs(d3) ? d2 : d3;
     }
 }

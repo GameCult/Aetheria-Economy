@@ -17,11 +17,11 @@ public class Entity
     public float2 Velocity;
     public Dictionary<Guid, List<IActivatedBehavior>> Bindings;
     public Dictionary<IAnalogBehavior, float> Axes;
+    public readonly GameContext Context;
+    public readonly List<ItemInstance> Cargo;
+    public readonly List<Gear> EquippedItems;
     
-    protected readonly GameContext Context;
     protected readonly List<IBehavior> Behaviors;
-    protected readonly List<Gear> Items;
-    protected readonly List<ItemInstance> Cargo;
     
     public Gear Hull { get; }
 
@@ -33,19 +33,13 @@ public class Entity
     {
         Context = context;
 
-        Items = items.ToList();
+        EquippedItems = items.ToList();
         Cargo = cargo.ToList();
         Hull = hull;
-        
-        Mass = hull?.Mass ?? 0 + 
-               Items.Sum(i => i.Mass) + 
-               Cargo.Sum(ii => ii.Mass);
-        
-        SpecificHeat = (hull?.HeatCapacity ?? 0) + 
-                       Items.Sum(i => i.HeatCapacity) +
-                       Cargo.Sum(ii => ii.HeatCapacity);
 
-        var activeItems = hull == null ? Items : Items.Append(hull);
+        RecalculateMass();
+
+        var activeItems = Hull == null ? EquippedItems : EquippedItems.Append(Hull);
         
         Behaviors = activeItems
             .Where(i=>i.ItemData.Behaviors?.Any()??false)
@@ -61,6 +55,22 @@ public class Entity
         Axes = Behaviors
             .Where(b => b is IAnalogBehavior)
             .ToDictionary(b => b as IAnalogBehavior, b => 0f);
+        
+        foreach (var behavior in Behaviors)
+        {
+            behavior.Initialize();
+        }
+    }
+
+    public void RecalculateMass()
+    {
+        Mass = Hull?.Mass ?? 0 + 
+            EquippedItems.Sum(i => i.Mass) + 
+            Cargo.Sum(ii => ii.Mass);
+        
+        SpecificHeat = (Hull?.HeatCapacity ?? 0) + 
+                       EquippedItems.Sum(i => i.HeatCapacity) +
+                       Cargo.Sum(ii => ii.HeatCapacity);
     }
 
     public IEnumerable<T> GetBehaviors<T>() where T : class, IBehavior
@@ -90,7 +100,7 @@ public class Entity
         foreach(var behavior in Behaviors)
             behavior.Update(delta);
 
-        foreach (var item in Items.Where(item => item.ItemData.Performance(Temperature) < .01f))
+        foreach (var item in EquippedItems.Where(item => item.ItemData.Performance(Temperature) < .01f))
             item.Durability -= delta;
     }
 }

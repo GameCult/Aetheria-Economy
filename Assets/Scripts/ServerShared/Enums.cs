@@ -20,7 +20,8 @@ public enum HardpointType
     Tool,
     Energy,
     Ballistic,
-    Launcher
+    Launcher,
+    Infrastructure
 }
 
 public enum DamageType

@@ -204,7 +204,8 @@ public class GameContext
             quality = item.CompoundQuality();
         else
         {
-            var ingredients = item.Ingredients.Where(i => activeEffects.Any(e => e.Ingredient == i.Data)).ToArray();
+            var ingredientInstances = item.Ingredients.Select(i => Cache.Get<ItemInstance>(i)).ToArray();
+            var ingredients = ingredientInstances.Where(i => activeEffects.Any(e => e.Ingredient == i.Data)).ToArray();
             if(ingredients.Length != activeEffects.Length)
             {
                 _logger($"Item {item.ID} does not have the ingredients specified by the stat effects of its blueprint!");
@@ -297,6 +298,8 @@ public class GameContext
             })
             .ToList();
         
+        Cache.AddAll(ingredients);
+        
         if (item is EquippableItemData equippableItemData)
         {
             var newGear = new Gear
@@ -304,22 +307,25 @@ public class GameContext
                 Context = this,
                 Data = data,
                 ID = Guid.NewGuid(),
-                Ingredients = ingredients,
+                Ingredients = ingredients.Select(i=>i.ID).ToList(),
                 Quality = quality,
                 Blueprint = blueprint
             };
             newGear.Durability = Evaluate(equippableItemData.Durability, newGear);
+            Cache.Add(newGear);
             return newGear;
         }
 
-        return new CompoundCommodity
+        var newCommodity = new CompoundCommodity
         {
             Context = this,
             Data = data,
             ID = Guid.NewGuid(),
-            Ingredients = ingredients,
+            Ingredients = ingredients.Select(i=>i.ID).ToList(),
             Quality = quality,
             Blueprint = blueprint
         };
+        Cache.Add(newCommodity);
+        return newCommodity;
     }
 }

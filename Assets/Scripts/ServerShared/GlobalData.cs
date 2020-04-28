@@ -97,6 +97,9 @@ public class GlobalData : DatabaseEntry
 
     [InspectableField, JsonProperty("planetMass"), Key(28)]  
     public float PlanetMass = 100f;
+
+    [InspectableField, JsonProperty("orbitSpeedMultiplier"), Key(29)]  
+    public float OrbitSpeedMultiplier = .25f;
     
     public float PlanetRadius(float mass)
     {

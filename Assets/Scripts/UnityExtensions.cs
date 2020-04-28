@@ -28,7 +28,8 @@ public static class UnityExtensions
 				                                               BindingFlags.Public |
 				                                               BindingFlags.Static);
 
-				method.Invoke(component, new[] { value });
+				if(method!=null)
+					method.Invoke(component, new[] { value });
 			}
 			catch (Exception e)
 			{

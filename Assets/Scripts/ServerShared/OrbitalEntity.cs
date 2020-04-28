@@ -31,7 +31,7 @@ public class OrbitalEntity : Entity
         {
             var orbitData = Context.Cache.Get<OrbitData>(orbit);
             _orbitPositions[orbit] = GetOrbitPosition(orbitData.Parent) + (orbitData.Period < .01f ? float2.zero : 
-                OrbitData.Evaluate((float) (Context.Time / -orbitData.Period + orbitData.Phase)) *
+                OrbitData.Evaluate((float) (Context.Time / -orbitData.Period * Context.GlobalData.OrbitSpeedMultiplier + orbitData.Phase)) *
                 orbitData.Distance);
         }
 

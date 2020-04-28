@@ -51,6 +51,8 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
+          <e p="ConsoleController.cs" t="Include" />
+          <e p="ConsoleView.cs" t="Include" />
           <e p="CultClient.cs" t="Include" />
           <e p="Editor" t="Include">
             <e p="DatabaseInspector.cs" t="Include" />
@@ -70,168 +72,6 @@
               <e p="SimplexNoise3D.cginc" t="Include" />
               <e p="SimplexNoiseGrad2D.cginc" t="Include" />
               <e p="SimplexNoiseGrad3D.cginc" t="Include" />
-            </e>
-            <e p="Graph#" t="Include">
-              <e p="Algorithms" t="Include">
-                <e p="AlgorithmBase.cs" t="Include" />
-                <e p="EdgeRouting" t="Include">
-                  <e p="EdgeRoutingAlgorithmBase.cs" t="Include" />
-                  <e p="EdgeRoutingParameters.cs" t="Include" />
-                  <e p="IEdgeRoutingAlgorithm.cs" t="Include" />
-                  <e p="IEdgeRoutingAlgorithmFactory.cs" t="Include" />
-                  <e p="IEdgeRoutingParameters.cs" t="Include" />
-                  <e p="StandardEdgeRoutingAlgorithmFactory.cs" t="Include" />
-                </e>
-                <e p="FactoryHelper.cs" t="Include" />
-                <e p="Highlight" t="Include">
-                  <e p="HighlightAlgorithmBase.cs" t="Include" />
-                  <e p="HighlightContext.cs" t="Include" />
-                  <e p="HighlightParameterBase.cs" t="Include" />
-                  <e p="IHighlightAlgorithm.cs" t="Include" />
-                  <e p="IHighlightAlgorithmFactory.cs" t="Include" />
-                  <e p="IHighlightContext.cs" t="Include" />
-                  <e p="IHighlightController.cs" t="Include" />
-                  <e p="IHighlightParameters.cs" t="Include" />
-                  <e p="SimpleHighlightAlgorithm.cs" t="Include" />
-                  <e p="StandardHighlightAlgorithmFactory.cs" t="Include" />
-                </e>
-                <e p="IAlgorithm.cs" t="Include" />
-                <e p="IAlgorithmParameters.cs" t="Include" />
-                <e p="LayeredTopologicalSortAlgorithm.cs" t="Include" />
-                <e p="Layout" t="Include">
-                  <e p="Compound" t="Include">
-                    <e p="CompoundLayoutContext.cs" t="Include" />
-                    <e p="CompoundLayoutIterationEventArgs.cs" t="Include" />
-                    <e p="CompoundVertexInnerLayoutType.cs" t="Include" />
-                    <e p="FDP" t="Include">
-                      <e p="CompoundFDPLayoutAlgorithm.cs" t="Include" />
-                      <e p="CompoundFDPLayoutAlgorithm.Data.cs" t="Include" />
-                      <e p="CompoundFDPLayoutAlgorithm.Init.cs" t="Include" />
-                      <e p="CompoundFDPLayoutParameters.cs" t="Include" />
-                    </e>
-                    <e p="ICompoundLayoutAlgorithm.cs" t="Include" />
-                    <e p="ICompoundLayoutContext.cs" t="Include" />
-                    <e p="ICompoundLayoutIterationEventArgs.cs" t="Include" />
-                    <e p="TestingCompoundLayoutIterationEventArgs.cs" t="Include" />
-                    <e p="TestingCompoundVertexInfo.cs" t="Include" />
-                  </e>
-                  <e p="Contextual" t="Include">
-                    <e p="ContextualLayoutAlgorithmFactory.cs" t="Include" />
-                    <e p="ContextualLayoutContext.cs" t="Include" />
-                    <e p="DoubleTreeLayoutAlgorithm.cs" t="Include" />
-                    <e p="DoubleTreeLayoutParameters.cs" t="Include" />
-                    <e p="IContextualLayoutAlgorithmFactory.cs" t="Include" />
-                    <e p="RadialTreeLayoutAlgorithm.cs" t="Include" />
-                    <e p="RadialTreeLayoutParameters.cs" t="Include" />
-                  </e>
-                  <e p="ILayoutAlgorithm.cs" t="Include" />
-                  <e p="ILayoutAlgorithmFactory.cs" t="Include" />
-                  <e p="ILayoutContext.cs" t="Include" />
-                  <e p="ILayoutInfoIterationEventArgs.cs" t="Include" />
-                  <e p="ILayoutIterationEventArgs.cs" t="Include" />
-                  <e p="ILayoutParameters.cs" t="Include" />
-                  <e p="IParameterizedLayoutAlgorithm.cs" t="Include" />
-                  <e p="LayoutAlgorithmBase.cs" t="Include" />
-                  <e p="LayoutContext.cs" t="Include" />
-                  <e p="LayoutDirection.cs" t="Include" />
-                  <e p="LayoutIterationEventArgs.cs" t="Include" />
-                  <e p="LayoutMode.cs" t="Include" />
-                  <e p="LayoutParametersBase.cs" t="Include" />
-                  <e p="LayoutState.cs" t="Include" />
-                  <e p="LayoutUtil.cs" t="Include" />
-                  <e p="ParameterizedLayoutAlgorithmBase.cs" t="Include" />
-                  <e p="Simple" t="Include">
-                    <e p="Circular" t="Include">
-                      <e p="CircularLayoutAlgorithm.cs" t="Include" />
-                      <e p="CircularLayoutParameters.cs" t="Include" />
-                    </e>
-                    <e p="FDP" t="Include">
-                      <e p="BoundedFRLayoutParameters.cs" t="Include" />
-                      <e p="FRCoolingFunction.cs" t="Include" />
-                      <e p="FreeFRLayoutParameters.cs" t="Include" />
-                      <e p="FRLayoutAlgorithm.cs" t="Include" />
-                      <e p="FRLayoutParametersBase.cs" t="Include" />
-                      <e p="ISOMLayoutAlgorithm.cs" t="Include" />
-                      <e p="ISOMLayoutParameters.cs" t="Include" />
-                      <e p="KKLayoutAlgorithm.cs" t="Include" />
-                      <e p="KKLayoutParameters.cs" t="Include" />
-                      <e p="LinLogLayoutAlgorithm.cs" t="Include" />
-                      <e p="LinLogLayoutAlgorithm.QuadTree.cs" t="Include" />
-                      <e p="LinLogLayoutParameters.cs" t="Include" />
-                    </e>
-                    <e p="Hierarchical" t="Include">
-                      <e p="EfficientSugiyamaAlgorithm.BuildSparseNormalizedGraph.cs" t="Include" />
-                      <e p="EfficientSugiyamaAlgorithm.DoCrossingMinimizations.cs" t="Include" />
-                      <e p="EfficientSugiyamaAlgorithm.DoPreparing.cs" t="Include" />
-                      <e p="EfficientSugiyamaLayoutAlgorithm.AlternatingLayer.cs" t="Include" />
-                      <e p="EfficientSugiyamaLayoutAlgorithm.cs" t="Include" />
-                      <e p="EfficientSugiyamaLayoutAlgorithm.Data.cs" t="Include" />
-                      <e p="EfficientSugiyamaLayoutAlgorithm.HorizontalAssignment.cs" t="Include" />
-                      <e p="EfficientSugiyamaLayoutAlgorithm.SegmentContainer.cs" t="Include" />
-                      <e p="EfficientSugiyamaLayoutParameters.cs" t="Include" />
-                      <e p="SugiyamaEdgeRoutings.cs" t="Include" />
-                      <e p="SugiyamaLayoutAlgorithm.cs" t="Include" />
-                      <e p="SugiyamaLayoutAlgorithm.Enums.cs" t="Include" />
-                      <e p="SugiyamaLayoutAlgorithm.SugiEdge.cs" t="Include" />
-                      <e p="SugiyamaLayoutAlgorithm.SugiVertex.cs" t="Include" />
-                      <e p="SugiyamaLayoutAlgorithm.VertexLayer.cs" t="Include" />
-                      <e p="SugiyamaLayoutAlgorithm.VertexLayerCollection.cs" t="Include" />
-                      <e p="SugiyamaLayoutParameters.cs" t="Include" />
-                    </e>
-                    <e p="Tree" t="Include">
-                      <e p="BalloonTreeLayoutAlgorithm.cs" t="Include" />
-                      <e p="BalloonTreeLayoutParameters.cs" t="Include" />
-                      <e p="SimpleTreeLayoutAlgorithm.cs" t="Include" />
-                      <e p="SimpleTreeLayoutAlgorithm.Data.cs" t="Include" />
-                      <e p="SimpleTreeLayoutAlgorithm.WidthAndHeightOpt.cs" t="Include" />
-                      <e p="SimpleTreeLayoutParameters.cs" t="Include" />
-                      <e p="SpanningTreeGeneration.cs" t="Include" />
-                    </e>
-                  </e>
-                  <e p="StandardLayoutAlgorithmFactory.cs" t="Include" />
-                </e>
-                <e p="OverlapRemoval" t="Include">
-                  <e p="FSAAlgorithm.cs" t="Include" />
-                  <e p="IOverlapRemovalAlgorithm.cs" t="Include" />
-                  <e p="IOverlapRemovalAlgorithmFactory.cs" t="Include" />
-                  <e p="IOverlapRemovalContext.cs" t="Include" />
-                  <e p="IOverlapRemovalParameters.cs" t="Include" />
-                  <e p="OneWayFSAAlgorithm.cs" t="Include" />
-                  <e p="OneWayFSAParameters.cs" t="Include" />
-                  <e p="OverlapRemovalAlgorithmBase.cs" t="Include" />
-                  <e p="OverlapRemovalContext.cs" t="Include" />
-                  <e p="OverlapRemovalHelper.cs" t="Include" />
-                  <e p="OverlapRemovalParameters.cs" t="Include" />
-                  <e p="RectangleWrapper.cs" t="Include" />
-                  <e p="StandardOverlapRemovalAlgorithmFactory.cs" t="Include" />
-                </e>
-              </e>
-              <e p="ClassDiagrams" t="Include">
-                <e p="Algorithm Interfaces.cd" t="Include" />
-                <e p="Implemented Algorithms.cd" t="Include" />
-              </e>
-              <e p="CompoundGraph.cs" t="Include" />
-              <e p="Contracts" t="Include">
-                <e p="ICompoundGraphContract.cs" t="Include" />
-                <e p="IContextualLayoutAlgorithmFactoryContract.cs" t="Include" />
-                <e p="ILayoutAlgorithmFactoryContract.cs" t="Include" />
-                <e p="ILayoutContextContract.cs" t="Include" />
-              </e>
-              <e p="GraphHelper.cs" t="Include" />
-              <e p="GraphHideHelper.cs" t="Include" />
-              <e p="HierarchicalGraph.cs" t="Include" />
-              <e p="ICompoundGraph.cs" t="Include" />
-              <e p="IHierarchicalBidirectionalGraph.cs" t="Include" />
-              <e p="IMutableCompoundGraph.cs" t="Include" />
-              <e p="ISoftMutableGraph.cs" t="Include" />
-              <e p="Properties" t="Include">
-                <e p="AssemblyInfo.cs" t="Include" />
-              </e>
-              <e p="SoftMutableBidirectionalGraph.cs" t="Include" />
-              <e p="SoftMutableHierarchicalGraph.cs" t="Include" />
-              <e p="TypedEdge.cs" t="Include" />
-              <e p="WeightedEdge.cs" t="Include" />
-              <e p="WrappedVertex.cs" t="Include" />
             </e>
             <e p="LinqFaster" t="Include">
               <e p="Aggregate.cs" t="Include" />
@@ -1447,6 +1287,7 @@
             <e p="Behaviors" t="Include">
               <e p="Afterburner.cs" t="Include" />
               <e p="Behaviors.cs" t="Include" />
+              <e p="FactoryBehavior.cs" t="Include" />
               <e p="Launcher.cs" t="Include" />
               <e p="ProjectileWeapon.cs" t="Include" />
               <e p="Radiator.cs" t="Include" />
@@ -1887,7 +1728,6 @@
           </e>
           <e p="StrategyGameManager.cs" t="Include" />
           <e p="TechTreeMsagl.cs" t="Include" />
-          <e p="TechTreeTest.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="BackgroundRenderer.cs" t="Include" />
             <e p="ClickableCollider.cs" t="Include" />

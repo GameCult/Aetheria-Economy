@@ -33,7 +33,7 @@ public abstract class CraftedItemInstance : ItemInstance
 {
     [JsonProperty("quality"), Key(2)]  public float Quality;
 
-    [JsonProperty("ingredients"), Key(3)]  public List<ItemInstance> Ingredients = new List<ItemInstance>();
+    [JsonProperty("ingredients"), Key(3)]  public List<Guid> Ingredients = new List<Guid>();
     
     [JsonProperty("blueprint"), Key(4)]  public BlueprintData Blueprint;
 }

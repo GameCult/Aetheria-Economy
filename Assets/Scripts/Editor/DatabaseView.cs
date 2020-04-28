@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿// TODO: USE THIS EVERYWHERE
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
-using UniRx;
-using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
-// TODO: USE THIS EVERYWHERE
-using static Unity.Mathematics.math;
-using Object = UnityEngine.Object;
 using static UnityEditor.EditorGUILayout;
 
 public class DatabaseListView : EditorWindow
@@ -61,7 +51,7 @@ public class DatabaseListView : EditorWindow
         {
             // "Get existing open window or if none, make a new one:" says documentation.
             // But if called after script reloads a second instance will be opened! => Custom singleton required.
-            DatabaseListView window = EditorWindow.GetWindow<DatabaseListView>();
+            DatabaseListView window = GetWindow<DatabaseListView>();
             window.titleContent = new GUIContent("DB List");
             _instance = window;
             _instance.InitStyles();
@@ -147,13 +137,21 @@ public class DatabaseListView : EditorWindow
             // Indicate that we don't accept drags ourselves
             DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
 
-        using (var h = new EditorGUILayout.HorizontalScope())
+        using (var h = new HorizontalScope())
         {
-            _connectionString = EditorGUILayout.TextField(_connectionString);
+            _connectionString = TextField(_connectionString);
             if (GUILayout.Button("Connect"))
             {
                 EditorPrefs.SetString("RethinkDB.URL", _connectionString);
                 _connection = RethinkConnection.RethinkConnect(_databaseCache, _connectionString);
+            }
+        }
+        using (var h = new HorizontalScope())
+        {
+            if (GUILayout.Button("Connect All"))
+            {
+                EditorPrefs.SetString("RethinkDB.URL", _connectionString);
+                _connection = RethinkConnection.RethinkConnect(_databaseCache, _connectionString, true, false);
             }
 
             if (GUILayout.Button("Save"))
@@ -171,19 +169,19 @@ public class DatabaseListView : EditorWindow
             _inspector.Repaint();
         };
 
-        using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
+        using (var h = new HorizontalScope(ListItemStyle))
         {
-            _itemsFoldout = EditorGUILayout.Foldout(_itemsFoldout, "Items", true);
+            _itemsFoldout = Foldout(_itemsFoldout, "Items", true);
         }
         if (_itemsFoldout)
         {
             var items = _databaseCache.AllEntries.Where(item => item is ItemData).Cast<ItemData>().ToArray();
             for (var i = 0; i < _itemTypes.Length; i++)
             {
-                using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
+                using (var h = new HorizontalScope(ListItemStyle))
                 {
                     GUILayout.Space(10);
-                    _gearFoldouts[i] = EditorGUILayout.Foldout(_gearFoldouts[i],
+                    _gearFoldouts[i] = Foldout(_gearFoldouts[i],
                         ((NameAttribute) _itemTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? FormatTypeName(_itemTypes[i].Name),
                         true);
                 }
@@ -193,7 +191,7 @@ public class DatabaseListView : EditorWindow
                     {
                         var style = ListItemStyle;
                         var selected = SelectedItem == item.ID;
-                        using (var h = new EditorGUILayout.HorizontalScope(selected?SelectedStyle:style))
+                        using (var h = new HorizontalScope(selected?SelectedStyle:style))
                         {
                             if (h.rect.Contains(currentEvent.mousePosition))
                             {
@@ -212,13 +210,13 @@ public class DatabaseListView : EditorWindow
                         }
                     }
                     
-                    using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
+                    using (var h = new HorizontalScope(ListItemStyle))
                     {
                         if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
                             CreateItem(_itemTypes[i]);
                         GUILayout.Space(20);
                         GUILayout.Label("New " + _itemTypes[i].Name);
-                        var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
                         GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                     }
                 }
@@ -228,9 +226,9 @@ public class DatabaseListView : EditorWindow
         var entries = _databaseCache.AllEntries.Where(item => !(item is ItemData)).ToArray();
         for (var i = 0; i < _entryTypes.Length; i++)
         {
-            using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
+            using (var h = new HorizontalScope(ListItemStyle))
             {
-                _entryFoldouts[i] = EditorGUILayout.Foldout(_entryFoldouts[i],
+                _entryFoldouts[i] = Foldout(_entryFoldouts[i],
                     ((NameAttribute) _entryTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? FormatTypeName(_entryTypes[i].Name),
                     true);
             }
@@ -243,7 +241,7 @@ public class DatabaseListView : EditorWindow
                     index++;
                     var style = ListItemStyle;
                     var selected = SelectedItem == entry.ID;
-                    using (var h = new EditorGUILayout.HorizontalScope(selected?SelectedStyle:style))
+                    using (var h = new HorizontalScope(selected?SelectedStyle:style))
                     {
                         if (h.rect.Contains(currentEvent.mousePosition))
                         {
@@ -261,13 +259,13 @@ public class DatabaseListView : EditorWindow
                     }
                 }
                     
-                using (var h = new EditorGUILayout.HorizontalScope(ListItemStyle))
+                using (var h = new HorizontalScope(ListItemStyle))
                 {
                     if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
                         CreateItem(_entryTypes[i]);
                     GUILayout.Space(10);
                     GUILayout.Label("New " + _entryTypes[i].Name);
-                    var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                    var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
                     GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                 }
             }

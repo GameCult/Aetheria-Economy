@@ -30,6 +30,12 @@ public interface IAnalogBehavior : IBehavior
     void SetAxis(float value);
 }
 
+public interface IPersistentBehavior//<T> where T : IBehavior
+{
+    object Store();
+    IBehavior Restore(GameContext context, Entity entity, Gear item, Guid data);
+}
+
 [InspectableField, 
  Union(0, typeof(ProjectileWeaponData)), 
  Union(1, typeof(LauncherData)),
@@ -43,6 +49,7 @@ public interface IAnalogBehavior : IBehavior
  Union(9, typeof(TurningData)),
  Union(10, typeof(VelocityConversionData)),
  Union(11, typeof(VelocityLimitData)),
+ Union(12, typeof(FactoryData)),
  JsonConverter(typeof(JsonKnownTypesConverter<IBehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public interface IBehaviorData
 {

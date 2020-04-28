@@ -146,29 +146,64 @@ public class StrategyGameManager : MonoBehaviour
         _backgroundMaterial = ZoneBackground.material;
     }
 
+    void spawn(string[] args)
+    {
+        var zoneData = _cache.Get<ZoneData>(_populatedZone);
+
+        // Parse first argument as hull name, default to Fighter if argument missing
+        HullData hullData;
+        if (args.Length > 0)
+        {
+            hullData = _cache.GetAll<HullData>().FirstOrDefault(h => h.Name == args[0]);
+            if (hullData == null)
+            {
+                Debug.Log($"Hull with name \"{args[0]}\" not found!");
+                return;
+            }
+        }
+        else
+        {
+            hullData = _cache.GetAll<HullData>().FirstOrDefault(h => h.Name == "Fighter");
+        }
+        var hull = _context.CreateInstance(hullData.ID, .9f) as Gear;
+
+        List<Gear> gear = new List<Gear>();
+        if (args.Length > 1)
+        {
+            foreach (string arg in args.Skip(1))
+            {
+                var gearData = _cache.GetAll<GearData>().FirstOrDefault(h => h.Name == arg);
+                if (gearData == null)
+                {
+                    Debug.Log($"Gear with name \"{arg}\" not found!");
+                    return;
+                }
+                gear.Add(_context.CreateInstance(gearData.ID, .9f) as Gear);
+            }
+        }
+        else
+        {
+            var thrusterData = _cache.GetAll<GearData>().FirstOrDefault(g => g.Behaviors.Any(b => b is ThrusterData));
+            var thruster = _context.CreateInstance(thrusterData.ID, .9f) as Gear;
+            gear.Add(thruster);
+        }
+        var entity = new Ship(_context, hull, gear, Enumerable.Empty<ItemInstance>());
+        var shipData = new ShipData // TODO: Better database entry for ships?
+        {
+            ID = Guid.NewGuid()
+        };
+        _cache.Add(shipData);
+        _context.ZoneContents[zoneData][shipData] = entity;
+        _context.Agents.Add(new AgentController(_context, zoneData, entity));
+        var zoneShip = Instantiate(ZoneShipPrefab, ZoneRoot);
+        zoneShip.Label.text = $"Ship {_zoneShips.Count}";
+        _zoneShips[entity] = zoneShip;
+    }
+
     private void Update()
     {
         if (TestMode)
         {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                var zoneData = _cache.Get<ZoneData>(_populatedZone);
-                var thrusterData = _cache.GetAll<GearData>().FirstOrDefault(g => g.Behaviors.Any(b => b is ThrusterData));
-                var thruster = _context.CreateInstance(thrusterData.ID, .9f) as Gear;
-                var hullData = _cache.GetAll<HullData>().FirstOrDefault(h => h.Name == "Fighter");
-                var hull = _context.CreateInstance(hullData.ID, .9f) as Gear;
-                var entity = new Ship(_context, hull, new []{thruster}, Enumerable.Empty<ItemInstance>());
-                var shipData = new ShipData // TODO: Better database entry for ships?
-                {
-                    ID = Guid.NewGuid()
-                };
-                _context.ZoneContents[zoneData][shipData] = entity;
-                _context.Agents.Add(new AgentController(_context, zoneData, entity));
-                var zoneShip = Instantiate(ZoneShipPrefab, ZoneRoot);
-                zoneShip.Label.text = $"Ship {_zoneShips.Count}";
-                _zoneShips[entity] = zoneShip;
-            }
-
             if (Input.GetKeyDown(KeyCode.Space) && _currentTab == ZoneTabButton)
             {
                 PopulateZone();
@@ -348,7 +383,7 @@ public class StrategyGameManager : MonoBehaviour
                     beltShape.radius = orbit.Distance * ZoneSizeScale;
                     beltShape.donutRadius = orbit.Distance * ZoneSizeScale / 2;
                     var beltVelocity = beltObject.velocityOverLifetime;
-                    beltVelocity.orbitalZ = orbit.Distance * ZoneSizeScale / orbit.Period;
+                    beltVelocity.orbitalZ = _context.GlobalData.OrbitSpeedMultiplier * orbit.Distance * ZoneSizeScale / orbit.Period;
                     beltObject.Simulate(60);
                     beltObject.Play();
                 }

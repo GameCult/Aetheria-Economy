@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RethinkDb.Driver;
+using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Net;
 using UniRx;
 using UnityEngine;
@@ -13,7 +14,7 @@ public static class RethinkConnection
 {
     public static RethinkDB R = RethinkDB.R;
     
-    public static Connection RethinkConnect(DatabaseCache cache, string connectionString, bool syncLocalChanges = true)
+    public static Connection RethinkConnect(DatabaseCache cache, string connectionString, bool syncLocalChanges = true, bool filterGalaxyData = true)
     {
         // Add Unity.Mathematics serialization support to RethinkDB Driver
         //Converter.Serializer.Converters.Add(new MathJsonConverter());
@@ -89,10 +90,13 @@ public static class RethinkConnection
         // Get globaldata and all galaxy map layer data from RethinkDB
         Task.Run(async () =>
         {
-            var result = await R
+            ReqlAst operation = R
                 .Db("Aetheria")
-                .Table("Galaxy")
-                //.Filter(o => o["$type"]==typeof(GalaxyMapLayerData).Name || o["$type"]==typeof(GlobalData).Name)
+                .Table("Galaxy");
+            if (filterGalaxyData)
+                operation = ((Table)operation).Filter(o =>
+                    o["$type"] == typeof(GalaxyMapLayerData).Name || o["$type"] == typeof(GlobalData).Name);
+            var result = await operation
                 .RunCursorAsync<DatabaseEntry>(connection);
             while (await result.MoveNextAsync())
             {
