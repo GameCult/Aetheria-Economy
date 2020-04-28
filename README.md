@@ -91,7 +91,9 @@ We are organizing according to an [Agile development](https://en.wikipedia.org/w
 
 ### Testing Locally
 
-If midgard.gamecult.games is not currently up, you can always build and run the economy server yourself, and connect to it by typing localhost into the main menu.
+If midgard.gamecult.games is not currently up, you can always build and run the economy server yourself, and connect to it by typing localhost into the main menu. To start the game in this mode you open the "Start" scene and type "localhost" into the host field. You will still need to create an account.
+
+Another way to test the game entirely offline doesn't require running the economy server, but you still need to download the database contents. Instead of connecting to the database with the "Connect" button, click "Connect All", which in addition to syncing item data will also sync galaxy data such as the sectors. Once the tools are finished syncing, which can take a while (you know it's done when the console has stopped logging "Received {table} entry"), you can click "Save" to create a local backup of the entire database contents. If you enter Play mode in the "Main" scene with the TestMode parameter set to true in the game manager, the game will use that local copy instead of requiring a connection to the master server.
 
 ### Database Editor Tools
 

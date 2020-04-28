@@ -148,6 +148,7 @@ public class StrategyGameManager : MonoBehaviour
 
     void spawn(string[] args)
     {
+        Debug.Log("Spawning ship!");
         var zoneData = _cache.Get<ZoneData>(_populatedZone);
 
         // Parse first argument as hull name, default to Fighter if argument missing
