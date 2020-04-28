@@ -9,12 +9,14 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 public class ConsoleController
 {
     private static ConsoleController instance;
+    private static Regex permittedCharacters = new Regex("[^a-zA-Z0-9 -]");
 
     private ConsoleController()
     {
@@ -105,6 +107,11 @@ public class ConsoleController
 		}
 		char[] parmCharsArr = new char[parmChars.Count];
 		parmChars.CopyTo(parmCharsArr, 0);
-		return (new string(parmCharsArr)).Split(new char[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+		var args = new string(parmCharsArr).Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+		for (var i = 0; i < args.Length; i++)
+		{
+			args[i] = permittedCharacters.Replace(args[i], "");
+		}
+		return args;
 	}
 }

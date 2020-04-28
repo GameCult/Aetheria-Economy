@@ -107,6 +107,20 @@ At the top of the list view there is a text field where you can enter the URL of
 
 You can unfold the categories of items in the list view to see what items exist. If you select an item, the Database Inspector will populate with all of the available fields of that item. Any changes you make in the Inspector will automatically be pushed to RethinkDB. If you've connected to the production database, this will update the stats of in-game items in real-time!
 
+### Debug Console
+
+Pressing the tilde key (`) while running the game allows you to access the console. Here you can view the debug log as well as entering commands which aid in testing various game mechanics.
+
+#### Commands
+
+##### spawn
+
+Arguments:
+
+- Entity type: needs to be "ship", "station" or "turret"
+- Hull name (optional): selects the hull of the spawned entity by name
+- Gear List (optional): every additional argument specifies a Gear item to install
+
 ### Galaxy Editor
 
 When you select a galaxy asset in the Unity scene hierarchy, a custom editor opens in the inspector which enables the procedural generation of a new galaxy. There you can find some variables pertaining to the galaxy as a whole, such as the number and twist of the spiral arms. 

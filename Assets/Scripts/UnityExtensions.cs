@@ -13,10 +13,20 @@ using static Unity.Mathematics.math;
 
 public static class UnityExtensions
 {
+	public static void BroadcastAll(string fun, System.Object msg) {
+		GameObject[] gos = (GameObject[])GameObject.FindObjectsOfType(typeof(GameObject));
+		foreach (GameObject go in gos) {
+			if (go && go.transform.parent == null) {
+				go.gameObject.BroadcastMessageExt<MonoBehaviour>(fun, msg, SendMessageOptions.DontRequireReceiver);
+			}
+		}
+	}
+	
 	public static void BroadcastMessageExt<T>(this GameObject go, string methodName, object value = null, SendMessageOptions options = SendMessageOptions.RequireReceiver)
 	{
 		var monoList = new List<T>();
 		go.GetComponentsInChildren(true, monoList);
+		//monoList.Add();
 		foreach (var component in monoList)
 		{
 			try

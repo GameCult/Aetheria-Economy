@@ -153,7 +153,7 @@ public class StrategyGameManager : MonoBehaviour
 
         // Parse first argument as hull name, default to Fighter if argument missing
         HullData hullData;
-        if (args.Length > 0)
+        if (args.Length > 1)
         {
             hullData = _cache.GetAll<HullData>().FirstOrDefault(h => h.Name == args[0]);
             if (hullData == null)
@@ -169,9 +169,9 @@ public class StrategyGameManager : MonoBehaviour
         var hull = _context.CreateInstance(hullData.ID, .9f) as Gear;
 
         List<Gear> gear = new List<Gear>();
-        if (args.Length > 1)
+        if (args.Length > 2)
         {
-            foreach (string arg in args.Skip(1))
+            foreach (string arg in args.Skip(2))
             {
                 var gearData = _cache.GetAll<GearData>().FirstOrDefault(h => h.Name == arg);
                 if (gearData == null)
@@ -184,21 +184,33 @@ public class StrategyGameManager : MonoBehaviour
         }
         else
         {
-            var thrusterData = _cache.GetAll<GearData>().FirstOrDefault(g => g.Behaviors.Any(b => b is ThrusterData));
-            var thruster = _context.CreateInstance(thrusterData.ID, .9f) as Gear;
-            gear.Add(thruster);
+            // If no gear arguments supplied and we're spawning a ship, get the first thruster and put it in
+            if (args[0] == "ship")
+            {
+                var thrusterData = _cache.GetAll<GearData>().FirstOrDefault(g => g.Behaviors.Any(b => b is ThrusterData));
+                var thruster = _context.CreateInstance(thrusterData.ID, .9f) as Gear;
+                gear.Add(thruster);
+            }
         }
-        var entity = new Ship(_context, hull, gear, Enumerable.Empty<ItemInstance>());
-        var shipData = new ShipData // TODO: Better database entry for ships?
+
+        if (args[0] == "ship")
         {
-            ID = Guid.NewGuid()
-        };
-        _cache.Add(shipData);
-        _context.ZoneContents[zoneData][shipData] = entity;
-        _context.Agents.Add(new AgentController(_context, zoneData, entity));
-        var zoneShip = Instantiate(ZoneShipPrefab, ZoneRoot);
-        zoneShip.Label.text = $"Ship {_zoneShips.Count}";
-        _zoneShips[entity] = zoneShip;
+            var entity = new Ship(_context, hull, gear, Enumerable.Empty<ItemInstance>());
+            var shipData = new ShipData // TODO: Better database entry for ships?
+            {
+                ID = Guid.NewGuid()
+            };
+            _cache.Add(shipData);
+            _context.ZoneContents[zoneData][shipData] = entity;
+            _context.Agents.Add(new AgentController(_context, zoneData, entity));
+            var zoneShip = Instantiate(ZoneShipPrefab, ZoneRoot);
+            zoneShip.Label.text = $"Ship {_zoneShips.Count}";
+            _zoneShips[entity] = zoneShip;
+        }
+        else
+        {
+            Debug.Log($"Unknown entity type: \"{args[0]}\"");
+        }
     }
 
     private void Update()
