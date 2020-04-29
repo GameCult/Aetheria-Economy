@@ -43,11 +43,11 @@ public class VelocityMatch : AgentBehavior
             var velocity = length(_entity.Velocity);
             var deltaV = Objective.Velocity - _entity.Velocity;
             
-            var stoppingTime = length(deltaV) / _entity.Context.Evaluate((_thrust.Data as ThrusterData).Thrust, _thrust.Item, _entity) * _entity.Mass;
-            var stoppingDistance = stoppingTime * velocity / 2;
+            var stoppingTime = length(deltaV) / (_entity.Context.Evaluate((_thrust.Data as ThrusterData).Thrust, _thrust.Item, _entity) / _entity.Mass);
+            var stoppingDistance = stoppingTime * (velocity / 2);
             
             var angleDiff = _entity.Direction.AngleDiff(deltaV);
-            var turnaroundTime = angleDiff / _entity.Context.Evaluate((_turning.Data as TurningData).Torque, _turning.Item, _entity) * _entity.Mass;
+            var turnaroundTime = angleDiff / (_entity.Context.Evaluate((_turning.Data as TurningData).Torque, _turning.Item, _entity) / _entity.Mass);
             var turnaroundDistance = turnaroundTime * velocity;
             
             return float2(stoppingDistance + turnaroundDistance, stoppingTime + turnaroundTime);

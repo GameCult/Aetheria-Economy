@@ -17,9 +17,10 @@ This repository is the home of Aetheria, an economy focused RTS MMO where you co
     - [Getting the Files](#Getting-the-Files)
     - [Choosing a Task](#Choosing-a-Task)
     - [Database Editor Tools](#Database-Editor-Tools)
-    - [Connecting to RethinkDB](#Connecting-to-RethinkDB)
-    - [Editing Items](#Editing-Items)
+      - [Connecting to RethinkDB](#Connecting-to-RethinkDB)
+      - [Editing Items](#Editing-Items)
     - [Testing Locally](#Testing-Locally)
+    - [Debug Console](#Debug-Console)
 6. [Galaxy Editor](#Galaxy-Editor)
     - [Map Layer Data](#Map-Layer-Data)
     - [Star Tools](#Star-Tools)
@@ -29,7 +30,7 @@ This repository is the home of Aetheria, an economy focused RTS MMO where you co
 
 ## Game Design
 
-The ARPG game design document is available [here](https://docs.google.com/document/d/1iULu1WsbuQoUM3c87XkGseb1P-8R5xlruoiyg03TsSE/edit?usp=sharing), while the RTS gameplay is documented [here](https://docs.google.com/document/d/1U3uGFqQboAiFJ_Y-nUOGpyixbXUHRbc5DiCuB59GM4w/edit?usp=sharing). There's also a document explaining how some of the shaders work [here](https://docs.google.com/document/d/1AFycvCtW6hA1jkKq1ZmYd3k6_uEWaaCqcZ4fYj4vU6A/edit?usp=sharing). The goal is to essentially create two games which both take place in the same persistent universe, allowing players with vastly different preferences to struggle together for the survival of mankind. Each instance of the game lasts until the inevitable destruction of the entire population at the hands of aliens, after which the universe resets. Each loop is designed to last up to a couple of months, during which the hostility of the aliens steadily increases until the players are unable to hold back the tide.
+The ARPG game design document is available [here](https://docs.google.com/document/d/1iULu1WsbuQoUM3c87XkGseb1P-8R5xlruoiyg03TsSE/edit?usp=sharing), while the RTS gameplay is documented [here](https://docs.google.com/document/d/1U3uGFqQboAiFJ_Y-nUOGpyixbXUHRbc5DiCuB59GM4w/edit?usp=sharing). There's also a document explaining how some of the shaders work [here](https://docs.google.com/document/d/1AFycvCtW6hA1jkKq1ZmYd3k6_uEWaaCqcZ4fYj4vU6A/edit?usp=sharing). The goal is to essentially create two games which both take place in the same persistent universe, allowing players with vastly different preferences to struggle together for the survival of mankind. Each instance of the game lasts until the inevitable destruction of the entire population at the hands of aliens, after which the universe resets. Each loop is designed to last up to a couple of months, during which the hostility of the aliens steadily increases until the players are unable to hold back the tide. As players gain proficiency with the systems, the length of the time loop may increase, allowing us to organically inject new content into the timeline.
 
 ## Previous Work
 
@@ -39,7 +40,7 @@ The concept for Aetheria goes back many years, during which I have steadily acqu
 
 As a result of lessons learned, the current focus is on the economy system, and building a client-server architecture for the networked simulation of a persistent universe. The goal is to create an RTS client, allowing players to take the role of a corporation, where they can define roles for their population, gather resources, build infrastructure, research new technology and produce items in order to make as much money as possible.
 
-Once we have built a persistent universe with a dynamic economy, we will begin rebuilding the ARPG client allowing the player to take control of a single ship and engage in fast-paced combat, questing and trading.
+Once we have built a persistent universe with a dynamic economy, we will begin rebuilding the ARPG client allowing the player to take control of a single ship and engage in fast-paced combat, exploration, trading and narrative questing.
 
 ## Architecture
 
@@ -49,7 +50,7 @@ There are two solutions in this repository. One is a Unity project containing th
 
 ### Third Party Libraries
 
-Client-Server communication is implemented using [LiteNetLib](https://github.com/RevenantX/LiteNetLib), a reliable UDP transport library which we use to transmit [MessagePack](https://github.com/neuecc/MessagePack-CSharp) over the wire.
+Client-Server communication is implemented using [LiteNetLib](https://github.com/RevenantX/LiteNetLib), a semi-reliable UDP transport library which we use to transmit [MessagePack](https://github.com/neuecc/MessagePack-CSharp) over the wire.
 
 Aetheria uses [RethinkDB](https://rethinkdb.com/) for data persistence. To make this possible, all persistent data is marked with attributes for both MessagePack and [JSON.Net](https://www.newtonsoft.com/json) serialization. During operation, the client does not communicate with the database server directly, only the game server does that; the game server caches data relevant to the game and sends it to the clients.
 
@@ -59,7 +60,7 @@ The codebase makes heavy use of C#'s [Language Integrated Queries (LINQ)](https:
 
 ### Data Structures
 
-All of the state which is persisted to the database inherits from the DatabaseEntry class, which uses a GUID as each entry's primary key. Whenever a reference to a database entry must be held, it should be stored as a GUID and when needed, retrieved directly from the DatabaseCache held by the GameContext. References  to Database Entries *should never be stored directly!* This is because the contents of entries can be updated in realtime by the database, causing changes to be pushed to the DatabaseCache and any previously existing DatabaseEntry instances will be outdated and invalid, potentially carrying stale data.
+All of the state which is persisted to the database inherits from the DatabaseEntry class, which uses a GUID as each entry's primary key. Whenever a reference to a database entry must be held, it should be stored as a GUID and when needed, retrieved directly from the DatabaseCache held by the GameContext. References to Database Entries *should never be stored directly!* This is because the contents of entries can be updated in realtime by the database, causing changes to be pushed to the DatabaseCache and any previously existing DatabaseEntry instances will be outdated and invalid, potentially carrying stale data.
 
 #### Equipment
 
@@ -87,13 +88,9 @@ When you have synced with the repository, you can open the project using Unity. 
 
 ### Choosing a Task
 
-We are organizing according to an [Agile development](https://en.wikipedia.org/wiki/Agile_software_development) schedule, with the progress of each sprint being tracked on its own board in the [Github Projects tab](https://github.com/rwvens/Aetheria-Economy/projects). If you wish to take on a task from the board, please contact us to become an official contributor so that the task can be assigned to you directly. Some issues are not on the sprint schedule, those are ideal for developers who want to jump in but are shy about joining.
+We are organizing according to an [Agile development](https://en.wikipedia.org/wiki/Agile_software_development) schedule, with the progress of each sprint being tracked on its own board in the [Github Projects tab](https://github.com/rwvens/Aetheria-Economy/projects). If you wish to take on a task from the board, please contact us to become an official contributor so that the task can be assigned to you directly. Some issues are not on the sprint schedule, those are ideal for developers who want to jump in but are shy about joining. We use the [good first issue](https://github.com/rwvens/Aetheria-Economy/labels/good%20first%20issue) label for issues that don't require heavy knowledge of the codebase.
 
-### Testing Locally
-
-If midgard.gamecult.games is not currently up, you can always build and run the economy server yourself, and connect to it by typing localhost into the main menu. To start the game in this mode you open the "Start" scene and type "localhost" into the host field. You will still need to create an account.
-
-Another way to test the game entirely offline doesn't require running the economy server, but you still need to download the database contents. Instead of connecting to the database with the "Connect" button, click "Connect All", which in addition to syncing item data will also sync galaxy data such as the sectors. Once the tools are finished syncing, which can take a while (you know it's done when the console has stopped logging "Received {table} entry"), you can click "Save" to create a local backup of the entire database contents. If you enter Play mode in the "Main" scene with the TestMode parameter set to true in the game manager, the game will use that local copy instead of requiring a connection to the master server.
+You don't have to be a programmer to contribute, either! We have issue labels for and very much welcome contributions from [writers](https://github.com/rwvens/Aetheria-Economy/labels/worldbuilding) and [game designers](https://github.com/rwvens/Aetheria-Economy/labels/game%20design).
 
 ### Database Editor Tools
 
@@ -107,6 +104,12 @@ At the top of the list view there is a text field where you can enter the URL of
 
 You can unfold the categories of items in the list view to see what items exist. If you select an item, the Database Inspector will populate with all of the available fields of that item. Any changes you make in the Inspector will automatically be pushed to RethinkDB. If you've connected to the production database, this will update the stats of in-game items in real-time!
 
+### Testing Locally
+
+If midgard.gamecult.games is not currently up, you can always build and run the economy server yourself, and connect to it by typing localhost into the main menu. To start the game in this mode you open the "Start" scene and type "localhost" into the host field. You will still need to create an account.
+
+Another way to test the game entirely offline doesn't require running the economy server, but you still need to download the database contents. Instead of connecting to the database with the "Connect" button, click "Connect All", which in addition to syncing item data will also sync galaxy data such as the sectors. Once the tools are finished syncing, which can take a while (you know it's done when the console has stopped logging "Received {table} entry"), you can click "Save" to create a local backup of the entire database contents. If you enter Play mode in the "Main" scene with the TestMode parameter set to true in the game manager, the game will use that local copy instead of requiring a connection to the master server.
+
 ### Debug Console
 
 Pressing the tilde key (`) while running the game allows you to access the console. Here you can view the debug log as well as entering commands which aid in testing various game mechanics.
@@ -115,11 +118,28 @@ Pressing the tilde key (`) while running the game allows you to access the conso
 
 ##### spawn
 
+Creates a new entity under your control
+
+Prerequisites:
+
+- Sector is selected
+- Sector is populated (Sector tab is open)
+
 Arguments:
 
 - Entity type: needs to be "ship", "station" or "turret"
 - Hull name (optional): selects the hull of the spawned entity by name
 - Gear List (optional): every additional argument specifies a Gear item to install
+
+##### newzone
+
+Replaces the current zone with a new one, randomizing the ID and contents
+
+Prerequisites:
+
+- Sector is selected
+
+Arguments: None
 
 ### Galaxy Editor
 

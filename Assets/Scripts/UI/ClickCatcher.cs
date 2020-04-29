@@ -31,14 +31,14 @@ public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		Debug.Log("Pointer Entered");
+		//Debug.Log("Pointer Entered");
 		OnEnter?.Invoke(eventData);
 		PointerIsInside = true;
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		Debug.Log("Pointer Exited");
+		//Debug.Log("Pointer Exited");
 		OnExit?.Invoke(eventData);
 		PointerIsInside = false;
 	}

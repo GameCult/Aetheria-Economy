@@ -148,8 +148,16 @@ public class StrategyGameManager : MonoBehaviour
 
     void spawn(string[] args)
     {
-        Debug.Log("Spawning ship!");
+        if (!TestMode)
+            return;
+        
         var zoneData = _cache.Get<ZoneData>(_populatedZone);
+
+        if (zoneData == null)
+        {
+            Debug.Log("Attempted to spawn ship but no zone is populated!");
+            return;
+        }
 
         // Parse first argument as hull name, default to Fighter if argument missing
         HullData hullData;
@@ -213,15 +221,75 @@ public class StrategyGameManager : MonoBehaviour
         }
     }
 
+    void newzone(string[] args)
+    {
+        var zoneData = _cache.Get<ZoneData>(_selectedZone);
+
+        if (zoneData == null)
+        {
+            Debug.Log("Attempted to regenerate zone but no zone is selected!");
+            return;
+        }
+        
+        if(_populatedZone!=Guid.Empty)
+            _context.UnloadZone(_cache.Get<ZoneData>(_populatedZone));
+        _cache.Delete(zoneData);
+        _galaxyResponseZones.Remove(zoneData.ID);
+        
+        var newZone = zoneData.Copy();
+        newZone.ID = Guid.NewGuid();
+        newZone.Name = newZone.ID.ToString().Substring(0, 8);
+        newZone.Visited = false;
+
+        var linkedZones = _cache.GetAll<ZoneData>().Where(z => z.Wormholes.Any(w => w == zoneData.ID)).ToArray();
+        foreach (var linkedZone in linkedZones)
+        {
+            linkedZone.Wormholes.Remove(zoneData.ID);
+            linkedZone.Wormholes.Add(newZone.ID);
+        }
+        newZone.Wormholes = linkedZones.Select(z => z.ID).ToList();
+        
+        var zone = _galaxyResponseZones[newZone.ID] = new GalaxyResponseZone
+        {
+            Links = newZone.Wormholes.ToArray(),
+            Name = newZone.Name,
+            Position = newZone.Position,
+            ZoneID = newZone.ID
+        };
+        
+        var galaxyZone = _galaxyZoneObjects[zoneData.ID];
+        _galaxyZoneObjects.Remove(zoneData.ID);
+        galaxyZone.Label.text = newZone.Name;
+        _galaxyZoneObjects[newZone.ID] = galaxyZone;
+        
+        var collider = galaxyZone.Background.GetComponent<ClickableCollider>();
+        collider.Clear();
+        collider.OnClick += (_, pointer) =>
+        {
+            if (_selectedGalaxyZone != null)
+                _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
+            if(_selectedZone != zone.ZoneID)
+                CultClient.Send(new ZoneRequestMessage{ZoneID = zone.ZoneID});
+            _selectedZone = zone.ZoneID;
+            _selectedGalaxyZone = galaxyZone;
+            _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
+            _selectedZone = zone.ZoneID;
+                
+            // If the user double clicks on a zone, switch to the zone tab
+            if(pointer.clickCount == 2) ZoneTabButton.OnPointerClick(pointer);
+        };
+        
+        _cache.Add(newZone);
+
+        _selectedZone = newZone.ID;
+        _populatedZone = Guid.Empty;
+        
+        if(_currentTab == ZoneTabButton)
+            PopulateZone();
+    }
+
     private void Update()
     {
-        if (TestMode)
-        {
-            if (Input.GetKeyDown(KeyCode.Space) && _currentTab == ZoneTabButton)
-            {
-                PopulateZone();
-            }
-        }
         if (_context != null)
         {
             _context.Time = Time.time;
@@ -252,6 +320,14 @@ public class StrategyGameManager : MonoBehaviour
                 thrusterScale.x = ship.Key.Axes.First(kvp => kvp.Key is Thruster).Value;
                 ship.Value.Thruster.localScale = thrusterScale;
             }
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (TestMode)
+        {
+            // TODO: Save game state on exit
         }
     }
 

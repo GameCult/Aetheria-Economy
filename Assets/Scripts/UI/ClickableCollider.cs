@@ -10,6 +10,11 @@ public class ClickableCollider : MonoBehaviour
 
     public void Click(PointerEventData eventData) => OnClick?.Invoke(this, eventData);
 
+    public void Clear()
+    {
+        OnClick = null;
+    }
+
     void Start()
     {
         var proto = GetComponent<Prototype>();

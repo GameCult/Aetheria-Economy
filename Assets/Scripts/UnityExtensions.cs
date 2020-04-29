@@ -29,8 +29,8 @@ public static class UnityExtensions
 		//monoList.Add();
 		foreach (var component in monoList)
 		{
-			try
-			{
+			// try
+			// {
 				Type type = component.GetType();
 
 				MethodInfo method = type.GetMethod(methodName, BindingFlags.Instance |
@@ -40,15 +40,15 @@ public static class UnityExtensions
 
 				if(method!=null)
 					method.Invoke(component, new[] { value });
-			}
-			catch (Exception e)
-			{
-				//Re-create the Error thrown by the original SendMessage function
-				if (options == SendMessageOptions.RequireReceiver)
-					Debug.LogError("SendMessage " + methodName + " has no receiver!");
-
-				Debug.LogError(e.Message);
-			}
+			// }
+			// catch (Exception e)
+			// {
+			// 	//Re-create the Error thrown by the original SendMessage function
+			// 	if (options == SendMessageOptions.RequireReceiver)
+			// 		Debug.LogError("SendMessage " + methodName + " has no receiver!");
+			//
+			// 	Debug.LogError(e.Message);
+			// }
 		}
 	}
 
