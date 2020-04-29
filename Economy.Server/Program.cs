@@ -160,7 +160,7 @@ namespace ChatApp.Server
                         global: context.GlobalData,
                         zone: zone,
                         mapLayers: context.MapLayers.Values,
-                        resources: cache.GetAll<SimpleCommodityData>(),
+                        resources: cache.GetAll<SimpleCommodityData>().Where(i=>i.ResourceDensity.Any()),
                         orbitData: out orbits,
                         planetsData: out planets);
                     cache.AddAll(orbits);

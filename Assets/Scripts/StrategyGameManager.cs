@@ -425,7 +425,7 @@ public class StrategyGameManager : MonoBehaviour
                 global: _context.GlobalData,
                 zone: zoneData,
                 mapLayers: _context.MapLayers.Values,
-                resources: _cache.GetAll<SimpleCommodityData>(),
+                resources: _cache.GetAll<SimpleCommodityData>().Where(i=>i.ResourceDensity.Any()),
                 orbitData: out orbits,
                 planetsData: out planets);
             _cache.AddAll(orbits);

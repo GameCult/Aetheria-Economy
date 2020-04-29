@@ -15,7 +15,7 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     [InspectableDatabaseLink(typeof(ItemData)), JsonProperty("ingredients"), Key(2)]  
     public Dictionary<Guid, int> Ingredients = new Dictionary<Guid, int>();
 
-    [InspectableDatabaseLink(typeof(CraftedItemData)), JsonProperty("item"), Key(3)]  
+    [InspectableDatabaseLink(typeof(ItemData)), JsonProperty("item"), Key(3)]  
     public Guid Item;
 
     [InspectableField, JsonProperty("quantity"), Key(4)]
