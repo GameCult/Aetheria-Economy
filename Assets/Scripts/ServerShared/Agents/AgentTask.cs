@@ -1,10 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class AgentTask
 {
-    
+    public abstract AgentJob JobType { get; }
+    public int Priority;
+    public Guid Zone;
 }
 
 public enum AgentJob
@@ -13,5 +16,6 @@ public enum AgentJob
     Haul,
     Tow,
     Defend,
-    Attack
+    Attack,
+    Explore
 }

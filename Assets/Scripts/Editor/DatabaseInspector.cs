@@ -642,6 +642,12 @@ public class DatabaseInspector : EditorWindow
                 using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
                     var entry = DatabaseCache.Get(ingredient.Key);
+                    if (entry == null)
+                    {
+                        value.Remove(ingredient.Key);
+                        GUI.changed = true;
+                        return;
+                    }
                     if(entry is INamedEntry named)
                         GUILayout.Label(named.EntryName);
                     else GUILayout.Label(entry.ID.ToString());

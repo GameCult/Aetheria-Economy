@@ -14,20 +14,20 @@ using Unity.Mathematics;
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<ItemData>))]
 public abstract class ItemData : DatabaseEntry, INamedEntry
 {
-    [InspectableField, JsonProperty("name"), Key(1)]  
+    [InspectableField, JsonProperty("name"), Key(1)]
     public string Name;
     
-    [InspectableText, JsonProperty("description"), Key(2)]  
+    [InspectableText, JsonProperty("description"), Key(2)]
     public string Description;
 
-    [InspectableField, JsonProperty("mass"), Key(3)]  
+    [InspectableField, JsonProperty("mass"), Key(3)]
     public float Mass;
 
-    [InspectableField, JsonProperty("size"), Key(4)]  
+    [InspectableField, JsonProperty("size"), Key(4)]
     public float Size;
 
     // Heat needed to change temperature of 1 gram by 1 degree
-    [InspectableField, JsonProperty("specificHeat"), Key(5)]  
+    [InspectableField, JsonProperty("specificHeat"), Key(5)]
     public float SpecificHeat;
     
     [IgnoreMember] public string EntryName
@@ -75,25 +75,25 @@ public class CompoundCommodityData : CraftedItemData {}
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<EquippableItemData>))]
 public abstract class EquippableItemData : CraftedItemData
 {
-    [InspectableField, JsonProperty("draw"), Key(6)]  
+    [InspectableField, JsonProperty("draw"), Key(6)]
     public PerformanceStat EnergyDraw = new PerformanceStat();
 
-    [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(7)]  
+    [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(7)]
     public float4[] HeatPerformanceCurve;
 
-    [TemperatureInspectable, JsonProperty("minTemp"), Key(8)]  
+    [TemperatureInspectable, JsonProperty("minTemp"), Key(8)]
     public float MinimumTemperature;
 
-    [TemperatureInspectable, JsonProperty("maxTemp"), Key(9)]  
+    [TemperatureInspectable, JsonProperty("maxTemp"), Key(9)]
     public float MaximumTemperature;
 
-    [InspectableField, JsonProperty("durabilityStat"), Key(10)]  
+    [InspectableField, JsonProperty("durabilityStat"), Key(10)]
     public PerformanceStat Durability = new PerformanceStat();
 
-    [InspectableField, JsonProperty("durabilityExponent"), Key(11)]  
+    [InspectableField, JsonProperty("durabilityExponent"), Key(11)]
     public PerformanceStat DurabilityExponent = new PerformanceStat();
 
-    [InspectableField, JsonProperty("heatExponent"), Key(12)]  
+    [InspectableField, JsonProperty("heatExponent"), Key(12)]
     public PerformanceStat HeatExponent = new PerformanceStat();
 
     [InspectableField, JsonProperty("behaviors"), Key(13)]  

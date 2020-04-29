@@ -3,31 +3,37 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using JsonKnownTypes;
+using MessagePack;
+using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-public class Entity
+[MessagePackObject, 
+ JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<Entity>))]
+public class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
 {
-    public Dictionary<IAnalogBehavior, float> AxisOverrides = new Dictionary<IAnalogBehavior, float>();
-    public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
+    [IgnoreMember] public Dictionary<IAnalogBehavior, float> AxisOverrides = new Dictionary<IAnalogBehavior, float>();
+    [IgnoreMember] public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     public float Temperature;
     public float Energy;
     public float2 Position;
     public float2 Direction = float2(0,1);
     public float2 Velocity;
-    public Dictionary<Guid, List<IActivatedBehavior>> Bindings;
-    public Dictionary<IAnalogBehavior, float> Axes;
-    public readonly GameContext Context;
+    [IgnoreMember] public Dictionary<Guid, List<IActivatedBehavior>> Bindings;
+    [IgnoreMember] public Dictionary<IAnalogBehavior, float> Axes;
     public readonly List<ItemInstance> Cargo;
     public readonly List<Gear> EquippedItems;
     
-    protected readonly List<IBehavior> Behaviors;
+    [IgnoreMember] protected List<IBehavior> Behaviors;
     
     public Gear Hull { get; }
 
-    public float Mass { get; private set; }
-    public float SpecificHeat { get; private set; }
-    public float Visibility => VisibilitySources.Values.Sum();
+    [IgnoreMember] public float Mass { get; private set; }
+    [IgnoreMember] public float SpecificHeat { get; private set; }
+    [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
+
+    public object[] PersistedBehaviors;
 
     public Entity(GameContext context, Gear hull, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo)
     {
@@ -102,5 +108,40 @@ public class Entity
 
         foreach (var item in EquippedItems.Where(item => item.ItemData.Performance(Temperature) < .01f))
             item.Durability -= delta;
+    }
+
+    public void OnBeforeSerialize()
+    {
+        PersistedBehaviors = Behaviors
+            .Where(b => b is IPersistentBehavior)
+            .Cast<IPersistentBehavior>()
+            .Select(b => b.Store()).ToArray();
+    }
+
+    public void OnAfterDeserialize()
+    {
+        RecalculateMass();
+
+        var activeItems = Hull == null ? EquippedItems : EquippedItems.Append(Hull);
+        
+        Behaviors = activeItems
+            .Where(i=>i.ItemData.Behaviors?.Any()??false)
+            .SelectMany(i => i.ItemData.Behaviors
+                .Select(bd => bd.CreateInstance(Context, this, i)))
+            .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
+        
+        Bindings = Behaviors
+            .Where(b => b is IActivatedBehavior)
+            .GroupBy(b => b.Item.ID, (guid, behaviors) => new {guid, behaviors})
+            .ToDictionary(g => g.guid, g => g.behaviors.Cast<IActivatedBehavior>().ToList());
+        
+        Axes = Behaviors
+            .Where(b => b is IAnalogBehavior)
+            .ToDictionary(b => b as IAnalogBehavior, b => 0f);
+        
+        foreach (var behavior in Behaviors)
+        {
+            behavior.Initialize();
+        }
     }
 }

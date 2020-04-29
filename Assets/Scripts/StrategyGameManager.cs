@@ -126,9 +126,12 @@ public class StrategyGameManager : MonoBehaviour
 
             if (_currentTab == ZoneTabButton)
             {
-                if (_populatedZone != _selectedZone && _cache.Get<ZoneData>(_selectedZone) != null)
+                var zone = _cache.Get<ZoneData>(_selectedZone);
+                if (_populatedZone != _selectedZone && zone != null)
                     PopulateZone();
                 Camera.transform.position = -Vector3.forward;
+                if (zone != null)
+                    Camera.orthographicSize = zone.Radius * ZoneSizeScale;
             }
 
             if (_currentTab == TechTabButton)
