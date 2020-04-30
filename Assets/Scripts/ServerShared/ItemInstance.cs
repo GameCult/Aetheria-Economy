@@ -35,7 +35,7 @@ public abstract class CraftedItemInstance : ItemInstance
 
     [JsonProperty("ingredients"), Key(3)]  public List<Guid> Ingredients = new List<Guid>();
     
-    [JsonProperty("blueprint"), Key(4)]  public BlueprintData Blueprint;
+    [JsonProperty("blueprint"), Key(4)]  public Guid Blueprint;
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]

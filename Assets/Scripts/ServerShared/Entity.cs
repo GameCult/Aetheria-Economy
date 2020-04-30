@@ -33,7 +33,7 @@ public class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
     [IgnoreMember] public float SpecificHeat { get; private set; }
     [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
 
-    public object[] PersistedBehaviors;
+    public PersistentBehaviorData[] PersistedBehaviors;
 
     public Entity(GameContext context, Gear hull, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo)
     {
@@ -129,6 +129,14 @@ public class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
             .SelectMany(i => i.ItemData.Behaviors
                 .Select(bd => bd.CreateInstance(Context, this, i)))
             .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
+
+        var index = 0;
+        foreach (var persistentBehavior in Behaviors
+            .Where(b => b is IPersistentBehavior)
+            .Cast<IPersistentBehavior>())
+        {
+            persistentBehavior.Restore(PersistedBehaviors[index++]);
+        }
         
         Bindings = Behaviors
             .Where(b => b is IActivatedBehavior)

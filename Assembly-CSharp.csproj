@@ -918,7 +918,6 @@
     <Compile Include="Assets\Scripts\UI\ZoneShip.cs" />
     <Compile Include="Assets\Scripts\UnityExtensions.cs" />
     <Compile Include="Assets\Scripts\UnityFormatters.cs" />
-    <Compile Include="Assets\Scripts\ZoneGeneratorTest.cs" />
     <None Include="Assets\Shaders\AdditiveUI.shader" />
     <None Include="Assets\Shaders\Background.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />

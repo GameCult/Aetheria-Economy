@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using static Unity.Mathematics.math;
+using Random = Unity.Mathematics.Random;
 
 public class GameContext
 {
+    public Random Random = new Random((uint) (DateTime.Now.Ticks%uint.MaxValue));
     public List<AgentController> Agents = new List<AgentController>();
     public Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>> ZoneContents = new Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>>();
     public Dictionary<string, GalaxyMapLayerData> MapLayers = new Dictionary<string, GalaxyMapLayerData>();
@@ -197,8 +199,8 @@ public class GameContext
     // Determine quality of either the item itself or the specific ingredient this stat depends on
     public float Quality(PerformanceStat stat, Gear item)
     {
-        
-        var activeEffects = item.Blueprint.StatEffects.Where(x => GetAffectedStat(item.Blueprint, x) == stat).ToArray();
+        var blueprint = Cache.Get<BlueprintData>(item.Blueprint);
+        var activeEffects = blueprint.StatEffects.Where(x => GetAffectedStat(blueprint, x) == stat).ToArray();
         float quality;
         if (!activeEffects.Any())
             quality = item.CompoundQuality();
@@ -309,7 +311,7 @@ public class GameContext
                 ID = Guid.NewGuid(),
                 Ingredients = ingredients.Select(i=>i.ID).ToList(),
                 Quality = quality,
-                Blueprint = blueprint
+                Blueprint = blueprint.ID
             };
             newGear.Durability = Evaluate(equippableItemData.Durability, newGear);
             Cache.Add(newGear);
@@ -323,7 +325,7 @@ public class GameContext
             ID = Guid.NewGuid(),
             Ingredients = ingredients.Select(i=>i.ID).ToList(),
             Quality = quality,
-            Blueprint = blueprint
+            Blueprint = blueprint.ID
         };
         Cache.Add(newCommodity);
         return newCommodity;

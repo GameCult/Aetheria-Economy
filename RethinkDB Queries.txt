@@ -7,3 +7,9 @@ r.db('Aetheria').table('Galaxy').filter({$type:'PlanetData'}).delete()
 
 Find Unassigned Items
 r.db('Aetheria').table('Items').filter({mass:0}).pluck('$type','name')
+
+Find Unassigned Blueprints
+r.db('Aetheria').table('Items').filter({researchTime:0}).pluck('name')
+
+Find Unassigned Stats
+r.db('Aetheria').table('Items').filter({durabilityStat:{min:0}}).pluck('$type','name')

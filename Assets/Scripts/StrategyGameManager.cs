@@ -422,7 +422,7 @@ public class StrategyGameManager : MonoBehaviour
             OrbitData[] orbits;
             PlanetData[] planets;
             ZoneGenerator.GenerateZone(
-                global: _context.GlobalData,
+                context: _context,
                 zone: zoneData,
                 mapLayers: _context.MapLayers.Values,
                 resources: _cache.GetAll<SimpleCommodityData>().Where(i=>i.ResourceDensity.Any()),

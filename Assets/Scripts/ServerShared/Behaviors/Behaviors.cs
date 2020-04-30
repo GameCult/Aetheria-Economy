@@ -32,9 +32,12 @@ public interface IAnalogBehavior : IBehavior
 
 public interface IPersistentBehavior//<T> where T : IBehavior
 {
-    object Store();
-    IBehavior Restore(GameContext context, Entity entity, Gear item, Guid data);
+    PersistentBehaviorData Store();
+    void Restore(PersistentBehaviorData data);
 }
+[Union(0, typeof(FactoryPersistence)), 
+ JsonConverter(typeof(JsonKnownTypesConverter<PersistentBehaviorData>))]
+public class PersistentBehaviorData { }
 
 [InspectableField, 
  Union(0, typeof(ProjectileWeaponData)), 

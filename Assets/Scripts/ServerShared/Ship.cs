@@ -10,8 +10,6 @@ using static Unity.Mathematics.math;
 [MessagePackObject]
 public class Ship : Entity
 {
-    [Key("hull")] 
-    public Gear Hull;
     [Key("hardpoints")] 
     public List<Hardpoint> Hardpoints = new List<Hardpoint>();
     

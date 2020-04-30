@@ -5,6 +5,7 @@ using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using Random = Unity.Mathematics.Random;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class FactoryData : IBehaviorData
@@ -31,12 +32,13 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
     
     private FactoryData _data;
     
-    private BlueprintData _blueprint;
+    private Guid _blueprint;
     private float _remainingManHours;
     private bool _retooling;
+    private bool _producing;
     private List<ItemInstance> _reservedStock = new List<ItemInstance>();
     private int _assignedPopulation;
-    private int _productionQuality;
+    private float _productionQuality;
 
     public Factory(GameContext context, FactoryData data, Entity entity, Gear item)
     {
@@ -52,58 +54,91 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
 
     public void Update(float delta)
     {
-        if (_retooling || _reservedStock.Count > 0)
+        var blueprint = Context.Cache.Get<BlueprintData>(_blueprint);
+        if (_retooling || _producing)
         {
-            _remainingManHours -= delta / 3600 * (_assignedPopulation + _data.AutomationPoints) / _productionQuality;
+            _remainingManHours -= delta / 3600 * (_assignedPopulation + _data.AutomationPoints) /
+                                  pow(lerp(blueprint.QualityFloor, 1, saturate(_productionQuality)),
+                                      blueprint.ProductionExponent);
         }
 
         if (_remainingManHours < 0)
         {
             if (_retooling)
                 _retooling = false;
-            else if (_reservedStock.Count > 0)
+            else if (_producing)
             {
-                var blueprintItemData = Context.Cache.Get(_blueprint.Item);
+                var blueprintItemData = Context.Cache.Get(blueprint.Item);
 
-                for (int i = 0; i < _blueprint.Quantity; i++)
+                if (blueprintItemData is CraftedItemData)
                 {
-                    CraftedItemInstance newItem;
-                    
-                    if (blueprintItemData is EquippableItemData equippableItemData)
+                    for (int i = 0; i < blueprint.Quantity; i++)
                     {
-                        var newGear = new Gear
+                        CraftedItemInstance newItem;
+
+                        // Applying exponents to two random numbers and adding them produces a range of interesting probability distributions
+                        var quality = blueprint.Quality *
+                            pow(_productionQuality, blueprint.QualityExponent) *
+                            (pow(Context.Random.NextFloat(), blueprint.RandomExponent) +
+                             pow(Context.Random.NextFloat(), blueprint.RandomExponent)) / 2;
+                    
+                        if (blueprintItemData is EquippableItemData equippableItemData)
+                        {
+                            var newGear = new Gear
+                            {
+                                Context = Context,
+                                Data = blueprintItemData.ID,
+                                ID = Guid.NewGuid(),
+                                Ingredients = _reservedStock.Select(ii=>ii.ID).ToList(),
+                                Quality = quality,
+                                Blueprint = _blueprint
+                            };
+                            newGear.Durability = Context.Evaluate(equippableItemData.Durability, newGear);
+                            newItem = newGear;
+                        }
+                        else
+                        {
+                            newItem = new CompoundCommodity
+                            {
+                                Context = Context,
+                                Data = blueprintItemData.ID,
+                                ID = Guid.NewGuid(),
+                                Ingredients = _reservedStock.Select(ii=>ii.ID).ToList(),
+                                Quality = quality,
+                                Blueprint = _blueprint
+                            };
+                        }
+                        Context.Cache.Add(newItem);
+                        Entity.Cargo.Add(newItem);
+                    }
+                }
+                else
+                {
+                    var simpleCommodityData = blueprintItemData as SimpleCommodityData;
+                    var simpleCommodityInstance = Entity.Cargo.FirstOrDefault(i => i.Data == simpleCommodityData.ID) as SimpleCommodity;
+                    if (simpleCommodityInstance == null)
+                    {
+                        simpleCommodityInstance = new SimpleCommodity
                         {
                             Context = Context,
-                            Data = blueprintItemData.ID,
+                            Data = simpleCommodityData.ID,
                             ID = Guid.NewGuid(),
-                            Ingredients = _reservedStock.Select(ii=>ii.ID).ToList(),
-                            Quality = _productionQuality * _blueprint.Quality,
-                            Blueprint = _blueprint
+                            Quantity = blueprint.Quantity
                         };
-                        newGear.Durability = Context.Evaluate(equippableItemData.Durability, newGear);
-                        newItem = newGear;
+                        Context.Cache.Add(simpleCommodityInstance);
+                        Entity.Cargo.Add(simpleCommodityInstance);
                     }
                     else
                     {
-                        newItem = new CompoundCommodity
-                        {
-                            Context = Context,
-                            Data = blueprintItemData.ID,
-                            ID = Guid.NewGuid(),
-                            Ingredients = _reservedStock.Select(ii=>ii.ID).ToList(),
-                            Quality = _productionQuality * _blueprint.Quality,
-                            Blueprint = _blueprint
-                        };
+                        simpleCommodityInstance.Quantity += blueprint.Quantity;
                     }
-                    Context.Cache.Add(newItem);
-                    Entity.Cargo.Add(newItem);
                 }
                 Entity.RecalculateMass();
 
                 var simpleIngredients = new List<SimpleCommodity>();
                 var compoundIngredients = new List<CompoundCommodity>();
                 var hasAllIngredients = true;
-                foreach (var kvp in _blueprint.Ingredients)
+                foreach (var kvp in blueprint.Ingredients)
                 {
                     var itemData = Context.Cache.Get(kvp.Key);
                     if (itemData is SimpleCommodityData)
@@ -137,7 +172,7 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
                     }
                     foreach (var simpleCommodity in simpleIngredients)
                     {
-                        var blueprintQuantity = _blueprint.Ingredients
+                        var blueprintQuantity = blueprint.Ingredients
                             .First(ingredient => ingredient.Key == simpleCommodity.ID).Value;
                         if (simpleCommodity.Quantity == blueprintQuantity)
                         {
@@ -157,35 +192,49 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
                             _reservedStock.Add(newSimpleCommodity);
                         }
                     }
+                    Entity.RecalculateMass();
+                    _remainingManHours = blueprint.ProductionTime;
+                    _producing = true;
                 }
             }
         }
     }
 
-    public object Store()
+    public PersistentBehaviorData Store()
     {
         return new FactoryPersistence
         {
-            Blueprint = _blueprint.ID,
+            Blueprint = _blueprint,
             RemainingManHours = _remainingManHours,
             Retooling = _retooling,
-            ReservedStock = _reservedStock.Select(i=>i.ID).ToArray()
+            Producing = _producing,
+            ReservedStock = _reservedStock.Select(i=>i.ID).ToArray(),
+            AssignedPopulation = _assignedPopulation,
+            ProductionQuality = _productionQuality
         };
     }
 
-    public IBehavior Restore(GameContext context, Entity entity, Gear item, Guid data)
+    public void Restore(PersistentBehaviorData data)
     {
-        var equippable = item.ItemData;
-        var behaviorData = (FactoryData) equippable.Behaviors.First(b => b is FactoryData);
-        return new Factory(context, behaviorData, entity, item);
+        var factoryPersistence = data as FactoryPersistence;
+        _blueprint = factoryPersistence.Blueprint;
+        _remainingManHours = factoryPersistence.RemainingManHours;
+        _retooling = factoryPersistence.Retooling;
+        _producing = factoryPersistence.Producing;
+        _reservedStock = factoryPersistence.ReservedStock.Select(id => Context.Cache.Get<ItemInstance>(id)).ToList();
+        _assignedPopulation = factoryPersistence.AssignedPopulation;
+        _productionQuality = factoryPersistence.ProductionQuality;
     }
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class FactoryPersistence
+public class FactoryPersistence : PersistentBehaviorData
 {
     public Guid Blueprint;
     public float RemainingManHours;
     public bool Retooling;
+    public bool Producing;
     public Guid[] ReservedStock;
+    public int AssignedPopulation;
+    public float ProductionQuality;
 }
