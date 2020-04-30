@@ -1747,6 +1747,7 @@
             <e p="TechArrow.cs" t="Include" />
             <e p="TechNode.cs" t="Include" />
             <e p="ZoneObject.cs" t="Include" />
+            <e p="ZonePropertiesResource.cs" t="Include" />
             <e p="ZoneRenderer.cs" t="Include" />
             <e p="ZoneShip.cs" t="Include" />
           </e>

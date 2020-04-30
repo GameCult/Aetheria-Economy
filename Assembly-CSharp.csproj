@@ -914,6 +914,7 @@
     <Compile Include="Assets\Scripts\UI\TechArrow.cs" />
     <Compile Include="Assets\Scripts\UI\TechNode.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneObject.cs" />
+    <Compile Include="Assets\Scripts\UI\ZonePropertiesResource.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneRenderer.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneShip.cs" />
     <Compile Include="Assets\Scripts\UnityExtensions.cs" />

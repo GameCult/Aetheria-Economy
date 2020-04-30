@@ -64,6 +64,7 @@ public class GameContext
 
         var zoneData = Cache.Get<ZoneData>(zoneID);
         
+        // TODO: Associate planets with stored entities for planetary colonies
         var planetsData = zoneData.Planets.Select(id => Cache.Get<PlanetData>(id)).ToArray();
         var planetEntities = planetsData.ToDictionary(p => p,
             p => new OrbitalEntity(this, null, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), p.Belt ? Cache.Get<OrbitData>(p.Orbit).Parent : p.Orbit));

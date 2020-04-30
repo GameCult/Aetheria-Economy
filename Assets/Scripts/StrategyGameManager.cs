@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NaughtyAttributes;
 using RethinkDb.Driver.Net;
+using TMPro;
 using UnityEngine;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
@@ -12,34 +14,54 @@ using Random = UnityEngine.Random;
 
 public class StrategyGameManager : MonoBehaviour
 {
+    public bool TestMode;
+    
+    [Section("Scene Links")]
     public Camera Camera;
+    public TechTreeMsagl TechTree;
+    public MeshRenderer GalaxyBackground;
+    public Transform ZoneRoot;
+    public MeshRenderer ZoneBackground;
+    public MeshRenderer ZoneBoundary;
+    public ClickRaycaster ClickRaycaster;
+    
+    [Section("Tab Links")]
     public TabGroup PrimaryTabGroup;
     public TabButton GalaxyTabButton;
     public TabButton ZoneTabButton;
     public TabButton TechTabButton;
-    public TechTreeMsagl TechTree;
+    
+    [Section("Prefabs & Prototypes")]
     public Prototype GalaxyZonePrototype;
     public Prototype GalaxyZoneLinkPrototype;
-    public MeshRenderer GalaxyBackground;
-    public float GalaxyScale;
     public ZoneObject ZoneObjectPrefab;
     public ZoneShip ZoneShipPrefab;
     public ParticleSystem BeltPrefab;
-    public Transform ZoneRoot;
+    
+    [Section("Textures")]
     public Texture2D PlanetoidSprite;
     public Texture2D PlanetSprite;
     public Texture2D GasGiantSprite;
     public Texture2D OrbitalSprite;
     public Texture2D SunSprite;
     public Texture2D WormholeSprite;
+    
+    [Section("UI Properties")]
     public Color SelectedColor;
     public Color UnselectedColor;
+    public float GalaxyScale;
     public float ZoneSizeScale = .01f;
     public float ZoneMassScale = .01f;
     public float ZoneMassPower = .5f;
-    public MeshRenderer ZoneBackground;
-    public MeshRenderer ZoneBoundary;
-    public bool TestMode;
+
+    [Section("Zone Properties Panel")]
+    public RectTransform ZonePropertiesPanel;
+    public TextMeshProUGUI ZoneTitle;
+    public RectTransform[] ZonePlanetProperties;
+    public TextMeshProUGUI ZonePropertiesName;
+    public TextMeshProUGUI ZonePropertiesMass;
+    public Transform ZonePropertiesResourcesParent;
+    public ZonePropertiesResource ZonePropertiesResourcePrefab;
 
     private DatabaseCache _cache;
     private GameContext _context;
@@ -55,6 +77,7 @@ public class StrategyGameManager : MonoBehaviour
     private Dictionary<OrbitalEntity, ParticleSystem> _zoneBelts = new Dictionary<OrbitalEntity, ParticleSystem>();
     private Dictionary<Ship, ZoneShip> _zoneShips = new Dictionary<Ship, ZoneShip>();
     private List<ZoneObject> _wormholes = new List<ZoneObject>();
+    private List<ZonePropertiesResource> _zonePropertiesResources = new List<ZonePropertiesResource>();
     private Vector3 _galaxyCameraPos = -Vector3.forward;
     private float _galaxyOrthoSize = 50;
     private Material _boundaryMaterial;
@@ -147,6 +170,8 @@ public class StrategyGameManager : MonoBehaviour
         
         _boundaryMaterial = ZoneBoundary.material;
         _backgroundMaterial = ZoneBackground.material;
+        
+        ClickRaycaster.OnClickMiss += () => ZonePropertiesPanel.gameObject.SetActive(false);
     }
 
     void spawn(string[] args)
@@ -411,6 +436,8 @@ public class StrategyGameManager : MonoBehaviour
 
         ZoneData zoneData = _cache.Get<ZoneData>(_populatedZone);
 
+        ZoneTitle.text = zoneData.Name;
+
         if (TestMode && !zoneData.Visited)
         {
             float2 position;
@@ -460,6 +487,27 @@ public class StrategyGameManager : MonoBehaviour
                         planetData.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
                         planetData.Mass > _context.GlobalData.PlanetMass ? PlanetSprite :
                         PlanetoidSprite);
+                    planetObject.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
+                        {
+                            ZonePropertiesPanel.gameObject.SetActive(true);
+                            foreach (var zonePlanetProperty in ZonePlanetProperties)
+                                zonePlanetProperty.gameObject.SetActive(true);
+                            
+                            foreach (var zonePropertiesResource in _zonePropertiesResources)
+                                Destroy(zonePropertiesResource.gameObject);
+                            _zonePropertiesResources.Clear();
+
+                            ZonePropertiesName.text = planetData.Name;
+                            ZonePropertiesMass.text = $"{planetData.Mass}";
+                            foreach (var resource in planetData.Resources)
+                            {
+                                var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
+                                var resourceInstance = Instantiate(ZonePropertiesResourcePrefab, ZonePropertiesResourcesParent);
+                                resourceInstance.NameLabel.text = itemData.Name;
+                                resourceInstance.QuantityLabel.text = $"{resource.Value:0}";
+                                _zonePropertiesResources.Add(resourceInstance);
+                            }
+                        };
                 }
                 else
                 {
