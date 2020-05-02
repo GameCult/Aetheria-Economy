@@ -21,7 +21,8 @@ public enum HardpointType
     Energy,
     Ballistic,
     Launcher,
-    Infrastructure
+    Infrastructure,
+    ControlModule
 }
 
 public enum DamageType

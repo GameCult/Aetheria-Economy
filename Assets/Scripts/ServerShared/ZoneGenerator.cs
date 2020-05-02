@@ -76,7 +76,7 @@ public class ZoneGenerator
 			        planet.Mass > context.GlobalData.PlanetMass ? BodyType.Planet : BodyType.Planetoid);
 		        if ((bodyType & r.ResourceBodyType) != 0)
 		        {
-			        float quantity = context.Random.NextUnbounded(r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]), r.ResourceDensityBiasPower);
+			        float quantity = context.Random.NextUnbounded(r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]), r.DensityBiasPower, r.RandomCeiling);
 			        if (r.ResourceFloor < quantity) dictionary.Add(r.ID, quantity);
 		        }
 	        }
@@ -128,7 +128,7 @@ public class ZoneGenerator
 		if (rosette)
 		{
 			// Create a rosette with a number of vertices between 2 and 9 inclusive
-			root.ExpandRosette((int)(random.NextFloat(1, 3) * random.NextFloat(2, 3)));
+			root.ExpandRosette((int)(random.NextFloat(1, 5) + random.NextFloat(1, 5)));
 		
 			// Create a small number of less massive "captured" planets orbiting past the rosette
 			root.ExpandSolar(
@@ -146,7 +146,7 @@ public class ZoneGenerator
 				var m = p.Mass / averageChildMass;
 				// Give each child in the rosette its own mini solar system
 				p.ExpandSolar(
-					count: (int) (random.NextFloat() * random.NextFloat() * m * 5 + 1), 
+					count: (int) (random.NextFloat(1, 3 * m) + random.NextFloat(1, 3 * m)), 
 					massMulMin: 0.75f, 
 					massMulMax: 2.5f, 
 					distMulMin: 1 + m * .25f,

@@ -35,6 +35,7 @@ public interface INamedEntry
  Union(14, typeof(StationData)), 
  Union(15, typeof(OrbitData)), 
  Union(16, typeof(PlanetData)),
+ Union(17, typeof(PersonalityAttribute)),
  // Union(17, typeof(ShipData)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 //[Union(21, typeof(ContractData))]

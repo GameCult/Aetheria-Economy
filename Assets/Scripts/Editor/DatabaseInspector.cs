@@ -206,7 +206,7 @@ public class DatabaseInspector : EditorWindow
         else if (type == typeof(Dictionary<Guid, float>))
         {
             var dict = (Dictionary<Guid, float>) field.GetValue(obj);
-            Inspect(field.Name.SplitCamelCase(), ref dict);
+            Inspect(field.Name.SplitCamelCase(), ref dict, link.EntryType);
         }
         else if (type == typeof(List<BlueprintStatEffect>))
         {
@@ -685,7 +685,7 @@ public class DatabaseInspector : EditorWindow
         }
     }
     
-    public void Inspect(string label, ref Dictionary<Guid,float> value)
+    public void Inspect(string label, ref Dictionary<Guid,float> value, Type referenceType)
     {
         Space();
         LabelField(label, EditorStyles.boldLabel);
@@ -703,7 +703,17 @@ public class DatabaseInspector : EditorWindow
             {
                 using (var h = new HorizontalScope(_list.ListItemStyle))
                 {
-                    GUILayout.Label(DatabaseCache.Get(ingredient.Key).ID.ToString());
+                    var entry = DatabaseCache.Get(ingredient.Key);
+                    if (entry == null)
+                    {
+                        value.Remove(ingredient.Key);
+                        GUI.changed = true;
+                        return;
+                    }
+                    
+                    if(entry is INamedEntry named)
+                        GUILayout.Label(named.EntryName);
+                    else GUILayout.Label(entry.ID.ToString());
                     value[ingredient.Key] = DelayedFloatField(value[ingredient.Key], GUILayout.Width(50));
                     
                     var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
@@ -715,15 +725,18 @@ public class DatabaseInspector : EditorWindow
 
             if (v.rect.Contains(Event.current.mousePosition))
             {
+                var dragData = DragAndDrop.GetGenericData("Item");
+                var isId = dragData is Guid guid;
+                var dragEntry = isId ? DatabaseCache.Get(guid) : null;
+                var correctType = referenceType.IsInstanceOfType(dragEntry);
                 if(Event.current.type == EventType.DragUpdated)
-                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                    DragAndDrop.visualMode = correctType ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
                 else if(Event.current.type == EventType.DragPerform)
                 {
-                    var guid = DragAndDrop.GetGenericData("Item");
-                    if (guid is Guid)
+                    if (isId && correctType)
                     {
                         DragAndDrop.AcceptDrag();
-                        value[(Guid) guid] = 1;
+                        value[guid] = 1;
                         GUI.changed = true;
                     }
                 }

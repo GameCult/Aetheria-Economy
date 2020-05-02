@@ -50,6 +50,12 @@ public class BlueprintData : DatabaseEntry, INamedEntry
 
     [InspectableDatabaseLink(typeof(CraftedItemData)), JsonProperty("factoryItem"), Key(14)]
     public Guid FactoryItem;
+
+    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("resourceRequirements"), Key(15)]  
+    public Dictionary<Guid, int> ResourceRequirements = new Dictionary<Guid, int>();
+    
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("productionProfile"), Key(16)]  
+    public Dictionary<Guid, float> ProductionProfile = new Dictionary<Guid, float>();
     
     [IgnoreMember] public string EntryName
     {
@@ -64,16 +70,16 @@ public class BlueprintStatEffect
     [InspectableField, JsonProperty("ingredient"), Key(1)]
     public Guid Ingredient;
     
-    [InspectableField, JsonProperty("stat"), Key(2)]  
+    [InspectableField, JsonProperty("stat"), Key(2)]
     public StatReference StatReference = new StatReference();
 }
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class StatReference
 {
-    [InspectableType(typeof(IBehaviorData)), JsonProperty("behavior"), Key(1)]  
+    [InspectableType(typeof(IBehaviorData)), JsonProperty("behavior"), Key(1)]
     public string Behavior;
     
-    [InspectableField, JsonProperty("stat"), Key(2)]  
+    [InspectableField, JsonProperty("stat"), Key(2)]
     public string Stat;
 }

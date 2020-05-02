@@ -50,10 +50,14 @@ public class SimpleCommodityData : ItemData
 
     // Controls the bias power variable during resource placement
     [InspectableField, JsonProperty("resourceDensityBiasPower"), Key(8)]
-    public float ResourceDensityBiasPower = 5;
+    public float DensityBiasPower = 5;
+
+    // Controls the bias power variable during resource placement
+    [InspectableField, JsonProperty("resourceRandomCeiling"), Key(9)]
+    public float RandomCeiling = .9f;
 
     // Minimum amount of resources needed for presence to register
-    [InspectableField, JsonProperty("resourceFloor"), Key(9)]
+    [InspectableField, JsonProperty("resourceFloor"), Key(10)]
     public float ResourceFloor = 10f;
 }
 
@@ -68,7 +72,11 @@ public abstract class CraftedItemData : ItemData
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject]
-public class CompoundCommodityData : CraftedItemData {}
+public class CompoundCommodityData : CraftedItemData
+{
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("demandProfile"), Key(6)]  
+    public Dictionary<Guid, float> DemandProfile = new Dictionary<Guid, float>();
+}
 
 [Union(0, typeof(GearData)), 
  Union(1, typeof(HullData)), 
@@ -209,5 +217,18 @@ public class PerformanceStat
             ConstantModifiers[entity] = new Dictionary<IBehavior, float>();
 
         return ConstantModifiers[entity];
+    }
+}
+
+[RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class PersonalityAttribute : DatabaseEntry, INamedEntry
+{
+    [InspectableField, JsonProperty("name"), Key(1)]
+    public string Name;
+    
+    [IgnoreMember] public string EntryName
+    {
+        get => Name;
+        set => Name = value;
     }
 }

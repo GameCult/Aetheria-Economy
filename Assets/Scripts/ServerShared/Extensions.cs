@@ -70,7 +70,7 @@ public static class Extensions
     private static Random Random => (Random) (_random ?? (_random = new Random((uint) (DateTime.Now.Ticks%uint.MaxValue))));
     // public static T RandomElement<T>(this IEnumerable<T> enumerable) => enumerable.ElementAt(Random.NextInt(0, enumerable.Count()));
     public static float NextUnbounded(this ref Random random) => 1 / (1 - random.NextFloat()) - 1;
-    public static float NextUnbounded(this ref Random random, float bias, float power) => 1 / (1 - pow(random.NextFloat(), 1 - pow(clamp(bias,0,.99f), 1 / power))) - 1;
+    public static float NextUnbounded(this ref Random random, float bias, float power, float ceiling) => 1 / (1 - pow(min(random.NextFloat(), ceiling), 1 - pow(clamp(bias,0,.99f), 1 / power))) - 1;
 	
     private static Dictionary<Type,Type[]> InterfaceClasses = new Dictionary<Type, Type[]>();
     public static Type[] GetAllInterfaceClasses(this Type type)
