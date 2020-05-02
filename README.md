@@ -159,4 +159,4 @@ After generating stars, you can generate the links between them, which performs 
 
 ## Contact Us
 
-If you want to chat, please join [our Discord server](https://discord.gg/trbteNj).
+If you want to chat, please join [our Discord server](https://discord.gg/trbteNj). You can also join me as I stream development daily on [Mixer](https://mixer.com/PixelBro).
