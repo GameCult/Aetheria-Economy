@@ -5139,13 +5139,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 258993626}
-    characterCount: 0
+    characterCount: 13
     spriteCount: 0
-    spaceCount: 0
-    wordCount: 0
+    spaceCount: 2
+    wordCount: 2
     linkCount: 0
-    lineCount: 0
-    pageCount: 0
+    lineCount: 1
+    pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
@@ -19685,13 +19685,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 904172350}
-    characterCount: 0
+    characterCount: 2
     spriteCount: 0
     spaceCount: 0
-    wordCount: 0
+    wordCount: 1
     linkCount: 0
-    lineCount: 0
-    pageCount: 0
+    lineCount: 1
+    pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
@@ -25837,7 +25837,7 @@ MonoBehaviour:
     type: 3}
   ZoneShipPrefab: {fileID: 795352744099449573, guid: 7c1524f8ce57a9943920988eae00c86e,
     type: 3}
-  BeltPrefab: {fileID: 3696484618621710612, guid: de2171f0e78642f48ac4cb15f3c012c5,
+  BeltPrefab: {fileID: 349597964696402918, guid: 1f1bfa2175a13b647888e2949e0cb138,
     type: 3}
   PlanetoidSprite: {fileID: 2800000, guid: 823d8a1c4e071994087624c39f62b319, type: 3}
   PlanetSprite: {fileID: 2800000, guid: 0d2acbd593b7fd349b0b26b4844733ef, type: 3}
@@ -25851,9 +25851,13 @@ MonoBehaviour:
   ZoneSizeScale: 0.02
   ZoneMassScale: 10
   ZoneMassPower: 0.25
+  AsteroidSpritesheetWidth: 4
+  AsteroidSpritesheetHeight: 4
   ZonePropertiesPanel: {fileID: 944413849}
   ZoneTitle: {fileID: 1359052237}
-  ZonePlanetProperties: []
+  ZonePlanetProperties:
+  - {fileID: 872134618}
+  - {fileID: 1470234924}
   ZonePropertiesName: {fileID: 1709420494}
   ZonePropertiesMass: {fileID: 2130830627}
   ZonePropertiesResourcesParent: {fileID: 1470234924}

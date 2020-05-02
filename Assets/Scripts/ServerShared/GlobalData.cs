@@ -41,8 +41,8 @@ public class GlobalData : DatabaseEntry
     [InspectableField, JsonProperty("gasGiantMass"), Key(10)]  
     public float GasGiantMass = 2000;
 
-    [InspectableField, JsonProperty("dockingDistance"), Key(11)]  
-    public float DockingDistance = 10;
+    [InspectableField, JsonProperty("planetMass"), Key(11)]  
+    public float PlanetMass = 100f;
 
     [InspectableField, JsonProperty("satelliteCreationMassFloor"), Key(12)]  
     public float SatelliteCreationMassFloor = 100;
@@ -95,10 +95,22 @@ public class GlobalData : DatabaseEntry
     [InspectableField, JsonProperty("beltMassExponent"), Key(27)]  
     public float BeltMassExponent = 100f;
 
-    [InspectableField, JsonProperty("planetMass"), Key(28)]  
-    public float PlanetMass = 100f;
+    [InspectableField, JsonProperty("asteroidSizeMin"), Key(28)]  
+    public float AsteroidSizeMin = 2f;
 
-    [InspectableField, JsonProperty("orbitSpeedMultiplier"), Key(29)]  
+    [InspectableField, JsonProperty("asteroidSizeMax"), Key(29)]  
+    public float AsteroidSizeMax = 10f;
+
+    [InspectableField, JsonProperty("asteroidSizeExponent"), Key(30)]  
+    public float AsteroidSizeExponent = 2f;
+
+    [InspectableField, JsonProperty("asteroidRotationSpeed"), Key(31)]  
+    public float AsteroidRotationSpeed = 2f;
+
+    [InspectableField, JsonProperty("dockingDistance"), Key(32)]  
+    public float DockingDistance = 10;
+
+    [InspectableField, JsonProperty("orbitSpeedMultiplier"), Key(33)]  
     public float OrbitSpeedMultiplier = .25f;
     
     public float PlanetRadius(float mass)

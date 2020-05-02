@@ -67,34 +67,40 @@ public class ZoneGenerator
         
         planetsData = planets.Where(p=>!p.Empty).Select(planet =>
         {
-            var planetData = new PlanetData
+	        Dictionary<Guid, float> dictionary = new Dictionary<Guid, float>();
+	        foreach (var r in resources)
+	        {
+		        var bodyType = (planet.Belt ? BodyType.Asteroid :
+			        planet.Mass > context.GlobalData.SunMass ? BodyType.Sun :
+			        planet.Mass > context.GlobalData.GasGiantMass ? BodyType.GasGiant :
+			        planet.Mass > context.GlobalData.PlanetMass ? BodyType.Planet : BodyType.Planetoid);
+		        if ((bodyType & r.ResourceBodyType) != 0)
+		        {
+			        float quantity = context.Random.NextUnbounded(r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]), r.ResourceDensityBiasPower);
+			        if (r.ResourceFloor < quantity) dictionary.Add(r.ID, quantity);
+		        }
+	        }
+
+	        var planetData = new PlanetData
             {
                 Mass = planet.Mass,
                 ID = Guid.NewGuid(),
                 Orbit = orbitMap[planet].ID,
                 Zone = zone.ID,
                 Belt = planet.Belt,
-                Resources = resources
-		            // Filter resources where the body type matches the current planet
-	                .Where(r =>
-						((planet.Belt ? BodyType.Asteroid : 
-						planet.Mass > context.GlobalData.SunMass ? BodyType.Sun :
-						planet.Mass > context.GlobalData.GasGiantMass ? BodyType.GasGiant :
-						planet.Mass > context.GlobalData.PlanetMass ? BodyType.Planet : BodyType.Planetoid) & r.ResourceBodyType) != 0)
-		            // NextUnbounded is our extension function containing resource placement formula
-		            // Obtain bias variable by multiplying all resource maps together
-	                .Select(r => new
-	                {
-		                resource = r, 
-		                quantity = context.Random.NextUnbounded(
-			                r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]), 
-			                r.ResourceDensityBiasPower)
-	                })
-		            // Only include resources above a minimum quantity
-	                .Where(r => r.resource.ResourceFloor < r.quantity)
-	                .ToDictionary(r => r.resource.ID, r => r.quantity)
+                Resources = dictionary
             };
             planetData.Name = planetData.ID.ToString().Substring(0, 8);
+            if (planet.Belt)
+            {
+	            planetData.Asteroids = 
+		            Enumerable.Range(0, (int) (pow(planetData.Mass, context.GlobalData.BeltMassExponent) / context.GlobalData.BeltMassRatio * orbitMap[planet].Distance))
+			            .Select(_ => float4(context.Random.NextFloat(orbitMap[planet].Distance * .5f, orbitMap[planet].Distance * 1.5f),
+				            context.Random.NextFloat(),
+				            pow(context.Random.NextFloat(), context.GlobalData.AsteroidSizeExponent) * (context.GlobalData.AsteroidSizeMax - context.GlobalData.AsteroidSizeMin) + context.GlobalData.AsteroidSizeMin,
+				            context.Random.NextFloat() * context.GlobalData.AsteroidRotationSpeed))
+			            .ToArray();
+            }
             return planetData;
         }).ToArray();
 

@@ -92,6 +92,9 @@ public class PlanetData : DatabaseEntry, INamedEntry
 
     [JsonProperty("resources"), Key(6)]
     public Dictionary<Guid, float> Resources = new Dictionary<Guid, float>();
+
+    [JsonProperty("asteroids"), Key(7)]
+    public float4[] Asteroids; // Distance, Phase, Size, RotationSpeed
     
     // [JsonProperty("radius")] [Key(5)]
     // public float GravityRadius;

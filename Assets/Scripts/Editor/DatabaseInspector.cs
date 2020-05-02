@@ -164,9 +164,12 @@ public class DatabaseInspector : EditorWindow
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (int) value));
         }
         else if (type.IsEnum)
+        {
+            var isflags = type.GetCustomAttributes<FlagsAttribute>().Any();
+            var names = Enum.GetNames(field.FieldType);
             field.SetValue(obj,
-                Inspect(field.Name.SplitCamelCase(), (int) field.GetValue(obj), Enum.GetNames(field.FieldType),
-                    type.GetCustomAttributes<FlagsAttribute>().Any()));
+                Inspect(field.Name.SplitCamelCase(), (int) field.GetValue(obj), isflags ? names.Skip(1).ToArray() : names, isflags));
+        }
         //else if (field.FieldType == typeof(Color)) Inspect(field.Name, () => (Color) field.GetValue(obj), c => field.SetValue(obj, c));
         else if (type == typeof(bool)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (bool) value));
         else if (type == typeof(string))
@@ -523,7 +526,7 @@ public class DatabaseInspector : EditorWindow
             LabelField(label, EditorStyles.boldLabel);
             using (var v = new VerticalScope(GUI.skin.box))
             {
-                for (var i = 1; i < enumOptions.Length; i++)
+                for (var i = 0; i < enumOptions.Length; i++)
                 {
                     using (var h = new HorizontalScope())
                     {

@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Grid.cs" />
     <Compile Include="Assets\Scripts\ConsoleController.cs" />
     <Compile Include="Assets\Scripts\ConsoleView.cs" />
     <Compile Include="Assets\Scripts\CultClient.cs" />

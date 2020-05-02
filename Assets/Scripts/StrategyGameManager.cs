@@ -36,7 +36,7 @@ public class StrategyGameManager : MonoBehaviour
     public Prototype GalaxyZoneLinkPrototype;
     public ZoneObject ZoneObjectPrefab;
     public ZoneShip ZoneShipPrefab;
-    public ParticleSystem BeltPrefab;
+    public MeshFilter BeltPrefab;
     
     [Section("Textures")]
     public Texture2D PlanetoidSprite;
@@ -53,6 +53,8 @@ public class StrategyGameManager : MonoBehaviour
     public float ZoneSizeScale = .01f;
     public float ZoneMassScale = .01f;
     public float ZoneMassPower = .5f;
+    public int AsteroidSpritesheetWidth = 4;
+    public int AsteroidSpritesheetHeight = 4;
 
     [Section("Zone Properties Panel")]
     public RectTransform ZonePropertiesPanel;
@@ -74,7 +76,7 @@ public class StrategyGameManager : MonoBehaviour
     private Dictionary<Guid, GalaxyResponseZone> _galaxyResponseZones;
     private Dictionary<Guid, GalaxyZone> _galaxyZoneObjects = new Dictionary<Guid, GalaxyZone>();
     private Dictionary<OrbitalEntity, ZoneObject> _zoneObjects = new Dictionary<OrbitalEntity, ZoneObject>();
-    private Dictionary<OrbitalEntity, ParticleSystem> _zoneBelts = new Dictionary<OrbitalEntity, ParticleSystem>();
+    private Dictionary<OrbitalEntity, AsteroidBelt> _zoneBelts = new Dictionary<OrbitalEntity, AsteroidBelt>();
     private Dictionary<Ship, ZoneShip> _zoneShips = new Dictionary<Ship, ZoneShip>();
     private List<ZoneObject> _wormholes = new List<ZoneObject>();
     private List<ZonePropertiesResource> _zonePropertiesResources = new List<ZonePropertiesResource>();
@@ -172,6 +174,277 @@ public class StrategyGameManager : MonoBehaviour
         _backgroundMaterial = ZoneBackground.material;
         
         ClickRaycaster.OnClickMiss += () => ZonePropertiesPanel.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (_context != null)
+        {
+            _context.Time = Time.time;
+            _context.Update();
+        }
+        if (_currentTab == GalaxyTabButton)
+        {
+            _galaxyCameraPos = Camera.transform.position;
+            _galaxyOrthoSize = Camera.orthographicSize;
+        }
+        if (_currentTab == ZoneTabButton && _populatedZone == _selectedZone)
+        {
+            foreach (var planet in _zoneObjects)
+            {
+                planet.Value.transform.position = float3(planet.Key.Position * ZoneSizeScale, .1f);
+            }
+
+            foreach (var belt in _zoneBelts)
+            {
+                belt.Value.Transform.position = float3(belt.Key.Position * ZoneSizeScale, .15f);
+                belt.Value.Update();
+            }
+
+            foreach (var ship in _zoneShips)
+            {
+                ship.Value.transform.position = float3(ship.Key.Position * ZoneSizeScale, .05f);
+                ship.Value.Icon.transform.up = (Vector2) ship.Key.Direction;
+                var thrusterScale = ship.Value.Thruster.localScale;
+                thrusterScale.x = ship.Key.Axes.First(kvp => kvp.Key is Thruster).Value;
+                ship.Value.Thruster.localScale = thrusterScale;
+            }
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (TestMode)
+        {
+            // TODO: Save game state on exit
+        }
+    }
+
+    void PopulateGalaxy()
+    {
+        _galaxyPopulated = true;
+        
+        GalaxyBackground.transform.localScale = Vector3.one * GalaxyScale;
+        
+        var galaxyMat = GalaxyBackground.material;
+        galaxyMat.SetFloat("Arms", _context.GlobalData.Arms);
+        galaxyMat.SetFloat("Twist", _context.GlobalData.Twist);
+        galaxyMat.SetFloat("TwistPower", _context.GlobalData.TwistPower);
+        galaxyMat.SetFloat("SpokeOffset", _context.MapLayers["StarDensity"].SpokeOffset);
+        galaxyMat.SetFloat("SpokeScale", _context.MapLayers["StarDensity"].SpokeScale);
+        galaxyMat.SetFloat("CoreBoost", _context.MapLayers["StarDensity"].CoreBoost);
+        galaxyMat.SetFloat("CoreBoostOffset", _context.MapLayers["StarDensity"].CoreBoostOffset);
+        galaxyMat.SetFloat("CoreBoostPower", _context.MapLayers["StarDensity"].CoreBoostPower);
+        galaxyMat.SetFloat("EdgeReduction", _context.MapLayers["StarDensity"].EdgeReduction);
+        galaxyMat.SetFloat("NoisePosition", _context.MapLayers["StarDensity"].NoisePosition);
+        galaxyMat.SetFloat("NoiseAmplitude", _context.MapLayers["StarDensity"].NoiseAmplitude);
+        galaxyMat.SetFloat("NoiseOffset", _context.MapLayers["StarDensity"].NoiseOffset);
+        galaxyMat.SetFloat("NoiseGain", _context.MapLayers["StarDensity"].NoiseGain);
+        galaxyMat.SetFloat("NoiseLacunarity", _context.MapLayers["StarDensity"].NoiseLacunarity);
+        galaxyMat.SetFloat("NoiseFrequency", _context.MapLayers["StarDensity"].NoiseFrequency);
+        
+        // var zones = _galaxyResponse.Zones.ToDictionary(z=>z.ZoneID);
+        var linkedZones = new List<Guid>();
+        foreach (var zone in _galaxyResponseZones.Values)
+        {
+            linkedZones.Add(zone.ZoneID);
+            var instance = GalaxyZonePrototype.Instantiate<Transform>();
+            instance.position = float3((Vector2) zone.Position - Vector2.one * .5f,0) * GalaxyScale;
+            var instanceZone = instance.GetComponent<GalaxyZone>();
+            _galaxyZoneObjects[zone.ZoneID] = instanceZone;
+            instanceZone.Label.text = zone.Name;
+            instanceZone.Background.GetComponent<ClickableCollider>().OnClick += (_, pointer) =>
+            {
+                if (_selectedGalaxyZone != null)
+                    _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
+                if(_selectedZone != zone.ZoneID)
+                    CultClient.Send(new ZoneRequestMessage{ZoneID = zone.ZoneID});
+                _selectedZone = zone.ZoneID;
+                _selectedGalaxyZone = instanceZone;
+                _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
+                _selectedZone = zone.ZoneID;
+                
+                // If the user double clicks on a zone, switch to the zone tab
+                if(pointer.clickCount == 2) ZoneTabButton.OnPointerClick(pointer);
+            };
+            foreach (var linkedZone in zone.Links.Where(l=>!linkedZones.Contains(l)))
+            {
+                var link = GalaxyZoneLinkPrototype.Instantiate<Transform>();
+                var diff = _galaxyResponseZones[linkedZone].Position - zone.Position;
+                link.position = instance.position + Vector3.forward*.1f;
+                link.rotation = Quaternion.Euler(0,0,atan2(diff.y, diff.x) * Mathf.Rad2Deg);
+                link.localScale = new Vector3(length(diff) * GalaxyScale, 1, 1);
+            }
+        }
+    }
+
+    void PopulateZone()
+    {
+        // Delete all the existing zone contents
+        foreach (var zoneObject in _zoneObjects.Values) Destroy(zoneObject.gameObject);//zoneObject.GetComponent<Prototype>().ReturnToPool();
+        _zoneObjects.Clear();
+        foreach (var zoneObject in _wormholes) Destroy(zoneObject.gameObject); //zoneObject.GetComponent<Prototype>().ReturnToPool();
+        _wormholes.Clear();
+        foreach (var belt in _zoneBelts.Values) Destroy(belt.Transform.gameObject);
+        _zoneBelts.Clear();
+        foreach (var ship in _zoneShips.Values) Destroy(ship.gameObject);
+        _zoneShips.Clear();
+
+        if(_populatedZone!=Guid.Empty)
+            _context.UnloadZone(_cache.Get<ZoneData>(_populatedZone));
+        
+        _populatedZone = _selectedZone;
+
+        ZoneData zoneData = _cache.Get<ZoneData>(_populatedZone);
+
+        ZoneTitle.text = zoneData.Name;
+
+        if (TestMode && !zoneData.Visited)
+        {
+            float2 position;
+            do
+            {
+                position = float2(Random.value, Random.value);
+            } while (_context.MapLayers["StarDensity"].Evaluate(position, _context.GlobalData) < .1f);
+        
+            OrbitData[] orbits;
+            PlanetData[] planets;
+            ZoneGenerator.GenerateZone(
+                context: _context,
+                zone: zoneData,
+                mapLayers: _context.MapLayers.Values,
+                resources: _cache.GetAll<SimpleCommodityData>().Where(i=>i.ResourceDensity.Any()),
+                orbitData: out orbits,
+                planetsData: out planets);
+            _cache.AddAll(orbits);
+            _cache.AddAll(planets);
+            zoneData.Visited = true;
+        }
+        
+        var zoneContents = _context.InitializeZone(_populatedZone);
+        
+        float zoneDepth = 0;
+
+        foreach (var kvp in zoneContents)
+        {
+            var entity = kvp.Value;
+            if (kvp.Key is PlanetData planetData)
+            {
+                if (!planetData.Belt)
+                {
+                    var planetObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
+                    _zoneObjects[entity as OrbitalEntity] = planetObject;
+                    planetObject.Label.text = planetData.Name;
+                    planetObject.GravityMesh.gameObject.SetActive(true);
+                    planetObject.GravityMesh.transform.localScale =
+                        Vector3.one * (pow(planetData.Mass, _context.GlobalData.GravityRadiusExponent) *
+                                       _context.GlobalData.GravityRadiusMultiplier * 2 * ZoneSizeScale);
+                    var depth = pow(planetData.Mass, ZoneMassPower) * ZoneMassScale;
+                    if (depth > zoneDepth)
+                        zoneDepth = depth;
+                    planetObject.GravityMesh.material.SetFloat("_Depth", depth);
+                    planetObject.Icon.material.SetTexture("_MainTex",
+                        planetData.Mass > _context.GlobalData.SunMass ? SunSprite :
+                        planetData.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
+                        planetData.Mass > _context.GlobalData.PlanetMass ? PlanetSprite :
+                        PlanetoidSprite);
+                    planetObject.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
+                        {
+                            ZonePropertiesPanel.gameObject.SetActive(true);
+                            foreach (var zonePlanetProperty in ZonePlanetProperties)
+                                zonePlanetProperty.gameObject.SetActive(true);
+                            
+                            foreach (var zonePropertiesResource in _zonePropertiesResources)
+                                Destroy(zonePropertiesResource.gameObject);
+                            _zonePropertiesResources.Clear();
+
+                            ZonePropertiesName.text = planetData.Name;
+                            ZonePropertiesMass.text = $"{planetData.Mass}";
+                            foreach (var resource in planetData.Resources)
+                            {
+                                var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
+                                var resourceInstance = Instantiate(ZonePropertiesResourcePrefab, ZonePropertiesResourcesParent);
+                                resourceInstance.NameLabel.text = itemData.Name;
+                                resourceInstance.QuantityLabel.text = $"{resource.Value:0}";
+                                _zonePropertiesResources.Add(resourceInstance);
+                            }
+                        };
+                }
+                else
+                {
+                    var beltObject = Instantiate(BeltPrefab, ZoneRoot);
+                    var collider = beltObject.GetComponent<MeshCollider>();
+                    var belt = new AsteroidBelt(_context, beltObject, collider, planetData, AsteroidSpritesheetWidth, AsteroidSpritesheetHeight, ZoneSizeScale);
+                    _zoneBelts[entity as OrbitalEntity] = belt;
+                    beltObject.GetComponent<ClickableCollider>().OnClick += (_, data) =>
+                    {
+                        ZonePropertiesPanel.gameObject.SetActive(true);
+                        foreach (var zonePlanetProperty in ZonePlanetProperties)
+                            zonePlanetProperty.gameObject.SetActive(true);
+                            
+                        foreach (var zonePropertiesResource in _zonePropertiesResources)
+                            Destroy(zonePropertiesResource.gameObject);
+                        _zonePropertiesResources.Clear();
+
+                        ZonePropertiesName.text = planetData.Name;
+                        ZonePropertiesMass.text = $"{planetData.Mass}";
+                        foreach (var resource in planetData.Resources)
+                        {
+                            var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
+                            var resourceInstance = Instantiate(ZonePropertiesResourcePrefab, ZonePropertiesResourcesParent);
+                            resourceInstance.NameLabel.text = itemData.Name;
+                            resourceInstance.QuantityLabel.text = $"{resource.Value:0}";
+                            _zonePropertiesResources.Add(resourceInstance);
+                        }
+                    };
+                    // var beltEmission = beltObject.emission;
+                    // beltEmission.rateOverTime = 
+                    //     new ParticleSystem.MinMaxCurve(
+                    //         pow(planetData.Mass,_context.GlobalData.BeltMassExponent)
+                    //         / _context.GlobalData.BeltMassRatio * orbit.Distance);
+                    // var beltShape = beltObject.shape;
+                    // beltShape.radius = orbit.Distance * ZoneSizeScale;
+                    // beltShape.donutRadius = orbit.Distance * ZoneSizeScale / 2;
+                    // var beltVelocity = beltObject.velocityOverLifetime;
+                    // beltVelocity.orbitalZ = _context.GlobalData.OrbitSpeedMultiplier * orbit.Distance * ZoneSizeScale / orbit.Period;
+                    // beltObject.Simulate(60);
+                    // beltObject.Play();
+                }
+            }
+        }
+
+        var radius = (zoneData.Radius * ZoneSizeScale * 2);
+        _backgroundMaterial.SetFloat("_ClipDistance", radius);
+        _backgroundMaterial.SetFloat("_HeightRange", zoneDepth + _boundaryMaterial.GetFloat("_Depth"));
+        ZoneBoundary.transform.localScale = Vector3.one * radius;
+        
+        foreach (var wormhole in zoneData.Wormholes)
+        {
+            var otherZone = _galaxyResponseZones[wormhole];
+            var wormholeObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
+            _wormholes.Add(wormholeObject);
+            var direction = otherZone.Position - zoneData.Position;
+            wormholeObject.transform.position = (Vector2) (normalize(direction) * zoneData.Radius * .95f * ZoneSizeScale);
+            wormholeObject.GravityMesh.gameObject.SetActive(false);
+            wormholeObject.Icon.material.SetTexture("_MainTex", WormholeSprite);
+            wormholeObject.Label.text = otherZone.Name;
+            wormholeObject.Icon.GetComponent<ClickableCollider>().OnClick += (_, pointer) =>
+            {
+                // If the user double clicks on a wormhole, switch to that zone
+                if (pointer.clickCount == 2)
+                {
+                    _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
+                    if(_selectedZone != wormhole && !TestMode)
+                        CultClient.Send(new ZoneRequestMessage{ZoneID = wormhole});
+                    _selectedZone = wormhole;
+                    if(TestMode)
+                        PopulateZone();
+                    _selectedGalaxyZone = _galaxyZoneObjects[wormhole];
+                    _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
+                    
+                }
+            };
+        }
     }
 
     void spawn(string[] args)
@@ -315,252 +588,89 @@ public class StrategyGameManager : MonoBehaviour
         if(_currentTab == ZoneTabButton)
             PopulateZone();
     }
+}
 
-    private void Update()
+public class AsteroidBelt
+{
+    public Transform Transform;
+    private MeshFilter _filter;
+    private MeshCollider _collider;
+    private Vector3[] _vertices;
+    private Vector3[] _normals;
+    private Vector2[] _uvs;
+    private int[] _indices;
+    private PlanetData _data;
+    private GameContext _context;
+    private Mesh _mesh;
+    private float _zoneScale;
+
+    public AsteroidBelt(GameContext context, MeshFilter meshFilter, MeshCollider collider, PlanetData data, int spritesheetWidth, int spritesheetHeight, float zoneScale)
     {
-        if (_context != null)
-        {
-            _context.Time = Time.time;
-            _context.Update();
-        }
-        if (_currentTab == GalaxyTabButton)
-        {
-            _galaxyCameraPos = Camera.transform.position;
-            _galaxyOrthoSize = Camera.orthographicSize;
-        }
-        if (_currentTab == ZoneTabButton && _populatedZone == _selectedZone)
-        {
-            foreach (var planet in _zoneObjects)
-            {
-                planet.Value.transform.position = float3(planet.Key.Position * ZoneSizeScale, .1f);
-            }
+        Transform = collider.transform;
+        _context = context;
+        _data = data;
+        _filter = meshFilter;
+        _collider = collider;
+        _zoneScale = zoneScale;
+        _vertices = new Vector3[data.Asteroids.Length*4];
+        _normals = new Vector3[data.Asteroids.Length*4];
+        _uvs = new Vector2[data.Asteroids.Length*4];
+        _indices = new int[data.Asteroids.Length*6];
 
-            foreach (var belt in _zoneBelts)
-            {
-                belt.Value.transform.position = float3(belt.Key.Position * ZoneSizeScale, .15f);
-            }
-
-            foreach (var ship in _zoneShips)
-            {
-                ship.Value.transform.position = float3(ship.Key.Position * ZoneSizeScale, .05f);
-                ship.Value.Icon.transform.up = (Vector2) ship.Key.Direction;
-                var thrusterScale = ship.Value.Thruster.localScale;
-                thrusterScale.x = ship.Key.Axes.First(kvp => kvp.Key is Thruster).Value;
-                ship.Value.Thruster.localScale = thrusterScale;
-            }
+        var maxDist = 0f;
+        var spriteSize = float2(1f / spritesheetWidth, 1f / spritesheetHeight);
+        // vertex order: bottom left, top left, top right, bottom right
+        for (var i = 0; i < _data.Asteroids.Length; i++)
+        {
+            if (_data.Asteroids[i].x > maxDist)
+                maxDist = _data.Asteroids[i].x;
+            var spriteX = Random.Range(0, spritesheetWidth);
+            var spriteY = Random.Range(0, spritesheetHeight);
+            
+            _uvs[i * 4] = new Vector2(spriteX * spriteSize.x, spriteY * spriteSize.y);
+            _uvs[i * 4 + 1] = new Vector2(spriteX * spriteSize.x, spriteY * spriteSize.y + spriteSize.y);
+            _uvs[i * 4 + 2] = new Vector2(spriteX * spriteSize.x + spriteSize.x, spriteY * spriteSize.y + spriteSize.y);
+            _uvs[i * 4 + 3] = new Vector2(spriteX * spriteSize.x + spriteSize.x, spriteY * spriteSize.y);
+            
+            _indices[i * 6] = i * 4;
+            _indices[i * 6 + 1] = i * 4 + 1;
+            _indices[i * 6 + 2] = i * 4 + 3;
+            _indices[i * 6 + 3] = i * 4 + 3;
+            _indices[i * 6 + 4] = i * 4 + 1;
+            _indices[i * 6 + 5] = i * 4 + 2;
         }
+        
+        for (var i = 0; i < _normals.Length; i++)
+        {
+            _normals[i] = -Vector3.forward;
+        }
+        
+        _mesh = new Mesh();
+        _mesh.vertices = _vertices;
+        _mesh.uv = _uvs;
+        _mesh.triangles = _indices;
+        _mesh.normals = _normals;
+        _mesh.bounds = new Bounds(Vector3.zero, Vector3.one * maxDist);
+
+        _filter.mesh = _mesh;
+        //_collider.sharedMesh = _mesh;
     }
 
-    private void OnApplicationQuit()
+    public void Update()
     {
-        if (TestMode)
+        for (var i = 0; i < _data.Asteroids.Length; i++)
         {
-            // TODO: Save game state on exit
-        }
-    }
-
-    void PopulateGalaxy()
-    {
-        _galaxyPopulated = true;
-        
-        GalaxyBackground.transform.localScale = Vector3.one * GalaxyScale;
-        
-        var galaxyMat = GalaxyBackground.material;
-        galaxyMat.SetFloat("Arms", _context.GlobalData.Arms);
-        galaxyMat.SetFloat("Twist", _context.GlobalData.Twist);
-        galaxyMat.SetFloat("TwistPower", _context.GlobalData.TwistPower);
-        galaxyMat.SetFloat("SpokeOffset", _context.MapLayers["StarDensity"].SpokeOffset);
-        galaxyMat.SetFloat("SpokeScale", _context.MapLayers["StarDensity"].SpokeScale);
-        galaxyMat.SetFloat("CoreBoost", _context.MapLayers["StarDensity"].CoreBoost);
-        galaxyMat.SetFloat("CoreBoostOffset", _context.MapLayers["StarDensity"].CoreBoostOffset);
-        galaxyMat.SetFloat("CoreBoostPower", _context.MapLayers["StarDensity"].CoreBoostPower);
-        galaxyMat.SetFloat("EdgeReduction", _context.MapLayers["StarDensity"].EdgeReduction);
-        galaxyMat.SetFloat("NoisePosition", _context.MapLayers["StarDensity"].NoisePosition);
-        galaxyMat.SetFloat("NoiseAmplitude", _context.MapLayers["StarDensity"].NoiseAmplitude);
-        galaxyMat.SetFloat("NoiseOffset", _context.MapLayers["StarDensity"].NoiseOffset);
-        galaxyMat.SetFloat("NoiseGain", _context.MapLayers["StarDensity"].NoiseGain);
-        galaxyMat.SetFloat("NoiseLacunarity", _context.MapLayers["StarDensity"].NoiseLacunarity);
-        galaxyMat.SetFloat("NoiseFrequency", _context.MapLayers["StarDensity"].NoiseFrequency);
-        
-        // var zones = _galaxyResponse.Zones.ToDictionary(z=>z.ZoneID);
-        var linkedZones = new List<Guid>();
-        foreach (var zone in _galaxyResponseZones.Values)
-        {
-            linkedZones.Add(zone.ZoneID);
-            var instance = GalaxyZonePrototype.Instantiate<Transform>();
-            instance.position = float3((Vector2) zone.Position - Vector2.one * .5f,0) * GalaxyScale;
-            var instanceZone = instance.GetComponent<GalaxyZone>();
-            _galaxyZoneObjects[zone.ZoneID] = instanceZone;
-            instanceZone.Label.text = zone.Name;
-            instanceZone.Background.GetComponent<ClickableCollider>().OnClick += (_, pointer) =>
-            {
-                if (_selectedGalaxyZone != null)
-                    _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
-                if(_selectedZone != zone.ZoneID)
-                    CultClient.Send(new ZoneRequestMessage{ZoneID = zone.ZoneID});
-                _selectedZone = zone.ZoneID;
-                _selectedGalaxyZone = instanceZone;
-                _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
-                _selectedZone = zone.ZoneID;
-                
-                // If the user double clicks on a zone, switch to the zone tab
-                if(pointer.clickCount == 2) ZoneTabButton.OnPointerClick(pointer);
-            };
-            foreach (var linkedZone in zone.Links.Where(l=>!linkedZones.Contains(l)))
-            {
-                var link = GalaxyZoneLinkPrototype.Instantiate<Transform>();
-                var diff = _galaxyResponseZones[linkedZone].Position - zone.Position;
-                link.position = instance.position + Vector3.forward*.1f;
-                link.rotation = Quaternion.Euler(0,0,atan2(diff.y, diff.x) * Mathf.Rad2Deg);
-                link.localScale = new Vector3(length(diff) * GalaxyScale, 1, 1);
-            }
-        }
-    }
-
-    void PopulateZone()
-    {
-        // Delete all the existing zone contents
-        foreach (var zoneObject in _zoneObjects.Values) Destroy(zoneObject.gameObject);//zoneObject.GetComponent<Prototype>().ReturnToPool();
-        _zoneObjects.Clear();
-        foreach (var zoneObject in _wormholes) Destroy(zoneObject.gameObject); //zoneObject.GetComponent<Prototype>().ReturnToPool();
-        _wormholes.Clear();
-        foreach (var belt in _zoneBelts.Values) Destroy(belt.gameObject);
-        _zoneBelts.Clear();
-        foreach (var ship in _zoneShips.Values) Destroy(ship.gameObject);
-        _zoneShips.Clear();
-
-        if(_populatedZone!=Guid.Empty)
-            _context.UnloadZone(_cache.Get<ZoneData>(_populatedZone));
-        
-        _populatedZone = _selectedZone;
-
-        ZoneData zoneData = _cache.Get<ZoneData>(_populatedZone);
-
-        ZoneTitle.text = zoneData.Name;
-
-        if (TestMode && !zoneData.Visited)
-        {
-            float2 position;
-            do
-            {
-                position = float2(Random.value, Random.value);
-            } while (_context.MapLayers["StarDensity"].Evaluate(position, _context.GlobalData) < .1f);
-        
-            OrbitData[] orbits;
-            PlanetData[] planets;
-            ZoneGenerator.GenerateZone(
-                context: _context,
-                zone: zoneData,
-                mapLayers: _context.MapLayers.Values,
-                resources: _cache.GetAll<SimpleCommodityData>().Where(i=>i.ResourceDensity.Any()),
-                orbitData: out orbits,
-                planetsData: out planets);
-            _cache.AddAll(orbits);
-            _cache.AddAll(planets);
-            zoneData.Visited = true;
-        }
-        
-        var zoneContents = _context.InitializeZone(_populatedZone);
-        
-        float zoneDepth = 0;
-
-        foreach (var kvp in zoneContents)
-        {
-            var entity = kvp.Value;
-            if (kvp.Key is PlanetData planetData)
-            {
-                if (!planetData.Belt)
-                {
-                    var planetObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
-                    _zoneObjects[entity as OrbitalEntity] = planetObject;
-                    planetObject.Label.text = planetData.Name;
-                    planetObject.GravityMesh.gameObject.SetActive(true);
-                    planetObject.GravityMesh.transform.localScale =
-                        Vector3.one * (pow(planetData.Mass, _context.GlobalData.GravityRadiusExponent) *
-                                       _context.GlobalData.GravityRadiusMultiplier * 2 * ZoneSizeScale);
-                    var depth = pow(planetData.Mass, ZoneMassPower) * ZoneMassScale;
-                    if (depth > zoneDepth)
-                        zoneDepth = depth;
-                    planetObject.GravityMesh.material.SetFloat("_Depth", depth);
-                    planetObject.Icon.material.SetTexture("_MainTex",
-                        planetData.Mass > _context.GlobalData.SunMass ? SunSprite :
-                        planetData.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
-                        planetData.Mass > _context.GlobalData.PlanetMass ? PlanetSprite :
-                        PlanetoidSprite);
-                    planetObject.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
-                        {
-                            ZonePropertiesPanel.gameObject.SetActive(true);
-                            foreach (var zonePlanetProperty in ZonePlanetProperties)
-                                zonePlanetProperty.gameObject.SetActive(true);
-                            
-                            foreach (var zonePropertiesResource in _zonePropertiesResources)
-                                Destroy(zonePropertiesResource.gameObject);
-                            _zonePropertiesResources.Clear();
-
-                            ZonePropertiesName.text = planetData.Name;
-                            ZonePropertiesMass.text = $"{planetData.Mass}";
-                            foreach (var resource in planetData.Resources)
-                            {
-                                var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
-                                var resourceInstance = Instantiate(ZonePropertiesResourcePrefab, ZonePropertiesResourcesParent);
-                                resourceInstance.NameLabel.text = itemData.Name;
-                                resourceInstance.QuantityLabel.text = $"{resource.Value:0}";
-                                _zonePropertiesResources.Add(resourceInstance);
-                            }
-                        };
-                }
-                else
-                {
-                    var beltObject = Instantiate(BeltPrefab, ZoneRoot);
-                    var orbit = _cache.Get<OrbitData>(planetData.Orbit);
-                    _zoneBelts[entity as OrbitalEntity] = beltObject;
-                    var beltEmission = beltObject.emission;
-                    beltEmission.rateOverTime = 
-                        new ParticleSystem.MinMaxCurve(
-                            pow(planetData.Mass,_context.GlobalData.BeltMassExponent)
-                            / _context.GlobalData.BeltMassRatio * orbit.Distance);
-                    var beltShape = beltObject.shape;
-                    beltShape.radius = orbit.Distance * ZoneSizeScale;
-                    beltShape.donutRadius = orbit.Distance * ZoneSizeScale / 2;
-                    var beltVelocity = beltObject.velocityOverLifetime;
-                    beltVelocity.orbitalZ = _context.GlobalData.OrbitSpeedMultiplier * orbit.Distance * ZoneSizeScale / orbit.Period;
-                    beltObject.Simulate(60);
-                    beltObject.Play();
-                }
-            }
+            var rotation = Quaternion.Euler(0, 0, (float) (_context.Time * _data.Asteroids[i].w % 360.0));
+            var position = (Vector3) (Vector2)
+                OrbitData.Evaluate((float) (_context.Time / -pow(_data.Asteroids[i].x, _context.GlobalData.OrbitPeriodExponent) * _context.GlobalData.OrbitPeriodMultiplier) *
+                    _context.GlobalData.OrbitSpeedMultiplier + _data.Asteroids[i].y) * (_data.Asteroids[i].x * _zoneScale);
+            _vertices[i * 4] = rotation * new Vector3(-_data.Asteroids[i].z,-_data.Asteroids[i].z,0) + position;
+            _vertices[i * 4 + 1] = rotation * new Vector3(-_data.Asteroids[i].z,_data.Asteroids[i].z,0) + position;
+            _vertices[i * 4 + 2] = rotation * new Vector3(_data.Asteroids[i].z,_data.Asteroids[i].z,0) + position;
+            _vertices[i * 4 + 3] = rotation * new Vector3(_data.Asteroids[i].z,-_data.Asteroids[i].z,0) + position;
         }
 
-        var radius = (zoneData.Radius * ZoneSizeScale * 2);
-        _backgroundMaterial.SetFloat("_ClipDistance", radius);
-        _backgroundMaterial.SetFloat("_HeightRange", zoneDepth + _boundaryMaterial.GetFloat("_Depth"));
-        ZoneBoundary.transform.localScale = Vector3.one * radius;
-        
-        foreach (var wormhole in zoneData.Wormholes)
-        {
-            var otherZone = _galaxyResponseZones[wormhole];
-            var wormholeObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
-            _wormholes.Add(wormholeObject);
-            var direction = otherZone.Position - zoneData.Position;
-            wormholeObject.transform.position = (Vector2) (normalize(direction) * zoneData.Radius * .95f * ZoneSizeScale);
-            wormholeObject.GravityMesh.gameObject.SetActive(false);
-            wormholeObject.Icon.material.SetTexture("_MainTex", WormholeSprite);
-            wormholeObject.Label.text = otherZone.Name;
-            wormholeObject.Icon.GetComponent<ClickableCollider>().OnClick += (_, pointer) =>
-            {
-                // If the user double clicks on a wormhole, switch to that zone
-                if (pointer.clickCount == 2)
-                {
-                    _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
-                    if(_selectedZone != wormhole && !TestMode)
-                        CultClient.Send(new ZoneRequestMessage{ZoneID = wormhole});
-                    _selectedZone = wormhole;
-                    if(TestMode)
-                        PopulateZone();
-                    _selectedGalaxyZone = _galaxyZoneObjects[wormhole];
-                    _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
-                    
-                }
-            };
-        }
+        _mesh.vertices = _vertices;
+        _collider.sharedMesh = _mesh;
     }
 }
