@@ -10,8 +10,10 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 [MessagePackObject, 
+ Union(0, typeof(Ship)),
+ Union(1, typeof(OrbitalEntity)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<Entity>))]
-public class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
+public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
 {
     [IgnoreMember] public Dictionary<IAnalogBehavior, float> AxisOverrides = new Dictionary<IAnalogBehavior, float>();
     [IgnoreMember] public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
@@ -24,6 +26,9 @@ public class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
     [IgnoreMember] public Dictionary<IAnalogBehavior, float> Axes;
     public readonly List<ItemInstance> Cargo;
     public readonly List<Gear> EquippedItems;
+    public Entity Parent;
+    public List<Entity> Children = new List<Entity>();
+    public Guid Zone;
     
     [IgnoreMember] protected List<IBehavior> Behaviors;
     
@@ -37,6 +42,7 @@ public class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
 
     public Entity(GameContext context, Gear hull, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo)
     {
+        ID = Guid.NewGuid();
         Context = context;
 
         EquippedItems = items.ToList();
@@ -72,7 +78,8 @@ public class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
     {
         Mass = Hull?.Mass ?? 0 + 
             EquippedItems.Sum(i => i.Mass) + 
-            Cargo.Sum(ii => ii.Mass);
+            Cargo.Sum(ii => ii.Mass) + 
+            Children.Sum(c=>c.Mass);
         
         SpecificHeat = (Hull?.HeatCapacity ?? 0) + 
                        EquippedItems.Sum(i => i.HeatCapacity) +
@@ -108,6 +115,12 @@ public class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
 
         foreach (var item in EquippedItems.Where(item => item.ItemData.Performance(Temperature) < .01f))
             item.Durability -= delta;
+
+        if (Parent != null)
+        {
+            Position = Parent.Position;
+            Velocity = Parent.Velocity;
+        }
     }
 
     public void OnBeforeSerialize()

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 public class EntityAgent
@@ -7,9 +8,9 @@ public class EntityAgent
     
     public Entity Entity { get; }
     public GameContext Context { get; }
-    public ZoneData Zone { get; set; }
+    public Guid Zone { get; set; }
     
-    public EntityAgent(GameContext context, ZoneData zone, Entity entity)
+    public EntityAgent(GameContext context, Guid zone, Entity entity)
     {
         Entity = entity;
         Zone = zone;

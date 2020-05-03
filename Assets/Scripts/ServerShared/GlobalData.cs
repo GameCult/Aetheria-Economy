@@ -95,22 +95,25 @@ public class GlobalData : DatabaseEntry
     [InspectableField, JsonProperty("beltMassExponent"), Key(27)]  
     public float BeltMassExponent = 100f;
 
-    [InspectableField, JsonProperty("asteroidSizeMin"), Key(28)]  
+    [InspectableField, JsonProperty("asteroidSizeMin"), Key(28)]
     public float AsteroidSizeMin = 2f;
 
-    [InspectableField, JsonProperty("asteroidSizeMax"), Key(29)]  
+    [InspectableField, JsonProperty("asteroidSizeMax"), Key(29)]
     public float AsteroidSizeMax = 10f;
 
-    [InspectableField, JsonProperty("asteroidSizeExponent"), Key(30)]  
+    [InspectableField, JsonProperty("asteroidSizeExponent"), Key(30)]
     public float AsteroidSizeExponent = 2f;
 
-    [InspectableField, JsonProperty("asteroidRotationSpeed"), Key(31)]  
+    [InspectableField, JsonProperty("asteroidRotationSpeed"), Key(31)]
     public float AsteroidRotationSpeed = 2f;
 
-    [InspectableField, JsonProperty("dockingDistance"), Key(32)]  
-    public float DockingDistance = 10;
+    [InspectableField, JsonProperty("dockingDistance"), Key(32)]
+    public float DockingDistance = 25;
 
-    [InspectableField, JsonProperty("orbitSpeedMultiplier"), Key(33)]  
+    [InspectableField, JsonProperty("warpDistance"), Key(33)]
+    public float WarpDistance = 25;
+
+    [InspectableField, JsonProperty("orbitSpeedMultiplier"), Key(34)]
     public float OrbitSpeedMultiplier = .25f;
     
     public float PlanetRadius(float mass)

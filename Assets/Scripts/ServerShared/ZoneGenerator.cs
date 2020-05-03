@@ -104,7 +104,7 @@ public class ZoneGenerator
             return planetData;
         }).ToArray();
 
-        zone.Planets = planetsData.Select(pd => pd.ID).ToList();
+        zone.Planets = planetsData.Select(pd => pd.ID).ToArray();
         zone.Orbits = orbitData.Select(od => od.ID).ToList();
 	}
 

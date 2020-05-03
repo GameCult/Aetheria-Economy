@@ -9,7 +9,7 @@ public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 {
 	//public bool EnableMouse => PointerIsInside && !_catching;
 	public bool PointerIsInside { get; private set; }
-	public float ClickTime = .5f;
+	public float DragDistance = 25f;
 	
 	public event Action<PointerEventData> OnEnter;
 	public event Action<PointerEventData> OnExit;
@@ -56,6 +56,7 @@ public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
 	public void OnPointerClick(PointerEventData eventData)
 	{
-		OnClick?.Invoke(eventData);
+		if((eventData.pressPosition - eventData.position).sqrMagnitude < DragDistance)
+			OnClick?.Invoke(eventData);
 	}
 }

@@ -75,8 +75,8 @@ public class StrategyGameManager : MonoBehaviour
     private GalaxyZone _selectedGalaxyZone;
     private Dictionary<Guid, GalaxyResponseZone> _galaxyResponseZones;
     private Dictionary<Guid, GalaxyZone> _galaxyZoneObjects = new Dictionary<Guid, GalaxyZone>();
-    private Dictionary<OrbitalEntity, ZoneObject> _zoneObjects = new Dictionary<OrbitalEntity, ZoneObject>();
-    private Dictionary<OrbitalEntity, AsteroidBelt> _zoneBelts = new Dictionary<OrbitalEntity, AsteroidBelt>();
+    private Dictionary<Guid, ZoneObject> _zoneObjects = new Dictionary<Guid, ZoneObject>(); // Key is Orbit
+    private Dictionary<Guid, AsteroidBelt> _zoneBelts = new Dictionary<Guid, AsteroidBelt>();
     private Dictionary<Ship, ZoneShip> _zoneShips = new Dictionary<Ship, ZoneShip>();
     private List<ZoneObject> _wormholes = new List<ZoneObject>();
     private List<ZonePropertiesResource> _zonePropertiesResources = new List<ZonePropertiesResource>();
@@ -192,12 +192,12 @@ public class StrategyGameManager : MonoBehaviour
         {
             foreach (var planet in _zoneObjects)
             {
-                planet.Value.transform.position = float3(planet.Key.Position * ZoneSizeScale, .1f);
+                planet.Value.transform.position = float3(_context.GetOrbitPosition(planet.Key) * ZoneSizeScale, .1f);
             }
 
             foreach (var belt in _zoneBelts)
             {
-                belt.Value.Transform.position = float3(belt.Key.Position * ZoneSizeScale, .15f);
+                belt.Value.Transform.position = float3(_context.GetOrbitPosition(belt.Key) * ZoneSizeScale, .15f);
                 belt.Value.Update();
             }
 
@@ -291,7 +291,7 @@ public class StrategyGameManager : MonoBehaviour
         _zoneShips.Clear();
 
         if(_populatedZone!=Guid.Empty)
-            _context.UnloadZone(_cache.Get<ZoneData>(_populatedZone));
+            _context.UnloadZone(_populatedZone);
         
         _populatedZone = _selectedZone;
 
@@ -321,67 +321,37 @@ public class StrategyGameManager : MonoBehaviour
             zoneData.Visited = true;
         }
         
-        var zoneContents = _context.InitializeZone(_populatedZone);
+        _context.InitializeZone(_populatedZone);
         
         float zoneDepth = 0;
 
-        foreach (var kvp in zoneContents)
+        foreach (var planet in _context.ZonePlanets[_populatedZone])
         {
-            var entity = kvp.Value;
-            if (kvp.Key is PlanetData planetData)
+            var planetData = _cache.Get<PlanetData>(planet);
+            if (!planetData.Belt)
             {
-                if (!planetData.Belt)
-                {
-                    var planetObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
-                    _zoneObjects[entity as OrbitalEntity] = planetObject;
-                    planetObject.Label.text = planetData.Name;
-                    planetObject.GravityMesh.gameObject.SetActive(true);
-                    planetObject.GravityMesh.transform.localScale =
-                        Vector3.one * (pow(planetData.Mass, _context.GlobalData.GravityRadiusExponent) *
-                                       _context.GlobalData.GravityRadiusMultiplier * 2 * ZoneSizeScale);
-                    var depth = pow(planetData.Mass, ZoneMassPower) * ZoneMassScale;
-                    if (depth > zoneDepth)
-                        zoneDepth = depth;
-                    planetObject.GravityMesh.material.SetFloat("_Depth", depth);
-                    planetObject.Icon.material.SetTexture("_MainTex",
-                        planetData.Mass > _context.GlobalData.SunMass ? SunSprite :
-                        planetData.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
-                        planetData.Mass > _context.GlobalData.PlanetMass ? PlanetSprite :
-                        PlanetoidSprite);
-                    planetObject.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
-                        {
-                            ZonePropertiesPanel.gameObject.SetActive(true);
-                            foreach (var zonePlanetProperty in ZonePlanetProperties)
-                                zonePlanetProperty.gameObject.SetActive(true);
-                            
-                            foreach (var zonePropertiesResource in _zonePropertiesResources)
-                                Destroy(zonePropertiesResource.gameObject);
-                            _zonePropertiesResources.Clear();
-
-                            ZonePropertiesName.text = planetData.Name;
-                            ZonePropertiesMass.text = $"{planetData.Mass}";
-                            foreach (var resource in planetData.Resources)
-                            {
-                                var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
-                                var resourceInstance = Instantiate(ZonePropertiesResourcePrefab, ZonePropertiesResourcesParent);
-                                resourceInstance.NameLabel.text = itemData.Name;
-                                resourceInstance.QuantityLabel.text = $"{resource.Value:0}";
-                                _zonePropertiesResources.Add(resourceInstance);
-                            }
-                        };
-                }
-                else
-                {
-                    var beltObject = Instantiate(BeltPrefab, ZoneRoot);
-                    var collider = beltObject.GetComponent<MeshCollider>();
-                    var belt = new AsteroidBelt(_context, beltObject, collider, planetData, AsteroidSpritesheetWidth, AsteroidSpritesheetHeight, ZoneSizeScale);
-                    _zoneBelts[entity as OrbitalEntity] = belt;
-                    beltObject.GetComponent<ClickableCollider>().OnClick += (_, data) =>
+                var planetObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
+                _zoneObjects[planetData.Orbit] = planetObject;
+                planetObject.Label.text = planetData.Name;
+                planetObject.GravityMesh.gameObject.SetActive(true);
+                planetObject.GravityMesh.transform.localScale =
+                    Vector3.one * (pow(planetData.Mass, _context.GlobalData.GravityRadiusExponent) *
+                                   _context.GlobalData.GravityRadiusMultiplier * 2 * ZoneSizeScale);
+                var depth = pow(planetData.Mass, ZoneMassPower) * ZoneMassScale;
+                if (depth > zoneDepth)
+                    zoneDepth = depth;
+                planetObject.GravityMesh.material.SetFloat("_Depth", depth);
+                planetObject.Icon.material.SetTexture("_MainTex",
+                    planetData.Mass > _context.GlobalData.SunMass ? SunSprite :
+                    planetData.Mass > _context.GlobalData.GasGiantMass ? GasGiantSprite :
+                    planetData.Mass > _context.GlobalData.PlanetMass ? PlanetSprite :
+                    PlanetoidSprite);
+                planetObject.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
                     {
                         ZonePropertiesPanel.gameObject.SetActive(true);
                         foreach (var zonePlanetProperty in ZonePlanetProperties)
                             zonePlanetProperty.gameObject.SetActive(true);
-                            
+                        
                         foreach (var zonePropertiesResource in _zonePropertiesResources)
                             Destroy(zonePropertiesResource.gameObject);
                         _zonePropertiesResources.Clear();
@@ -397,19 +367,34 @@ public class StrategyGameManager : MonoBehaviour
                             _zonePropertiesResources.Add(resourceInstance);
                         }
                     };
-                    // var beltEmission = beltObject.emission;
-                    // beltEmission.rateOverTime = 
-                    //     new ParticleSystem.MinMaxCurve(
-                    //         pow(planetData.Mass,_context.GlobalData.BeltMassExponent)
-                    //         / _context.GlobalData.BeltMassRatio * orbit.Distance);
-                    // var beltShape = beltObject.shape;
-                    // beltShape.radius = orbit.Distance * ZoneSizeScale;
-                    // beltShape.donutRadius = orbit.Distance * ZoneSizeScale / 2;
-                    // var beltVelocity = beltObject.velocityOverLifetime;
-                    // beltVelocity.orbitalZ = _context.GlobalData.OrbitSpeedMultiplier * orbit.Distance * ZoneSizeScale / orbit.Period;
-                    // beltObject.Simulate(60);
-                    // beltObject.Play();
-                }
+            }
+            else
+            {
+                var beltObject = Instantiate(BeltPrefab, ZoneRoot);
+                var collider = beltObject.GetComponent<MeshCollider>();
+                var belt = new AsteroidBelt(_context, beltObject, collider, planetData, AsteroidSpritesheetWidth, AsteroidSpritesheetHeight, ZoneSizeScale);
+                _zoneBelts[_cache.Get<OrbitData>(planetData.Orbit).Parent] = belt;
+                beltObject.GetComponent<ClickableCollider>().OnClick += (_, data) =>
+                {
+                    ZonePropertiesPanel.gameObject.SetActive(true);
+                    foreach (var zonePlanetProperty in ZonePlanetProperties)
+                        zonePlanetProperty.gameObject.SetActive(true);
+                        
+                    foreach (var zonePropertiesResource in _zonePropertiesResources)
+                        Destroy(zonePropertiesResource.gameObject);
+                    _zonePropertiesResources.Clear();
+
+                    ZonePropertiesName.text = planetData.Name;
+                    ZonePropertiesMass.text = $"{planetData.Mass}";
+                    foreach (var resource in planetData.Resources)
+                    {
+                        var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
+                        var resourceInstance = Instantiate(ZonePropertiesResourcePrefab, ZonePropertiesResourcesParent);
+                        resourceInstance.NameLabel.text = itemData.Name;
+                        resourceInstance.QuantityLabel.text = $"{resource.Value:0}";
+                        _zonePropertiesResources.Add(resourceInstance);
+                    }
+                };
             }
         }
 
@@ -423,8 +408,7 @@ public class StrategyGameManager : MonoBehaviour
             var otherZone = _galaxyResponseZones[wormhole];
             var wormholeObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
             _wormholes.Add(wormholeObject);
-            var direction = otherZone.Position - zoneData.Position;
-            wormholeObject.transform.position = (Vector2) (normalize(direction) * zoneData.Radius * .95f * ZoneSizeScale);
+            wormholeObject.transform.position = (Vector2) (_context.WormholePosition(zoneData.ID, wormhole) * ZoneSizeScale);
             wormholeObject.GravityMesh.gameObject.SetActive(false);
             wormholeObject.Icon.material.SetTexture("_MainTex", WormholeSprite);
             wormholeObject.Label.text = otherZone.Name;
@@ -505,13 +489,9 @@ public class StrategyGameManager : MonoBehaviour
         if (args[0] == "ship")
         {
             var entity = new Ship(_context, hull, gear, Enumerable.Empty<ItemInstance>());
-            var shipData = new ShipData // TODO: Better database entry for ships?
-            {
-                ID = Guid.NewGuid()
-            };
-            _cache.Add(shipData);
-            _context.ZoneContents[zoneData][shipData] = entity;
-            _context.Agents.Add(new AgentController(_context, zoneData, entity));
+            _context.Cache.Add(entity);
+            _context.ZoneEntities[_populatedZone][entity.ID] = entity;
+            _context.Agents.Add(new AgentController(_context, _populatedZone, entity));
             var zoneShip = Instantiate(ZoneShipPrefab, ZoneRoot);
             zoneShip.Label.text = $"Ship {_zoneShips.Count}";
             _zoneShips[entity] = zoneShip;
@@ -533,7 +513,7 @@ public class StrategyGameManager : MonoBehaviour
         }
         
         if(_populatedZone!=Guid.Empty)
-            _context.UnloadZone(_cache.Get<ZoneData>(_populatedZone));
+            _context.UnloadZone(_populatedZone);
         _cache.Delete(zoneData);
         _galaxyResponseZones.Remove(zoneData.ID);
         

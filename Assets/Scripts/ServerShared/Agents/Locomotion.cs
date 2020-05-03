@@ -6,8 +6,7 @@ using static Unity.Mathematics.math;
 
 public class Locomotion : AgentBehavior
 {
-    public Entity Objective;
-    public float LeadTime;
+    public float2 Objective;
     private Entity _entity;
     private IAnalogBehavior _thrust;
     private IAnalogBehavior _turning;
@@ -23,9 +22,9 @@ public class Locomotion : AgentBehavior
 
     public override void Update(float delta)
     {
-        if (Objective != null && _thrust != null && _turning != null)
+        if (_thrust != null && _turning != null)
         {
-            float2 diff = Objective.Position + Objective.Velocity * LeadTime - _entity.Position;
+            float2 diff = Objective - _entity.Position;
             float2 tangential = _entity.Velocity - dot(normalize(diff), normalize(_entity.Velocity)) * _entity.Velocity;
             float angleDiff = _entity.Direction.AngleDiff(normalize(diff) - tangential * TangentSensitivity);
             _entity.Axes[_turning] = clamp(-angleDiff * Sensitivity, -1, 1);

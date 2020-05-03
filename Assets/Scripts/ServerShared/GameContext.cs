@@ -2,14 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using float2 = Unity.Mathematics.float2;
 using Random = Unity.Mathematics.Random;
 
 public class GameContext
 {
     public Random Random = new Random((uint) (DateTime.Now.Ticks%uint.MaxValue));
     public List<AgentController> Agents = new List<AgentController>();
-    public Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>> ZoneContents = new Dictionary<ZoneData, Dictionary<DatabaseEntry, Entity>>();
+    public Dictionary<Guid, Guid[]> ZonePlanets = new Dictionary<Guid, Guid[]>();
+    public Dictionary<Guid, Dictionary<Guid, Entity>> ZoneEntities = new Dictionary<Guid, Dictionary<Guid, Entity>>();
     public Dictionary<string, GalaxyMapLayerData> MapLayers = new Dictionary<string, GalaxyMapLayerData>();
     
     private Action<string> _logger;
@@ -20,6 +23,10 @@ public class GameContext
     private double _time;
     private float _deltaTime;
     private GlobalData _globalData;
+    private HashSet<Guid> _orbits = new HashSet<Guid>();
+    private Dictionary<Guid, float2> _orbitVelocities = new Dictionary<Guid, float2>();
+    private Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
+    private Dictionary<Guid, float2> _previousOrbitPositions = new Dictionary<Guid, float2>();
 
     public GlobalData GlobalData => _globalData ?? (_globalData = Cache.GetAll<GlobalData>().FirstOrDefault());
     public DatabaseCache Cache { get; }
@@ -32,6 +39,13 @@ public class GameContext
             _deltaTime = (float) (value - _time);
             _time = value;
         }
+    }
+
+    public float2 WormholePosition(Guid zone, Guid other)
+    {
+        var zoneData = Cache.Get<ZoneData>(zone);
+        var direction = Cache.Get<ZoneData>(other).Position - zoneData.Position;
+        return normalize(direction) * zoneData.Radius * .95f;
     }
 
     // private readonly Dictionary<CraftedItemData, int> Tier = new Dictionary<CraftedItemData, int>();
@@ -53,56 +67,81 @@ public class GameContext
         _logger(s);
     }
 
-    public IEnumerable<Entity> ZoneEntities(ZoneData zone)
+    public IEnumerable<Entity> GetEntities(Guid zone)
     {
-        return ZoneContents[zone].Values;
+        return ZoneEntities[zone].Values;
     }
 
-    public Dictionary<DatabaseEntry, Entity> InitializeZone(Guid zoneID)
+    public void InitializeZone(Guid zoneID)
     {
-        var contents = new Dictionary<DatabaseEntry, Entity>();
-
         var zoneData = Cache.Get<ZoneData>(zoneID);
         
-        // TODO: Associate planets with stored entities for planetary colonies
-        var planetsData = zoneData.Planets.Select(id => Cache.Get<PlanetData>(id)).ToArray();
-        var planetEntities = planetsData.ToDictionary(p => p,
-            p => new OrbitalEntity(this, null, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), p.Belt ? Cache.Get<OrbitData>(p.Orbit).Parent : p.Orbit));
-        foreach(var kvp in planetEntities)
-            contents.Add(kvp.Key, kvp.Value);
+        foreach (var orbit in zoneData.Orbits) _orbits.Add(orbit);
 
-        var stationsData = zoneData.Stations.Select(id => Cache.Get<StationData>(id));
-        var stationEntities = stationsData.ToDictionary(s => s,
-            s => new OrbitalEntity(this, null, Enumerable.Empty<Gear>(), Enumerable.Empty<ItemInstance>(), s.Parent));
-        foreach(var kvp in stationEntities)
-            contents.Add(kvp.Key, kvp.Value);
+        // TODO: Associate planets with stored entities for planetary colonies
+        ZonePlanets[zoneID] = zoneData.Planets;
         
-        ZoneContents.Add(zoneData, contents);
-        
-        return contents;
+        // TODO: Load stored entities
     }
 
     public void Update()
     {
+        _previousOrbitPositions = _orbitPositions;
+        _orbitPositions = new Dictionary<Guid, float2>(_orbits.Count);
+        
+        foreach(var orbit in _orbits)
+        {
+            _orbitPositions[orbit] = GetOrbitPosition(orbit);
+            _orbitVelocities[orbit] = _previousOrbitPositions.ContainsKey(orbit)
+                ? _orbitPositions[orbit] - _previousOrbitPositions[orbit]
+                : float2.zero;
+        }
+        
         foreach (var agent in Agents)
         {
             agent.Update(_deltaTime);
         }
-        OrbitalEntity.ClearOrbits();
-        foreach (var kvp in ZoneContents)
+        
+        foreach (var kvp in ZoneEntities)
         {
-            var zone = kvp.Key;
-            var entities = kvp.Value.Values;
-            foreach (var entity in entities)
-            {
-                entity.Update(_deltaTime);
-            }
+            foreach (var entity in kvp.Value.Values) entity.Update(_deltaTime);
         }
     }
 
-    public void UnloadZone(ZoneData zone)
+    public void UnloadZone(Guid zone)
     {
-        ZoneContents.Remove(zone);
+        var zoneData = Cache.Get<ZoneData>(zone);
+        foreach (var orbit in zoneData.Orbits) _orbits.Remove(orbit);
+        ZoneEntities.Remove(zone);
+    }
+
+    // Determine orbital position recursively, caching parent positions to avoid repeated calculations
+    public float2 GetOrbitPosition(Guid orbit)
+    {
+        // Root orbit is fixed at center
+        if(orbit==Guid.Empty)
+            return float2.zero;
+        
+        if (!_orbitPositions.ContainsKey(orbit))
+        {
+            var orbitData = Cache.Get<OrbitData>(orbit);
+            _orbitPositions[orbit] = GetOrbitPosition(orbitData.Parent) + (orbitData.Period < .01f ? float2.zero : 
+                OrbitData.Evaluate((float) (Time / -orbitData.Period * GlobalData.OrbitSpeedMultiplier + orbitData.Phase)) *
+                orbitData.Distance);
+        }
+
+        var position = _orbitPositions[orbit];
+        if (float.IsNaN(position.x))
+        {
+            Log("Orbit position is NaN, something went very wrong!");
+            return float2.zero;
+        }
+        return _orbitPositions[orbit];
+    }
+
+    public float2 GetOrbitVelocity(Guid orbit)
+    {
+        return _orbitVelocities.ContainsKey(orbit) ? _orbitVelocities[orbit] : float2.zero;
     }
     
     // public int ItemTier(CraftedItemData itemData)

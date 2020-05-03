@@ -9,29 +9,26 @@ using static Unity.Mathematics.math;
 [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ZoneData : DatabaseEntry, INamedEntry
 {
-    [JsonProperty("name"), Key(1)]  
+    [JsonProperty("name"), Key(1)]
     public string Name;
 
-    [JsonProperty("position"), Key(2)]  
+    [JsonProperty("position"), Key(2)]
     public float2 Position = 500;
 
-    [JsonProperty("wormholes"), Key(3)]  
-    public List<Guid> Wormholes = new List<Guid>();
-
-    [JsonProperty("stations"), Key(4)]  
-    public List<Guid> Stations = new List<Guid>();
-
-    [JsonProperty("planets"), Key(5)]  
-    public List<Guid> Planets = new List<Guid>();
-
-    [JsonProperty("orbits"), Key(6)]  
-    public List<Guid> Orbits = new List<Guid>();
-
-    [JsonProperty("radius"), Key(7)]  
+    [JsonProperty("radius"), Key(3)]
     public float Radius = 2000;
 
-    [JsonProperty("visited"), Key(8)]  
+    [JsonProperty("visited"), Key(4)]
     public bool Visited;
+
+    [JsonProperty("wormholes"), Key(5)]
+    public List<Guid> Wormholes = new List<Guid>();
+
+    [JsonProperty("planets"), Key(6)]
+    public Guid[] Planets;// = new List<Guid>();
+
+    [JsonProperty("orbits"), Key(7)]
+    public List<Guid> Orbits = new List<Guid>();
     
     [IgnoreMember] public string EntryName
     {
