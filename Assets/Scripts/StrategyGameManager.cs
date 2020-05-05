@@ -24,6 +24,7 @@ public class StrategyGameManager : MonoBehaviour
     public MeshRenderer ZoneBackground;
     public MeshRenderer ZoneBoundary;
     public ClickRaycaster ClickRaycaster;
+    public ReadOnlyPropertiesPanel PropertiesPanel;
     
     [Section("Tab Links")]
     public TabGroup PrimaryTabGroup;
@@ -56,15 +57,6 @@ public class StrategyGameManager : MonoBehaviour
     public int AsteroidSpritesheetWidth = 4;
     public int AsteroidSpritesheetHeight = 4;
 
-    [Section("Zone Properties Panel")]
-    public RectTransform ZonePropertiesPanel;
-    public TextMeshProUGUI ZoneTitle;
-    public RectTransform[] ZonePlanetProperties;
-    public TextMeshProUGUI ZonePropertiesName;
-    public TextMeshProUGUI ZonePropertiesMass;
-    public Transform ZonePropertiesResourcesParent;
-    public ZonePropertiesResource ZonePropertiesResourcePrefab;
-
     private DatabaseCache _cache;
     private GameContext _context;
     // private GalaxyResponseMessage _galaxyResponse;
@@ -79,7 +71,6 @@ public class StrategyGameManager : MonoBehaviour
     private Dictionary<Guid, AsteroidBelt> _zoneBelts = new Dictionary<Guid, AsteroidBelt>();
     private Dictionary<Ship, ZoneShip> _zoneShips = new Dictionary<Ship, ZoneShip>();
     private List<ZoneObject> _wormholes = new List<ZoneObject>();
-    private List<ZonePropertiesResource> _zonePropertiesResources = new List<ZonePropertiesResource>();
     private Vector3 _galaxyCameraPos = -Vector3.forward;
     private float _galaxyOrthoSize = 50;
     private Material _boundaryMaterial;
@@ -135,6 +126,9 @@ public class StrategyGameManager : MonoBehaviour
                 _cache.Add(zone.Zone);
                 foreach (var entry in zone.Contents) _cache.Add(entry);
             
+                if(_currentTab==GalaxyTabButton && _selectedZone == zone.Zone.ID)
+                    PopulateZoneProperties(_selectedZone);
+                    
                 if (_currentTab == ZoneTabButton && _populatedZone != zone.Zone.ID) PopulateZone();
             });
         }
@@ -144,23 +138,29 @@ public class StrategyGameManager : MonoBehaviour
             _currentTab = button;
             if (_currentTab == GalaxyTabButton)
             {
+                PropertiesPanel.gameObject.SetActive(true);
+                PopulateGalaxyProperties();
                 if (!_galaxyPopulated) PopulateGalaxy();
                 Camera.transform.position = _galaxyCameraPos;
                 Camera.orthographicSize = _galaxyOrthoSize;
             }
 
-            if (_currentTab == ZoneTabButton)
+            else if (_currentTab == ZoneTabButton)
             {
+                PropertiesPanel.gameObject.SetActive(true);
                 var zone = _cache.Get<ZoneData>(_selectedZone);
                 if (_populatedZone != _selectedZone && zone != null)
                     PopulateZone();
+                PopulateZoneProperties(_populatedZone);
                 Camera.transform.position = -Vector3.forward;
                 if (zone != null)
                     Camera.orthographicSize = zone.Radius * ZoneSizeScale;
             }
 
-            if (_currentTab == TechTabButton)
+            else if (_currentTab == TechTabButton)
             {
+                PropertiesPanel.gameObject.SetActive(true);
+                PopulateTechProperties();
                 if (!_techLayoutGenerated)
                 {
                     TechTree.Initialize();
@@ -168,12 +168,46 @@ public class StrategyGameManager : MonoBehaviour
                     TechTree.GenerateTechs();
                 }
             }
+            
+            else PropertiesPanel.gameObject.SetActive(false);
         };
         
         _boundaryMaterial = ZoneBoundary.material;
         _backgroundMaterial = ZoneBackground.material;
-        
-        ClickRaycaster.OnClickMiss += () => ZonePropertiesPanel.gameObject.SetActive(false);
+
+        ClickRaycaster.OnClickMiss += () =>
+        {
+            if (_currentTab == GalaxyTabButton) PopulateGalaxyProperties();
+            else if (_currentTab == ZoneTabButton) PopulateZoneProperties(_populatedZone);
+            else if (_currentTab == TechTabButton) PopulateTechProperties();
+        };
+    }
+
+    private void PopulateGalaxyProperties()
+    {
+        PropertiesPanel.Clear();
+        PropertiesPanel.Title.text = _context.GlobalData.GalaxyName;
+        PropertiesPanel.AddSection("Galaxy");
+        PropertiesPanel.AddProperty("Sectors", $"{_galaxyResponseZones.Count}");
+    }
+
+    private void PopulateZoneProperties(Guid zone)
+    {
+        PropertiesPanel.Clear();
+        var zoneData = _cache.Get<ZoneData>(zone);
+        PropertiesPanel.Title.text = zoneData.Name;
+        PropertiesPanel.AddSection("Sector");
+        PropertiesPanel.AddProperty("Planets", $"{zoneData.Planets.Length}");
+    }
+
+    private void PopulateTechProperties()
+    {
+        PropertiesPanel.Clear();
+        PropertiesPanel.Title.text = "Technologies";
+        var count = _context.Cache.GetAll<BlueprintData>().Count();
+        PropertiesPanel.AddProperty("Discovered Techs", $"{count}");
+        PropertiesPanel.AddProperty("Available Techs", $"{count}");
+        PropertiesPanel.AddProperty("Researched Techs", $"{count}");
     }
 
     private void Update()
@@ -259,6 +293,14 @@ public class StrategyGameManager : MonoBehaviour
                     _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
                 if(_selectedZone != zone.ZoneID)
                     CultClient.Send(new ZoneRequestMessage{ZoneID = zone.ZoneID});
+                if (TestMode)
+                {
+                    if(!_context.Cache.Get<ZoneData>(zone.ZoneID).Visited)
+                    {
+                        GenerateZone(zone.ZoneID);
+                    }
+                    PopulateZoneProperties(zone.ZoneID);
+                }
                 _selectedZone = zone.ZoneID;
                 _selectedGalaxyZone = instanceZone;
                 _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
@@ -278,6 +320,29 @@ public class StrategyGameManager : MonoBehaviour
         }
     }
 
+    void GenerateZone(Guid zone)
+    {
+        var zoneData = _cache.Get<ZoneData>(zone);
+        float2 position;
+        do
+        {
+            position = float2(Random.value, Random.value);
+        } while (_context.MapLayers["StarDensity"].Evaluate(position, _context.GlobalData) < .1f);
+        
+        OrbitData[] orbits;
+        PlanetData[] planets;
+        ZoneGenerator.GenerateZone(
+            context: _context,
+            zone: zoneData,
+            mapLayers: _context.MapLayers.Values,
+            resources: _cache.GetAll<SimpleCommodityData>().Where(i=>i.ResourceDensity.Any()),
+            orbitData: out orbits,
+            planetsData: out planets);
+        _cache.AddAll(orbits);
+        _cache.AddAll(planets);
+        zoneData.Visited = true;
+    }
+
     void PopulateZone()
     {
         // Delete all the existing zone contents
@@ -295,30 +360,11 @@ public class StrategyGameManager : MonoBehaviour
         
         _populatedZone = _selectedZone;
 
-        ZoneData zoneData = _cache.Get<ZoneData>(_populatedZone);
-
-        ZoneTitle.text = zoneData.Name;
+        var zoneData = _cache.Get<ZoneData>(_populatedZone);
 
         if (TestMode && !zoneData.Visited)
         {
-            float2 position;
-            do
-            {
-                position = float2(Random.value, Random.value);
-            } while (_context.MapLayers["StarDensity"].Evaluate(position, _context.GlobalData) < .1f);
-        
-            OrbitData[] orbits;
-            PlanetData[] planets;
-            ZoneGenerator.GenerateZone(
-                context: _context,
-                zone: zoneData,
-                mapLayers: _context.MapLayers.Values,
-                resources: _cache.GetAll<SimpleCommodityData>().Where(i=>i.ResourceDensity.Any()),
-                orbitData: out orbits,
-                planetsData: out planets);
-            _cache.AddAll(orbits);
-            _cache.AddAll(planets);
-            zoneData.Visited = true;
+            GenerateZone(_populatedZone);
         }
         
         _context.InitializeZone(_populatedZone);
@@ -348,24 +394,18 @@ public class StrategyGameManager : MonoBehaviour
                     PlanetoidSprite);
                 planetObject.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
                     {
-                        ZonePropertiesPanel.gameObject.SetActive(true);
-                        foreach (var zonePlanetProperty in ZonePlanetProperties)
-                            zonePlanetProperty.gameObject.SetActive(true);
-                        
-                        foreach (var zonePropertiesResource in _zonePropertiesResources)
-                            Destroy(zonePropertiesResource.gameObject);
-                        _zonePropertiesResources.Clear();
-
-                        ZonePropertiesName.text = planetData.Name;
-                        ZonePropertiesMass.text = $"{planetData.Mass}";
-                        foreach (var resource in planetData.Resources)
+                        PropertiesPanel.Clear();
+                        PropertiesPanel.Title.text = planetData.Name;
+                        PropertiesPanel.AddSection(planetData.Mass > _context.GlobalData.SunMass ? "Star" :
+                            planetData.Mass > _context.GlobalData.GasGiantMass ? "Gas Giant" :
+                            planetData.Mass > _context.GlobalData.PlanetMass ? "Planet" :
+                            "Planetoid");
+                        PropertiesPanel.AddProperty("Mass", $"{planetData.Mass}");
+                        PropertiesPanel.AddList("Resources", planetData.Resources.Select(resource =>
                         {
                             var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
-                            var resourceInstance = Instantiate(ZonePropertiesResourcePrefab, ZonePropertiesResourcesParent);
-                            resourceInstance.NameLabel.text = itemData.Name;
-                            resourceInstance.QuantityLabel.text = $"{resource.Value:0}";
-                            _zonePropertiesResources.Add(resourceInstance);
-                        }
+                            return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
+                        }));
                     };
             }
             else
@@ -376,24 +416,15 @@ public class StrategyGameManager : MonoBehaviour
                 _zoneBelts[_cache.Get<OrbitData>(planetData.Orbit).Parent] = belt;
                 beltObject.GetComponent<ClickableCollider>().OnClick += (_, data) =>
                 {
-                    ZonePropertiesPanel.gameObject.SetActive(true);
-                    foreach (var zonePlanetProperty in ZonePlanetProperties)
-                        zonePlanetProperty.gameObject.SetActive(true);
-                        
-                    foreach (var zonePropertiesResource in _zonePropertiesResources)
-                        Destroy(zonePropertiesResource.gameObject);
-                    _zonePropertiesResources.Clear();
-
-                    ZonePropertiesName.text = planetData.Name;
-                    ZonePropertiesMass.text = $"{planetData.Mass}";
-                    foreach (var resource in planetData.Resources)
+                    PropertiesPanel.Clear();
+                    PropertiesPanel.Title.text = planetData.Name;
+                    PropertiesPanel.AddSection("Asteroid Belt");
+                    PropertiesPanel.AddProperty("Mass", $"{planetData.Mass}");
+                    PropertiesPanel.AddList("Resources", planetData.Resources.Select(resource =>
                     {
                         var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
-                        var resourceInstance = Instantiate(ZonePropertiesResourcePrefab, ZonePropertiesResourcesParent);
-                        resourceInstance.NameLabel.text = itemData.Name;
-                        resourceInstance.QuantityLabel.text = $"{resource.Value:0}";
-                        _zonePropertiesResources.Add(resourceInstance);
-                    }
+                        return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
+                    }));
                 };
             }
         }

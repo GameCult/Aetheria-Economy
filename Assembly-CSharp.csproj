@@ -909,13 +909,14 @@
     <Compile Include="Assets\Scripts\UI\Icons.cs" />
     <Compile Include="Assets\Scripts\UI\LoginScreen.cs" />
     <Compile Include="Assets\Scripts\UI\PropertiesPanel.cs" />
+    <Compile Include="Assets\Scripts\UI\PropertyLabel.cs" />
+    <Compile Include="Assets\Scripts\UI\ReadOnlyPropertiesPanel.cs" />
     <Compile Include="Assets\Scripts\UI\TabActivator.cs" />
     <Compile Include="Assets\Scripts\UI\TabButton.cs" />
     <Compile Include="Assets\Scripts\UI\TabGroup.cs" />
     <Compile Include="Assets\Scripts\UI\TechArrow.cs" />
     <Compile Include="Assets\Scripts\UI\TechNode.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneObject.cs" />
-    <Compile Include="Assets\Scripts\UI\ZonePropertiesResource.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneRenderer.cs" />
     <Compile Include="Assets\Scripts\UI\ZoneShip.cs" />
     <Compile Include="Assets\Scripts\UnityExtensions.cs" />

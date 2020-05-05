@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ecea37e1387aed94bb9d985e9aeaf638, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 95f2fb99a63015245b80380d621574fe, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -132,7 +132,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 16, y: 0}
+  m_AnchoredPosition: {x: 32, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7103233285868643396
@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 6894815547664563684}
   - component: {fileID: 6049092145546415630}
   m_Layer: 5
-  m_Name: Tab Button Bottom
+  m_Name: Tab Button Primary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -451,7 +451,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6c76486130e56d443bbb1ef731a4cb6d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cb44e107d81bc9140ac00c28ab8daa41, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1

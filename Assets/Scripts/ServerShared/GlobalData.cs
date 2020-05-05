@@ -11,14 +11,8 @@ using static NoiseFbm;
 [Inspectable, Serializable, RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GlobalData : DatabaseEntry
 {
-    [InspectableField, JsonProperty("targetPersistenceDuration"), Key(1)]  
-    public float TargetPersistenceDuration = 3;
-
-    [InspectableField, JsonProperty("heatRadiationPower"), Key(2)]  
-    public float HeatRadiationPower = 1;
-
-    [InspectableField, JsonProperty("heatRadiationMultiplier"), Key(3)]  
-    public float HeatRadiationMultiplier = 1;
+    [InspectableField, JsonProperty("galaxyName"), Key(1)]  
+    public string GalaxyName;
 
     [InspectableField, JsonProperty("galaxyArms"), Key(4)]  
     public int Arms = 4;
@@ -115,6 +109,15 @@ public class GlobalData : DatabaseEntry
 
     [InspectableField, JsonProperty("orbitSpeedMultiplier"), Key(34)]
     public float OrbitSpeedMultiplier = .25f;
+    
+    [InspectableField, JsonProperty("targetPersistenceDuration"), Key(35)]  
+    public float TargetPersistenceDuration = 3;
+
+    [InspectableField, JsonProperty("heatRadiationPower"), Key(36)]  
+    public float HeatRadiationPower = 1;
+
+    [InspectableField, JsonProperty("heatRadiationMultiplier"), Key(37)]  
+    public float HeatRadiationMultiplier = 1;
     
     public float PlanetRadius(float mass)
     {

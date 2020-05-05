@@ -1742,13 +1742,14 @@
             <e p="Icons.cs" t="Include" />
             <e p="LoginScreen.cs" t="Include" />
             <e p="PropertiesPanel.cs" t="Include" />
+            <e p="PropertyLabel.cs" t="Include" />
+            <e p="ReadOnlyPropertiesPanel.cs" t="Include" />
             <e p="TabActivator.cs" t="Include" />
             <e p="TabButton.cs" t="Include" />
             <e p="TabGroup.cs" t="Include" />
             <e p="TechArrow.cs" t="Include" />
             <e p="TechNode.cs" t="Include" />
             <e p="ZoneObject.cs" t="Include" />
-            <e p="ZonePropertiesResource.cs" t="Include" />
             <e p="ZoneRenderer.cs" t="Include" />
             <e p="ZoneShip.cs" t="Include" />
           </e>

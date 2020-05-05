@@ -23,19 +23,7 @@ public class TechTreeMsagl : MonoBehaviour
     public Prototype Arrow;
 
     [Section("UI Links")]
-    public RectTransform PropertiesPanel;
-    public TextMeshProUGUI TechName;
-    public TextMeshProUGUI Quality;
-    public TextMeshProUGUI ProductionTime;
-    public TextMeshProUGUI Produces;
-    public TextMeshProUGUI ResearchTime;
-    public RectTransform RequirementParent;
-    public RectTransform DependencyParent;
-    public RectTransform DescendantParent;
-    public RectTransform RequirementPrefab;
-    public RectTransform DependencyPrefab;
-    public RectTransform DescendantPrefab;
-    public ClickRaycaster ClickRaycaster;
+    public ReadOnlyPropertiesPanel PropertiesPanel;
 
     [Section("Graph Generation")]
     public bool TestMode;
@@ -86,7 +74,6 @@ public class TechTreeMsagl : MonoBehaviour
     private List<Prototype> _linkInstances = new List<Prototype>();
     private List<Prototype> _arrowInstances = new List<Prototype>();
     private Texture2D[] _icons;
-    private List<RectTransform> _propertyInstances = new List<RectTransform>();
     
     public BlueprintData[] Blueprints { get; set; }
     
@@ -94,7 +81,6 @@ public class TechTreeMsagl : MonoBehaviour
     {
         if(TestMode)
             Initialize();
-        ClickRaycaster.OnClickMiss += () => PropertiesPanel.gameObject.SetActive(false);
     }
 
     public void Initialize()
@@ -344,36 +330,25 @@ public class TechTreeMsagl : MonoBehaviour
             if (!TestMode)
                 tech.Fill.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
                 {
-                    foreach (var instance in _propertyInstances) Destroy(instance.gameObject);
-                    _propertyInstances.Clear();
+                    PropertiesPanel.Clear();
                     var blueprint = (BlueprintData) vertex.UserData;
-                    PropertiesPanel.gameObject.SetActive(true);
-                    TechName.text = blueprint.Name;
-                    Quality.text = $"{Mathf.RoundToInt(blueprint.Quality * 100)}%";
-                    ProductionTime.text = $"{blueprint.ProductionTime:0.##} MH";
-                    Produces.text = $"{blueprint.Quantity} {Context.Cache.Get<ItemData>(blueprint.Item).Name}";
-                    ResearchTime.text = $"{blueprint.ResearchTime:0.##} MH";
-                    foreach (var ingredient in blueprint.Ingredients)
+                    PropertiesPanel.Title.text = blueprint.Name;
+                    PropertiesPanel.AddProperty("Research Time", $"{blueprint.ResearchTime:0.##} MH");
+                    PropertiesPanel.AddProperty("Produces", $"{blueprint.Quantity} {Context.Cache.Get<ItemData>(blueprint.Item).Name}");
+                    PropertiesPanel.AddProperty("Production Quality", $"{Mathf.RoundToInt(blueprint.Quality * 100)}%");
+                    PropertiesPanel.AddProperty("Production Time", $"{blueprint.ProductionTime:0.##} MH");
+                    PropertiesPanel.AddList("Ingredients", blueprint.Ingredients.Select(ingredient =>
                     {
                         var ingredientData = Context.Cache.Get<ItemData>(ingredient.Key);
-                        var ingredientInstance = Instantiate(RequirementPrefab, RequirementParent);
-                        ingredientInstance.GetComponentInChildren<TextMeshProUGUI>().text = $"{ingredient.Value} {ingredientData.Name}";
-                        _propertyInstances.Add(ingredientInstance);
-                    }
-                    foreach (var dependency in blueprint.Dependencies)
+                        return $"{ingredient.Value} {ingredientData.Name}";
+                    }));
+                    PropertiesPanel.AddList("Dependencies", blueprint.Dependencies.Select(dependency =>
                     {
                         var dependencyBlueprint = Context.Cache.Get<BlueprintData>(dependency);
-                        var dependencyInstance = Instantiate(DependencyPrefab, DependencyParent);
-                        dependencyInstance.GetComponentInChildren<TextMeshProUGUI>().text = dependencyBlueprint.Name;
-                        _propertyInstances.Add(dependencyInstance);
-                    }
-                    foreach (var descendant in Blueprints.Where(bp =>
-                        bp.Dependencies.Any(dep => blueprint.ID == dep)))
-                    {
-                        var descendantInstance = Instantiate(DescendantPrefab, DescendantParent);
-                        descendantInstance.GetComponentInChildren<TextMeshProUGUI>().text = descendant.Name;
-                        _propertyInstances.Add(descendantInstance);
-                    }
+                        return $"{dependencyBlueprint.Name}";
+                    }));
+                    PropertiesPanel.AddList("Descendants", Blueprints.Where(bp =>
+                        bp.Dependencies.Any(dep => blueprint.ID == dep)).Select(descendant => $"{descendant.Name}"));
                 };
             _techInstances.Add(tech.GetComponent<Prototype>());
         }
