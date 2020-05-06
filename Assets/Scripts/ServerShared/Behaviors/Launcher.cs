@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class LauncherData : IBehaviorData
+public class LauncherData : BehaviorData
 {
     [InspectablePrefab, JsonProperty("missile"), Key(9)]  
     public string MissilePrefab;
@@ -37,7 +37,7 @@ public class LauncherData : IBehaviorData
     [InspectableField, JsonProperty("lockOnTime"), Key(18)]
     public PerformanceStat LockOnTime = new PerformanceStat();
 
-    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new Launcher(context, this, entity, item);
     }
@@ -162,5 +162,5 @@ public class Launcher : IActivatedBehavior
         // }
     }
     
-    public IBehaviorData Data => _launcher;
+    public BehaviorData Data => _launcher;
 }

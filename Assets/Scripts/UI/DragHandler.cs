@@ -9,17 +9,22 @@ public class DragHandler : MonoBehaviour
     public float Scaling;
     public ClickCatcher Background;
     private Vector2 _previousPosition;
+    private bool _isDragging;
 
     void Update()
     {
+        var newPosition = Camera.ScreenToWorldPoint(Input.mousePosition);
+        
+        if (!Input.GetMouseButton(0)) _isDragging = false;
+        
+        if (_isDragging) Camera.transform.position -= (Vector3) ((Vector2) newPosition - _previousPosition);
+
         if (Background.PointerIsInside)
         {
-            var newPosition = Camera.ScreenToWorldPoint(Input.mousePosition);
-            if(Input.GetMouseButtonDown(0))
-                _previousPosition = newPosition;
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
-                Camera.transform.position -= (Vector3)((Vector2) newPosition - _previousPosition);
+                _previousPosition = newPosition;
+                _isDragging = true;
             }
 
             if (abs(Input.mouseScrollDelta.y) > .01f)

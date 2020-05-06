@@ -3,7 +3,7 @@ using MessagePack;
 using Newtonsoft.Json;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class SensorData : IBehaviorData
+public class SensorData : BehaviorData
 {
     [InspectableField, JsonProperty("radiance"), Key(0)]  
     public PerformanceStat Radiance = new PerformanceStat();
@@ -17,7 +17,7 @@ public class SensorData : IBehaviorData
     [InspectableField, JsonProperty("range"), Key(3)]  
     public PerformanceStat Range = new PerformanceStat();
     
-    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new Sensor(context, this, entity, item);
     }
@@ -31,7 +31,7 @@ public class Sensor : IBehavior
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IBehaviorData Data => _data;
+    public BehaviorData Data => _data;
 
     public Sensor(GameContext context, SensorData data, Entity entity, Gear item)
     {

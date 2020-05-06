@@ -4,12 +4,12 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class VelocityLimitData : IBehaviorData
+public class VelocityLimitData : BehaviorData
 {
     [InspectableField, JsonProperty("topSpeed"), Key(0)]  
     public PerformanceStat TopSpeed = new PerformanceStat();
     
-    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new VelocityLimit(context, this, entity, item);
     }
@@ -22,7 +22,7 @@ public class VelocityLimit : IBehavior
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IBehaviorData Data => _data;
+    public BehaviorData Data => _data;
     
     private VelocityLimitData _data;
 

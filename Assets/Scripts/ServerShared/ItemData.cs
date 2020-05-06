@@ -105,7 +105,7 @@ public abstract class EquippableItemData : CraftedItemData
     public PerformanceStat HeatExponent = new PerformanceStat();
 
     [InspectableField, JsonProperty("behaviors"), Key(13)]  
-    public List<IBehaviorData> Behaviors = new List<IBehaviorData>();
+    public List<BehaviorData> Behaviors = new List<BehaviorData>();
     
     [IgnoreMember]
     public abstract HardpointType HardpointType { get; }

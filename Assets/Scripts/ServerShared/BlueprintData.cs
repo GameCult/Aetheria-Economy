@@ -77,7 +77,7 @@ public class BlueprintStatEffect
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class StatReference
 {
-    [InspectableType(typeof(IBehaviorData)), JsonProperty("behavior"), Key(1)]
+    [InspectableType(typeof(BehaviorData)), JsonProperty("behavior"), Key(1)]
     public string Behavior;
     
     [InspectableField, JsonProperty("stat"), Key(2)]

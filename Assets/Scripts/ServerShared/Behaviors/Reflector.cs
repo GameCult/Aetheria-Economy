@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class ReflectorData : IBehaviorData
+public class ReflectorData : BehaviorData
 {
     [InspectableField, JsonProperty("crossSection"), Key(0)]  
     public PerformanceStat CrossSection = new PerformanceStat();
@@ -12,7 +12,7 @@ public class ReflectorData : IBehaviorData
     // [InspectableAnimationCurve, JsonProperty("visibility"), Key(1)]  
     // public float4[] VisibilityCurve;
     
-    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new Reflector(context, this, entity, item);
     }
@@ -24,7 +24,7 @@ public class Reflector : IBehavior
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IBehaviorData Data => _data;
+    public BehaviorData Data => _data;
     
     private ReflectorData _data;
 

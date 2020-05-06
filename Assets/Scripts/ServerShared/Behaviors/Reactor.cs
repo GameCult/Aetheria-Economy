@@ -2,7 +2,7 @@ using MessagePack;
 using Newtonsoft.Json;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class ReactorData : IBehaviorData
+public class ReactorData : BehaviorData
 {
     [InspectableField, JsonProperty("charge"), Key(0)]  
     public PerformanceStat Charge = new PerformanceStat();
@@ -19,7 +19,7 @@ public class ReactorData : IBehaviorData
     [InspectableField, JsonProperty("underload"), Key(4)]  
     public PerformanceStat UnderloadRecovery = new PerformanceStat();
     
-    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new Reactor(context, this, entity, item);
     }
@@ -33,7 +33,7 @@ public class Reactor : IBehavior
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IBehaviorData Data => _data;
+    public BehaviorData Data => _data;
 
     public Reactor(GameContext context, ReactorData data, Entity entity, Gear item)
     {

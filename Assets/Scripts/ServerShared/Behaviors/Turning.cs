@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class TurningData : IBehaviorData
+public class TurningData : BehaviorData
 {
     [InspectableField, JsonProperty("torque"), Key(0)]  
     public PerformanceStat Torque = new PerformanceStat();
@@ -15,7 +15,7 @@ public class TurningData : IBehaviorData
     [InspectableField, JsonProperty("heat"), Key(2)]  
     public PerformanceStat Heat = new PerformanceStat();
     
-    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new Turning(context, this, entity, item);
     }
@@ -27,7 +27,7 @@ public class Turning : IAnalogBehavior
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IBehaviorData Data => _data;
+    public BehaviorData Data => _data;
     
     private TurningData _data;
     

@@ -16,7 +16,7 @@ public interface IBehavior
     Entity Entity { get; }
     Gear Item { get; }
     GameContext Context { get; }
-    IBehaviorData Data { get; }
+    BehaviorData Data { get; }
 }
 
 public interface IActivatedBehavior : IBehavior
@@ -35,9 +35,14 @@ public interface IPersistentBehavior//<T> where T : IBehavior
     PersistentBehaviorData Store();
     void Restore(PersistentBehaviorData data);
 }
-[Union(0, typeof(FactoryPersistence)), 
+
+[MessagePackObject,
+ Union(0, typeof(FactoryPersistence)),
+ JsonObject(MemberSerialization.OptIn),
  JsonConverter(typeof(JsonKnownTypesConverter<PersistentBehaviorData>))]
-public class PersistentBehaviorData { }
+public abstract class PersistentBehaviorData
+{
+}
 
 [InspectableField, 
  Union(0, typeof(ProjectileWeaponData)), 
@@ -53,8 +58,11 @@ public class PersistentBehaviorData { }
  Union(10, typeof(VelocityConversionData)),
  Union(11, typeof(VelocityLimitData)),
  Union(12, typeof(FactoryData)),
- JsonConverter(typeof(JsonKnownTypesConverter<IBehaviorData>)), JsonObject(MemberSerialization.OptIn)]
-public interface IBehaviorData
+ JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
+public abstract class BehaviorData
 {
-    IBehavior CreateInstance(GameContext context, Entity entity, Gear item);
+    // [InspectableField, JsonProperty("index"), Key(0)]
+    // public int Index;
+    
+    public abstract IBehavior CreateInstance(GameContext context, Entity entity, Gear item);
 }

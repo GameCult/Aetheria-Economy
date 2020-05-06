@@ -5,7 +5,7 @@ using MessagePack;
 using Newtonsoft.Json;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class AfterburnerData : IBehaviorData
+public class AfterburnerData : BehaviorData
 {
     [InspectableField, JsonProperty("thrust"), Key(0)]  
     public PerformanceStat ThrustModifier = new PerformanceStat();
@@ -16,7 +16,7 @@ public class AfterburnerData : IBehaviorData
     [InspectableField, JsonProperty("torque"), Key(2)]  
     public PerformanceStat TorqueModifier = new PerformanceStat();
     
-    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new Afterburner(context, this, entity, item);
     }
@@ -32,7 +32,7 @@ public class Afterburner : IActivatedBehavior
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IBehaviorData Data => _data;
+    public BehaviorData Data => _data;
 
     public Afterburner(GameContext context, AfterburnerData data, Entity entity, Gear item)
     {

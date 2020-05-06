@@ -8,7 +8,7 @@ using static Unity.Mathematics.math;
 using Random = Unity.Mathematics.Random;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class FactoryData : IBehaviorData
+public class FactoryData : BehaviorData
 {
     [InspectableField, JsonProperty("toolingTime"), Key(0)]
     public PerformanceStat ToolingTime = new PerformanceStat();
@@ -16,7 +16,7 @@ public class FactoryData : IBehaviorData
     [InspectableField, JsonProperty("automation"), Key(1)]
     public int AutomationPoints;
     
-    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new Factory(context, this, entity, item);
     }
@@ -28,7 +28,7 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
     public Gear Item { get; }
     public GameContext Context { get; }
 
-    public IBehaviorData Data => _data;
+    public BehaviorData Data => _data;
     
     private FactoryData _data;
     
@@ -109,28 +109,28 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
                             };
                         }
                         Context.Cache.Add(newItem);
-                        Entity.Cargo.Add(newItem);
+                        Entity.Cargo.Add(newItem.ID);
                     }
                 }
                 else
                 {
                     var simpleCommodityData = blueprintItemData as SimpleCommodityData;
-                    var simpleCommodityInstance = Entity.Cargo.FirstOrDefault(i => i.Data == simpleCommodityData.ID) as SimpleCommodity;
-                    if (simpleCommodityInstance == null)
+                    var simpleCommodityInstance = Entity.Cargo.FirstOrDefault(i => i == simpleCommodityData.ID);
+                    if (simpleCommodityInstance == Guid.Empty)
                     {
-                        simpleCommodityInstance = new SimpleCommodity
+                        var newSimpleCommodity = new SimpleCommodity
                         {
                             Context = Context,
                             Data = simpleCommodityData.ID,
                             ID = Guid.NewGuid(),
                             Quantity = blueprint.Quantity
                         };
-                        Context.Cache.Add(simpleCommodityInstance);
-                        Entity.Cargo.Add(simpleCommodityInstance);
+                        Context.Cache.Add(newSimpleCommodity);
+                        Entity.Cargo.Add(newSimpleCommodity.ID);
                     }
                     else
                     {
-                        simpleCommodityInstance.Quantity += blueprint.Quantity;
+                        Context.Cache.Get<SimpleCommodity>(simpleCommodityInstance).Quantity += blueprint.Quantity;
                     }
                 }
                 Entity.RecalculateMass();
@@ -138,15 +138,15 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
                 var simpleIngredients = new List<SimpleCommodity>();
                 var compoundIngredients = new List<CompoundCommodity>();
                 var hasAllIngredients = true;
+                var cargoInstances = Entity.Cargo.Select(c => Context.Cache.Get<ItemInstance>(c));
                 foreach (var kvp in blueprint.Ingredients)
                 {
                     var itemData = Context.Cache.Get(kvp.Key);
                     if (itemData is SimpleCommodityData)
                     {
-                        var matchingItem = Entity.Cargo.FirstOrDefault(ii =>
+                        var matchingItem = cargoInstances.FirstOrDefault(ii =>
                         {
-                            var simpleCommodity = ii as SimpleCommodity;
-                            if (simpleCommodity == null) return false;
+                            if (!(ii is SimpleCommodity simpleCommodity)) return false;
                             return simpleCommodity.Data == itemData.ID && simpleCommodity.Quantity >= kvp.Value;
                         }) as SimpleCommodity;
                         hasAllIngredients = hasAllIngredients && matchingItem != null;
@@ -156,10 +156,10 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
                     else
                     {
                         var matchingItems =
-                            Entity.Cargo.Where(ii => (ii as CompoundCommodity)?.Data == itemData.ID).Cast<CompoundCommodity>().ToArray();
+                            cargoInstances.Where(ii => (ii as CompoundCommodity)?.Data == itemData.ID).Cast<CompoundCommodity>().ToArray();
                         hasAllIngredients = hasAllIngredients && matchingItems.Length >= kvp.Value;
                         if(matchingItems.Length >= kvp.Value)
-                            compoundIngredients.AddRange(matchingItems);
+                            compoundIngredients.AddRange(matchingItems.Take(kvp.Value));
                     }
                 }
 
@@ -168,7 +168,7 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
                     _reservedStock.AddRange(compoundIngredients);
                     foreach (var compoundCommodity in compoundIngredients)
                     {
-                        Entity.Cargo.Remove(compoundCommodity);
+                        Entity.Cargo.Remove(compoundCommodity.ID);
                     }
                     foreach (var simpleCommodity in simpleIngredients)
                     {
@@ -177,7 +177,7 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
                         if (simpleCommodity.Quantity == blueprintQuantity)
                         {
                             _reservedStock.Add(simpleCommodity);
-                            Entity.Cargo.Remove(simpleCommodity);
+                            Entity.Cargo.Remove(simpleCommodity.ID);
                         }
                         else
                         {
@@ -230,11 +230,11 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class FactoryPersistence : PersistentBehaviorData
 {
-    public Guid Blueprint;
-    public float RemainingManHours;
-    public bool Retooling;
-    public bool Producing;
-    public Guid[] ReservedStock;
-    public int AssignedPopulation;
-    public float ProductionQuality;
+    [JsonProperty("blueprint"), Key(0)] public Guid Blueprint;
+    [JsonProperty("remainingManHours"), Key(1)] public float RemainingManHours;
+    [JsonProperty("retooling"), Key(2)] public bool Retooling;
+    [JsonProperty("producing"), Key(3)] public bool Producing;
+    [JsonProperty("reservedStock"), Key(4)] public Guid[] ReservedStock;
+    [JsonProperty("assignedPopulation"), Key(5)] public int AssignedPopulation;
+    [JsonProperty("productionQuality"), Key(6)] public float ProductionQuality;
 }

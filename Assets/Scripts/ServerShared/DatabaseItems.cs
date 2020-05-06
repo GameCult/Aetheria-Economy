@@ -68,6 +68,7 @@ public class Player : DatabaseEntry, INamedEntry
 public class Corporation : DatabaseEntry, INamedEntry
 {
     [JsonProperty("name"), Key(1)]  public string Name;
+    [JsonProperty("tasks"), Key(2)]  public List<AgentTask> Tasks = new List<AgentTask>();
     
     [IgnoreMember] public string EntryName
     {

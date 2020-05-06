@@ -519,10 +519,10 @@ public class StrategyGameManager : MonoBehaviour
 
         if (args[0] == "ship")
         {
-            var entity = new Ship(_context, hull, gear, Enumerable.Empty<ItemInstance>());
+            var entity = new Ship(_context, hull.ID, gear.Select(i=>i.ID), Enumerable.Empty<Guid>());
             _context.Cache.Add(entity);
             _context.ZoneEntities[_populatedZone][entity.ID] = entity;
-            _context.Agents.Add(new AgentController(_context, _populatedZone, entity));
+            _context.Agents.Add(new AgentController(_context, _populatedZone, entity.ID));
             var zoneShip = Instantiate(ZoneShipPrefab, ZoneRoot);
             zoneShip.Label.text = $"Ship {_zoneShips.Count}";
             _zoneShips[entity] = zoneShip;

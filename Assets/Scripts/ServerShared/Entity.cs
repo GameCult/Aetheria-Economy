@@ -15,32 +15,35 @@ using static Unity.Mathematics.math;
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<Entity>))]
 public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
 {
+    [JsonProperty("temperature"), Key(1)] public float Temperature;
+    [JsonProperty("energy"), Key(2)] public float Energy;
+    [JsonProperty("position"), Key(3)] public float2 Position;
+    [JsonProperty("direction"), Key(4)] public float2 Direction = float2(0,1);
+    [JsonProperty("velocity"), Key(5)] public float2 Velocity;
+    [JsonProperty("cargo"), Key(6)] public readonly List<Guid> Cargo; // Type: ItemInstance
+    [JsonProperty("equipment"), Key(7)] public readonly List<Guid> EquippedItems; // Type: Gear
+    [JsonProperty("parent"), Key(8)] public Guid Parent; // Type: Entity
+    [JsonProperty("children"), Key(9)] public List<Guid> Children = new List<Guid>(); // Type: Entity
+    [JsonProperty("hull"), Key(10)] public Guid Hull; // Type: Gear
+    [JsonProperty("persistedBehaviorData"), Key(11)] public Dictionary<Guid, PersistentBehaviorData[]> PersistedBehaviors;
+    [JsonProperty("agent"), Key(12)] public EntityAgent Agent;
+    
+    // [IgnoreMember] protected List<IBehavior> Behaviors;
+    [IgnoreMember] public Guid Zone;
+    [IgnoreMember] public Dictionary<Gear, List<IBehavior>> ItemBehaviors;
+    [IgnoreMember] public Dictionary<Gear, List<IActivatedBehavior>> Bindings;
+    [IgnoreMember] public Dictionary<IAnalogBehavior, float> Axes;
     [IgnoreMember] public Dictionary<IAnalogBehavior, float> AxisOverrides = new Dictionary<IAnalogBehavior, float>();
     [IgnoreMember] public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
-    public float Temperature;
-    public float Energy;
-    public float2 Position;
-    public float2 Direction = float2(0,1);
-    public float2 Velocity;
-    [IgnoreMember] public Dictionary<Guid, List<IActivatedBehavior>> Bindings;
-    [IgnoreMember] public Dictionary<IAnalogBehavior, float> Axes;
-    public readonly List<ItemInstance> Cargo;
-    public readonly List<Gear> EquippedItems;
-    public Entity Parent;
-    public List<Entity> Children = new List<Entity>();
-    public Guid Zone;
     
-    [IgnoreMember] protected List<IBehavior> Behaviors;
-    
-    public Gear Hull { get; }
+    private Dictionary<Gear, EquippableItemData> GearData;
 
     [IgnoreMember] public float Mass { get; private set; }
     [IgnoreMember] public float SpecificHeat { get; private set; }
     [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
 
-    public PersistentBehaviorData[] PersistedBehaviors;
 
-    public Entity(GameContext context, Gear hull, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo)
+    public Entity(GameContext context, Guid hull, IEnumerable<Guid> items, IEnumerable<Guid> cargo)
     {
         ID = Guid.NewGuid();
         Context = context;
@@ -51,24 +54,35 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
         RecalculateMass();
 
-        var activeItems = Hull == null ? EquippedItems : EquippedItems.Append(Hull);
+        AddItemBehaviors();
+    }
+
+    public void AddItemBehaviors()
+    {
+        var gear = EquippedItems.Append(Hull);
+        var gearData = gear.ToDictionary(id => id, id => Context.Cache.Get<Gear>(id));
+        GearData = gearData.Values.ToDictionary(g => g, g => g.ItemData);
         
-        Behaviors = activeItems
-            .Where(i=>i.ItemData.Behaviors?.Any()??false)
-            .SelectMany(i => i.ItemData.Behaviors
-                .Select(bd => bd.CreateInstance(Context, this, i)))
+        var allbehaviors = gear
+            .Where(i=>gearData[i].ItemData.Behaviors?.Any()??false)
+            .SelectMany(i => gearData[i].ItemData.Behaviors
+                .Select(bd => bd.CreateInstance(Context, this, gearData[i])))
             .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
         
-        Bindings = Behaviors
+        ItemBehaviors = allbehaviors
+            .GroupBy(b => b.Item.ID, (guid, behaviors) => new {guid, behaviors})
+            .ToDictionary(g => gearData[g.guid], g => g.behaviors.ToList());
+        
+        Bindings = allbehaviors
             .Where(b => b is IActivatedBehavior)
             .GroupBy(b => b.Item.ID, (guid, behaviors) => new {guid, behaviors})
-            .ToDictionary(g => g.guid, g => g.behaviors.Cast<IActivatedBehavior>().ToList());
+            .ToDictionary(g => gearData[g.guid], g => g.behaviors.Cast<IActivatedBehavior>().ToList());
         
-        Axes = Behaviors
+        Axes = allbehaviors
             .Where(b => b is IAnalogBehavior)
             .ToDictionary(b => b as IAnalogBehavior, b => 0f);
         
-        foreach (var behavior in Behaviors)
+        foreach (var behavior in allbehaviors)
         {
             behavior.Initialize();
         }
@@ -76,28 +90,30 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
     public void RecalculateMass()
     {
-        Mass = Hull?.Mass ?? 0 + 
-            EquippedItems.Sum(i => i.Mass) + 
-            Cargo.Sum(ii => ii.Mass) + 
-            Children.Sum(c=>c.Mass);
+        Mass = Context.Cache.Get<Gear>(Hull).Mass + 
+            EquippedItems.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.Mass) + 
+            Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.Mass) + 
+            Children.Select(i => Context.Cache.Get<Entity>(i)).Sum(c=>c.Mass);
         
-        SpecificHeat = (Hull?.HeatCapacity ?? 0) + 
-                       EquippedItems.Sum(i => i.HeatCapacity) +
-                       Cargo.Sum(ii => ii.HeatCapacity);
+        SpecificHeat = Context.Cache.Get<Gear>(Hull).HeatCapacity + 
+                       EquippedItems.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.HeatCapacity) +
+                       Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.HeatCapacity);
     }
 
     public IEnumerable<T> GetBehaviors<T>() where T : class, IBehavior
     {
-        foreach (var behavior in Behaviors)
-            if (behavior is T b)
-                yield return b;
+        foreach (var behaviors in ItemBehaviors.Values)
+            foreach (var behavior in behaviors)
+                if (behavior is T b)
+                    yield return b;
     }
 
-    public IEnumerable<T> GetBehaviorData<T>() where T : class, IBehaviorData
+    public IEnumerable<T> GetBehaviorData<T>() where T : BehaviorData
     {
-        foreach (var behavior in Behaviors)
-            if (behavior.Data is T b)
-                yield return b;
+        foreach (var behaviors in ItemBehaviors.Values)
+            foreach (var behavior in behaviors)
+                if (behavior.Data is T b)
+                    yield return b;
     }
 
     public void AddHeat(float heat)
@@ -109,60 +125,103 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     {
         foreach(var analogBehavior in Axes.Keys)
             analogBehavior.SetAxis(AxisOverrides.ContainsKey(analogBehavior) ? AxisOverrides[analogBehavior] : Axes[analogBehavior]);
-        
-        foreach(var behavior in Behaviors)
+
+        foreach (var behavior in ItemBehaviors.SelectMany(item => item.Value))
             behavior.Update(delta);
 
-        foreach (var item in EquippedItems.Where(item => item.ItemData.Performance(Temperature) < .01f))
+        foreach (var staleItem in GearData
+            .Where(kvp=>kvp.Key.ItemData!=kvp.Value)
+            .Select(kvp=>kvp.Key))
+        {
+            // Item is stale, there's an updated one in the database cache
+            //var actualItem = Context.Cache.Get<Gear>(staleItem.ID);
+            var staleBehaviors = ItemBehaviors[staleItem];
+            ItemBehaviors.Remove(staleItem);
+            
+            // We'll be reloading the item along with its behaviors, some data must be persisted
+            var persistentData = staleBehaviors
+                .Where(b => b is IPersistentBehavior)
+                .Cast<IPersistentBehavior>()
+                .Select(b => b.Store());
+            
+            // Regenerate the behavior list for the updated item
+            ItemBehaviors[staleItem] = staleItem.ItemData.Behaviors
+                .Select(bd => bd.CreateInstance(Context, this, staleItem))
+                .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
+            
+            // Restore state for persisted behaviors
+            foreach(var persistentBehaviorData in ItemBehaviors[staleItem]
+                .Where(b => b is IPersistentBehavior)
+                .Cast<IPersistentBehavior>()
+                .Zip(persistentData, (behavior, data) => new {behavior, data}))
+                persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
+            
+            // Regenerate activated behavior bindings
+            if (Bindings.ContainsKey(staleItem))
+            {
+                Bindings.Remove(staleItem);
+                Bindings[staleItem] = ItemBehaviors[staleItem]
+                    .Where(b => b is IActivatedBehavior)
+                    .Cast<IActivatedBehavior>().ToList();
+            }
+
+            // Remove axis bindings and overrides for analog behaviors
+            foreach (var axis in staleBehaviors.Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
+            {
+                Axes.Remove(axis);
+                if (AxisOverrides.ContainsKey(axis))
+                    AxisOverrides.Remove(axis);
+            }
+
+            // Regenerate axis bindings for analog behaviors
+            foreach (var axis in ItemBehaviors[staleItem].Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
+                Axes[axis] = 0;
+        }
+
+        foreach (var item in EquippedItems
+            .Select(item => Context.Cache.Get<Gear>(item))
+            .Where(item => item.ItemData.Performance(Temperature) < .01f))
             item.Durability -= delta;
 
-        if (Parent != null)
+        if (Parent != Guid.Empty)
         {
-            Position = Parent.Position;
-            Velocity = Parent.Velocity;
+            var parent = Context.Cache.Get<Entity>(Parent);
+            Position = parent.Position;
+            Velocity = parent.Velocity;
         }
     }
 
     public void OnBeforeSerialize()
     {
-        PersistedBehaviors = Behaviors
-            .Where(b => b is IPersistentBehavior)
-            .Cast<IPersistentBehavior>()
-            .Select(b => b.Store()).ToArray();
+        // Filter item behavior collections by those with any persistent behaviors
+        // For each item create an object containing the item ID and a list of persistent behaviors
+        // Then turn that into a dictionary mapping from item ID to an array of every behaviors persistent data
+        PersistedBehaviors = ItemBehaviors
+            .Where(x => x.Value.Any(b=>b is IPersistentBehavior))
+            .Select(x => new {gear=x.Key, behaviors = x.Value
+                .Where(b=>b is IPersistentBehavior)
+                .Cast<IPersistentBehavior>()})
+            .ToDictionary(x=> x.gear.ID, x=>x.behaviors.Select(b => b.Store()).ToArray());
     }
 
     public void OnAfterDeserialize()
     {
         RecalculateMass();
-
-        var activeItems = Hull == null ? EquippedItems : EquippedItems.Append(Hull);
         
-        Behaviors = activeItems
-            .Where(i=>i.ItemData.Behaviors?.Any()??false)
-            .SelectMany(i => i.ItemData.Behaviors
-                .Select(bd => bd.CreateInstance(Context, this, i)))
-            .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
+        AddItemBehaviors();
 
         var index = 0;
-        foreach (var persistentBehavior in Behaviors
-            .Where(b => b is IPersistentBehavior)
-            .Cast<IPersistentBehavior>())
-        {
-            persistentBehavior.Restore(PersistedBehaviors[index++]);
-        }
-        
-        Bindings = Behaviors
-            .Where(b => b is IActivatedBehavior)
-            .GroupBy(b => b.Item.ID, (guid, behaviors) => new {guid, behaviors})
-            .ToDictionary(g => g.guid, g => g.behaviors.Cast<IActivatedBehavior>().ToList());
-        
-        Axes = Behaviors
-            .Where(b => b is IAnalogBehavior)
-            .ToDictionary(b => b as IAnalogBehavior, b => 0f);
-        
-        foreach (var behavior in Behaviors)
-        {
-            behavior.Initialize();
-        }
+        // Iterate only over the behaviors of items which contain persistent data
+        // Filter the behaviors for each item to get the persistent ones, then cast them and combine with the persisted data array for that item
+        foreach (var persistentBehaviorData in ItemBehaviors
+            .Where(itemBehaviors => PersistedBehaviors.ContainsKey(itemBehaviors.Key.ID)).
+            SelectMany(itemBehaviors => itemBehaviors.Value
+                .Where(b=> b is IPersistentBehavior)
+                .Cast<IPersistentBehavior>()
+                .Zip(PersistedBehaviors[itemBehaviors.Key.ID], (behavior, data) => new{behavior, data})))
+            persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
+
+        Agent.Context = Context;
+        Agent.Entity = ID;
     }
 }

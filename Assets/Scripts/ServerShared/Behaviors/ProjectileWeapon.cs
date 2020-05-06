@@ -2,7 +2,7 @@ using MessagePack;
 using Newtonsoft.Json;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class ProjectileWeaponData : WeaponData, IBehaviorData
+public class ProjectileWeaponData : WeaponData
 {
     [InspectablePrefab, JsonProperty("bullet"), Key(9)]  
     public string BulletPrefab;
@@ -16,7 +16,7 @@ public class ProjectileWeaponData : WeaponData, IBehaviorData
     [InspectableField, JsonProperty("bulletVelocity"), Key(12)]  
     public PerformanceStat Velocity = new PerformanceStat();
     
-    public IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new ProjectileWeapon(context, this, entity, item);
     }
@@ -97,5 +97,5 @@ public class ProjectileWeapon : IActivatedBehavior
         }
     }
     
-    public IBehaviorData Data => _projectileWeapon;
+    public BehaviorData Data => _projectileWeapon;
 }

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 [Union(0, typeof(ProjectileWeaponData)),
  Union(1, typeof(LauncherData))]
-public abstract class WeaponData
+public abstract class WeaponData : BehaviorData
 {
     [InspectableField, JsonProperty("damageType"), Key(0)]
     public DamageType DamageType;

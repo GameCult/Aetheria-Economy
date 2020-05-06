@@ -9,7 +9,7 @@ public class OrbitalEntity : Entity
 {
     private Guid _orbitData;
     
-    public OrbitalEntity(GameContext context, Gear hull, IEnumerable<Gear> items, IEnumerable<ItemInstance> cargo, Guid orbit) : base(context, hull, items, cargo)
+    public OrbitalEntity(GameContext context, Guid hull, IEnumerable<Guid> items, IEnumerable<Guid> cargo, Guid orbit) : base(context, hull, items, cargo)
     {
         _orbitData = orbit;
     }

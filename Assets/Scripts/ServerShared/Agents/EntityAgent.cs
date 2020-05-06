@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using JsonKnownTypes;
+using MessagePack;
+using Newtonsoft.Json;
 
+[MessagePackObject, 
+ JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<Entity>))]
 public class EntityAgent
 {
-    public AgentBehavior CurrentBehavior;
+    [IgnoreMember] public AgentBehavior CurrentBehavior;
+    [IgnoreMember] public Guid Entity;
+    [IgnoreMember] public GameContext Context;
+    [JsonProperty("homeZone"), Key(0)] public Guid HomeZone;
+    [JsonProperty("homeColony"), Key(0)] public Guid HomeColony;
     
-    public Entity Entity { get; }
-    public GameContext Context { get; }
-    public Guid Zone { get; set; }
-    
-    public EntityAgent(GameContext context, Guid zone, Entity entity)
+    public EntityAgent(GameContext context, Guid entity, Guid homeZone, Guid homeColony)
     {
         Entity = entity;
-        Zone = zone;
+        HomeZone = homeZone;
         Context = context;
     }
 
     public void Update(float delta)
     {
-        CurrentBehavior.Update(delta);
+        CurrentBehavior?.Update(delta);
     }
 }
