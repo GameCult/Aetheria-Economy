@@ -10,10 +10,10 @@ using Random = Unity.Mathematics.Random;
 public class GameContext
 {
     public Random Random = new Random((uint) (DateTime.Now.Ticks%uint.MaxValue));
-    public List<AgentController> Agents = new List<AgentController>();
     public Dictionary<Guid, Guid[]> ZonePlanets = new Dictionary<Guid, Guid[]>();
     public Dictionary<Guid, Dictionary<Guid, Entity>> ZoneEntities = new Dictionary<Guid, Dictionary<Guid, Entity>>();
     public Dictionary<string, GalaxyMapLayerData> MapLayers = new Dictionary<string, GalaxyMapLayerData>();
+    public Dictionary<Guid, List<IController>> CorporationControllers = new Dictionary<Guid, List<IController>>();
     
     private Action<string> _logger;
 
@@ -38,6 +38,7 @@ public class GameContext
         {
             _deltaTime = (float) (value - _time);
             _time = value;
+            //Log($"GameContext delta time: {_deltaTime}");
         }
     }
 
@@ -82,6 +83,7 @@ public class GameContext
         ZonePlanets[zoneID] = zoneData.Planets;
         
         // TODO: Load stored entities
+        ZoneEntities[zoneID] = new Dictionary<Guid, Entity>();
     }
 
     public void Update()
@@ -93,13 +95,30 @@ public class GameContext
         {
             _orbitPositions[orbit] = GetOrbitPosition(orbit);
             _orbitVelocities[orbit] = _previousOrbitPositions.ContainsKey(orbit)
-                ? _orbitPositions[orbit] - _previousOrbitPositions[orbit]
+                ? (_orbitPositions[orbit] - _previousOrbitPositions[orbit]) / _deltaTime
                 : float2.zero;
         }
-        
-        foreach (var agent in Agents)
+
+        foreach (var corporation in Cache.GetAll<Corporation>())
         {
-            agent.Update(_deltaTime);
+            foreach (var taskController in corporation.Tasks
+                .Select(id => Cache.Get<AgentTask>(id)) // Fetch the tasks from the database cache
+                .Where(task => task.Reserved == false) // Filter out tasks that have already been reserved
+                .GroupBy(task => task.Type) // Group tasks by job type
+                .Where(grouping =>
+                    CorporationControllers[corporation.ID] // Filter out groupings with no available controller
+                        .Any(controller => controller.Available && controller.JobType == grouping.Key))
+                .Select(grouping => grouping // Pair each task in remaining groupings with available controllers
+                    .OrderByDescending(task => task.Priority) // Sort by priority, highest first
+                    .Zip(CorporationControllers[corporation.ID]
+                            .Where(controller => controller.Available && controller.JobType == grouping.Key),
+                        (task, controller) => new {task, controller}))
+                .SelectMany(x => x)) // Flatten groupings
+            {
+                taskController.task.Reserved = true;
+                taskController.controller.AssignTask(taskController.task.ID);
+            }
+                
         }
         
         foreach (var kvp in ZoneEntities)

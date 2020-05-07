@@ -9,14 +9,21 @@ using UnityEngine;
 [MessagePackObject, 
  Union(0, typeof(StationTowing)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
-public abstract class AgentTask
+public abstract class AgentTask : DatabaseEntry
 {
-    [IgnoreMember] public abstract AgentJob JobType { get; }
-    [JsonProperty("id"), Key(0)] public int Priority;
-    [JsonProperty("zone"), Key(1)] public Guid Zone;
+    [JsonProperty("priority"), Key(1)]
+    public int Priority;
+    
+    [JsonProperty("zone"), Key(2)]
+    public Guid Zone;
+    
+    [JsonProperty("assignedEntity"), Key(3)]
+    public bool Reserved;
+    
+    [IgnoreMember] public abstract TaskType Type { get; }
 }
 
-public enum AgentJob
+public enum TaskType
 {
     Mine,
     Haul,

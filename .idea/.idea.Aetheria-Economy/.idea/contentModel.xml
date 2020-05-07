@@ -1290,8 +1290,10 @@
             <e p="Behaviors" t="Include">
               <e p="Afterburner.cs" t="Include" />
               <e p="Behaviors.cs" t="Include" />
+              <e p="Controller.cs" t="Include" />
               <e p="FactoryBehavior.cs" t="Include" />
               <e p="Launcher.cs" t="Include" />
+              <e p="PatrolController.cs" t="Include" />
               <e p="ProjectileWeapon.cs" t="Include" />
               <e p="Radiator.cs" t="Include" />
               <e p="Reactor.cs" t="Include" />
@@ -1299,6 +1301,7 @@
               <e p="Sensor.cs" t="Include" />
               <e p="Shield.cs" t="Include" />
               <e p="Thruster.cs" t="Include" />
+              <e p="TowingController.cs" t="Include" />
               <e p="Turning.cs" t="Include" />
               <e p="VelocityConversion.cs" t="Include" />
               <e p="VelocityLimit.cs" t="Include" />

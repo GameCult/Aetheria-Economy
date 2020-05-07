@@ -71,8 +71,10 @@
     <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Afterburner.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Controller.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\FactoryBehavior.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Launcher.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\PatrolController.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ProjectileWeapon.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Radiator.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reactor.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Sensor.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Shield.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thruster.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\TowingController.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Turning.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\VelocityConversion.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\VelocityLimit.cs" />

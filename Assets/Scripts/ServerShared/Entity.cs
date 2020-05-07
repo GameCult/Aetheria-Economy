@@ -26,7 +26,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     [JsonProperty("children"), Key(9)] public List<Guid> Children = new List<Guid>(); // Type: Entity
     [JsonProperty("hull"), Key(10)] public Guid Hull; // Type: Gear
     [JsonProperty("persistedBehaviorData"), Key(11)] public Dictionary<Guid, PersistentBehaviorData[]> PersistedBehaviors;
-    [JsonProperty("agent"), Key(12)] public EntityAgent Agent;
+    [JsonProperty("corporation"), Key(12)] public Guid Corporation;
     
     // [IgnoreMember] protected List<IBehavior> Behaviors;
     [IgnoreMember] public Guid Zone;
@@ -43,10 +43,11 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
 
 
-    public Entity(GameContext context, Guid hull, IEnumerable<Guid> items, IEnumerable<Guid> cargo)
+    public Entity(GameContext context, Guid hull, IEnumerable<Guid> items, IEnumerable<Guid> cargo, Guid zone)
     {
         ID = Guid.NewGuid();
         Context = context;
+        Zone = zone;
 
         EquippedItems = items.ToList();
         Cargo = cargo.ToList();
@@ -63,29 +64,27 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         var gearData = gear.ToDictionary(id => id, id => Context.Cache.Get<Gear>(id));
         GearData = gearData.Values.ToDictionary(g => g, g => g.ItemData);
         
-        var allbehaviors = gear
-            .Where(i=>gearData[i].ItemData.Behaviors?.Any()??false)
-            .SelectMany(i => gearData[i].ItemData.Behaviors
-                .Select(bd => bd.CreateInstance(Context, this, gearData[i])))
-            .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
+        ItemBehaviors = gear
+            .Where(i=> gearData[i].ItemData.Behaviors?.Any()??false)
+            .ToDictionary(i=> gearData[i], i => gearData[i].ItemData.Behaviors
+                .Select(bd => bd.CreateInstance(Context, this, gearData[i]))
+                .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0)
+                .ToList());
         
-        ItemBehaviors = allbehaviors
-            .GroupBy(b => b.Item.ID, (guid, behaviors) => new {guid, behaviors})
-            .ToDictionary(g => gearData[g.guid], g => g.behaviors.ToList());
+        Bindings = ItemBehaviors
+            .Where(x => x.Value.Any(g => g is IActivatedBehavior))
+            .Select(x=> new {gear = x.Key, behaviors = x.Value
+                .Where(g => g is IActivatedBehavior)
+                .Cast<IActivatedBehavior>().ToList()})
+            .ToDictionary(x => x.gear, x => x.behaviors);
         
-        Bindings = allbehaviors
-            .Where(b => b is IActivatedBehavior)
-            .GroupBy(b => b.Item.ID, (guid, behaviors) => new {guid, behaviors})
-            .ToDictionary(g => gearData[g.guid], g => g.behaviors.Cast<IActivatedBehavior>().ToList());
-        
-        Axes = allbehaviors
+        Axes = ItemBehaviors.Values
+            .SelectMany(behaviors=>behaviors)
             .Where(b => b is IAnalogBehavior)
             .ToDictionary(b => b as IAnalogBehavior, b => 0f);
         
-        foreach (var behavior in allbehaviors)
-        {
-            behavior.Initialize();
-        }
+        foreach (var behavior in ItemBehaviors.Values
+            .SelectMany(behaviors=>behaviors)) behavior.Initialize();
     }
 
     public void RecalculateMass()
@@ -148,6 +147,9 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             ItemBehaviors[staleItem] = staleItem.ItemData.Behaviors
                 .Select(bd => bd.CreateInstance(Context, this, staleItem))
                 .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
+            
+            foreach(var behavior in ItemBehaviors[staleItem])
+                behavior.Initialize();
             
             // Restore state for persisted behaviors
             foreach(var persistentBehaviorData in ItemBehaviors[staleItem]
@@ -220,8 +222,5 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                 .Cast<IPersistentBehavior>()
                 .Zip(PersistedBehaviors[itemBehaviors.Key.ID], (behavior, data) => new{behavior, data})))
             persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
-
-        Agent.Context = Context;
-        Agent.Entity = ID;
     }
 }

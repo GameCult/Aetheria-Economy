@@ -26,12 +26,14 @@ public class Turning : IAnalogBehavior
     public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
+    
+    public float Torque { get; private set; }
 
     public BehaviorData Data => _data;
     
     private TurningData _data;
     
-    private float _turning;
+    private float _input;
 
     public Turning(GameContext context, TurningData data, Entity entity, Gear item)
     {
@@ -43,7 +45,7 @@ public class Turning : IAnalogBehavior
     
     public void SetAxis(float value)
     {
-        _turning = clamp(value, -1, 1);
+        _input = clamp(value, -1, 1);
     }
 
     public void Initialize()
@@ -52,8 +54,9 @@ public class Turning : IAnalogBehavior
 
     public void Update(float delta)
     {
-        Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_turning * Context.Evaluate(_data.Torque, Item, Entity) / Entity.Mass * delta));
-        Entity.AddHeat(abs(_turning) * Context.Evaluate(_data.Heat, Item, Entity) * delta);
-        Entity.VisibilitySources[this] = abs(_turning) * Context.Evaluate(_data.Visibility, Item, Entity);
+        Torque = Context.Evaluate(_data.Torque, Item, Entity);
+        Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque / Entity.Mass * delta));
+        Entity.AddHeat(abs(_input) * Context.Evaluate(_data.Heat, Item, Entity) * delta);
+        Entity.VisibilitySources[this] = abs(_input) * Context.Evaluate(_data.Visibility, Item, Entity);
     }
 }

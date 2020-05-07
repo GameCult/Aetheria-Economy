@@ -80,6 +80,7 @@ public class StrategyGameManager : MonoBehaviour
     
     void Start()
     {
+        ConsoleController.MessageReceiver = this;
         _galaxyOrthoSize = GalaxyScale / 2;
         _cache = new DatabaseCache();
 
@@ -215,6 +216,7 @@ public class StrategyGameManager : MonoBehaviour
         if (_context != null)
         {
             _context.Time = Time.time;
+            //Debug.Log($"Unity delta time: {Time.deltaTime}");
             _context.Update();
         }
         if (_currentTab == GalaxyTabButton)
@@ -479,10 +481,10 @@ public class StrategyGameManager : MonoBehaviour
         HullData hullData;
         if (args.Length > 1)
         {
-            hullData = _cache.GetAll<HullData>().FirstOrDefault(h => h.Name == args[0]);
+            hullData = _cache.GetAll<HullData>().FirstOrDefault(h => h.Name == args[1]);
             if (hullData == null)
             {
-                Debug.Log($"Hull with name \"{args[0]}\" not found!");
+                Debug.Log($"Hull with name \"{args[1]}\" not found!");
                 return;
             }
         }
@@ -519,10 +521,10 @@ public class StrategyGameManager : MonoBehaviour
 
         if (args[0] == "ship")
         {
-            var entity = new Ship(_context, hull.ID, gear.Select(i=>i.ID), Enumerable.Empty<Guid>());
+            var entity = new Ship(_context, hull.ID, gear.Select(i=>i.ID), Enumerable.Empty<Guid>(), _populatedZone);
             _context.Cache.Add(entity);
             _context.ZoneEntities[_populatedZone][entity.ID] = entity;
-            _context.Agents.Add(new AgentController(_context, _populatedZone, entity.ID));
+            //_context.Agents.Add(new AgentController(_context, _populatedZone, entity.ID));
             var zoneShip = Instantiate(ZoneShipPrefab, ZoneRoot);
             zoneShip.Label.text = $"Ship {_zoneShips.Count}";
             _zoneShips[entity] = zoneShip;

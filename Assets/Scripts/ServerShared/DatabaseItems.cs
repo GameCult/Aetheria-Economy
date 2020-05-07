@@ -36,6 +36,7 @@ public interface INamedEntry
  Union(15, typeof(OrbitData)), 
  Union(16, typeof(PlanetData)),
  Union(17, typeof(PersonalityAttribute)),
+ Union(18, typeof(AgentTask)),
  // Union(17, typeof(ShipData)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 //[Union(21, typeof(ContractData))]
@@ -67,8 +68,11 @@ public class Player : DatabaseEntry, INamedEntry
 [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class Corporation : DatabaseEntry, INamedEntry
 {
-    [JsonProperty("name"), Key(1)]  public string Name;
-    [JsonProperty("tasks"), Key(2)]  public List<AgentTask> Tasks = new List<AgentTask>();
+    [JsonProperty("name"), Key(1)]
+    public string Name;
+    
+    [JsonProperty("tasks"), Key(2)]
+    public List<Guid> Tasks = new List<Guid>();
     
     [IgnoreMember] public string EntryName
     {

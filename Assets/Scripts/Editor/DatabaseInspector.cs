@@ -364,6 +364,19 @@ public class DatabaseInspector : EditorWindow
                                 }
                                 menu.ShowAsContext();
                             }
+                            else if (listType.IsAbstract)
+                            {
+                                var menu = new GenericMenu();
+                                foreach (var behaviorType in listType.GetAllChildClasses().Where(t=>!t.IsAbstract))
+                                {
+                                    menu.AddItem(new GUIContent(behaviorType.Name), false, () =>
+                                    {
+                                        list.Add(Activator.CreateInstance(behaviorType));
+                                        DatabaseCache.Add(entry);
+                                    });
+                                }
+                                menu.ShowAsContext();
+                            }
                             else
                             {
                                 list.Add(Activator.CreateInstance(listType));

@@ -4,21 +4,23 @@ using System.Collections.Generic;
 using JsonKnownTypes;
 using MessagePack;
 using Newtonsoft.Json;
-using UnityEngine;
 
 [MessagePackObject, 
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 public class StationTowing : AgentTask
 {
-    [IgnoreMember] public override AgentJob JobType => AgentJob.Tow;
+    [IgnoreMember] public override TaskType Type => TaskType.Tow;
     
-    private Guid _entity;
+    [JsonProperty("station"), Key(4)]
+    private Guid _station;
+    
+    [JsonProperty("targetOrbit"), Key(5)]
     private Guid _targetOrbit;
 
-    public StationTowing(Guid zone, Guid entity, Guid targetOrbit)
+    public StationTowing(Guid zone, Guid station, Guid targetOrbit)
     {
         Zone = zone;
-        _entity = entity;
+        _station = station;
         _targetOrbit = targetOrbit;
     }
 }

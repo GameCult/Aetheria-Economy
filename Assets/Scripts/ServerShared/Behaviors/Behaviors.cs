@@ -13,9 +13,6 @@ public interface IBehavior
 {
     void Initialize();
     void Update(float delta);
-    Entity Entity { get; }
-    Gear Item { get; }
-    GameContext Context { get; }
     BehaviorData Data { get; }
 }
 
@@ -34,6 +31,13 @@ public interface IPersistentBehavior//<T> where T : IBehavior
 {
     PersistentBehaviorData Store();
     void Restore(PersistentBehaviorData data);
+}
+
+public interface IController
+{
+    bool Available { get; }
+    TaskType JobType { get; }
+    void AssignTask(Guid task);
 }
 
 [MessagePackObject,
@@ -58,6 +62,8 @@ public abstract class PersistentBehaviorData
  Union(10, typeof(VelocityConversionData)),
  Union(11, typeof(VelocityLimitData)),
  Union(12, typeof(FactoryData)),
+ Union(13, typeof(PatrolControllerData)),
+ Union(14, typeof(TowingControllerData)),
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {

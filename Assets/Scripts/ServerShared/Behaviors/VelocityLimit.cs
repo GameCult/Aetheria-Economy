@@ -21,6 +21,8 @@ public class VelocityLimit : IBehavior
     public Entity Entity { get; }
     public Gear Item { get; }
     public GameContext Context { get; }
+    
+    public float Limit { get; private set; }
 
     public BehaviorData Data => _data;
     
@@ -40,8 +42,8 @@ public class VelocityLimit : IBehavior
 
     public void Update(float delta)
     {
-        var limit = Context.Evaluate(_data.TopSpeed, Item, Entity);
-        if (length(Entity.Velocity) > limit)
-            Entity.Velocity = normalize(Entity.Velocity) * limit;
+        Limit = Context.Evaluate(_data.TopSpeed, Item, Entity);
+        if (length(Entity.Velocity) > Limit)
+            Entity.Velocity = normalize(Entity.Velocity) * Limit;
     }
 }

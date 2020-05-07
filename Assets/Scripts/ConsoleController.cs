@@ -15,6 +15,7 @@ using Object = UnityEngine.Object;
 
 public class ConsoleController
 {
+	public static Component MessageReceiver;
     private static ConsoleController instance;
     private static Regex permittedCharacters = new Regex("[^a-zA-Z0-9 -]");
 
@@ -83,8 +84,7 @@ public class ConsoleController
 			args = new string[numArgs];
 			Array.Copy(commandSplit, 1, args, 0, numArgs);
 		}
-        foreach(var go in Object.FindObjectsOfType<Transform>().Where(t=>t.parent==null))
-            go.gameObject.BroadcastMessageExt<MonoBehaviour>(commandSplit[0].ToLower(), args, SendMessageOptions.DontRequireReceiver);
+		MessageReceiver.SendMessage(commandSplit[0].ToLower(), args, SendMessageOptions.DontRequireReceiver);
 		_commandHistory.Add(commandString);
 	}
 	
