@@ -8,7 +8,7 @@ using static Unity.Mathematics.math;
 public class VelocityMatch : AgentBehavior
 {
     public event Action OnMatch;
-    public Guid TargetOrbit;
+    public float2 TargetVelocity;
     private Thruster _thrust;
     private Turning _turning;
     private const float TargetThreshold = .1f;
@@ -21,12 +21,17 @@ public class VelocityMatch : AgentBehavior
         _thrust = Entity.Axes.Keys.FirstOrDefault(x => x is Thruster) as Thruster;
         _turning = Entity.Axes.Keys.FirstOrDefault(x => x is Turning) as Turning;
     }
+
+    public void Clear()
+    {
+        OnMatch = null;
+    }
     
     public override void Update(float delta)
     {
-        if (TargetOrbit != Guid.Empty && _thrust != null && _turning != null)
+        if (_thrust != null && _turning != null)
         {
-            var deltaV = _context.GetOrbitVelocity(TargetOrbit) - Entity.Velocity;
+            var deltaV = TargetVelocity - Entity.Velocity;
             if(length(deltaV) < TargetThreshold)
                 OnMatch?.Invoke();
             Entity.Axes[_turning] = TurningInput(deltaV);
@@ -39,7 +44,7 @@ public class VelocityMatch : AgentBehavior
         get
         {
             var velocity = length(Entity.Velocity);
-            var deltaV = _context.GetOrbitVelocity(TargetOrbit) - Entity.Velocity;
+            var deltaV = TargetVelocity - Entity.Velocity;
             
             var stoppingTime = length(deltaV) / (_thrust.Thrust / Entity.Mass);
             var stoppingDistance = stoppingTime * (velocity / 2);

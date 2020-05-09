@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using Random = Unity.Mathematics.Random;
+using JM.LinqFaster;
 
 public class GameContext
 {
@@ -14,6 +15,7 @@ public class GameContext
     public Dictionary<Guid, Dictionary<Guid, Entity>> ZoneEntities = new Dictionary<Guid, Dictionary<Guid, Entity>>();
     public Dictionary<string, GalaxyMapLayerData> MapLayers = new Dictionary<string, GalaxyMapLayerData>();
     public Dictionary<Guid, List<IController>> CorporationControllers = new Dictionary<Guid, List<IController>>();
+    public Dictionary<Guid, SimplifiedZoneData> GalaxyZones;
     
     private Action<string> _logger;
 
@@ -23,13 +25,28 @@ public class GameContext
     private double _time;
     private float _deltaTime;
     private GlobalData _globalData;
+    private HashSet<Guid> _loadedZones = new HashSet<Guid>();
     private HashSet<Guid> _orbits = new HashSet<Guid>();
     private Dictionary<Guid, float2> _orbitVelocities = new Dictionary<Guid, float2>();
     private Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
     private Dictionary<Guid, float2> _previousOrbitPositions = new Dictionary<Guid, float2>();
+    private Guid _forceLoadZone;
 
     public GlobalData GlobalData => _globalData ?? (_globalData = Cache.GetAll<GlobalData>().FirstOrDefault());
     public DatabaseCache Cache { get; }
+
+    public Guid ForceLoadZone
+    {
+        get => _forceLoadZone;
+        set
+        {
+            if(_forceLoadZone != Guid.Empty && ZoneEntities[_forceLoadZone].Count == 0)
+                UnloadZone(_forceLoadZone);
+            _forceLoadZone = value;
+            if(!_loadedZones.Contains(_forceLoadZone))
+                LoadZone(_forceLoadZone);
+        }
+    }
 
     public double Time
     {
@@ -68,24 +85,6 @@ public class GameContext
         _logger(s);
     }
 
-    public IEnumerable<Entity> GetEntities(Guid zone)
-    {
-        return ZoneEntities[zone].Values;
-    }
-
-    public void InitializeZone(Guid zoneID)
-    {
-        var zoneData = Cache.Get<ZoneData>(zoneID);
-        
-        foreach (var orbit in zoneData.Orbits) _orbits.Add(orbit);
-
-        // TODO: Associate planets with stored entities for planetary colonies
-        ZonePlanets[zoneID] = zoneData.Planets;
-        
-        // TODO: Load stored entities
-        ZoneEntities[zoneID] = new Dictionary<Guid, Entity>();
-    }
-
     public void Update()
     {
         _previousOrbitPositions = _orbitPositions;
@@ -101,22 +100,33 @@ public class GameContext
 
         foreach (var corporation in Cache.GetAll<Corporation>())
         {
-            foreach (var taskController in corporation.Tasks
+            foreach (var tasks in corporation.Tasks
                 .Select(id => Cache.Get<AgentTask>(id)) // Fetch the tasks from the database cache
-                .Where(task => task.Reserved == false) // Filter out tasks that have already been reserved
-                .GroupBy(task => task.Type) // Group tasks by job type
-                .Where(grouping =>
-                    CorporationControllers[corporation.ID] // Filter out groupings with no available controller
-                        .Any(controller => controller.Available && controller.JobType == grouping.Key))
-                .Select(grouping => grouping // Pair each task in remaining groupings with available controllers
-                    .OrderByDescending(task => task.Priority) // Sort by priority, highest first
-                    .Zip(CorporationControllers[corporation.ID]
-                            .Where(controller => controller.Available && controller.JobType == grouping.Key),
-                        (task, controller) => new {task, controller}))
-                .SelectMany(x => x)) // Flatten groupings
+                .Where(task => !task.Reserved) // Filter out tasks that have already been reserved
+                .GroupBy(task => task.Type)) // Group tasks by type
             {
-                taskController.task.Reserved = true;
-                taskController.controller.AssignTask(taskController.task.ID);
+                // Create a list of available controllers for this task type
+                var availableControllers = CorporationControllers[corporation.ID]
+                    .Where(controller => controller.TaskType == tasks.Key && controller.Available).ToList();
+                
+                // Iterate over the highest priority tasks for which controllers are available
+                foreach (var task in tasks.OrderByDescending(task => task.Priority).Take(availableControllers.Count))
+                {
+                    // Find the nearest controller for this task
+                    IController nearestController = availableControllers[0];
+                    List<SimplifiedZoneData> nearestControllerPath = FindPath(GalaxyZones[availableControllers.First().Zone], GalaxyZones[task.Zone], true);
+                    foreach (var controller in availableControllers.Skip(1))
+                    {
+                        var path = FindPath(GalaxyZones[controller.Zone], GalaxyZones[task.Zone], true);
+                        if (path.Count < nearestControllerPath.Count)
+                        {
+                            nearestControllerPath = path;
+                            nearestController = controller;
+                        }
+                    }
+                    task.Reserved = true;
+                    nearestController.AssignTask(task.ID, nearestControllerPath);
+                }
             }
                 
         }
@@ -127,11 +137,57 @@ public class GameContext
         }
     }
 
+    public IEnumerable<Entity> GetEntities(Guid zone)
+    {
+        return ZoneEntities[zone].Values;
+    }
+
+    public void LoadZone(Guid zone)
+    {
+        var zoneData = Cache.Get<ZoneData>(zone);
+
+        _loadedZones.Add(zone);
+        
+        foreach (var orbit in zoneData.Orbits) _orbits.Add(orbit);
+
+        // TODO: Associate planets with stored entities for planetary colonies
+        ZonePlanets[zone] = zoneData.Planets;
+        
+        // TODO: Load stored entities
+        ZoneEntities[zone] = new Dictionary<Guid, Entity>();
+    }
+
     public void UnloadZone(Guid zone)
     {
         var zoneData = Cache.Get<ZoneData>(zone);
-        foreach (var orbit in zoneData.Orbits) _orbits.Remove(orbit);
+
+        _loadedZones.Remove(zone);
         ZoneEntities.Remove(zone);
+        ZonePlanets.Remove(zone);
+        foreach (var orbit in zoneData.Orbits) _orbits.Remove(orbit);
+    }
+
+    public void Warp(Entity entity, Guid targetZone)
+    {
+        if (length(entity.Position - WormholePosition(entity.Zone, targetZone)) < GlobalData.WarpDistance)
+        {
+            var sourceZone = entity.Zone;
+            
+            // Remove entity from source zone
+            ZoneEntities[sourceZone].Remove(entity.ID);
+            
+            // Unload source zone if empty and unobserved
+            if(ForceLoadZone != sourceZone && ZoneEntities[sourceZone].Count == 0)
+                UnloadZone(sourceZone);
+            
+            // Load target zone if not yet loaded
+            if(!_loadedZones.Contains(targetZone))
+                LoadZone(targetZone);
+            
+            entity.Zone = targetZone;
+            entity.Position = WormholePosition(targetZone, sourceZone);
+            ZoneEntities[targetZone][entity.ID] = entity;
+        }
     }
 
     // Determine orbital position recursively, caching parent positions to avoid repeated calculations
@@ -145,7 +201,7 @@ public class GameContext
         {
             var orbitData = Cache.Get<OrbitData>(orbit);
             _orbitPositions[orbit] = GetOrbitPosition(orbitData.Parent) + (orbitData.Period < .01f ? float2.zero : 
-                OrbitData.Evaluate((float) (Time / -orbitData.Period * GlobalData.OrbitSpeedMultiplier + orbitData.Phase)) *
+                OrbitData.Evaluate((float) frac(Time / -orbitData.Period * GlobalData.OrbitSpeedMultiplier + orbitData.Phase)) *
                 orbitData.Distance);
         }
 
@@ -161,6 +217,35 @@ public class GameContext
     public float2 GetOrbitVelocity(Guid orbit)
     {
         return _orbitVelocities.ContainsKey(orbit) ? _orbitVelocities[orbit] : float2.zero;
+    }
+
+    public OrbitData CreateOrbit(Guid parent, float2 position)
+    {
+        var parentOrbit = Cache.Get<OrbitData>(parent);
+        var parentPosition = GetOrbitPosition(parent);
+        var delta = position - parentPosition;
+        var distance = length(delta);
+        var period = OrbitalPeriod(distance);
+        var phase = atan2(delta.y, delta.x) / (PI * 2);
+        var storedPhase = (float) frac(Time / -period * GlobalData.OrbitSpeedMultiplier - phase);
+
+        var orbit = new OrbitData
+        {
+            Context = this,
+            Distance = distance,
+            ID = Guid.NewGuid(),
+            Parent = parent,
+            Period = period,
+            Phase = storedPhase,
+            Zone = parentOrbit.Zone
+        };
+        Cache.Add(orbit);
+        return orbit;
+    }
+
+    public float OrbitalPeriod(float distance)
+    {
+        return pow(distance, GlobalData.OrbitPeriodExponent) * GlobalData.OrbitPeriodMultiplier;
     }
     
     // public int ItemTier(CraftedItemData itemData)
@@ -388,5 +473,38 @@ public class GameContext
         };
         Cache.Add(newCommodity);
         return newCommodity;
+    }
+    
+    class DijkstraNode
+    {
+        public float Cost;
+        public DijkstraNode Parent;
+        public SimplifiedZoneData Zone;
+    }
+	
+    public List<SimplifiedZoneData> FindPath(SimplifiedZoneData source, SimplifiedZoneData target, bool bestFirst = false)
+    {
+        SortedList<float,DijkstraNode> members = new SortedList<float,DijkstraNode>{{0,new DijkstraNode{Zone = source}}};
+        List<DijkstraNode> searched = new List<DijkstraNode>();
+        while (true)
+        {
+            var s = members.FirstOrDefault(m => !searched.Contains(m.Value)).Value; // Lowest cost unsearched node
+            if (s == null) return null; // No vertices left unsearched
+            if (s.Zone == target) // We found the path
+            {
+                Stack<DijkstraNode> path = new Stack<DijkstraNode>(); // Since we start at the end, use a LIFO collection
+                path.Push(s);
+                while(path.Peek().Parent!=null) // Keep pushing until we reach the start, which has no parent
+                    path.Push(path.Peek().Parent);
+                return path.Select(dv => dv.Zone).ToList();
+            }
+            // For each adjacent star (filter already visited zones unless heuristic is in use)
+            foreach (var dijkstraStar in s.Zone.Links.WhereSelectF(i => !bestFirst || members.All(m => m.Value.Zone != GalaxyZones[i]),
+                    // Cost is parent cost plus distance
+                    i => new DijkstraNode {Parent = s, Zone = GalaxyZones[i], Cost = s.Cost + length(s.Zone.Position - GalaxyZones[i].Position)}))
+                // Add new member to list, sorted by cost plus optional heuristic
+                members.Add(bestFirst ? dijkstraStar.Cost + length(dijkstraStar.Zone.Position - target.Position) : dijkstraStar.Cost, dijkstraStar);
+            searched.Add(s);
+        }
     }
 }

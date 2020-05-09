@@ -17,7 +17,7 @@ public abstract class AgentTask : DatabaseEntry
     [JsonProperty("zone"), Key(2)]
     public Guid Zone;
     
-    [JsonProperty("assignedEntity"), Key(3)]
+    [JsonProperty("reserved"), Key(3)]
     public bool Reserved;
     
     [IgnoreMember] public abstract TaskType Type { get; }

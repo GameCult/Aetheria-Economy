@@ -12,15 +12,19 @@ public class StationTowing : AgentTask
     [IgnoreMember] public override TaskType Type => TaskType.Tow;
     
     [JsonProperty("station"), Key(4)]
-    private Guid _station;
+    public Guid Station;
     
-    [JsonProperty("targetOrbit"), Key(5)]
-    private Guid _targetOrbit;
+    [JsonProperty("orbitParent"), Key(5)]
+    public Guid OrbitParent;
+    
+    [JsonProperty("orbitDistance"), Key(6)]
+    public float OrbitDistance;
 
-    public StationTowing(Guid zone, Guid station, Guid targetOrbit)
+    public StationTowing(Guid zone, Guid station, Guid orbitParent, float orbitDistance)
     {
         Zone = zone;
-        _station = station;
-        _targetOrbit = targetOrbit;
+        Station = station;
+        OrbitParent = orbitParent;
+        OrbitDistance = orbitDistance;
     }
 }

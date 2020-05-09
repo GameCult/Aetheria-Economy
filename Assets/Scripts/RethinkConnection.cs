@@ -14,7 +14,7 @@ public static class RethinkConnection
 {
     public static RethinkDB R = RethinkDB.R;
     
-    public static Connection RethinkConnect(DatabaseCache cache, string connectionString, bool syncLocalChanges = true, bool filterGalaxyData = true)
+    public static RethinkQueryStatus RethinkConnect(DatabaseCache cache, string connectionString, bool syncLocalChanges = true, bool filterGalaxyData = true)
     {
         // Add Unity.Mathematics serialization support to RethinkDB Driver
         //Converter.Serializer.Converters.Add(new MathJsonConverter());
@@ -72,9 +72,16 @@ public static class RethinkConnection
             };
         }
 
+        var status = new RethinkQueryStatus();
+
         // Get all item data from RethinkDB
         Task.Run(async () =>
         {
+            status.ItemsEntries = R
+                .Db("Aetheria")
+                .Table("Items")
+                .Count().RunAtom<int>(connection);
+            
             var result = await R
                 .Db("Aetheria")
                 .Table("Items")
@@ -82,8 +89,9 @@ public static class RethinkConnection
             while (await result.MoveNextAsync())
             {
                 var entry = result.Current;
-                Debug.Log($"Received Items entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
+                //Debug.Log($"Received Items entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
                 cache.Add(entry, true);
+                status.RetrievedItems++;
             }
         }).WrapErrors();
 
@@ -94,15 +102,24 @@ public static class RethinkConnection
                 .Db("Aetheria")
                 .Table("Galaxy");
             if (filterGalaxyData)
-                operation = ((Table)operation).Filter(o =>
-                    o["$type"] == typeof(GalaxyMapLayerData).Name || o["$type"] == typeof(GlobalData).Name);
+            {
+                var filter = ((Table) operation).Filter(o =>
+                    o["$type"] == typeof(GalaxyMapLayerData).Name || 
+                    o["$type"] == typeof(GlobalData).Name ||
+                    o["$type"] == typeof(MegaCorporation).Name);
+                status.GalaxyEntries = filter.Count().RunAtom<int>(connection);
+                operation = filter;
+            }
+            else status.GalaxyEntries = ((Table) operation).Count().RunAtom<int>(connection);
+            
             var result = await operation
                 .RunCursorAsync<DatabaseEntry>(connection);
             while (await result.MoveNextAsync())
             {
                 var entry = result.Current;
-                Debug.Log($"Received Galaxy entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
+                //Debug.Log($"Received Galaxy entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
                 cache.Add(entry, true);
+                status.RetrievedItems++;
             }
         }).WrapErrors();
 
@@ -132,6 +149,13 @@ public static class RethinkConnection
             Debug.Log(R.Now().Run<DateTime>(connection).ToString() as string);
         });
         
-        return connection;
+        return status;
     }
+}
+
+public class RethinkQueryStatus
+{
+    public int RetrievedItems;
+    public int GalaxyEntries;
+    public int ItemsEntries;
 }

@@ -36,8 +36,9 @@ public interface IPersistentBehavior//<T> where T : IBehavior
 public interface IController
 {
     bool Available { get; }
-    TaskType JobType { get; }
-    void AssignTask(Guid task);
+    TaskType TaskType { get; }
+    Guid Zone { get; }
+    void AssignTask(Guid task, List<SimplifiedZoneData> path);
 }
 
 [MessagePackObject,

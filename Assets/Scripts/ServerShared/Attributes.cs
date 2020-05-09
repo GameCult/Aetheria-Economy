@@ -54,6 +54,9 @@ public class InspectableTextAttribute : InspectableFieldAttribute { }
 public class InspectablePrefabAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
+public class InspectableTextureAttribute : InspectableFieldAttribute { }
+
+[AttributeUsage(AttributeTargets.Field)]
 public class TemperatureInspectableAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]

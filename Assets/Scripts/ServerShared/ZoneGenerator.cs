@@ -274,7 +274,7 @@ public class Planet
 				ChildDistanceMaximum = (i % 2 == 0 ? p0ChildDist : p1ChildDist)
 			};
 			child.ChildDistanceMinimum = Context.GlobalData.PlanetRadius(child.Mass) * 2;
-			child.Period = pow(child.Distance, Context.GlobalData.OrbitPeriodExponent) * Context.GlobalData.OrbitPeriodMultiplier;
+			child.Period = Context.OrbitalPeriod(child.Distance);
 			Children.Add(child);
 		}
 
@@ -335,7 +335,7 @@ public class Planet
 					Distance = distances[i],
 					Phase = Context.Random.NextFloat()
 				};
-				child.Period = pow(child.Distance, Context.GlobalData.OrbitPeriodExponent) * Context.GlobalData.OrbitPeriodMultiplier;
+				child.Period = Context.OrbitalPeriod(child.Distance);
 				child.ChildDistanceMinimum = Context.GlobalData.PlanetRadius(child.Mass) * 2;
 				// Maximum child distance of child is the smallest distance to either of its neighbors
 				child.ChildDistanceMaximum = min(i == 0 ? child.Distance - ChildDistanceMinimum : child.Distance - distances[i - 1],

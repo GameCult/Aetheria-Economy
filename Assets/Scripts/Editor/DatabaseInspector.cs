@@ -176,6 +176,8 @@ public class DatabaseInspector : EditorWindow
         {
             if(inspectable is InspectablePrefabAttribute)
                 field.SetValue(obj, InspectGameObject(field.Name.SplitCamelCase(), (string) value));
+            else if(inspectable is InspectableTextureAttribute)
+                field.SetValue(obj, InspectTexture(field.Name.SplitCamelCase(), (string) value));
             else
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (string) value, inspectable is InspectableTextAttribute));
         }
@@ -269,7 +271,7 @@ public class DatabaseInspector : EditorWindow
 
                     using (var h = new HorizontalScope(_list.ListItemStyle))
                     {
-                        GUILayout.Label($"Add new Stat Effect", GUILayout.ExpandWidth(true));
+                        GUILayout.Label("Add new Stat Effect", GUILayout.ExpandWidth(true));
                         var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
                         GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                         if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
@@ -554,13 +556,11 @@ public class DatabaseInspector : EditorWindow
 
             return value;
         }
-        else
+
+        using (var h = new HorizontalScope())
         {
-            using (var h = new HorizontalScope())
-            {
-                GUILayout.Label(label, GUILayout.Width(width));
-                return Popup(value, enumOptions);
-            }
+            GUILayout.Label(label, GUILayout.Width(width));
+            return Popup(value, enumOptions);
         }
     }
 
@@ -570,6 +570,15 @@ public class DatabaseInspector : EditorWindow
         {
             GUILayout.Label(label, GUILayout.Width(width));
             return AssetDatabase.GetAssetPath(ObjectField(AssetDatabase.LoadAssetAtPath<GameObject>(value), typeof(GameObject), false));
+        }
+    }
+
+    public string InspectTexture(string label, string value)
+    {
+        using (var h = new HorizontalScope())
+        {
+            GUILayout.Label(label, GUILayout.Width(width));
+            return AssetDatabase.GetAssetPath(ObjectField(AssetDatabase.LoadAssetAtPath<Texture2D>(value), typeof(Texture2D), false));
         }
     }
 
@@ -977,117 +986,115 @@ public class DatabaseInspector : EditorWindow
         }
         #endregion
 
-        // #region Loadout
-        // var loadout = entry as LoadoutData;
-        // if (loadout != null)
-        // {
-        //     EditorGUILayout.Space();
-        //     EditorGUILayout.LabelField("Loadout Hull", EditorStyles.boldLabel);
-        //
-        //     var loadoutHull = Database.Get(loadout.Hull) as HullData;
-        //
-        //     if (loadoutHull != null)
-        //     {
-        //         // Reserve slots in the loadout for all equippable (non-hull) hardpoints
-        //         var hardpoints = loadoutHull.Hardpoints.Where(h => h.Type != HardpointType.Hull).ToArray();
-        //         if (loadout.Items.Count < hardpoints.Length)
-        //             loadout.Items.AddRange(Enumerable.Repeat(Guid.Empty, hardpoints.Length - loadout.Items.Count));
-        //
-        //         // EditorGUILayout.Space();
-        //         // using (var h = new EditorGUILayout.HorizontalScope())
-        //         // {
-        //         //     GUILayout.Label($"Equipped Items: {loadout.Items.Sum(i=>((ItemData) Database.Get(i))?.Data.Size ?? 0)}/{loadoutHull.Capacity.Min}", EditorStyles.boldLabel);
-        //         //     GUILayout.Label($"Mass: {loadout.Items.Sum(i=>((ItemData) Database.Get(i))?.Data.Mass ?? 0)}", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-        //         // }
-        //
-        //         int itemIndex = 0;
-        //         using (var v = new EditorGUILayout.VerticalScope(GUI.skin.box))
-        //         {
-        //             for (; itemIndex < hardpoints.Length; itemIndex++)
-        //             {
-        //                 var hp = hardpoints[itemIndex];
-        //                 
-        //                 var loadoutItem = Database.Get(loadout.Items[itemIndex]) as EquippableItemData;
-        //
-        //                 if (loadoutItem != null && loadoutItem.HardpointType != hp.Type)
-        //                 {
-        //                     loadout.Items[itemIndex] = Guid.Empty;
-        //                     Debug.Log($"Invalid Item \"{loadoutItem.Name}\" in {Enum.GetName(typeof(HardpointType),hp.Type)} hardpoint for loadout \"{loadout.Name}\"");
-        //                     Database.Save(entry);
-        //                 }
-        //                 
-        //                 using (var h = new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
-        //                 {
-        //                     if (h.rect.Contains(current.mousePosition) &&
-        //                         (currentEventType == EventType.DragUpdated || currentEventType == EventType.DragPerform))
-        //                     {
-        //                         var guid = (Guid) DragAndDrop.GetGenericData("Item");
-        //                         var draggedEquippable = Database.Get(guid) as EquippableItemData;
-        //                         var good = draggedEquippable != null && draggedEquippable.HardpointType == hp.Type;
-        //                         if (currentEventType == EventType.DragUpdated)
-        //                             DragAndDrop.visualMode = good ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
-        //                         else if (currentEventType == EventType.DragPerform && good)
-        //                         {
-        //                             DragAndDrop.AcceptDrag();
-        //                             loadout.Items[itemIndex] = guid;
-        //
-        //                             Database.Save(entry);
-        //                         }
-        //                     }
-        //
-        //                     GUILayout.Label(Enum.GetName(typeof(HardpointType), hp.Type));
-        //                     if (loadoutItem == null || loadoutItem.HardpointType != hp.Type)
-        //                         GUILayout.Label("Empty Hardpoint", GUILayout.ExpandWidth(false));
-        //                     else
-        //                     {
-        //                         GUILayout.Label(loadoutItem.Name, GUILayout.ExpandWidth(false));
-        //                         var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-        //                         GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
-        //                         if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
-        //                             loadout.Items[itemIndex] = Guid.Empty;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //
-        //         EditorGUILayout.Space();
-        //         EditorGUILayout.LabelField("Cargo", EditorStyles.boldLabel);
-        //         
-        //         using (var v = new EditorGUILayout.VerticalScope(GUI.skin.box))
-        //         {
-        //             if (v.rect.Contains(current.mousePosition) &&
-        //                 (currentEventType == EventType.DragUpdated || currentEventType == EventType.DragPerform))
-        //             {
-        //                 var guid = (Guid) DragAndDrop.GetGenericData("Item");
-        //                 var dragItem = Database.Get(guid) as ItemData;
-        //                 if (currentEventType == EventType.DragUpdated)
-        //                     DragAndDrop.visualMode = dragItem != null ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
-        //                 else if (currentEventType == EventType.DragPerform && dragItem != null)
-        //                 {
-        //                     DragAndDrop.AcceptDrag();
-        //                             
-        //                     loadout.Items.Add(guid);
-        //                     Database.Save(entry);
-        //                 }
-        //             }
-        //             if(itemIndex == loadout.Items.Count)
-        //                 GUILayout.Label("Nothing Here!");
-        //             for (; itemIndex < loadout.Items.Count; itemIndex++)
-        //             {
-        //                 var loadoutItem = Database.Get(loadout.Items[itemIndex]) as ItemData;
-        //                 using (var h = new EditorGUILayout.HorizontalScope(_list.ListItemStyle))
-        //                 {
-        //                     GUILayout.Label(loadoutItem?.Name ?? "Invalid Item");
-        //                     var rect = EditorGUILayout.GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-        //                     GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
-        //                     if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
-        //                         loadout.Items.RemoveAt(itemIndex--);
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-        // #endregion
+        #region Loadout
+        var loadout = entry as LoadoutData;
+        if (loadout != null)
+        {
+            Space();
+            LabelField("Loadout Hull", EditorStyles.boldLabel);
+
+            if (DatabaseCache.Get(loadout.Hull) is HullData loadoutHull)
+            {
+                // Reserve slots in the loadout for all equippable (non-hull) hardpoints
+                var hardpoints = loadoutHull.Hardpoints.Where(h => h.Type != HardpointType.Hull).ToArray();
+                if (loadout.Items.Count < hardpoints.Length)
+                    loadout.Items.AddRange(Enumerable.Repeat(Guid.Empty, hardpoints.Length - loadout.Items.Count));
+        
+                Space();
+                using (var h = new HorizontalScope())
+                {
+                    GUILayout.Label($"Equipped Items: {loadout.Items.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Size ?? 0)}/{loadoutHull.Capacity.Min}", EditorStyles.boldLabel);
+                    GUILayout.Label($"Mass: {loadout.Items.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Mass ?? 0)}", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+                }
+        
+                int itemIndex = 0;
+                using (var v = new VerticalScope(GUI.skin.box))
+                {
+                    for (; itemIndex < hardpoints.Length; itemIndex++)
+                    {
+                        var hp = hardpoints[itemIndex];
+                        
+                        var loadoutItem = DatabaseCache.Get(loadout.Items[itemIndex]) as EquippableItemData;
+        
+                        if (loadoutItem != null && loadoutItem.HardpointType != hp.Type)
+                        {
+                            loadout.Items[itemIndex] = Guid.Empty;
+                            Debug.Log($"Invalid Item \"{loadoutItem.Name}\" in {Enum.GetName(typeof(HardpointType),hp.Type)} hardpoint for loadout \"{loadout.Name}\"");
+                            GUI.changed = true;
+                        }
+                        
+                        using (var h = new HorizontalScope(_list.ListItemStyle))
+                        {
+                            if (h.rect.Contains(current.mousePosition) &&
+                                (currentEventType == EventType.DragUpdated || currentEventType == EventType.DragPerform))
+                            {
+                                var guid = (Guid) DragAndDrop.GetGenericData("Item");
+                                var draggedEquippable = DatabaseCache.Get(guid) as EquippableItemData;
+                                var good = draggedEquippable != null && draggedEquippable.HardpointType == hp.Type;
+                                if (currentEventType == EventType.DragUpdated)
+                                    DragAndDrop.visualMode = good ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
+                                else if (currentEventType == EventType.DragPerform && good)
+                                {
+                                    DragAndDrop.AcceptDrag();
+                                    loadout.Items[itemIndex] = guid;
+        
+                                    GUI.changed = true;
+                                }
+                            }
+        
+                            GUILayout.Label(Enum.GetName(typeof(HardpointType), hp.Type));
+                            if (loadoutItem == null || loadoutItem.HardpointType != hp.Type)
+                                GUILayout.Label("Empty Hardpoint", GUILayout.ExpandWidth(false));
+                            else
+                            {
+                                GUILayout.Label(loadoutItem.Name, GUILayout.ExpandWidth(false));
+                                var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                                GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
+                                if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                                    loadout.Items[itemIndex] = Guid.Empty;
+                            }
+                        }
+                    }
+                }
+        
+                Space();
+                LabelField("Cargo", EditorStyles.boldLabel);
+                
+                using (var v = new VerticalScope(GUI.skin.box))
+                {
+                    if (v.rect.Contains(current.mousePosition) &&
+                        (currentEventType == EventType.DragUpdated || currentEventType == EventType.DragPerform))
+                    {
+                        var guid = (Guid) DragAndDrop.GetGenericData("Item");
+                        var dragItem = DatabaseCache.Get(guid) as ItemData;
+                        if (currentEventType == EventType.DragUpdated)
+                            DragAndDrop.visualMode = dragItem != null ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
+                        else if (currentEventType == EventType.DragPerform && dragItem != null)
+                        {
+                            DragAndDrop.AcceptDrag();
+                                    
+                            loadout.Items.Add(guid);
+                            GUI.changed = true;
+                        }
+                    }
+                    if(itemIndex == loadout.Items.Count)
+                        GUILayout.Label("Nothing Here!");
+                    for (; itemIndex < loadout.Items.Count; itemIndex++)
+                    {
+                        var loadoutItem = DatabaseCache.Get(loadout.Items[itemIndex]) as ItemData;
+                        using (var h = new HorizontalScope(_list.ListItemStyle))
+                        {
+                            GUILayout.Label(loadoutItem?.Name ?? "Invalid Item");
+                            var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                            GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
+                            if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                                loadout.Items.RemoveAt(itemIndex--);
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
         
         if (EditorGUI.EndChangeCheck())
         {

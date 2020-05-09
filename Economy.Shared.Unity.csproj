@@ -113,6 +113,37 @@
     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettings.cs" />
     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettingsManager.cs" />
     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\Utils\Mapper.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Aggregate.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\AnyAll.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Average.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Contains.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Count.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Distinct.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\First.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Last.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Max.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Min.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\OrderBy.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Range.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Repeat.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Reverse.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Select.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SelectMany.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SelectWhere.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Single.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Sum.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Take.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\ComparerMagic.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\CustomPartition.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\Error.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\GenericOperators.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Where.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereAggregate.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSelect.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSum.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Zip.cs" />
     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\BaseChannel.cs" />
     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\ConnectionRequest.cs" />
     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\INetEventListener.cs" />
@@ -463,6 +494,7 @@
     <Compile Include="Assets\Scripts\ServerShared\ZoneData.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ZoneGenerator.cs" />
     <None Include="Assets\Scripts\ServerShared\Economy.Shared.Unity.asmdef" />
+    <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
     <Reference Include="Unity.Mathematics">
       <HintPath>C:/Users/rwvens/Documents/GitHub/Aetheria-Economy/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
     </Reference>

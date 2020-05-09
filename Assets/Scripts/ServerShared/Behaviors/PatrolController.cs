@@ -20,8 +20,9 @@ public class PatrolControllerData : ControllerData
 
 public class PatrolController : IBehavior, IController
 {
-    public TaskType JobType => TaskType.Tow;
+    public TaskType TaskType => TaskType.Tow;
     public bool Available => false;
+    public Guid Zone => _entity.Zone;
     public BehaviorData Data => _data;
     
     private PatrolControllerData _data;
@@ -55,7 +56,7 @@ public class PatrolController : IBehavior, IController
             RandomTarget();
     }
 
-    public void AssignTask(Guid task)
+    public void AssignTask(Guid task, List<SimplifiedZoneData> path)
     {
         throw new NotImplementedException();
     }

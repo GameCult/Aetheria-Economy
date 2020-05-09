@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
@@ -19,7 +20,25 @@ public abstract class ControllerData : BehaviorData
     public float TangentSensitivity = 4;
 }
 
-// public abstract class Controller
+// public abstract class Controller : IController
 // {
+//     public abstract bool Available { get; }
+//     public abstract TaskType TaskType { get; }
+//     public Guid Zone { get; }
 //     
+//     private GameContext _context;
+//     private Entity _entity;
+//     private Guid _task;
+//     private List<SimplifiedZoneData> _path;
+//
+//     public Controller(GameContext context, Entity entity)
+//     {
+//         
+//     }
+//     
+//     public void AssignTask(Guid task, List<SimplifiedZoneData> path)
+//     {
+//         _task = task;
+//         _path = path;
+//     }
 // }

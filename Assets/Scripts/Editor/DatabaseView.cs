@@ -17,7 +17,6 @@ public class DatabaseListView : EditorWindow
     public GUIStyle SelectedStyle;
 
     public static RethinkDB R = RethinkDB.R;
-    private Connection _connection;
     
     private DatabaseCache _databaseCache;
     private bool[] _gearFoldouts;
@@ -36,6 +35,7 @@ public class DatabaseListView : EditorWindow
     private string _connectionString;
     private const float LineHeight = 20;
     private Vector2 _view;
+    private RethinkQueryStatus _queryStatus;
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
@@ -143,7 +143,7 @@ public class DatabaseListView : EditorWindow
             if (GUILayout.Button("Connect"))
             {
                 EditorPrefs.SetString("RethinkDB.URL", _connectionString);
-                _connection = RethinkConnection.RethinkConnect(_databaseCache, _connectionString);
+                _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString);
             }
         }
         using (var h = new HorizontalScope())
@@ -151,7 +151,7 @@ public class DatabaseListView : EditorWindow
             if (GUILayout.Button("Connect All"))
             {
                 EditorPrefs.SetString("RethinkDB.URL", _connectionString);
-                _connection = RethinkConnection.RethinkConnect(_databaseCache, _connectionString, true, false);
+                _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString, true, false);
             }
 
             if (GUILayout.Button("Save"))
@@ -159,7 +159,16 @@ public class DatabaseListView : EditorWindow
                 _databaseCache.Save(new DirectoryInfo(Application.dataPath).Parent.FullName);
             }
         }
+
+        if (_queryStatus != null && _queryStatus.RetrievedItems < _queryStatus.GalaxyEntries + _queryStatus.ItemsEntries)
+        {
+            var progressRect = GetControlRect(false, 20);
+            EditorGUI.ProgressBar(progressRect, (float)_queryStatus.RetrievedItems/(_queryStatus.GalaxyEntries + _queryStatus.ItemsEntries), "Sync Progress");
+        }
         GUILayout.Space(5);
+        
+        // if(GUILayout.Button("Log Cache Count"))
+        //     Debug.Log($"Cache contains {_databaseCache.AllEntries.Count()} elements");
 
         Action<DatabaseEntry> select = item =>
         {

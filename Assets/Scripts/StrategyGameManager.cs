@@ -8,6 +8,7 @@ using RethinkDb.Driver.Net;
 using TMPro;
 using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine.EventSystems;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using Random = UnityEngine.Random;
@@ -25,6 +26,7 @@ public class StrategyGameManager : MonoBehaviour
     public MeshRenderer ZoneBoundary;
     public ClickRaycaster ClickRaycaster;
     public ReadOnlyPropertiesPanel PropertiesPanel;
+    public ContextMenu ContextMenu;
     
     [Section("Tab Links")]
     public TabGroup PrimaryTabGroup;
@@ -65,7 +67,6 @@ public class StrategyGameManager : MonoBehaviour
     private Guid _populatedZone;
     private Guid _selectedZone;
     private GalaxyZone _selectedGalaxyZone;
-    private Dictionary<Guid, GalaxyResponseZone> _galaxyResponseZones;
     private Dictionary<Guid, GalaxyZone> _galaxyZoneObjects = new Dictionary<Guid, GalaxyZone>();
     private Dictionary<Guid, ZoneObject> _zoneObjects = new Dictionary<Guid, ZoneObject>(); // Key is Orbit
     private Dictionary<Guid, AsteroidBelt> _zoneBelts = new Dictionary<Guid, AsteroidBelt>();
@@ -90,8 +91,8 @@ public class StrategyGameManager : MonoBehaviour
             _context = new GameContext(_cache, Debug.Log);
             TechTree.Context = _context;
             _context.MapLayers = _cache.GetAll<GalaxyMapLayerData>().ToDictionary(ml => ml.Name);
-            _galaxyResponseZones = _cache.GetAll<ZoneData>()
-                .ToDictionary(z => z.ID, z => new GalaxyResponseZone
+            _context.GalaxyZones = _cache.GetAll<ZoneData>()
+                .ToDictionary(z => z.ID, z => new SimplifiedZoneData
                 {
                     Links = z.Wormholes.ToArray(),
                     Name = z.Name,
@@ -110,7 +111,7 @@ public class StrategyGameManager : MonoBehaviour
             // Listen for the server's galaxy description
             CultClient.AddMessageListener<GalaxyResponseMessage>(galaxy =>
             {
-                _galaxyResponseZones = galaxy.Zones.ToDictionary(z => z.ZoneID);
+                _context.GalaxyZones = galaxy.Zones.ToDictionary(z => z.ZoneID);
                 _cache.Add(galaxy.GlobalData, true);
                 _context = new GameContext(_cache, Debug.Log);
                 TechTree.Context = _context;
@@ -178,6 +179,7 @@ public class StrategyGameManager : MonoBehaviour
 
         ClickRaycaster.OnClickMiss += () =>
         {
+            ContextMenu.gameObject.SetActive(false);
             if (_currentTab == GalaxyTabButton) PopulateGalaxyProperties();
             else if (_currentTab == ZoneTabButton) PopulateZoneProperties(_populatedZone);
             else if (_currentTab == TechTabButton) PopulateTechProperties();
@@ -189,7 +191,7 @@ public class StrategyGameManager : MonoBehaviour
         PropertiesPanel.Clear();
         PropertiesPanel.Title.text = _context.GlobalData.GalaxyName;
         PropertiesPanel.AddSection("Galaxy");
-        PropertiesPanel.AddProperty("Sectors", $"{_galaxyResponseZones.Count}");
+        PropertiesPanel.AddProperty("Sectors", $"{_context.GalaxyZones.Count}");
     }
 
     private void PopulateZoneProperties(Guid zone)
@@ -281,7 +283,7 @@ public class StrategyGameManager : MonoBehaviour
         
         // var zones = _galaxyResponse.Zones.ToDictionary(z=>z.ZoneID);
         var linkedZones = new List<Guid>();
-        foreach (var zone in _galaxyResponseZones.Values)
+        foreach (var zone in _context.GalaxyZones.Values)
         {
             linkedZones.Add(zone.ZoneID);
             var instance = GalaxyZonePrototype.Instantiate<Transform>();
@@ -314,7 +316,7 @@ public class StrategyGameManager : MonoBehaviour
             foreach (var linkedZone in zone.Links.Where(l=>!linkedZones.Contains(l)))
             {
                 var link = GalaxyZoneLinkPrototype.Instantiate<Transform>();
-                var diff = _galaxyResponseZones[linkedZone].Position - zone.Position;
+                var diff = _context.GalaxyZones[linkedZone].Position - zone.Position;
                 link.position = instance.position + Vector3.forward*.1f;
                 link.rotation = Quaternion.Euler(0,0,atan2(diff.y, diff.x) * Mathf.Rad2Deg);
                 link.localScale = new Vector3(length(diff) * GalaxyScale, 1, 1);
@@ -356,9 +358,6 @@ public class StrategyGameManager : MonoBehaviour
         _zoneBelts.Clear();
         foreach (var ship in _zoneShips.Values) Destroy(ship.gameObject);
         _zoneShips.Clear();
-
-        if(_populatedZone!=Guid.Empty)
-            _context.UnloadZone(_populatedZone);
         
         _populatedZone = _selectedZone;
 
@@ -368,8 +367,8 @@ public class StrategyGameManager : MonoBehaviour
         {
             GenerateZone(_populatedZone);
         }
-        
-        _context.InitializeZone(_populatedZone);
+
+        _context.ForceLoadZone = _populatedZone;
         
         float zoneDepth = 0;
 
@@ -396,18 +395,29 @@ public class StrategyGameManager : MonoBehaviour
                     PlanetoidSprite);
                 planetObject.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
                     {
-                        PropertiesPanel.Clear();
-                        PropertiesPanel.Title.text = planetData.Name;
-                        PropertiesPanel.AddSection(planetData.Mass > _context.GlobalData.SunMass ? "Star" :
-                            planetData.Mass > _context.GlobalData.GasGiantMass ? "Gas Giant" :
-                            planetData.Mass > _context.GlobalData.PlanetMass ? "Planet" :
-                            "Planetoid");
-                        PropertiesPanel.AddProperty("Mass", $"{planetData.Mass}");
-                        PropertiesPanel.AddList("Resources", planetData.Resources.Select(resource =>
+                        if (data.button == PointerEventData.InputButton.Left)
                         {
-                            var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
-                            return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
-                        }));
+                            PropertiesPanel.Clear();
+                            PropertiesPanel.Title.text = planetData.Name;
+                            PropertiesPanel.AddSection(planetData.Mass > _context.GlobalData.SunMass ? "Star" :
+                                planetData.Mass > _context.GlobalData.GasGiantMass ? "Gas Giant" :
+                                planetData.Mass > _context.GlobalData.PlanetMass ? "Planet" :
+                                "Planetoid");
+                            PropertiesPanel.AddProperty("Mass", $"{planetData.Mass}");
+                            PropertiesPanel.AddList("Resources", planetData.Resources.Select(resource =>
+                            {
+                                var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
+                                return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
+                            }));
+                        }
+                        else if (data.button == PointerEventData.InputButton.Right)
+                        {
+                            ContextMenu.gameObject.SetActive(true);
+                            ContextMenu.SetOptions(new []
+                            {
+                                ("Test Option", (Action) (() => Debug.Log("Test Option Selected")))
+                            });
+                        }
                     };
             }
             else
@@ -418,15 +428,22 @@ public class StrategyGameManager : MonoBehaviour
                 _zoneBelts[_cache.Get<OrbitData>(planetData.Orbit).Parent] = belt;
                 beltObject.GetComponent<ClickableCollider>().OnClick += (_, data) =>
                 {
-                    PropertiesPanel.Clear();
-                    PropertiesPanel.Title.text = planetData.Name;
-                    PropertiesPanel.AddSection("Asteroid Belt");
-                    PropertiesPanel.AddProperty("Mass", $"{planetData.Mass}");
-                    PropertiesPanel.AddList("Resources", planetData.Resources.Select(resource =>
+                    if (data.button == PointerEventData.InputButton.Left)
                     {
-                        var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
-                        return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
-                    }));
+                        PropertiesPanel.Clear();
+                        PropertiesPanel.Title.text = planetData.Name;
+                        PropertiesPanel.AddSection("Asteroid Belt");
+                        PropertiesPanel.AddProperty("Mass", $"{planetData.Mass}");
+                        PropertiesPanel.AddList("Resources", planetData.Resources.Select(resource =>
+                        {
+                            var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
+                            return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
+                        }));
+                    }
+                    else if (data.button == PointerEventData.InputButton.Right)
+                    {
+                            
+                    }
                 };
             }
         }
@@ -438,7 +455,7 @@ public class StrategyGameManager : MonoBehaviour
         
         foreach (var wormhole in zoneData.Wormholes)
         {
-            var otherZone = _galaxyResponseZones[wormhole];
+            var otherZone = _context.GalaxyZones[wormhole];
             var wormholeObject = Instantiate(ZoneObjectPrefab, ZoneRoot);
             _wormholes.Add(wormholeObject);
             wormholeObject.transform.position = (Vector2) (_context.WormholePosition(zoneData.ID, wormhole) * ZoneSizeScale);
@@ -548,7 +565,7 @@ public class StrategyGameManager : MonoBehaviour
         if(_populatedZone!=Guid.Empty)
             _context.UnloadZone(_populatedZone);
         _cache.Delete(zoneData);
-        _galaxyResponseZones.Remove(zoneData.ID);
+        _context.GalaxyZones.Remove(zoneData.ID);
         
         var newZone = zoneData.Copy();
         newZone.ID = Guid.NewGuid();
@@ -563,7 +580,7 @@ public class StrategyGameManager : MonoBehaviour
         }
         newZone.Wormholes = linkedZones.Select(z => z.ID).ToList();
         
-        var zone = _galaxyResponseZones[newZone.ID] = new GalaxyResponseZone
+        var zone = _context.GalaxyZones[newZone.ID] = new SimplifiedZoneData
         {
             Links = newZone.Wormholes.ToArray(),
             Name = newZone.Name,
@@ -675,8 +692,8 @@ public class AsteroidBelt
         {
             var rotation = Quaternion.Euler(0, 0, (float) (_context.Time * _data.Asteroids[i].w % 360.0));
             var position = (Vector3) (Vector2)
-                OrbitData.Evaluate((float) (_context.Time / -pow(_data.Asteroids[i].x, _context.GlobalData.OrbitPeriodExponent) * _context.GlobalData.OrbitPeriodMultiplier) *
-                    _context.GlobalData.OrbitSpeedMultiplier + _data.Asteroids[i].y) * (_data.Asteroids[i].x * _zoneScale);
+                OrbitData.Evaluate((float) frac(_context.Time / -_context.OrbitalPeriod(_data.Asteroids[i].x) *
+                    _context.GlobalData.OrbitSpeedMultiplier + _data.Asteroids[i].y)) * (_data.Asteroids[i].x * _zoneScale);
             _vertices[i * 4] = rotation * new Vector3(-_data.Asteroids[i].z,-_data.Asteroids[i].z,0) + position;
             _vertices[i * 4 + 1] = rotation * new Vector3(-_data.Asteroids[i].z,_data.Asteroids[i].z,0) + position;
             _vertices[i * 4 + 2] = rotation * new Vector3(_data.Asteroids[i].z,_data.Asteroids[i].z,0) + position;

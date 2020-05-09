@@ -31,13 +31,13 @@ public interface INamedEntry
  Union(10, typeof(ZoneData)), 
  Union(11, typeof(Player)), 
  Union(12, typeof(Corporation)),
- Union(13, typeof(ShipData)), 
+ Union(13, typeof(MegaCorporation)),
  Union(14, typeof(StationData)), 
  Union(15, typeof(OrbitData)), 
  Union(16, typeof(PlanetData)),
  Union(17, typeof(PersonalityAttribute)),
  Union(18, typeof(AgentTask)),
- // Union(17, typeof(ShipData)),
+ Union(19, typeof(LoadoutData)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 //[Union(21, typeof(ContractData))]
 //[Union(22, typeof(Station))]
@@ -81,8 +81,43 @@ public class Corporation : DatabaseEntry, INamedEntry
     }
 }
 
-[RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class ShipData : DatabaseEntry
+[RethinkTable("Galaxy"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class MegaCorporation : DatabaseEntry, INamedEntry
 {
+    [InspectableField, JsonProperty("name"), Key(1)]
+    public string Name;
     
+    [InspectableTexture, JsonProperty("logo"), Key(2)]
+    public string Logo;
+    
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("initialFleet"), Key(3)]  
+    public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
+    
+    [InspectableDatabaseLink(typeof(LoadoutData)), JsonProperty("initialFleet"), Key(4)]  
+    public Dictionary<Guid, int> InitialFleet = new Dictionary<Guid, int>();
+    
+    [IgnoreMember] public string EntryName
+    {
+        get => Name;
+        set => Name = value;
+    }
+}
+
+[RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class LoadoutData : DatabaseEntry, INamedEntry
+{
+    [InspectableField, JsonProperty("name"), Key(1)]
+    public string Name;
+
+    [InspectableDatabaseLink(typeof(HullData)), JsonProperty("hull"), Key(2)]  
+    public Guid Hull;
+
+    [JsonProperty("items"), Key(3)]  
+    public List<Guid> Items = new List<Guid>();
+
+    [IgnoreMember] public string EntryName
+    {
+        get => Name;
+        set => Name = value;
+    }
 }
