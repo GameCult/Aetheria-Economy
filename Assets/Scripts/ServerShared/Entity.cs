@@ -30,13 +30,14 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     
     // [IgnoreMember] protected List<IBehavior> Behaviors;
     [IgnoreMember] public Guid Zone;
-    [IgnoreMember] public Dictionary<Gear, List<IBehavior>> ItemBehaviors;
-    [IgnoreMember] public Dictionary<Gear, List<IActivatedBehavior>> Bindings;
-    [IgnoreMember] public Dictionary<IAnalogBehavior, float> Axes;
-    [IgnoreMember] public Dictionary<IAnalogBehavior, float> AxisOverrides = new Dictionary<IAnalogBehavior, float>();
+    [IgnoreMember] public Dictionary<int, List<IBehavior>> Behaviors;
+    [IgnoreMember] public Dictionary<int, List<IActivatedBehavior>> Bindings;
+    [IgnoreMember] public Dictionary<int, AxisSetting> Axes;
+    [IgnoreMember] public Dictionary<int, float> AxisOverrides = new Dictionary<int, float>();
     [IgnoreMember] public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     
     private Dictionary<Gear, EquippableItemData> GearData;
+    private Dictionary<Gear, List<IBehavior>> ItemBehaviors;
 
     [IgnoreMember] public float Mass { get; private set; }
     [IgnoreMember] public float SpecificHeat { get; private set; }
@@ -64,26 +65,44 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         var gearData = gear.ToDictionary(id => id, id => Context.Cache.Get<Gear>(id));
         GearData = gearData.Values.ToDictionary(g => g, g => g.ItemData);
         
+        // Associate items with behavior list, used only for persistence
         ItemBehaviors = gear
             .Where(i=> gearData[i].ItemData.Behaviors?.Any()??false)
             .ToDictionary(i=> gearData[i], i => gearData[i].ItemData.Behaviors
                 .Select(bd => bd.CreateInstance(Context, this, gearData[i]))
                 .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0)
                 .ToList());
+
+        var behaviorGroups = ItemBehaviors
+            .SelectMany(x => x.Value
+                .Select(b => new {item = x.Key, behavior = b})
+                .OrderBy(ib => ib.behavior.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0))
+            .GroupBy(ib => new {ib.item, ib.behavior.Data.Group});
         
-        Bindings = ItemBehaviors
+        Behaviors = behaviorGroups
+            .Select((grouping, i) => new {index = i, group = grouping})
+            .ToDictionary(ig => ig.index, ig => ig.group.Select(x => x.behavior).ToList());
+        
+        Bindings = Behaviors
             .Where(x => x.Value.Any(g => g is IActivatedBehavior))
-            .Select(x=> new {gear = x.Key, behaviors = x.Value
+            .Select((x, i) => new {index = i, behaviors = x.Value
                 .Where(g => g is IActivatedBehavior)
                 .Cast<IActivatedBehavior>().ToList()})
-            .ToDictionary(x => x.gear, x => x.behaviors);
+            .ToDictionary(x => x.index, x => x.behaviors);
         
-        Axes = ItemBehaviors.Values
-            .SelectMany(behaviors=>behaviors)
-            .Where(b => b is IAnalogBehavior)
-            .ToDictionary(b => b as IAnalogBehavior, b => 0f);
+        Axes = Behaviors
+            .Where(x => x.Value.Any(g => g is IAnalogBehavior))
+            .Select((x, i) => new {index = i, behaviors = x.Value
+                .Where(g => g is IAnalogBehavior)
+                .Cast<IAnalogBehavior>().ToList()})
+            .ToDictionary(x => x.index, x => new AxisSetting{Behaviors = x.behaviors, Value = 0f});
         
-        foreach (var behavior in ItemBehaviors.Values
+        // Axes = Behaviors.Values
+        //     .SelectMany(behaviors=>behaviors)
+        //     .Where(b => b is IAnalogBehavior)
+        //     .ToDictionary(b => b as IAnalogBehavior, b => 0f);
+        
+        foreach (var behavior in Behaviors.Values
             .SelectMany(behaviors=>behaviors)) behavior.Initialize();
     }
 
@@ -101,7 +120,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
     public IEnumerable<T> GetBehaviors<T>() where T : class, IBehavior
     {
-        foreach (var behaviors in ItemBehaviors.Values)
+        foreach (var behaviors in Behaviors.Values)
             foreach (var behavior in behaviors)
                 if (behavior is T b)
                     yield return b;
@@ -109,10 +128,27 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
     public IEnumerable<T> GetBehaviorData<T>() where T : BehaviorData
     {
-        foreach (var behaviors in ItemBehaviors.Values)
+        foreach (var behaviors in Behaviors.Values)
             foreach (var behavior in behaviors)
                 if (behavior.Data is T b)
                     yield return b;
+    }
+
+    public int GetAxis(IAnalogBehavior behavior)
+    {
+        var axis = Axes.FirstOrDefault(x => x.Value.Behaviors.Contains(behavior));
+        if (axis.IsNull())
+            return -1;
+        return axis.Key;
+    }
+
+    public int GetAxis<T>() where T : class, IBehavior
+    {
+        foreach (var axis in Axes)
+            foreach (var behavior in axis.Value.Behaviors)
+                if (behavior is T)
+                    return axis.Key;
+        return -1;
     }
 
     public void AddHeat(float heat)
@@ -122,63 +158,14 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
     public virtual void Update(float delta)
     {
-        foreach(var analogBehavior in Axes.Keys)
-            analogBehavior.SetAxis(AxisOverrides.ContainsKey(analogBehavior) ? AxisOverrides[analogBehavior] : Axes[analogBehavior]);
+        foreach(var axis in Axes)
+            foreach(var analogBehavior in axis.Value.Behaviors)
+                analogBehavior.SetAxis(AxisOverrides.ContainsKey(axis.Key) ? AxisOverrides[axis.Key] : Axes[axis.Key].Value);
 
-        foreach (var behavior in ItemBehaviors.SelectMany(item => item.Value))
-            behavior.Update(delta);
-
-        foreach (var staleItem in GearData
-            .Where(kvp=>kvp.Key.ItemData!=kvp.Value)
-            .Select(kvp=>kvp.Key))
-        {
-            // Item is stale, there's an updated one in the database cache
-            //var actualItem = Context.Cache.Get<Gear>(staleItem.ID);
-            var staleBehaviors = ItemBehaviors[staleItem];
-            ItemBehaviors.Remove(staleItem);
-            
-            // We'll be reloading the item along with its behaviors, some data must be persisted
-            var persistentData = staleBehaviors
-                .Where(b => b is IPersistentBehavior)
-                .Cast<IPersistentBehavior>()
-                .Select(b => b.Store());
-            
-            // Regenerate the behavior list for the updated item
-            ItemBehaviors[staleItem] = staleItem.ItemData.Behaviors
-                .Select(bd => bd.CreateInstance(Context, this, staleItem))
-                .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
-            
-            foreach(var behavior in ItemBehaviors[staleItem])
-                behavior.Initialize();
-            
-            // Restore state for persisted behaviors
-            foreach(var persistentBehaviorData in ItemBehaviors[staleItem]
-                .Where(b => b is IPersistentBehavior)
-                .Cast<IPersistentBehavior>()
-                .Zip(persistentData, (behavior, data) => new {behavior, data}))
-                persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
-            
-            // Regenerate activated behavior bindings
-            if (Bindings.ContainsKey(staleItem))
-            {
-                Bindings.Remove(staleItem);
-                Bindings[staleItem] = ItemBehaviors[staleItem]
-                    .Where(b => b is IActivatedBehavior)
-                    .Cast<IActivatedBehavior>().ToList();
-            }
-
-            // Remove axis bindings and overrides for analog behaviors
-            foreach (var axis in staleBehaviors.Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
-            {
-                Axes.Remove(axis);
-                if (AxisOverrides.ContainsKey(axis))
-                    AxisOverrides.Remove(axis);
-            }
-
-            // Regenerate axis bindings for analog behaviors
-            foreach (var axis in ItemBehaviors[staleItem].Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
-                Axes[axis] = 0;
-        }
+        foreach (var group in Behaviors.Values)
+            foreach(var behavior in group)
+                if(!behavior.Update(delta))
+                    break;
 
         foreach (var item in EquippedItems
             .Select(item => Context.Cache.Get<Gear>(item))
@@ -191,6 +178,66 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             Position = parent.Position;
             Velocity = parent.Velocity;
         }
+
+        // Processing stale item data properly was a pain in my ass, so the shortcut is just persisting and restoring everything
+        if (GearData.Any(kvp => kvp.Key.ItemData != kvp.Value))
+        {
+            OnBeforeSerialize();
+            OnAfterDeserialize();
+        }
+        
+        // Here's the PITA way
+        // foreach (var staleItem in GearData
+        //     .Where(kvp=>kvp.Key.ItemData!=kvp.Value)
+        //     .Select(kvp=>kvp.Key))
+        // {
+        //     // Item is stale, there's an updated one in the database cache
+        //     //var actualItem = Context.Cache.Get<Gear>(staleItem.ID);
+        //     var staleBehaviors = ItemBehaviors[staleItem];
+        //     ItemBehaviors.Remove(staleItem);
+        //     
+        //     // We'll be reloading the item along with its behaviors, some data must be persisted
+        //     var persistentData = staleBehaviors
+        //         .Where(b => b is IPersistentBehavior)
+        //         .Cast<IPersistentBehavior>()
+        //         .Select(b => b.Store());
+        //     
+        //     // Regenerate the behavior list for the updated item
+        //     ItemBehaviors[staleItem] = staleItem.ItemData.Behaviors
+        //         .Select(bd => bd.CreateInstance(Context, this, staleItem))
+        //         .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
+        //     
+        //     foreach(var behavior in ItemBehaviors[staleItem])
+        //         behavior.Initialize();
+        //     
+        //     // Restore state for persisted behaviors
+        //     foreach(var persistentBehaviorData in ItemBehaviors[staleItem]
+        //         .Where(b => b is IPersistentBehavior)
+        //         .Cast<IPersistentBehavior>()
+        //         .Zip(persistentData, (behavior, data) => new {behavior, data}))
+        //         persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
+        //     
+        //     // Regenerate activated behavior bindings
+        //     if (Bindings.ContainsKey(staleItem))
+        //     {
+        //         Bindings.Remove(staleItem);
+        //         Bindings[staleItem] = ItemBehaviors[staleItem]
+        //             .Where(b => b is IActivatedBehavior)
+        //             .Cast<IActivatedBehavior>().ToList();
+        //     }
+        //
+        //     // Remove axis bindings and overrides for analog behaviors
+        //     foreach (var axis in staleBehaviors.Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
+        //     {
+        //         Axes.Remove(axis);
+        //         if (AxisOverrides.ContainsKey(axis))
+        //             AxisOverrides.Remove(axis);
+        //     }
+        //
+        //     // Regenerate axis bindings for analog behaviors
+        //     foreach (var axis in ItemBehaviors[staleItem].Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
+        //         Axes[axis] = 0;
+        // }
     }
 
     public void OnBeforeSerialize()
@@ -223,4 +270,10 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                 .Zip(PersistedBehaviors[itemBehaviors.Key.ID], (behavior, data) => new{behavior, data})))
             persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
     }
+}
+
+public class AxisSetting
+{
+    public float Value;
+    public List<IAnalogBehavior> Behaviors;
 }

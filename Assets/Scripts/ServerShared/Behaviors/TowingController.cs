@@ -48,7 +48,7 @@ public class TowingController : IBehavior, IPersistentBehavior, IController
         _velocityMatch = new VelocityMatch(_context, _entity, _data);
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
         if (_path.Any())
         {
@@ -119,6 +119,7 @@ public class TowingController : IBehavior, IPersistentBehavior, IController
                 _velocityMatch.Update(delta);
             }
         }
+        return true;
     }
 
     public PersistentBehaviorData Store()
@@ -147,6 +148,10 @@ public class TowingController : IBehavior, IPersistentBehavior, IController
     private void SetWormholeDestination()
     {
         _locomotion.Objective = _context.WormholePosition(_entity.Zone, _path[0].ZoneID);
+    }
+
+    public void Remove()
+    {
     }
 }
 

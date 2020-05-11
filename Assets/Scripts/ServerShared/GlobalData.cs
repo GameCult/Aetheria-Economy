@@ -14,6 +14,9 @@ public class GlobalData : DatabaseEntry
     [InspectableField, JsonProperty("galaxyName"), Key(1)]  
     public string GalaxyName;
 
+    [InspectableDatabaseLink(typeof(ZoneData)), JsonProperty("arrivalZone"), Key(2)]  
+    public Guid ArrivalZone;
+
     [InspectableField, JsonProperty("galaxyArms"), Key(4)]  
     public int Arms = 4;
 

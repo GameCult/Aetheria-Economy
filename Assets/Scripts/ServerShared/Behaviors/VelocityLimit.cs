@@ -6,7 +6,7 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class VelocityLimitData : BehaviorData
 {
-    [InspectableField, JsonProperty("topSpeed"), Key(0)]  
+    [InspectableField, JsonProperty("topSpeed"), Key(1)]  
     public PerformanceStat TopSpeed = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -40,10 +40,15 @@ public class VelocityLimit : IBehavior
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
         Limit = Context.Evaluate(_data.TopSpeed, Item, Entity);
         if (length(Entity.Velocity) > Limit)
             Entity.Velocity = normalize(Entity.Velocity) * Limit;
+        return true;
+    }
+
+    public void Remove()
+    {
     }
 }

@@ -5,16 +5,16 @@ using Newtonsoft.Json;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class SensorData : BehaviorData
 {
-    [InspectableField, JsonProperty("radiance"), Key(0)]  
+    [InspectableField, JsonProperty("radiance"), Key(1)]  
     public PerformanceStat Radiance = new PerformanceStat();
 
-    [InspectableField, JsonProperty("masking"), Key(1)]  
+    [InspectableField, JsonProperty("masking"), Key(2)]  
     public PerformanceStat RadianceMasking = new PerformanceStat();
 
-    [InspectableField, JsonProperty("sensitivity"), Key(2)]  
+    [InspectableField, JsonProperty("sensitivity"), Key(3)]  
     public PerformanceStat Sensitivity = new PerformanceStat();
 
-    [InspectableField, JsonProperty("range"), Key(3)]  
+    [InspectableField, JsonProperty("range"), Key(4)]  
     public PerformanceStat Range = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -27,9 +27,9 @@ public class Sensor : IBehavior
 {
     private SensorData _data;
 
-    public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
+    private Entity Entity { get; }
+    private Gear Item { get; }
+    private GameContext Context { get; }
 
     public BehaviorData Data => _data;
 
@@ -45,8 +45,9 @@ public class Sensor : IBehavior
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
+        return true;
         // var ship = Hardpoint.Ship.Ship.transform;
         // var contacts =
         //     Physics.OverlapSphere(ship.position, _data.Range.Evaluate(Hardpoint)).Where(c=>c.attachedRigidbody?.GetComponent<Targetable>()!=null).Select(c=>c.attachedRigidbody.GetComponent<Targetable>());
@@ -64,5 +65,9 @@ public class Sensor : IBehavior
         //
         // Hardpoint.Ship.VisibilitySources[this] = _data.Radiance.Evaluate(Hardpoint) / _data.RadianceMasking.Evaluate(Hardpoint);
         // TODO: Handle Active Detection / Visibility From Reflected Radiance
+    }
+
+    public void Remove()
+    {
     }
 }

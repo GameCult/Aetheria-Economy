@@ -10,10 +10,10 @@ using Random = Unity.Mathematics.Random;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class FactoryData : BehaviorData
 {
-    [InspectableField, JsonProperty("toolingTime"), Key(0)]
+    [InspectableField, JsonProperty("toolingTime"), Key(1)]
     public PerformanceStat ToolingTime = new PerformanceStat();
 
-    [InspectableField, JsonProperty("automation"), Key(1)]
+    [InspectableField, JsonProperty("automation"), Key(2)]
     public int AutomationPoints;
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -52,7 +52,7 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
         var blueprint = Context.Cache.Get<BlueprintData>(_blueprint);
         if (_retooling || _producing)
@@ -198,6 +198,8 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
                 }
             }
         }
+
+        return true;
     }
 
     public PersistentBehaviorData Store()
@@ -224,6 +226,10 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
         _reservedStock = factoryPersistence.ReservedStock.Select(id => Context.Cache.Get<ItemInstance>(id)).ToList();
         _assignedPopulation = factoryPersistence.AssignedPopulation;
         _productionQuality = factoryPersistence.ProductionQuality;
+    }
+
+    public void Remove()
+    {
     }
 }
 

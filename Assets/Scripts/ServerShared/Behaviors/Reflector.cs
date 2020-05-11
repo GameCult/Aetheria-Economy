@@ -6,7 +6,7 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ReflectorData : BehaviorData
 {
-    [InspectableField, JsonProperty("crossSection"), Key(0)]  
+    [InspectableField, JsonProperty("crossSection"), Key(1)]  
     public PerformanceStat CrossSection = new PerformanceStat();
 
     // [InspectableAnimationCurve, JsonProperty("visibility"), Key(1)]  
@@ -40,7 +40,12 @@ public class Reflector : IBehavior
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
+    {
+        return true;
+    }
+
+    public void Remove()
     {
     }
 }

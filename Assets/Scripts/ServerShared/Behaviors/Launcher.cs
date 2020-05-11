@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class LauncherData : BehaviorData
+public class LauncherData : WeaponData
 {
     [InspectablePrefab, JsonProperty("missile"), Key(9)]  
     public string MissilePrefab;
@@ -50,16 +50,20 @@ public class Launcher : IActivatedBehavior
     private float _cooldown; // normalized
     private bool _locked;
     
-    private LauncherData _launcher;
-    public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
+    private LauncherData _data;
+    private Entity Entity { get; }
+    private Gear Item { get; }
+    private GameContext Context { get; }
     private float _firingVisibility;
+    
+    public BehaviorData Data => _data;
+
+    public int Group => _data.Group;
 
     public Launcher(GameContext context, LauncherData m, Entity entity, Gear item)
     {
         Context = context;
-        _launcher  = m;
+        _data  = m;
         Entity = entity;
         Item = item;
         // _audio = hp.Proxy.GetComponent<AudioSource>();
@@ -70,10 +74,11 @@ public class Launcher : IActivatedBehavior
         // _audio.volume = .5f;
     }
     
-    public void Activate()
+    public bool Activate()
     {
         _locking = true;
         _lockingTimer = 1;
+        return true;
     }
 
     private void Fire(long b)
@@ -124,8 +129,9 @@ public class Launcher : IActivatedBehavior
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
+        return true;
         // if (Ship.Target == null)
         //     return;
         //
@@ -161,6 +167,8 @@ public class Launcher : IActivatedBehavior
         //     _firingVisibility = 0;
         // }
     }
-    
-    public BehaviorData Data => _launcher;
+
+    public void Remove()
+    {
+    }
 }

@@ -6,7 +6,7 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class RadiatorData : BehaviorData
 {
-    [InspectableField, JsonProperty("emissivity"), Key(0)]  
+    [InspectableField, JsonProperty("emissivity"), Key(1)]  
     public PerformanceStat Emissivity = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -37,10 +37,15 @@ public class Radiator : IBehavior
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
         var rad = pow(Entity.Temperature, Context.GlobalData.HeatRadiationPower) * Context.GlobalData.HeatRadiationMultiplier;
         Entity.Temperature -= rad * delta;
         Entity.VisibilitySources[this] = rad;
+        return true;
+    }
+
+    public void Remove()
+    {
     }
 }

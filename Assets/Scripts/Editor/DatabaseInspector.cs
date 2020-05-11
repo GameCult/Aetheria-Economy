@@ -484,8 +484,11 @@ public class DatabaseInspector : EditorWindow
         using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            if(area)
-                return TextArea(value,GUILayout.Width(position.width-width-10), GUILayout.Height(100));
+            if (area)
+            {
+                EditorStyles.textArea.wordWrap = true;
+                return DelayedTextField(value, EditorStyles.textArea, GUILayout.Width(position.width-width-10), GUILayout.Height(100));
+            }
             return DelayedTextField(value);
         }
     }

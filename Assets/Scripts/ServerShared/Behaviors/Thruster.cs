@@ -6,13 +6,13 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship)]
 public class ThrusterData : BehaviorData
 {
-    [InspectableField, JsonProperty("thrust"), Key(0)]  
+    [InspectableField, JsonProperty("thrust"), Key(1)]  
     public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField, JsonProperty("visibility"), Key(1)]  
+    [InspectableField, JsonProperty("visibility"), Key(2)]  
     public PerformanceStat Visibility = new PerformanceStat();
 
-    [InspectableField, JsonProperty("heat"), Key(2)]  
+    [InspectableField, JsonProperty("heat"), Key(3)]  
     public PerformanceStat Heat = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -52,11 +52,16 @@ public class Thruster : IAnalogBehavior
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
         Thrust = Context.Evaluate(_data.Thrust, Item, Entity);
         Entity.Velocity += Entity.Direction * _input * Thrust / Entity.Mass * delta;
         Entity.AddHeat(_input * Context.Evaluate(_data.Heat, Item, Entity) * delta);
         Entity.VisibilitySources[this] = _input * Context.Evaluate(_data.Visibility, Item, Entity);
+        return true;
+    }
+
+    public void Remove()
+    {
     }
 }

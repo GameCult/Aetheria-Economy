@@ -6,7 +6,7 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class VelocityConversionData : BehaviorData
 {
-    [InspectableField, JsonProperty("traction"), Key(0)]  
+    [InspectableField, JsonProperty("traction"), Key(1)]  
     public PerformanceStat Traction = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -37,7 +37,12 @@ public class VelocityConversion : IBehavior
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
+    {
+        return true;
+    }
+
+    public void Remove()
     {
     }
 }

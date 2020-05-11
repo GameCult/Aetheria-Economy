@@ -69,10 +69,13 @@
     <Compile Include="Assets\Scripts\ServerShared\Agents\StationTowing.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\VelocityMatch.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\ActivatedItemUsage.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Afterburner.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Controller.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\FactoryBehavior.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Hitscan.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\ItemUsage.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Launcher.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\PatrolController.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ProjectileWeapon.cs" />

@@ -12,13 +12,14 @@ using static Unity.Mathematics.noise;
 public interface IBehavior
 {
     void Initialize();
-    void Update(float delta);
+    bool Update(float delta);
+    void Remove();
     BehaviorData Data { get; }
 }
 
 public interface IActivatedBehavior : IBehavior
 {
-    void Activate();
+    bool Activate();
     void Deactivate();
 }
 
@@ -68,8 +69,8 @@ public abstract class PersistentBehaviorData
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {
-    // [InspectableField, JsonProperty("index"), Key(0)]
-    // public int Index;
+    [InspectableField, JsonProperty("group"), Key(0)]
+    public int Group;
     
     public abstract IBehavior CreateInstance(GameContext context, Entity entity, Gear item);
 }

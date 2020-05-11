@@ -4,19 +4,19 @@ using Newtonsoft.Json;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ReactorData : BehaviorData
 {
-    [InspectableField, JsonProperty("charge"), Key(0)]  
+    [InspectableField, JsonProperty("charge"), Key(1)]  
     public PerformanceStat Charge = new PerformanceStat();
 
-    [InspectableField, JsonProperty("capacitance"), Key(1)]  
+    [InspectableField, JsonProperty("capacitance"), Key(2)]  
     public PerformanceStat Capacitance = new PerformanceStat();
 
-    [InspectableField, JsonProperty("efficiency"), Key(2)]  
+    [InspectableField, JsonProperty("efficiency"), Key(3)]  
     public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("overload"), Key(3)]  
+    [InspectableField, JsonProperty("overload"), Key(4)]  
     public PerformanceStat OverloadEfficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("underload"), Key(4)]  
+    [InspectableField, JsonProperty("underload"), Key(5)]  
     public PerformanceStat UnderloadRecovery = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -47,7 +47,7 @@ public class Reactor : IBehavior
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
         var cap = Context.Evaluate(_data.Capacitance, Item, Entity);
         var charge = Context.Evaluate(_data.Charge, Item, Entity) * delta;
@@ -67,5 +67,10 @@ public class Reactor : IBehavior
             Entity.AddHeat( -Entity.Energy / Context.Evaluate(_data.OverloadEfficiency, Item, Entity));
             Entity.Energy = 0;
         }
+        return true;
+    }
+
+    public void Remove()
+    {
     }
 }

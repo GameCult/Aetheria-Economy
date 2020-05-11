@@ -6,10 +6,10 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ShieldData : BehaviorData
 {
-    [InspectableField, JsonProperty("efficiency"), Key(0)]  
+    [InspectableField, JsonProperty("efficiency"), Key(1)]  
     public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("shielding"), Key(1)]  
+    [InspectableField, JsonProperty("shielding"), Key(2)]  
     public PerformanceStat Shielding = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -42,7 +42,12 @@ public class Shield : IBehavior
     {
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
+    {
+        return true;
+    }
+
+    public void Remove()
     {
     }
 }

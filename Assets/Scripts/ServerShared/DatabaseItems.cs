@@ -87,14 +87,20 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("name"), Key(1)]
     public string Name;
     
-    [InspectableTexture, JsonProperty("logo"), Key(2)]
+    [InspectableText, JsonProperty("description"), Key(2)]
+    public string Description;
+    
+    [InspectableTexture, JsonProperty("logo"), Key(3)]
     public string Logo;
     
-    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("initialFleet"), Key(3)]  
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(4)]  
     public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
     
-    [InspectableDatabaseLink(typeof(LoadoutData)), JsonProperty("initialFleet"), Key(4)]  
+    [InspectableDatabaseLink(typeof(LoadoutData)), JsonProperty("initialFleet"), Key(5)]  
     public Dictionary<Guid, int> InitialFleet = new Dictionary<Guid, int>();
+    
+    [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("initialTechs"), Key(6)]  
+    public List<Guid> InitialTechnologies = new List<Guid>();
     
     [IgnoreMember] public string EntryName
     {

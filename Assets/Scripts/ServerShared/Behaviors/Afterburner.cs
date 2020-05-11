@@ -7,13 +7,13 @@ using Newtonsoft.Json;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class AfterburnerData : BehaviorData
 {
-    [InspectableField, JsonProperty("thrust"), Key(0)]  
+    [InspectableField, JsonProperty("thrust"), Key(1)]  
     public PerformanceStat ThrustModifier = new PerformanceStat();
 
-    [InspectableField, JsonProperty("speed"), Key(1)]  
+    [InspectableField, JsonProperty("speed"), Key(2)]  
     public PerformanceStat SpeedModifier = new PerformanceStat();
 
-    [InspectableField, JsonProperty("torque"), Key(2)]  
+    [InspectableField, JsonProperty("torque"), Key(3)]  
     public PerformanceStat TorqueModifier = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -27,6 +27,7 @@ public class Afterburner : IActivatedBehavior
     private List<Dictionary<IBehavior,float>> _modifiers = new List<Dictionary<IBehavior, float>>();
     private AfterburnerData _data;
     private Thruster _thruster;
+    private int _thrustAxis;
 
     public Entity Entity { get; }
     public Gear Item { get; }
@@ -45,21 +46,25 @@ public class Afterburner : IActivatedBehavior
     public void Initialize()
     {
         _thruster = Entity.GetBehaviors<Thruster>().FirstOrDefault();
+        _thrustAxis = Entity.GetAxis<Thruster>();
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
+        return true;
     }
     
-    public void Activate()
+    public bool Activate()
     {
-        if (_thruster == null) return;
+        if (_thruster == null) return false;
         
         var thrustMod = ((ThrusterData) _thruster.Data).Thrust.GetScaleModifiers(Entity);
         thrustMod.Add(this,Context.Evaluate(_data.ThrustModifier,Item, Entity));
         _modifiers.Add(thrustMod);
 
-        Entity.AxisOverrides[_thruster] = 1;
+        Entity.AxisOverrides[_thrustAxis] = 1;
+        
+        return true;
         
         // var speedMod = (Ship.Hull.ItemData as HullData).TopSpeed.GetScaleModifiers(Ship);
         // _modifiers.Add(speedMod);
@@ -72,11 +77,15 @@ public class Afterburner : IActivatedBehavior
 
     public void Deactivate()
     {
-        Entity.AxisOverrides.Remove(_thruster);
+        Entity.AxisOverrides.Remove(_thrustAxis);
         foreach (var mod in _modifiers)
         {
             mod.Remove(this);
         }
         _modifiers.Clear();
+    }
+
+    public void Remove()
+    {
     }
 }

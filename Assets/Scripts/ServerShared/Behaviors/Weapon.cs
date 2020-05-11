@@ -5,30 +5,30 @@ using Newtonsoft.Json;
  Union(1, typeof(LauncherData))]
 public abstract class WeaponData : BehaviorData
 {
-    [InspectableField, JsonProperty("damageType"), Key(0)]
+    [InspectableField, JsonProperty("damageType"), Key(1)]
     public DamageType DamageType;
 
-    [InspectableField, JsonProperty("damage"), Key(1)]  
+    [InspectableField, JsonProperty("damage"), Key(2)]  
     public PerformanceStat Damage = new PerformanceStat();
 
-    [InspectableField, JsonProperty("range"), Key(2)]  
+    [InspectableField, JsonProperty("range"), Key(3)]  
     public PerformanceStat Range = new PerformanceStat();
 
-    [InspectableField, JsonProperty("cooldown"), Key(3)]  
+    [InspectableField, JsonProperty("cooldown"), Key(4)]  
     public PerformanceStat Cooldown = new PerformanceStat();
 
-    [InspectableField, JsonProperty("heat"), Key(4)]  
+    [InspectableField, JsonProperty("heat"), Key(5)]  
     public PerformanceStat Heat = new PerformanceStat();
 
-    [InspectableField, JsonProperty("visibility"), Key(5)]  
+    [InspectableField, JsonProperty("visibility"), Key(6)]  
     public PerformanceStat Visibility = new PerformanceStat();
 
-    [InspectableField, JsonProperty("visibilityDecay"), Key(6)]  
+    [InspectableField, JsonProperty("visibilityDecay"), Key(7)]  
     public PerformanceStat VisibilityDecay = new PerformanceStat();
 
-    [InspectableField, JsonProperty("burstCount"), Key(7)]  
+    [InspectableField, JsonProperty("burstCount"), Key(8)]  
     public int BurstCount;
 
-    [InspectableField, JsonProperty("burstTime"), Key(8)]  
+    [InspectableField, JsonProperty("burstTime"), Key(9)]  
     public PerformanceStat BurstTime = new PerformanceStat();
 }

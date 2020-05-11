@@ -7,16 +7,16 @@ using Newtonsoft.Json;
 [Union(0, typeof(TowingControllerData))]
 public abstract class ControllerData : BehaviorData
 {
-    [InspectableField, JsonProperty("thrustSensitivity"), Key(0)]
+    [InspectableField, JsonProperty("thrustSensitivity"), Key(1)]
     public float ThrustSensitivity = 1;
     
-    [InspectableField, JsonProperty("thrustSpecificity"), Key(1)]
+    [InspectableField, JsonProperty("thrustSpecificity"), Key(2)]
     public float ThrustSpecificity = 8;
     
-    [InspectableField, JsonProperty("turningSensitivity"), Key(2)]
+    [InspectableField, JsonProperty("turningSensitivity"), Key(3)]
     public float TurningSensitivity = 1;
     
-    [InspectableField, JsonProperty("tangentSensitivity"), Key(3)]
+    [InspectableField, JsonProperty("tangentSensitivity"), Key(4)]
     public float TangentSensitivity = 4;
 }
 

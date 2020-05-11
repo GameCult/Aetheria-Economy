@@ -9,7 +9,7 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship)]
 public class PatrolControllerData : ControllerData
 {
-    [InspectableField, JsonProperty("targetDistance"), Key(4)]  
+    [InspectableField, JsonProperty("targetDistance"), Key(5)]  
     public float TargetDistance = 10;
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -47,13 +47,15 @@ public class PatrolController : IBehavior, IController
         RandomTarget();
     }
 
-    public void Update(float delta)
+    public bool Update(float delta)
     {
         _locomotion.Objective = _context.GetOrbitPosition(_targetOrbit);
         _locomotion.Update(delta);
         
         if(length(_entity.Position - _locomotion.Objective) < _data.TargetDistance)
             RandomTarget();
+        
+        return true;
     }
 
     public void AssignTask(Guid task, List<SimplifiedZoneData> path)
@@ -65,5 +67,9 @@ public class PatrolController : IBehavior, IController
     {
         var entities = _context.ZonePlanets[_entity.Zone];
         _targetOrbit = _context.Cache.Get<PlanetData>(entities[_context.Random.NextInt(entities.Length)]).Orbit;
+    }
+
+    public void Remove()
+    {
     }
 }

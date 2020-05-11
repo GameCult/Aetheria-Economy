@@ -130,6 +130,11 @@ public static class Extensions
 
         return isDefault;
     }
+    
+    public static bool IsNull<T, TU>(this KeyValuePair<T, TU> pair)
+    {
+        return pair.Equals(new KeyValuePair<T, TU>());
+    }
 
     private static Dictionary<float4[], int2> _cachedIndices = new Dictionary<float4[], int2>();
     public static float Evaluate(this float4[] curve, float time)

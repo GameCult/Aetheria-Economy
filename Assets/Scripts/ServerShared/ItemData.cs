@@ -83,28 +83,25 @@ public class CompoundCommodityData : CraftedItemData
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<EquippableItemData>))]
 public abstract class EquippableItemData : CraftedItemData
 {
-    [InspectableField, JsonProperty("draw"), Key(6)]
-    public PerformanceStat EnergyDraw = new PerformanceStat();
-
-    [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(7)]
+    [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(6)]
     public float4[] HeatPerformanceCurve;
 
-    [TemperatureInspectable, JsonProperty("minTemp"), Key(8)]
+    [TemperatureInspectable, JsonProperty("minTemp"), Key(7)]
     public float MinimumTemperature;
 
-    [TemperatureInspectable, JsonProperty("maxTemp"), Key(9)]
+    [TemperatureInspectable, JsonProperty("maxTemp"), Key(8)]
     public float MaximumTemperature;
 
-    [InspectableField, JsonProperty("durabilityStat"), Key(10)]
+    [InspectableField, JsonProperty("durabilityStat"), Key(9)]
     public PerformanceStat Durability = new PerformanceStat();
 
-    [InspectableField, JsonProperty("durabilityExponent"), Key(11)]
+    [InspectableField, JsonProperty("durabilityExponent"), Key(10)]
     public PerformanceStat DurabilityExponent = new PerformanceStat();
 
-    [InspectableField, JsonProperty("heatExponent"), Key(12)]
+    [InspectableField, JsonProperty("heatExponent"), Key(11)]
     public PerformanceStat HeatExponent = new PerformanceStat();
 
-    [InspectableField, JsonProperty("behaviors"), Key(13)]  
+    [InspectableField, JsonProperty("behaviors"), Key(12)]  
     public List<BehaviorData> Behaviors = new List<BehaviorData>();
     
     [IgnoreMember]
@@ -142,7 +139,7 @@ public abstract class EquippableItemData : CraftedItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GearData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpointType"), Key(14)]  
+    [InspectableField, JsonProperty("hardpointType"), Key(13)]  
     public HardpointType Hardpoint;
 
     [IgnoreMember] public override HardpointType HardpointType => Hardpoint;
@@ -151,16 +148,16 @@ public class GearData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HullData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hullCapacity"), Key(14)]  
+    [InspectableField, JsonProperty("hullCapacity"), Key(13)]  
     public PerformanceStat Capacity = new PerformanceStat();
 
-    [InspectableField, JsonProperty("hardpoints"), Key(15)]  
+    [InspectableField, JsonProperty("hardpoints"), Key(14)]  
     public List<HardpointData> Hardpoints = new List<HardpointData>();
 
-    [InspectablePrefab, JsonProperty("prefab"), Key(16)]  
+    [InspectablePrefab, JsonProperty("prefab"), Key(15)]  
     public string Prefab;
 
-    [InspectableField, JsonProperty("hullType"), Key(17)]
+    [InspectableField, JsonProperty("hullType"), Key(16)]
     public HullType HullType;
 
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Hull;
