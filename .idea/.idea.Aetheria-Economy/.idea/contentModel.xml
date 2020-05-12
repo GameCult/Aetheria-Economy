@@ -1252,26 +1252,32 @@
             </e>
             <e p="Attributes.cs" t="Include" />
             <e p="Behaviors" t="Include">
-              <e p="ActivatedItemUsage.cs" t="Include" />
               <e p="Afterburner.cs" t="Include" />
               <e p="Behaviors.cs" t="Include" />
               <e p="Controller.cs" t="Include" />
+              <e p="Cooldown.cs" t="Include" />
               <e p="FactoryBehavior.cs" t="Include" />
+              <e p="Heat.cs" t="Include" />
               <e p="Hitscan.cs" t="Include" />
               <e p="ItemUsage.cs" t="Include" />
               <e p="Launcher.cs" t="Include" />
               <e p="PatrolController.cs" t="Include" />
               <e p="ProjectileWeapon.cs" t="Include" />
+              <e p="Radiance.cs" t="Include" />
               <e p="Radiator.cs" t="Include" />
               <e p="Reactor.cs" t="Include" />
               <e p="Reflector.cs" t="Include" />
               <e p="Sensor.cs" t="Include" />
               <e p="Shield.cs" t="Include" />
+              <e p="StatModifier.cs" t="Include" />
+              <e p="Switch.cs" t="Include" />
               <e p="Thruster.cs" t="Include" />
               <e p="TowingController.cs" t="Include" />
+              <e p="Trigger.cs" t="Include" />
               <e p="Turning.cs" t="Include" />
               <e p="VelocityConversion.cs" t="Include" />
               <e p="VelocityLimit.cs" t="Include" />
+              <e p="Visibility.cs" t="Include" />
               <e p="Weapon.cs" t="Include" />
             </e>
             <e p="BlueprintData.cs" t="Include" />
@@ -1732,6 +1738,7 @@
             <e p="Rect.cs" t="Include" />
             <e p="RegisterResolver.cs" t="Include" />
             <e p="Ship.cs" t="Include" />
+            <e p="TypeFormatterResolver.cs" t="Include" />
             <e p="ZoneData.cs" t="Include" />
             <e p="ZoneGenerator.cs" t="Include" />
           </e>

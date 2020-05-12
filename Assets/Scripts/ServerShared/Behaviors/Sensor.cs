@@ -5,17 +5,8 @@ using Newtonsoft.Json;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class SensorData : BehaviorData
 {
-    [InspectableField, JsonProperty("radiance"), Key(1)]  
-    public PerformanceStat Radiance = new PerformanceStat();
-
-    [InspectableField, JsonProperty("masking"), Key(2)]  
-    public PerformanceStat RadianceMasking = new PerformanceStat();
-
     [InspectableField, JsonProperty("sensitivity"), Key(3)]  
     public PerformanceStat Sensitivity = new PerformanceStat();
-
-    [InspectableField, JsonProperty("range"), Key(4)]  
-    public PerformanceStat Range = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
@@ -41,12 +32,9 @@ public class Sensor : IBehavior
         Context = context;
     }
 
-    public void Initialize()
-    {
-    }
-
     public bool Update(float delta)
     {
+        // TODO: Handle Active Detection / Visibility From Reflected Radiance
         return true;
         // var ship = Hardpoint.Ship.Ship.transform;
         // var contacts =
@@ -64,10 +52,5 @@ public class Sensor : IBehavior
         // }
         //
         // Hardpoint.Ship.VisibilitySources[this] = _data.Radiance.Evaluate(Hardpoint) / _data.RadianceMasking.Evaluate(Hardpoint);
-        // TODO: Handle Active Detection / Visibility From Reflected Radiance
-    }
-
-    public void Remove()
-    {
     }
 }

@@ -36,16 +36,9 @@ public class Reflector : IBehavior
         Item = item;
     }
 
-    public void Initialize()
-    {
-    }
-
     public bool Update(float delta)
     {
+        // TODO: Light system!
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

@@ -22,7 +22,7 @@ public class FactoryData : BehaviorData
     }
 }
 
-public class Factory : IBehavior, IPersistentBehavior//<Factory>
+public class Factory : IBehavior, IPersistentBehavior
 {
     public Entity Entity { get; }
     public Gear Item { get; }
@@ -46,10 +46,6 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
         _data = data;
         Entity = entity;
         Item = item;
-    }
-
-    public void Initialize()
-    {
     }
 
     public bool Update(float delta)
@@ -226,10 +222,6 @@ public class Factory : IBehavior, IPersistentBehavior//<Factory>
         _reservedStock = factoryPersistence.ReservedStock.Select(id => Context.Cache.Get<ItemInstance>(id)).ToList();
         _assignedPopulation = factoryPersistence.AssignedPopulation;
         _productionQuality = factoryPersistence.ProductionQuality;
-    }
-
-    public void Remove()
-    {
     }
 }
 

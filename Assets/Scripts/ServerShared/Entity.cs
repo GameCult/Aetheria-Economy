@@ -31,7 +31,8 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     // [IgnoreMember] protected List<IBehavior> Behaviors;
     [IgnoreMember] public Guid Zone;
     [IgnoreMember] public Dictionary<int, List<IBehavior>> Behaviors;
-    [IgnoreMember] public Dictionary<int, List<IActivatedBehavior>> Bindings;
+    [IgnoreMember] public Dictionary<int, Switch> Switches;
+    [IgnoreMember] public Dictionary<int, Trigger> Triggers;
     [IgnoreMember] public Dictionary<int, AxisSetting> Axes;
     [IgnoreMember] public Dictionary<int, float> AxisOverrides = new Dictionary<int, float>();
     [IgnoreMember] public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
@@ -83,12 +84,15 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             .Select((grouping, i) => new {index = i, group = grouping})
             .ToDictionary(ig => ig.index, ig => ig.group.Select(x => x.behavior).ToList());
         
-        Bindings = Behaviors
-            .Where(x => x.Value.Any(g => g is IActivatedBehavior))
-            .Select((x, i) => new {index = i, behaviors = x.Value
-                .Where(g => g is IActivatedBehavior)
-                .Cast<IActivatedBehavior>().ToList()})
-            .ToDictionary(x => x.index, x => x.behaviors);
+        Switches = Behaviors
+            .Where(x => x.Value.Any(g => g is Switch))
+            .Select((x, i) => new {index = i, s = x.Value.First(g => g is Switch) as Switch})
+            .ToDictionary(x => x.index, x => x.s);
+        
+        Triggers = Behaviors
+            .Where(x => x.Value.Any(g => g is Trigger))
+            .Select((x, i) => new {index = i, s = x.Value.First(g => g is Trigger) as Trigger})
+            .ToDictionary(x => x.index, x => x.s);
         
         Axes = Behaviors
             .Where(x => x.Value.Any(g => g is IAnalogBehavior))
@@ -103,7 +107,9 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         //     .ToDictionary(b => b as IAnalogBehavior, b => 0f);
         
         foreach (var behavior in Behaviors.Values
-            .SelectMany(behaviors=>behaviors)) behavior.Initialize();
+            .SelectMany(behaviors=>behaviors)
+            .Where(behavior => behavior is IInitializableBehavior)
+            .Cast<IInitializableBehavior>()) behavior.Initialize();
     }
 
     public void RecalculateMass()

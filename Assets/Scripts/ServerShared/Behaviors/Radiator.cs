@@ -33,19 +33,11 @@ public class Radiator : IBehavior
         Item = item;
     }
 
-    public void Initialize()
-    {
-    }
-
     public bool Update(float delta)
     {
         var rad = pow(Entity.Temperature, Context.GlobalData.HeatRadiationPower) * Context.GlobalData.HeatRadiationMultiplier;
         Entity.Temperature -= rad * delta;
         Entity.VisibilitySources[this] = rad;
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

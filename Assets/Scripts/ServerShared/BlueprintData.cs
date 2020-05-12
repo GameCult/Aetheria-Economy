@@ -78,7 +78,7 @@ public class BlueprintStatEffect
 public class StatReference
 {
     [InspectableType(typeof(BehaviorData)), JsonProperty("behavior"), Key(1)]
-    public string Behavior;
+    public string Target;
     
     [InspectableField, JsonProperty("stat"), Key(2)]
     public string Stat;

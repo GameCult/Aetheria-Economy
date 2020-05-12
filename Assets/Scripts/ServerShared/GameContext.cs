@@ -31,9 +31,13 @@ public class GameContext
     private Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
     private Dictionary<Guid, float2> _previousOrbitPositions = new Dictionary<Guid, float2>();
     private Guid _forceLoadZone;
-
+    private Type[] _statObjects;
+    
     public GlobalData GlobalData => _globalData ?? (_globalData = Cache.GetAll<GlobalData>().FirstOrDefault());
     public DatabaseCache Cache { get; }
+
+    public Type[] StatObjects => _statObjects ?? (_statObjects = typeof(BehaviorData).GetAllChildClasses()
+        .Concat(typeof(EquippableItemData).GetAllChildClasses()).ToArray());
 
     public Guid ForceLoadZone
     {
@@ -319,11 +323,11 @@ public class GameContext
         }
         
         // Get the first behavior of the type specified in the blueprint stat effect, return null if not found
-        var effectObject = effect.StatReference.Behavior == blueprintItem.Name ? (object) blueprintItem : 
-            blueprintItem.Behaviors.FirstOrDefault(b => b.GetType().Name == effect.StatReference.Behavior);
+        var effectObject = effect.StatReference.Target == blueprintItem.Name ? (object) blueprintItem : 
+            blueprintItem.Behaviors.FirstOrDefault(b => b.GetType().Name == effect.StatReference.Target);
         if (effectObject == null)
         {
-            _logger($"Attempted to get stat effect for Blueprint {blueprint.ID} but stat references missing behavior \"{effect.StatReference.Behavior}\"!");
+            _logger($"Attempted to get stat effect for Blueprint {blueprint.ID} but stat references missing behavior \"{effect.StatReference.Target}\"!");
             return AffectedStats[effect] = null;
         }
         
@@ -332,7 +336,7 @@ public class GameContext
         var field = type.GetField(effect.StatReference.Stat);
         if (field == null)
         {
-            _logger($"Attempted to get stat effect for Blueprint {blueprint.ID} but object {effect.StatReference.Behavior} does not have a stat named \"{effect.StatReference.Stat}\"!");
+            _logger($"Attempted to get stat effect for Blueprint {blueprint.ID} but object {effect.StatReference.Target} does not have a stat named \"{effect.StatReference.Stat}\"!");
             return AffectedStats[effect] = null;
         }
         

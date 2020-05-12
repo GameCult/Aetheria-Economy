@@ -11,21 +11,34 @@ using static Unity.Mathematics.noise;
 
 public interface IBehavior
 {
-    void Initialize();
     bool Update(float delta);
-    void Remove();
     BehaviorData Data { get; }
 }
 
-public interface IActivatedBehavior : IBehavior
-{
-    bool Activate();
-    void Deactivate();
-}
+// public interface IActivatedBehavior : IBehavior
+// {
+//     bool Activate();
+//     void Deactivate();
+// }
 
 public interface IAnalogBehavior : IBehavior
 {
     void SetAxis(float value);
+}
+
+public interface IDisposableBehavior
+{
+    void Dispose();
+}
+
+public interface IInitializableBehavior
+{
+    void Initialize();
+}
+
+public interface IAlwaysUpdatedBehavior
+{
+    void AlwaysUpdate(float delta);
 }
 
 public interface IPersistentBehavior//<T> where T : IBehavior
@@ -55,7 +68,7 @@ public abstract class PersistentBehaviorData
  Union(1, typeof(LauncherData)),
  Union(2, typeof(ReactorData)), 
  Union(3, typeof(RadiatorData)), 
- Union(4, typeof(AfterburnerData)), 
+ Union(4, typeof(StatModifierData)), 
  Union(5, typeof(SensorData)),
  Union(6, typeof(ReflectorData)),
  Union(7, typeof(ShieldData)),
@@ -66,6 +79,14 @@ public abstract class PersistentBehaviorData
  Union(12, typeof(FactoryData)),
  Union(13, typeof(PatrolControllerData)),
  Union(14, typeof(TowingControllerData)),
+ Union(15, typeof(CooldownData)),
+ Union(16, typeof(HeatData)),
+ Union(17, typeof(HitscanData)),
+ Union(18, typeof(ItemUsageData)),
+ Union(19, typeof(RadianceData)),
+ Union(20, typeof(SwitchData)),
+ Union(21, typeof(TriggerData)),
+ Union(22, typeof(VisibilityData)),
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {

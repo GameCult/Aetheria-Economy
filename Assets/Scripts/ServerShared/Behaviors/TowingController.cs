@@ -16,7 +16,8 @@ public class TowingControllerData : ControllerData
     }
 }
 
-public class TowingController : IBehavior, IPersistentBehavior, IController
+[UpdateOrder(-100)]
+public class TowingController : IBehavior, IPersistentBehavior, IController, IInitializableBehavior
 {
     public TaskType TaskType => TaskType.Tow;
     public bool Available => _towingTask != Guid.Empty;
@@ -148,10 +149,6 @@ public class TowingController : IBehavior, IPersistentBehavior, IController
     private void SetWormholeDestination()
     {
         _locomotion.Objective = _context.WormholePosition(_entity.Zone, _path[0].ZoneID);
-    }
-
-    public void Remove()
-    {
     }
 }
 

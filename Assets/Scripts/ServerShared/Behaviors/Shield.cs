@@ -38,16 +38,8 @@ public class Shield : IBehavior
         // TODO: Detect hits on Ship, keep a list of callbacks that modify the hit by reference
     }
 
-    public void Initialize()
-    {
-    }
-
     public bool Update(float delta)
     {
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

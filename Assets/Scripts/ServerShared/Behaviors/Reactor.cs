@@ -43,10 +43,6 @@ public class Reactor : IBehavior
         Item = item;
     }
 
-    public void Initialize()
-    {
-    }
-
     public bool Update(float delta)
     {
         var cap = Context.Evaluate(_data.Capacitance, Item, Entity);
@@ -68,9 +64,5 @@ public class Reactor : IBehavior
             Entity.Energy = 0;
         }
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
@@ -8,9 +9,6 @@ public class ItemUsageData : BehaviorData
 {
     [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("item"), Key(1)]  
     public Guid Item;
-
-    [InspectableField, JsonProperty("cooldown"), Key(2)]  
-    public PerformanceStat Cooldown = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
@@ -18,6 +16,7 @@ public class ItemUsageData : BehaviorData
     }
 }
 
+[UpdateOrder(-5)]
 public class ItemUsage : IBehavior
 {
     private ItemUsageData _data;
@@ -36,16 +35,21 @@ public class ItemUsage : IBehavior
         Context = context;
     }
 
-    public void Initialize()
-    {
-    }
-
     public bool Update(float delta)
     {
-        return true;
-    }
+        var cargoInstances = Entity.Cargo.Select(c => Context.Cache.Get<ItemInstance>(c));
+        if (cargoInstances.FirstOrDefault(c => c.Data == _data.Item) is SimpleCommodity item)
+        {
+            if (item.Quantity > 1)
+                item.Quantity--;
+            else
+            {
+                Entity.Cargo.Remove(item.ID);
+                Context.Cache.Delete(item);
+            }
 
-    public void Remove()
-    {
+            return true;
+        }
+        return false;
     }
 }

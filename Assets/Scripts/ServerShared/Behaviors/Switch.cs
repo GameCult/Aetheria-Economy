@@ -1,38 +1,40 @@
-﻿using MessagePack;
+﻿using System;
+using System.Linq;
+using MessagePack;
 using Newtonsoft.Json;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class HitscanData : WeaponData
+public class SwitchData : BehaviorData
 {
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new Hitscan(context, this, entity, item);
+        return new Switch(context, this, entity, item);
     }
 }
 
-public class Hitscan : IBehavior
+[UpdateOrder(-25)]
+public class Switch : IBehavior
 {
-    private bool _firing;
-    private float _cooldown; // normalized
-    private HitscanData _data;
+    private SwitchData _data;
+
     private Entity Entity { get; }
     private Gear Item { get; }
     private GameContext Context { get; }
-    private float _firingVisibility;
-    
+
     public BehaviorData Data => _data;
 
-    public Hitscan(GameContext context, HitscanData c, Entity entity, Gear item)
+    private bool Activated { get; set; }
+
+    public Switch(GameContext context, SwitchData data, Entity entity, Gear item)
     {
-        Context = context;
-        _data = c;
+        _data = data;
         Entity = entity;
         Item = item;
+        Context = context;
     }
 
     public bool Update(float delta)
     {
-        return true;
+        return Activated;
     }
-
 }

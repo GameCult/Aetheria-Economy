@@ -7,34 +7,34 @@ using Unity.Mathematics;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class LauncherData : WeaponData
 {
-    [InspectablePrefab, JsonProperty("missile"), Key(9)]  
+    [InspectablePrefab, JsonProperty("missile"), Key(6)]  
     public string MissilePrefab;
 
-    [InspectableAnimationCurve, JsonProperty("guidance"), Key(10)]  
+    [InspectableAnimationCurve, JsonProperty("guidance"), Key(7)]  
     public float4[] GuidanceCurve;
 
-    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(11)]  
+    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(8)]  
     public float4[] ThrustCurve;
 
-    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(12)]  
+    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(9)]  
     public float4[] LiftCurve;
 
-    [InspectableField, JsonProperty("thrust"), Key(13)]  
+    [InspectableField, JsonProperty("thrust"), Key(10)]  
     public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField, JsonProperty("lockAngle"), Key(14)]  
+    [InspectableField, JsonProperty("lockAngle"), Key(11)]  
     public float LockAngle;
 
-    [InspectableField, JsonProperty("frequency"), Key(15)]  
+    [InspectableField, JsonProperty("frequency"), Key(12)]  
     public float DodgeFrequency;
 
-    [InspectableField, JsonProperty("launchSpeed"), Key(16)]  
+    [InspectableField, JsonProperty("launchSpeed"), Key(13)]  
     public PerformanceStat LaunchSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("missileSpeed"), Key(17)]  
+    [InspectableField, JsonProperty("missileSpeed"), Key(14)]  
     public PerformanceStat MissileSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("lockOnTime"), Key(18)]
+    [InspectableField, JsonProperty("lockOnTime"), Key(15)]
     public PerformanceStat LockOnTime = new PerformanceStat();
 
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -43,7 +43,7 @@ public class LauncherData : WeaponData
     }
 }
 
-public class Launcher : IActivatedBehavior
+public class Launcher : IBehavior, IAlwaysUpdatedBehavior
 {
     private bool _locking;
     private float _lockingTimer;
@@ -57,8 +57,6 @@ public class Launcher : IActivatedBehavior
     private float _firingVisibility;
     
     public BehaviorData Data => _data;
-
-    public int Group => _data.Group;
 
     public Launcher(GameContext context, LauncherData m, Entity entity, Gear item)
     {
@@ -81,9 +79,24 @@ public class Launcher : IActivatedBehavior
         return true;
     }
 
-    private void Fire(long b)
+    public void Deactivate()
     {
-        
+        // if (_lockingTimer < 0)
+        // {
+        //     Fire(0);
+        //     if(_launcher.BurstCount>1)
+        //         Observable.Interval(TimeSpan.FromSeconds(_launcher.BurstTime.Evaluate(Hardpoint) / (_launcher.BurstCount-1))).Take(_launcher.BurstCount-1)
+        //             .Subscribe(l => Fire(l+1));
+        //     _lockingTimer = _cooldown = 1;
+        //     _locking = _locked = false;
+        //     _audio.Stop();
+        // }
+        // _locking = false;
+        // _lockingTimer = 1;
+    }
+
+    public bool Update(float delta)
+    {
         // _firingVisibility += _launcher.Visibility.Evaluate(Hardpoint);
         // Hardpoint.Temperature += _launcher.Heat.Evaluate(Hardpoint) / Hardpoint.HeatCapacity;
         // var inst = GameObject.Instantiate(_launcher.MissilePrefab).transform;
@@ -107,31 +120,12 @@ public class Launcher : IActivatedBehavior
         // proj.Thrust = _launcher.Thrust.Evaluate(Hardpoint);
         // _audio.PlayOneShot(_launcher.Sounds.RandomElement());
 //        Debug.Log($"Firing bullet {b}");
-    }
-
-    public void Deactivate()
-    {
-        // if (_lockingTimer < 0)
-        // {
-        //     Fire(0);
-        //     if(_launcher.BurstCount>1)
-        //         Observable.Interval(TimeSpan.FromSeconds(_launcher.BurstTime.Evaluate(Hardpoint) / (_launcher.BurstCount-1))).Take(_launcher.BurstCount-1)
-        //             .Subscribe(l => Fire(l+1));
-        //     _lockingTimer = _cooldown = 1;
-        //     _locking = _locked = false;
-        //     _audio.Stop();
-        // }
-        // _locking = false;
-        // _lockingTimer = 1;
-    }
-
-    public void Initialize()
-    {
-    }
-
-    public bool Update(float delta)
-    {
         return true;
+    }
+
+    public void AlwaysUpdate(float delta)
+    {
+        
         // if (Ship.Target == null)
         //     return;
         //
@@ -166,9 +160,5 @@ public class Launcher : IActivatedBehavior
         //     Hardpoint.Ship.Visibility += _firingVisibility;
         //     _firingVisibility = 0;
         // }
-    }
-
-    public void Remove()
-    {
     }
 }

@@ -13,6 +13,7 @@ public static class RegisterResolver
         // Set extensions to default resolver.
         var resolver = CompositeResolver.Create(
             MathResolver.Instance,
+            TypeResolver.Instance,
             NativeGuidResolver.Instance,
             StandardResolver.Instance
         );

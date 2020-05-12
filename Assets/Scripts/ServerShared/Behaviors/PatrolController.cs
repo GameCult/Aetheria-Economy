@@ -18,7 +18,8 @@ public class PatrolControllerData : ControllerData
     }
 }
 
-public class PatrolController : IBehavior, IController
+[UpdateOrder(-100)]
+public class PatrolController : IBehavior, IController, IInitializableBehavior
 {
     public TaskType TaskType => TaskType.Tow;
     public bool Available => false;
@@ -67,9 +68,5 @@ public class PatrolController : IBehavior, IController
     {
         var entities = _context.ZonePlanets[_entity.Zone];
         _targetOrbit = _context.Cache.Get<PlanetData>(entities[_context.Random.NextInt(entities.Length)]).Orbit;
-    }
-
-    public void Remove()
-    {
     }
 }

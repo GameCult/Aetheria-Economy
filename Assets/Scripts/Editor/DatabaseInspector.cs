@@ -181,6 +181,7 @@ public class DatabaseInspector : EditorWindow
             else
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (string) value, inspectable is InspectableTextAttribute));
         }
+        else if (type == typeof(Type) && inspectable is InspectableTypeAttribute typeAttribute) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (Type) value, typeAttribute.Type));
         else if (type == typeof(GameObject)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (GameObject) value));
         else if (type == typeof(AnimationCurve)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (AnimationCurve) value));
         else if (type == typeof(PerformanceStat)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (PerformanceStat) value, obj as CraftedItemData));
@@ -199,6 +200,11 @@ public class DatabaseInspector : EditorWindow
                 }
                 field.SetValue(obj, stats);
             }
+        }
+        else if (type == typeof(StatReference))
+        {
+            var statRef = (StatReference) field.GetValue(obj);
+            Inspect(field.Name.SplitCamelCase(), ref statRef);
         }
         else if (type == typeof(Dictionary<Guid, int>))
         {
@@ -567,6 +573,21 @@ public class DatabaseInspector : EditorWindow
         }
     }
 
+    public Type Inspect(string label, Type value, Type parentType)
+    {
+        var types = parentType.GetAllChildClasses();
+        var enumOptions = new[] {"None"}.Concat(types.Select(t => t.Name)).ToArray();
+        var index = Array.IndexOf(types, value) + 1;
+
+        using (var h = new HorizontalScope())
+        {
+            GUILayout.Label(label, GUILayout.Width(width));
+            index = Popup(index, enumOptions);
+        }
+
+        return index == 0 ? null : types[index - 1];
+    }
+
     public string InspectGameObject(string label, string value)
     {
         using (var h = new HorizontalScope())
@@ -826,13 +847,65 @@ public class DatabaseInspector : EditorWindow
             }
         }
     }
+    
+    public void Inspect(string label, ref StatReference effect)
+    {
+        using (new HorizontalScope())
+        {
+            GUILayout.Label(label, GUILayout.Width(width));
+            
+            using (new VerticalScope())
+            {
+                var targetObjects = typeof(BehaviorData).GetAllChildClasses()
+                    .Concat(typeof(EquippableItemData).GetAllChildClasses()).ToArray();
+                var objectNames = targetObjects.Select(b => b.Name).ToArray();
+                var selectedIndex = Array.IndexOf(objectNames, effect.Target);
+                if (selectedIndex == -1)
+                {
+                    selectedIndex = 0;
+                    GUI.changed = true;
+                }
+                using (new HorizontalScope())
+                {
+                    GUILayout.Label("Target", GUILayout.Width(width));
+                    var newSelection = Popup(selectedIndex, objectNames);
+                    if (newSelection != selectedIndex)
+                        GUI.changed = true;
+                    effect.Target = objectNames[newSelection];
+                }
+
+                using (new HorizontalScope())
+                {
+                    GUILayout.Label("Stat", GUILayout.Width(width));
+                    var stats = targetObjects[selectedIndex].GetFields()
+                        .Where(f => f.FieldType == typeof(PerformanceStat)).ToArray();
+                    if(stats.Length==0)
+                        GUILayout.Label("No Stats!");
+                    else
+                    {
+                        var statNames = stats.Select(s => s.Name).ToArray();
+                        var selectedStatIndex = Array.IndexOf(statNames, effect.Stat);
+                        if (selectedStatIndex == -1)
+                        {
+                            selectedStatIndex = 0;
+                            GUI.changed = true;
+                        }
+                        var newSelection = Popup(selectedStatIndex, statNames);
+                        if (newSelection != selectedStatIndex)
+                            GUI.changed = true;
+                        effect.Stat = statNames[newSelection];
+                    }
+                }
+            }
+        }
+    }
 
     public void Inspect(ref StatReference effect, EquippableItemData item)
     {
         using (new VerticalScope())
         {
             var behaviorNames = new []{item.Name}.Concat(item.Behaviors.Select(b => b.GetType().Name)).ToArray();
-            var selectedBehaviorIndex = Array.IndexOf(behaviorNames, effect.Behavior);
+            var selectedBehaviorIndex = Array.IndexOf(behaviorNames, effect.Target);
             if (selectedBehaviorIndex == -1)
             {
                 selectedBehaviorIndex = 0;
@@ -844,7 +917,7 @@ public class DatabaseInspector : EditorWindow
                 var newSelection = Popup(selectedBehaviorIndex, behaviorNames);
                 if (newSelection != selectedBehaviorIndex)
                     GUI.changed = true;
-                effect.Behavior = behaviorNames[newSelection];
+                effect.Target = behaviorNames[newSelection];
             }
 
             using (new HorizontalScope())

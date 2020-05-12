@@ -48,10 +48,6 @@ public class Thruster : IAnalogBehavior
         _input = saturate(value);
     }
 
-    public void Initialize()
-    {
-    }
-
     public bool Update(float delta)
     {
         Thrust = Context.Evaluate(_data.Thrust, Item, Entity);
@@ -59,9 +55,5 @@ public class Thruster : IAnalogBehavior
         Entity.AddHeat(_input * Context.Evaluate(_data.Heat, Item, Entity) * delta);
         Entity.VisibilitySources[this] = _input * Context.Evaluate(_data.Visibility, Item, Entity);
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

@@ -4,16 +4,16 @@ using Newtonsoft.Json;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ProjectileWeaponData : WeaponData
 {
-    [InspectablePrefab, JsonProperty("bullet"), Key(9)]  
+    [InspectablePrefab, JsonProperty("bullet"), Key(6)]  
     public string BulletPrefab;
 
-    [InspectableField, JsonProperty("spread"), Key(10)]  
+    [InspectableField, JsonProperty("spread"), Key(7)]  
     public PerformanceStat Spread = new PerformanceStat();
 
-    [InspectableField, JsonProperty("bulletInherit"), Key(11)]  
+    [InspectableField, JsonProperty("bulletInherit"), Key(8)]  
     public float Inherit;
 
-    [InspectableField, JsonProperty("bulletVelocity"), Key(12)]  
+    [InspectableField, JsonProperty("bulletVelocity"), Key(9)]  
     public PerformanceStat Velocity = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -22,18 +22,12 @@ public class ProjectileWeaponData : WeaponData
     }
 }
 
-public class ProjectileWeapon : IActivatedBehavior
+public class ProjectileWeapon : IBehavior
 {
     private ProjectileWeaponData _data;
     private Entity Entity { get; }
     private Gear Item { get; }
     private GameContext Context { get; }
-    private float _firingVisibility;
-    private bool _firing;
-    private float _cooldown; // normalized
-    private float _burstCooldown;
-    private float _burstCooldownTime;
-    private int _burstRemaining;
     
     public BehaviorData Data => _data;
 
@@ -44,31 +38,9 @@ public class ProjectileWeapon : IActivatedBehavior
         Entity = entity;
         Item = item;
     }
-    
-    public bool Activate()
-    {
-        _firing = true;
-        return true;
-//        Debug.Log("Activating ProjectileWeapon");
-//         Observable.EveryUpdate().TakeWhile(_ => _firing).Subscribe(_ =>
-//         {
-// //            Debug.Log($"Updating Observable {_cooldown}");
-//             if (_cooldown < 0)
-//             {
-//                 _cooldown = 1;
-//                 Fire(0);
-//                 if(_projectileWeapon.BurstCount>1)
-//                     Observable.Interval(TimeSpan.FromSeconds(_projectileWeapon.BurstTime.Evaluate(Hardpoint) / (_projectileWeapon.BurstCount-1))).Take(_projectileWeapon.BurstCount-1)
-//                     .Subscribe(l => Fire(l+1));
-//             }
-//         });
-    }
 
-    private void Fire()
-    {
-        _burstRemaining--;
-        _firingVisibility += Context.Evaluate(_data.Visibility, Item, Entity);
-        Entity.AddHeat(Context.Evaluate(_data.Heat, Item, Entity));
+    // private void Fire()
+    // {
         // Hardpoint.Temperature += _projectileWeapon.Heat.Evaluate(Hardpoint) / Hardpoint.HeatCapacity;
         // var inst = GameObject.Instantiate(_projectileWeapon.BulletPrefab).transform;
         // Physics.IgnoreCollision(Hardpoint.Ship.Ship.GetComponent<Collider>(), inst.GetComponent<Collider>());
@@ -82,49 +54,10 @@ public class ProjectileWeapon : IActivatedBehavior
         // inst.GetComponent<Rigidbody>().velocity = _projectileWeapon.Velocity.Evaluate(Hardpoint) * Vector3.RotateTowards(-inst.forward, Hardpoint.Ship.Ship.Direction, _projectileWeapon.Deflection * Mathf.Deg2Rad, 1);
         // Hardpoint.Ship.Ship.AudioSource.PlayOneShot(_projectileWeapon.Sounds.RandomElement());
 //        Debug.Log($"Firing bullet {b}");
-    }
-
-    public void Deactivate()
-    {
-        _firing = false;
-    }
-
-    public void Initialize()
-    {
-    }
+    // }
 
     public bool Update(float delta)
     {
-        _cooldown -= delta / Context.Evaluate(_data.Cooldown, Item, Entity);
-        if (_cooldown < 0)
-        {
-            _cooldown = 1;
-            _burstRemaining = _data.BurstCount;
-            _burstCooldownTime = Context.Evaluate(_data.BurstTime, Item, Entity) / _data.BurstCount;
-            _burstCooldown = -1;
-            Fire();
-        }
-        
-        if (_burstRemaining > 0)
-        {
-            _burstCooldown -= delta / _burstCooldownTime;
-            if (_burstCooldown < 0)
-            {
-                _burstCooldown = 1;
-                Fire();
-            }
-        }
-
-        _firingVisibility *= Context.Evaluate(_data.VisibilityDecay, Item, Entity);
-        
-        if (_firingVisibility < 0.01f)
-        {
-            Entity.VisibilitySources.Remove(this);
-        }
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }
