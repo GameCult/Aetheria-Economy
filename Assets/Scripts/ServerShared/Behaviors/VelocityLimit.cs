@@ -15,7 +15,7 @@ public class VelocityLimitData : BehaviorData
     }
 }
 
-[UpdateOrder(100)]
+[Order(100)]
 public class VelocityLimit : IBehavior
 {
     public Entity Entity { get; }

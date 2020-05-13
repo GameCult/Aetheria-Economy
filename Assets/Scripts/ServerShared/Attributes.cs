@@ -21,11 +21,11 @@ public class RethinkTableAttribute : Attribute
     }
 }
 
-public class UpdateOrderAttribute : Attribute
+public class OrderAttribute : Attribute
 {
     public int Order;
 
-    public UpdateOrderAttribute(int order)
+    public OrderAttribute(int order)
     {
         Order = order;
     }

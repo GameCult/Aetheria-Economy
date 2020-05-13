@@ -70,14 +70,13 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         ItemBehaviors = gear
             .Where(i=> gearData[i].ItemData.Behaviors?.Any()??false)
             .ToDictionary(i=> gearData[i], i => gearData[i].ItemData.Behaviors
+                .OrderBy(bd => bd.GetType().GetCustomAttribute<OrderAttribute>()?.Order ?? 0)
                 .Select(bd => bd.CreateInstance(Context, this, gearData[i]))
-                .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0)
                 .ToList());
 
         var behaviorGroups = ItemBehaviors
             .SelectMany(x => x.Value
-                .Select(b => new {item = x.Key, behavior = b})
-                .OrderBy(ib => ib.behavior.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0))
+                .Select(b => new {item = x.Key, behavior = b}))
             .GroupBy(ib => new {ib.item, ib.behavior.Data.Group});
         
         Behaviors = behaviorGroups

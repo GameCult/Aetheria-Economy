@@ -4,7 +4,7 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-5)]
 public class ItemUsageData : BehaviorData
 {
     [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("item"), Key(1)]  
@@ -16,7 +16,6 @@ public class ItemUsageData : BehaviorData
     }
 }
 
-[UpdateOrder(-5)]
 public class ItemUsage : IBehavior
 {
     private ItemUsageData _data;

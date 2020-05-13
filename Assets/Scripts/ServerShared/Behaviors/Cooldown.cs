@@ -3,7 +3,7 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-10)]
 public class CooldownData : BehaviorData
 {
     [InspectableField, JsonProperty("cooldown"), Key(1)]
@@ -15,7 +15,6 @@ public class CooldownData : BehaviorData
     }
 }
 
-[UpdateOrder(-10)]
 public class Cooldown : IBehavior, IAlwaysUpdatedBehavior
 {
     private CooldownData _data;

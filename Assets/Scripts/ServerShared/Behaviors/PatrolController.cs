@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship)]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship), Order(-100)]
 public class PatrolControllerData : ControllerData
 {
     [InspectableField, JsonProperty("targetDistance"), Key(5)]  
@@ -18,7 +18,6 @@ public class PatrolControllerData : ControllerData
     }
 }
 
-[UpdateOrder(-100)]
 public class PatrolController : IBehavior, IController, IInitializableBehavior
 {
     public TaskType TaskType => TaskType.Tow;

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship)]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship), Order(-100)]
 public class TowingControllerData : ControllerData
 {
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -16,7 +16,6 @@ public class TowingControllerData : ControllerData
     }
 }
 
-[UpdateOrder(-100)]
 public class TowingController : IBehavior, IPersistentBehavior, IController, IInitializableBehavior
 {
     public TaskType TaskType => TaskType.Tow;

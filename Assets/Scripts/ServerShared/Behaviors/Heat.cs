@@ -3,7 +3,7 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
 public class HeatData : BehaviorData
 {
     [InspectableField, JsonProperty("heat"), Key(1)]
@@ -15,7 +15,6 @@ public class HeatData : BehaviorData
     }
 }
 
-[UpdateOrder(10)]
 public class Heat : IBehavior
 {
     private HeatData _data;

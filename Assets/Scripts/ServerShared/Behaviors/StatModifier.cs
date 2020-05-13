@@ -24,7 +24,7 @@ public class StatModifierData : BehaviorData
     }
 }
 
-[UpdateOrder(-4)]
+[Order(-4)]
 public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavior
 {
     private StatModifierData _data;
