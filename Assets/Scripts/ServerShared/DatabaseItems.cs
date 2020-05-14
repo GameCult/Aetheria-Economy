@@ -43,20 +43,25 @@ public interface INamedEntry
 //[Union(22, typeof(Station))]
 public abstract class DatabaseEntry
 {
-    [JsonProperty("id"), Key(0)]  public Guid ID = Guid.NewGuid();
+    [JsonProperty("id"), Key(0)]
+    public Guid ID = Guid.NewGuid();
     [IgnoreMember] public GameContext Context { get; set; }
 }
 
 [RethinkTable("Users"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class Player : DatabaseEntry, INamedEntry
 {
-    [JsonProperty("email"), Key(1)]  public string Email;
+    [JsonProperty("email"), Key(1)]
+    public string Email;
 
-    [JsonProperty("password"), Key(2)]  public string Password;
+    [JsonProperty("password"), Key(2)]
+    public string Password;
 
-    [JsonProperty("username"), Key(3)]  public string Username;
+    [JsonProperty("username"), Key(3)]
+    public string Username;
 
-    [JsonProperty("corporation"), Key(4)]  public Guid Corporation;
+    [JsonProperty("corporation"), Key(4)]
+    public Guid Corporation;
     
     [IgnoreMember] public string EntryName
     {
@@ -70,8 +75,11 @@ public class Corporation : DatabaseEntry, INamedEntry
 {
     [JsonProperty("name"), Key(1)]
     public string Name;
+
+    [JsonProperty("parent"), Key(2)]
+    public Guid Parent;
     
-    [JsonProperty("tasks"), Key(2)]
+    [JsonProperty("tasks"), Key(3)]
     public List<Guid> Tasks = new List<Guid>();
     
     [IgnoreMember] public string EntryName
