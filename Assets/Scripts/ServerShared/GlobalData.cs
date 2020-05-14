@@ -62,65 +62,77 @@ public class GlobalData : DatabaseEntry
     [InspectableField, JsonProperty("zoneRadiusMax"), Key(17)]  
     public float MaximumZoneRadius = 2000;
 
-    [InspectableField, JsonProperty("zoneMassMin"), Key(18)]  
+    [InspectableField, JsonProperty("zoneRadiusExp"), Key(18)]  
+    public float ZoneRadiusExponent = -.75f;
+
+    [InspectableField, JsonProperty("zoneMassMin"), Key(19)]  
     public float MinimumZoneMass = 10000;
 
-    [InspectableField, JsonProperty("zoneMassMax"), Key(19)]  
+    [InspectableField, JsonProperty("zoneMassMax"), Key(20)]  
     public float MaximumZoneMass = 100000;
 
-    [InspectableField, JsonProperty("orbitPeriodExponent"), Key(20)]  
+    [InspectableField, JsonProperty("zoneMassExp"), Key(21)]  
+    public float ZoneMassExponent = -.75f;
+
+    [InspectableField, JsonProperty("orbitPeriodExponent"), Key(22)]  
     public float OrbitPeriodExponent = 1.5f;
 
-    [InspectableField, JsonProperty("orbitPeriodMultiplier"), Key(21)]  
+    [InspectableField, JsonProperty("orbitPeriodMultiplier"), Key(23)]  
     public float OrbitPeriodMultiplier = 1f;
 
-    [InspectableField, JsonProperty("gravityRadiusExponent"), Key(22)]  
+    [InspectableField, JsonProperty("gravityRadiusExponent"), Key(24)]  
     public float GravityRadiusExponent = 1.5f;
 
-    [InspectableField, JsonProperty("gravityRadiusMultiplier"), Key(23)]  
+    [InspectableField, JsonProperty("gravityRadiusMultiplier"), Key(25)]  
     public float GravityRadiusMultiplier = 1f;
 
-    [InspectableField, JsonProperty("beltProbability"), Key(24)]  
+    [InspectableField, JsonProperty("beltProbability"), Key(26)]  
     public float BeltProbability = .05f;
 
-    [InspectableField, JsonProperty("beltMassCeiling"), Key(25)]  
+    [InspectableField, JsonProperty("beltMassCeiling"), Key(27)]  
     public float BeltMassCeiling = 500f;
 
-    [InspectableField, JsonProperty("beltMassRatio"), Key(26)]  
+    [InspectableField, JsonProperty("beltMassRatio"), Key(28)]  
     public float BeltMassRatio = 100f;
 
-    [InspectableField, JsonProperty("beltMassExponent"), Key(27)]  
+    [InspectableField, JsonProperty("beltMassExponent"), Key(29)]  
     public float BeltMassExponent = 100f;
 
-    [InspectableField, JsonProperty("asteroidSizeMin"), Key(28)]
+    [InspectableField, JsonProperty("asteroidSizeMin"), Key(30)]
     public float AsteroidSizeMin = 2f;
 
-    [InspectableField, JsonProperty("asteroidSizeMax"), Key(29)]
+    [InspectableField, JsonProperty("asteroidSizeMax"), Key(31)]
     public float AsteroidSizeMax = 10f;
 
-    [InspectableField, JsonProperty("asteroidSizeExponent"), Key(30)]
+    [InspectableField, JsonProperty("asteroidSizeExponent"), Key(32)]
     public float AsteroidSizeExponent = 2f;
 
-    [InspectableField, JsonProperty("asteroidRotationSpeed"), Key(31)]
+    [InspectableField, JsonProperty("asteroidRotationSpeed"), Key(33)]
     public float AsteroidRotationSpeed = 2f;
 
-    [InspectableField, JsonProperty("dockingDistance"), Key(32)]
+    [InspectableField, JsonProperty("dockingDistance"), Key(34)]
     public float DockingDistance = 25;
 
-    [InspectableField, JsonProperty("warpDistance"), Key(33)]
+    [InspectableField, JsonProperty("warpDistance"), Key(35)]
     public float WarpDistance = 25;
 
-    [InspectableField, JsonProperty("orbitSpeedMultiplier"), Key(34)]
+    [InspectableField, JsonProperty("orbitSpeedMultiplier"), Key(36)]
     public float OrbitSpeedMultiplier = .25f;
     
-    [InspectableField, JsonProperty("targetPersistenceDuration"), Key(35)]  
+    [InspectableField, JsonProperty("targetPersistenceDuration"), Key(37)]  
     public float TargetPersistenceDuration = 3;
 
-    [InspectableField, JsonProperty("heatRadiationPower"), Key(36)]  
+    [InspectableField, JsonProperty("heatRadiationPower"), Key(38)]  
     public float HeatRadiationPower = 1;
 
-    [InspectableField, JsonProperty("heatRadiationMultiplier"), Key(37)]  
+    [InspectableField, JsonProperty("heatRadiationMultiplier"), Key(39)]  
     public float HeatRadiationMultiplier = 1;
+
+    [InspectableField, JsonProperty("resourceDensityMinimum"), Key(40)]  
+    public float ResourceDensityMinimum = .1f;
+
+    [InspectableField, JsonProperty("resourceDensityMaximum"), Key(41)]  
+    public float ResourceDensityMaximum = 1.5f;
     
     public float PlanetRadius(float mass)
     {

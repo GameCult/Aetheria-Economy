@@ -69,6 +69,8 @@ public static class Extensions
     private static Random? _random;
     private static Random Random => (Random) (_random ?? (_random = new Random((uint) (DateTime.Now.Ticks%uint.MaxValue))));
     // public static T RandomElement<T>(this IEnumerable<T> enumerable) => enumerable.ElementAt(Random.NextInt(0, enumerable.Count()));
+    public static float NextPowerDistribution(this ref Random random, float min, float max, float exp, float randexp) =>
+        pow((pow(max, exp + 1) - pow(min, exp + 1)) * pow(random.NextFloat(), randexp) + pow(min, exp + 1), 1 / (exp + 1));
     public static float NextUnbounded(this ref Random random) => 1 / (1 - random.NextFloat()) - 1;
     public static float NextUnbounded(this ref Random random, float bias, float power, float ceiling) => 1 / (1 - pow(min(random.NextFloat(), ceiling), 1 - pow(clamp(bias,0,.99f), 1 / power))) - 1;
 	

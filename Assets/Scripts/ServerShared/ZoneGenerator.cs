@@ -19,18 +19,28 @@ public class ZoneGenerator
 		out OrbitData[] orbitData,
 		out PlanetData[] planetsData)
 	{
-		var zoneRadius = lerp(context.GlobalData.MinimumZoneRadius,
+		var zoneRadius = context.Random.NextPowerDistribution(
+			context.GlobalData.MinimumZoneRadius,
 			context.GlobalData.MaximumZoneRadius,
-			mapLayers.First(m => m.Name == "Radius")
-				.Evaluate(zone.Position,
-					context.GlobalData));
+			context.GlobalData.ZoneRadiusExponent,
+			1 / lerp(
+				context.GlobalData.ResourceDensityMinimum,
+				context.GlobalData.ResourceDensityMaximum,
+				mapLayers
+					.First(m => m.Name == "Radius")
+					.Evaluate(zone.Position, context.GlobalData)));
 		zone.Radius = zoneRadius;
 		
-		var zoneMass = lerp(context.GlobalData.MinimumZoneMass,
+		var zoneMass = context.Random.NextPowerDistribution(
+			context.GlobalData.MinimumZoneMass,
 			context.GlobalData.MaximumZoneMass,
-			mapLayers.First(m => m.Name == "Mass")
-				.Evaluate(zone.Position,
-					context.GlobalData));
+			context.GlobalData.ZoneMassExponent,
+			1 / lerp(
+				context.GlobalData.ResourceDensityMinimum,
+				context.GlobalData.ResourceDensityMaximum,
+				mapLayers
+					.First(m => m.Name == "Mass")
+					.Evaluate(zone.Position, context.GlobalData)));
 		
 		//Debug.Log($"Generating zone at position {zone.Position} with radius {zoneRadius} and mass {zoneMass}");
 		
@@ -76,8 +86,8 @@ public class ZoneGenerator
 			        planet.Mass > context.GlobalData.PlanetMass ? BodyType.Planet : BodyType.Planetoid);
 		        if ((bodyType & r.ResourceBodyType) != 0)
 		        {
-			        float quantity = context.Random.NextUnbounded(r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]), r.DensityBiasPower, r.RandomCeiling);
-			        if (r.ResourceFloor < quantity) dictionary.Add(r.ID, quantity);
+			        float quantity = ResourceValue(r, context, r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]));
+			        if (r.Floor < quantity) dictionary.Add(r.ID, quantity);
 		        }
 	        }
 
@@ -106,6 +116,12 @@ public class ZoneGenerator
 
         zone.Planets = planetsData.Select(pd => pd.ID).ToArray();
         zone.Orbits = orbitData.Select(od => od.ID).ToList();
+	}
+	
+	static float ResourceValue(SimpleCommodityData resource, GameContext context, float density)
+	{
+		return context.Random.NextPowerDistribution(resource.Minimum, resource.Maximum, resource.Exponent,
+			1 / lerp(context.GlobalData.ResourceDensityMinimum, context.GlobalData.ResourceDensityMaximum, density));
 	}
 
 	public static Planet[] GenerateEntities(GameContext context, ZoneData data, float mass, float radius)

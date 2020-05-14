@@ -12,6 +12,7 @@
     <explicitExcludes>
       <Path>.git</Path>
       <Path>.idea</Path>
+      <Path>Asset Sources</Path>
       <Path>Economy.Server</Path>
       <Path>Economy.Shared</Path>
       <Path>GameData</Path>

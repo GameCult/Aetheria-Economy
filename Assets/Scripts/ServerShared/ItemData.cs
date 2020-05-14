@@ -48,17 +48,21 @@ public class SimpleCommodityData : ItemData
     [InspectableDatabaseLink(typeof(GalaxyMapLayerData)), JsonProperty("resourceDensity"), Key(7)]  
     public List<Guid> ResourceDensity = new List<Guid>();
 
-    // Controls the bias power variable during resource placement
-    [InspectableField, JsonProperty("resourceDensityBiasPower"), Key(8)]
-    public float DensityBiasPower = 5;
+    // Controls the lowest value in the resource distribution curve
+    [InspectableField, JsonProperty("minimum"), Key(8)]
+    public float Minimum = 1;
 
-    // Controls the bias power variable during resource placement
-    [InspectableField, JsonProperty("resourceRandomCeiling"), Key(9)]
-    public float RandomCeiling = .9f;
+    // Controls the highest value in the resource distribution curve
+    [InspectableField, JsonProperty("maximum"), Key(9)]
+    public float Maximum = 100;
+
+    // Controls the shape of the resource distribution curve
+    [InspectableField, JsonProperty("exponent"), Key(10)]
+    public float Exponent = -.75f;
 
     // Minimum amount of resources needed for presence to register
-    [InspectableField, JsonProperty("resourceFloor"), Key(10)]
-    public float ResourceFloor = 10f;
+    [InspectableField, JsonProperty("floor"), Key(11)]
+    public float Floor = 5f;
 }
 
 [MessagePackObject, 
