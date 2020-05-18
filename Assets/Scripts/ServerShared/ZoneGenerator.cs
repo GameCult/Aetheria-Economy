@@ -41,6 +41,7 @@ public class ZoneGenerator
 				mapLayers
 					.First(m => m.Name == "Mass")
 					.Evaluate(zone.Position, context.GlobalData)));
+		zone.Mass = zoneMass;
 		
 		//Debug.Log($"Generating zone at position {zone.Position} with radius {zoneRadius} and mass {zoneMass}");
 		

@@ -109,6 +109,9 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
     
     [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("initialTechs"), Key(6)]  
     public List<Guid> InitialTechnologies = new List<Guid>();
+
+    [JsonProperty("parent"), Key(7)]
+    public Guid HomeZone;
     
     [IgnoreMember] public string EntryName
     {

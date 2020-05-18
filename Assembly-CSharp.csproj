@@ -868,11 +868,13 @@
     <Compile Include="Assets\Scripts\RethinkConnection.cs" />
     <Compile Include="Assets\Scripts\StrategyGameManager.cs" />
     <Compile Include="Assets\Scripts\TechTreeMsagl.cs" />
+    <Compile Include="Assets\Scripts\UI\AttributeProperty.cs" />
     <Compile Include="Assets\Scripts\UI\BackgroundRenderer.cs" />
     <Compile Include="Assets\Scripts\UI\ClickableCollider.cs" />
     <Compile Include="Assets\Scripts\UI\ClickCatcher.cs" />
     <Compile Include="Assets\Scripts\UI\ClickRaycaster.cs" />
     <Compile Include="Assets\Scripts\UI\ContextMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\CorporationMenuItem.cs" />
     <Compile Include="Assets\Scripts\UI\DragHandler.cs" />
     <Compile Include="Assets\Scripts\UI\FlatButton.cs" />
     <Compile Include="Assets\Scripts\UI\GalaxyZone.cs" />

@@ -9,6 +9,7 @@ using TMPro;
 using UnityEngine;
 using Unity.Mathematics;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using Random = UnityEngine.Random;
@@ -27,6 +28,11 @@ public class StrategyGameManager : MonoBehaviour
     public ClickRaycaster ClickRaycaster;
     public ReadOnlyPropertiesPanel PropertiesPanel;
     public ContextMenu ContextMenu;
+    public RectTransform GameMenuRoot;
+    public RectTransform CorpMenuRoot;
+    public CorporationMenuItem CorpOptionPrefab;
+    public TabButton CorpMenuContinueButton;
+    public TMP_InputField CorpNameInputField;
     
     [Section("Tab Links")]
     public TabGroup PrimaryTabGroup;
@@ -78,6 +84,10 @@ public class StrategyGameManager : MonoBehaviour
     private Material _backgroundMaterial;
     private bool _techLayoutGenerated;
     private Connection _connection;
+    // private bool _choosingCorporation;
+    private Guid _playerCorporation;
+    private Dictionary<CorporationMenuItem, Guid> _corpOptionMap = new Dictionary<CorporationMenuItem, Guid>();
+    private CorporationMenuItem _selectedParent;
     
     void Start()
     {
@@ -99,6 +109,81 @@ public class StrategyGameManager : MonoBehaviour
                     Position = z.Position,
                     ZoneID = z.ID
                 });
+
+            var megas = _cache.GetAll<MegaCorporation>();
+            if (megas.First().HomeZone == Guid.Empty)
+            {
+                foreach (var corpzone in megas
+                    .Zip(_cache.GetAll<ZoneData>().OrderByDescending(z => z.Mass),
+                        (corporation, zone) => new {corporation, zone}))
+                    corpzone.corporation.HomeZone = corpzone.zone.ID;
+            }
+
+            var player = _cache.GetAll<Player>().FirstOrDefault();
+            if (player == null)
+            {
+                player = new Player
+                {
+                    Context = _context,
+                    ID = Guid.NewGuid(),
+                    Username = Environment.UserName
+                };
+                _cache.Add(player);
+            }
+
+            if (player.Corporation == Guid.Empty)
+            {
+                GameMenuRoot.gameObject.SetActive(false);
+                CorpMenuRoot.gameObject.SetActive(true);
+                
+                foreach (var mega in megas)
+                {
+                    var corpOption = Instantiate(CorpOptionPrefab, CorpMenuRoot);
+                    _corpOptionMap[corpOption] = mega.ID;
+                    corpOption.Title.text = mega.Name;
+                    corpOption.Logo.sprite = Resources.Load<Sprite>(mega.Logo.Substring("Assets/Resources/".Length).Split('.').First());
+                    corpOption.Description.text = mega.Description;
+                    var corpOptionImage = corpOption.GetComponent<Image>();
+                    corpOptionImage.color = UnselectedColor;
+                    corpOption.GetComponent<Button>().onClick.AddListener(() =>
+                    {
+                        if (_selectedParent != null)
+                        {
+                            _selectedParent.GetComponent<Image>().color = UnselectedColor;
+                        }
+                        _selectedParent = corpOption;
+                        corpOptionImage.color = SelectedColor;
+                    });
+                    foreach (var attributeValue in mega.Personality.Select(kvp =>
+                        new {attribute = _cache.Get<PersonalityAttribute>(kvp.Key), val = kvp.Value}))
+                    {
+                        var attributeInstance = Instantiate(corpOption.AttributePrefab, corpOption.transform);
+                        attributeInstance.Slider.value = attributeValue.val;
+                        attributeInstance.Title.text = attributeValue.attribute.Name;
+                        attributeInstance.HighLabel.text = attributeValue.attribute.HighName;
+                        attributeInstance.LowLabel.text = attributeValue.attribute.LowName;
+                    }
+                }
+
+                CorpMenuContinueButton.OnClick += _ =>
+                {
+                    if (_selectedParent != null && !string.IsNullOrEmpty(CorpNameInputField.text))
+                    {
+                        var newCorp = new Corporation
+                        {
+                            Context = _context,
+                            ID = Guid.NewGuid(),
+                            Name = CorpNameInputField.text,
+                            Parent = _corpOptionMap[_selectedParent]
+                        };
+                        _cache.Add(newCorp);
+                        player.Corporation = newCorp.ID;
+                        
+                        GameMenuRoot.gameObject.SetActive(true);
+                        CorpMenuRoot.gameObject.SetActive(false);
+                    }
+                };
+            }
         }
         else
         {

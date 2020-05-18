@@ -227,6 +227,12 @@ public class PersonalityAttribute : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("name"), Key(1)]
     public string Name;
     
+    [InspectableField, JsonProperty("low"), Key(2)]
+    public string LowName;
+    
+    [InspectableField, JsonProperty("high"), Key(3)]
+    public string HighName;
+    
     [IgnoreMember] public string EntryName
     {
         get => Name;

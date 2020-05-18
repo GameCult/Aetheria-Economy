@@ -13,3 +13,8 @@ r.db('Aetheria').table('Items').filter({researchTime:0}).pluck('name')
 
 Find Unassigned Stats
 r.db('Aetheria').table('Items').filter({durabilityStat:{min:0}}).pluck('$type','name')
+
+Find Galaxy Sectors With Long Names
+r.db('Aetheria').table('Galaxy').filter({$type:'ZoneData'}).filter(function (zone) {
+    return zone("name").count().gt(8);
+})

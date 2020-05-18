@@ -18,16 +18,19 @@ public class ZoneData : DatabaseEntry, INamedEntry
     [JsonProperty("radius"), Key(3)]
     public float Radius = 2000;
 
-    [JsonProperty("visited"), Key(4)]
+    [JsonProperty("mass"), Key(4)]
+    public float Mass = 10000;
+
+    [JsonProperty("visited"), Key(5)]
     public bool Visited;
 
-    [JsonProperty("wormholes"), Key(5)]
+    [JsonProperty("wormholes"), Key(6)]
     public List<Guid> Wormholes = new List<Guid>();
 
-    [JsonProperty("planets"), Key(6)]
+    [JsonProperty("planets"), Key(7)]
     public Guid[] Planets;// = new List<Guid>();
 
-    [JsonProperty("orbits"), Key(7)]
+    [JsonProperty("orbits"), Key(8)]
     public List<Guid> Orbits = new List<Guid>();
     
     [IgnoreMember] public string EntryName

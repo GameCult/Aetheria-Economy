@@ -1745,11 +1745,13 @@
           <e p="StrategyGameManager.cs" t="Include" />
           <e p="TechTreeMsagl.cs" t="Include" />
           <e p="UI" t="Include">
+            <e p="AttributeProperty.cs" t="Include" />
             <e p="BackgroundRenderer.cs" t="Include" />
             <e p="ClickableCollider.cs" t="Include" />
             <e p="ClickCatcher.cs" t="Include" />
             <e p="ClickRaycaster.cs" t="Include" />
             <e p="ContextMenu.cs" t="Include" />
+            <e p="CorporationMenuItem.cs" t="Include" />
             <e p="DragHandler.cs" t="Include" />
             <e p="FlatButton.cs" t="Include" />
             <e p="GalaxyZone.cs" t="Include" />
