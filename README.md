@@ -1,7 +1,12 @@
 # Aetheria
 This repository is the home of Aetheria, an economy focused RTS MMO where you control the production, research, supply chains and actions of a corporation tasked with colonizing an alien galaxy. Control over your minions is indirect, like in Rimworld, and gameplay takes place over months as your production and tasks continue acting on the world even when you're offline.
 
-<img src="https://i.ibb.co/XxvYPfH/Unity-nr8ih-BUJ75.jpg" style="zoom:50%;" /> <img src="https://i.ibb.co/Twbwk4M/screen-3056x1720-2018-11-18-18-23-01.png" style="zoom:50%;" /> <img src="C:\Users\rwvens\Documents\ShareX\Screenshots\2020-05\Unity_HR2A02DGFq.jpg" alt="Unity_HR2A02DGFq" style="zoom:50%;" /> <img src="C:\Users\rwvens\Documents\ShareX\Screenshots\2020-05\Unity_B7cgUaVrtV.jpg" alt="Unity_B7cgUaVrtV" style="zoom:50%;" /> <img src="C:\Users\rwvens\Documents\ShareX\Screenshots\2020-05\Unity_o7cTT9vdOm.jpg" alt="Unity_o7cTT9vdOm" style="zoom:50%;" /> <img src="C:\Users\rwvens\Documents\ShareX\Screenshots\2020-05\Unity_Ydd2l3lph8.jpg" alt="Unity_Ydd2l3lph8" style="zoom:50%;" />
+<img src="https://i.ibb.co/XxvYPfH/Unity-nr8ih-BUJ75.jpg" style="zoom:50%;" />
+<img src="https://i.ibb.co/Twbwk4M/screen-3056x1720-2018-11-18-18-23-01.png" style="zoom:50%;" />
+<img src="https://i.ibb.co/z6Tncgt/Unity-o7c-TT9vd-Om.jpg" style="zoom:50%;" />
+<img src="https://i.ibb.co/M1GH4wY/Unity-Ydd2l3lph8.jpg" style="zoom:50%;" />
+<img src="https://i.ibb.co/HBThbdf/Unity-HR2-A02-DGFq.jpg" style="zoom:50%;" />
+<img src="https://i.ibb.co/ZNDkQ7Z/Unity-B7cg-Ua-Vrt-V.jpg" style="zoom:50%;" />
 
 ## Table of Contents
 
