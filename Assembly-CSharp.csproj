@@ -874,12 +874,14 @@
     <Compile Include="Assets\Scripts\UI\ClickCatcher.cs" />
     <Compile Include="Assets\Scripts\UI\ClickRaycaster.cs" />
     <Compile Include="Assets\Scripts\UI\ContextMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\ContextMenuOption.cs" />
     <Compile Include="Assets\Scripts\UI\CorporationMenuItem.cs" />
     <Compile Include="Assets\Scripts\UI\DragHandler.cs" />
     <Compile Include="Assets\Scripts\UI\FlatButton.cs" />
     <Compile Include="Assets\Scripts\UI\GalaxyZone.cs" />
     <Compile Include="Assets\Scripts\UI\Icons.cs" />
     <Compile Include="Assets\Scripts\UI\LoginScreen.cs" />
+    <Compile Include="Assets\Scripts\UI\MouseHover.cs" />
     <Compile Include="Assets\Scripts\UI\PropertiesPanel.cs" />
     <Compile Include="Assets\Scripts\UI\PropertyLabel.cs" />
     <Compile Include="Assets\Scripts\UI\ReadOnlyPropertiesPanel.cs" />

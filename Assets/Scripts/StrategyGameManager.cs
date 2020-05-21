@@ -266,7 +266,6 @@ public class StrategyGameManager : MonoBehaviour
 
         ClickRaycaster.OnClickMiss += () =>
         {
-            ContextMenu.gameObject.SetActive(false);
             if (_currentTab == GalaxyTabButton) PopulateGalaxyProperties();
             else if (_currentTab == ZoneTabButton) PopulateZoneProperties(_populatedZone);
             else if (_currentTab == TechTabButton) PopulateTechProperties();
@@ -343,6 +342,25 @@ public class StrategyGameManager : MonoBehaviour
         {
             // TODO: Save game state on exit
         }
+    }
+
+    void ShowContextMenu(object clickTarget)
+    {
+        ContextMenu.gameObject.SetActive(true);
+        ContextMenu.Clear();
+        if (clickTarget is PlanetData planet)
+        {
+            ContextMenu.AddOption("Test Option 1", () => Debug.Log("Test Option 1 Selected"));
+            ContextMenu.AddOption("Test Option 2", () => Debug.Log("Test Option 2 Selected"));
+            ContextMenu.AddDropdown("Test Dropdown", new []
+            {
+                ("Dropdown Option 1", (Action) (() => Debug.Log("Dropdown Option 1 Selected"))),
+                ("Dropdown Option 2", (Action) (() => Debug.Log("Dropdown Option 2 Selected"))),
+                ("Dropdown Option 3", (Action) (() => Debug.Log("Dropdown Option 3 Selected")))
+            });
+            ContextMenu.AddOption("Test Option 3", () => Debug.Log("Test Option 3 Selected"));
+        }
+        ContextMenu.Show();
     }
 
     void PopulateGalaxy()
@@ -507,11 +525,7 @@ public class StrategyGameManager : MonoBehaviour
                         }
                         else if (data.button == PointerEventData.InputButton.Right)
                         {
-                            ContextMenu.gameObject.SetActive(true);
-                            ContextMenu.SetOptions(new []
-                            {
-                                ("Test Option", (Action) (() => Debug.Log("Test Option Selected")))
-                            });
+                            ShowContextMenu(planetData);
                         }
                     };
             }
@@ -537,7 +551,7 @@ public class StrategyGameManager : MonoBehaviour
                     }
                     else if (data.button == PointerEventData.InputButton.Right)
                     {
-                            
+                        ShowContextMenu(planetData);
                     }
                 };
             }
