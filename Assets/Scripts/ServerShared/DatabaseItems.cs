@@ -113,6 +113,9 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
     [JsonProperty("parent"), Key(7)]
     public Guid HomeZone;
     
+    [InspectableField, JsonProperty("placement"), Key(8)]
+    public MegaPlacementType PlacementType;
+    
     [IgnoreMember] public string EntryName
     {
         get => Name;

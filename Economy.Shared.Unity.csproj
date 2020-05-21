@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Controller.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Cooldown.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\EnergyDraw.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\FactoryBehavior.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Heat.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Hitscan.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Radiator.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reactor.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reflector.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\ResourceScanner.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Sensor.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Shield.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\StatModifier.cs" />

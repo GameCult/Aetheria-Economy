@@ -264,7 +264,6 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         
         AddItemBehaviors();
 
-        var index = 0;
         // Iterate only over the behaviors of items which contain persistent data
         // Filter the behaviors for each item to get the persistent ones, then cast them and combine with the persisted data array for that item
         foreach (var persistentBehaviorData in ItemBehaviors

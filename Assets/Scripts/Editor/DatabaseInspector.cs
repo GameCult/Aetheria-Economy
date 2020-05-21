@@ -184,7 +184,7 @@ public class DatabaseInspector : EditorWindow
         else if (type == typeof(Type) && inspectable is InspectableTypeAttribute typeAttribute) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (Type) value, typeAttribute.Type));
         else if (type == typeof(GameObject)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (GameObject) value));
         else if (type == typeof(AnimationCurve)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (AnimationCurve) value));
-        else if (type == typeof(PerformanceStat)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (PerformanceStat) value, obj as CraftedItemData));
+        else if (type == typeof(PerformanceStat)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (PerformanceStat) value, field.GetCustomAttribute<SimplePerformanceStatAttribute>() != null));
         else if (type == typeof(PerformanceStat[]))
         {
             LabelField(field.Name.SplitCamelCase(), EditorStyles.boldLabel);
@@ -196,7 +196,7 @@ public class DatabaseInspector : EditorWindow
                     stats = new PerformanceStat[damageTypes.Length];
                 for (var i = 0; i < stats.Length; i++)
                 {
-                    stats[i] = Inspect(damageTypes[i].SplitCamelCase(), stats[i], obj as CraftedItemData);
+                    stats[i] = Inspect(damageTypes[i].SplitCamelCase(), stats[i]);
                 }
                 field.SetValue(obj, stats);
             }
@@ -519,7 +519,7 @@ public class DatabaseInspector : EditorWindow
             if (area)
             {
                 EditorStyles.textArea.wordWrap = true;
-                return DelayedTextField(value, EditorStyles.textArea, GUILayout.Width(position.width-width-10), GUILayout.Height(100));
+                return DelayedTextField(value, EditorStyles.textArea, /*GUILayout.Width(EditorGUIUtility.currentViewWidth-width-10), */GUILayout.Height(100));
             }
             return DelayedTextField(value);
         }
@@ -971,7 +971,7 @@ public class DatabaseInspector : EditorWindow
         }
     }
     
-    public PerformanceStat Inspect(string label, PerformanceStat value, CraftedItemData crafted)
+    public PerformanceStat Inspect(string label, PerformanceStat value, bool isSimple = false)
     {
         using (new VerticalScope())
         {
@@ -984,16 +984,29 @@ public class DatabaseInspector : EditorWindow
                 value.Max = DelayedFloatField(value.Max);
             }
 
-            using (new HorizontalScope())
+            // Only display heat, durability and quality effects if the stat actually varies
+            if (Math.Abs(value.Min - value.Max) > .01f)
             {
-                GUILayout.Label("", GUILayout.Width(width));
-                GUILayout.Label("H", _labelStyle);
-                value.HeatDependent = Toggle(value.HeatDependent);
-                GUILayout.Label("D", _labelStyle);
-                value.DurabilityDependent = Toggle(value.DurabilityDependent);
-                GUILayout.Label("QEx", _labelStyle, GUILayout.Width(labelWidth + 5));
-                value.QualityExponent = DelayedFloatField(value.QualityExponent);
+                using (new HorizontalScope())
+                {
+                    GUILayout.Label("", GUILayout.Width(width));
+                    if (!isSimple)
+                    {
+                        GUILayout.Label("H", _labelStyle);
+                        value.HeatDependent = Toggle(value.HeatDependent);
+                        GUILayout.Label("D", _labelStyle);
+                        value.DurabilityDependent = Toggle(value.DurabilityDependent);
+                        GUILayout.Label("QEx", _labelStyle, GUILayout.Width(labelWidth + 5));
+                        value.QualityExponent = DelayedFloatField(value.QualityExponent);
+                    }
+                    else
+                    {
+                        GUILayout.Label("Quality Exponent", _labelStyle);
+                        value.QualityExponent = DelayedFloatField(value.QualityExponent);
+                    }
+                }
             }
+
 
             // using (new HorizontalScope())
             // {

@@ -4,6 +4,9 @@ using Newtonsoft.Json;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HitscanData : WeaponData
 {
+    [InspectableField, JsonProperty("perSecond"), Key(6)]
+    public bool PerSecond;
+    
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new Hitscan(context, this, entity, item);
@@ -32,6 +35,7 @@ public class Hitscan : IBehavior
 
     public bool Update(float delta)
     {
+        // TODO: Implement hitscan weapons!
         return true;
     }
 

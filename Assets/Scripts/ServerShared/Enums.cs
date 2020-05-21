@@ -52,3 +52,12 @@ public enum HullType
     Station,
     Turret
 }
+
+public enum MegaPlacementType
+{
+    Mass = 0,
+    Planets = 1,
+    Resources = 2,
+    Connected = 3,
+    Isolated = 4
+}

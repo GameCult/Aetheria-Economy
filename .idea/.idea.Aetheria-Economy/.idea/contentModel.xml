@@ -1256,6 +1256,7 @@
               <e p="Behaviors.cs" t="Include" />
               <e p="Controller.cs" t="Include" />
               <e p="Cooldown.cs" t="Include" />
+              <e p="EnergyDraw.cs" t="Include" />
               <e p="FactoryBehavior.cs" t="Include" />
               <e p="Heat.cs" t="Include" />
               <e p="Hitscan.cs" t="Include" />
@@ -1267,6 +1268,7 @@
               <e p="Radiator.cs" t="Include" />
               <e p="Reactor.cs" t="Include" />
               <e p="Reflector.cs" t="Include" />
+              <e p="ResourceScanner.cs" t="Include" />
               <e p="Sensor.cs" t="Include" />
               <e p="Shield.cs" t="Include" />
               <e p="StatModifier.cs" t="Include" />

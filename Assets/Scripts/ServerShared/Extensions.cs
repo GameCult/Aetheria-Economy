@@ -237,6 +237,32 @@ public static class Extensions
         var d3 = directionAngle + 2 * PI - currentAngle;
         return abs(d1) < abs(d2) ? abs(d1) < abs(d3) ? d1 : d3 : abs(d2) < abs(d3) ? d2 : d3;
     }
+    
+    // https://stackoverflow.com/a/3188835
+    public static T MaxBy<T, U>(this IEnumerable<T> items, Func<T, U> selector)
+    {
+        if (!items.Any())
+        {
+            throw new InvalidOperationException("Empty input sequence");
+        }
+
+        var comparer = Comparer<U>.Default;
+        T   maxItem  = items.First();
+        U   maxValue = selector(maxItem);
+
+        foreach (T item in items.Skip(1))
+        {
+            // Get the value of the item and compare it to the current max.
+            U value = selector(item);
+            if (comparer.Compare(value, maxValue) > 0)
+            {
+                maxValue = value;
+                maxItem  = item;
+            }
+        }
+
+        return maxItem;
+    }
 }
 
 // https://github.com/Burtsev-Alexey/net-object-deep-copy
@@ -307,42 +333,6 @@ public static class ObjectExtensions
     {
         return (r2.x + r2.width >= r1.x && r2.x <= r1.x + r1.width) &&
                (r2.y + r2.height >= r1.y && r2.y <= r1.y + r1.height);
-    }
-
-    // public static IEnumerable<T> FindPath<T>(this IEnumerable<Edge<T>> data, T source, T target, Func<T, T, double> costFunction, bool bestFirst = true) where T : class
-    // {
-    //     List<DijkstraVertex<T>> members = new List<DijkstraVertex<T>>{new DijkstraVertex<T>{Vertex = source}};
-    //     List<T> searched = new List<T>();
-    //     while (true)
-    //     {
-    //         var v = members.Where(m=>!searched.Contains(m.Vertex)).OrderBy(m=>bestFirst?m.Heuristic:m.Cost).FirstOrDefault();
-    //         if (v == null) return null; // No vertices left unsearched
-    //         if (v.Vertex == target)
-    //         {
-    //             Stack<DijkstraVertex<T>> path = new Stack<DijkstraVertex<T>>();
-    //             path.Push(v);
-    //             while(path.Peek().Parent!=null)
-    //                 path.Push(path.Peek().Parent);
-    //             return path.Select(dv => dv.Vertex).ToList();
-    //         }
-    //         members.AddRange(data.Where(l => l.Source == v.Vertex).Select(l => l.Target).Concat(data.Where(l => l.Target == v.Vertex).Select(l => l.Source))
-    //             .Where(n => members.All(m => m.Vertex != n)).Select(n =>
-    //             {
-    //                 var c = new DijkstraVertex<T> {Parent = v, Vertex = n, Cost = v.Cost + costFunction(v.Vertex,n)};
-    //                 if (bestFirst)
-    //                     c.Heuristic = c.Cost + costFunction(c.Vertex,target);
-    //                 return c;
-    //             }));
-    //         searched.Add(v.Vertex);
-    //     }
-    // }
-	
-    class DijkstraVertex<T>
-    {
-        public double Cost;
-        public double Heuristic;
-        public DijkstraVertex<T> Parent;
-        public T Vertex;
     }
 }
 

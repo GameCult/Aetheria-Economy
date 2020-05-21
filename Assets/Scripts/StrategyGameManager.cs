@@ -109,14 +109,13 @@ public class StrategyGameManager : MonoBehaviour
                     Position = z.Position,
                     ZoneID = z.ID
                 });
+            
+            foreach (var zone in _context.GalaxyZones.Keys) GenerateZone(zone);
 
             var megas = _cache.GetAll<MegaCorporation>();
             if (megas.First().HomeZone == Guid.Empty)
             {
-                foreach (var corpzone in megas
-                    .Zip(_cache.GetAll<ZoneData>().OrderByDescending(z => z.Mass),
-                        (corporation, zone) => new {corporation, zone}))
-                    corpzone.corporation.HomeZone = corpzone.zone.ID;
+                _context.PlaceMegas();
             }
 
             var player = _cache.GetAll<Player>().FirstOrDefault();
@@ -181,6 +180,9 @@ public class StrategyGameManager : MonoBehaviour
                         
                         GameMenuRoot.gameObject.SetActive(true);
                         CorpMenuRoot.gameObject.SetActive(false);
+
+                        _selectedZone = _cache.Get<MegaCorporation>(newCorp.Parent).HomeZone;
+                        ZoneTabButton.OnPointerClick(null);
                     }
                 };
             }
@@ -384,10 +386,10 @@ public class StrategyGameManager : MonoBehaviour
                     CultClient.Send(new ZoneRequestMessage{ZoneID = zone.ZoneID});
                 if (TestMode)
                 {
-                    if(!_context.Cache.Get<ZoneData>(zone.ZoneID).Visited)
-                    {
-                        GenerateZone(zone.ZoneID);
-                    }
+                    // if(!_context.Cache.Get<ZoneData>(zone.ZoneID).Visited)
+                    // {
+                    //     GenerateZone(zone.ZoneID);
+                    // }
                     PopulateZoneProperties(zone.ZoneID);
                 }
                 _selectedZone = zone.ZoneID;
@@ -398,6 +400,13 @@ public class StrategyGameManager : MonoBehaviour
                 // If the user double clicks on a zone, switch to the zone tab
                 if(pointer.clickCount == 2) ZoneTabButton.OnPointerClick(pointer);
             };
+            
+            if(_selectedZone == zone.ZoneID)
+            {
+                _selectedGalaxyZone = instanceZone;
+                _selectedGalaxyZone.Background.material.SetColor("_TintColor", SelectedColor);
+            }
+            
             foreach (var linkedZone in zone.Links.Where(l=>!linkedZones.Contains(l)))
             {
                 var link = GalaxyZoneLinkPrototype.Instantiate<Transform>();
@@ -407,6 +416,7 @@ public class StrategyGameManager : MonoBehaviour
                 link.localScale = new Vector3(length(diff) * GalaxyScale, 1, 1);
             }
         }
+        
     }
 
     void GenerateZone(Guid zone)

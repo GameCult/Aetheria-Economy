@@ -132,7 +132,6 @@ public class GameContext
                     nearestController.AssignTask(task.ID, nearestControllerPath);
                 }
             }
-                
         }
         
         foreach (var kvp in ZoneEntities)
@@ -250,6 +249,91 @@ public class GameContext
     public float OrbitalPeriod(float distance)
     {
         return pow(distance, GlobalData.OrbitPeriodExponent) * GlobalData.OrbitPeriodMultiplier;
+    }
+
+    public void PlaceMegas()
+    {
+        var megas = Cache.GetAll<MegaCorporation>();
+        
+        var availableZones = Cache.GetAll<ZoneData>()
+            .Where(z => megas.All(m => m.HomeZone != z.ID))
+            .ToList();
+        
+        foreach(var megaPlacement in megas
+            .OrderBy(m=>m.PlacementType)
+            .GroupBy(m=>m.PlacementType))
+            switch (megaPlacement.Key)
+            {
+                case MegaPlacementType.Mass:
+                    foreach (var mega in megaPlacement)
+                    {
+                        var zone = availableZones
+                            .MaxBy(z => z.Mass);
+                        availableZones.Remove(zone);
+                        mega.HomeZone = zone.ID;
+                    }
+                    break;
+                case MegaPlacementType.Planets:
+                    foreach (var mega in megaPlacement)
+                    {
+                        var zone = availableZones
+                            .MaxBy(z => z.Planets.Length);
+                        availableZones.Remove(zone);
+                        mega.HomeZone = zone.ID;
+                    }
+                    break;
+                case MegaPlacementType.Resources:
+                    foreach (var mega in megaPlacement)
+                    {
+                        var zone = availableZones
+                            .MaxBy(z => z.Planets
+                                .SelectMany(id=>Cache.Get<PlanetData>(id).Resources
+                                    .Select(r=>r.Key))
+                                .Distinct()
+                                .Count());
+                        availableZones.Remove(zone);
+                        mega.HomeZone = zone.ID;
+                    }
+                    break;
+                case MegaPlacementType.Connected:
+                    foreach (var mega in megaPlacement)
+                    {
+                        var zone = availableZones
+                            .OrderByDescending(z => z.Wormholes.Count)
+                            .ThenBy(z=>megas
+                                .Sum(m=>m.HomeZone==Guid.Empty?0:lengthsq(Cache.Get<ZoneData>(m.HomeZone).Position - z.Position)))
+                            .First();
+                        availableZones.Remove(zone);
+                        mega.HomeZone = zone.ID;
+                    }
+                    break;
+                case MegaPlacementType.Isolated:
+                    foreach (var mega in megaPlacement)
+                    {
+                        var zone = availableZones
+                            .Where(z=>z.Wormholes.Count==1)
+                            .MaxBy(z =>
+                            {
+                                int soloChain = 0;
+                                var previous = z;
+                                var next = Cache.Get<ZoneData>(z.Wormholes.First());
+                                while (next.Wormholes.Count == 2)
+                                {
+                                    var temp = next;
+                                    next = Cache.Get<ZoneData>(next.Wormholes.First(w=>w != previous.ID));
+                                    previous = temp;
+                                    soloChain++;
+                                }
+
+                                return soloChain;
+                            });
+                        availableZones.Remove(zone);
+                        mega.HomeZone = zone.ID;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
     }
     
     // public int ItemTier(CraftedItemData itemData)

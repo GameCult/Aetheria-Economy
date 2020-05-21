@@ -3,24 +3,24 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
-public class HeatData : BehaviorData
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(12)]
+public class EnergyDrawData : BehaviorData
 {
-    [InspectableField, JsonProperty("heat"), Key(1)]
-    public PerformanceStat Heat = new PerformanceStat();
+    [InspectableField, JsonProperty("draw"), Key(1)]
+    public PerformanceStat Draw = new PerformanceStat();
     
     [InspectableField, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
-        return new Heat(context, this, entity, item);
+        return new EnergyDraw(context, this, entity, item);
     }
 }
 
-public class Heat : IBehavior
+public class EnergyDraw : IBehavior
 {
-    private HeatData _data;
+    private EnergyDrawData _data;
 
     private Entity Entity { get; }
     private Gear Item { get; }
@@ -28,7 +28,7 @@ public class Heat : IBehavior
 
     public BehaviorData Data => _data;
 
-    public Heat(GameContext context, HeatData data, Entity entity, Gear item)
+    public EnergyDraw(GameContext context, EnergyDrawData data, Entity entity, Gear item)
     {
         _data = data;
         Entity = entity;
@@ -38,7 +38,7 @@ public class Heat : IBehavior
 
     public bool Update(float delta)
     {
-        Entity.AddHeat(Context.Evaluate(_data.Heat, Item, Entity) * (_data.PerSecond ? delta : 1));
+        Entity.Energy -= Context.Evaluate(_data.Draw, Item, Entity) * (_data.PerSecond ? delta : 1);
         return true;
     }
 }

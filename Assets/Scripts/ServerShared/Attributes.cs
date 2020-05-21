@@ -106,3 +106,6 @@ public class InspectableTypeAttribute : InspectableFieldAttribute
         Type = type;
     }
 }
+
+[AttributeUsage(AttributeTargets.Field)]
+public class SimplePerformanceStatAttribute : Attribute { }

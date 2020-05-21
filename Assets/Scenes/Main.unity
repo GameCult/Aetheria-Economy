@@ -8311,6 +8311,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1619776840}
     m_Modifications:
+    - target: {fileID: 4451361954557856253, guid: cde91a528214ecc4081092fcad3cc981,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4451361954557856253, guid: cde91a528214ecc4081092fcad3cc981,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -40
+      objectReference: {fileID: 0}
     - target: {fileID: 4451361955953725105, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -8341,25 +8351,55 @@ PrefabInstance:
       propertyPath: m_text
       value: Corporation Name
       objectReference: {fileID: 0}
+    - target: {fileID: 4451361955953725105, guid: cde91a528214ecc4081092fcad3cc981,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 4451361955953725105, guid: cde91a528214ecc4081092fcad3cc981,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 4451361955953725105, guid: cde91a528214ecc4081092fcad3cc981,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 513
+      objectReference: {fileID: 0}
     - target: {fileID: 4451361956030022762, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4451361956030022762, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4451361956030022762, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4451361956030022762, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
       propertyPath: m_textInfo.pageCount
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4451361956030022762, guid: cde91a528214ecc4081092fcad3cc981,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 4451361956030022762, guid: cde91a528214ecc4081092fcad3cc981,
+        type: 3}
+      propertyPath: m_fontSizeBase
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 4451361956030022762, guid: cde91a528214ecc4081092fcad3cc981,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 513
       objectReference: {fileID: 0}
     - target: {fileID: 4451361956630297305, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
@@ -8424,7 +8464,7 @@ PrefabInstance:
     - target: {fileID: 4451361956630297310, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -147.9
       objectReference: {fileID: 0}
     - target: {fileID: 4451361956630297310, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
@@ -8434,12 +8474,12 @@ PrefabInstance:
     - target: {fileID: 4451361956630297310, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 285.13
+      value: 650
       objectReference: {fileID: 0}
     - target: {fileID: 4451361956630297310, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 32.005005
+      value: 64
       objectReference: {fileID: 0}
     - target: {fileID: 4451361956630297310, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
@@ -8464,7 +8504,7 @@ PrefabInstance:
     - target: {fileID: 4451361956630297310, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4451361956630297310, guid: cde91a528214ecc4081092fcad3cc981,
         type: 3}
@@ -11199,7 +11239,7 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 90.43
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
