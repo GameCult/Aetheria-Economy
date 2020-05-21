@@ -73,12 +73,14 @@ public class SimpleCommodityData : ItemData
  JsonConverter(typeof(JsonKnownTypesConverter<CraftedItemData>))]
 public abstract class CraftedItemData : ItemData
 {
+    [InspectableField, JsonProperty("ingredientQualityWeight"), Key(6)]  
+    public float IngredientQualityWeight = .5f;
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject]
 public class CompoundCommodityData : CraftedItemData
 {
-    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("demandProfile"), Key(6)]  
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("demandProfile"), Key(7)]  
     public Dictionary<Guid, float> DemandProfile = new Dictionary<Guid, float>();
 }
 
@@ -87,25 +89,25 @@ public class CompoundCommodityData : CraftedItemData
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<EquippableItemData>))]
 public abstract class EquippableItemData : CraftedItemData
 {
-    [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(6)]
+    [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(7)]
     public float4[] HeatPerformanceCurve;
 
-    [TemperatureInspectable, JsonProperty("minTemp"), Key(7)]
+    [TemperatureInspectable, JsonProperty("minTemp"), Key(8)]
     public float MinimumTemperature;
 
-    [TemperatureInspectable, JsonProperty("maxTemp"), Key(8)]
+    [TemperatureInspectable, JsonProperty("maxTemp"), Key(9)]
     public float MaximumTemperature;
 
-    [InspectableField, JsonProperty("durabilityStat"), Key(9), SimplePerformanceStat]
+    [InspectableField, JsonProperty("durabilityStat"), Key(10), SimplePerformanceStat]
     public PerformanceStat Durability = new PerformanceStat();
 
-    [InspectableField, JsonProperty("durabilityExponent"), Key(10), SimplePerformanceStat]
+    [InspectableField, JsonProperty("durabilityExponent"), Key(11), SimplePerformanceStat]
     public PerformanceStat DurabilityExponent = new PerformanceStat();
 
-    [InspectableField, JsonProperty("heatExponent"), Key(11), SimplePerformanceStat]
+    [InspectableField, JsonProperty("heatExponent"), Key(12), SimplePerformanceStat]
     public PerformanceStat HeatExponent = new PerformanceStat();
 
-    [InspectableField, JsonProperty("behaviors"), Key(12)]  
+    [InspectableField, JsonProperty("behaviors"), Key(13)]  
     public List<BehaviorData> Behaviors = new List<BehaviorData>();
     
     [IgnoreMember]
@@ -143,7 +145,7 @@ public abstract class EquippableItemData : CraftedItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GearData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpointType"), Key(13)]  
+    [InspectableField, JsonProperty("hardpointType"), Key(14)]
     public HardpointType Hardpoint;
 
     [IgnoreMember] public override HardpointType HardpointType => Hardpoint;

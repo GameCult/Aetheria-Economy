@@ -428,6 +428,26 @@ public class GameContext
         return AffectedStats[effect] = field.GetValue(effectObject) as PerformanceStat;
     }
 
+    private readonly Dictionary<CraftedItemInstance, float> ItemQuality = new Dictionary<CraftedItemInstance, float>();
+    public float CompoundQuality(CraftedItemInstance item)
+    {
+        if (ItemQuality.ContainsKey(item)) return ItemQuality[item];
+		
+        var quality = item.Quality;
+			
+        var craftedIngredients = item.Ingredients.Where(i => i is CraftedItemInstance).ToArray();
+        if (craftedIngredients.Length > 0)
+        {
+            var ingredientQualityWeight = Cache.Get<CraftedItemData>(item.Data).IngredientQualityWeight;
+            quality = quality * (1 - ingredientQualityWeight) +
+                      craftedIngredients.Cast<CraftedItemInstance>().Average(CompoundQuality) * ingredientQualityWeight;
+        }
+
+        ItemQuality[item] = quality;
+
+        return ItemQuality[item];
+    }
+
     // Determine quality of either the item itself or the specific ingredient this stat depends on
     public float Quality(PerformanceStat stat, Gear item)
     {
@@ -435,7 +455,7 @@ public class GameContext
         var activeEffects = blueprint.StatEffects.Where(x => GetAffectedStat(blueprint, x) == stat).ToArray();
         float quality;
         if (!activeEffects.Any())
-            quality = item.CompoundQuality();
+            quality = CompoundQuality(item);
         else
         {
             var ingredientInstances = item.Ingredients.Select(i => Cache.Get<ItemInstance>(i)).ToArray();
@@ -450,7 +470,7 @@ public class GameContext
             foreach (var i in ingredients)
             {
                 if (i is CraftedItemInstance ci)
-                    sum += ci.CompoundQuality();
+                    sum += CompoundQuality(ci);
                 else _logger($"Blueprint stat effect for item {item.ID} specifies invalid (non crafted) ingredient!");
             }
 

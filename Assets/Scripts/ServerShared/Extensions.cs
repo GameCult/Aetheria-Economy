@@ -23,24 +23,6 @@ public static class Extensions
         return baseType.GetInterfaces().Any(interfaceType.Equals);
     }
 
-    private static readonly Dictionary<CraftedItemInstance, float> Quality = new Dictionary<CraftedItemInstance, float>();
-    public static float CompoundQuality(this CraftedItemInstance item)
-    {
-        if (Quality.ContainsKey(item)) return Quality[item];
-		
-        var quality = item.Quality;
-			
-        var craftedIngredients = item.Ingredients.Where(i => i is CraftedItemInstance).ToArray();
-        if (craftedIngredients.Length > 0)
-        {
-            quality *= craftedIngredients.Cast<CraftedItemInstance>().Average(CompoundQuality);
-        }
-
-        Quality[item] = quality;
-
-        return Quality[item];
-    }
-
     public static void Send<T>(this NetPeer peer, T message, DeliveryMethod method = DeliveryMethod.ReliableOrdered) where T : Message
     {
         peer.Send(MessagePackSerializer.Serialize(message as Message), method);
