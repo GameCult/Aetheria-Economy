@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[RethinkTable("Items"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class BlueprintData : DatabaseEntry, INamedEntry
 {
     [InspectableField, JsonProperty("name"), Key(1)]  
@@ -15,7 +15,7 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     [InspectableDatabaseLink(typeof(ItemData)), JsonProperty("ingredients"), Key(2)]  
     public Dictionary<Guid, int> Ingredients = new Dictionary<Guid, int>();
 
-    [InspectableDatabaseLink(typeof(ItemData)), JsonProperty("item"), Key(3)]  
+    [JsonProperty("item"), Key(3)]  
     public Guid Item;
 
     [InspectableField, JsonProperty("quantity"), Key(4)]

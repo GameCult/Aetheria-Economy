@@ -10,7 +10,9 @@ public class DatabaseCache
     public event Action<DatabaseEntry> OnDataInsertLocal;
     public event Action<DatabaseEntry> OnDataUpdateLocal;
     public event Action<DatabaseEntry> OnDataDeleteLocal;
+    public event Action<DatabaseEntry> OnDataInsertRemote;
     public event Action<DatabaseEntry> OnDataUpdateRemote;
+    public event Action<DatabaseEntry> OnDataDeleteRemote;
 
     public Action<string> Logger = Console.WriteLine;
 
@@ -36,7 +38,12 @@ public class DatabaseCache
             }
 
             if (remote)
-                OnDataUpdateRemote?.Invoke(entry);
+            {
+                if (exists)
+                    OnDataUpdateRemote?.Invoke(entry);
+                else
+                    OnDataInsertRemote?.Invoke(entry);
+            }
             else
             {
                 if (exists)
@@ -84,7 +91,9 @@ public class DatabaseCache
             type.Remove(entry.ID);
         }
 
-        if (!remote)
+        if (remote)
+            OnDataDeleteRemote?.Invoke(entry);
+        else
             OnDataDeleteLocal?.Invoke(entry);
     }
 
