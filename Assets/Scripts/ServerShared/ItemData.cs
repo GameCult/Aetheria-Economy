@@ -63,6 +63,9 @@ public class SimpleCommodityData : ItemData
     // Minimum amount of resources needed for presence to register
     [InspectableField, JsonProperty("floor"), Key(11)]
     public float Floor = 5f;
+
+    [InspectableField, JsonProperty("category"), Key(12)]  
+    public SimpleCommodityCategory Category;
 }
 
 [MessagePackObject, 
@@ -82,6 +85,9 @@ public class CompoundCommodityData : CraftedItemData
 {
     [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("demandProfile"), Key(7)]  
     public Dictionary<Guid, float> DemandProfile = new Dictionary<Guid, float>();
+
+    [InspectableField, JsonProperty("category"), Key(8)]  
+    public CompoundCommodityCategory Category;
 }
 
 [Union(0, typeof(GearData)), 
@@ -154,16 +160,16 @@ public class GearData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HullData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hullCapacity"), Key(13)]  
+    [InspectableField, JsonProperty("hullCapacity"), Key(14)]  
     public PerformanceStat Capacity = new PerformanceStat();
 
-    [InspectableField, JsonProperty("hardpoints"), Key(14)]  
+    [InspectableField, JsonProperty("hardpoints"), Key(15)]  
     public List<HardpointData> Hardpoints = new List<HardpointData>();
 
-    [InspectablePrefab, JsonProperty("prefab"), Key(15)]  
+    [InspectablePrefab, JsonProperty("prefab"), Key(16)]  
     public string Prefab;
 
-    [InspectableField, JsonProperty("hullType"), Key(16)]
+    [InspectableField, JsonProperty("hullType"), Key(17)]
     public HullType HullType;
 
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Hull;

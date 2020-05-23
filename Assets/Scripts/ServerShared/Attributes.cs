@@ -109,3 +109,13 @@ public class InspectableTypeAttribute : InspectableFieldAttribute
 
 [AttributeUsage(AttributeTargets.Field)]
 public class SimplePerformanceStatAttribute : Attribute { }
+
+// public class CategoryAttribute : Attribute
+// {
+//     public readonly Type Type;
+//
+//     public CategoryAttribute(Type type)
+//     {
+//         Type = type;
+//     }
+// }

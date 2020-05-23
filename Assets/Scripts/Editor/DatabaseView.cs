@@ -20,7 +20,7 @@ public class DatabaseListView : EditorWindow
     public static RethinkDB R = RethinkDB.R;
     
     private DatabaseCache _databaseCache;
-    private bool[] _gearFoldouts;
+    private bool[] _itemTypeFoldouts;
     private bool _itemsFoldout;
     private bool _compoundFoldout;
     private bool _simpleFoldout;
@@ -39,6 +39,7 @@ public class DatabaseListView : EditorWindow
     private RethinkQueryStatus _queryStatus;
     private Dictionary<Guid, HashSet<Guid>> _itemBlueprints = new Dictionary<Guid, HashSet<Guid>>();
     private HashSet<Guid> _itemBlueprintFoldouts = new HashSet<Guid>();
+    private HashSet<string> _itemGroupFoldouts = new HashSet<string>();
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
@@ -106,7 +107,11 @@ public class DatabaseListView : EditorWindow
         _databaseCache.OnDataDeleteRemote += onDelete;
         
         _databaseCache.OnDataUpdateLocal += _ => Repaint();
+        _databaseCache.OnDataInsertLocal += _ => Repaint();
+        _databaseCache.OnDataDeleteLocal += _ => Repaint();
         _databaseCache.OnDataUpdateRemote += _ => EditorDispatcher.Dispatch(Repaint);
+        _databaseCache.OnDataInsertRemote += _ => EditorDispatcher.Dispatch(Repaint);
+        _databaseCache.OnDataDeleteRemote += _ => EditorDispatcher.Dispatch(Repaint);
 
         DatabaseInspector.DatabaseCache = _databaseCache;
         _inspector = DatabaseInspector.ShowWindow();
@@ -116,7 +121,7 @@ public class DatabaseListView : EditorWindow
         _entryTypes = typeof(DatabaseEntry).GetAllChildClasses()
             .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null && !typeof(ItemData).IsAssignableFrom(t)).ToArray();
         
-        _gearFoldouts = new bool[_itemTypes.Length];
+        _itemTypeFoldouts = new bool[_itemTypes.Length];
         _entryFoldouts = new bool[_entryTypes.Length];
 
         if (EditorPrefs.HasKey("RethinkDB.URL"))
@@ -221,102 +226,131 @@ public class DatabaseListView : EditorWindow
                 using (var h = new HorizontalScope(ListItemStyle))
                 {
                     GUILayout.Space(10);
-                    _gearFoldouts[i] = Foldout(_gearFoldouts[i],
+                    _itemTypeFoldouts[i] = Foldout(_itemTypeFoldouts[i],
                         ((NameAttribute) _itemTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? FormatTypeName(_itemTypes[i].Name),
                         true);
                 }
-                if (_gearFoldouts[i])
+                if (_itemTypeFoldouts[i])
                 {
+                    var typedItems = items.Where(e => e.GetType() == _itemTypes[i]).OrderBy(item => item.Name);
+                    IEnumerable<IGrouping<string, ItemData>> itemGroups = new List<IGrouping<string, ItemData>>();
+                    if(_itemTypes[i] == typeof(SimpleCommodityData))
+                        itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(SimpleCommodityCategory), (item as SimpleCommodityData).Category));
+                    else if(_itemTypes[i] == typeof(CompoundCommodityData))
+                        itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(CompoundCommodityCategory), (item as CompoundCommodityData).Category));
+                    else if(_itemTypes[i] == typeof(GearData))
+                        itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(HardpointType), (item as GearData).Hardpoint));
+                    else if(_itemTypes[i] == typeof(HullData))
+                        itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(HullType), (item as HullData).HullType));
+
+                    foreach (var itemGroup in itemGroups)
+                    {
+                        using (var h = new HorizontalScope(ListItemStyle))
+                        {
+                            GUILayout.Space(20);
+                            if (Foldout(_itemGroupFoldouts.Contains(itemGroup.Key), FormatTypeName(itemGroup.Key), true))
+                                _itemGroupFoldouts.Add(itemGroup.Key);
+                            else _itemGroupFoldouts.Remove(itemGroup.Key);
+                        }
+
+                        if (_itemGroupFoldouts.Contains(itemGroup.Key))
+                        {
+                            foreach (var item in itemGroup)
+                            {
+                                var style = ListItemStyle;
+                                var selected = SelectedItem == item.ID;
+                                using (new HorizontalScope(selected?SelectedStyle:style))
+                                {
+                                    using (var h = new HorizontalScope())
+                                    {
+                                        if (h.rect.Contains(currentEvent.mousePosition))
+                                        {
+                                            if (currentEventType == EventType.MouseDrag)
+                                            {
+                                                DragAndDrop.PrepareStartDrag();
+                                                DragAndDrop.SetGenericData("Item", item.ID);
+                                                DragAndDrop.StartDrag("Database Item");
+                                            }
+                                            else if (currentEventType == EventType.MouseUp)
+                                                Select(item);
+                                        }
+
+                                        GUILayout.Space(30);
+                                        GUILayout.Label(item.Name, selected ? EditorStyles.whiteLabel : GUI.skin.label);
+                                    }
+
+                                    using (var h = new HorizontalScope(GUILayout.Width(15)))
+                                    {
+                                        if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
+                                        {
+                                            if(_itemBlueprintFoldouts.Contains(item.ID))
+                                                _itemBlueprintFoldouts.Remove(item.ID);
+                                            else
+                                                _itemBlueprintFoldouts.Add(item.ID);
+                                        }
+                                        GUILayout.Label(_itemBlueprints[item.ID].Count.ToString());
+                                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                                        if (Event.current.type == EventType.Repaint)
+                                        {
+                                            var controlId = GUIUtility.GetControlID(1337, FocusType.Keyboard, position);
+                                            EditorStyles.foldout.Draw(rect, GUIContent.none, controlId, _itemBlueprintFoldouts.Contains(item.ID));
+                                        }
+                                    }
+                                }
+                                
+                                if (_itemBlueprintFoldouts.Contains(item.ID))
+                                {
+                                    foreach (var blueprintData in _itemBlueprints[item.ID]
+                                        .Select(id => _databaseCache.Get<BlueprintData>(id))
+                                        .OrderBy(bp => bp.Quality))
+                                    {
+                                        var blueprintStyle = ListItemStyle;
+                                        var blueprintSelected = SelectedItem == blueprintData.ID;
+                                        using (var h = new HorizontalScope(blueprintSelected ? SelectedStyle : blueprintStyle))
+                                        {
+                                            if (h.rect.Contains(currentEvent.mousePosition))
+                                            {
+                                                if (currentEventType == EventType.MouseDrag)
+                                                {
+                                                    DragAndDrop.PrepareStartDrag();
+                                                    DragAndDrop.SetGenericData("Item", blueprintData.ID);
+                                                    DragAndDrop.StartDrag("Database Item");
+                                                }
+                                                else if (currentEventType == EventType.MouseUp)
+                                                    Select(blueprintData);
+                                            }
+
+                                            GUILayout.Space(40);
+                                            GUILayout.Label(blueprintData.Name,
+                                                blueprintSelected ? EditorStyles.whiteLabel : GUI.skin.label);
+                                        }
+                                    }
+
+                                    using (var h = new HorizontalScope(ListItemStyle))
+                                    {
+                                        if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
+                                        {
+                                            var blueprint = new BlueprintData
+                                            {
+                                                Item = item.ID,
+                                                Name = item.Name
+                                            };
+                                            _databaseCache.Add(blueprint);
+                                            Select(blueprint);
+                                        }
+                                        GUILayout.Space(30);
+                                        GUILayout.Label("New Blueprint");
+                                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor,
+                                            0, 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                     foreach (var item in items.Where(e=>e.GetType()==_itemTypes[i]).OrderBy(item=>item.Name))
                     {
-                        var style = ListItemStyle;
-                        var selected = SelectedItem == item.ID;
-                        using (new HorizontalScope(selected?SelectedStyle:style))
-                        {
-                            using (var h = new HorizontalScope())
-                            {
-                                if (h.rect.Contains(currentEvent.mousePosition))
-                                {
-                                    if (currentEventType == EventType.MouseDrag)
-                                    {
-                                        DragAndDrop.PrepareStartDrag();
-                                        DragAndDrop.SetGenericData("Item", item.ID);
-                                        DragAndDrop.StartDrag("Database Item");
-                                    }
-                                    else if (currentEventType == EventType.MouseUp)
-                                        Select(item);
-                                }
-
-                                GUILayout.Space(20);
-                                GUILayout.Label(item.Name, selected ? EditorStyles.whiteLabel : GUI.skin.label);
-                            }
-
-                            using (var h = new HorizontalScope(GUILayout.Width(15)))
-                            {
-                                if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-                                {
-                                    if(_itemBlueprintFoldouts.Contains(item.ID))
-                                        _itemBlueprintFoldouts.Remove(item.ID);
-                                    else
-                                        _itemBlueprintFoldouts.Add(item.ID);
-                                }
-                                GUILayout.Label(_itemBlueprints[item.ID].Count.ToString());
-                                var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                                if (Event.current.type == EventType.Repaint)
-                                {
-                                    var controlId = GUIUtility.GetControlID(1337, FocusType.Keyboard, position);
-                                    EditorStyles.foldout.Draw(rect, GUIContent.none, controlId, _itemBlueprintFoldouts.Contains(item.ID));
-                                }
-                            }
-                        }
-                        
-                        if(_itemBlueprintFoldouts.Contains(item.ID))
-                        {
-                            foreach (var blueprintData in _itemBlueprints[item.ID]
-                                .Select(id => _databaseCache.Get<BlueprintData>(id))
-                                .OrderBy(bp => bp.Quality))
-                            {
-                                var blueprintStyle = ListItemStyle;
-                                var blueprintSelected = SelectedItem == blueprintData.ID;
-                                using (var h = new HorizontalScope(blueprintSelected ? SelectedStyle : blueprintStyle))
-                                {
-                                    if (h.rect.Contains(currentEvent.mousePosition))
-                                    {
-                                        if (currentEventType == EventType.MouseDrag)
-                                        {
-                                            DragAndDrop.PrepareStartDrag();
-                                            DragAndDrop.SetGenericData("Item", blueprintData.ID);
-                                            DragAndDrop.StartDrag("Database Item");
-                                        }
-                                        else if (currentEventType == EventType.MouseUp)
-                                            Select(blueprintData);
-                                    }
-
-                                    GUILayout.Space(30);
-                                    GUILayout.Label(blueprintData.Name,
-                                        blueprintSelected ? EditorStyles.whiteLabel : GUI.skin.label);
-                                }
-                            }
-
-                            using (var h = new HorizontalScope(ListItemStyle))
-                            {
-                                if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-                                {
-                                    var blueprint = new BlueprintData
-                                    {
-                                        Item = item.ID,
-                                        Name = item.Name
-                                    };
-                                    _databaseCache.Add(blueprint);
-                                    Select(blueprint);
-                                }
-                                GUILayout.Space(30);
-                                GUILayout.Label("New Blueprint");
-                                var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                                GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor,
-                                    0, 0);
-                            }
-                        }
                     }
                     
                     using (var h = new HorizontalScope(ListItemStyle))

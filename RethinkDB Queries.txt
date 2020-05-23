@@ -18,3 +18,6 @@ Find Galaxy Sectors With Long Names
 r.db('Aetheria').table('Galaxy').filter({$type:'ZoneData'}).filter(function (zone) {
     return zone("name").count().gt(8);
 })
+
+Find orphaned blueprints
+r.db('Aetheria').table('Items').filter({$type:'BlueprintData'}).filter({item:'00000000-0000-0000-0000-000000000000'})

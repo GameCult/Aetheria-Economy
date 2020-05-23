@@ -61,3 +61,22 @@ public enum MegaPlacementType
     Connected = 3,
     Isolated = 4
 }
+
+public enum SimpleCommodityCategory
+{
+    Minerals,
+    Metals,
+    Alloys,
+    Compounds,
+    Organics
+}
+
+public enum CompoundCommodityCategory
+{
+    Wearables,
+    Consumables,
+    Luxuries,
+    Tools,
+    Manufacturing,
+    Assemblies
+}
