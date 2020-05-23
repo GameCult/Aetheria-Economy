@@ -194,6 +194,23 @@ public class DatabaseListView : EditorWindow
             }
         }
 
+        using (new HorizontalScope())
+        {
+            if (GUILayout.Button("Delete Orphaned Blueprints"))
+            {
+                int count = 0;
+                foreach (var blueprintData in _databaseCache.GetAll<BlueprintData>().ToArray())
+                {
+                    if (_databaseCache.Get(blueprintData.Item) == null)
+                    {
+                        _databaseCache.Delete(blueprintData);
+                        count++;
+                    }
+                }
+                Debug.Log($"Deleted {count} orphaned blueprints!");
+            }
+        }
+
         if (_queryStatus != null && _queryStatus.RetrievedItems < _queryStatus.GalaxyEntries + _queryStatus.ItemsEntries)
         {
             var progressRect = GetControlRect(false, 20);
