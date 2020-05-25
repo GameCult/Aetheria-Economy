@@ -54,9 +54,8 @@ public class ZoneGenerator
         // Create orbit database entries
         orbitData = planets.Select(planet =>
         {
-            var data = new OrbitData()
+            var data = new OrbitData
             {
-                ID = Guid.NewGuid(),
                 Distance = planet.Distance,
                 Period = planet.Period,
                 Phase = planet.Phase,
@@ -95,7 +94,6 @@ public class ZoneGenerator
 	        var planetData = new PlanetData
             {
                 Mass = planet.Mass,
-                ID = Guid.NewGuid(),
                 Orbit = orbitMap[planet].ID,
                 Zone = zone.ID,
                 Belt = planet.Belt,

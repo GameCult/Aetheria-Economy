@@ -84,7 +84,6 @@ public class Factory : IBehavior, IPersistentBehavior
                             {
                                 Context = Context,
                                 Data = blueprintItemData.ID,
-                                ID = Guid.NewGuid(),
                                 Ingredients = _reservedStock.Select(ii=>ii.ID).ToList(),
                                 Quality = quality,
                                 Blueprint = _blueprint
@@ -98,7 +97,6 @@ public class Factory : IBehavior, IPersistentBehavior
                             {
                                 Context = Context,
                                 Data = blueprintItemData.ID,
-                                ID = Guid.NewGuid(),
                                 Ingredients = _reservedStock.Select(ii=>ii.ID).ToList(),
                                 Quality = quality,
                                 Blueprint = _blueprint
@@ -118,7 +116,6 @@ public class Factory : IBehavior, IPersistentBehavior
                         {
                             Context = Context,
                             Data = simpleCommodityData.ID,
-                            ID = Guid.NewGuid(),
                             Quantity = blueprint.Quantity
                         };
                         Context.Cache.Add(newSimpleCommodity);
@@ -181,7 +178,6 @@ public class Factory : IBehavior, IPersistentBehavior
                             {
                                 Context = Context,
                                 Data = simpleCommodity.Data,
-                                ID = Guid.NewGuid(),
                                 Quantity = blueprintQuantity
                             };
                             simpleCommodity.Quantity -= blueprintQuantity;

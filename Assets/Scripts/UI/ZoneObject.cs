@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class ZoneObject : MonoBehaviour
 {
-    public MeshRenderer GravityMesh;
-
     public MeshRenderer Icon;
 
     public TextMeshPro Label;
+    
+    [HideInInspector]
+    public List<MeshRenderer> Children = new List<MeshRenderer>();
 }

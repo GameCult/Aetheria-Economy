@@ -1769,6 +1769,7 @@
             <e p="TabGroup.cs" t="Include" />
             <e p="TechArrow.cs" t="Include" />
             <e p="TechNode.cs" t="Include" />
+            <e p="ZoneGravityObject.cs" t="Include" />
             <e p="ZoneObject.cs" t="Include" />
             <e p="ZoneRenderer.cs" t="Include" />
             <e p="ZoneShip.cs" t="Include" />

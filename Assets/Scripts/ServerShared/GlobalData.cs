@@ -133,6 +133,12 @@ public class GlobalData : DatabaseEntry
 
     [InspectableField, JsonProperty("resourceDensityMaximum"), Key(41)]  
     public float ResourceDensityMaximum = 1.5f;
+
+    [InspectableField, JsonProperty("startingGearQualityMin"), Key(42)]
+    public float StartingGearQualityMin = .1f;
+
+    [InspectableField, JsonProperty("startingGearQualityMax"), Key(43)]  
+    public float StartingGearQualityMax = .5f;
     
     public float PlanetRadius(float mass)
     {

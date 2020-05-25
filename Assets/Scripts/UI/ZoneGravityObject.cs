@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ZoneShip : ZoneObject
+public class ZoneGravityObject : ZoneObject
 {
-    public Transform Thruster;
+    public MeshRenderer GravityMesh;
 }

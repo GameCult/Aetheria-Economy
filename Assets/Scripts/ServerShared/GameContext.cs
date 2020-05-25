@@ -30,6 +30,8 @@ public class GameContext
     private Dictionary<Guid, float2> _orbitVelocities = new Dictionary<Guid, float2>();
     private Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
     private Dictionary<Guid, float2> _previousOrbitPositions = new Dictionary<Guid, float2>();
+    private Dictionary<Guid, float3[]> _asteroidPositions = new Dictionary<Guid, float3[]>();
+    private Dictionary<Guid, bool> _asteroidPositionsUpdated = new Dictionary<Guid, bool>();
     private Guid _forceLoadZone;
     private Type[] _statObjects;
     
@@ -101,6 +103,9 @@ public class GameContext
                 ? (_orbitPositions[orbit] - _previousOrbitPositions[orbit]) / _deltaTime
                 : float2.zero;
         }
+
+        foreach (var asteroids in _asteroidPositions.Keys)
+            _asteroidPositionsUpdated[asteroids] = false;
 
         foreach (var corporation in Cache.GetAll<Corporation>())
         {
@@ -222,6 +227,28 @@ public class GameContext
         return _orbitVelocities.ContainsKey(orbit) ? _orbitVelocities[orbit] : float2.zero;
     }
 
+    public float3[] GetAsteroidTransforms(Guid planetDataID)
+    {
+        var planetData = Cache.Get<PlanetData>(planetDataID);
+        if (!_asteroidPositions.ContainsKey(planetDataID))
+        {
+            _asteroidPositions[planetDataID] = new float3[planetData.Asteroids.Length];
+            _asteroidPositionsUpdated[planetDataID] = false;
+        }
+
+        if (_asteroidPositionsUpdated[planetDataID])
+            return _asteroidPositions[planetDataID];
+        for (var i = 0; i < planetData.Asteroids.Length; i++)
+        {
+            _asteroidPositions[planetDataID][i] = float3(
+                OrbitData.Evaluate((float) frac(Time / -OrbitalPeriod(planetData.Asteroids[i].x) * GlobalData.OrbitSpeedMultiplier +
+                    planetData.Asteroids[i].y)) * planetData.Asteroids[i].x,
+                (float) (Time * planetData.Asteroids[i].w % 360.0));
+        }
+        
+        return _asteroidPositions[planetDataID];
+    }
+
     public OrbitData CreateOrbit(Guid parent, float2 position)
     {
         var parentOrbit = Cache.Get<OrbitData>(parent);
@@ -236,7 +263,6 @@ public class GameContext
         {
             Context = this,
             Distance = distance,
-            ID = Guid.NewGuid(),
             Parent = parent,
             Period = period,
             Phase = storedPhase,
@@ -511,6 +537,138 @@ public class GameContext
             return stat.Min;
         return result;
     }
+
+    public Entity CreateEntity(Guid zone, Guid corporation, Guid loadout)
+    {
+        if (!(Cache.Get(loadout) is LoadoutData loadoutData))
+        {
+            _logger("Attempted to spawn invalid loadout ID");
+            return null;
+        }
+
+        if (!(Cache.Get(loadoutData.Hull) is HullData hullData))
+        {
+            _logger("Attempted to spawn loadout with invalid hull ID");
+            return null;
+        }
+
+        if (!(Cache.Get(zone) is ZoneData zoneData))
+        {
+            _logger("Attempted to spawn entity with invalid zone ID");
+            return null;
+        }
+
+        if (!(Cache.Get(corporation) is Corporation corpData))
+        {
+            _logger("Attempted to spawn entity with invalid corporation ID");
+            return null;
+        }
+
+        var gearData = loadoutData.Items
+            .Take(hullData.Hardpoints.Count)
+            .Where(id => id != Guid.Empty)
+            .Select(id => Cache.Get<GearData>(id))
+            .ToArray();
+
+        if (gearData.Any(g=>g==null))
+        {
+            _logger("Attempted to spawn loadout with invalid gear ID");
+            return null;
+        }
+
+        var cargoData = loadoutData.Items
+            .Skip(hullData.Hardpoints.Count)
+            .Where(id => id != Guid.Empty)
+            .Select(id => Cache.Get<CraftedItemData>(id))
+            .ToArray();
+
+        if (cargoData.Any(g=>g==null))
+        {
+            _logger("Attempted to spawn loadout with invalid cargo ID");
+            return null;
+        }
+
+        var gear = gearData
+            .Select(gd => CreateInstance(gd.ID, GlobalData.StartingGearQualityMin, GlobalData.StartingGearQualityMax))
+            .ToArray();
+
+        if (gear.Any(g=>g==null))
+            return null;
+        
+        foreach(var g in gear)
+            Cache.Add(g);
+
+        var cargo = cargoData
+            .Select(gd => CreateInstance(gd.ID, GlobalData.StartingGearQualityMin, GlobalData.StartingGearQualityMax))
+            .ToArray();
+
+        if (cargo.Any(g=>g==null))
+            return null;
+        
+        foreach(var c in cargo)
+            Cache.Add(c);
+
+        var simpleCargo = loadoutData.SimpleCargo?
+            .Select(x => CreateInstance(x.Key, x.Value))
+            .ToArray() ?? new SimpleCommodity[0];
+
+        if (simpleCargo.Any(g=>g==null))
+            return null;
+        
+        foreach(var c in simpleCargo)
+            Cache.Add(c);
+        
+        var hull = CreateInstance(loadoutData.Hull, GlobalData.StartingGearQualityMin, GlobalData.StartingGearQualityMax);
+        
+        if(hull==null)
+            return null;
+
+        // Load target zone if not yet loaded
+        if (!_loadedZones.Contains(zone))
+            LoadZone(zone);
+
+        if (hullData.HullType == HullType.Ship)
+        {
+            var entity = new Ship(this, hull.ID, gear.Select(g => g.ID),
+                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), zone)
+            {
+                Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}"
+            };
+            Cache.Add(entity);
+
+            ZoneEntities[zone][entity.ID] = entity;
+            return entity;
+        }
+
+        if (hullData.HullType == HullType.Station)
+        {
+            var distance = lerp(.2f, .8f, Random.NextFloat()) * zoneData.Radius;
+            var orbit = new OrbitData
+            {
+                Context = this,
+                Distance = distance,
+                Parent = _orbits
+                    .Select(id => Cache.Get<OrbitData>(id))
+                    .First(orbitData => orbitData.Zone == zone && orbitData.Parent == Guid.Empty).ID,
+                Period = OrbitalPeriod(distance),
+                Phase = Random.NextFloat(),
+                Zone = zone
+            };
+            Cache.Add(orbit);
+            
+            var entity = new OrbitalEntity(this, hull.ID, gear.Select(g => g.ID),
+                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), orbit.ID, zone)
+            {
+                Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}"
+            };
+            Cache.Add(entity);
+
+            ZoneEntities[zone][entity.ID] = entity;
+            return entity;
+        }
+
+        return null;
+    }
     
     public SimpleCommodity CreateInstance(Guid data, int count)
     {
@@ -519,15 +677,14 @@ public class GameContext
             return new SimpleCommodity
             {
                 Data = data,
-                Quantity = count,
-                ID = Guid.NewGuid()
+                Quantity = count
             };
         
         _logger("Attempted to create Simple Commodity instance using missing or incorrect item id");
         return null;
     }
     
-    public CraftedItemInstance CreateInstance(Guid data, float quality)
+    public CraftedItemInstance CreateInstance(Guid data, float qualityMin, float qualityMax)
     {
         var item = Cache.Get<CraftedItemData>(data);
         if (item == null)
@@ -548,7 +705,7 @@ public class GameContext
                 var ingredient = Cache.Get(ci.Key);
                 return ingredient is SimpleCommodityData
                     ? (IEnumerable<ItemInstance>) new[] {CreateInstance(ci.Key, ci.Value)}
-                    : Enumerable.Range(0, ci.Value).Select(i => CreateInstance(ci.Key, quality));
+                    : Enumerable.Range(0, ci.Value).Select(i => CreateInstance(ci.Key, qualityMin, qualityMax));
             })
             .ToList();
         
@@ -560,9 +717,8 @@ public class GameContext
             {
                 Context = this,
                 Data = data,
-                ID = Guid.NewGuid(),
                 Ingredients = ingredients.Select(i=>i.ID).ToList(),
-                Quality = quality,
+                Quality = Random.NextFloat(qualityMin, qualityMax),
                 Blueprint = blueprint.ID
             };
             newGear.Durability = Evaluate(equippableItemData.Durability, newGear);
@@ -574,9 +730,8 @@ public class GameContext
         {
             Context = this,
             Data = data,
-            ID = Guid.NewGuid(),
             Ingredients = ingredients.Select(i=>i.ID).ToList(),
-            Quality = quality,
+            Quality = Random.NextFloat(qualityMin, qualityMax),
             Blueprint = blueprint.ID
         };
         Cache.Add(newCommodity);
@@ -614,5 +769,22 @@ public class GameContext
                 members.Add(bestFirst ? dijkstraStar.Cost + length(dijkstraStar.Zone.Position - target.Position) : dijkstraStar.Cost, dijkstraStar);
             searched.Add(s);
         }
+    }
+
+    public void SetParent(Entity child, Entity parent)
+    {
+        child.Parent = parent.ID;
+        parent.Children.Add(child.ID);
+        parent.RecalculateMass();
+    }
+
+    public void RemoveParent(Entity child)
+    {
+        if (child.Parent == Guid.Empty)
+            return;
+
+        var parent = Cache.Get<Entity>(child.Parent);
+        parent.Children.Remove(child.ID);
+        child.Parent = Guid.Empty;
     }
 }

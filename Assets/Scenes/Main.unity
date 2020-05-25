@@ -11186,16 +11186,22 @@ MonoBehaviour:
   TechTabButton: {fileID: 1250888060}
   GalaxyZonePrototype: {fileID: 559120531}
   GalaxyZoneLinkPrototype: {fileID: 899487252}
-  ZoneObjectPrefab: {fileID: 5321404118521994133, guid: f9521191d31952a42a76632d158de0d3,
+  ZoneGravityObjectPrefab: {fileID: 5321404118521994133, guid: f9521191d31952a42a76632d158de0d3,
+    type: 3}
+  ZoneObjectPrefab: {fileID: 5800314421439145179, guid: 6aa81281891c79e4dabe3be35be479cd,
     type: 3}
   ZoneShipPrefab: {fileID: 795352744099449573, guid: 7c1524f8ce57a9943920988eae00c86e,
     type: 3}
   BeltPrefab: {fileID: 349597964696402918, guid: 1f1bfa2175a13b647888e2949e0cb138,
     type: 3}
+  ChildEntityPrefab: {fileID: 1757477368280699322, guid: dfe057045c1f88945ae9256f34d7c8e6,
+    type: 3}
   PlanetoidSprite: {fileID: 2800000, guid: 823d8a1c4e071994087624c39f62b319, type: 3}
   PlanetSprite: {fileID: 2800000, guid: 0d2acbd593b7fd349b0b26b4844733ef, type: 3}
   GasGiantSprite: {fileID: 2800000, guid: 39505115515c61f4db3c5c5397a5ba49, type: 3}
   OrbitalSprite: {fileID: 2800000, guid: 97bce58bfe43bfa40870ca062cfb7ec1, type: 3}
+  ShipSprite: {fileID: 2800000, guid: 4eee2b60a0b77e248885aed0587c6329, type: 3}
+  TurretSprite: {fileID: 2800000, guid: 4eee2b60a0b77e248885aed0587c6329, type: 3}
   SunSprite: {fileID: 2800000, guid: 6ca81c82c86205648a1a243805aae5c9, type: 3}
   WormholeSprite: {fileID: 2800000, guid: 6d0b27330fdcc8347b1e09a2d17a0673, type: 3}
   SelectedColor: {r: 1, g: 0.44583336, b: 0.050000012, a: 1}
@@ -11206,6 +11212,9 @@ MonoBehaviour:
   ZoneMassPower: 0.25
   AsteroidSpritesheetWidth: 4
   AsteroidSpritesheetHeight: 4
+  ChildEntityDistance: 0.66
+  ChildEntityScale: 0.25
+  ChildEntityOffsetDegrees: 30
 --- !u!4 &1126386501
 Transform:
   m_ObjectHideFlags: 0

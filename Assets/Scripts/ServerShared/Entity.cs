@@ -13,7 +13,7 @@ using static Unity.Mathematics.math;
  Union(0, typeof(Ship)),
  Union(1, typeof(OrbitalEntity)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<Entity>))]
-public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver
+public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver, INamedEntry
 {
     [JsonProperty("temperature"), Key(1)] public float Temperature;
     [JsonProperty("energy"), Key(2)] public float Energy;
@@ -27,6 +27,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     [JsonProperty("hull"), Key(10)] public Guid Hull; // Type: Gear
     [JsonProperty("persistedBehaviorData"), Key(11)] public Dictionary<Guid, PersistentBehaviorData[]> PersistedBehaviors;
     [JsonProperty("corporation"), Key(12)] public Guid Corporation;
+    [JsonProperty("name"), Key(13)] public string Name;
     
     // [IgnoreMember] protected List<IBehavior> Behaviors;
     [IgnoreMember] public Guid Zone;
@@ -44,10 +45,15 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     [IgnoreMember] public float SpecificHeat { get; private set; }
     [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
 
+    [IgnoreMember] public string EntryName
+    {
+        get => Name;
+        set => Name = value;
+    }
+
 
     public Entity(GameContext context, Guid hull, IEnumerable<Guid> items, IEnumerable<Guid> cargo, Guid zone)
     {
-        ID = Guid.NewGuid();
         Context = context;
         Zone = zone;
 
@@ -120,7 +126,8 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         
         SpecificHeat = Context.Cache.Get<Gear>(Hull).HeatCapacity + 
                        EquippedItems.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.HeatCapacity) +
-                       Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.HeatCapacity);
+                       Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.HeatCapacity) + 
+                       Children.Select(i => Context.Cache.Get<Entity>(i)).Sum(c=>c.SpecificHeat);
     }
 
     public IEnumerable<T> GetBehaviors<T>() where T : class, IBehavior

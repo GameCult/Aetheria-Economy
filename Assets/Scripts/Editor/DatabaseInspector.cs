@@ -1181,7 +1181,7 @@ public class DatabaseInspector : EditorWindow
                         (currentEventType == EventType.DragUpdated || currentEventType == EventType.DragPerform))
                     {
                         var guid = (Guid) DragAndDrop.GetGenericData("Item");
-                        var dragItem = DatabaseCache.Get(guid) as ItemData;
+                        var dragItem = DatabaseCache.Get(guid) as CraftedItemData;
                         if (currentEventType == EventType.DragUpdated)
                             DragAndDrop.visualMode = dragItem != null ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
                         else if (currentEventType == EventType.DragPerform && dragItem != null)

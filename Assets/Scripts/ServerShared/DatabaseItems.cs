@@ -135,6 +135,9 @@ public class LoadoutData : DatabaseEntry, INamedEntry
     [JsonProperty("items"), Key(3)]  
     public List<Guid> Items = new List<Guid>();
 
+    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("resourceRequirements"), Key(4)]  
+    public Dictionary<Guid, int> SimpleCargo = new Dictionary<Guid, int>();
+
     [IgnoreMember] public string EntryName
     {
         get => Name;

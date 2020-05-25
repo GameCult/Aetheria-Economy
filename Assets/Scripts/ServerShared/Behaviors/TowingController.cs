@@ -50,6 +50,10 @@ public class TowingController : IBehavior, IPersistentBehavior, IController, IIn
 
     public bool Update(float delta)
     {
+        var towingTask = _context.Cache.Get<StationTowing>(_towingTask);
+        if (towingTask == null)
+            return false;
+        
         if (_path.Any())
         {
             _locomotion.Update(delta);
@@ -64,7 +68,6 @@ public class TowingController : IBehavior, IPersistentBehavior, IController, IIn
         }
         else
         {
-            var towingTask = _context.Cache.Get<StationTowing>(_towingTask);
             var destination = float2(0);
             var velocity = float2(0);
             if (_towingPhase == TowingPhase.Pickup)
@@ -97,19 +100,17 @@ public class TowingController : IBehavior, IPersistentBehavior, IController, IIn
                         _velocityMatch.OnMatch += () =>
                         {
                             var target = _context.ZoneEntities[_entity.Zone][towingTask.Station];
-                            _entity.Children.Add(towingTask.Station);
-                            target.Parent = _entity.ID;
+                            _context.SetParent(target, _entity);
                             _towingPhase = TowingPhase.Delivery;
                             _movementPhase = MovementPhase.Locomotion;
                         };
                     else
                         _velocityMatch.OnMatch += () =>
                         {
-                            var orbit = _context.CreateOrbit(towingTask.OrbitParent, _entity.Position);
-
                             var target = _context.ZoneEntities[_entity.Zone][towingTask.Station] as OrbitalEntity;
-                            _entity.Children.Remove(towingTask.Station);
-                            target.Parent = Guid.Empty;
+                            _context.RemoveParent(target);
+                            
+                            var orbit = _context.CreateOrbit(towingTask.OrbitParent, _entity.Position);
                             target.OrbitData = orbit.ID;
                         };
                 }

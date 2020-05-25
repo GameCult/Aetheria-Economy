@@ -333,10 +333,10 @@ public class TechTreeMsagl : MonoBehaviour
                     PropertiesPanel.Clear();
                     var blueprint = (BlueprintData) vertex.UserData;
                     PropertiesPanel.Title.text = blueprint.Name;
-                    PropertiesPanel.AddProperty("Research Time", $"{blueprint.ResearchTime:0.##} MH");
-                    PropertiesPanel.AddProperty("Produces", $"{blueprint.Quantity} {Context.Cache.Get<ItemData>(blueprint.Item).Name}");
-                    PropertiesPanel.AddProperty("Production Quality", $"{Mathf.RoundToInt(blueprint.Quality * 100)}%");
-                    PropertiesPanel.AddProperty("Production Time", $"{blueprint.ProductionTime:0.##} MH");
+                    PropertiesPanel.AddProperty("Research Time", () => $"{blueprint.ResearchTime:0.##} MH");
+                    PropertiesPanel.AddProperty("Produces", () => $"{blueprint.Quantity} {Context.Cache.Get<ItemData>(blueprint.Item).Name}");
+                    PropertiesPanel.AddProperty("Production Quality", () => $"{Mathf.RoundToInt(blueprint.Quality * 100)}%");
+                    PropertiesPanel.AddProperty("Production Time", () => $"{blueprint.ProductionTime:0.##} MH");
                     PropertiesPanel.AddList("Ingredients", blueprint.Ingredients.Select(ingredient =>
                     {
                         var ingredientData = Context.Cache.Get<ItemData>(ingredient.Key);
