@@ -25,6 +25,7 @@ public class ReadOnlyPropertiesPanel : MonoBehaviour
     {
         var property = Instantiate(PropertyPrefab, transform);
         property.Name.text = name;
+        property.Value.text = value();
         property.ValueFunction = value;
         _properties.Add(property.gameObject);
     }

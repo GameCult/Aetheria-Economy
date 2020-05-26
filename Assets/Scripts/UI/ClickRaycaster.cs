@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ClickRaycaster : MonoBehaviour
 {
-    public event Action OnClickMiss;
+    public event Action<PointerEventData> OnClickMiss;
     public Camera RayCamera;
     private ClickCatcher _clickCatcher;
     
@@ -22,7 +23,7 @@ public class ClickRaycaster : MonoBehaviour
                 if (clickable != null)
                     clickable.Click(pointer);
             }
-            else OnClickMiss?.Invoke();
+            else OnClickMiss?.Invoke(pointer);
         };
     }
 }

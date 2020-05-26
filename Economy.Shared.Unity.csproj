@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Shield.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\StatModifier.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Switch.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thermotoggle.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thruster.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\TowingController.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Trigger.cs" />

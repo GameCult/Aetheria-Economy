@@ -28,7 +28,7 @@ public class DatabaseInspector : EditorWindow
     private static float2 _dragOffset;
     private bool _ctrlDown;
     private string[] _hardpointTypes;
-    private const int width = 100;
+    private const int width = 150;
     private const int labelWidth = 20;
     private Material _galaxyMat;
     private Texture2D _white;
@@ -985,7 +985,7 @@ public class DatabaseInspector : EditorWindow
             }
 
             // Only display heat, durability and quality effects if the stat actually varies
-            if (Math.Abs(value.Min - value.Max) > .01f)
+            if (Math.Abs(value.Min - value.Max) > .0001f)
             {
                 using (new HorizontalScope())
                 {

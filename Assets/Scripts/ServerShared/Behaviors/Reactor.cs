@@ -34,6 +34,7 @@ public class Reactor : IBehavior
     public GameContext Context { get; }
 
     public BehaviorData Data => _data;
+    public float Capacitance;
 
     public Reactor(GameContext context, ReactorData data, Entity entity, Gear item)
     {
@@ -45,17 +46,17 @@ public class Reactor : IBehavior
 
     public bool Update(float delta)
     {
-        var cap = Context.Evaluate(_data.Capacitance, Item, Entity);
+        Capacitance = Context.Evaluate(_data.Capacitance, Item, Entity);
         var charge = Context.Evaluate(_data.Charge, Item, Entity) * delta;
         var efficiency = Context.Evaluate(_data.Efficiency, Item, Entity);
 
         Entity.AddHeat(charge / efficiency);
         Entity.Energy += charge;
 
-        if (Entity.Energy > cap)
+        if (Entity.Energy > Capacitance)
         {
-            Entity.AddHeat(-(Entity.Energy - cap) / efficiency * (1 - 1 / Context.Evaluate(_data.UnderloadRecovery, Item, Entity)));
-            Entity.Energy = cap;
+            Entity.AddHeat(-(Entity.Energy - Capacitance) / efficiency * (1 - 1 / Context.Evaluate(_data.UnderloadRecovery, Item, Entity)));
+            Entity.Energy = Capacitance;
         }
 
         if (Entity.Energy < 0)

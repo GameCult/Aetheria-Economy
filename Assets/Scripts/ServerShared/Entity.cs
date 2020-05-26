@@ -42,6 +42,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     private Dictionary<Gear, List<IBehavior>> ItemBehaviors;
 
     [IgnoreMember] public float Mass { get; private set; }
+    [IgnoreMember] public float OccupiedCapacity { get; private set; }
     [IgnoreMember] public float SpecificHeat { get; private set; }
     [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
 
@@ -128,6 +129,9 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                        EquippedItems.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.HeatCapacity) +
                        Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.HeatCapacity) + 
                        Children.Select(i => Context.Cache.Get<Entity>(i)).Sum(c=>c.SpecificHeat);
+
+        OccupiedCapacity = EquippedItems.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.ItemData.Size) +
+                           Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => Context.GetSize(ii));
     }
 
     public IEnumerable<T> GetBehaviors<T>() where T : class, IBehavior
@@ -165,7 +169,14 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
     public void AddHeat(float heat)
     {
-        Temperature += heat / SpecificHeat;
+        if (Parent != Guid.Empty)
+        {
+            var parent = Context.Cache.Get<Entity>(Parent);
+            parent.AddHeat(heat);
+        }
+        else
+            Temperature += heat / SpecificHeat;
+
     }
 
     public virtual void Update(float delta)
@@ -189,6 +200,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             var parent = Context.Cache.Get<Entity>(Parent);
             Position = parent.Position;
             Velocity = parent.Velocity;
+            Temperature = parent.Temperature;
         }
 
         // Processing stale item data properly was a pain in my ass, so the shortcut is just persisting and restoring everything

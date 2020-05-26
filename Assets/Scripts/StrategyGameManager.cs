@@ -232,7 +232,7 @@ public class StrategyGameManager : MonoBehaviour
                 foreach (var entry in zone.Contents) _cache.Add(entry);
             
                 if(_currentTab==GalaxyTabButton && _selectedZone == zone.Zone.ID)
-                    PopulateZoneProperties(_selectedZone);
+                    PopulatePropertiesPanel(_selectedZone);
                     
                 if (_currentTab == ZoneTabButton && _populatedZone != zone.Zone.ID) PopulateZone();
             });
@@ -256,7 +256,7 @@ public class StrategyGameManager : MonoBehaviour
                 var zone = _cache.Get<ZoneData>(_selectedZone);
                 if (_populatedZone != _selectedZone && zone != null)
                     PopulateZone();
-                PopulateZoneProperties(_populatedZone);
+                PopulatePropertiesPanel(_populatedZone);
                 Camera.transform.position = -Vector3.forward;
                 if (zone != null)
                     Camera.orthographicSize = zone.Radius * ZoneSizeScale;
@@ -280,10 +280,16 @@ public class StrategyGameManager : MonoBehaviour
         _boundaryMaterial = ZoneBoundary.material;
         _backgroundMaterial = ZoneBackground.material;
 
-        ClickRaycaster.OnClickMiss += () =>
+        ClickRaycaster.OnClickMiss += data =>
         {
             if (_currentTab == GalaxyTabButton) PopulateGalaxyProperties();
-            else if (_currentTab == ZoneTabButton) PopulateZoneProperties(_populatedZone);
+            else if (_currentTab == ZoneTabButton)
+            {
+                if (data.button == PointerEventData.InputButton.Left)
+                    PopulatePropertiesPanel(_populatedZone);
+                else if (data.button == PointerEventData.InputButton.Right) 
+                    ShowContextMenu(_populatedZone);
+            }
             else if (_currentTab == TechTabButton) PopulateTechProperties();
         };
     }
@@ -294,15 +300,6 @@ public class StrategyGameManager : MonoBehaviour
         PropertiesPanel.Title.text = _context.GlobalData.GalaxyName;
         PropertiesPanel.AddSection("Galaxy");
         PropertiesPanel.AddProperty("Sectors", () => $"{_context.GalaxyZones.Count}");
-    }
-
-    private void PopulateZoneProperties(Guid zone)
-    {
-        PropertiesPanel.Clear();
-        var zoneData = _cache.Get<ZoneData>(zone);
-        PropertiesPanel.Title.text = zoneData.Name;
-        PropertiesPanel.AddSection("Sector");
-        PropertiesPanel.AddProperty("Planets", () => $"{zoneData.Planets.Length}");
     }
 
     private void PopulateTechProperties()
@@ -522,7 +519,8 @@ public class StrategyGameManager : MonoBehaviour
             if(planet.Belt)
                 PropertiesPanel.AddSection("Asteroid Belt");
             else
-                PropertiesPanel.AddSection(planet.Mass > _context.GlobalData.SunMass ? "Star" :
+                PropertiesPanel.AddSection(
+                    planet.Mass > _context.GlobalData.SunMass ? "Star" :
                     planet.Mass > _context.GlobalData.GasGiantMass ? "Gas Giant" :
                     planet.Mass > _context.GlobalData.PlanetMass ? "Planet" :
                     "Planetoid");
@@ -532,6 +530,31 @@ public class StrategyGameManager : MonoBehaviour
                 var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
                 return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
             }));
+        }
+
+        if (targetObject is Entity entity)
+        {
+            PropertiesPanel.Clear();
+            PropertiesPanel.Title.text = entity.Name;
+            var hull = _context.Cache.Get<Gear>(entity.Hull);
+            var hullData = _context.Cache.Get<HullData>(hull.Data);
+            PropertiesPanel.AddSection(
+                hullData.HullType == HullType.Ship ? "Drone Ship" :
+                hullData.HullType == HullType.Station ? "Colony" :
+                "Weapons Platform");
+            PropertiesPanel.AddProperty("Hull", () => $"{hullData.Name}");
+            PropertiesPanel.AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{_context.Evaluate(hullData.Capacity, hull, entity)}");
+            PropertiesPanel.AddProperty("Mass", () => $"{entity.Mass}");
+            PropertiesPanel.AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
+            PropertiesPanel.AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
+        }
+
+        if (targetObject is ZoneData zone)
+        {
+            PropertiesPanel.Clear();
+            PropertiesPanel.Title.text = zone.Name;
+            PropertiesPanel.AddSection("Sector");
+            PropertiesPanel.AddProperty("Planets", () => $"{zone.Planets.Length}");
         }
     }
 
@@ -576,11 +599,7 @@ public class StrategyGameManager : MonoBehaviour
                     CultClient.Send(new ZoneRequestMessage{ZoneID = zone.ZoneID});
                 if (TestMode)
                 {
-                    // if(!_context.Cache.Get<ZoneData>(zone.ZoneID).Visited)
-                    // {
-                    //     GenerateZone(zone.ZoneID);
-                    // }
-                    PopulateZoneProperties(zone.ZoneID);
+                    PopulatePropertiesPanel(zone.ZoneID);
                 }
                 _selectedZone = zone.ZoneID;
                 _selectedGalaxyZone = instanceZone;

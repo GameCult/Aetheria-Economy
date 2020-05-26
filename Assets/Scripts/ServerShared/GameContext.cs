@@ -405,6 +405,20 @@ public class GameContext
         return 0;
     }
 
+    public float GetSize(ItemInstance item)
+    {
+        var data = GetData(item);
+        switch (item)
+        {
+            case CraftedItemInstance _:
+                return data.Size;
+            case SimpleCommodity commodity:
+                return data.Size * commodity.Quantity;
+        }
+
+        return 0;
+    }
+
     public float GetHeatCapacity(ItemInstance item)
     {
         var data = GetData(item);
@@ -659,7 +673,8 @@ public class GameContext
             var entity = new OrbitalEntity(this, hull.ID, gear.Select(g => g.ID),
                 cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), orbit.ID, zone)
             {
-                Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}"
+                Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}",
+                Temperature = 293
             };
             Cache.Add(entity);
 

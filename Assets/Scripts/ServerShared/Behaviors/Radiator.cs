@@ -22,6 +22,8 @@ public class Radiator : IBehavior
     public GameContext Context { get; }
 
     public BehaviorData Data => _data;
+
+    public float Emissivity;
     
     private RadiatorData _data;
 
@@ -35,7 +37,8 @@ public class Radiator : IBehavior
 
     public bool Update(float delta)
     {
-        var rad = pow(Entity.Temperature, Context.GlobalData.HeatRadiationPower) * Context.GlobalData.HeatRadiationMultiplier;
+        Emissivity = Context.Evaluate(_data.Emissivity, Item, Entity);
+        var rad = pow(Entity.Temperature, Context.GlobalData.HeatRadiationPower) * Context.GlobalData.HeatRadiationMultiplier * Emissivity;
         Entity.Temperature -= rad * delta;
         Entity.VisibilitySources[this] = rad;
         return true;
