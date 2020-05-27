@@ -208,9 +208,14 @@ public class GameContext
         if (!_orbitPositions.ContainsKey(orbit))
         {
             var orbitData = Cache.Get<OrbitData>(orbit);
-            _orbitPositions[orbit] = GetOrbitPosition(orbitData.Parent) + (orbitData.Period < .01f ? float2.zero : 
-                OrbitData.Evaluate((float) frac(Time / -orbitData.Period * GlobalData.OrbitSpeedMultiplier + orbitData.Phase)) *
-                orbitData.Distance);
+            float2 pos = float2.zero;
+            if (orbitData.Period > .01f)
+            {
+                var phase = (float) frac(Time / orbitData.Period * GlobalData.OrbitSpeedMultiplier);
+                pos = OrbitData.Evaluate(frac(phase + orbitData.Phase)) * orbitData.Distance;
+            }
+
+            _orbitPositions[orbit] = GetOrbitPosition(orbitData.Parent) + pos;
         }
 
         var position = _orbitPositions[orbit];
@@ -241,7 +246,7 @@ public class GameContext
         for (var i = 0; i < planetData.Asteroids.Length; i++)
         {
             _asteroidPositions[planetDataID][i] = float3(
-                OrbitData.Evaluate((float) frac(Time / -OrbitalPeriod(planetData.Asteroids[i].x) * GlobalData.OrbitSpeedMultiplier +
+                OrbitData.Evaluate((float) frac(Time / OrbitalPeriod(planetData.Asteroids[i].x) * GlobalData.OrbitSpeedMultiplier +
                     planetData.Asteroids[i].y)) * planetData.Asteroids[i].x,
                 (float) (Time * planetData.Asteroids[i].w % 360.0));
         }
@@ -257,7 +262,7 @@ public class GameContext
         var distance = length(delta);
         var period = OrbitalPeriod(distance);
         var phase = atan2(delta.y, delta.x) / (PI * 2);
-        var currentPhase = frac(Time / -period * GlobalData.OrbitSpeedMultiplier);
+        var currentPhase = frac(Time / period * GlobalData.OrbitSpeedMultiplier);
         var storedPhase = (float) frac(phase - currentPhase);
 
         var orbit = new OrbitData
@@ -269,9 +274,11 @@ public class GameContext
             Phase = storedPhase,
             Zone = parentOrbit.Zone
         };
+        _lastCreatedOrbit = orbit;
         Cache.Add(orbit);
         return orbit;
     }
+    private OrbitData _lastCreatedOrbit;
 
     public float OrbitalPeriod(float distance)
     {
@@ -470,6 +477,7 @@ public class GameContext
     }
 
     private readonly Dictionary<CraftedItemInstance, float> ItemQuality = new Dictionary<CraftedItemInstance, float>();
+
     public float CompoundQuality(CraftedItemInstance item)
     {
         if (ItemQuality.ContainsKey(item)) return ItemQuality[item];
