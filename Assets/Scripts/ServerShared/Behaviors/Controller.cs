@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
+using float2 = Unity.Mathematics.float2;
 
 [Union(0, typeof(TowingControllerData))]
 public abstract class ControllerData : BehaviorData
@@ -18,27 +21,171 @@ public abstract class ControllerData : BehaviorData
     
     [InspectableField, JsonProperty("tangentSensitivity"), Key(4)]
     public float TangentSensitivity = 4;
+    
+    [InspectableField, JsonProperty("targetDistance"), Key(5)]  
+    public float TargetDistance = 10;
 }
 
-// public abstract class Controller : IController
-// {
-//     public abstract bool Available { get; }
-//     public abstract TaskType TaskType { get; }
-//     public Guid Zone { get; }
-//     
-//     private GameContext _context;
-//     private Entity _entity;
-//     private Guid _task;
-//     private List<SimplifiedZoneData> _path;
-//
-//     public Controller(GameContext context, Entity entity)
-//     {
-//         
-//     }
-//     
-//     public void AssignTask(Guid task, List<SimplifiedZoneData> path)
-//     {
-//         _task = task;
-//         _path = path;
-//     }
-// }
+public abstract class ControllerBase : IBehavior, IController, IInitializableBehavior
+{
+    public Guid HomeEntity;
+    public bool Available => Task == Guid.Empty;
+    public abstract TaskType TaskType { get; }
+    public Guid Zone => _entity.Zone;
+    public BehaviorData Data => _controllerData;
+    
+    protected Locomotion Locomotion;
+    protected VelocityMatch VelocityMatch;
+    protected Func<float2> TargetPosition;
+    protected Func<float2> TargetVelocity;
+    protected bool MatchVelocity;
+    protected List<SimplifiedZoneData> Path;
+    protected Guid Task;
+    
+    private GameContext _context;
+    private Entity _entity;
+    private ControllerData _controllerData;
+    private MovementPhase _movementPhase;
+    private bool _moving;
+    private Action _onFinishMoving;
+
+    public ControllerBase(GameContext context, ControllerData data, Entity entity)
+    {
+        _context = context;
+        _controllerData = data;
+        _entity = entity;
+    }
+    
+    public void Initialize()
+    {
+        Locomotion = new Locomotion(_context, _entity, _controllerData);
+        VelocityMatch = new VelocityMatch(_context, _entity, _controllerData);
+        
+        _context.CorporationControllers[_entity.Corporation].Add(this);
+    }
+    
+    public void AssignTask(Guid task)
+    {
+        Task = task;
+        _moving = false;
+    }
+
+    public bool Update(float delta)
+    {
+        if (Available)
+        {
+            // No task is assigned and we're at home, do nothing!
+            if (_entity.Parent == HomeEntity)
+                return false;
+            
+            // No task is assigned, but we're not home, go home!
+            var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
+            if (!_moving)
+            {
+                if (Zone == homeEntity.Zone) MoveTo(homeEntity, true, () => 
+                    _context.SetParent(_entity, homeEntity));
+                else MoveTo(homeEntity.Zone, () => MoveTo(homeEntity, true, () => 
+                    _context.SetParent(_entity, homeEntity)));
+            }
+        }
+
+        if (_moving)
+        {
+            var distance = length(TargetPosition() - _entity.Position);
+            if (MatchVelocity)
+            {
+                VelocityMatch.TargetVelocity = TargetVelocity();
+                if (_movementPhase == MovementPhase.Locomotion)
+                {
+                    var matchDistanceTime = VelocityMatch.MatchDistanceTime;
+                    Locomotion.Objective = TargetPosition() + TargetVelocity() * matchDistanceTime.y;
+                    Locomotion.Update(delta);
+                        
+                    if (distance < matchDistanceTime.x)
+                    {
+                        _movementPhase = MovementPhase.Slowdown;
+                        _context.Log($"Controller {_entity.Name} has entered slowdown phase.");
+                        VelocityMatch.Clear();
+                        VelocityMatch.OnMatch += () =>
+                        {
+                            _moving = false;
+                            _onFinishMoving();
+                        };
+                    } 
+                }
+                else
+                {
+                    VelocityMatch.Update(delta);
+                }
+            }
+            else
+            {
+                Locomotion.Objective = TargetPosition();
+                Locomotion.Update(delta);
+                if (distance < _controllerData.TargetDistance)
+                {
+                    _moving = false;
+                    _onFinishMoving();
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public void MoveTo(Entity entity, bool matchVelocity = true, Action onFinish = null)
+    {
+        TargetPosition = () => entity.Position;
+        TargetVelocity = () => entity.Velocity;
+        MatchVelocity = matchVelocity;
+        _movementPhase = MovementPhase.Locomotion;
+        _moving = true;
+        _onFinishMoving = onFinish;
+    }
+
+    public void MoveTo(float2 position, bool matchVelocity = true, Action onFinish = null)
+    {
+        TargetPosition = () => position;
+        TargetVelocity = () => float2.zero;
+        MatchVelocity = matchVelocity;
+        _movementPhase = MovementPhase.Locomotion;
+        _moving = true;
+        _onFinishMoving = onFinish;
+    }
+
+    public void MoveTo(Func<float2> position, Func<float2> velocity, Action onFinish = null)
+    {
+        TargetPosition = position;
+        TargetVelocity = velocity;
+        MatchVelocity = true;
+        _movementPhase = MovementPhase.Locomotion;
+        _moving = true;
+        _onFinishMoving = onFinish;
+    }
+
+    public void MoveTo(Guid zone, Action onFinish = null)
+    {
+        var path = _context.FindPath(_context.GalaxyZones[Zone], _context.GalaxyZones[zone]);
+
+        void OnNextZone()
+        {
+            path.RemoveAt(0);
+            if (path.Count > 0)
+            {
+                MoveTo(_context.WormholePosition(_entity.Zone, Path[0].ZoneID), false, OnNextZone);
+            }
+            else
+            {
+                onFinish?.Invoke();
+            }
+        }
+        
+        OnNextZone();
+    }
+}
+
+public enum MovementPhase
+{
+    Locomotion,
+    Slowdown
+}

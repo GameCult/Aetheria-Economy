@@ -134,7 +134,7 @@ public class GameContext
                         }
                     }
                     task.Reserved = true;
-                    nearestController.AssignTask(task.ID, nearestControllerPath);
+                    nearestController.AssignTask(task.ID);
                 }
             }
         }
@@ -257,7 +257,8 @@ public class GameContext
         var distance = length(delta);
         var period = OrbitalPeriod(distance);
         var phase = atan2(delta.y, delta.x) / (PI * 2);
-        var storedPhase = (float) frac(Time / -period * GlobalData.OrbitSpeedMultiplier - phase);
+        var currentPhase = frac(Time / -period * GlobalData.OrbitSpeedMultiplier);
+        var storedPhase = (float) frac(phase - currentPhase);
 
         var orbit = new OrbitData
         {
@@ -644,7 +645,7 @@ public class GameContext
         if (hullData.HullType == HullType.Ship)
         {
             var entity = new Ship(this, hull.ID, gear.Select(g => g.ID),
-                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), zone)
+                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), zone, corporation)
             {
                 Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}"
             };
@@ -671,7 +672,7 @@ public class GameContext
             Cache.Add(orbit);
             
             var entity = new OrbitalEntity(this, hull.ID, gear.Select(g => g.ID),
-                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), orbit.ID, zone)
+                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), orbit.ID, zone, corporation)
             {
                 Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}",
                 Temperature = 293
@@ -800,6 +801,7 @@ public class GameContext
 
         var parent = Cache.Get<Entity>(child.Parent);
         parent.Children.Remove(child.ID);
+        parent.RecalculateMass();
         child.Parent = Guid.Empty;
     }
 }

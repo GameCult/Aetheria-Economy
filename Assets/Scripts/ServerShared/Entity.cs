@@ -53,10 +53,11 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     }
 
 
-    public Entity(GameContext context, Guid hull, IEnumerable<Guid> items, IEnumerable<Guid> cargo, Guid zone)
+    public Entity(GameContext context, Guid hull, IEnumerable<Guid> items, IEnumerable<Guid> cargo, Guid zone, Guid corporation)
     {
         Context = context;
         Zone = zone;
+        Corporation = corporation;
 
         EquippedItems = items.ToList();
         Cargo = cargo.ToList();

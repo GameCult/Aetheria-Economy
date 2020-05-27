@@ -1243,9 +1243,7 @@
             <e p="ActionCollection.cs" t="Include" />
             <e p="Agents" t="Include">
               <e p="AgentBehavior.cs" t="Include" />
-              <e p="AgentController.cs" t="Include" />
               <e p="AgentTask.cs" t="Include" />
-              <e p="EntityAgent.cs" t="Include" />
               <e p="Locomotion.cs" t="Include" />
               <e p="StationTowing.cs" t="Include" />
               <e p="VelocityMatch.cs" t="Include" />

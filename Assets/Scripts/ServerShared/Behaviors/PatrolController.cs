@@ -9,9 +9,6 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship), Order(-100)]
 public class PatrolControllerData : ControllerData
 {
-    [InspectableField, JsonProperty("targetDistance"), Key(5)]  
-    public float TargetDistance = 10;
-    
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new PatrolController(context, this, entity, item);
@@ -58,7 +55,7 @@ public class PatrolController : IBehavior, IController, IInitializableBehavior
         return true;
     }
 
-    public void AssignTask(Guid task, List<SimplifiedZoneData> path)
+    public void AssignTask(Guid task)
     {
         throw new NotImplementedException();
     }

@@ -62,9 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\ServerShared\ActionCollection.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentBehavior.cs" />
-    <Compile Include="Assets\Scripts\ServerShared\Agents\AgentController.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentTask.cs" />
-    <Compile Include="Assets\Scripts\ServerShared\Agents\EntityAgent.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\Locomotion.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\StationTowing.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\VelocityMatch.cs" />

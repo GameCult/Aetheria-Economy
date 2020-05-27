@@ -20,11 +20,11 @@ public class StationTowing : AgentTask
     [JsonProperty("orbitDistance"), Key(6)]
     public float OrbitDistance;
 
-    public StationTowing(Guid zone, Guid station, Guid orbitParent, float orbitDistance)
-    {
-        Zone = zone;
-        Station = station;
-        OrbitParent = orbitParent;
-        OrbitDistance = orbitDistance;
-    }
+    // public StationTowing(Guid zone, Guid station, Guid orbitParent, float orbitDistance)
+    // {
+    //     Zone = zone;
+    //     Station = station;
+    //     OrbitParent = orbitParent;
+    //     OrbitDistance = orbitDistance;
+    // }
 }

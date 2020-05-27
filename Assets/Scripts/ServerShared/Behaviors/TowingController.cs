@@ -16,156 +16,84 @@ public class TowingControllerData : ControllerData
     }
 }
 
-public class TowingController : IBehavior, IPersistentBehavior, IController, IInitializableBehavior
+public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
 {
-    public TaskType TaskType => TaskType.Tow;
-    public bool Available => _towingTask != Guid.Empty;
-    public Guid Zone => _entity.Zone;
+    public override TaskType TaskType => TaskType.Tow;
     public BehaviorData Data => _data;
     
     private TowingControllerData _data;
     private GameContext _context;
     private Entity _entity;
     private Gear _item;
-    private Guid _towingTask;
-    private List<SimplifiedZoneData> _path;
-    private TowingPhase _towingPhase = TowingPhase.Pickup;
-    private MovementPhase _movementPhase = MovementPhase.Locomotion;
-    private Locomotion _locomotion;
-    private VelocityMatch _velocityMatch;
+    private bool _taskStarted;
     
-    public TowingController(GameContext context, TowingControllerData data, Entity entity, Gear item)
+    public TowingController(GameContext context, TowingControllerData data, Entity entity, Gear item) : base(context, data, entity)
     {
         _context = context;
         _data = data;
         _entity = entity;
         _item = item;
     }
-    
-    public void Initialize()
+
+    public new bool Update(float delta)
     {
-        _locomotion = new Locomotion(_context, _entity, _data);
-        _velocityMatch = new VelocityMatch(_context, _entity, _data);
-    }
-
-    public bool Update(float delta)
-    {
-        var towingTask = _context.Cache.Get<StationTowing>(_towingTask);
-        if (towingTask == null)
-            return false;
-        
-        if (_path.Any())
+        var towingTask = _context.Cache.Get<StationTowing>(Task);
+        if (towingTask != null)
         {
-            _locomotion.Update(delta);
+            if(_entity.Parent!=Guid.Empty)
+                _context.RemoveParent(_entity);
 
-            if (length(_entity.Position - _locomotion.Objective) < _context.GlobalData.WarpDistance)
+            if (!_taskStarted)
             {
-                _context.Warp(_entity, _path[0].ZoneID);
-                _path.RemoveAt(0);
-                if(_path.Any())
-                    SetWormholeDestination();
-            }
-        }
-        else
-        {
-            var destination = float2(0);
-            var velocity = float2(0);
-            if (_towingPhase == TowingPhase.Pickup)
-            {
-                destination = _context.ZoneEntities[_entity.Zone][towingTask.Station].Position;
-                velocity = _context.ZoneEntities[_entity.Zone][towingTask.Station].Velocity;
-            }
-            else
-            {
-                var orbitParent = _context.GetOrbitPosition(towingTask.OrbitParent);
-                var parentToUs = _entity.Position - orbitParent;
-                var nearestPointInOrbit = orbitParent + normalize(parentToUs) * towingTask.OrbitDistance;
-                destination = nearestPointInOrbit;
-                velocity = _context.GetOrbitVelocity(towingTask.OrbitParent);
-            }
-
-            _velocityMatch.TargetVelocity = velocity;
-            if (_movementPhase == MovementPhase.Locomotion)
-            {
-                var matchDistanceTime = _velocityMatch.MatchDistanceTime;
-                _locomotion.Objective = destination + velocity * matchDistanceTime.y;
-                _locomotion.Update(delta);
-                
-                var distance = length(destination - _entity.Position);
-                if (distance < matchDistanceTime.x)
+                MoveTo(towingTask.Zone, () =>
                 {
-                    _movementPhase = MovementPhase.Slowdown;
-                    _velocityMatch.Clear();
-                    if (_towingPhase == TowingPhase.Pickup)
-                        _velocityMatch.OnMatch += () =>
+                    _context.Log($"Towing Controller {_entity.Name} has entered pickup phase.");
+                    MoveTo(_context.Cache.Get<Entity>(towingTask.Station), true, () =>
+                    {
+                        var target = _context.ZoneEntities[_entity.Zone][towingTask.Station] as OrbitalEntity;
+                        _context.SetParent(target, _entity);
+                        _context.Log($"Towing Controller {_entity.Name} has entered delivery phase.");
+                        MoveTo(() =>
                         {
-                            var target = _context.ZoneEntities[_entity.Zone][towingTask.Station];
-                            _context.SetParent(target, _entity);
-                            _towingPhase = TowingPhase.Delivery;
-                            _movementPhase = MovementPhase.Locomotion;
-                        };
-                    else
-                        _velocityMatch.OnMatch += () =>
+                            var orbitParent = _context.GetOrbitPosition(towingTask.OrbitParent);
+                            var parentToUs = _entity.Position - orbitParent;
+                            return orbitParent + normalize(parentToUs) * towingTask.OrbitDistance;
+                        }, () => _context.GetOrbitVelocity(towingTask.OrbitParent), () =>
                         {
-                            var target = _context.ZoneEntities[_entity.Zone][towingTask.Station] as OrbitalEntity;
                             _context.RemoveParent(target);
+                            _context.Log($"Towing Controller {_entity.Name} has delivered the target. Returning Home.");
                             
                             var orbit = _context.CreateOrbit(towingTask.OrbitParent, _entity.Position);
                             target.OrbitData = orbit.ID;
-                        };
-                }
-            }
-            else
-            {
-                _velocityMatch.Update(delta);
+                            
+                            Task = Guid.Empty;
+                            _taskStarted = false;
+                        });
+                    });
+                });
+                _taskStarted = true;
             }
         }
-        return true;
+        return base.Update(delta);
     }
 
     public PersistentBehaviorData Store()
     {
         return new TowingControllerPersistence
         {
-            TowingTask = _towingTask
+            Task = Task
         };
     }
 
     public void Restore(PersistentBehaviorData data)
     {
         var towingControllerPersistence = data as TowingControllerPersistence;
-        _towingTask = towingControllerPersistence.TowingTask;
-    }
-
-    public void AssignTask(Guid task, List<SimplifiedZoneData> path)
-    {
-        _towingTask = task;
-        _path = path;
-        _path.RemoveAt(0);
-        if(_path.Any())
-            SetWormholeDestination();
-    }
-
-    private void SetWormholeDestination()
-    {
-        _locomotion.Objective = _context.WormholePosition(_entity.Zone, _path[0].ZoneID);
+        Task = towingControllerPersistence.Task;
     }
 }
 
 public class TowingControllerPersistence : PersistentBehaviorData
 {
-    [JsonProperty("towingTask"), Key(0)]
-    public Guid TowingTask;
-}
-
-public enum TowingPhase
-{
-    Pickup,
-    Delivery
-}
-
-public enum MovementPhase
-{
-    Locomotion,
-    Slowdown
+    [JsonProperty("task"), Key(0)]
+    public Guid Task;
 }

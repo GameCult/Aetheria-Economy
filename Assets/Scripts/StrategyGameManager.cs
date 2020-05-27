@@ -33,6 +33,7 @@ public class StrategyGameManager : MonoBehaviour
     public CorporationMenuItem CorpOptionPrefab;
     public TabButton CorpMenuContinueButton;
     public TMP_InputField CorpNameInputField;
+    public LineRenderer OrbitLineRenderer;
     
     [Section("Tab Links")]
     public TabGroup PrimaryTabGroup;
@@ -71,6 +72,7 @@ public class StrategyGameManager : MonoBehaviour
     public float ChildEntityDistance = .66f;
     public float ChildEntityScale = .25f;
     public float ChildEntityOffsetDegrees = 30f;
+    public int OrbitCircleSegments = 128;
 
     private DatabaseCache _cache;
     private GameContext _context;
@@ -97,6 +99,10 @@ public class StrategyGameManager : MonoBehaviour
     private Dictionary<CorporationMenuItem, Guid> _corpOptionMap = new Dictionary<CorporationMenuItem, Guid>();
     private CorporationMenuItem _selectedParent;
     private Dictionary<int, float2[]> _childEntityPositions = new Dictionary<int, float2[]>();
+    private bool _orbitSelectMode;
+    private Guid _selectedOrbit = Guid.Empty;
+    private Guid _selectedTowingTarget = Guid.Empty;
+    private float _orbitRadius;
     
     void Start()
     {
@@ -183,7 +189,9 @@ public class StrategyGameManager : MonoBehaviour
                             Parent = _corpOptionMap[_selectedParent]
                         };
                         _cache.Add(newCorp);
+                        _context.CorporationControllers[newCorp.ID] = new List<IController>();
                         player.Corporation = newCorp.ID;
+                        _playerCorporation = newCorp.ID;
                         
                         GameMenuRoot.gameObject.SetActive(true);
                         CorpMenuRoot.gameObject.SetActive(false);
@@ -198,7 +206,12 @@ public class StrategyGameManager : MonoBehaviour
                                 entities.Add(_context.CreateEntity(_selectedZone, newCorp.ID, loadout.Key));
                         var colony = entities.First(e => e is OrbitalEntity);
                         foreach (var ship in entities.Where(e => e is Ship))
+                        {
+                            foreach (var controller in ship.GetBehaviors<ControllerBase>())
+                                controller.HomeEntity = colony.ID;
+
                             _context.SetParent(ship, colony);
+                        }
                     }
                 };
             }
@@ -232,7 +245,7 @@ public class StrategyGameManager : MonoBehaviour
                 foreach (var entry in zone.Contents) _cache.Add(entry);
             
                 if(_currentTab==GalaxyTabButton && _selectedZone == zone.Zone.ID)
-                    PopulatePropertiesPanel(_selectedZone);
+                    Select(_selectedZone);
                     
                 if (_currentTab == ZoneTabButton && _populatedZone != zone.Zone.ID) PopulateZone();
             });
@@ -256,7 +269,7 @@ public class StrategyGameManager : MonoBehaviour
                 var zone = _cache.Get<ZoneData>(_selectedZone);
                 if (_populatedZone != _selectedZone && zone != null)
                     PopulateZone();
-                PopulatePropertiesPanel(_populatedZone);
+                Select(_populatedZone);
                 Camera.transform.position = -Vector3.forward;
                 if (zone != null)
                     Camera.orthographicSize = zone.Radius * ZoneSizeScale;
@@ -286,12 +299,36 @@ public class StrategyGameManager : MonoBehaviour
             else if (_currentTab == ZoneTabButton)
             {
                 if (data.button == PointerEventData.InputButton.Left)
-                    PopulatePropertiesPanel(_populatedZone);
+                {
+                    if (_orbitSelectMode)
+                    {
+                        var playerCorp = _cache.Get<Corporation>(_playerCorporation);
+                        var towingTask = new StationTowing
+                        {
+                            Context = _context,
+                            OrbitDistance = _orbitRadius,
+                            OrbitParent = _selectedOrbit,
+                            Priority = 0,
+                            Reserved = false,
+                            Station = _selectedTowingTarget,
+                            Zone = _populatedZone
+                        };
+                        _cache.Add(towingTask);
+                        playerCorp.Tasks.Add(towingTask.ID);
+                        _orbitSelectMode = false;
+                        OrbitLineRenderer.gameObject.SetActive(false);
+                    }
+                    else
+                        Select(_populatedZone);
+                }
                 else if (data.button == PointerEventData.InputButton.Right) 
                     ShowContextMenu(_populatedZone);
             }
             else if (_currentTab == TechTabButton) PopulateTechProperties();
         };
+
+        OrbitLineRenderer.positionCount = OrbitCircleSegments;
+        OrbitLineRenderer.gameObject.SetActive(false);
     }
 
     private void PopulateGalaxyProperties()
@@ -369,7 +406,7 @@ public class StrategyGameManager : MonoBehaviour
                         childGameObject.GetComponent<ClickableCollider>().OnClick += (collider, data) => 
                         {
                             if (data.button == PointerEventData.InputButton.Left)
-                                PopulatePropertiesPanel(child);
+                                Select(child);
                             else if (data.button == PointerEventData.InputButton.Right) 
                                 ShowContextMenu(child);
                         };
@@ -389,7 +426,7 @@ public class StrategyGameManager : MonoBehaviour
                     zoneShip.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) => 
                     {
                         if (data.button == PointerEventData.InputButton.Left)
-                            PopulatePropertiesPanel(ship.ID);
+                            Select(ship.ID);
                         else if (data.button == PointerEventData.InputButton.Right) 
                             ShowContextMenu(ship.ID);
                     };
@@ -425,7 +462,7 @@ public class StrategyGameManager : MonoBehaviour
                     zoneOrbital.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) => 
                     {
                         if (data.button == PointerEventData.InputButton.Left)
-                            PopulatePropertiesPanel(orbital.ID);
+                            Select(orbital.ID);
                         else if (data.button == PointerEventData.InputButton.Right) 
                             ShowContextMenu(orbital.ID);
                     };
@@ -445,6 +482,22 @@ public class StrategyGameManager : MonoBehaviour
             {
                 Destroy(_zoneOrbitals[orbital].gameObject);
                 _zoneOrbitals.Remove(orbital);
+            }
+
+            if (_orbitSelectMode)
+            {
+                var center = _context.GetOrbitPosition(_selectedOrbit) * ZoneSizeScale;
+                var mousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
+                var radius = length(float2(mousePos.x, mousePos.y)  - center);
+                _orbitRadius = radius / ZoneSizeScale;
+                var positions = new Vector3[OrbitCircleSegments];
+                for (int i = 0; i < OrbitCircleSegments; i++)
+                {
+                    var deg = ((float) i) / OrbitCircleSegments * 2 * PI;
+                    positions[i] = float3(float2(sin(deg), cos(deg)) * radius + center, 0);
+                }
+                OrbitLineRenderer.gameObject.SetActive(true);
+                OrbitLineRenderer.SetPositions(positions);
             }
         }
     }
@@ -500,6 +553,20 @@ public class StrategyGameManager : MonoBehaviour
             });
             ContextMenu.AddOption("Test Option 3", () => Debug.Log("Test Option 3 Selected"));
         }
+        else if (targetObject is Ship ship)
+        {
+            
+        }
+        else if (targetObject is OrbitalEntity orbital)
+        {
+            ContextMenu.AddOption("Create Towing Task", () =>
+            {
+                _selectedOrbit = Guid.Empty;
+                _selectedTowingTarget = orbital.ID;
+                _orbitSelectMode = true;
+                OrbitLineRenderer.gameObject.SetActive(true);
+            });
+        }
         else
         {
             ContextMenu.gameObject.SetActive(false);
@@ -508,28 +575,35 @@ public class StrategyGameManager : MonoBehaviour
         ContextMenu.Show();
     }
 
-    void PopulatePropertiesPanel(Guid clickTarget)
+    void Select(Guid clickTarget)
     {
         var targetObject = _context.Cache.Get(clickTarget);
 
         if (targetObject is PlanetData planet)
         {
-            PropertiesPanel.Clear();
-            PropertiesPanel.Title.text = planet.Name;
-            if(planet.Belt)
-                PropertiesPanel.AddSection("Asteroid Belt");
-            else
-                PropertiesPanel.AddSection(
-                    planet.Mass > _context.GlobalData.SunMass ? "Star" :
-                    planet.Mass > _context.GlobalData.GasGiantMass ? "Gas Giant" :
-                    planet.Mass > _context.GlobalData.PlanetMass ? "Planet" :
-                    "Planetoid");
-            PropertiesPanel.AddProperty("Mass", () => $"{planet.Mass}");
-            PropertiesPanel.AddList("Resources", planet.Resources.Select(resource =>
+            if (_orbitSelectMode)
             {
-                var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
-                return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
-            }));
+                _selectedOrbit = planet.Orbit;
+            }
+            else
+            {
+                PropertiesPanel.Clear();
+                PropertiesPanel.Title.text = planet.Name;
+                if(planet.Belt)
+                    PropertiesPanel.AddSection("Asteroid Belt");
+                else
+                    PropertiesPanel.AddSection(
+                        planet.Mass > _context.GlobalData.SunMass ? "Star" :
+                        planet.Mass > _context.GlobalData.GasGiantMass ? "Gas Giant" :
+                        planet.Mass > _context.GlobalData.PlanetMass ? "Planet" :
+                        "Planetoid");
+                PropertiesPanel.AddProperty("Mass", () => $"{planet.Mass}");
+                PropertiesPanel.AddList("Resources", planet.Resources.Select(resource =>
+                {
+                    var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
+                    return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
+                }));
+            }
         }
 
         if (targetObject is Entity entity)
@@ -599,7 +673,7 @@ public class StrategyGameManager : MonoBehaviour
                     CultClient.Send(new ZoneRequestMessage{ZoneID = zone.ZoneID});
                 if (TestMode)
                 {
-                    PopulatePropertiesPanel(zone.ZoneID);
+                    Select(zone.ZoneID);
                 }
                 _selectedZone = zone.ZoneID;
                 _selectedGalaxyZone = instanceZone;
@@ -700,7 +774,7 @@ public class StrategyGameManager : MonoBehaviour
                 planetObject.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) =>
                     {
                         if (data.button == PointerEventData.InputButton.Left)
-                            PopulatePropertiesPanel(planetData.ID);
+                            Select(planetData.ID);
                         else if (data.button == PointerEventData.InputButton.Right) 
                             ShowContextMenu(planetData.ID);
                     };
@@ -714,7 +788,7 @@ public class StrategyGameManager : MonoBehaviour
                 beltObject.GetComponent<ClickableCollider>().OnClick += (_, data) =>
                 {
                     if (data.button == PointerEventData.InputButton.Left)
-                        PopulatePropertiesPanel(planetData.ID);
+                        Select(planetData.ID);
                     else if (data.button == PointerEventData.InputButton.Right) 
                         ShowContextMenu(planetData.ID);
                 };

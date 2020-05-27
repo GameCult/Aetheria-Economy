@@ -52,7 +52,7 @@ public interface IController
     bool Available { get; }
     TaskType TaskType { get; }
     Guid Zone { get; }
-    void AssignTask(Guid task, List<SimplifiedZoneData> path);
+    void AssignTask(Guid task);
 }
 
 [MessagePackObject,
