@@ -22,7 +22,7 @@ public class Switch : IBehavior
 
     public BehaviorData Data => _data;
 
-    private bool Activated { get; set; }
+    public bool Activated { get; set; }
 
     public Switch(GameContext context, SwitchData data, Entity entity, Gear item)
     {

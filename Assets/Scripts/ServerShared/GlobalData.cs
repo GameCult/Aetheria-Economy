@@ -139,6 +139,21 @@ public class GlobalData : DatabaseEntry
 
     [InspectableField, JsonProperty("startingGearQualityMax"), Key(43)]  
     public float StartingGearQualityMax = .5f;
+
+    [InspectableField, JsonProperty("asteroidHitpointsMin"), Key(44)]  
+    public float AsteroidHitpointsMin = 10f;
+
+    [InspectableField, JsonProperty("asteroidHitpointsMax"), Key(45)]  
+    public float AsteroidHitpointsMax = 200f;
+
+    [InspectableField, JsonProperty("asteroidHitpointsPower"), Key(46)]  
+    public float AsteroidHitpointsPower = 2f;
+
+    [InspectableField, JsonProperty("asteroidRespawnMin"), Key(47)]  
+    public float AsteroidRespawnMin = 10f;
+
+    [InspectableField, JsonProperty("asteroidRespawnMax"), Key(48)]  
+    public float AsteroidRespawnMax = 100f;
     
     public float PlanetRadius(float mass)
     {

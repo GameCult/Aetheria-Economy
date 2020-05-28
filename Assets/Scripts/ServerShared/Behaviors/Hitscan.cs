@@ -24,6 +24,7 @@ public class Hitscan : IBehavior
     private float _firingVisibility;
     
     public BehaviorData Data => _data;
+    public float Range { get; private set; }
 
     public Hitscan(GameContext context, HitscanData c, Entity entity, Gear item)
     {
@@ -36,6 +37,7 @@ public class Hitscan : IBehavior
     public bool Update(float delta)
     {
         // TODO: Implement hitscan weapons!
+        Range = Context.Evaluate(_data.Range, Item, Entity);
         return true;
     }
 

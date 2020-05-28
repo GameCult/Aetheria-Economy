@@ -8,6 +8,7 @@ using UnityEngine;
 
 [MessagePackObject, 
  Union(0, typeof(StationTowing)),
+ Union(1, typeof(Mining)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 public abstract class AgentTask : DatabaseEntry
 {
@@ -25,6 +26,7 @@ public abstract class AgentTask : DatabaseEntry
 
 public enum TaskType
 {
+    None,
     Mine,
     Haul,
     Tow,

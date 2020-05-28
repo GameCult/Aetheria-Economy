@@ -40,9 +40,6 @@ public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
         var towingTask = _context.Cache.Get<StationTowing>(Task);
         if (towingTask != null)
         {
-            if(_entity.Parent!=Guid.Empty)
-                _context.RemoveParent(_entity);
-
             if (!_taskStarted)
             {
                 MoveTo(towingTask.Zone, () =>
@@ -66,7 +63,7 @@ public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
                             var orbit = _context.CreateOrbit(towingTask.OrbitParent, _entity.Position);
                             target.OrbitData = orbit.ID;
                             
-                            Task = Guid.Empty;
+                            FinishTask();
                             _taskStarted = false;
                         });
                     });

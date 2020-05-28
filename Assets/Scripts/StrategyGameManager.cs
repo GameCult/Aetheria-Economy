@@ -371,7 +371,7 @@ public class StrategyGameManager : MonoBehaviour
 
             foreach (var belt in _zoneBelts)
             {
-                belt.Value.Transform.position = float3(_context.GetOrbitPosition(belt.Key) * ZoneSizeScale, .15f);
+                //belt.Value.Transform.position = float3(_context.GetOrbitPosition(belt.Key) * ZoneSizeScale, .15f);
                 belt.Value.Update();
             }
 
@@ -543,15 +543,31 @@ public class StrategyGameManager : MonoBehaviour
         ContextMenu.Clear();
         if (targetObject is PlanetData planet)
         {
-            ContextMenu.AddOption("Test Option 1", () => Debug.Log("Test Option 1 Selected"));
-            ContextMenu.AddOption("Test Option 2", () => Debug.Log("Test Option 2 Selected"));
-            ContextMenu.AddDropdown("Test Dropdown", new []
+            if (planet.Belt)
             {
-                ("Dropdown Option 1", (Action) (() => Debug.Log("Dropdown Option 1 Selected"))),
-                ("Dropdown Option 2", (Action) (() => Debug.Log("Dropdown Option 2 Selected"))),
-                ("Dropdown Option 3", (Action) (() => Debug.Log("Dropdown Option 3 Selected")))
-            });
-            ContextMenu.AddOption("Test Option 3", () => Debug.Log("Test Option 3 Selected"));
+                ContextMenu.AddOption("Create Mining Task", () =>
+                {
+                    var task = new Mining
+                    {
+                        Asteroids = clickTarget,
+                        Context = _context,
+                        Priority = 0,
+                        Reserved = false,
+                        Zone = _populatedZone
+                    };
+                    _cache.Add(task);
+                    _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
+                });
+            }
+            // ContextMenu.AddOption("Test Option 1", () => Debug.Log("Test Option 1 Selected"));
+            // ContextMenu.AddOption("Test Option 2", () => Debug.Log("Test Option 2 Selected"));
+            // ContextMenu.AddDropdown("Test Dropdown", new []
+            // {
+            //     ("Dropdown Option 1", (Action) (() => Debug.Log("Dropdown Option 1 Selected"))),
+            //     ("Dropdown Option 2", (Action) (() => Debug.Log("Dropdown Option 2 Selected"))),
+            //     ("Dropdown Option 3", (Action) (() => Debug.Log("Dropdown Option 3 Selected")))
+            // });
+            // ContextMenu.AddOption("Test Option 3", () => Debug.Log("Test Option 3 Selected"));
         }
         else if (targetObject is Ship ship)
         {
@@ -617,7 +633,7 @@ public class StrategyGameManager : MonoBehaviour
                 hullData.HullType == HullType.Station ? "Colony" :
                 "Weapons Platform");
             PropertiesPanel.AddProperty("Hull", () => $"{hullData.Name}");
-            PropertiesPanel.AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{_context.Evaluate(hullData.Capacity, hull, entity)}");
+            PropertiesPanel.AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{entity.Capacity}");
             PropertiesPanel.AddProperty("Mass", () => $"{entity.Mass}");
             PropertiesPanel.AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
             PropertiesPanel.AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
@@ -986,9 +1002,11 @@ public class AsteroidBelt
     private Vector2[] _uvs;
     private int[] _indices;
     private Guid _data;
+    private Guid _orbit;
     private GameContext _context;
     private Mesh _mesh;
     private float _zoneScale;
+    private float _size;
 
     public AsteroidBelt(GameContext context, MeshFilter meshFilter, MeshCollider collider, Guid data, int spritesheetWidth, int spritesheetHeight, float zoneScale)
     {
@@ -999,6 +1017,8 @@ public class AsteroidBelt
         _collider = collider;
         _zoneScale = zoneScale;
         var planetData = context.Cache.Get<PlanetData>(data);
+        var orbitData = context.Cache.Get<OrbitData>(planetData.Orbit);
+        _orbit = orbitData.Parent;
         _vertices = new Vector3[planetData.Asteroids.Length*4];
         _normals = new Vector3[planetData.Asteroids.Length*4];
         _uvs = new Vector2[planetData.Asteroids.Length*4];
@@ -1009,8 +1029,8 @@ public class AsteroidBelt
         // vertex order: bottom left, top left, top right, bottom right
         for (var i = 0; i < planetData.Asteroids.Length; i++)
         {
-            if (planetData.Asteroids[i].x > maxDist)
-                maxDist = planetData.Asteroids[i].x;
+            if (planetData.Asteroids[i].Distance > maxDist)
+                maxDist = planetData.Asteroids[i].Distance;
             var spriteX = Random.Range(0, spritesheetWidth);
             var spriteY = Random.Range(0, spritesheetHeight);
             
@@ -1038,6 +1058,7 @@ public class AsteroidBelt
         _mesh.triangles = _indices;
         _mesh.normals = _normals;
         _mesh.bounds = new Bounds(Vector3.zero, Vector3.one * maxDist);
+        _size = maxDist;
 
         _filter.mesh = _mesh;
         //_collider.sharedMesh = _mesh;
@@ -1051,12 +1072,13 @@ public class AsteroidBelt
         {
             var rotation = Quaternion.Euler(0, 0, asteroidTransforms[i].z);
             var position = (Vector3) (Vector2) asteroidTransforms[i].xy * _zoneScale;
-            _vertices[i * 4] = rotation * new Vector3(-planetData.Asteroids[i].z,-planetData.Asteroids[i].z,0) + position;
-            _vertices[i * 4 + 1] = rotation * new Vector3(-planetData.Asteroids[i].z,planetData.Asteroids[i].z,0) + position;
-            _vertices[i * 4 + 2] = rotation * new Vector3(planetData.Asteroids[i].z,planetData.Asteroids[i].z,0) + position;
-            _vertices[i * 4 + 3] = rotation * new Vector3(planetData.Asteroids[i].z,-planetData.Asteroids[i].z,0) + position;
+            _vertices[i * 4] = rotation * new Vector3(-asteroidTransforms[i].w * _zoneScale,-asteroidTransforms[i].w * _zoneScale,0) + position;
+            _vertices[i * 4 + 1] = rotation * new Vector3(-asteroidTransforms[i].w * _zoneScale,asteroidTransforms[i].w * _zoneScale,0) + position;
+            _vertices[i * 4 + 2] = rotation * new Vector3(asteroidTransforms[i].w * _zoneScale,asteroidTransforms[i].w * _zoneScale,0) + position;
+            _vertices[i * 4 + 3] = rotation * new Vector3(asteroidTransforms[i].w * _zoneScale,-asteroidTransforms[i].w * _zoneScale,0) + position;
         }
 
+        _mesh.bounds = new Bounds((Vector2) _context.GetOrbitPosition(_orbit) * _zoneScale, Vector3.one * (_size * _zoneScale * 2));
         _mesh.vertices = _vertices;
         _collider.sharedMesh = _mesh;
     }

@@ -109,7 +109,7 @@ public class Factory : IBehavior, IPersistentBehavior
                 else
                 {
                     var simpleCommodityData = blueprintItemData as SimpleCommodityData;
-                    var simpleCommodityInstance = Entity.Cargo.FirstOrDefault(i => i == simpleCommodityData.ID);
+                    var simpleCommodityInstance = Entity.Cargo.FirstOrDefault(i => Context.Cache.Get<ItemInstance>(i).Data == simpleCommodityData.ID);
                     if (simpleCommodityInstance == Guid.Empty)
                     {
                         var newSimpleCommodity = new SimpleCommodity

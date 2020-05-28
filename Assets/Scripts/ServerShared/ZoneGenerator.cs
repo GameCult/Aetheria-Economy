@@ -104,11 +104,15 @@ public class ZoneGenerator
             {
 	            planetData.Asteroids = 
 		            Enumerable.Range(0, (int) (pow(planetData.Mass, context.GlobalData.BeltMassExponent) / context.GlobalData.BeltMassRatio * orbitMap[planet].Distance))
-			            .Select(_ => float4(context.Random.NextFloat(orbitMap[planet].Distance * .5f, orbitMap[planet].Distance * 1.5f),
-				            context.Random.NextFloat(),
-				            pow(context.Random.NextFloat(), context.GlobalData.AsteroidSizeExponent) * (context.GlobalData.AsteroidSizeMax - context.GlobalData.AsteroidSizeMin) + context.GlobalData.AsteroidSizeMin,
-				            context.Random.NextFloat() * context.GlobalData.AsteroidRotationSpeed))
-			            .ToArray();
+			            .Select(_ => new Asteroid
+			            {
+				            Distance = context.Random.NextFloat(orbitMap[planet].Distance * .5f, orbitMap[planet].Distance * 1.5f),
+				            Phase = context.Random.NextFloat(),
+				            Size = pow(context.Random.NextFloat(), context.GlobalData.AsteroidSizeExponent) * 
+					            (context.GlobalData.AsteroidSizeMax - context.GlobalData.AsteroidSizeMin) + 
+					            context.GlobalData.AsteroidSizeMin,
+				            RotationSpeed = context.Random.NextFloat() * context.GlobalData.AsteroidRotationSpeed
+			            }).ToArray();
             }
             return planetData;
         }).ToArray();

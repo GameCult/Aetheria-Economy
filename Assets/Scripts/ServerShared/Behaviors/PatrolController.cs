@@ -17,7 +17,7 @@ public class PatrolControllerData : ControllerData
 
 public class PatrolController : IBehavior, IController, IInitializableBehavior
 {
-    public TaskType TaskType => TaskType.Tow;
+    public TaskType TaskType => TaskType.None;
     public bool Available => false;
     public Guid Zone => _entity.Zone;
     public BehaviorData Data => _data;
@@ -26,7 +26,6 @@ public class PatrolController : IBehavior, IController, IInitializableBehavior
     private GameContext _context;
     private Entity _entity;
     private Gear _item;
-    private Guid _towingTask;
     private Locomotion _locomotion;
     private Guid _targetOrbit;
     

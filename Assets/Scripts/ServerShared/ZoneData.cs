@@ -94,7 +94,7 @@ public class PlanetData : DatabaseEntry, INamedEntry
     public Dictionary<Guid, float> Resources = new Dictionary<Guid, float>();
 
     [JsonProperty("asteroids"), Key(7)]
-    public float4[] Asteroids; // Distance, Phase, Size, RotationSpeed
+    public Asteroid[] Asteroids; // Distance, Phase, Size, RotationSpeed
     
     // [JsonProperty("radius")] [Key(5)]
     // public float GravityRadius;
@@ -104,6 +104,15 @@ public class PlanetData : DatabaseEntry, INamedEntry
         get => Name;
         set => Name = value;
     }
+}
+
+[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class Asteroid
+{
+    public float Distance;
+    public float Phase;
+    public float Size;
+    public float RotationSpeed;
 }
 
 [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]

@@ -45,6 +45,15 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     [IgnoreMember] public float OccupiedCapacity { get; private set; }
     [IgnoreMember] public float SpecificHeat { get; private set; }
     [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
+    public float Capacity
+    {
+        get
+        {
+            var hull = Context.Cache.Get<Gear>(Hull);
+            var hullData = Context.Cache.Get<HullData>(hull.Data);
+            return Context.Evaluate(hullData.Capacity, hull, this);
+        }
+    }
 
     [IgnoreMember] public string EntryName
     {
@@ -166,6 +175,21 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                 if (behavior is T)
                     return axis.Key;
         return -1;
+    }
+
+    public int GetSwitch<T>() where T : class, IBehavior
+    {
+        var s = Behaviors
+            .FirstOrDefault(x => x.Value.Any(g => g is Switch) && x.Value.Any(g => g is T))
+            .Value.First(g => g is Switch) as Switch;
+        return Switches.FirstOrDefault(kvp => kvp.Value == s).Key;
+    }
+
+    public Switch GetSwitch(IBehavior behavior)
+    {
+        return Behaviors
+            .FirstOrDefault(x => x.Value.Any(g => g == behavior))
+            .Value.First(g => g is Switch) as Switch;
     }
 
     public void AddHeat(float heat)

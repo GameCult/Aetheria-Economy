@@ -1245,6 +1245,7 @@
               <e p="AgentBehavior.cs" t="Include" />
               <e p="AgentTask.cs" t="Include" />
               <e p="Locomotion.cs" t="Include" />
+              <e p="Mining.cs" t="Include" />
               <e p="StationTowing.cs" t="Include" />
               <e p="VelocityMatch.cs" t="Include" />
             </e>
@@ -1260,6 +1261,8 @@
               <e p="Hitscan.cs" t="Include" />
               <e p="ItemUsage.cs" t="Include" />
               <e p="Launcher.cs" t="Include" />
+              <e p="MiningController.cs" t="Include" />
+              <e p="MiningTool.cs" t="Include" />
               <e p="PatrolController.cs" t="Include" />
               <e p="ProjectileWeapon.cs" t="Include" />
               <e p="Radiance.cs" t="Include" />

@@ -30,7 +30,10 @@ public class GameContext
     private Dictionary<Guid, float2> _orbitVelocities = new Dictionary<Guid, float2>();
     private Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
     private Dictionary<Guid, float2> _previousOrbitPositions = new Dictionary<Guid, float2>();
-    private Dictionary<Guid, float3[]> _asteroidPositions = new Dictionary<Guid, float3[]>();
+    private Dictionary<Guid, float4[]> _asteroidTransforms = new Dictionary<Guid, float4[]>(); // x, y, rotation, scale
+    private Dictionary<Guid, float4[]> _previousAsteroidTransforms = new Dictionary<Guid, float4[]>(); // x, y, rotation, scale
+    private Dictionary<(Guid, int), float> _asteroidRespawnTimers = new Dictionary<(Guid, int), float>();
+    private Dictionary<(Guid, int), float> _asteroidDamage = new Dictionary<(Guid, int), float>();
     private Dictionary<Guid, bool> _asteroidPositionsUpdated = new Dictionary<Guid, bool>();
     private Guid _forceLoadZone;
     private Type[] _statObjects;
@@ -104,7 +107,7 @@ public class GameContext
                 : float2.zero;
         }
 
-        foreach (var asteroids in _asteroidPositions.Keys)
+        foreach (var asteroids in _asteroidTransforms.Keys)
             _asteroidPositionsUpdated[asteroids] = false;
 
         foreach (var corporation in Cache.GetAll<Corporation>())
@@ -232,26 +235,82 @@ public class GameContext
         return _orbitVelocities.ContainsKey(orbit) ? _orbitVelocities[orbit] : float2.zero;
     }
 
-    public float3[] GetAsteroidTransforms(Guid planetDataID)
+    public int NearestAsteroid(Guid planetDataID, float2 position)
     {
         var planetData = Cache.Get<PlanetData>(planetDataID);
-        if (!_asteroidPositions.ContainsKey(planetDataID))
+
+        var asteroidPositions = GetAsteroidTransforms(planetDataID);
+
+        int nearest = 0;
+        float nearestDistance = Single.MaxValue;
+        for (int i = 0; i < planetData.Asteroids.Length; i++)
         {
-            _asteroidPositions[planetDataID] = new float3[planetData.Asteroids.Length];
+            var dist = lengthsq(asteroidPositions[i].xy - position);
+            if (AsteroidExists(planetDataID, i) && dist < nearestDistance)
+            {
+                nearest = i;
+                nearestDistance = dist;
+            }
+        }
+
+        return nearest;
+    }
+
+    public bool AsteroidExists(Guid planetDataID, int asteroid) =>
+        !_asteroidRespawnTimers.ContainsKey((planetDataID, asteroid));
+
+    public float2 GetAsteroidVelocity(Guid planetDataID, int asteroid)
+    {
+        UpdateAsteroidTransforms(planetDataID);
+        
+        if (!_previousAsteroidTransforms.ContainsKey(planetDataID))
+            return float2.zero;
+        
+        return (_asteroidTransforms[planetDataID][asteroid].xy - _previousAsteroidTransforms[planetDataID][asteroid].xy) / _deltaTime;
+    }
+
+    public float4 GetAsteroidTransform(Guid planetDataID, int asteroid)
+    {
+        UpdateAsteroidTransforms(planetDataID);
+        return _asteroidTransforms[planetDataID][asteroid];
+    }
+
+    public float4[] GetAsteroidTransforms(Guid planetDataID)
+    {
+        UpdateAsteroidTransforms(planetDataID);
+        
+        return _asteroidTransforms[planetDataID];
+    }
+
+    private void UpdateAsteroidTransforms(Guid planetDataID)
+    {
+        var planetData = Cache.Get<PlanetData>(planetDataID);
+        
+        if (!_asteroidTransforms.ContainsKey(planetDataID))
+        {
+            _asteroidTransforms[planetDataID] = new float4[planetData.Asteroids.Length];
             _asteroidPositionsUpdated[planetDataID] = false;
         }
 
         if (_asteroidPositionsUpdated[planetDataID])
-            return _asteroidPositions[planetDataID];
+            return;
+        
+        if (!_previousAsteroidTransforms.ContainsKey(planetDataID))
+            _previousAsteroidTransforms[planetDataID] = new float4[planetData.Asteroids.Length];
+        Array.Copy(_asteroidTransforms[planetDataID], _previousAsteroidTransforms[planetDataID], planetData.Asteroids.Length);
+        
+        var orbitData = Cache.Get<OrbitData>(planetData.Orbit);
+        var orbitPosition = GetOrbitPosition(orbitData.Parent);
         for (var i = 0; i < planetData.Asteroids.Length; i++)
         {
-            _asteroidPositions[planetDataID][i] = float3(
-                OrbitData.Evaluate((float) frac(Time / OrbitalPeriod(planetData.Asteroids[i].x) * GlobalData.OrbitSpeedMultiplier +
-                    planetData.Asteroids[i].y)) * planetData.Asteroids[i].x,
-                (float) (Time * planetData.Asteroids[i].w % 360.0));
+            _asteroidTransforms[planetDataID][i] = float4(
+                OrbitData.Evaluate((float) frac(Time / OrbitalPeriod(planetData.Asteroids[i].Distance) * GlobalData.OrbitSpeedMultiplier +
+                                                planetData.Asteroids[i].Phase)) * planetData.Asteroids[i].Distance + orbitPosition,
+                (float) (Time * planetData.Asteroids[i].RotationSpeed % 360.0),
+                _asteroidRespawnTimers.ContainsKey((planetDataID, i)) ? 0 : planetData.Asteroids[i].Size);
         }
         
-        return _asteroidPositions[planetDataID];
+        _asteroidPositionsUpdated[planetDataID] = true;
     }
 
     public OrbitData CreateOrbit(Guid parent, float2 position)
@@ -274,11 +333,9 @@ public class GameContext
             Phase = storedPhase,
             Zone = parentOrbit.Zone
         };
-        _lastCreatedOrbit = orbit;
         Cache.Add(orbit);
         return orbit;
     }
-    private OrbitData _lastCreatedOrbit;
 
     public float OrbitalPeriod(float distance)
     {
@@ -811,5 +868,134 @@ public class GameContext
         parent.Children.Remove(child.ID);
         parent.RecalculateMass();
         child.Parent = Guid.Empty;
+    }
+
+    public void MineAsteroid(Entity miner, Guid asteroidBelt, int asteroid, float damage, float efficiency, float penetration)
+    {
+        var planetData = Cache.Get<PlanetData>(asteroidBelt);
+        var asteroidTransform = GetAsteroidTransform(asteroidBelt, asteroid);
+        var hpLerp = unlerp(GlobalData.AsteroidSizeMin, GlobalData.AsteroidSizeMax, asteroidTransform.w);
+        var asteroidHitpoints = lerp(GlobalData.AsteroidHitpointsMin, GlobalData.AsteroidHitpointsMax, pow(hpLerp, GlobalData.AsteroidHitpointsPower));
+        if (!_asteroidDamage.ContainsKey((asteroidBelt, asteroid)))
+            _asteroidDamage[(asteroidBelt, asteroid)] = 0;
+        _asteroidDamage[(asteroidBelt, asteroid)] = _asteroidDamage[(asteroidBelt, asteroid)] + damage;
+        if (_asteroidDamage[(asteroidBelt, asteroid)] > asteroidHitpoints)
+            _asteroidRespawnTimers[(asteroidBelt, asteroid)] =
+                lerp(GlobalData.AsteroidRespawnMin, GlobalData.AsteroidRespawnMax, hpLerp);
+        var resource = planetData.Resources.MaxBy(x => pow(x.Value, 1f / penetration) * Random.NextFloat());
+        if (resource.Value * efficiency * Random.NextFloat() > 1 && miner.OccupiedCapacity < miner.Capacity - 1)
+        {
+            var simpleCommodityTarget = miner.Cargo
+                .Select(i => Cache.Get<ItemInstance>(i))
+                .FirstOrDefault(i => i.Data == resource.Key) as SimpleCommodity;
+            if (simpleCommodityTarget == null)
+            {
+                var newSimpleCommodity = new SimpleCommodity
+                {
+                    Context = this,
+                    Data = resource.Key,
+                    Quantity = 1
+                };
+                Cache.Add(newSimpleCommodity);
+                miner.Cargo.Add(newSimpleCommodity.ID);
+                miner.RecalculateMass();
+            }
+            else
+            {
+                simpleCommodityTarget.Quantity++;
+                miner.RecalculateMass();
+            }
+        }
+    }
+
+    public bool MoveCargo(Entity source, Entity target, ItemInstance item, int quantity = int.MaxValue)
+    {
+        if (item is CraftedItemInstance craftedItemInstance)
+        {
+            var craftedItemData = Cache.Get<CraftedItemData>(craftedItemInstance.Data);
+            if (target.Capacity - target.OccupiedCapacity > craftedItemData.Size)
+            {
+                // Target has the cargo capacity for the item, simply move the instance
+                source.Cargo.Remove(item.ID);
+                target.Cargo.Add(item.ID);
+                source.RecalculateMass();
+                target.RecalculateMass();
+                return true;
+            }
+            return false;
+        }
+        
+        if (item is SimpleCommodity simpleCommoditySource)
+        {
+            quantity = min(quantity, simpleCommoditySource.Quantity);
+            var simpleCommodityData = Cache.Get<SimpleCommodityData>(simpleCommoditySource.Data);
+            var spareCapacity = (int) (target.Capacity - target.OccupiedCapacity);
+            var simpleCommodityTarget = target.Cargo
+                .Select(i => Cache.Get<ItemInstance>(i))
+                .FirstOrDefault(i => i.Data == simpleCommodityData.ID) as SimpleCommodity;
+            var success = spareCapacity >= quantity;
+            quantity = min(quantity, spareCapacity);
+            if (simpleCommodityTarget == null)
+            {
+                if (quantity == simpleCommoditySource.Quantity)
+                {
+                    // Target has the cargo capacity to hold the full quantity,
+                    // and the target has no matching item instance;
+                    // simply move the existing item instance to the target
+                    source.Cargo.Remove(simpleCommoditySource.ID);
+                    target.Cargo.Add(simpleCommoditySource.ID);
+                    source.RecalculateMass();
+                    target.RecalculateMass();
+                    return success;
+                }
+                else
+                {
+                    // Target has the cargo capacity to hold the desired quantity
+                    // and the target has no matching item instance;
+                    // Create a new item instance on the target and decrement the quantity of the source instance
+                    var newSimpleCommodity = new SimpleCommodity
+                    {
+                        Context = this,
+                        Data = simpleCommodityData.ID,
+                        Quantity = simpleCommoditySource.Quantity
+                    };
+                    Cache.Add(newSimpleCommodity);
+                    target.Cargo.Add(newSimpleCommodity.ID);
+                    simpleCommoditySource.Quantity -= quantity;
+                    source.RecalculateMass();
+                    target.RecalculateMass();
+                    return success;
+                }
+            }
+            else
+            {
+                if (quantity == simpleCommoditySource.Quantity)
+                {
+                    // Target has the cargo capacity to hold the full quantity,
+                    // and there is already a matching item instance;
+                    // delete the source entity's item instance and increment the target's quantity
+                    source.Cargo.Remove(simpleCommoditySource.ID);
+                    Cache.Delete(simpleCommoditySource);
+                    simpleCommodityTarget.Quantity += quantity;
+                    source.RecalculateMass();
+                    target.RecalculateMass();
+                    return success;
+                }
+                else
+                {
+                    // Target has the cargo capacity to hold the desired quantity,
+                    // and there is already a matching item instance;
+                    // decrement the source's quantity and increment the target's quantity
+                    simpleCommoditySource.Quantity -= quantity;
+                    simpleCommodityTarget.Quantity += quantity;
+                    source.RecalculateMass();
+                    target.RecalculateMass();
+                    return success;
+                }
+            }
+            
+        }
+        
+        return false;
     }
 }

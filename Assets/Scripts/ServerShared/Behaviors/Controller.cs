@@ -41,12 +41,12 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     protected bool MatchVelocity;
     protected List<SimplifiedZoneData> Path;
     protected Guid Task;
+    protected bool Moving;
     
     private GameContext _context;
     private Entity _entity;
     private ControllerData _controllerData;
     private MovementPhase _movementPhase;
-    private bool _moving;
     private Action _onFinishMoving;
 
     public ControllerBase(GameContext context, ControllerData data, Entity entity)
@@ -67,7 +67,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     public void AssignTask(Guid task)
     {
         Task = task;
-        _moving = false;
+        Moving = false;
     }
 
     public bool Update(float delta)
@@ -79,18 +79,17 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
                 return false;
             
             // No task is assigned, but we're not home, go home!
-            var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
-            if (!_moving)
+            if (!Moving)
             {
-                if (Zone == homeEntity.Zone) MoveTo(homeEntity, true, () => 
-                    _context.SetParent(_entity, homeEntity));
-                else MoveTo(homeEntity.Zone, () => MoveTo(homeEntity, true, () => 
-                    _context.SetParent(_entity, homeEntity)));
+                GoHome();
             }
         }
 
-        if (_moving)
+        if (Moving)
         {
+            if(_entity.Parent!=Guid.Empty)
+                _context.RemoveParent(_entity);
+            
             var distance = length(TargetPosition() - _entity.Position);
             if (MatchVelocity)
             {
@@ -108,8 +107,8 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
                         VelocityMatch.Clear();
                         VelocityMatch.OnMatch += () =>
                         {
-                            _moving = false;
-                            _onFinishMoving();
+                            Moving = false;
+                            _onFinishMoving?.Invoke();
                         };
                     } 
                 }
@@ -124,7 +123,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
                 Locomotion.Update(delta);
                 if (distance < _controllerData.TargetDistance)
                 {
-                    _moving = false;
+                    Moving = false;
                     _onFinishMoving();
                 }
             }
@@ -133,13 +132,39 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
         return true;
     }
 
+    public void FinishTask()
+    {
+        if (Task == Guid.Empty)
+            return;
+        
+        var task = _context.Cache.Get(Task);
+        _context.Cache.Delete(task);
+        _context.Cache.Get<Corporation>(_entity.Corporation).Tasks.Remove(task.ID);
+        Task = Guid.Empty;
+    }
+
+    public void GoHome(Action onFinish = null)
+    {
+        var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
+        if (Zone == homeEntity.Zone) MoveTo(homeEntity, true, () =>
+        {
+            _context.SetParent(_entity, homeEntity);
+            onFinish?.Invoke();
+        });
+        else MoveTo(homeEntity.Zone, () => MoveTo(homeEntity, true, () =>
+        {
+            _context.SetParent(_entity, homeEntity);
+            onFinish?.Invoke();
+        }));
+    }
+
     public void MoveTo(Entity entity, bool matchVelocity = true, Action onFinish = null)
     {
         TargetPosition = () => entity.Position;
         TargetVelocity = () => entity.Velocity;
         MatchVelocity = matchVelocity;
         _movementPhase = MovementPhase.Locomotion;
-        _moving = true;
+        Moving = true;
         _onFinishMoving = onFinish;
     }
 
@@ -149,7 +174,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
         TargetVelocity = () => float2.zero;
         MatchVelocity = matchVelocity;
         _movementPhase = MovementPhase.Locomotion;
-        _moving = true;
+        Moving = true;
         _onFinishMoving = onFinish;
     }
 
@@ -159,7 +184,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
         TargetVelocity = velocity;
         MatchVelocity = true;
         _movementPhase = MovementPhase.Locomotion;
-        _moving = true;
+        Moving = true;
         _onFinishMoving = onFinish;
     }
 
