@@ -9,6 +9,7 @@ using UnityEngine;
 [MessagePackObject, 
  Union(0, typeof(StationTowing)),
  Union(1, typeof(Mining)),
+ Union(2, typeof(Survey)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 public abstract class AgentTask : DatabaseEntry
 {

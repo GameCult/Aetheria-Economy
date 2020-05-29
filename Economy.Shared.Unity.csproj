@@ -63,9 +63,11 @@
     <Compile Include="Assets\Scripts\ServerShared\ActionCollection.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentBehavior.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentTask.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\Aim.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\Locomotion.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\Mining.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\StationTowing.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\Survey.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\VelocityMatch.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Afterburner.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Sensor.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Shield.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\StatModifier.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\SurveyController.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Switch.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thermotoggle.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thruster.cs" />

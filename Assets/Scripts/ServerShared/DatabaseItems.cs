@@ -82,6 +82,9 @@ public class Corporation : DatabaseEntry, INamedEntry
     [JsonProperty("tasks"), Key(3)]
     public List<Guid> Tasks = new List<Guid>();
     
+    [JsonProperty("planetSurveyFloor"), Key(4)]  
+    public Dictionary<Guid, float> PlanetSurveyFloor = new Dictionary<Guid, float>();
+    
     [IgnoreMember] public string EntryName
     {
         get => Name;

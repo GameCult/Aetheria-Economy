@@ -3392,7 +3392,6 @@ GameObject:
   m_Component:
   - component: {fileID: 435654367}
   - component: {fileID: 435654368}
-  - component: {fileID: 435654369}
   m_Layer: 0
   m_Name: Zone View
   m_TagString: Untagged
@@ -3431,18 +3430,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TabGroup: {fileID: 143833105}
   TabButton: {fileID: 618245060}
---- !u!114 &435654369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 435654366}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ae6f9307731b8f469a018c69d95d2ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &456371627
 GameObject:
   m_ObjectHideFlags: 0

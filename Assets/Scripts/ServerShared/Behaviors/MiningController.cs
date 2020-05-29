@@ -64,7 +64,7 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
                         var asteroidTransform = _context.GetAsteroidTransform(miningTask.Asteroids, _asteroid);
                         if (length(_entity.Position - asteroidTransform.xy) - asteroidTransform.w > _miningTool.Range)
                         {
-                            _context.Log($"Mining Controller {_entity.Name} is out of range, moving to target asteroid.");
+                            _entity.SetMessage("Moving to target asteroid.");
                             MoveTo(() => _context.GetAsteroidTransform(miningTask.Asteroids, _asteroid).xy, 
                                 () => _context.GetAsteroidVelocity(miningTask.Asteroids, _asteroid));
                             _toolSwitch.Activated = false;
@@ -76,20 +76,22 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
                                 _miningTool.AsteroidBelt = miningTask.Asteroids;
                                 _miningTool.Asteroid = _asteroid;
                                 _toolSwitch.Activated = true;
+                                Aim.Objective = _context.GetAsteroidTransform(miningTask.Asteroids, _asteroid).xy;
+                                Aim.Update(delta);
                             }
                             else NextAsteroid();
                         }
                     }
                     else
                     {
-                        _context.Log($"Mining Controller {_entity.Name} is out of cargo space. Returning home to offload cargo.");
+                        _entity.SetMessage("Out of cargo space. Returning home to offload cargo.");
                         GoHome(() =>
                         {
                             var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
                             if (!_entity.Cargo.ToArray().All(ii =>
                                 _context.MoveCargo(_entity, homeEntity, _context.Cache.Get<ItemInstance>(ii))))
                             {
-                                _context.Log($"Mining Controller {_entity.Name} has run out of cargo space in parent. Closing Task.");
+                                homeEntity.SetMessage("Colony is out of cargo space. Closing Mining Task.");
                                 FinishTask();
                                 _taskStarted = false;
                             }
@@ -105,7 +107,7 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
     {
         var miningTask = _context.Cache.Get<Mining>(Task);
         _asteroid = _context.NearestAsteroid(miningTask.Asteroids, _entity.Position);
-        _context.Log($"Mining Controller {_entity.Name} selecting new asteroid.");
+        _entity.SetMessage("Selecting new asteroid.");
     }
 
     public PersistentBehaviorData Store()

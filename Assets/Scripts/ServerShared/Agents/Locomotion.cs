@@ -8,7 +8,6 @@ using static Unity.Mathematics.math;
 public class Locomotion : AgentBehavior
 {
     public float2 Objective;
-    private const float Sensitivity = 1;
     private const float TangentSensitivity = 2;
     
     private Thruster _thrust;

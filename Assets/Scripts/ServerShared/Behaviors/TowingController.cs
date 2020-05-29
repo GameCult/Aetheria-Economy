@@ -44,12 +44,12 @@ public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
             {
                 MoveTo(towingTask.Zone, () =>
                 {
-                    _context.Log($"Towing Controller {_entity.Name} has entered pickup phase.");
+                    _entity.SetMessage("Entering pickup phase.");
                     MoveTo(_context.Cache.Get<Entity>(towingTask.Station), true, () =>
                     {
                         var target = _context.ZoneEntities[_entity.Zone][towingTask.Station] as OrbitalEntity;
                         _context.SetParent(target, _entity);
-                        _context.Log($"Towing Controller {_entity.Name} has entered delivery phase.");
+                        _entity.SetMessage("Entering delivery phase.");
                         MoveTo(() =>
                         {
                             var orbitParent = _context.GetOrbitPosition(towingTask.OrbitParent);
@@ -58,9 +58,9 @@ public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
                         }, () => _context.GetOrbitVelocity(towingTask.OrbitParent), () =>
                         {
                             _context.RemoveParent(target);
-                            _context.Log($"Towing Controller {_entity.Name} has delivered the target. Returning Home.");
+                            _entity.SetMessage("Target delivered. Returning Home.");
                             
-                            var orbit = _context.CreateOrbit(towingTask.OrbitParent, _entity.Position);
+                            var orbit = _context.CreateOrbit(towingTask.Zone, towingTask.OrbitParent, _entity.Position);
                             target.OrbitData = orbit.ID;
                             
                             FinishTask();

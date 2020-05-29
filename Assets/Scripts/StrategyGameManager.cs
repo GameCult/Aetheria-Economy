@@ -308,8 +308,6 @@ public class StrategyGameManager : MonoBehaviour
                             Context = _context,
                             OrbitDistance = _orbitRadius,
                             OrbitParent = _selectedOrbit,
-                            Priority = 0,
-                            Reserved = false,
                             Station = _selectedTowingTarget,
                             Zone = _populatedZone
                         };
@@ -367,6 +365,7 @@ public class StrategyGameManager : MonoBehaviour
             foreach (var planet in _zoneGravityObjects)
             {
                 planet.Value.transform.position = float3(_context.GetOrbitPosition(planet.Key) * ZoneSizeScale, .1f);
+                planet.Value.Message.text = "";
             }
 
             foreach (var belt in _zoneBelts)
@@ -439,6 +438,8 @@ public class StrategyGameManager : MonoBehaviour
                 var thrusterScale = _zoneShips[ship].Thruster.localScale;
                 thrusterScale.x = ship.Axes[ship.GetAxis<Thruster>()].Value;
                 _zoneShips[ship].Thruster.localScale = thrusterScale;
+                _zoneShips[ship].Message.text = !ship.Messages.Any() ? "" : 
+                    string.Join("\n", ship.Messages.OrderByDescending(x=>x.Value).Take(2).Select(x=>x.Key));
 
                 PopulateChildObjects(_zoneShips[ship], ship);
 
@@ -472,6 +473,8 @@ public class StrategyGameManager : MonoBehaviour
                 
                 _zoneOrbitals[orbital].transform.position = float3(orbital.Position * ZoneSizeScale, .05f);
                 _zoneOrbitals[orbital].Icon.transform.up = (Vector2) orbital.Direction;
+                _zoneOrbitals[orbital].Message.text = !orbital.Messages.Any() ? "" : 
+                    string.Join("\n", orbital.Messages.OrderByDescending(x=>x.Value).Take(2).Select(x=>x.Key));
 
                 PopulateChildObjects(_zoneOrbitals[orbital], orbital);
 
@@ -551,14 +554,23 @@ public class StrategyGameManager : MonoBehaviour
                     {
                         Asteroids = clickTarget,
                         Context = _context,
-                        Priority = 0,
-                        Reserved = false,
                         Zone = _populatedZone
                     };
                     _cache.Add(task);
                     _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
                 });
             }
+            ContextMenu.AddOption("Create Survey Task", () =>
+            {
+                var task = new Survey
+                {
+                    Planets = new List<Guid>(new []{clickTarget}),
+                    Context = _context,
+                    Zone = _populatedZone
+                };
+                _cache.Add(task);
+                _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
+            });
             // ContextMenu.AddOption("Test Option 1", () => Debug.Log("Test Option 1 Selected"));
             // ContextMenu.AddOption("Test Option 2", () => Debug.Log("Test Option 2 Selected"));
             // ContextMenu.AddDropdown("Test Dropdown", new []
@@ -571,7 +583,10 @@ public class StrategyGameManager : MonoBehaviour
         }
         else if (targetObject is Ship ship)
         {
-            
+            var controller = ship.GetBehaviors<ControllerBase>().FirstOrDefault();
+            if (controller != null)
+                ContextMenu.AddOption("Finish Task", () => controller.FinishTask());
+
         }
         else if (targetObject is OrbitalEntity orbital)
         {
@@ -582,6 +597,46 @@ public class StrategyGameManager : MonoBehaviour
                 _orbitSelectMode = true;
                 OrbitLineRenderer.gameObject.SetActive(true);
             });
+        }
+        else if (targetObject is ZoneData zone)
+        {
+            ContextMenu.AddOption("Survey All", () =>
+            {
+                var planets = zone.Planets.ToList();
+                var task = new Survey
+                {
+                    Planets = planets,
+                    Context = _context,
+                    Zone = _populatedZone
+                };
+                _cache.Add(task);
+                _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
+            });
+            ContextMenu.AddOption("Survey Planets", () =>
+            {
+                var planets = zone.Planets.Where(id => !_cache.Get<PlanetData>(id).Belt).ToList();
+                var task = new Survey
+                {
+                    Planets = planets,
+                    Context = _context,
+                    Zone = _populatedZone
+                };
+                _cache.Add(task);
+                _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
+            });
+            ContextMenu.AddOption("Survey Asteroids", () =>
+            {
+                var planets = zone.Planets.Where(id => _cache.Get<PlanetData>(id).Belt).ToList();
+                var task = new Survey
+                {
+                    Planets = planets,
+                    Context = _context,
+                    Zone = _populatedZone
+                };
+                _cache.Add(task);
+                _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
+            });
+
         }
         else
         {
@@ -614,11 +669,24 @@ public class StrategyGameManager : MonoBehaviour
                         planet.Mass > _context.GlobalData.PlanetMass ? "Planet" :
                         "Planetoid");
                 PropertiesPanel.AddProperty("Mass", () => $"{planet.Mass}");
-                PropertiesPanel.AddList("Resources", planet.Resources.Select(resource =>
+                var playerCorp = _cache.Get<Corporation>(_playerCorporation);
+                if (!playerCorp.PlanetSurveyFloor.ContainsKey(clickTarget))
                 {
-                    var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
-                    return new Tuple<string, string>(itemData.Name, $"{resource.Value:0}");
-                }));
+                    PropertiesPanel.AddProperty("Not surveyed for resources", () => "");
+                }
+                else
+                {
+                    var detectionFloor = playerCorp.PlanetSurveyFloor[clickTarget];
+                    var detectedResources = planet.Resources.Where(x => x.Value > detectionFloor);
+                    if(!detectedResources.Any())
+                        PropertiesPanel.AddProperty("No resources detected", () => "");
+                    else
+                        PropertiesPanel.AddList("Resources", detectedResources.Select<KeyValuePair<Guid, float>, (string, Func<string>)>(resource =>
+                        {
+                            var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
+                            return (itemData.Name, () => $"{resource.Value:0}");
+                        }));
+                }
             }
         }
 
@@ -637,6 +705,13 @@ public class StrategyGameManager : MonoBehaviour
             PropertiesPanel.AddProperty("Mass", () => $"{entity.Mass}");
             PropertiesPanel.AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
             PropertiesPanel.AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
+            PropertiesPanel.AddList("Gear", entity.EquippedItems.Select(g=>_context.Cache.Get<Gear>(g).ItemData.Name));
+            PropertiesPanel.AddList("Cargo", entity.Cargo.Select<Guid, (string, Func<string>)>(ii=>
+            {
+                var itemInstance = _context.Cache.Get<ItemInstance>(ii);
+                var data = _context.Cache.Get<ItemData>(itemInstance.Data);
+                return (data.Name, () => itemInstance is SimpleCommodity simpleCommodity ? simpleCommodity.Quantity.ToString() : "");
+            }));
         }
 
         if (targetObject is ZoneData zone)
@@ -825,6 +900,7 @@ public class StrategyGameManager : MonoBehaviour
             wormholeObject.GravityMesh.gameObject.SetActive(false);
             wormholeObject.Icon.material.SetTexture("_MainTex", WormholeSprite);
             wormholeObject.Label.text = otherZone.Name;
+            wormholeObject.Message.text = "";
             wormholeObject.Icon.GetComponent<ClickableCollider>().OnClick += (_, pointer) =>
             {
                 // If the user double clicks on a wormhole, switch to that zone

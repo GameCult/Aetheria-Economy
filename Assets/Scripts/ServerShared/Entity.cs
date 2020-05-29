@@ -37,6 +37,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     [IgnoreMember] public Dictionary<int, AxisSetting> Axes;
     [IgnoreMember] public Dictionary<int, float> AxisOverrides = new Dictionary<int, float>();
     [IgnoreMember] public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
+    [IgnoreMember] public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
     
     private Dictionary<Gear, EquippableItemData> GearData;
     private Dictionary<Gear, List<IBehavior>> ItemBehaviors;
@@ -214,6 +215,10 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             foreach(var behavior in group)
                 if(!behavior.Update(delta))
                     break;
+        
+        foreach (var behaviors in Behaviors.Values)
+            foreach (var behavior in behaviors.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
+                behavior.AlwaysUpdate(delta);
 
         foreach (var item in EquippedItems
             .Select(item => Context.Cache.Get<Gear>(item))
@@ -234,7 +239,14 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             OnBeforeSerialize();
             OnAfterDeserialize();
         }
-        
+
+        foreach (var message in Messages.Keys.ToArray())
+        {
+            Messages[message] = Messages[message] - delta;
+            if (Messages[message] < 0)
+                Messages.Remove(message);
+        }
+
         // Here's the PITA way
         // foreach (var staleItem in GearData
         //     .Where(kvp=>kvp.Key.ItemData!=kvp.Value)
@@ -287,6 +299,11 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         //     foreach (var axis in ItemBehaviors[staleItem].Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
         //         Axes[axis] = 0;
         // }
+    }
+
+    public void SetMessage(string message)
+    {
+        Messages[message] = Context.GlobalData.MessageDuration;
     }
 
     public void OnBeforeSerialize()

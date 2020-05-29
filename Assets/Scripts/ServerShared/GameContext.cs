@@ -34,6 +34,7 @@ public class GameContext
     private Dictionary<Guid, float4[]> _previousAsteroidTransforms = new Dictionary<Guid, float4[]>(); // x, y, rotation, scale
     private Dictionary<(Guid, int), float> _asteroidRespawnTimers = new Dictionary<(Guid, int), float>();
     private Dictionary<(Guid, int), float> _asteroidDamage = new Dictionary<(Guid, int), float>();
+    private Dictionary<(Guid, Guid, int), float> _asteroidMiningAccumulator = new Dictionary<(Guid, Guid, int), float>();
     private Dictionary<Guid, bool> _asteroidPositionsUpdated = new Dictionary<Guid, bool>();
     private Guid _forceLoadZone;
     private Type[] _statObjects;
@@ -303,19 +304,27 @@ public class GameContext
         var orbitPosition = GetOrbitPosition(orbitData.Parent);
         for (var i = 0; i < planetData.Asteroids.Length; i++)
         {
+            var size = planetData.Asteroids[i].Size;
+            if(_asteroidRespawnTimers.ContainsKey((planetDataID, i))) size = 0;
+            else if (_asteroidDamage.ContainsKey((planetDataID, i)))
+            {
+                var hpLerp = unlerp(GlobalData.AsteroidSizeMin, GlobalData.AsteroidSizeMax, size);
+                var asteroidHitpoints = lerp(GlobalData.AsteroidHitpointsMin, GlobalData.AsteroidHitpointsMax, pow(hpLerp, GlobalData.AsteroidHitpointsPower));
+                var sizeLerp = (asteroidHitpoints - _asteroidDamage[(planetDataID, i)]) / asteroidHitpoints;
+                size = lerp(GlobalData.AsteroidSizeMin, size, sizeLerp);
+            }
+        
             _asteroidTransforms[planetDataID][i] = float4(
                 OrbitData.Evaluate((float) frac(Time / OrbitalPeriod(planetData.Asteroids[i].Distance) * GlobalData.OrbitSpeedMultiplier +
                                                 planetData.Asteroids[i].Phase)) * planetData.Asteroids[i].Distance + orbitPosition,
-                (float) (Time * planetData.Asteroids[i].RotationSpeed % 360.0),
-                _asteroidRespawnTimers.ContainsKey((planetDataID, i)) ? 0 : planetData.Asteroids[i].Size);
+                (float) (Time * planetData.Asteroids[i].RotationSpeed % 360.0), size);
         }
         
         _asteroidPositionsUpdated[planetDataID] = true;
     }
 
-    public OrbitData CreateOrbit(Guid parent, float2 position)
+    public OrbitData CreateOrbit(Guid zone, Guid parent, float2 position)
     {
-        var parentOrbit = Cache.Get<OrbitData>(parent);
         var parentPosition = GetOrbitPosition(parent);
         var delta = position - parentPosition;
         var distance = length(delta);
@@ -331,9 +340,10 @@ public class GameContext
             Parent = parent,
             Period = period,
             Phase = storedPhase,
-            Zone = parentOrbit.Zone
+            Zone = zone
         };
         Cache.Add(orbit);
+        _orbits.Add(orbit.ID);
         return orbit;
     }
 
@@ -735,6 +745,7 @@ public class GameContext
                 Zone = zone
             };
             Cache.Add(orbit);
+            _orbits.Add(orbit.ID);
             
             var entity = new OrbitalEntity(this, hull.ID, gear.Select(g => g.ID),
                 cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), orbit.ID, zone, corporation)
@@ -876,15 +887,29 @@ public class GameContext
         var asteroidTransform = GetAsteroidTransform(asteroidBelt, asteroid);
         var hpLerp = unlerp(GlobalData.AsteroidSizeMin, GlobalData.AsteroidSizeMax, asteroidTransform.w);
         var asteroidHitpoints = lerp(GlobalData.AsteroidHitpointsMin, GlobalData.AsteroidHitpointsMax, pow(hpLerp, GlobalData.AsteroidHitpointsPower));
+        
         if (!_asteroidDamage.ContainsKey((asteroidBelt, asteroid)))
             _asteroidDamage[(asteroidBelt, asteroid)] = 0;
         _asteroidDamage[(asteroidBelt, asteroid)] = _asteroidDamage[(asteroidBelt, asteroid)] + damage;
+        
+        if (!_asteroidMiningAccumulator.ContainsKey((asteroidBelt, miner.ID, asteroid)))
+            _asteroidMiningAccumulator[(asteroidBelt, miner.ID, asteroid)] = 0;
+        _asteroidMiningAccumulator[(asteroidBelt, miner.ID, asteroid)] = _asteroidMiningAccumulator[(asteroidBelt, miner.ID, asteroid)] + damage;
+        
         if (_asteroidDamage[(asteroidBelt, asteroid)] > asteroidHitpoints)
+        {
             _asteroidRespawnTimers[(asteroidBelt, asteroid)] =
                 lerp(GlobalData.AsteroidRespawnMin, GlobalData.AsteroidRespawnMax, hpLerp);
+            _asteroidDamage.Remove((asteroidBelt, asteroid));
+            _asteroidMiningAccumulator.Remove((asteroidBelt, miner.ID, asteroid));
+            return;
+        }
+
+        var resourceCount = planetData.Resources.Sum(x => x.Value);
         var resource = planetData.Resources.MaxBy(x => pow(x.Value, 1f / penetration) * Random.NextFloat());
-        if (resource.Value * efficiency * Random.NextFloat() > 1 && miner.OccupiedCapacity < miner.Capacity - 1)
+        if (efficiency * Random.NextFloat() * _asteroidMiningAccumulator[(asteroidBelt, miner.ID, asteroid)] * resourceCount / GlobalData.MiningDifficulty > 1 && miner.OccupiedCapacity < miner.Capacity - 1)
         {
+            _asteroidMiningAccumulator.Remove((asteroidBelt, miner.ID, asteroid));
             var simpleCommodityTarget = miner.Cargo
                 .Select(i => Cache.Get<ItemInstance>(i))
                 .FirstOrDefault(i => i.Data == resource.Key) as SimpleCommodity;

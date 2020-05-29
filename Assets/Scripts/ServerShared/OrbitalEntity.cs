@@ -18,8 +18,8 @@ public class OrbitalEntity : Entity
     {
         if (OrbitData != Guid.Empty)
         {
-            Velocity = Context.GetOrbitVelocity(OrbitData);
             Position = Context.GetOrbitPosition(OrbitData);
+            Velocity = Context.GetOrbitVelocity(OrbitData);
         }
         
         base.Update(delta);

@@ -154,6 +154,12 @@ public class GlobalData : DatabaseEntry
 
     [InspectableField, JsonProperty("asteroidRespawnMax"), Key(48)]  
     public float AsteroidRespawnMax = 100f;
+
+    [InspectableField, JsonProperty("miningDifficulty"), Key(49)]  
+    public float MiningDifficulty = 500f;
+
+    [InspectableField, JsonProperty("messageDuration"), Key(50)]  
+    public float MessageDuration = 4f;
     
     public float PlanetRadius(float mass)
     {

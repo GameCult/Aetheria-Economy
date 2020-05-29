@@ -36,6 +36,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     
     protected Locomotion Locomotion;
     protected VelocityMatch VelocityMatch;
+    protected Aim Aim;
     protected Func<float2> TargetPosition;
     protected Func<float2> TargetVelocity;
     protected bool MatchVelocity;
@@ -60,6 +61,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     {
         Locomotion = new Locomotion(_context, _entity, _controllerData);
         VelocityMatch = new VelocityMatch(_context, _entity, _controllerData);
+        Aim = new Aim(_context, _entity, _controllerData);
         
         _context.CorporationControllers[_entity.Corporation].Add(this);
     }
@@ -89,21 +91,23 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
         {
             if(_entity.Parent!=Guid.Empty)
                 _context.RemoveParent(_entity);
-            
-            var distance = length(TargetPosition() - _entity.Position);
+
+            var targetPosition = TargetPosition();
+            var distance = length(targetPosition - _entity.Position);
             if (MatchVelocity)
             {
-                VelocityMatch.TargetVelocity = TargetVelocity();
+                var targetVelocity = TargetVelocity();
+                VelocityMatch.TargetVelocity = targetVelocity;
                 if (_movementPhase == MovementPhase.Locomotion)
                 {
                     var matchDistanceTime = VelocityMatch.MatchDistanceTime;
-                    Locomotion.Objective = TargetPosition() + TargetVelocity() * matchDistanceTime.y;
+                    Locomotion.Objective = targetPosition + targetVelocity * matchDistanceTime.y;
                     Locomotion.Update(delta);
                         
                     if (distance < matchDistanceTime.x)
                     {
                         _movementPhase = MovementPhase.Slowdown;
-                        _context.Log($"Controller {_entity.Name} has entered slowdown phase.");
+                        //_context.Log($"Controller {_entity.Name} has entered slowdown phase.");
                         VelocityMatch.Clear();
                         VelocityMatch.OnMatch += () =>
                         {
@@ -114,6 +118,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
                 }
                 else
                 {
+                    VelocityMatch.TargetVelocity = targetVelocity;
                     VelocityMatch.Update(delta);
                 }
             }

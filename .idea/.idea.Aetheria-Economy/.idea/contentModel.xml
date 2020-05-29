@@ -1244,9 +1244,11 @@
             <e p="Agents" t="Include">
               <e p="AgentBehavior.cs" t="Include" />
               <e p="AgentTask.cs" t="Include" />
+              <e p="Aim.cs" t="Include" />
               <e p="Locomotion.cs" t="Include" />
               <e p="Mining.cs" t="Include" />
               <e p="StationTowing.cs" t="Include" />
+              <e p="Survey.cs" t="Include" />
               <e p="VelocityMatch.cs" t="Include" />
             </e>
             <e p="Attributes.cs" t="Include" />
@@ -1273,6 +1275,7 @@
               <e p="Sensor.cs" t="Include" />
               <e p="Shield.cs" t="Include" />
               <e p="StatModifier.cs" t="Include" />
+              <e p="SurveyController.cs" t="Include" />
               <e p="Switch.cs" t="Include" />
               <e p="Thermotoggle.cs" t="Include" />
               <e p="Thruster.cs" t="Include" />

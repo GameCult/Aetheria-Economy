@@ -50,7 +50,7 @@ public class ReadOnlyPropertiesPanel : MonoBehaviour
         _properties.Add(list.gameObject);
     }
 
-    public void AddList(string name, IEnumerable<Tuple<string, string>> elements)
+    public void AddList(string name, IEnumerable<(string, Func<string>)> elements)
     {
         var list = Instantiate(ListPrefab, transform);
         list.GetComponentInChildren<TextMeshProUGUI>().text = name;
@@ -58,7 +58,8 @@ public class ReadOnlyPropertiesPanel : MonoBehaviour
         {
             var item = Instantiate(ListPropertyPrefab, list);
             item.Name.text = element.Item1;
-            item.Value.text = element.Item2;
+            item.Value.text = element.Item2();
+            item.ValueFunction = element.Item2;
             _properties.Add(item.gameObject);
         }
         _properties.Add(list.gameObject);

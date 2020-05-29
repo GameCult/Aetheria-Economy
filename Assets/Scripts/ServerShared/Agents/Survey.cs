@@ -7,10 +7,10 @@ using Newtonsoft.Json;
 
 [MessagePackObject, 
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
-public class Mining : AgentTask
+public class Survey : AgentTask
 {
-    [IgnoreMember] public override TaskType Type => TaskType.Mine;
+    [IgnoreMember] public override TaskType Type => TaskType.Explore;
     
-    [JsonProperty("asteroids"), Key(4)]
-    public Guid Asteroids;
+    [JsonProperty("station"), Key(4)]
+    public List<Guid> Planets;
 }
