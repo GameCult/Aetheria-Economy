@@ -7,6 +7,7 @@ using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using Random = Unity.Mathematics.Random;
 using JM.LinqFaster;
+using float4 = Unity.Mathematics.float4;
 
 public class GameContext
 {
@@ -35,7 +36,6 @@ public class GameContext
     private Dictionary<(Guid, int), float> _asteroidRespawnTimers = new Dictionary<(Guid, int), float>();
     private Dictionary<(Guid, int), float> _asteroidDamage = new Dictionary<(Guid, int), float>();
     private Dictionary<(Guid, Guid, int), float> _asteroidMiningAccumulator = new Dictionary<(Guid, Guid, int), float>();
-    private Dictionary<Guid, bool> _asteroidPositionsUpdated = new Dictionary<Guid, bool>();
     private Guid _forceLoadZone;
     private Type[] _statObjects;
     
@@ -109,7 +109,7 @@ public class GameContext
         }
 
         foreach (var asteroids in _asteroidTransforms.Keys)
-            _asteroidPositionsUpdated[asteroids] = false;
+            UpdateAsteroidTransforms(asteroids);
 
         foreach (var corporation in Cache.GetAll<Corporation>())
         {
@@ -164,6 +164,14 @@ public class GameContext
 
         // TODO: Associate planets with stored entities for planetary colonies
         ZonePlanets[zone] = zoneData.Planets;
+
+        foreach (var belt in zoneData.Planets
+            .Select(id => Cache.Get<PlanetData>(id))
+            .Where(p => p.Belt))
+        {
+            _asteroidTransforms[belt.ID] = new float4[belt.Asteroids.Length];
+            _previousAsteroidTransforms[belt.ID] = new float4[belt.Asteroids.Length];
+        }
         
         // TODO: Load stored entities
         ZoneEntities[zone] = new Dictionary<Guid, Entity>();
@@ -177,6 +185,13 @@ public class GameContext
         ZoneEntities.Remove(zone);
         ZonePlanets.Remove(zone);
         foreach (var orbit in zoneData.Orbits) _orbits.Remove(orbit);
+        foreach (var belt in zoneData.Planets
+            .Select(id => Cache.Get<PlanetData>(id))
+            .Where(p => p.Belt))
+        {
+            _asteroidTransforms.Remove(belt.ID);
+            _previousAsteroidTransforms.Remove(belt.ID);
+        }
     }
 
     public void Warp(Entity entity, Guid targetZone)
@@ -262,24 +277,16 @@ public class GameContext
 
     public float2 GetAsteroidVelocity(Guid planetDataID, int asteroid)
     {
-        UpdateAsteroidTransforms(planetDataID);
-        
-        if (!_previousAsteroidTransforms.ContainsKey(planetDataID))
-            return float2.zero;
-        
         return (_asteroidTransforms[planetDataID][asteroid].xy - _previousAsteroidTransforms[planetDataID][asteroid].xy) / _deltaTime;
     }
 
     public float4 GetAsteroidTransform(Guid planetDataID, int asteroid)
     {
-        UpdateAsteroidTransforms(planetDataID);
         return _asteroidTransforms[planetDataID][asteroid];
     }
 
     public float4[] GetAsteroidTransforms(Guid planetDataID)
     {
-        UpdateAsteroidTransforms(planetDataID);
-        
         return _asteroidTransforms[planetDataID];
     }
 
@@ -287,17 +294,6 @@ public class GameContext
     {
         var planetData = Cache.Get<PlanetData>(planetDataID);
         
-        if (!_asteroidTransforms.ContainsKey(planetDataID))
-        {
-            _asteroidTransforms[planetDataID] = new float4[planetData.Asteroids.Length];
-            _asteroidPositionsUpdated[planetDataID] = false;
-        }
-
-        if (_asteroidPositionsUpdated[planetDataID])
-            return;
-        
-        if (!_previousAsteroidTransforms.ContainsKey(planetDataID))
-            _previousAsteroidTransforms[planetDataID] = new float4[planetData.Asteroids.Length];
         Array.Copy(_asteroidTransforms[planetDataID], _previousAsteroidTransforms[planetDataID], planetData.Asteroids.Length);
         
         var orbitData = Cache.Get<OrbitData>(planetData.Orbit);
@@ -319,8 +315,6 @@ public class GameContext
                                                 planetData.Asteroids[i].Phase)) * planetData.Asteroids[i].Distance + orbitPosition,
                 (float) (Time * planetData.Asteroids[i].RotationSpeed % 360.0), size);
         }
-        
-        _asteroidPositionsUpdated[planetDataID] = true;
     }
 
     public OrbitData CreateOrbit(Guid zone, Guid parent, float2 position)

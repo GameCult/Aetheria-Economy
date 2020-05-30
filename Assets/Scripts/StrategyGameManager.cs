@@ -756,7 +756,7 @@ public class StrategyGameManager : MonoBehaviour
             var instanceZone = instance.GetComponent<GalaxyZone>();
             _galaxyZoneObjects[zone.ZoneID] = instanceZone;
             instanceZone.Label.text = zone.Name;
-            instanceZone.Background.GetComponent<ClickableCollider>().OnClick += (_, pointer) =>
+            instanceZone.Icon.GetComponent<ClickableCollider>().OnClick += (_, pointer) =>
             {
                 if (_selectedGalaxyZone != null)
                     _selectedGalaxyZone.Background.material.SetColor("_TintColor", UnselectedColor);
