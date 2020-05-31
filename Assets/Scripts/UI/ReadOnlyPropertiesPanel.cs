@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -10,11 +12,17 @@ public class ReadOnlyPropertiesPanel : MonoBehaviour
     public RectTransform SectionPrefab;
     public PropertiesList ListPrefab;
     public PropertyLabel PropertyPrefab;
+    public AttributeProperty AttributePrefab;
+    public InputField InputField;
+    public RangedFloatField RangedFloatField;
+    public EnumField EnumField;
+    public BoolField BoolField;
     public bool ChildRadioSelection;
 
     protected List<GameObject> Properties = new List<GameObject>();
     protected List<FlatFlatButton> Buttons = new List<FlatFlatButton>();
     protected FlatFlatButton SelectedChild;
+    protected event Action RefreshPropertyValues;
 
     public void Clear()
     {
@@ -71,4 +79,92 @@ public class ReadOnlyPropertiesPanel : MonoBehaviour
         Properties.Add(list.gameObject);
         return list;
     }
+
+    public AttributeProperty AddAttribute(PersonalityAttribute attribute, float value)
+    {
+        var attributeInstance = Instantiate(AttributePrefab, transform);
+        attributeInstance.Slider.value = value;
+        attributeInstance.Title.text = attribute.Name;
+        attributeInstance.HighLabel.text = attribute.HighName;
+        attributeInstance.LowLabel.text = attribute.LowName;
+        return attributeInstance;
+    }
+	
+	public void AddProperty(string name, Func<string> read, Action<string> write)
+	{
+		var field = Instantiate(InputField, transform);
+		field.Label.text = name;
+		field.Field.contentType = TMP_InputField.ContentType.Standard;
+		field.Field.onValueChanged.AddListener(val => write(val));
+		RefreshPropertyValues += () => field.Field.text = read();
+		Properties.Add(field.gameObject);
+	}
+
+	public void AddProperty(string name, Func<float> read, Action<float> write)
+	{
+		var field = Instantiate(InputField, transform);
+		field.Label.text = name;
+		field.Field.contentType = TMP_InputField.ContentType.DecimalNumber;
+		field.Field.onValueChanged.AddListener(val => write(float.Parse(val)));
+		RefreshPropertyValues += () => field.Field.text = read().ToString(CultureInfo.InvariantCulture);
+		Properties.Add(field.gameObject);
+	}
+	
+	public void AddProperty(string name, Func<int> read, Action<int> write)
+	{
+		var field = Instantiate(InputField, transform);
+		field.Label.text = name;
+		field.Field.contentType = TMP_InputField.ContentType.IntegerNumber;
+		field.Field.onValueChanged.AddListener(val => write(int.Parse(val)));
+		RefreshPropertyValues += () => field.Field.text = read().ToString(CultureInfo.InvariantCulture);
+		Properties.Add(field.gameObject);
+	}
+	
+	public void AddProperty(string name, Func<float> read, Action<float> write, float min, float max)
+	{
+		var field = Instantiate(RangedFloatField, transform);
+		field.Label.text = name;
+		field.Slider.wholeNumbers = false;
+		field.Slider.minValue = min;
+		field.Slider.maxValue = max;
+		field.Slider.onValueChanged.AddListener(val => write(val));
+		RefreshPropertyValues += () => field.Slider.value = read();
+		Properties.Add(field.gameObject);
+	}
+	
+	public void AddProperty(string name, Func<int> read, Action<int> write, int min, int max)
+	{
+		var field = Instantiate(RangedFloatField, transform);
+		field.Label.text = name;
+		field.Slider.wholeNumbers = true;
+		field.Slider.minValue = min;
+		field.Slider.maxValue = max;
+		field.Slider.onValueChanged.AddListener(val => write(Mathf.RoundToInt(val)));
+		RefreshPropertyValues += () => field.Slider.value = read();
+		Properties.Add(field.gameObject);
+	}
+	
+	public void AddProperty(string name, Func<bool> read, Action<bool> write)
+	{
+		var field = Instantiate(BoolField, transform);
+		field.Label.text = name;
+		field.Toggle.onValueChanged.AddListener(val => write(val));
+		RefreshPropertyValues += () => field.Toggle.isOn = read();
+		Properties.Add(field.gameObject);
+	}
+	
+	public void AddProperty(string name, Func<int> read, Action<int> write, string[] enumOptions)
+	{
+		var field = Instantiate(EnumField, transform);
+		field.Label.text = name;
+		field.Dropdown.options = enumOptions.Select(s => new TMP_Dropdown.OptionData(s)).ToList();
+		field.Dropdown.onValueChanged.AddListener(val => write(val));
+		RefreshPropertyValues += () => field.Dropdown.value = read();
+		Properties.Add(field.gameObject);
+	}
+
+	public void RefreshValues()
+	{
+		RefreshPropertyValues?.Invoke();
+	}
 }

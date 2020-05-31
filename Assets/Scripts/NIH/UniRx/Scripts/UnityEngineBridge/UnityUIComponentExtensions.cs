@@ -77,7 +77,7 @@ namespace UniRx
         }
 
         /// <summary>Observe onEndEdit(Submit) event.</summary>
-        public static IObservable<string> OnEndEditAsObservable(this InputField inputField)
+        public static IObservable<string> OnEndEditAsObservable(this UnityEngine.UI.InputField inputField)
         {
             return inputField.onEndEdit.AsObservable();
         }
@@ -86,9 +86,9 @@ namespace UniRx
 #if !(UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2)
         [Obsolete("onValueChange has been renamed to onValueChanged")]
 #endif
-        public static IObservable<string> OnValueChangeAsObservable(this InputField inputField)
+        public static IObservable<string> OnValueChangeAsObservable(this UnityEngine.UI.InputField inputField)
         {
-            return Observable.CreateWithState<string, InputField>(inputField, (i, observer) =>
+            return Observable.CreateWithState<string, UnityEngine.UI.InputField>(inputField, (i, observer) =>
             {
                 observer.OnNext(i.text);
 #if (UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2)
@@ -101,9 +101,9 @@ namespace UniRx
 
 #if !(UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1 || UNITY_5_2)
         /// <summary>Observe onValueChanged with current `text` value on subscribe.</summary>
-        public static IObservable<string> OnValueChangedAsObservable(this InputField inputField)
+        public static IObservable<string> OnValueChangedAsObservable(this UnityEngine.UI.InputField inputField)
         {
-            return Observable.CreateWithState<string, InputField>(inputField, (i, observer) =>
+            return Observable.CreateWithState<string, UnityEngine.UI.InputField>(inputField, (i, observer) =>
             {
                 observer.OnNext(i.text);
                 return i.onValueChanged.AsObservable().Subscribe(observer);

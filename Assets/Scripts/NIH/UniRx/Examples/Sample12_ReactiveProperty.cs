@@ -12,7 +12,7 @@ namespace UniRx.Examples
         // Open Sample12Scene. Set from canvas
         public Button MyButton;
         public Toggle MyToggle;
-        public InputField MyInput;
+        public UnityEngine.UI.InputField MyInput;
         public Text MyText;
         public Slider MySlider;
 

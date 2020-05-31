@@ -13,7 +13,7 @@ namespace UniRx.Examples
     {
         // Open Sample13Scene. Set from canvas
         public Text Title;
-        public InputField ToDoInput;
+        public UnityEngine.UI.InputField ToDoInput;
         public Button AddButton;
         public Button ClearButton;
         public GameObject TodoList;

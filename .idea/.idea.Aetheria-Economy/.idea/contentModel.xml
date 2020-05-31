@@ -1754,6 +1754,7 @@
           <e p="UI" t="Include">
             <e p="AttributeProperty.cs" t="Include" />
             <e p="BackgroundRenderer.cs" t="Include" />
+            <e p="BoolField.cs" t="Include" />
             <e p="ClickableCollider.cs" t="Include" />
             <e p="ClickCatcher.cs" t="Include" />
             <e p="ClickRaycaster.cs" t="Include" />
@@ -1761,15 +1762,18 @@
             <e p="ContextMenuOption.cs" t="Include" />
             <e p="CorporationMenuItem.cs" t="Include" />
             <e p="DragHandler.cs" t="Include" />
+            <e p="EnumField.cs" t="Include" />
             <e p="FlatButton.cs" t="Include" />
             <e p="FlatFlatButton.cs" t="Include" />
             <e p="GalaxyZone.cs" t="Include" />
             <e p="Icons.cs" t="Include" />
+            <e p="InputField.cs" t="Include" />
             <e p="LoginScreen.cs" t="Include" />
             <e p="MouseHover.cs" t="Include" />
             <e p="PropertiesList.cs" t="Include" />
             <e p="PropertiesPanel.cs" t="Include" />
             <e p="PropertyLabel.cs" t="Include" />
+            <e p="RangedFloatField.cs" t="Include" />
             <e p="ReadOnlyPropertiesPanel.cs" t="Include" />
             <e p="TabActivator.cs" t="Include" />
             <e p="TabButton.cs" t="Include" />
