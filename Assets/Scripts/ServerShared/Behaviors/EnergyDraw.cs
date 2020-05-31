@@ -3,10 +3,10 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(12)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(12), RuntimeInspectable]
 public class EnergyDrawData : BehaviorData
 {
-    [InspectableField, JsonProperty("draw"), Key(1)]
+    [InspectableField, JsonProperty("draw"), Key(1), RuntimeInspectable]
     public PerformanceStat Draw = new PerformanceStat();
     
     [InspectableField, JsonProperty("perSecond"), Key(2)]

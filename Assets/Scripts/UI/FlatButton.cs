@@ -8,12 +8,11 @@ using UnityEngine.UI;
 
 public class FlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public event Action<FlatButton> OnClick;
+    public event Action OnClick;
     public float StateDamping;
 //    public RectTransform Tab;
     public Image Fill;
     public Image Outline;
-    public TextMeshProUGUI Label;
     public VerticalLayoutGroup LabelLayout;
     public FlatButtonState CurrentState = FlatButtonState.Unselected;
     public bool DisableClickWhenSelected = true;
@@ -50,7 +49,7 @@ public class FlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             Fill.color = ClickAppearance.FillColor;
             Outline.color = ClickAppearance.OutlineColor;
-            OnClick?.Invoke(this);
+            OnClick?.Invoke();
         }
     }
 

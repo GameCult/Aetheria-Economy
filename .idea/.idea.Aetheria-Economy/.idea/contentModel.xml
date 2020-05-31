@@ -1762,10 +1762,12 @@
             <e p="CorporationMenuItem.cs" t="Include" />
             <e p="DragHandler.cs" t="Include" />
             <e p="FlatButton.cs" t="Include" />
+            <e p="FlatFlatButton.cs" t="Include" />
             <e p="GalaxyZone.cs" t="Include" />
             <e p="Icons.cs" t="Include" />
             <e p="LoginScreen.cs" t="Include" />
             <e p="MouseHover.cs" t="Include" />
+            <e p="PropertiesList.cs" t="Include" />
             <e p="PropertiesPanel.cs" t="Include" />
             <e p="PropertyLabel.cs" t="Include" />
             <e p="ReadOnlyPropertiesPanel.cs" t="Include" />

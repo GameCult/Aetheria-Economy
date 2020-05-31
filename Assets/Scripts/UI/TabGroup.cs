@@ -15,7 +15,7 @@ public class TabGroup : MonoBehaviour
         _tabButtons = GetComponentsInChildren<TabButton>();
         foreach (var thisButton in _tabButtons)
         {
-            thisButton.OnClick += button =>
+            thisButton.OnClick += () =>
             {
                 if (_currentButton != null)
                 {

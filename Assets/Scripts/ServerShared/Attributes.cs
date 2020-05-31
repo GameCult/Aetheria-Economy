@@ -42,6 +42,8 @@ public class EntityTypeRestrictionAttribute : Attribute
     }
 }
 
+public class RuntimeInspectable : Attribute { }
+
 [AttributeUsage(AttributeTargets.Class)]
 public class InspectableAttribute : Attribute { }
 

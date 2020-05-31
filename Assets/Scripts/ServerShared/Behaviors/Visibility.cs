@@ -3,10 +3,10 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VisibilityData : BehaviorData
 {
-    [InspectableField, JsonProperty("visibility"), Key(1)]  
+    [InspectableField, JsonProperty("visibility"), Key(1), RuntimeInspectable]  
     public PerformanceStat Visibility = new PerformanceStat();
 
     [InspectableField, JsonProperty("visibilityDecay"), Key(2)]  

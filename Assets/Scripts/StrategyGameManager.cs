@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NaughtyAttributes;
 using RethinkDb.Driver.Net;
 using TMPro;
@@ -178,7 +179,7 @@ public class StrategyGameManager : MonoBehaviour
                     }
                 }
 
-                CorpMenuContinueButton.OnClick += _ =>
+                CorpMenuContinueButton.OnClick += () =>
                 {
                     if (_selectedParent != null && !string.IsNullOrEmpty(CorpNameInputField.text))
                     {
@@ -681,11 +682,14 @@ public class StrategyGameManager : MonoBehaviour
                     if(!detectedResources.Any())
                         PropertiesPanel.AddProperty("No resources detected", () => "");
                     else
-                        PropertiesPanel.AddList("Resources", detectedResources.Select<KeyValuePair<Guid, float>, (string, Func<string>)>(resource =>
+                    {
+                        var list = PropertiesPanel.AddList("Resources");
+                        foreach (var resource in detectedResources)
                         {
                             var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
-                            return (itemData.Name, () => $"{resource.Value:0}");
-                        }));
+                            list.AddProperty(itemData.Name, () => $"{resource.Value:0}");
+                        }
+                    }
                 }
             }
         }
@@ -700,18 +704,34 @@ public class StrategyGameManager : MonoBehaviour
                 hullData.HullType == HullType.Ship ? "Drone Ship" :
                 hullData.HullType == HullType.Station ? "Colony" :
                 "Weapons Platform");
-            PropertiesPanel.AddProperty("Hull", () => $"{hullData.Name}");
-            PropertiesPanel.AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{entity.Capacity}");
-            PropertiesPanel.AddProperty("Mass", () => $"{entity.Mass}");
+            PopulateGearProperties(PropertiesPanel.AddList(hullData.Name), hull, entity);
+            //PropertiesPanel.AddProperty("Hull", () => $"{hullData.Name}");
+            PropertiesPanel.AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{entity.Capacity:0}");
+            PropertiesPanel.AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(_context.GlobalData.SignificantDigits)}");
             PropertiesPanel.AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
             PropertiesPanel.AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
-            PropertiesPanel.AddList("Gear", entity.EquippedItems.Select(g=>_context.Cache.Get<Gear>(g).ItemData.Name));
-            PropertiesPanel.AddList("Cargo", entity.Cargo.Select<Guid, (string, Func<string>)>(ii=>
+            var gearList = PropertiesPanel.AddList("Gear");
+            var equippedItems = entity.EquippedItems.Select(g => _context.Cache.Get<Gear>(g));
+            foreach(var gear in equippedItems)
+                PopulateGearProperties(gearList.AddList(gear.ItemData.Name), gear, entity);
+            //     gearList.AddProperty(gear.ItemData.Name);
+            // var firstGear = equippedItems.First();
+            // PopulateGearProperties(gearList.AddList(firstGear.ItemData.Name), firstGear, entity);
+            if(!entity.Cargo.Any())
+                PropertiesPanel.AddProperty("No Cargo");
+            else
             {
-                var itemInstance = _context.Cache.Get<ItemInstance>(ii);
-                var data = _context.Cache.Get<ItemData>(itemInstance.Data);
-                return (data.Name, () => itemInstance is SimpleCommodity simpleCommodity ? simpleCommodity.Quantity.ToString() : "");
-            }));
+                var cargoList = PropertiesPanel.AddList("Cargo");
+                foreach (var itemID in entity.Cargo)
+                {
+                    var itemInstance = _context.Cache.Get<ItemInstance>(itemID);
+                    var data = _context.Cache.Get<ItemData>(itemInstance.Data);
+                    if(itemInstance is SimpleCommodity simpleCommodity)
+                        cargoList.AddProperty(data.Name, () => simpleCommodity.Quantity.ToString());
+                    else
+                        cargoList.AddProperty(data.Name);
+                }
+            }
         }
 
         if (targetObject is ZoneData zone)
@@ -720,6 +740,32 @@ public class StrategyGameManager : MonoBehaviour
             PropertiesPanel.Title.text = zone.Name;
             PropertiesPanel.AddSection("Sector");
             PropertiesPanel.AddProperty("Planets", () => $"{zone.Planets.Length}");
+        }
+    }
+
+    void PopulateGearProperties(PropertiesList panel, Gear gear, Entity entity)
+    {
+        var data = gear.ItemData;
+        panel.AddProperty("Durability", () => $"{gear.Durability.SignificantDigits(_context.GlobalData.SignificantDigits)}/{_context.Evaluate(data.Durability, gear).SignificantDigits(_context.GlobalData.SignificantDigits)}");
+        foreach (var behavior in data.Behaviors)
+        {
+            var type = behavior.GetType();
+            if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
+            {
+                foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
+                {
+                    var fieldType = field.FieldType;
+                    if (fieldType == typeof(float))
+                        panel.AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(_context.GlobalData.SignificantDigits)}");
+                    else if (fieldType == typeof(int))
+                        panel.AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
+                    else if (fieldType == typeof(PerformanceStat))
+                    {
+                        var stat = (PerformanceStat) field.GetValue(behavior);
+                        panel.AddProperty(field.Name, () => $"{_context.Evaluate(stat, gear, entity).SignificantDigits(_context.GlobalData.SignificantDigits)}");
+                    }
+                }
+            }
         }
     }
 

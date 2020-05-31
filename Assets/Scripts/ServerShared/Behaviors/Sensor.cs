@@ -2,10 +2,10 @@
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class SensorData : BehaviorData
 {
-    [InspectableField, JsonProperty("sensitivity"), Key(3)]  
+    [InspectableField, JsonProperty("sensitivity"), Key(3), RuntimeInspectable]  
     public PerformanceStat Sensitivity = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)

@@ -42,36 +42,53 @@ public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
         {
             if (!_taskStarted)
             {
-                MoveTo(towingTask.Zone, () =>
-                {
-                    _entity.SetMessage("Entering pickup phase.");
-                    MoveTo(_context.Cache.Get<Entity>(towingTask.Station), true, () =>
-                    {
-                        var target = _context.ZoneEntities[_entity.Zone][towingTask.Station] as OrbitalEntity;
-                        _context.SetParent(target, _entity);
-                        _entity.SetMessage("Entering delivery phase.");
-                        MoveTo(() =>
-                        {
-                            var orbitParent = _context.GetOrbitPosition(towingTask.OrbitParent);
-                            var parentToUs = _entity.Position - orbitParent;
-                            return orbitParent + normalize(parentToUs) * towingTask.OrbitDistance;
-                        }, () => _context.GetOrbitVelocity(towingTask.OrbitParent), () =>
-                        {
-                            _context.RemoveParent(target);
-                            _entity.SetMessage("Target delivered. Returning Home.");
-                            
-                            var orbit = _context.CreateOrbit(towingTask.Zone, towingTask.OrbitParent, _entity.Position);
-                            target.OrbitData = orbit.ID;
-                            
-                            FinishTask();
-                            _taskStarted = false;
-                        });
-                    });
-                });
+                MoveTo(towingTask.Zone, OnZoneArrival);
                 _taskStarted = true;
             }
         }
         return base.Update(delta);
+    }
+    
+    void OnZoneArrival()
+    {
+        var towingTask = _context.Cache.Get<StationTowing>(Task);
+        
+        _entity.SetMessage("Entering pickup phase.");
+        
+        MoveTo(_context.Cache.Get<Entity>(towingTask.Station), true, OnPickup);
+    }
+    
+    void OnPickup()
+    {
+        var towingTask = _context.Cache.Get<StationTowing>(Task);
+        var target = _context.ZoneEntities[_entity.Zone][towingTask.Station] as OrbitalEntity;
+        
+        _context.SetParent(target, _entity);
+        
+        _entity.SetMessage("Entering delivery phase.");
+
+        MoveTo(() =>
+        {
+            var orbitParent = _context.GetOrbitPosition(towingTask.OrbitParent);
+            var parentToUs = _entity.Position - orbitParent;
+            return orbitParent + normalize(parentToUs) * towingTask.OrbitDistance;
+        }, () => _context.GetOrbitVelocity(towingTask.OrbitParent), OnDelivery);
+    }
+    
+    void OnDelivery()
+    {
+        var towingTask = _context.Cache.Get<StationTowing>(Task);
+        var target = _context.ZoneEntities[_entity.Zone][towingTask.Station] as OrbitalEntity;
+        
+        _context.RemoveParent(target);
+        
+        _entity.SetMessage("Target delivered. Returning Home.");
+
+        var orbit = _context.CreateOrbit(towingTask.Zone, towingTask.OrbitParent, _entity.Position);
+        target.OrbitData = orbit.ID;
+
+        FinishTask();
+        _taskStarted = false;
     }
 
     public PersistentBehaviorData Store()

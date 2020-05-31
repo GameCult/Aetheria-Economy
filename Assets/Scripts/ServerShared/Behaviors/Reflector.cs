@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ReflectorData : BehaviorData
 {
-    [InspectableField, JsonProperty("crossSection"), Key(1)]  
+    [InspectableField, JsonProperty("crossSection"), Key(1), RuntimeInspectable]  
     public PerformanceStat CrossSection = new PerformanceStat();
 
     // [InspectableAnimationCurve, JsonProperty("visibility"), Key(1)]  

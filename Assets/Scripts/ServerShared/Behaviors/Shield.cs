@@ -3,13 +3,13 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ShieldData : BehaviorData
 {
-    [InspectableField, JsonProperty("efficiency"), Key(1)]  
+    [InspectableField, JsonProperty("efficiency"), Key(1), RuntimeInspectable]  
     public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("shielding"), Key(2)]  
+    [InspectableField, JsonProperty("shielding"), Key(2), RuntimeInspectable]  
     public PerformanceStat Shielding = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)

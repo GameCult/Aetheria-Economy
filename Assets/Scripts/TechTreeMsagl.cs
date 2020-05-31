@@ -337,18 +337,26 @@ public class TechTreeMsagl : MonoBehaviour
                     PropertiesPanel.AddProperty("Produces", () => $"{blueprint.Quantity} {Context.Cache.Get<ItemData>(blueprint.Item).Name}");
                     PropertiesPanel.AddProperty("Production Quality", () => $"{Mathf.RoundToInt(blueprint.Quality * 100)}%");
                     PropertiesPanel.AddProperty("Production Time", () => $"{blueprint.ProductionTime:0.##} MH");
-                    PropertiesPanel.AddList("Ingredients", blueprint.Ingredients.Select(ingredient =>
+                    
+                    var ingredientsList = PropertiesPanel.AddList("Ingredients");
+                    foreach (var ingredient in blueprint.Ingredients)
                     {
                         var ingredientData = Context.Cache.Get<ItemData>(ingredient.Key);
-                        return $"{ingredient.Value} {ingredientData.Name}";
-                    }));
-                    PropertiesPanel.AddList("Dependencies", blueprint.Dependencies.Select(dependency =>
+                        ingredientsList.AddProperty(ingredientData.Name, () => ingredient.Value.ToString());
+                    }
+                    
+                    var dependenciesList = PropertiesPanel.AddList("Dependencies");
+                    foreach (var dependency in blueprint.Dependencies)
                     {
                         var dependencyBlueprint = Context.Cache.Get<BlueprintData>(dependency);
-                        return $"{dependencyBlueprint.Name}";
-                    }));
-                    PropertiesPanel.AddList("Descendants", Blueprints.Where(bp =>
-                        bp.Dependencies.Any(dep => blueprint.ID == dep)).Select(descendant => $"{descendant.Name}"));
+                        dependenciesList.AddProperty(dependencyBlueprint.Name);
+                    }
+                    
+                    var descendantsList = PropertiesPanel.AddList("Descendants");
+                    foreach (var descendant in Blueprints.Where(bp => bp.Dependencies.Any(dep => blueprint.ID == dep)))
+                    {
+                        descendantsList.AddProperty(descendant.Name);
+                    }
                 };
             _techInstances.Add(tech.GetComponent<Prototype>());
         }

@@ -3,10 +3,10 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10), Inspectable]
 public class HeatData : BehaviorData
 {
-    [InspectableField, JsonProperty("heat"), Key(1)]
+    [InspectableField, JsonProperty("heat"), Key(1), RuntimeInspectable]
     public PerformanceStat Heat = new PerformanceStat();
     
     [InspectableField, JsonProperty("perSecond"), Key(2)]

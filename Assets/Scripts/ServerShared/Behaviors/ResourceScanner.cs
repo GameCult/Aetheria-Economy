@@ -5,16 +5,16 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ResourceScannerData : BehaviorData
 {
-    [InspectableField, JsonProperty("range"), Key(1)]
+    [InspectableField, JsonProperty("range"), Key(1), RuntimeInspectable]
     public PerformanceStat Range = new PerformanceStat();
     
-    [InspectableField, JsonProperty("minDensity"), Key(2)]
+    [InspectableField, JsonProperty("minDensity"), Key(2), RuntimeInspectable]
     public PerformanceStat MinimumDensity = new PerformanceStat();
     
-    [InspectableField, JsonProperty("scanDuration"), Key(3)]
+    [InspectableField, JsonProperty("scanDuration"), Key(3), RuntimeInspectable]
     public PerformanceStat ScanDuration = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)

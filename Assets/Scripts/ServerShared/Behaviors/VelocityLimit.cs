@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VelocityLimitData : BehaviorData
 {
-    [InspectableField, JsonProperty("topSpeed"), Key(1)]  
+    [InspectableField, JsonProperty("topSpeed"), Key(1), RuntimeInspectable]  
     public PerformanceStat TopSpeed = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)

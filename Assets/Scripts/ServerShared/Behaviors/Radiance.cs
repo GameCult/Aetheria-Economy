@@ -3,10 +3,10 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class RadianceData : BehaviorData
 {
-    [InspectableField, JsonProperty("radiance"), Key(1)]
+    [InspectableField, JsonProperty("radiance"), Key(1), RuntimeInspectable]
     public PerformanceStat Radiance = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)

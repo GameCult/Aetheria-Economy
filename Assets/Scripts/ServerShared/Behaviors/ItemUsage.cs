@@ -4,10 +4,10 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-5)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-5), RuntimeInspectable]
 public class ItemUsageData : BehaviorData
 {
-    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("item"), Key(1)]  
+    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("item"), Key(1), RuntimeInspectable]  
     public Guid Item;
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)

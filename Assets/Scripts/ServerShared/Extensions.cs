@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using LiteNetLib;
@@ -46,6 +47,16 @@ public static class Extensions
             @"(\p{Ll})(\P{Ll})", 
             "$1 $2" 
         );
+    }
+    
+    public static string SignificantDigits(this float d, int digits=10)
+    {
+        int magnitude = (d == 0.0f) ? 0 : (int)Math.Floor(Math.Log10(Math.Abs(d))) + 1;
+        digits -= magnitude;
+        if (digits < 0)
+            digits = 0;
+        string fmt = "f" + digits.ToString();
+        return d.ToString(fmt);
     }
 
     private static Random? _random;

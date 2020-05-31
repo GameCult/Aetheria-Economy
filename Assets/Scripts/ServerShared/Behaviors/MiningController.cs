@@ -85,22 +85,23 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
                     else
                     {
                         _entity.SetMessage("Out of cargo space. Returning home to offload cargo.");
-                        GoHome(() =>
-                        {
-                            var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
-                            if (!_entity.Cargo.ToArray().All(ii =>
-                                _context.MoveCargo(_entity, homeEntity, _context.Cache.Get<ItemInstance>(ii))))
-                            {
-                                homeEntity.SetMessage("Colony is out of cargo space. Closing Mining Task.");
-                                FinishTask();
-                                _taskStarted = false;
-                            }
-                        });
+                        GoHome(OnArriveHome);
                     }
                 }
             }
         }
         return base.Update(delta);
+    }
+
+    private void OnArriveHome()
+    {
+        var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
+        if (!_entity.Cargo.ToArray().All(ii => _context.MoveCargo(_entity, homeEntity, _context.Cache.Get<ItemInstance>(ii))))
+        {
+            homeEntity.SetMessage("Colony is out of cargo space. Closing Mining Task.");
+            FinishTask();
+            _taskStarted = false;
+        }
     }
 
     private void NextAsteroid()

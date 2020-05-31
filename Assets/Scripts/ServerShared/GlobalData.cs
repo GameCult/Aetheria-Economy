@@ -160,6 +160,9 @@ public class GlobalData : DatabaseEntry
 
     [InspectableField, JsonProperty("messageDuration"), Key(50)]  
     public float MessageDuration = 4f;
+
+    [InspectableField, JsonProperty("significantDigits"), Key(51)]
+    public int SignificantDigits = 3;
     
     public float PlanetRadius(float mass)
     {

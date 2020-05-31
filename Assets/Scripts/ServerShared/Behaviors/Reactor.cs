@@ -1,23 +1,23 @@
 using MessagePack;
 using Newtonsoft.Json;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ReactorData : BehaviorData
 {
-    [InspectableField, JsonProperty("charge"), Key(1)]  
+    [InspectableField, JsonProperty("charge"), Key(1), RuntimeInspectable]  
     public PerformanceStat Charge = new PerformanceStat();
 
-    [InspectableField, JsonProperty("capacitance"), Key(2)]  
+    [InspectableField, JsonProperty("capacitance"), Key(2), RuntimeInspectable]  
     public PerformanceStat Capacitance = new PerformanceStat();
 
-    [InspectableField, JsonProperty("efficiency"), Key(3)]  
+    [InspectableField, JsonProperty("efficiency"), Key(3), RuntimeInspectable]  
     public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("overload"), Key(4)]  
+    [InspectableField, JsonProperty("overload"), Key(4), RuntimeInspectable]  
     public PerformanceStat OverloadEfficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("underload"), Key(5)]  
-    public PerformanceStat UnderloadRecovery = new PerformanceStat();
+    [InspectableField, JsonProperty("underload"), Key(5), RuntimeInspectable]  
+    public PerformanceStat ThrottlingFactor = new PerformanceStat();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
@@ -55,7 +55,7 @@ public class Reactor : IBehavior
 
         if (Entity.Energy > Capacitance)
         {
-            Entity.AddHeat(-(Entity.Energy - Capacitance) / efficiency * (1 - 1 / Context.Evaluate(_data.UnderloadRecovery, Item, Entity)));
+            Entity.AddHeat(-(Entity.Energy - Capacitance) / efficiency * (1 - 1 / Context.Evaluate(_data.ThrottlingFactor, Item, Entity)));
             Entity.Energy = Capacitance;
         }
 
