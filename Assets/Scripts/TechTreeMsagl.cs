@@ -23,7 +23,7 @@ public class TechTreeMsagl : MonoBehaviour
     public Prototype Arrow;
 
     [Section("UI Links")]
-    public ReadOnlyPropertiesPanel PropertiesPanel;
+    public PropertiesPanel PropertiesPanel;
 
     [Section("Graph Generation")]
     public bool TestMode;

@@ -745,8 +745,12 @@ public class GameContext
                 cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), orbit.ID, zone, corporation)
             {
                 Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}",
-                Temperature = 293
+                Temperature = 293,
+                Population = 1
             };
+            var parentCorp = Cache.Get<MegaCorporation>(corpData.Parent);
+            foreach (var attribute in parentCorp.Personality)
+                entity.Personality[attribute.Key] = attribute.Value;
             Cache.Add(entity);
 
             ZoneEntities[zone][entity.ID] = entity;

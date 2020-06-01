@@ -15,19 +15,50 @@ using static Unity.Mathematics.math;
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<Entity>))]
 public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackReceiver, INamedEntry
 {
-    [JsonProperty("temperature"), Key(1)] public float Temperature;
-    [JsonProperty("energy"), Key(2)] public float Energy;
-    [JsonProperty("position"), Key(3)] public float2 Position;
-    [JsonProperty("direction"), Key(4)] public float2 Direction = float2(0,1);
-    [JsonProperty("velocity"), Key(5)] public float2 Velocity;
-    [JsonProperty("cargo"), Key(6)] public readonly List<Guid> Cargo; // Type: ItemInstance
-    [JsonProperty("equipment"), Key(7)] public readonly List<Guid> EquippedItems; // Type: Gear
-    [JsonProperty("parent"), Key(8)] public Guid Parent; // Type: Entity
-    [JsonProperty("children"), Key(9)] public List<Guid> Children = new List<Guid>(); // Type: Entity
-    [JsonProperty("hull"), Key(10)] public Guid Hull; // Type: Gear
-    [JsonProperty("persistedBehaviorData"), Key(11)] public Dictionary<Guid, PersistentBehaviorData[]> PersistedBehaviors;
-    [JsonProperty("corporation"), Key(12)] public Guid Corporation;
-    [JsonProperty("name"), Key(13)] public string Name;
+    [JsonProperty("temperature"), Key(1)]
+    public float Temperature;
+    
+    [JsonProperty("energy"), Key(2)]
+    public float Energy;
+    
+    [JsonProperty("position"), Key(3)]
+    public float2 Position;
+    
+    [JsonProperty("direction"), Key(4)]
+    public float2 Direction = float2(0,1);
+    
+    [JsonProperty("velocity"), Key(5)]
+    public float2 Velocity;
+    
+    [JsonProperty("cargo"), Key(6)]
+    public readonly List<Guid> Cargo; // Type: ItemInstance
+    
+    [JsonProperty("equipment"), Key(7)]
+    public readonly List<Guid> EquippedItems; // Type: Gear
+    
+    [JsonProperty("parent"), Key(8)]
+    public Guid Parent; // Type: Entity
+    
+    [JsonProperty("children"), Key(9)]
+    public List<Guid> Children = new List<Guid>(); // Type: Entity
+    
+    [JsonProperty("hull"), Key(10)]
+    public Guid Hull; // Type: Gear
+    
+    [JsonProperty("persistedBehaviorData"), Key(11)]
+    public Dictionary<Guid, PersistentBehaviorData[]> PersistedBehaviors;
+    
+    [JsonProperty("corporation"), Key(12)]
+    public Guid Corporation;
+    
+    [JsonProperty("name"), Key(13)]
+    public string Name;
+    
+    [JsonProperty("population"), Key(14)]
+    public int Population;
+    
+    [JsonProperty("personality"), Key(15)]
+    public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
     
     // [IgnoreMember] protected List<IBehavior> Behaviors;
     [IgnoreMember] public Guid Zone;

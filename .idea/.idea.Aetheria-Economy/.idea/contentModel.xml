@@ -1758,6 +1758,7 @@
             <e p="ClickableCollider.cs" t="Include" />
             <e p="ClickCatcher.cs" t="Include" />
             <e p="ClickRaycaster.cs" t="Include" />
+            <e p="ColonyTab.cs" t="Include" />
             <e p="ContextMenu.cs" t="Include" />
             <e p="ContextMenuOption.cs" t="Include" />
             <e p="CorporationMenuItem.cs" t="Include" />
@@ -1774,7 +1775,6 @@
             <e p="PropertiesPanel.cs" t="Include" />
             <e p="PropertyLabel.cs" t="Include" />
             <e p="RangedFloatField.cs" t="Include" />
-            <e p="ReadOnlyPropertiesPanel.cs" t="Include" />
             <e p="TabActivator.cs" t="Include" />
             <e p="TabButton.cs" t="Include" />
             <e p="TabGroup.cs" t="Include" />

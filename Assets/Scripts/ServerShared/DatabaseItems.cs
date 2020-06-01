@@ -32,12 +32,16 @@ public interface INamedEntry
  Union(11, typeof(Player)), 
  Union(12, typeof(Corporation)),
  Union(13, typeof(MegaCorporation)),
- Union(14, typeof(StationData)), 
+ Union(14, typeof(OrbitalEntity)), 
  Union(15, typeof(OrbitData)), 
  Union(16, typeof(PlanetData)),
  Union(17, typeof(PersonalityAttribute)),
  Union(18, typeof(AgentTask)),
  Union(19, typeof(LoadoutData)),
+ Union(20, typeof(Ship)), 
+ Union(21, typeof(Mining)), 
+ Union(22, typeof(StationTowing)), 
+ Union(23, typeof(Survey)), 
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 //[Union(21, typeof(ContractData))]
 //[Union(22, typeof(Station))]

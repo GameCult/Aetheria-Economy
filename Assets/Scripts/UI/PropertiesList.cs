@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PropertiesList : ReadOnlyPropertiesPanel
+public class PropertiesList : PropertiesPanel
 {
     public Image FoldoutIcon;
     public float FoldoutRotationDamping;

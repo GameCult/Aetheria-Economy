@@ -363,21 +363,60 @@ public class DatabaseListView : EditorWindow
                                     }
                                 }
                             }
+                            
+                            using (var h = new HorizontalScope(ListItemStyle))
+                            {
+                                if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
+                                {
+                                    CreateItem(_itemTypes[i], newItem =>
+                                    {
+                                        if(newItem is SimpleCommodityData simpleCommodityData)
+                                        {
+                                            simpleCommodityData.Category =
+                                                (SimpleCommodityCategory) Enum.Parse(typeof(SimpleCommodityCategory),
+                                                    itemGroup.Key);
+                                            simpleCommodityData.Name = $"New {itemGroup.Key}";
+                                        }
+                                        else if(newItem is CompoundCommodityData compoundCommodityData)
+                                        {
+                                            compoundCommodityData.Category =
+                                                (CompoundCommodityCategory) Enum.Parse(
+                                                    typeof(CompoundCommodityCategory), itemGroup.Key);
+                                            compoundCommodityData.Name = $"New {itemGroup.Key}";
+                                        }
+                                        else if(newItem is GearData gearData)
+                                        {
+                                            gearData.Hardpoint =
+                                                (HardpointType) Enum.Parse(typeof(HardpointType), itemGroup.Key);
+                                            gearData.Name = $"New {itemGroup.Key}";
+                                        }
+                                        else if(newItem is HullData hullData)
+                                        {
+                                            hullData.HullType = (HullType) Enum.Parse(typeof(HullType), itemGroup.Key);
+                                            hullData.Name = $"New {itemGroup.Key}";
+                                        }
+                                    });
+                                }
+                                GUILayout.Space(30);
+                                GUILayout.Label("New " + itemGroup.Key);
+                                var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                                GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                            }
                         }
+                        
                     }
-                    
-                    foreach (var item in items.Where(e=>e.GetType()==_itemTypes[i]).OrderBy(item=>item.Name))
+
+                    if (!itemGroups.Any())
                     {
-                    }
-                    
-                    using (var h = new HorizontalScope(ListItemStyle))
-                    {
-                        if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-                            CreateItem(_itemTypes[i]);
-                        GUILayout.Space(20);
-                        GUILayout.Label("New " + _itemTypes[i].Name);
-                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                        using (var h = new HorizontalScope(ListItemStyle))
+                        {
+                            if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
+                                CreateItem(_itemTypes[i]);
+                            GUILayout.Space(20);
+                            GUILayout.Label("New " + _itemTypes[i].Name);
+                            var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                            GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                        }
                     }
                 }
             }
@@ -449,11 +488,12 @@ public class DatabaseListView : EditorWindow
         _inspector.Repaint();
     }
 
-    private DatabaseEntry CreateItem(Type type)
+    private DatabaseEntry CreateItem(Type type, Action<DatabaseEntry> onCreate = null)
     {
         var newEntry = (DatabaseEntry) Activator.CreateInstance(type);
         if(newEntry is INamedEntry entry)
             entry.EntryName = $"New {FormatTypeName(type.Name)}";
+        onCreate?.Invoke(newEntry);
         _databaseCache.Add(newEntry);
         Select(newEntry);
         return newEntry;

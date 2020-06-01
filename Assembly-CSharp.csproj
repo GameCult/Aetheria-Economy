@@ -874,6 +874,7 @@
     <Compile Include="Assets\Scripts\UI\ClickableCollider.cs" />
     <Compile Include="Assets\Scripts\UI\ClickCatcher.cs" />
     <Compile Include="Assets\Scripts\UI\ClickRaycaster.cs" />
+    <Compile Include="Assets\Scripts\UI\ColonyTab.cs" />
     <Compile Include="Assets\Scripts\UI\ContextMenu.cs" />
     <Compile Include="Assets\Scripts\UI\ContextMenuOption.cs" />
     <Compile Include="Assets\Scripts\UI\CorporationMenuItem.cs" />
@@ -890,7 +891,6 @@
     <Compile Include="Assets\Scripts\UI\PropertiesPanel.cs" />
     <Compile Include="Assets\Scripts\UI\PropertyLabel.cs" />
     <Compile Include="Assets\Scripts\UI\RangedFloatField.cs" />
-    <Compile Include="Assets\Scripts\UI\ReadOnlyPropertiesPanel.cs" />
     <Compile Include="Assets\Scripts\UI\TabActivator.cs" />
     <Compile Include="Assets\Scripts\UI\TabButton.cs" />
     <Compile Include="Assets\Scripts\UI\TabGroup.cs" />

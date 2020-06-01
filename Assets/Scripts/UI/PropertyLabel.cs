@@ -8,12 +8,5 @@ public class PropertyLabel : MonoBehaviour
 {
     public TextMeshProUGUI Name;
     public TextMeshProUGUI Value;
-    public Func<string> ValueFunction;
     public FlatFlatButton Button;
-
-    private void Update()
-    {
-        if(ValueFunction != null)
-            Value.text = ValueFunction();
-    }
 }

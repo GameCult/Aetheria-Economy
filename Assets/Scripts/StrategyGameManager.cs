@@ -27,10 +27,12 @@ public class StrategyGameManager : MonoBehaviour
     public MeshRenderer ZoneBackground;
     public MeshRenderer ZoneBoundary;
     public ClickRaycaster ClickRaycaster;
-    public ReadOnlyPropertiesPanel PropertiesPanel;
+    public GameObject PropertiesPanelView;
+    public PropertiesPanel PropertiesPanel;
     public ContextMenu ContextMenu;
     public RectTransform GameMenuRoot;
     public RectTransform CorpMenuRoot;
+    public ColonyTab ColonyTab;
     public CorporationMenuItem CorpOptionPrefab;
     public TabButton CorpMenuContinueButton;
     public TMP_InputField CorpNameInputField;
@@ -41,6 +43,7 @@ public class StrategyGameManager : MonoBehaviour
     public TabButton GalaxyTabButton;
     public TabButton ZoneTabButton;
     public TabButton TechTabButton;
+    public TabButton ColonyTabButton;
     
     [Section("Prefabs & Prototypes")]
     public Prototype GalaxyZonePrototype;
@@ -104,6 +107,7 @@ public class StrategyGameManager : MonoBehaviour
     private Guid _selectedOrbit = Guid.Empty;
     private Guid _selectedTowingTarget = Guid.Empty;
     private float _orbitRadius;
+    private Guid _selectedEntity;
     
     void Start()
     {
@@ -115,6 +119,7 @@ public class StrategyGameManager : MonoBehaviour
         {
             _cache.Load(new DirectoryInfo(Application.dataPath).Parent.FullName);
             _context = new GameContext(_cache, Debug.Log);
+            ColonyTab.Context = _context;
             TechTree.Context = _context;
             _context.MapLayers = _cache.GetAll<GalaxyMapLayerData>().ToDictionary(ml => ml.Name);
             _context.GalaxyZones = _cache.GetAll<ZoneData>()
@@ -206,6 +211,7 @@ public class StrategyGameManager : MonoBehaviour
                             for(int i=0; i<loadout.Value; i++)
                                 entities.Add(_context.CreateEntity(_selectedZone, newCorp.ID, loadout.Key));
                         var colony = entities.First(e => e is OrbitalEntity);
+                        _selectedEntity = colony.ID;
                         foreach (var ship in entities.Where(e => e is Ship))
                         {
                             foreach (var controller in ship.GetBehaviors<ControllerBase>())
@@ -257,7 +263,7 @@ public class StrategyGameManager : MonoBehaviour
             _currentTab = button;
             if (_currentTab == GalaxyTabButton)
             {
-                PropertiesPanel.gameObject.SetActive(true);
+                PropertiesPanelView.gameObject.SetActive(true);
                 PopulateGalaxyProperties();
                 if (!_galaxyPopulated) PopulateGalaxy();
                 Camera.transform.position = _galaxyCameraPos;
@@ -266,7 +272,7 @@ public class StrategyGameManager : MonoBehaviour
 
             else if (_currentTab == ZoneTabButton)
             {
-                PropertiesPanel.gameObject.SetActive(true);
+                PropertiesPanelView.gameObject.SetActive(true);
                 var zone = _cache.Get<ZoneData>(_selectedZone);
                 if (_populatedZone != _selectedZone && zone != null)
                     PopulateZone();
@@ -278,7 +284,7 @@ public class StrategyGameManager : MonoBehaviour
 
             else if (_currentTab == TechTabButton)
             {
-                PropertiesPanel.gameObject.SetActive(true);
+                PropertiesPanelView.gameObject.SetActive(true);
                 PopulateTechProperties();
                 if (!_techLayoutGenerated)
                 {
@@ -288,7 +294,12 @@ public class StrategyGameManager : MonoBehaviour
                 }
             }
             
-            else PropertiesPanel.gameObject.SetActive(false);
+            else PropertiesPanelView.gameObject.SetActive(false);
+            
+            if (_currentTab == ColonyTabButton)
+            {
+                ColonyTab.Open(_selectedEntity);
+            }
         };
         
         _boundaryMaterial = ZoneBoundary.material;
@@ -464,7 +475,13 @@ public class StrategyGameManager : MonoBehaviour
                     zoneOrbital.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) => 
                     {
                         if (data.button == PointerEventData.InputButton.Left)
-                            Select(orbital.ID);
+                        {
+                            _selectedEntity = orbital.ID;
+                            if (data.clickCount == 1)
+                                Select(orbital.ID);
+                            else if (data.clickCount == 2)
+                                ColonyTabButton.OnPointerClick(data);
+                        }
                         else if (data.button == PointerEventData.InputButton.Right) 
                             ShowContextMenu(orbital.ID);
                     };
@@ -714,9 +731,6 @@ public class StrategyGameManager : MonoBehaviour
             var equippedItems = entity.EquippedItems.Select(g => _context.Cache.Get<Gear>(g));
             foreach(var gear in equippedItems)
                 PopulateGearProperties(gearList.AddList(gear.ItemData.Name), gear, entity);
-            //     gearList.AddProperty(gear.ItemData.Name);
-            // var firstGear = equippedItems.First();
-            // PopulateGearProperties(gearList.AddList(firstGear.ItemData.Name), firstGear, entity);
             if(!entity.Cargo.Any())
                 PropertiesPanel.AddProperty("No Cargo");
             else
@@ -741,6 +755,8 @@ public class StrategyGameManager : MonoBehaviour
             PropertiesPanel.AddSection("Sector");
             PropertiesPanel.AddProperty("Planets", () => $"{zone.Planets.Length}");
         }
+        
+        PropertiesPanel.RefreshValues();
     }
 
     void PopulateGearProperties(PropertiesList panel, Gear gear, Entity entity)
