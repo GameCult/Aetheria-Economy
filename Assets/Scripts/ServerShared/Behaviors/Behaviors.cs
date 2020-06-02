@@ -93,6 +93,7 @@ public abstract class PersistentBehaviorData
  Union(26, typeof(MiningToolData)),
  Union(27, typeof(SurveyControllerData)),
  Union(28, typeof(ResourceScannerData)),
+ Union(29, typeof(WanderControllerData)),
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {

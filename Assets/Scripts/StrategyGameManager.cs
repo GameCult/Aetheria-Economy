@@ -985,6 +985,83 @@ public class StrategyGameManager : MonoBehaviour
         }
     }
 
+    void loadtest(string[] args)
+    {
+        if (!TestMode)
+            return;
+
+        if (args.Length < 4)
+        {
+            Debug.Log("Expected arguments: Wanderer count, Patroller count, Orbital count!");
+            return;
+        }
+        
+        var zoneData = _cache.Get<ZoneData>(_populatedZone);
+
+        if (zoneData == null)
+        {
+            Debug.Log("Attempted to spawn ship but no zone is populated!");
+            return;
+        }
+
+        int wanderers;
+        if(!int.TryParse(args[1], out wanderers))
+        {
+            Debug.Log("Argument 1: Wanderer count invalid");
+            return;
+        }
+        for (int i = 0; i < wanderers; i++)
+        {
+            var loadoutData = _context.Cache.GetAll<LoadoutData>().FirstOrDefault(l => l.Name == "Wanderer");
+            if (loadoutData == null)
+            {
+                Debug.Log($"Loadout with name \"{args[1]}\" not found!");
+                return;
+            }
+
+            var entity = _context.CreateEntity(_populatedZone, _playerCorporation, loadoutData.ID);
+            entity.GetBehaviors<WanderController>().First().WanderTarget = _context.Random.NextFloat() > .5f
+                ? WanderTarget.Planets
+                : WanderTarget.Orbitals;
+        }
+        
+        int patrollers;
+        if(!int.TryParse(args[2], out patrollers))
+        {
+            Debug.Log("Argument 2: Patroller count invalid");
+            return;
+        }
+        for (int i = 0; i < patrollers; i++)
+        {
+            var loadoutData = _context.Cache.GetAll<LoadoutData>().FirstOrDefault(l => l.Name == "Patroller");
+            if (loadoutData == null)
+            {
+                Debug.Log($"Loadout with name \"{args[1]}\" not found!");
+                return;
+            }
+
+            _context.CreateEntity(_populatedZone, _playerCorporation, loadoutData.ID);
+        }
+        
+        int colonies;
+        if(!int.TryParse(args[1], out colonies))
+        {
+            Debug.Log("Argument 3: Colony count invalid");
+            return;
+        }
+        for (int i = 0; i < colonies; i++)
+        {
+            var loadoutData = _context.Cache.GetAll<LoadoutData>().FirstOrDefault(l => l.Name == "Orbital Colony");
+            if (loadoutData == null)
+            {
+                Debug.Log($"Loadout with name \"{args[1]}\" not found!");
+                return;
+            }
+
+            _context.CreateEntity(_populatedZone, _playerCorporation, loadoutData.ID);
+        }
+    }
+
     void spawn(string[] args)
     {
         if (!TestMode)

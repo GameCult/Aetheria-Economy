@@ -668,7 +668,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Kreacher's Comfort
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f65e20c70af9671428dd62c7c635e417, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f353c922a07f02041bdb1694a3faf9b7, type: 2}
   m_sharedMaterial: {fileID: 21790448164444372, guid: f65e20c70af9671428dd62c7c635e417,
     type: 2}
   m_fontSharedMaterials: []

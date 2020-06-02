@@ -13,6 +13,7 @@
       <Path>.git</Path>
       <Path>.idea</Path>
       <Path>Asset Sources</Path>
+      <Path>Build</Path>
       <Path>Economy.Server</Path>
       <Path>Economy.Shared</Path>
       <Path>GameData</Path>

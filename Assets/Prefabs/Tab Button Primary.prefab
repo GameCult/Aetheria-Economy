@@ -163,7 +163,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Corporation
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9dcd07b95faae7641a3ff6fccab43c32, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 54f472d4b2cd9b84b8d9917ec13a4e94, type: 2}
   m_sharedMaterial: {fileID: 21906973755630180, guid: 9dcd07b95faae7641a3ff6fccab43c32,
     type: 2}
   m_fontSharedMaterials: []
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 32
+  m_fontSize: 28
   m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
@@ -384,6 +384,10 @@ MonoBehaviour:
     FillColor: {r: 0, g: 0.4180913, b: 1, a: 0.7490196}
     OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     LayoutPadding: 32
+  DisabledAppearance:
+    FillColor: {r: 0, g: 0, b: 0, a: 0}
+    OutlineColor: {r: 0, g: 0, b: 0, a: 0}
+    LayoutPadding: 0
   Tab: {fileID: 0}
 --- !u!1 &6976631978676041201
 GameObject:

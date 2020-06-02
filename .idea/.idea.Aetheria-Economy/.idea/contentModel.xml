@@ -1285,6 +1285,7 @@
               <e p="VelocityConversion.cs" t="Include" />
               <e p="VelocityLimit.cs" t="Include" />
               <e p="Visibility.cs" t="Include" />
+              <e p="WanderController.cs" t="Include" />
               <e p="Weapon.cs" t="Include" />
             </e>
             <e p="BlueprintData.cs" t="Include" />
