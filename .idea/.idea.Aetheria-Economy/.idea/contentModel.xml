@@ -1288,6 +1288,7 @@
               <e p="Weapon.cs" t="Include" />
             </e>
             <e p="BlueprintData.cs" t="Include" />
+            <e p="Corporations.cs" t="Include" />
             <e p="DatabaseCache.cs" t="Include" />
             <e p="DatabaseItems.cs" t="Include" />
             <e p="Economy.Shared.Unity.asmdef" t="Include" />
@@ -1755,6 +1756,7 @@
             <e p="AttributeProperty.cs" t="Include" />
             <e p="BackgroundRenderer.cs" t="Include" />
             <e p="BoolField.cs" t="Include" />
+            <e p="ButtonField.cs" t="Include" />
             <e p="ClickableCollider.cs" t="Include" />
             <e p="ClickCatcher.cs" t="Include" />
             <e p="ClickRaycaster.cs" t="Include" />
@@ -1773,6 +1775,7 @@
             <e p="MouseHover.cs" t="Include" />
             <e p="PropertiesList.cs" t="Include" />
             <e p="PropertiesPanel.cs" t="Include" />
+            <e p="PropertyButton.cs" t="Include" />
             <e p="PropertyLabel.cs" t="Include" />
             <e p="RangedFloatField.cs" t="Include" />
             <e p="TabActivator.cs" t="Include" />

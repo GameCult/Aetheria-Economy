@@ -871,6 +871,7 @@
     <Compile Include="Assets\Scripts\UI\AttributeProperty.cs" />
     <Compile Include="Assets\Scripts\UI\BackgroundRenderer.cs" />
     <Compile Include="Assets\Scripts\UI\BoolField.cs" />
+    <Compile Include="Assets\Scripts\UI\ButtonField.cs" />
     <Compile Include="Assets\Scripts\UI\ClickableCollider.cs" />
     <Compile Include="Assets\Scripts\UI\ClickCatcher.cs" />
     <Compile Include="Assets\Scripts\UI\ClickRaycaster.cs" />
@@ -889,6 +890,7 @@
     <Compile Include="Assets\Scripts\UI\MouseHover.cs" />
     <Compile Include="Assets\Scripts\UI\PropertiesList.cs" />
     <Compile Include="Assets\Scripts\UI\PropertiesPanel.cs" />
+    <Compile Include="Assets\Scripts\UI\PropertyButton.cs" />
     <Compile Include="Assets\Scripts\UI\PropertyLabel.cs" />
     <Compile Include="Assets\Scripts\UI\RangedFloatField.cs" />
     <Compile Include="Assets\Scripts\UI\TabActivator.cs" />

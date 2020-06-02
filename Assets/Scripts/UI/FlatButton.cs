@@ -21,6 +21,7 @@ public class FlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public FlatButtonAppearance SelectedAppearance;
     public FlatButtonAppearance HoverAppearance;
     public FlatButtonAppearance ClickAppearance;
+    public FlatButtonAppearance DisabledAppearance;
 
     private RectOffset _defaultPadding;
     private float _currentPadding;
@@ -45,7 +46,7 @@ public class FlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!DisableClickWhenSelected || CurrentState != FlatButtonState.Selected)
+        if (CurrentState != FlatButtonState.Disabled && (!DisableClickWhenSelected || CurrentState != FlatButtonState.Selected))
         {
             Fill.color = ClickAppearance.FillColor;
             Outline.color = ClickAppearance.OutlineColor;
@@ -66,6 +67,9 @@ public class FlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 break;
             case FlatButtonState.Hover:
                 appearance = HoverAppearance;
+                break;
+            case FlatButtonState.Disabled:
+                appearance = DisabledAppearance;
                 break;
             default:
                 appearance = new FlatButtonAppearance();
@@ -89,7 +93,8 @@ public enum FlatButtonState
 {
     Unselected,
     Selected,
-    Hover
+    Hover,
+    Disabled
 }
 
 [Serializable]

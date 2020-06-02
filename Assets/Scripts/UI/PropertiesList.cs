@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PropertiesList : PropertiesPanel
@@ -33,7 +34,7 @@ public class PropertiesList : PropertiesPanel
 
     public void Start()
     {
-        Button.OnClick += ToggleExpand;
+        Button.OnClick += _ => ToggleExpand();
     }
 
     public void ToggleExpand() => Expanded = !_expanded;
@@ -45,24 +46,31 @@ public class PropertiesList : PropertiesPanel
         FoldoutIcon.transform.localRotation = Quaternion.Euler(0,0, _foldoutRotation);
     }
 
-    public new PropertyLabel AddProperty(string name, Func<string> value = null, Action onClick = null)
+    public override PropertyLabel AddProperty(string name, Func<string> read = null, Action<PointerEventData> onClick = null, bool radio = false)
     {
-        var prop = base.AddProperty(name, value, onClick);
+        var prop = base.AddProperty(name, read, onClick, radio);
         prop.gameObject.SetActive(false);
         return prop;
     }
 
-    public new PropertiesList AddList(string name)
+    public override PropertiesList AddList(string name)
     {
         var list = base.AddList(name);
         list.gameObject.SetActive(false);
         return list;
     }
 
-    public new RectTransform AddSection(string name)
+    public override RectTransform AddSection(string name)
     {
         var section = base.AddSection(name);
         section.gameObject.SetActive(false);
         return section;
+    }
+
+    public override PropertyButton AddButton(string name, Action<PointerEventData> onClick)
+    {
+        var button = base.AddButton(name, onClick);
+        button.gameObject.SetActive(false);
+        return button;
     }
 }

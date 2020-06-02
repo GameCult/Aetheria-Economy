@@ -203,6 +203,9 @@ public class StrategyGameManager : MonoBehaviour
                         CorpMenuRoot.gameObject.SetActive(false);
 
                         var parentCorp = _cache.Get<MegaCorporation>(newCorp.Parent);
+                        
+                        newCorp.UnlockedBlueprints.AddRange(parentCorp.InitialTechnologies);
+                        
                         _selectedZone = parentCorp.HomeZone;
                         ZoneTabButton.OnPointerClick(null);
                         

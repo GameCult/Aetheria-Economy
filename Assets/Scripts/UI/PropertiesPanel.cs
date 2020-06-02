@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PropertiesPanel : MonoBehaviour
 {
@@ -15,14 +16,18 @@ public class PropertiesPanel : MonoBehaviour
     public AttributeProperty AttributePrefab;
     public InputField InputField;
     public RangedFloatField RangedFloatField;
+    public RangedFloatField ProgressField;
     public EnumField EnumField;
     public BoolField BoolField;
-    public bool ChildRadioSelection;
+    public PropertyButton PropertyButton;
+    public ButtonField ButtonField;
+    [HideInInspector] public GameContext Context;
 
     protected List<GameObject> Properties = new List<GameObject>();
     protected List<FlatFlatButton> Buttons = new List<FlatFlatButton>();
     protected FlatFlatButton SelectedChild;
     protected event Action RefreshPropertyValues;
+    protected bool RadioSelection = false;
 
     private void Update()
     {
@@ -37,6 +42,7 @@ public class PropertiesPanel : MonoBehaviour
         Buttons.Clear();
         SelectedChild = null;
         RefreshPropertyValues = null;
+        RadioSelection = false;
     }
 
     public void Deselect()
@@ -46,7 +52,7 @@ public class PropertiesPanel : MonoBehaviour
 	    SelectedChild = null;
     }
 
-    public RectTransform AddSection(string name)
+    public virtual RectTransform AddSection(string name)
     {
         var section = Instantiate(SectionPrefab, transform);
         section.GetComponentInChildren<TextMeshProUGUI>().text = name;
@@ -54,20 +60,24 @@ public class PropertiesPanel : MonoBehaviour
         return section;
     }
 
-    public PropertyLabel AddProperty(string name, Func<string> read = null, Action onClick = null)
+    public virtual PropertyLabel AddProperty(string name, Func<string> read = null, Action<PointerEventData> onClick = null, bool radio = false)
     {
         var property = Instantiate(PropertyPrefab, transform);
         property.Name.text = name;
-        if (ChildRadioSelection)
+        if (radio)
         {
+	        RadioSelection = true;
             Buttons.Add(property.Button);
-            property.Button.OnClick += () =>
+            property.Button.OnClick += data =>
             {
-                if (SelectedChild != null)
-                    SelectedChild.CurrentState = FlatButtonState.Unselected;
-                SelectedChild = property.Button;
-                SelectedChild.CurrentState = FlatButtonState.Selected;
-                onClick?.Invoke();
+	            if (data.button == PointerEventData.InputButton.Left)
+	            {
+		            if (SelectedChild != null)
+			            SelectedChild.CurrentState = FlatButtonState.Unselected;
+		            SelectedChild = property.Button;
+		            SelectedChild.CurrentState = FlatButtonState.Selected;
+	            }
+                onClick?.Invoke(data);
             };
         }
         else if(onClick!=null) property.Button.OnClick += onClick;
@@ -76,7 +86,7 @@ public class PropertiesPanel : MonoBehaviour
         return property;
     }
 
-    public PropertiesList AddList(string name) //, IEnumerable<(string, Func<string>)> elements)
+    public virtual PropertiesList AddList(string name) //, IEnumerable<(string, Func<string>)> elements)
     {
         var list = Instantiate(ListPrefab, transform);
         list.Title.text = name;
@@ -103,8 +113,26 @@ public class PropertiesPanel : MonoBehaviour
         Properties.Add(attributeInstance.gameObject);
         return attributeInstance;
     }
+
+    public virtual PropertyButton AddButton(string name, Action<PointerEventData> onClick)
+    {
+	    var button = Instantiate(PropertyButton, transform);
+	    button.Label.text = name;
+	    button.Button.OnClick += onClick;
+	    Properties.Add(button.gameObject);
+	    return button;
+    }
+
+    public void AddButton(string name, string label, Action<PointerEventData> onClick)
+    {
+	    var button = Instantiate(ButtonField, transform);
+	    button.Label.text = name;
+	    button.ButtonLabel.text = label;
+	    button.Button.OnClick += onClick;
+	    Properties.Add(button.gameObject);
+    }
 	
-	public void AddProperty(string name, Func<string> read, Action<string> write)
+	public void AddField(string name, Func<string> read, Action<string> write)
 	{
 		var field = Instantiate(InputField, transform);
 		field.Label.text = name;
@@ -114,7 +142,7 @@ public class PropertiesPanel : MonoBehaviour
 		Properties.Add(field.gameObject);
 	}
 
-	public void AddProperty(string name, Func<float> read, Action<float> write)
+	public void AddField(string name, Func<float> read, Action<float> write)
 	{
 		var field = Instantiate(InputField, transform);
 		field.Label.text = name;
@@ -124,7 +152,7 @@ public class PropertiesPanel : MonoBehaviour
 		Properties.Add(field.gameObject);
 	}
 	
-	public void AddProperty(string name, Func<int> read, Action<int> write)
+	public void AddField(string name, Func<int> read, Action<int> write)
 	{
 		var field = Instantiate(InputField, transform);
 		field.Label.text = name;
@@ -134,7 +162,7 @@ public class PropertiesPanel : MonoBehaviour
 		Properties.Add(field.gameObject);
 	}
 	
-	public void AddProperty(string name, Func<float> read, Action<float> write, float min, float max)
+	public void AddField(string name, Func<float> read, Action<float> write, float min, float max)
 	{
 		var field = Instantiate(RangedFloatField, transform);
 		field.Label.text = name;
@@ -146,7 +174,19 @@ public class PropertiesPanel : MonoBehaviour
 		Properties.Add(field.gameObject);
 	}
 	
-	public void AddProperty(string name, Func<int> read, Action<int> write, int min, int max)
+	public void AddProgressField(string name, Func<float> read)
+	{
+		var field = Instantiate(ProgressField, transform);
+		field.Label.text = name;
+		field.Slider.wholeNumbers = false;
+		field.Slider.minValue = 0;
+		field.Slider.maxValue = 1;
+		//field.Slider.onValueChanged.AddListener(val => write(val));
+		RefreshPropertyValues += () => field.Slider.value = read();
+		Properties.Add(field.gameObject);
+	}
+	
+	public void AddField(string name, Func<int> read, Action<int> write, int min, int max)
 	{
 		var field = Instantiate(RangedFloatField, transform);
 		field.Label.text = name;
@@ -158,7 +198,7 @@ public class PropertiesPanel : MonoBehaviour
 		Properties.Add(field.gameObject);
 	}
 	
-	public void AddProperty(string name, Func<bool> read, Action<bool> write)
+	public void AddField(string name, Func<bool> read, Action<bool> write)
 	{
 		var field = Instantiate(BoolField, transform);
 		field.Label.text = name;
@@ -167,7 +207,7 @@ public class PropertiesPanel : MonoBehaviour
 		Properties.Add(field.gameObject);
 	}
 	
-	public void AddProperty(string name, Func<int> read, Action<int> write, string[] enumOptions)
+	public void AddField(string name, Func<int> read, Action<int> write, string[] enumOptions)
 	{
 		var field = Instantiate(EnumField, transform);
 		field.Label.text = name;

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public event Action OnClick;
+    public event Action<PointerEventData> OnClick;
     public float StateDamping;
 //    public RectTransform Tab;
     public Image Fill;
@@ -19,6 +19,7 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public Color SelectedColor;
     public Color HoverColor;
     public Color ClickColor;
+    public Color DisabledColor;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -34,12 +35,12 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!DisableClickWhenSelected || CurrentState != FlatButtonState.Selected)
+        if (CurrentState != FlatButtonState.Disabled && (!DisableClickWhenSelected || CurrentState != FlatButtonState.Selected))
         {
             if (OnClick != null)
             {
                 Fill.color = ClickColor;
-                OnClick();
+                OnClick(eventData);
             }
         }
     }
@@ -57,6 +58,9 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 break;
             case FlatButtonState.Hover:
                 appearance = HoverColor;
+                break;
+            case FlatButtonState.Disabled:
+                appearance = DisabledColor;
                 break;
             default:
                 appearance = Color.white;

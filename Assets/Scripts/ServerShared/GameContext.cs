@@ -699,9 +699,6 @@ public class GameContext
         if (simpleCargo.Any(g=>g==null))
             return null;
         
-        foreach(var c in simpleCargo)
-            Cache.Add(c);
-        
         var hull = CreateInstance(loadoutData.Hull, GlobalData.StartingGearQualityMin, GlobalData.StartingGearQualityMax);
         
         if(hull==null)
@@ -764,11 +761,16 @@ public class GameContext
     {
         var item = Cache.Get<SimpleCommodityData>(data);
         if (item != null)
-            return new SimpleCommodity
+        {
+            var newItem = new SimpleCommodity
             {
+                Context = this,
                 Data = data,
                 Quantity = count
             };
+            Cache.Add(newItem);
+            return newItem;
+        }
         
         _logger("Attempted to create Simple Commodity instance using missing or incorrect item id");
         return null;
@@ -809,7 +811,8 @@ public class GameContext
                 Data = data,
                 Ingredients = ingredients.Select(i=>i.ID).ToList(),
                 Quality = Random.NextFloat(qualityMin, qualityMax),
-                Blueprint = blueprint.ID
+                Blueprint = blueprint.ID,
+                Name = $"Generic {item.Name}"
             };
             newGear.Durability = Evaluate(equippableItemData.Durability, newGear);
             Cache.Add(newGear);
@@ -822,7 +825,8 @@ public class GameContext
             Data = data,
             Ingredients = ingredients.Select(i=>i.ID).ToList(),
             Quality = Random.NextFloat(qualityMin, qualityMax),
-            Blueprint = blueprint.ID
+            Blueprint = blueprint.ID,
+            Name = $"Generic {item.Name}"
         };
         Cache.Add(newCommodity);
         return newCommodity;

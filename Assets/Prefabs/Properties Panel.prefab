@@ -101,10 +101,15 @@ MonoBehaviour:
     type: 3}
   RangedFloatField: {fileID: 1663396771457720812, guid: c214f62d8f2188140b96ed12798034c8,
     type: 3}
+  ProgressField: {fileID: 256436433275418348, guid: e6524d59d9bc67545b0eb1304bfb9d4b,
+    type: 3}
   EnumField: {fileID: 8066691333806154, guid: f19a14cd178d48f49ace9ad217bea2ed, type: 3}
   BoolField: {fileID: 7661950293931311388, guid: 001ad6a15f0d582458d359c0ae4405ed,
     type: 3}
-  ChildRadioSelection: 0
+  PropertyButton: {fileID: 1613450655389604799, guid: 99bde06e2f0ca504bb95f2a4e3429462,
+    type: 3}
+  ButtonField: {fileID: 6566784227922820057, guid: 6db1feb4cda7b8c419384cd42c85a5c4,
+    type: 3}
 --- !u!1 &2378632238144827086
 GameObject:
   m_ObjectHideFlags: 0

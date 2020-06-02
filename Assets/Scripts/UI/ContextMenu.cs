@@ -54,7 +54,7 @@ public class ContextMenu : MonoBehaviour
         _hasDropdown = false;
     }
 
-    public void AddOption(string text, Action action)
+    public void AddOption(string text, Action action, bool enabled = true)
     {
         var optionButton = Instantiate(OptionPrefab, ContentRoot);
         optionButton.Label.text = text;
@@ -72,10 +72,11 @@ public class ContextMenu : MonoBehaviour
                 Destroy(_dropdown);
         };
         optionButton.Arrow.gameObject.SetActive(false);
+        optionButton.Button.interactable = enabled;
         _options.Add(optionButton.gameObject);
     }
 
-    public void AddDropdown(string text, IEnumerable<(string text, Action action)> options)
+    public void AddDropdown(string text, IEnumerable<(string text, Action action, bool enabled)> options)
     {
         _hasDropdown = true;
         var optionButton = Instantiate(OptionPrefab, ContentRoot);
@@ -89,7 +90,7 @@ public class ContextMenu : MonoBehaviour
                 var drop = Instantiate(DropMenuPrefab, Root);
                 _dropdown = drop.gameObject;
                 foreach (var option in options)
-                    drop.AddOption(option.text, option.action);
+                    drop.AddOption(option.text, option.action, option.enabled);
                 drop.Parent = this;
                 drop.ForceDirectionRight = _dropdownRight;
                 Vector3[] corners = new Vector3[4];

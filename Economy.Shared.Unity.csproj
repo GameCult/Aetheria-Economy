@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Visibility.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Weapon.cs" />
     <Compile Include="Assets\Scripts\ServerShared\BlueprintData.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Corporations.cs" />
     <Compile Include="Assets\Scripts\ServerShared\DatabaseCache.cs" />
     <Compile Include="Assets\Scripts\ServerShared\DatabaseItems.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Entity.cs" />
