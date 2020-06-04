@@ -472,14 +472,14 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
             }
         }
 
-#if TEST_MSAGL
-        private IEnumerable<DebugCurve> GetGraphDebugCurves() {
-            List<DebugCurve> l = 
-                VisibilityGraph.Edges.Select(e => new DebugCurve(50, 0.1, "blue", new LineSegment(e.SourcePoint, e.TargetPoint))).ToList();
-            l.AddRange(Obstacles.Select(o => new DebugCurve(1, "green", o.BoundaryCurve)));
-            return l;
-        }
-#endif
+// #if TEST_MSAGL
+//         private IEnumerable<DebugCurve> GetGraphDebugCurves() {
+//             List<DebugCurve> l = 
+//                 VisibilityGraph.Edges.Select(e => new DebugCurve(50, 0.1, "blue", new LineSegment(e.SourcePoint, e.TargetPoint))).ToList();
+//             l.AddRange(Obstacles.Select(o => new DebugCurve(1, "green", o.BoundaryCurve)));
+//             return l;
+//         }
+// #endif
 
         private static Dictionary<EdgeGeometry, IEnumerable<Path>> SplitEdgeGeomsWithWaypoints(IEnumerable<EdgeGeometry> edgeGeometries) {
             var ret = new Dictionary<EdgeGeometry, IEnumerable<Path>>();
@@ -541,17 +541,17 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
             this.PortManager.RemoveControlPointsFromGraph();
         }
 
-#if TEST_MSAGL
-// ReSharper disable UnusedMember.Local
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private void ShowEdgePath(Path path) {
-// ReSharper restore UnusedMember.Local
-            List<DebugCurve> dd = Nudger.GetObstacleBoundaries(PaddedObstacles, "black");
-            dd.AddRange(Nudger.PathDebugCurvesFromPoint(path));
-            dd.AddRange(VisibilityGraph.Edges.Select(e => new DebugCurve(0.5, "blue", new LineSegment(e.SourcePoint, e.TargetPoint))));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
-        }
-#endif
+// #if TEST_MSAGL
+// // ReSharper disable UnusedMember.Local
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         private void ShowEdgePath(Path path) {
+// // ReSharper restore UnusedMember.Local
+//             List<DebugCurve> dd = Nudger.GetObstacleBoundaries(PaddedObstacles, "black");
+//             dd.AddRange(Nudger.PathDebugCurvesFromPoint(path));
+//             dd.AddRange(VisibilityGraph.Edges.Select(e => new DebugCurve(0.5, "blue", new LineSegment(e.SourcePoint, e.TargetPoint))));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
+//         }
+// #endif
 
         internal virtual bool GeneratePath(MsmtRectilinearPath shortestPathRouter, Path edgePath, bool lastChance = false) {
             var sourceVertices = PortManager.FindVertices(edgePath.EdgeGeometry.SourcePort);
@@ -630,27 +630,27 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
             }
         }
 
-#if TEST_MSAGL && !SILVERLIGHT
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String)")]
-        internal static void ShowPointEnum(IEnumerable<Point> p) {
-// ReSharper disable InconsistentNaming
-            const double w0 = 0.1;
-            const int w1 = 3;
-            Point[] arr = p.ToArray();
-            double d = (w1 - w0)/(arr.Length - 1);
-            var l = new List<DebugCurve>();
-            for (int i = 0; i < arr.Length - 1; i++) {
-                Console.WriteLine(arr[i]);
-                l.Add(new DebugCurve(100, w0 + i*d, "blue", new LineSegment(arr[i], arr[i + 1])));
-            }
-            Console.WriteLine(arr.Last());
-            Console.WriteLine("================");
-
-
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
-// ReSharper restore InconsistentNaming
-        }
-#endif
+// #if TEST_MSAGL && !SILVERLIGHT
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String)")]
+//         internal static void ShowPointEnum(IEnumerable<Point> p) {
+// // ReSharper disable InconsistentNaming
+//             const double w0 = 0.1;
+//             const int w1 = 3;
+//             Point[] arr = p.ToArray();
+//             double d = (w1 - w0)/(arr.Length - 1);
+//             var l = new List<DebugCurve>();
+//             for (int i = 0; i < arr.Length - 1; i++) {
+//                 Console.WriteLine(arr[i]);
+//                 l.Add(new DebugCurve(100, w0 + i*d, "blue", new LineSegment(arr[i], arr[i + 1])));
+//             }
+//             Console.WriteLine(arr.Last());
+//             Console.WriteLine("================");
+//
+//
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
+// // ReSharper restore InconsistentNaming
+//         }
+// #endif
 
         internal virtual void NudgePaths(IEnumerable<Path> edgePaths) {
         
@@ -813,9 +813,9 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
         internal void GenerateVisibilityGraph() {
             if ((null == Obstacles) || !Obstacles.Any()) {
                 throw new InvalidOperationException(
-#if TEST_MSAGL
-                    "No obstacles have been set"
-#endif
+// #if TEST_MSAGL
+//                     "No obstacles have been set"
+// #endif
                     );
             }
 
@@ -826,30 +826,30 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
             }
         }
 
-#if TEST_MSAGL
-        internal void ShowPathWithTakenEdgesAndGraph(IEnumerable<VisibilityVertex> path, Set<VisibilityEdge> takenEdges){
-            var list = new List<VisibilityVertex>(path);
-            var lines = new List<LineSegment>();
-            for (int i = 0; i < list.Count - 1; i++)
-                lines.Add(new LineSegment(list[i].Point, list[i + 1].Point));
-
-// ReSharper disable InconsistentNaming
-            double w0 = 4;
-            const double w1 = 8;
-            double delta = (w1 - w0)/(list.Count - 1);
-
-            var dc = new List<DebugCurve>();
-            foreach (LineSegment line in lines) {
-                dc.Add(new DebugCurve(50, w0, "red", line));
-                w0 += delta;
-            }
-            dc.AddRange(takenEdges.Select(edge => new DebugCurve(50, 2, "black", new LineSegment(edge.SourcePoint, edge.TargetPoint))));
-            IEnumerable<DebugCurve> k = GetGraphDebugCurves();
-            dc.AddRange(k);
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dc);
-// ReSharper restore InconsistentNaming
-        }
-#endif
+// #if TEST_MSAGL
+//         internal void ShowPathWithTakenEdgesAndGraph(IEnumerable<VisibilityVertex> path, Set<VisibilityEdge> takenEdges){
+//             var list = new List<VisibilityVertex>(path);
+//             var lines = new List<LineSegment>();
+//             for (int i = 0; i < list.Count - 1; i++)
+//                 lines.Add(new LineSegment(list[i].Point, list[i + 1].Point));
+//
+// // ReSharper disable InconsistentNaming
+//             double w0 = 4;
+//             const double w1 = 8;
+//             double delta = (w1 - w0)/(list.Count - 1);
+//
+//             var dc = new List<DebugCurve>();
+//             foreach (LineSegment line in lines) {
+//                 dc.Add(new DebugCurve(50, w0, "red", line));
+//                 w0 += delta;
+//             }
+//             dc.AddRange(takenEdges.Select(edge => new DebugCurve(50, 2, "black", new LineSegment(edge.SourcePoint, edge.TargetPoint))));
+//             IEnumerable<DebugCurve> k = GetGraphDebugCurves();
+//             dc.AddRange(k);
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dc);
+// // ReSharper restore InconsistentNaming
+//         }
+// #endif
 
         internal static ICurve FitArcsIntoCorners(double radius, Point[] polyline) {
             IEnumerable<Ellipse> ellipses = GetFittedArcSegs(radius, polyline);

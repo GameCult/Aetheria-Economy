@@ -61,9 +61,9 @@ namespace Microsoft.Msagl.Layout.Initial {
             ValidateArg.IsNotNull(graph, "graph");
             ValidateArg.IsNotNull(clusters, "clusters");
             ValidateArg.IsNotNull(clusterSettings, "clusterSettings");
-#if TEST_MSAGL
-            graph.SetDebugIds();
-#endif
+// #if TEST_MSAGL
+//             graph.SetDebugIds();
+// #endif
 
             this.graph = graph;
             this.clusters = clusters.ToList();

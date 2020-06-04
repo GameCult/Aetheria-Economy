@@ -93,11 +93,13 @@ MonoBehaviour:
     type: 3}
   ListPrefab: {fileID: 6914334813923144328, guid: 93e63e3a8b352a04897123288d70f04b,
     type: 3}
-  PropertyPrefab: {fileID: 279061376544739623, guid: 5b8c5126640066e4fabe6e65b7225b3b,
+  PropertyPrefab: {fileID: 9159917045172241898, guid: be88722a74d512d45a454fe91327a389,
+    type: 3}
+  PropertyLabelPrefab: {fileID: 279061376544739623, guid: 5b8c5126640066e4fabe6e65b7225b3b,
     type: 3}
   AttributePrefab: {fileID: 4447025208748278043, guid: 5e3a258a5b91c8246b20962ba6eccb09,
     type: 3}
-  InputField: {fileID: 5557349869958992659, guid: fb49ef180533e3e488fa39d80cc2423a,
+  InputField: {fileID: 6586910564433979167, guid: fb49ef180533e3e488fa39d80cc2423a,
     type: 3}
   RangedFloatField: {fileID: 1663396771457720812, guid: c214f62d8f2188140b96ed12798034c8,
     type: 3}

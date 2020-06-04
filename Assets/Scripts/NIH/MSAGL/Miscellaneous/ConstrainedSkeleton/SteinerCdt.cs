@@ -279,33 +279,33 @@ namespace Microsoft.Msagl.Miscellaneous.ConstrainedSkeleton
                 new RTree<Point>(_pointsToIndices.Keys.Select(p => new KeyValuePair<Rectangle, Point>(new Rectangle(p), p)));
             var badSegs = (from e in _segments let overlaps = GetPointsOverlappingSeg(e, tree, indexToPoints) where overlaps.Count > 2 select e).ToList();
 
-#if TEST_MSAGL
-            if (badSegs.Any())
-                ShowInputSegments(badSegs, indexToPoints);
-#endif
+// #if TEST_MSAGL
+//             if (badSegs.Any())
+//                 ShowInputSegments(badSegs, indexToPoints);
+// #endif
             return !badSegs.Any();
         }
 
-#if TEST_MSAGL
-        private void ShowInputSegments(List<SymmetricTuple<int>> badSegs, Point[] indexToPoints) {
-            var l = new List<DebugCurve>();
-            foreach (var seg in _segments)
-            {
-                var p1 = indexToPoints[seg.A];
-                var p2 = indexToPoints[seg.B];
-                var ls = new LineSegment(p1, p2);
-
-                string color = badSegs.Contains(seg) ? "red" : "black";
-                double width = badSegs.Contains(seg) ? 3 : 1;
-                l.Add(new DebugCurve(100, width, color, ls));
-            }
-            //foreach (var p in indexToPoints)
-            //{
-            //    l.Add(new DebugCurve(200, 0.1, "black", CurveFactory.CreateCircle(0.1, p)));
-            //}
-            LayoutAlgorithmSettings.ShowDebugCurves(l.ToArray());
-        }
-#endif
+// #if TEST_MSAGL
+//         private void ShowInputSegments(List<SymmetricTuple<int>> badSegs, Point[] indexToPoints) {
+//             var l = new List<DebugCurve>();
+//             foreach (var seg in _segments)
+//             {
+//                 var p1 = indexToPoints[seg.A];
+//                 var p2 = indexToPoints[seg.B];
+//                 var ls = new LineSegment(p1, p2);
+//
+//                 string color = badSegs.Contains(seg) ? "red" : "black";
+//                 double width = badSegs.Contains(seg) ? 3 : 1;
+//                 l.Add(new DebugCurve(100, width, color, ls));
+//             }
+//             //foreach (var p in indexToPoints)
+//             //{
+//             //    l.Add(new DebugCurve(200, 0.1, "black", CurveFactory.CreateCircle(0.1, p)));
+//             //}
+//             LayoutAlgorithmSettings.ShowDebugCurves(l.ToArray());
+//         }
+// #endif
 
         /*
                 void AddSegsHandlingOverlaps(SymmetricTuple<int> seg, RTree<Point> tree, Point[] indexToPoints) {

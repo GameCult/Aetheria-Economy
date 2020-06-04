@@ -3066,29 +3066,29 @@ namespace Microsoft.Msagl.Layout.LargeGraphLayout
         static void ShowNodesAndSegmentsForOverlapRemoval(IEnumerable<LgNodeInfo> fixedNodes,
             IEnumerable<LgNodeInfo> moveableNodes, SymmetricSegment[] fixedSegments)
         {
-#if DEBUG && !SHARPKIT
-            var l = new List<DebugCurve>();
-            if (fixedNodes != null && fixedNodes.Any())
-            {
-                foreach (var node in fixedNodes)
-                {
-                    l.Add(new DebugCurve(200, 0.1, "red", node.BoundaryCurve));
-                }
-            }
-            if (fixedSegments != null && fixedSegments.Any())
-            {
-                foreach (var seg in fixedSegments)
-                {
-                    var ls = new LineSegment(seg.A, seg.B);
-                    l.Add(new DebugCurve(100, 0.1, "magenta", ls));
-                }
-            }
-            foreach (var node in moveableNodes)
-            {
-                l.Add(new DebugCurve(200, 0.1, "green", node.BoundaryCurve));
-            }
-            LayoutAlgorithmSettings.ShowDebugCurves(l.ToArray());
-#endif
+// #if DEBUG && !SHARPKIT
+//             var l = new List<DebugCurve>();
+//             if (fixedNodes != null && fixedNodes.Any())
+//             {
+//                 foreach (var node in fixedNodes)
+//                 {
+//                     l.Add(new DebugCurve(200, 0.1, "red", node.BoundaryCurve));
+//                 }
+//             }
+//             if (fixedSegments != null && fixedSegments.Any())
+//             {
+//                 foreach (var seg in fixedSegments)
+//                 {
+//                     var ls = new LineSegment(seg.A, seg.B);
+//                     l.Add(new DebugCurve(100, 0.1, "magenta", ls));
+//                 }
+//             }
+//             foreach (var node in moveableNodes)
+//             {
+//                 l.Add(new DebugCurve(200, 0.1, "green", node.BoundaryCurve));
+//             }
+//             LayoutAlgorithmSettings.ShowDebugCurves(l.ToArray());
+// #endif
         }
 
         void ClearLevels(int num)
@@ -3213,46 +3213,46 @@ namespace Microsoft.Msagl.Layout.LargeGraphLayout
         }
 
 
-#if DEBUG && !SHARPKIT
-        static void ShowOldNewIntersected(Set<Rail> oldIntersected, Set<Rail> newIntersected, Point a, Point shortcutted,
-            Point b, LgSkeletonLevel skeletonLevel)
-        {
-            var ll = new List<DebugCurve>();
-            ll.Add(new DebugCurve(new LineSegment(a, shortcutted)));
-            ll.Add(new DebugCurve(new LineSegment(shortcutted, b)));
-            ll.AddRange(oldIntersected.Select(r => new DebugCurve(100, 0.1, "blue", LineFromRail(r))));
-            ll.AddRange(newIntersected.Select(r => new DebugCurve(100, 0.1, "red", LineFromRail(r))));
-            ll.Add(new DebugCurve(CurveFactory.CreateCircle(3, shortcutted)));
-            ll.Add(new DebugCurve("red", CurveFactory.CreateCircle(3, a)));
-            ll.Add(new DebugCurve("green", CurveFactory.CreateCircle(3, b)));
-
-            foreach (var rail in newIntersected)
-            {
-                var e = FindRailInVisGraph(rail, skeletonLevel);
-                if (e == null)
-                {
-                    Console.WriteLine("rail {0} is not found in the vis graph", rail);
-                }
-            }
-
-
-            LayoutAlgorithmSettings.ShowDebugCurves(ll.ToArray());
-        }
-#endif
-
-#if DEBUG && !SHARPKIT
-        private static void ShowOldTrajectories(LgSkeletonLevel skeletonLevel)
-        {
-            if (skeletonLevel.ZoomLevel <= 1.0) return;
-            var segs = skeletonLevel.PathRouter.EdgesOnOldTrajectories();
-            var ll = new List<DebugCurve>();
-            foreach (var seg in segs)
-            {
-                ll.Add(new DebugCurve(new LineSegment(seg.A, seg.B)));
-            }
-            LayoutAlgorithmSettings.ShowDebugCurves(ll.ToArray());
-        }
-#endif
+// #if DEBUG && !SHARPKIT
+//         static void ShowOldNewIntersected(Set<Rail> oldIntersected, Set<Rail> newIntersected, Point a, Point shortcutted,
+//             Point b, LgSkeletonLevel skeletonLevel)
+//         {
+//             var ll = new List<DebugCurve>();
+//             ll.Add(new DebugCurve(new LineSegment(a, shortcutted)));
+//             ll.Add(new DebugCurve(new LineSegment(shortcutted, b)));
+//             ll.AddRange(oldIntersected.Select(r => new DebugCurve(100, 0.1, "blue", LineFromRail(r))));
+//             ll.AddRange(newIntersected.Select(r => new DebugCurve(100, 0.1, "red", LineFromRail(r))));
+//             ll.Add(new DebugCurve(CurveFactory.CreateCircle(3, shortcutted)));
+//             ll.Add(new DebugCurve("red", CurveFactory.CreateCircle(3, a)));
+//             ll.Add(new DebugCurve("green", CurveFactory.CreateCircle(3, b)));
+//
+//             foreach (var rail in newIntersected)
+//             {
+//                 var e = FindRailInVisGraph(rail, skeletonLevel);
+//                 if (e == null)
+//                 {
+//                     Console.WriteLine("rail {0} is not found in the vis graph", rail);
+//                 }
+//             }
+//
+//
+//             LayoutAlgorithmSettings.ShowDebugCurves(ll.ToArray());
+//         }
+// #endif
+//
+// #if DEBUG && !SHARPKIT
+//         private static void ShowOldTrajectories(LgSkeletonLevel skeletonLevel)
+//         {
+//             if (skeletonLevel.ZoomLevel <= 1.0) return;
+//             var segs = skeletonLevel.PathRouter.EdgesOnOldTrajectories();
+//             var ll = new List<DebugCurve>();
+//             foreach (var seg in segs)
+//             {
+//                 ll.Add(new DebugCurve(new LineSegment(seg.A, seg.B)));
+//             }
+//             LayoutAlgorithmSettings.ShowDebugCurves(ll.ToArray());
+//         }
+// #endif
 
         static VisibilityEdge FindRailInVisGraph(Rail rail, LgSkeletonLevel skeletonLevel)
         {

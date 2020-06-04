@@ -161,23 +161,23 @@ namespace Microsoft.Msagl.Routing.Spline.Bundling {
             constrainedDelaunayTriangulation.Run();
             return constrainedDelaunayTriangulation;
         }
-#if DEBUG && TEST_MSAGL
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        // ReSharper disable UnusedMember.Local
-        void ShowGraphLocal() {
-            // ReSharper restore UnusedMember.Local
-            var l = new List<ICurve>();
-            l.Clear();
-            foreach (var e in geometryGraph.Edges) {
-                {
-                    l.Add(new Ellipse(2, 2, e.Curve.Start));
-                    l.Add(CurveFactory.CreateDiamond(5, 5, e.Curve.End));
-                    l.Add(e.Curve);
-                }
-            }
-            SplineRouter.ShowVisGraph(VisibilityGraph, LooseHierarchy.GetAllLeaves(), null, l);
-        }
-#endif
+// #if DEBUG && TEST_MSAGL
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         // ReSharper disable UnusedMember.Local
+//         void ShowGraphLocal() {
+//             // ReSharper restore UnusedMember.Local
+//             var l = new List<ICurve>();
+//             l.Clear();
+//             foreach (var e in geometryGraph.Edges) {
+//                 {
+//                     l.Add(new Ellipse(2, 2, e.Curve.Start));
+//                     l.Add(CurveFactory.CreateDiamond(5, 5, e.Curve.End));
+//                     l.Add(e.Curve);
+//                 }
+//             }
+//             SplineRouter.ShowVisGraph(VisibilityGraph, LooseHierarchy.GetAllLeaves(), null, l);
+//         }
+// #endif
 
         void FixLocationsForHookAnywherePorts(IEnumerable<Edge> edges) {
             foreach (var edge in edges) {

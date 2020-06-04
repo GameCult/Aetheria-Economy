@@ -502,40 +502,40 @@ namespace Microsoft.Msagl.Core.Layout.ProximityOverlapRemoval {
                                                        Point[] nodePositions, List<Point> newPositions,
                                                        List<Tuple<int, int, double, double>> proximityEdgesWithDistance,
                                                        Point[] finalGridVectors) {
-#if DEBUG && !SHARPKIT
-            if (DebugMode && currentIteration%1 == 0) {
-                List<DebugCurve> curveList = new List<DebugCurve>();
-                var nodeBoxes = new Rectangle[nodeSizes.Length];
-                for(int i=0;i<nodeBoxes.Length;i++)
-                    nodeBoxes[i]=new Rectangle(nodeSizes[i], nodePositions[i]);
-                var nodeCurves =
-                    nodeBoxes.Select(
-                        v =>
-                        new DebugCurve(220, 1, "black", Curve.PolylineAroundClosedCurve(CurveFactory.CreateRectangle(v))));
-                curveList.AddRange(nodeCurves);
-                var vectors = nodePositions.Select(
-                    (p, i) =>
-                    new DebugCurve(220, 2, "red", new Polyline(p, newPositions[i]))).ToList();
-
-                foreach (Tuple<int, int, double, double> tuple in proximityEdgesWithDistance) {
-                    if (tuple.Item3 > 0) {
-                        curveList.Add(new DebugCurve(220, 1, "gray",
-                                                     new Polyline(nodePositions[tuple.Item1],
-                                                                  nodePositions[tuple.Item2])));
-                    }
-                }
-                curveList.AddRange(vectors);
-                if (finalGridVectors != null) {
-                    var gridFlowVectors = nodePositions.Select((p, i) =>
-                                                               new DebugCurve(220, 2, "blue",
-                                                                              new Polyline(p, p + finalGridVectors[i])))
-                                                       .ToList();
-                    curveList.AddRange(gridFlowVectors);
-                }
-
-                LayoutAlgorithmSettings.ShowDebugCurves(curveList.ToArray());
-            }
-#endif
+// #if DEBUG && !SHARPKIT
+//             if (DebugMode && currentIteration%1 == 0) {
+//                 List<DebugCurve> curveList = new List<DebugCurve>();
+//                 var nodeBoxes = new Rectangle[nodeSizes.Length];
+//                 for(int i=0;i<nodeBoxes.Length;i++)
+//                     nodeBoxes[i]=new Rectangle(nodeSizes[i], nodePositions[i]);
+//                 var nodeCurves =
+//                     nodeBoxes.Select(
+//                         v =>
+//                         new DebugCurve(220, 1, "black", Curve.PolylineAroundClosedCurve(CurveFactory.CreateRectangle(v))));
+//                 curveList.AddRange(nodeCurves);
+//                 var vectors = nodePositions.Select(
+//                     (p, i) =>
+//                     new DebugCurve(220, 2, "red", new Polyline(p, newPositions[i]))).ToList();
+//
+//                 foreach (Tuple<int, int, double, double> tuple in proximityEdgesWithDistance) {
+//                     if (tuple.Item3 > 0) {
+//                         curveList.Add(new DebugCurve(220, 1, "gray",
+//                                                      new Polyline(nodePositions[tuple.Item1],
+//                                                                   nodePositions[tuple.Item2])));
+//                     }
+//                 }
+//                 curveList.AddRange(vectors);
+//                 if (finalGridVectors != null) {
+//                     var gridFlowVectors = nodePositions.Select((p, i) =>
+//                                                                new DebugCurve(220, 2, "blue",
+//                                                                               new Polyline(p, p + finalGridVectors[i])))
+//                                                        .ToList();
+//                     curveList.AddRange(gridFlowVectors);
+//                 }
+//
+//                 LayoutAlgorithmSettings.ShowDebugCurves(curveList.ToArray());
+//             }
+// #endif
         }
 
         int CompleteProximityGraphWithRTree(ref int currentCrossings,

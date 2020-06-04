@@ -237,11 +237,11 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
 
         [Conditional("TEST_MSAGL")]
         static internal void Test_DumpVisibilityGraph(ObstacleTree obstacleTree, VisibilityGraph vg) {
-#if TEST_MSAGL
-            var debugCurves = Test_GetObstacleDebugCurves(obstacleTree);
-            debugCurves.AddRange(Test_GetVisibilityGraphDebugCurves(vg));
-            DebugCurveCollection.WriteToFile(debugCurves, GetDumpFileName("VisibilityGraph"));
-#endif // TEST
+// #if TEST_MSAGL
+//             var debugCurves = Test_GetObstacleDebugCurves(obstacleTree);
+//             debugCurves.AddRange(Test_GetVisibilityGraphDebugCurves(vg));
+//             DebugCurveCollection.WriteToFile(debugCurves, GetDumpFileName("VisibilityGraph"));
+// #endif // TEST
         }
 
 #if DEVTRACE
@@ -253,69 +253,69 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
         }
 #endif // DEVTRACE
 
-#if TEST_MSAGL
-        static internal List<DebugCurve> Test_GetObstacleDebugCurves(ObstacleTree obstacleTree) {
-            return Test_GetObstacleDebugCurves(obstacleTree, false, false);
-        }
-
-        static internal List<DebugCurve> Test_GetObstacleDebugCurves(ObstacleTree obstacleTree, bool noPadPoly, bool noVisPoly) {
-            return Test_GetObstacleDebugCurves(obstacleTree.GetAllObstacles(), noPadPoly, noVisPoly);
-        }
-
-        static internal List<DebugCurve> Test_GetObstacleDebugCurves(IEnumerable<Obstacle> obstacles, bool noPadPoly, bool noVisPoly) {
-            var debugCurves = new List<DebugCurve>();
-            foreach (var obstacle in obstacles) {
-                debugCurves.Add(new DebugCurve(0.1, "darkgray", obstacle.InputShape.BoundaryCurve));
-                if (!noPadPoly || obstacle.IsGroup) {
-                    debugCurves.Add(obstacle.IsTransparentAncestor
-                            ? new DebugCurve(0.3, "gold", obstacle.PaddedPolyline)
-                            : new DebugCurve(0.1, obstacle.IsGroup ? "purple" : "black", obstacle.PaddedPolyline));
-                }
-                if (!noVisPoly && obstacle.IsPrimaryObstacle && (obstacle.VisibilityPolyline != obstacle.PaddedPolyline)) {
-                    debugCurves.Add(new DebugCurve(0.1, obstacle.IsGroup ? "mediumpurple" : "lightgray", obstacle.VisibilityPolyline));
-                }
-            }
-            return debugCurves;
-        }
-
-        static internal List<DebugCurve> Test_GetVisibilityGraphDebugCurves(VisibilityGraph vg) {
-            return vg.Edges.Select(edge => new DebugCurve(0.1,
-                        (edge.Weight == ScanSegment.NormalWeight) ? "Blue"
-                                : ((edge.Weight == ScanSegment.ReflectionWeight) ? "DarkCyan" : "LightBlue"),
-                        new LineSegment(edge.Source.Point, edge.Target.Point))).ToList();
-
-        }
-
-        static internal List<DebugCurve> Test_GetPreNudgedPathDebugCurves(IEnumerable<Path> edgePaths) {
-            var debugCurves = new List<DebugCurve>();
-            foreach (var path in edgePaths) {
-                var points = path.PathPoints.ToArray();
-                for (int ii = 0; ii < points.Length - 1; ++ii) {
-                    debugCurves.Add(new DebugCurve(0.1, "purple", new LineSegment(points[ii], points[ii + 1])));
-                }
-            }
-            return debugCurves;
-        }
-
-        static internal List<DebugCurve> Test_GetPostNudgedPathDebugCurves(IEnumerable<Path> edgePaths) {
-            var debugCurves = new List<DebugCurve>();
-            foreach (var path in edgePaths) {
-                debugCurves.AddRange(path.PathEdges.Select
-                        (e => new DebugCurve(0.1, "purple", new LineSegment(e.Source, e.Target))));
-            }
-            return debugCurves;
-        }
-
-        static internal List<DebugCurve> Test_GetScanSegmentCurves(ScanSegmentTree segTree) {
-            return segTree.Segments.Select(seg => new DebugCurve(0.2,
-                        seg.IsOverlapped ? "Aqua" : (seg.IsReflection ? "LightGreen" : "DarkGreen"),
-                        new LineSegment(seg.Start, seg.End))).ToList();
-        }
-
-        static internal string GetDumpFileName(string prefix) {
-            return System.IO.Path.GetTempPath() + prefix + ".DebugCurves";
-        }
-#endif // TEST
+// #if TEST_MSAGL
+//         static internal List<DebugCurve> Test_GetObstacleDebugCurves(ObstacleTree obstacleTree) {
+//             return Test_GetObstacleDebugCurves(obstacleTree, false, false);
+//         }
+//
+//         static internal List<DebugCurve> Test_GetObstacleDebugCurves(ObstacleTree obstacleTree, bool noPadPoly, bool noVisPoly) {
+//             return Test_GetObstacleDebugCurves(obstacleTree.GetAllObstacles(), noPadPoly, noVisPoly);
+//         }
+//
+//         static internal List<DebugCurve> Test_GetObstacleDebugCurves(IEnumerable<Obstacle> obstacles, bool noPadPoly, bool noVisPoly) {
+//             var debugCurves = new List<DebugCurve>();
+//             foreach (var obstacle in obstacles) {
+//                 debugCurves.Add(new DebugCurve(0.1, "darkgray", obstacle.InputShape.BoundaryCurve));
+//                 if (!noPadPoly || obstacle.IsGroup) {
+//                     debugCurves.Add(obstacle.IsTransparentAncestor
+//                             ? new DebugCurve(0.3, "gold", obstacle.PaddedPolyline)
+//                             : new DebugCurve(0.1, obstacle.IsGroup ? "purple" : "black", obstacle.PaddedPolyline));
+//                 }
+//                 if (!noVisPoly && obstacle.IsPrimaryObstacle && (obstacle.VisibilityPolyline != obstacle.PaddedPolyline)) {
+//                     debugCurves.Add(new DebugCurve(0.1, obstacle.IsGroup ? "mediumpurple" : "lightgray", obstacle.VisibilityPolyline));
+//                 }
+//             }
+//             return debugCurves;
+//         }
+//
+//         static internal List<DebugCurve> Test_GetVisibilityGraphDebugCurves(VisibilityGraph vg) {
+//             return vg.Edges.Select(edge => new DebugCurve(0.1,
+//                         (edge.Weight == ScanSegment.NormalWeight) ? "Blue"
+//                                 : ((edge.Weight == ScanSegment.ReflectionWeight) ? "DarkCyan" : "LightBlue"),
+//                         new LineSegment(edge.Source.Point, edge.Target.Point))).ToList();
+//
+//         }
+//
+//         static internal List<DebugCurve> Test_GetPreNudgedPathDebugCurves(IEnumerable<Path> edgePaths) {
+//             var debugCurves = new List<DebugCurve>();
+//             foreach (var path in edgePaths) {
+//                 var points = path.PathPoints.ToArray();
+//                 for (int ii = 0; ii < points.Length - 1; ++ii) {
+//                     debugCurves.Add(new DebugCurve(0.1, "purple", new LineSegment(points[ii], points[ii + 1])));
+//                 }
+//             }
+//             return debugCurves;
+//         }
+//
+//         static internal List<DebugCurve> Test_GetPostNudgedPathDebugCurves(IEnumerable<Path> edgePaths) {
+//             var debugCurves = new List<DebugCurve>();
+//             foreach (var path in edgePaths) {
+//                 debugCurves.AddRange(path.PathEdges.Select
+//                         (e => new DebugCurve(0.1, "purple", new LineSegment(e.Source, e.Target))));
+//             }
+//             return debugCurves;
+//         }
+//
+//         static internal List<DebugCurve> Test_GetScanSegmentCurves(ScanSegmentTree segTree) {
+//             return segTree.Segments.Select(seg => new DebugCurve(0.2,
+//                         seg.IsOverlapped ? "Aqua" : (seg.IsReflection ? "LightGreen" : "DarkGreen"),
+//                         new LineSegment(seg.Start, seg.End))).ToList();
+//         }
+//
+//         static internal string GetDumpFileName(string prefix) {
+//             return System.IO.Path.GetTempPath() + prefix + ".DebugCurves";
+//         }
+// #endif // TEST
 // ReSharper restore InconsistentNaming
 
 #if DEBUG

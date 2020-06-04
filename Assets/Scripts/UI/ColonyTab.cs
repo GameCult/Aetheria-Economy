@@ -38,8 +38,13 @@ public class ColonyTab : MonoBehaviour
         _selectedHardpoint = null;
 
         var entity = Context.Cache.Get<Entity>(_selectedColony);
-        entity.OnInventoryUpdate += () => PopulateScreen(entity);
-        PopulateScreen(entity);
+        
+        Title.text = entity.Name;
+
+        UpdateGeneral(entity);
+        
+        entity.OnInventoryUpdate += () => UpdateInventory(entity);
+        UpdateInventory(entity);
     }
 
     private void OnDisable()
@@ -48,32 +53,36 @@ public class ColonyTab : MonoBehaviour
         entity.ClearInventoryListeners();
     }
 
-    public void PopulateScreen(Entity entity){
-        Title.text = entity.Name;
-        
+    public void UpdateGeneral(Entity entity)
+    {
         General.Clear();
-        Inventory.Clear();
-        Details.Clear();
-
-        var corporation = Context.Cache.Get<Corporation>(entity.Corporation);
-        var blueprints = corporation.UnlockedBlueprints.Select(id => Context.Cache.Get<BlueprintData>(id));
-        var hull = Context.Cache.Get<Gear>(entity.Hull);
-        var hullData = Context.Cache.Get<HullData>(hull.Data);
-        var capacity = Context.Evaluate(hullData.Capacity, hull, entity);
-
-        General.AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{capacity:0}");
+        
+        General.AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{entity.Capacity:0}");
         General.AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GlobalData.SignificantDigits)}");
         General.AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
         General.AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
         General.AddProperty("Population", () => $"{entity.Population}");
-        General.AddSection("Personality");
-        foreach (var attribute in entity.Personality)
-            General.AddPersonalityProperty(Context.Cache.Get<PersonalityAttribute>(attribute.Key),
-                () => attribute.Value);
+        var personalityList = General.AddList("Personality");
+        foreach (var attribute in entity.Personality.Keys)
+            personalityList.AddPersonalityProperty(Context.Cache.Get<PersonalityAttribute>(attribute),
+                () => entity.Personality[attribute]);
+        
         General.RefreshValues();
+    }
 
+    public void UpdateInventory(Entity entity)
+    {
+        Inventory.Clear();
+        
+        var corporation = Context.Cache.Get<Corporation>(entity.Corporation);
+        var blueprints = corporation.UnlockedBlueprints.Select(id => Context.Cache.Get<BlueprintData>(id));
+        var hull = Context.Cache.Get<Gear>(entity.Hull);
+        var hullData = Context.Cache.Get<HullData>(hull.Data);
+
+        // Create item data mapping for cargo similar to what Entity.GearData already does for equipped items
         var cargoData = entity.Cargo.ToDictionary(id => _context.Cache.Get<ItemInstance>(id),
             id => Context.Cache.Get<ItemData>(_context.Cache.Get<ItemInstance>(id).Data));
+        
         //var incompleteGear = entity.IncompleteGear.Keys.Select(id => _context.Cache.Get<Gear>(id));
         // var incompleteGear = entity.IncompleteGear.Select(x =>
         // {
@@ -82,21 +91,35 @@ public class ColonyTab : MonoBehaviour
         //     var progress = (productionTime - (float) x.Value) / productionTime;
         //     return (gear, progress);
         // });
-        Inventory.AddSection("Gear");
-        var gearList = new List<Gear>(entity.GearData.Keys.Concat(entity.IncompleteGear.Keys.Select(id => _context.Cache.Get<Gear>(id))));
+        
+        var gearList = Inventory.AddList("Gear");
+        
+        // Create temporary list including both equipped items and incomplete items
+        // This is necessary because the binding between items and hardpoints is implicit
+        var equippedItems = new List<Gear>(entity.GearData.Keys.Concat(entity.IncompleteGear.Keys.Select(id => _context.Cache.Get<Gear>(id))));
+        
+        // Display an entry in the list for each hardpoint on the entity
         foreach (var hardpoint in hullData.Hardpoints)
         {
-            var match = gearList.FirstOrDefault(g => g.ItemData.HardpointType == hardpoint.Type);
+            // This corresponds to the first equipped or incomplete gear which matches the hardpoint type
+            var match = equippedItems.FirstOrDefault(g => g.ItemData.HardpointType == hardpoint.Type);
+            
+            // These are the items in the inventory which can be equipped to the current hardpoint
             var matchingCargoGear = cargoData
-                .Where(x => x.Value is EquippableItemData equippableItemData &&
-                            equippableItemData.HardpointType == hardpoint.Type).Select(x=>x.Key as Gear)
+                .Where(x => 
+                    x.Value is EquippableItemData equippableItemData &&
+                    equippableItemData.HardpointType == hardpoint.Type)
+                .Select(x => x.Key as Gear)
                 .ToArray();
+            
+            // There is no item in the inventory which can fill the current hardpoint
             if (match == null)
             {
                 var matchingBlueprints = blueprints.Where(bp =>
                     bp.FactoryItem == Guid.Empty &&
                     Context.Cache.Get<ItemData>(bp.Item) is GearData gearData &&
                     gearData.HardpointType == hardpoint.Type).ToArray();
+                
                 Action<PointerEventData> onClick = null;
                 if (matchingCargoGear.Any() || matchingBlueprints.Any())
                     onClick = data =>
@@ -134,13 +157,13 @@ public class ColonyTab : MonoBehaviour
                             ContextMenu.Show();
                         }
                     };
-                Inventory.AddProperty($"Empty {Enum.GetName(typeof(HardpointType), hardpoint.Type)} Hardpoint", null, onClick, matchingBlueprints.Any());
+                gearList.AddProperty($"Empty {Enum.GetName(typeof(HardpointType), hardpoint.Type)} Hardpoint", onClick, matchingBlueprints.Any());
             }
             else
             {
                 if (entity.IncompleteGear.ContainsKey(match.ID))
                 {
-                    Inventory.AddProgressField(match.Name, () =>
+                    gearList.AddProgressField(match.Name, () =>
                     {
                         var productionTime = _context.Cache.Get<BlueprintData>(match.Blueprint).ProductionTime;
                         return (productionTime - (float) entity.IncompleteGear[match.ID]) / productionTime;
@@ -148,7 +171,7 @@ public class ColonyTab : MonoBehaviour
                 }
                 else
                 {
-                    var prop = Inventory.AddProperty(match.Name, null, _ =>
+                    var prop = gearList.AddProperty(match.Name, null, _ =>
                     {
                         _selectedHardpoint = hardpoint;
                         PopulateDetails(match, entity);
@@ -158,21 +181,21 @@ public class ColonyTab : MonoBehaviour
                 }
                 
 
-                gearList.Remove(match);
+                equippedItems.Remove(match);
             }
         }
         
         if(!entity.Cargo.Any())
-            Inventory.AddSection("No Cargo");
+            Inventory.AddProperty("No Cargo");
         else
         {
-            Inventory.AddSection("Cargo");
+            var cargoList = Inventory.AddList("Cargo");
             foreach (var x in cargoData)
             {
                 if(x.Key is SimpleCommodity simpleCommodity)
-                    Inventory.AddProperty(x.Value.Name, () => simpleCommodity.Quantity.ToString());
+                    cargoList.AddProperty(x.Value.Name, () => simpleCommodity.Quantity.ToString());
                 else
-                    Inventory.AddProperty(x.Value.Name);
+                    cargoList.AddProperty(x.Value.Name);
             }
         }
         Inventory.RefreshValues();

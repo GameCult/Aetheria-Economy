@@ -353,21 +353,21 @@ namespace Microsoft.Msagl.Layout.Layered {
             LayerArrays.UpdateLayers(yetBestLayers);
         }
 
-#if TEST_MSAGL
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledCode")]
-        void Show() {
-            SugiyamaLayoutSettings.ShowDatabase(database);
-        }
-#endif
+// #if TEST_MSAGL
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledCode")]
+//         void Show() {
+//             SugiyamaLayoutSettings.ShowDatabase(database);
+//         }
+// #endif
 
-#if TEST_MSAGL
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.Write(System.String)"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledCode")]
-        static void PrintPositions(double[] positions) {
-            for (int j = 0; j < positions.Length; j++)
-                Console.Write(" " + positions[j]);
-            Console.WriteLine();
-        }
-#endif
+// #if TEST_MSAGL
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.Write(System.String)"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledCode")]
+//         static void PrintPositions(double[] positions) {
+//             for (int j = 0; j < positions.Length; j++)
+//                 Console.Write(" " + positions[j]);
+//             Console.WriteLine();
+//         }
+// #endif
 
 
         void SortLayerBasedOnSolution(int[] layer, ISolverShell solver) {

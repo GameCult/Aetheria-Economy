@@ -143,9 +143,9 @@ namespace Microsoft.Msagl.Routing {
         /// <param name="inParentEdges"></param>
         /// <param name="outParentEdges"></param>
         public SplineRouter(GeometryGraph graph, double tightPadding, double loosePadding, double coneAngle, List<Edge> inParentEdges, List<Edge> outParentEdges) {
-#if TEST_MSAGL
-            graph.CheckClusterConsistency();
-#endif
+// #if TEST_MSAGL
+//             graph.CheckClusterConsistency();
+// #endif
             geometryGraph = graph;
             LoosePadding = loosePadding;
             this.tightPadding = tightPadding;
@@ -749,41 +749,41 @@ namespace Microsoft.Msagl.Routing {
         }
         #region debugging
 
-#if DEBUG && TEST_MSAGL
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static internal void AnotherShowMethod(VisibilityGraph visGraph,
-            Port sourcePort, Port targetPort, IEnumerable<Shape> obstacleShapes, ICurve curve) {
-            var dd = new List<DebugCurve>(
-         visGraph.Edges.Select(
-            e =>
-            new DebugCurve(100, 0.1, GetEdgeColor(e, sourcePort, targetPort),
-                           new LineSegment(e.SourcePoint, e.TargetPoint))));
-            if (obstacleShapes != null)
-                dd.AddRange(
-                    obstacleShapes.Select(s => new DebugCurve(1, s.BoundaryCurve)));
-            if (sourcePort != null && targetPort != null)
-                dd.AddRange(new[] {
-                                    new DebugCurve(CurveFactory.CreateDiamond(3, 3, sourcePort.Location)),
-                                    new DebugCurve(CurveFactory.CreateEllipse(3, 3, targetPort.Location)),
-                                });
-            if (curve != null)
-                dd.Add(new DebugCurve(5, "purple", curve));
-
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
-        }
-
-
-        static string GetEdgeColor(VisibilityEdge e, Port sourcePort, Port targetPort) {
-            if (sourcePort == null || targetPort == null)
-                return "green";
-            if (ApproximateComparer.Close(e.SourcePoint, sourcePort.Location) ||
-                ApproximateComparer.Close(e.SourcePoint, targetPort.Location)
-                || ApproximateComparer.Close(e.TargetPoint, sourcePort.Location) ||
-                ApproximateComparer.Close(e.TargetPoint, targetPort.Location))
-                return "lightgreen";
-            return e.IsPassable == null || e.IsPassable() ? "green" : "red";
-        }
-#endif
+// #if DEBUG && TEST_MSAGL
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static internal void AnotherShowMethod(VisibilityGraph visGraph,
+//             Port sourcePort, Port targetPort, IEnumerable<Shape> obstacleShapes, ICurve curve) {
+//             var dd = new List<DebugCurve>(
+//          visGraph.Edges.Select(
+//             e =>
+//             new DebugCurve(100, 0.1, GetEdgeColor(e, sourcePort, targetPort),
+//                            new LineSegment(e.SourcePoint, e.TargetPoint))));
+//             if (obstacleShapes != null)
+//                 dd.AddRange(
+//                     obstacleShapes.Select(s => new DebugCurve(1, s.BoundaryCurve)));
+//             if (sourcePort != null && targetPort != null)
+//                 dd.AddRange(new[] {
+//                                     new DebugCurve(CurveFactory.CreateDiamond(3, 3, sourcePort.Location)),
+//                                     new DebugCurve(CurveFactory.CreateEllipse(3, 3, targetPort.Location)),
+//                                 });
+//             if (curve != null)
+//                 dd.Add(new DebugCurve(5, "purple", curve));
+//
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
+//         }
+//
+//
+//         static string GetEdgeColor(VisibilityEdge e, Port sourcePort, Port targetPort) {
+//             if (sourcePort == null || targetPort == null)
+//                 return "green";
+//             if (ApproximateComparer.Close(e.SourcePoint, sourcePort.Location) ||
+//                 ApproximateComparer.Close(e.SourcePoint, targetPort.Location)
+//                 || ApproximateComparer.Close(e.TargetPoint, sourcePort.Location) ||
+//                 ApproximateComparer.Close(e.TargetPoint, targetPort.Location))
+//                 return "lightgreen";
+//             return e.IsPassable == null || e.IsPassable() ? "green" : "red";
+//         }
+// #endif
 
         #endregion
 
@@ -932,21 +932,21 @@ namespace Microsoft.Msagl.Routing {
         /// </summary>
         internal bool Bidirectional { get; set; }
 
-#if TEST_MSAGL
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static internal void ShowVisGraph(VisibilityGraph tmpVisGraph, IEnumerable<Polyline> obstacles, IEnumerable<ICurve> greenCurves, IEnumerable<ICurve> redCurves) {
-            var l = new List<DebugCurve>(tmpVisGraph.Edges.Select(e => new DebugCurve(100, 1,
-                e.IsPassable != null && e.IsPassable() ? "green" : "black"
-                , new LineSegment(e.SourcePoint, e.TargetPoint))));
-            if (obstacles != null)
-                l.AddRange(obstacles.Select(p => new DebugCurve(100, 1, "brown", p)));
-            if (greenCurves != null)
-                l.AddRange(greenCurves.Select(p => new DebugCurve(100, 10, "navy", p)));
-            if (redCurves != null)
-                l.AddRange(redCurves.Select(p => new DebugCurve(100, 10, "red", p)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
-        }
-#endif
+// #if TEST_MSAGL
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static internal void ShowVisGraph(VisibilityGraph tmpVisGraph, IEnumerable<Polyline> obstacles, IEnumerable<ICurve> greenCurves, IEnumerable<ICurve> redCurves) {
+//             var l = new List<DebugCurve>(tmpVisGraph.Edges.Select(e => new DebugCurve(100, 1,
+//                 e.IsPassable != null && e.IsPassable() ? "green" : "black"
+//                 , new LineSegment(e.SourcePoint, e.TargetPoint))));
+//             if (obstacles != null)
+//                 l.AddRange(obstacles.Select(p => new DebugCurve(100, 1, "brown", p)));
+//             if (greenCurves != null)
+//                 l.AddRange(greenCurves.Select(p => new DebugCurve(100, 10, "navy", p)));
+//             if (redCurves != null)
+//                 l.AddRange(redCurves.Select(p => new DebugCurve(100, 10, "red", p)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
+//         }
+// #endif
         void TryToCreateNewEdgeAndSetIsPassable(VisibilityEdge edge, Shape looseShape) {
             var e = visGraph.FindEdge(edge.SourcePoint, edge.TargetPoint);
             if (e != null) return;
@@ -1045,19 +1045,19 @@ namespace Microsoft.Msagl.Routing {
         }
 
 
-#if TEST_MSAGL
-        // ReSharper disable UnusedMember.Local
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static void Show(
-            IEnumerable<EdgeGeometry> edgeGeometries, IEnumerable<Shape> listOfShapes) {
-            // ReSharper restore UnusedMember.Local
-            var r = new Random(1);
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(
-                listOfShapes.Select(s => s.BoundaryCurve).Select(
-                    c => new DebugCurve(50, 1, DebugCurve.Colors[r.Next(DebugCurve.Colors.Length - 1)], c)).Concat(
-                        edgeGeometries.Select(e => new DebugCurve(100, 1, "red", e.Curve))));
-        }
-#endif
+// #if TEST_MSAGL
+//         // ReSharper disable UnusedMember.Local
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static void Show(
+//             IEnumerable<EdgeGeometry> edgeGeometries, IEnumerable<Shape> listOfShapes) {
+//             // ReSharper restore UnusedMember.Local
+//             var r = new Random(1);
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(
+//                 listOfShapes.Select(s => s.BoundaryCurve).Select(
+//                     c => new DebugCurve(50, 1, DebugCurve.Colors[r.Next(DebugCurve.Colors.Length - 1)], c)).Concat(
+//                         edgeGeometries.Select(e => new DebugCurve(100, 1, "red", e.Curve))));
+//         }
+// #endif
 
 
         internal static Dictionary<Shape, Set<Shape>> GetAncestorSetsMap(IEnumerable<Shape> shapes) {

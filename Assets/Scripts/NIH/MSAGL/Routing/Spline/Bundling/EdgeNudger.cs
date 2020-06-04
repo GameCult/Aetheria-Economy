@@ -168,116 +168,116 @@ namespace Microsoft.Msagl.Routing.Spline.Bundling {
 
         #region Debug show
 
-#if DEBUG && TEST_MSAGL
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static internal void ShowHubs(MetroGraphData metroGraphData, IMetroMapOrderingAlgorithm metroMapOrdering, Station station) {
-            var ttt = GetAllDebugCurves(metroMapOrdering, metroGraphData);
-            if (station != null)
-                ttt = ttt.Concat(new[] { new DebugCurve(255, 3, "pink", CurveFactory.CreateDiamond(20, 20, station.Position)) });
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ttt);
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static internal IEnumerable<DebugCurve> GetAllDebugCurves(IMetroMapOrderingAlgorithm metroMapOrdering, MetroGraphData metroGraphData) {
-            return GraphNodes(metroGraphData).Concat(VertexDebugCurves(metroMapOrdering, metroGraphData)).Concat(DebugEdges(metroGraphData));
-        }
-
-        static IEnumerable<DebugCurve> DebugEdges(MetroGraphData metroGraphData1) {
-            return metroGraphData1.Edges.Select(e => new DebugCurve(40, 0.1, "gray", e.Curve));
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static IEnumerable<DebugCurve> VertexDebugCurves(IMetroMapOrderingAlgorithm metroMapOrdering, MetroGraphData metroGraphData) {
-            return DebugCircles(metroGraphData).Concat(DebugHubBases(metroGraphData)).
-                Concat(DebugSegs(metroGraphData, metroMapOrdering)).
-                Concat(BetweenHubs(metroMapOrdering, metroGraphData));
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static IEnumerable<DebugCurve> BetweenHubs(IMetroMapOrderingAlgorithm metroMapOrdering, MetroGraphData metroGraphData) {
-            foreach (Metroline ml in metroGraphData.Metrolines) {
-                List<Tuple<Point, Point>> segs = GetInterestingSegs(metroGraphData, metroMapOrdering, ml);
-                string color = GetMonotoneColor(ml.Polyline.Start, ml.Polyline.End, segs);
-                foreach (var seg in segs)
-                    yield return new DebugCurve(100, ml.Width, color, new LineSegment(seg.Item1, seg.Item2));
-            }
-        }
-
-        static List<Tuple<Point, Point>> GetInterestingSegs(MetroGraphData metroGraphData, IMetroMapOrderingAlgorithm metroMapOrdering, Metroline line) {
-            var ret = new List<Tuple<Point, Point>>();
-            Point start = FindCurveStart(metroGraphData, metroMapOrdering, line);
-            var cubicSegs = HubSegsOfLine(metroGraphData, metroMapOrdering, line);
-            foreach (var seg in cubicSegs) {
-                if (seg == null) continue;
-                ret.Add(new Tuple<Point, Point>(start, seg.Start));
-                start = seg.End;
-            }
-            ret.Add(new Tuple<Point, Point>(start, FindCurveEnd(metroGraphData, metroMapOrdering, line)));
-
-            return ret;
-        }
-
-        static string GetMonotoneColor(Point start, Point end, List<Tuple<Point, Point>> segs) {
-            return "green";
-            //            Point dir = end - start;
-            //            bool monotone = segs.All(seg => (seg.Second - seg.First)*dir >= 0);
-            //            return monotone ? "green" : "magenta";
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static IEnumerable<DebugCurve> DebugHubBases(MetroGraphData metroGraphData) {
-            List<DebugCurve> dc = new List<DebugCurve>();
-            foreach (var s in metroGraphData.Stations)
-                foreach (var h in s.BundleBases.Values) {
-                    dc.Add(new DebugCurve(100, 1, "red", new LineSegment(h.LeftPoint, h.RightPoint)));
-                }
-
-            return dc;
-            //return
-            //    metroGraphData.Stations.SelectMany(s => s.BundleBases.Values).Select(
-            //        h => new DebugCurve(100, 0.01, "red", new LineSegment(h.Points[0], h.Points.Last())));
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static IEnumerable<DebugCurve> DebugCircles(MetroGraphData metroGraphData) {
-            return
-                metroGraphData.Stations.Select(
-                    station => new DebugCurve(100, 0.1, "blue", CurveFactory.CreateCircle(station.Radius, station.Position)));
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static IEnumerable<DebugCurve> DebugSegs(MetroGraphData metroGraphData, IMetroMapOrderingAlgorithm metroMapOrdering) {
-
-            var ls = new List<ICurve>();
-            foreach (var s in metroGraphData.VirtualNodes()) {
-                foreach (var b in s.BundleBases.Values) {
-                    foreach (var h in b.OrientedHubSegments) {
-                        if (h == null) continue;
-                        if (h.Segment == null) {
-                            var uBase = h.Other.BundleBase;
-                            var i = h.Index;
-                            var j = h.Other.Index;
-                            ls.Add(new LineSegment(b.Points[i], uBase.Points[j]));
-                        }
-                        else {
-                            ls.Add(h.Segment);
-                        }
-                    }
-                }
-            }
-
-            return ls.Select(s => new DebugCurve(100, 0.01, "green", s));
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static IEnumerable<DebugCurve> GraphNodes(MetroGraphData metroGraphData) {
-            var nodes =
-                new Set<ICurve>(
-                    metroGraphData.Edges.Select(e => e.SourcePort.Curve).Concat(
-                        metroGraphData.Edges.Select(e => e.TargetPort.Curve)));
-            return nodes.Select(n => new DebugCurve(40, 1, "black", n));
-        }
-#endif
+// #if DEBUG && TEST_MSAGL
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static internal void ShowHubs(MetroGraphData metroGraphData, IMetroMapOrderingAlgorithm metroMapOrdering, Station station) {
+//             var ttt = GetAllDebugCurves(metroMapOrdering, metroGraphData);
+//             if (station != null)
+//                 ttt = ttt.Concat(new[] { new DebugCurve(255, 3, "pink", CurveFactory.CreateDiamond(20, 20, station.Position)) });
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ttt);
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static internal IEnumerable<DebugCurve> GetAllDebugCurves(IMetroMapOrderingAlgorithm metroMapOrdering, MetroGraphData metroGraphData) {
+//             return GraphNodes(metroGraphData).Concat(VertexDebugCurves(metroMapOrdering, metroGraphData)).Concat(DebugEdges(metroGraphData));
+//         }
+//
+//         static IEnumerable<DebugCurve> DebugEdges(MetroGraphData metroGraphData1) {
+//             return metroGraphData1.Edges.Select(e => new DebugCurve(40, 0.1, "gray", e.Curve));
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static IEnumerable<DebugCurve> VertexDebugCurves(IMetroMapOrderingAlgorithm metroMapOrdering, MetroGraphData metroGraphData) {
+//             return DebugCircles(metroGraphData).Concat(DebugHubBases(metroGraphData)).
+//                 Concat(DebugSegs(metroGraphData, metroMapOrdering)).
+//                 Concat(BetweenHubs(metroMapOrdering, metroGraphData));
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static IEnumerable<DebugCurve> BetweenHubs(IMetroMapOrderingAlgorithm metroMapOrdering, MetroGraphData metroGraphData) {
+//             foreach (Metroline ml in metroGraphData.Metrolines) {
+//                 List<Tuple<Point, Point>> segs = GetInterestingSegs(metroGraphData, metroMapOrdering, ml);
+//                 string color = GetMonotoneColor(ml.Polyline.Start, ml.Polyline.End, segs);
+//                 foreach (var seg in segs)
+//                     yield return new DebugCurve(100, ml.Width, color, new LineSegment(seg.Item1, seg.Item2));
+//             }
+//         }
+//
+//         static List<Tuple<Point, Point>> GetInterestingSegs(MetroGraphData metroGraphData, IMetroMapOrderingAlgorithm metroMapOrdering, Metroline line) {
+//             var ret = new List<Tuple<Point, Point>>();
+//             Point start = FindCurveStart(metroGraphData, metroMapOrdering, line);
+//             var cubicSegs = HubSegsOfLine(metroGraphData, metroMapOrdering, line);
+//             foreach (var seg in cubicSegs) {
+//                 if (seg == null) continue;
+//                 ret.Add(new Tuple<Point, Point>(start, seg.Start));
+//                 start = seg.End;
+//             }
+//             ret.Add(new Tuple<Point, Point>(start, FindCurveEnd(metroGraphData, metroMapOrdering, line)));
+//
+//             return ret;
+//         }
+//
+//         static string GetMonotoneColor(Point start, Point end, List<Tuple<Point, Point>> segs) {
+//             return "green";
+//             //            Point dir = end - start;
+//             //            bool monotone = segs.All(seg => (seg.Second - seg.First)*dir >= 0);
+//             //            return monotone ? "green" : "magenta";
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static IEnumerable<DebugCurve> DebugHubBases(MetroGraphData metroGraphData) {
+//             List<DebugCurve> dc = new List<DebugCurve>();
+//             foreach (var s in metroGraphData.Stations)
+//                 foreach (var h in s.BundleBases.Values) {
+//                     dc.Add(new DebugCurve(100, 1, "red", new LineSegment(h.LeftPoint, h.RightPoint)));
+//                 }
+//
+//             return dc;
+//             //return
+//             //    metroGraphData.Stations.SelectMany(s => s.BundleBases.Values).Select(
+//             //        h => new DebugCurve(100, 0.01, "red", new LineSegment(h.Points[0], h.Points.Last())));
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static IEnumerable<DebugCurve> DebugCircles(MetroGraphData metroGraphData) {
+//             return
+//                 metroGraphData.Stations.Select(
+//                     station => new DebugCurve(100, 0.1, "blue", CurveFactory.CreateCircle(station.Radius, station.Position)));
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static IEnumerable<DebugCurve> DebugSegs(MetroGraphData metroGraphData, IMetroMapOrderingAlgorithm metroMapOrdering) {
+//
+//             var ls = new List<ICurve>();
+//             foreach (var s in metroGraphData.VirtualNodes()) {
+//                 foreach (var b in s.BundleBases.Values) {
+//                     foreach (var h in b.OrientedHubSegments) {
+//                         if (h == null) continue;
+//                         if (h.Segment == null) {
+//                             var uBase = h.Other.BundleBase;
+//                             var i = h.Index;
+//                             var j = h.Other.Index;
+//                             ls.Add(new LineSegment(b.Points[i], uBase.Points[j]));
+//                         }
+//                         else {
+//                             ls.Add(h.Segment);
+//                         }
+//                     }
+//                 }
+//             }
+//
+//             return ls.Select(s => new DebugCurve(100, 0.01, "green", s));
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static IEnumerable<DebugCurve> GraphNodes(MetroGraphData metroGraphData) {
+//             var nodes =
+//                 new Set<ICurve>(
+//                     metroGraphData.Edges.Select(e => e.SourcePort.Curve).Concat(
+//                         metroGraphData.Edges.Select(e => e.TargetPort.Curve)));
+//             return nodes.Select(n => new DebugCurve(40, 1, "black", n));
+//         }
+// #endif
 
         #endregion
 

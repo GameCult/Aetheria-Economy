@@ -566,45 +566,45 @@ namespace Microsoft.Msagl.Routing {
             relaxedPoint.PolylinePoint.Point = relaxedPoint.OriginalPosition + v;
         }
 
-#if TEST_MSAGL
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-// ReSharper disable UnusedMember.Local
-        internal void ShowPolylineAndObstacles(params ICurve[] curves)
-        {
-// ReSharper restore UnusedMember.Local
-            IEnumerable<DebugCurve> ls = GetDebugCurves(curves);
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        IEnumerable<DebugCurve> GetDebugCurves(params ICurve[] curves)
-        {
-            var ls = CreateListWithObstaclesAndPolyline(curves);
-            //ls.AddRange(this.VisibilityGraph.Edges.Select(e => new DebugCurve(100,0.1, e is TollFreeVisibilityEdge?"red":"green", new LineSegment(e.SourcePoint, e.TargetPoint))));
-            if (_sourceVisibilityVertex != null)
-                ls.Add(new DebugCurve("red", CurveFactory.CreateDiamond(4, 4, _sourceVisibilityVertex.Point)));
-            if (targetVisibilityVertex != null)
-                ls.Add(new DebugCurve("purple", new Ellipse(4, 4, targetVisibilityVertex.Point)));
-            var anywerePort=targetPort as HookUpAnywhereFromInsidePort;
-            if (anywerePort != null)
-                ls.Add(new DebugCurve("purple", anywerePort.LoosePolyline));
-            return ls;
-        }
-
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        List<DebugCurve> CreateListWithObstaclesAndPolyline(params ICurve[] curves)
-        {
-            var ls = new List<DebugCurve>(ObstacleCalculator.RootOfLooseHierarchy.GetAllLeaves().Select(e => new DebugCurve(100,0.01, "green", e)));
-            ls.AddRange(curves.Select(c=>new DebugCurve(100,0.01,"red", c)));
-            ls.AddRange(ObstacleCalculator.RootOfTightHierarchy.GetAllLeaves().Select(e => new DebugCurve(100, 0.01, "blue", e)));
-
-            // ls.AddRange(visibilityGraph.Edges.Select(e => (ICurve) new LineSegment(e.SourcePoint, e.TargetPoint)));
-            if (_polyline != null)
-                ls.Add(new DebugCurve(100, 0.03, "blue",_polyline));
-            return ls;
-        }
-#endif
+// #if TEST_MSAGL
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+// // ReSharper disable UnusedMember.Local
+//         internal void ShowPolylineAndObstacles(params ICurve[] curves)
+//         {
+// // ReSharper restore UnusedMember.Local
+//             IEnumerable<DebugCurve> ls = GetDebugCurves(curves);
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         IEnumerable<DebugCurve> GetDebugCurves(params ICurve[] curves)
+//         {
+//             var ls = CreateListWithObstaclesAndPolyline(curves);
+//             //ls.AddRange(this.VisibilityGraph.Edges.Select(e => new DebugCurve(100,0.1, e is TollFreeVisibilityEdge?"red":"green", new LineSegment(e.SourcePoint, e.TargetPoint))));
+//             if (_sourceVisibilityVertex != null)
+//                 ls.Add(new DebugCurve("red", CurveFactory.CreateDiamond(4, 4, _sourceVisibilityVertex.Point)));
+//             if (targetVisibilityVertex != null)
+//                 ls.Add(new DebugCurve("purple", new Ellipse(4, 4, targetVisibilityVertex.Point)));
+//             var anywerePort=targetPort as HookUpAnywhereFromInsidePort;
+//             if (anywerePort != null)
+//                 ls.Add(new DebugCurve("purple", anywerePort.LoosePolyline));
+//             return ls;
+//         }
+//
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         List<DebugCurve> CreateListWithObstaclesAndPolyline(params ICurve[] curves)
+//         {
+//             var ls = new List<DebugCurve>(ObstacleCalculator.RootOfLooseHierarchy.GetAllLeaves().Select(e => new DebugCurve(100,0.01, "green", e)));
+//             ls.AddRange(curves.Select(c=>new DebugCurve(100,0.01,"red", c)));
+//             ls.AddRange(ObstacleCalculator.RootOfTightHierarchy.GetAllLeaves().Select(e => new DebugCurve(100, 0.01, "blue", e)));
+//
+//             // ls.AddRange(visibilityGraph.Edges.Select(e => (ICurve) new LineSegment(e.SourcePoint, e.TargetPoint)));
+//             if (_polyline != null)
+//                 ls.Add(new DebugCurve(100, 0.03, "blue",_polyline));
+//             return ls;
+//         }
+// #endif
 
         /// <summary>
         /// smoothing the corners of the polyline
@@ -795,25 +795,25 @@ namespace Microsoft.Msagl.Routing {
             return RemoveCollinearVertices(ret);
         }
 
-#if TEST_MSAGL
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private void ShowIsPassable(VisibilityVertex sourceVisVertex, VisibilityVertex targetVisVertex)
-        {
-            var dd = new List<DebugCurve>(
-                visibilityGraph.Edges.Select(
-                    e =>
-                    new DebugCurve(100, 0.5, e.IsPassable == null || e.IsPassable() ? "green" : "red",
-                                   new LineSegment(e.SourcePoint, e.TargetPoint))));
-            if(sourceVisVertex!=null)
-                dd.Add(new DebugCurve(CurveFactory.CreateDiamond(3, 3, sourceVisVertex.Point)));
-            if(targetVisVertex!=null)
-                dd.Add(new DebugCurve(CurveFactory.CreateEllipse(3, 3, targetVisVertex.Point)));
-                              
-            if (Obstacles != null)
-                dd.AddRange(Obstacles.Select(o => new DebugCurve(o)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
-        }
-#endif
+// #if TEST_MSAGL
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         private void ShowIsPassable(VisibilityVertex sourceVisVertex, VisibilityVertex targetVisVertex)
+//         {
+//             var dd = new List<DebugCurve>(
+//                 visibilityGraph.Edges.Select(
+//                     e =>
+//                     new DebugCurve(100, 0.5, e.IsPassable == null || e.IsPassable() ? "green" : "red",
+//                                    new LineSegment(e.SourcePoint, e.TargetPoint))));
+//             if(sourceVisVertex!=null)
+//                 dd.Add(new DebugCurve(CurveFactory.CreateDiamond(3, 3, sourceVisVertex.Point)));
+//             if(targetVisVertex!=null)
+//                 dd.Add(new DebugCurve(CurveFactory.CreateEllipse(3, 3, targetVisVertex.Point)));
+//                               
+//             if (Obstacles != null)
+//                 dd.AddRange(Obstacles.Select(o => new DebugCurve(o)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
+//         }
+// #endif
 
         void CleanTheGraphForShortestPath() {
             visibilityGraph.ClearPrevEdgesTable();            

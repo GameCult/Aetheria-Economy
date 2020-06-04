@@ -25,7 +25,7 @@ public class UnityGameObjectFormatter : IMessagePackFormatter<GameObject>
 		string path;
 		if (!_paths.TryGetValue(value, out path))
 			path = "RUNTIME_SERIALIZER_UNKNOWN_RESOURCE";
-		return writer.Write(path);
+		writer.Write(path);
 #endif
 	}
 
@@ -60,7 +60,7 @@ public class UnityMaterialFormatter : IMessagePackFormatter<Material>
 		string path;
 		if (!_paths.TryGetValue(value, out path))
 			path = "RUNTIME_SERIALIZER_UNKNOWN_RESOURCE";
-		return writer.Write(path);
+		writer.Write(path);
 #endif
 	}
 
@@ -95,7 +95,7 @@ public class UnitySpriteFormatter : IMessagePackFormatter<Sprite>
 		string path;
 		if (!_paths.TryGetValue(value, out path))
 			path = "RUNTIME_SERIALIZER_UNKNOWN_RESOURCE";
-		return writer.Write(path);
+		writer.Write(path);
 #endif
 	}
 
@@ -130,7 +130,7 @@ public class UnityTexture2DFormatter : IMessagePackFormatter<Texture2D>
 		string path;
 		if (!_paths.TryGetValue(value, out path))
 			path = "RUNTIME_SERIALIZER_UNKNOWN_RESOURCE";
-		return writer.Write(path);
+		writer.Write(path);
 #endif
 	}
 

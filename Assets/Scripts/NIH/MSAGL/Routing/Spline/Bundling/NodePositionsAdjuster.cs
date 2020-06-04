@@ -36,9 +36,9 @@ namespace Microsoft.Msagl.Routing.Spline.Bundling {
         /// apply a number of heuristics to improve current routing
         /// </summary>
         internal static void FixRouting(MetroGraphData metroGraphData, BundlingSettings bundlingSettings) {
-#if DEBUG && TEST_MSAGL
-            Debug.Assert(metroGraphData.looseIntersections.HubPositionsAreOK());
-#endif
+// #if DEBUG && TEST_MSAGL
+//             Debug.Assert(metroGraphData.looseIntersections.HubPositionsAreOK());
+// #endif
             //TimeMeasurer.DebugOutput("Initial cost = " + CostCalculator.Cost(metroGraphData, bundlingSettings));
             //TimeMeasurer.DebugOutput("Initial cost of forces: " + CostCalculator.CostOfForces(metroGraphData, bundlingSettings));
 

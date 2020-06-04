@@ -267,23 +267,23 @@ namespace Microsoft.Msagl.Routing.Visibility {
             return Point.SignedDoubledTriangleArea(a, v, prev)*Point.SignedDoubledTriangleArea(a, v, next) >= 0;
         }
 
-#if TEST_MSAGL
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-// ReSharper disable UnusedMember.Local
-        void DrawActiveEdgesAndVisibleGraph() {
-// ReSharper restore UnusedMember.Local
-            var l = new List<ICurve>();
-            foreach (VisibilityEdge pe in visibilityGraph.Edges)
-                l.Add(new LineSegment(pe.SourcePoint, pe.TargetPoint));
-
-            foreach (PolylinePoint pe in activeSidesTree)
-                l.Add(new LineSegment(pe.Point, pe.NextOnPolyline.Point));
-            l.Add(new Ellipse(0.1, 0.1, q));
-
-
-            LayoutAlgorithmSettings.Show(l.ToArray());
-        }
-#endif
+// #if TEST_MSAGL
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+// // ReSharper disable UnusedMember.Local
+//         void DrawActiveEdgesAndVisibleGraph() {
+// // ReSharper restore UnusedMember.Local
+//             var l = new List<ICurve>();
+//             foreach (VisibilityEdge pe in visibilityGraph.Edges)
+//                 l.Add(new LineSegment(pe.SourcePoint, pe.TargetPoint));
+//
+//             foreach (PolylinePoint pe in activeSidesTree)
+//                 l.Add(new LineSegment(pe.Point, pe.NextOnPolyline.Point));
+//             l.Add(new Ellipse(0.1, 0.1, q));
+//
+//
+//             LayoutAlgorithmSettings.Show(l.ToArray());
+//         }
+// #endif
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         PolylinePoint GetOutgoingSide(PolylinePoint v) {

@@ -227,117 +227,117 @@ namespace Microsoft.Msagl.Routing.Spline.ConeSpanner {
             AddConeAndEnqueueEvents(vertexEvent);
         }
 
-#if TEST_MSAGL
-    // ReSharper disable UnusedMember.Local
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static Ellipse EllipseOnVert(SweepEvent vertexEvent) {
-            // ReSharper restore UnusedMember.Local
-            return new Ellipse(2, 2, vertexEvent.Site);
-        }
-
-        // ReSharper disable UnusedMember.Local
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static Ellipse EllipseOnPolylinePoint(PolylinePoint pp) {
-            // ReSharper restore UnusedMember.Local
-            return new Ellipse(2, 2, pp.Point);
-        }
-
-#endif
-
-
-#if TEST_MSAGL
-    // ReSharper disable UnusedMember.Local
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String)"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void CheckConsistency() {
-            // ReSharper restore UnusedMember.Local
-            foreach (var s in rightConeSides) {
-                coneSideComparer.SetOperand(s);
-                if (!leftConeSides.Contains(s.Cone.LeftSide))
-                    Console.WriteLine("bug");
-            }
-            foreach (var s in leftConeSides) {
-                coneSideComparer.SetOperand(s);
-                if (!rightConeSides.Contains(s.Cone.RightSide)) {
-                    Console.WriteLine("bug");
-                    PrintOutRightSegTree();
-                    PrintOutLeftSegTree();
-
-                    //                    ShowLeftTree();
-                    //                    ShowRightTree();
-                }
-            }
-        }
-
-        // ReSharper disable UnusedMember.Local
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowTrees(params ICurve[] curves) {
-            // ReSharper restore UnusedMember.Local
-            var l = Obstacles.Select(c => new DebugCurve(100, 1, "blue", c));
-            l = l.Concat(rightConeSides.Select(s => new DebugCurve(200, 1, "brown", ExtendSegmentToZ(s))));
-            l = l.Concat(leftConeSides.Select(s => new DebugCurve(200, 1, "gree", ExtendSegmentToZ(s))));
-            l = l.Concat(curves.Select(c => new DebugCurve("red", c)));
-            l =
-                l.Concat(
-                    visibilityGraph.Edges.Select(e => new LineSegment(e.SourcePoint, e.TargetPoint)).Select(
-                        c => new DebugCurve("marine", c)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
-        }
-
-        void ShowLeftTree(params ICurve[] curves) {
-            var l = Obstacles.Select(c => new DebugCurve(c));
-            l = l.Concat(leftConeSides.Select(s => new DebugCurve("brown", ExtendSegmentToZ(s))));
-            l = l.Concat(curves.Select(c => new DebugCurve("red", c)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
-
-        }
-        void ShowRightTree(params ICurve[] curves) {
-            var l = Obstacles.Select(c => new DebugCurve(c));
-            l = l.Concat(rightConeSides.Select(s => new DebugCurve("brown", ExtendSegmentToZ(s))));
-            l = l.Concat(curves.Select(c => new DebugCurve("red", c)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
-        }
-
-        // ReSharper disable UnusedMember.Global
-        internal void Show(params ICurve[] curves) {
-            // ReSharper restore UnusedMember.Global
-            var l = Obstacles.Select(c => new DebugCurve(100, 1, "black", c));
-
-            l = l.Concat(curves.Select(c => new DebugCurve(200, 1, "red", c)));
-            //            foreach (var s in rightConeSides){
-            //                l.Add(ExtendSegmentToZ(s));
-            //                if (s is BrokenConeSide)
-            //                    l.Add(Diamond(s.Start));
-            //                l.Add(ExtendSegmentToZ(s.Cone.LeftSide));
-            //            }
-
-            l =
-                l.Concat(
-                    visibilityGraph.Edges.Select(edge => new LineSegment(edge.SourcePoint, edge.TargetPoint)).Select(
-                        c => new DebugCurve(100, 1, "blue", c)));
+// #if TEST_MSAGL
+//     // ReSharper disable UnusedMember.Local
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static Ellipse EllipseOnVert(SweepEvent vertexEvent) {
+//             // ReSharper restore UnusedMember.Local
+//             return new Ellipse(2, 2, vertexEvent.Site);
+//         }
+//
+//         // ReSharper disable UnusedMember.Local
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static Ellipse EllipseOnPolylinePoint(PolylinePoint pp) {
+//             // ReSharper restore UnusedMember.Local
+//             return new Ellipse(2, 2, pp.Point);
+//         }
+//
+// #endif
 
 
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
-
-        }
-
-        ICurve ExtendSegmentToZ(ConeSide segment) {
-            double den = segment.Direction * SweepDirection;
-            Debug.Assert(Math.Abs(den) > ApproximateComparer.DistanceEpsilon);
-            double t = (Z - segment.Start * SweepDirection) / den;
-
-            return new LineSegment(segment.Start, segment.Start + segment.Direction * t);
-        }
-
-        // ReSharper disable UnusedMember.Global
-        internal ICurve ExtendSegmentToZPlus1(ConeSide segment) {
-            // ReSharper restore UnusedMember.Global
-            double den = segment.Direction * SweepDirection;
-            Debug.Assert(Math.Abs(den) > ApproximateComparer.DistanceEpsilon);
-            double t = (Z + 1 - segment.Start * SweepDirection) / den;
-
-            return new LineSegment(segment.Start, segment.Start + segment.Direction * t);
-        }
-#endif
+// #if TEST_MSAGL
+//     // ReSharper disable UnusedMember.Local
+//         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String)"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void CheckConsistency() {
+//             // ReSharper restore UnusedMember.Local
+//             foreach (var s in rightConeSides) {
+//                 coneSideComparer.SetOperand(s);
+//                 if (!leftConeSides.Contains(s.Cone.LeftSide))
+//                     Console.WriteLine("bug");
+//             }
+//             foreach (var s in leftConeSides) {
+//                 coneSideComparer.SetOperand(s);
+//                 if (!rightConeSides.Contains(s.Cone.RightSide)) {
+//                     Console.WriteLine("bug");
+//                     PrintOutRightSegTree();
+//                     PrintOutLeftSegTree();
+//
+//                     //                    ShowLeftTree();
+//                     //                    ShowRightTree();
+//                 }
+//             }
+//         }
+//
+//         // ReSharper disable UnusedMember.Local
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowTrees(params ICurve[] curves) {
+//             // ReSharper restore UnusedMember.Local
+//             var l = Obstacles.Select(c => new DebugCurve(100, 1, "blue", c));
+//             l = l.Concat(rightConeSides.Select(s => new DebugCurve(200, 1, "brown", ExtendSegmentToZ(s))));
+//             l = l.Concat(leftConeSides.Select(s => new DebugCurve(200, 1, "gree", ExtendSegmentToZ(s))));
+//             l = l.Concat(curves.Select(c => new DebugCurve("red", c)));
+//             l =
+//                 l.Concat(
+//                     visibilityGraph.Edges.Select(e => new LineSegment(e.SourcePoint, e.TargetPoint)).Select(
+//                         c => new DebugCurve("marine", c)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
+//         }
+//
+//         void ShowLeftTree(params ICurve[] curves) {
+//             var l = Obstacles.Select(c => new DebugCurve(c));
+//             l = l.Concat(leftConeSides.Select(s => new DebugCurve("brown", ExtendSegmentToZ(s))));
+//             l = l.Concat(curves.Select(c => new DebugCurve("red", c)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
+//
+//         }
+//         void ShowRightTree(params ICurve[] curves) {
+//             var l = Obstacles.Select(c => new DebugCurve(c));
+//             l = l.Concat(rightConeSides.Select(s => new DebugCurve("brown", ExtendSegmentToZ(s))));
+//             l = l.Concat(curves.Select(c => new DebugCurve("red", c)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
+//         }
+//
+//         // ReSharper disable UnusedMember.Global
+//         internal void Show(params ICurve[] curves) {
+//             // ReSharper restore UnusedMember.Global
+//             var l = Obstacles.Select(c => new DebugCurve(100, 1, "black", c));
+//
+//             l = l.Concat(curves.Select(c => new DebugCurve(200, 1, "red", c)));
+//             //            foreach (var s in rightConeSides){
+//             //                l.Add(ExtendSegmentToZ(s));
+//             //                if (s is BrokenConeSide)
+//             //                    l.Add(Diamond(s.Start));
+//             //                l.Add(ExtendSegmentToZ(s.Cone.LeftSide));
+//             //            }
+//
+//             l =
+//                 l.Concat(
+//                     visibilityGraph.Edges.Select(edge => new LineSegment(edge.SourcePoint, edge.TargetPoint)).Select(
+//                         c => new DebugCurve(100, 1, "blue", c)));
+//
+//
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
+//
+//         }
+//
+//         ICurve ExtendSegmentToZ(ConeSide segment) {
+//             double den = segment.Direction * SweepDirection;
+//             Debug.Assert(Math.Abs(den) > ApproximateComparer.DistanceEpsilon);
+//             double t = (Z - segment.Start * SweepDirection) / den;
+//
+//             return new LineSegment(segment.Start, segment.Start + segment.Direction * t);
+//         }
+//
+//         // ReSharper disable UnusedMember.Global
+//         internal ICurve ExtendSegmentToZPlus1(ConeSide segment) {
+//             // ReSharper restore UnusedMember.Global
+//             double den = segment.Direction * SweepDirection;
+//             Debug.Assert(Math.Abs(den) > ApproximateComparer.DistanceEpsilon);
+//             double t = (Z + 1 - segment.Start * SweepDirection) / den;
+//
+//             return new LineSegment(segment.Start, segment.Start + segment.Direction * t);
+//         }
+// #endif
 
         void AddConeAndEnqueueEvents(VertexEvent vertexEvent) {
             var leftVertexEvent = vertexEvent as LeftVertexEvent;
@@ -584,21 +584,21 @@ namespace Microsoft.Msagl.Routing.Spline.ConeSpanner {
                 Z = Math.Max(GetZ(coneSide.Start), Z - 0.01);
                 //we need to return to the past a little bit when the order was still correc
                 coneSideComparer.SetOperand(coneSide);
-#if TEST_MSAGL
-                b =
-#endif
+// #if TEST_MSAGL
+//                 b =
+// #endif
                 rightConeSides.Remove(coneSide);
                 Z = tmpZ;
 
-#if TEST_MSAGL
-                if (b == null) {
-                    PrintOutRightSegTree();
-                    Console.WriteLine(coneSide);
-                    ShowRightTree(CurveFactory.CreateDiamond(3, 4, coneSide.Start));
-                    GeometryGraph gg = CreateGraphFromObstacles(Obstacles);
-                    GeometryGraphWriter.Write(gg, "c:\\tmp\\bug1");
-                }
-#endif
+// #if TEST_MSAGL
+//                 if (b == null) {
+//                     PrintOutRightSegTree();
+//                     Console.WriteLine(coneSide);
+//                     ShowRightTree(CurveFactory.CreateDiamond(3, 4, coneSide.Start));
+//                     GeometryGraph gg = CreateGraphFromObstacles(Obstacles);
+//                     GeometryGraphWriter.Write(gg, "c:\\tmp\\bug1");
+//                 }
+// #endif
             }
             Debug.Assert(b != null);
         }
@@ -614,18 +614,18 @@ namespace Microsoft.Msagl.Routing.Spline.ConeSpanner {
                 Z = Math.Max(GetZ(coneSide.Start), Z - 0.01);
                 coneSideComparer.SetOperand(coneSide);
 
-#if TEST_MSAGL
-                b =
-#endif
+// #if TEST_MSAGL
+//                 b =
+// #endif
                 leftConeSides.Remove(coneSide);
                 Z = tmpZ;
-#if TEST_MSAGL
-                if (b == null) {
-                    PrintOutLeftSegTree();
-                    Console.WriteLine(coneSide);
-                    ShowLeftTree(new Ellipse(2, 2, coneSide.Start));
-                }
-#endif
+// #if TEST_MSAGL
+//                 if (b == null) {
+//                     PrintOutLeftSegTree();
+//                     Console.WriteLine(coneSide);
+//                     ShowLeftTree(new Ellipse(2, 2, coneSide.Start));
+//                 }
+// #endif
             }
 
             Debug.Assert(b != null);
@@ -764,18 +764,18 @@ namespace Microsoft.Msagl.Routing.Spline.ConeSpanner {
                 Z = tmpZ;
 
 
-#if TEST_MSAGL
-                if (rbNode == null) {
-                    //GeometryGraph gg = CreateGraphFromObstacles();
-                    //gg.Save("c:\\tmp\\bug");
-
-
-                    PrintOutLeftSegTree();
-                    Console.WriteLine(leftConeSide);
-                    ShowLeftTree(new Ellipse(3, 3, vertexEvent.Site));
-                    ShowRightTree(new Ellipse(3, 3, vertexEvent.Site));
-                }
-#endif
+// #if TEST_MSAGL
+//                 if (rbNode == null) {
+//                     //GeometryGraph gg = CreateGraphFromObstacles();
+//                     //gg.Save("c:\\tmp\\bug");
+//
+//
+//                     PrintOutLeftSegTree();
+//                     Console.WriteLine(leftConeSide);
+//                     ShowLeftTree(new Ellipse(3, 3, vertexEvent.Site));
+//                     ShowRightTree(new Ellipse(3, 3, vertexEvent.Site));
+//                 }
+// #endif
             }
 
             rbNode = leftConeSides.Next(rbNode);

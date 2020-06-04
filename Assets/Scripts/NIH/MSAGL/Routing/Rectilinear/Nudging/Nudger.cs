@@ -289,224 +289,224 @@ namespace Microsoft.Msagl.Routing.Rectilinear.Nudging {
         }
 
         #region debug
-#if TEST_MSAGL
-        internal static void ShowPathsFromPoints(IEnumerable<Path> paths, IEnumerable<Polyline> enumerable) {
-            var dd = new List<DebugCurve>();
-            if (enumerable != null)
-                dd.AddRange(GetObstacleBoundaries(enumerable, "grey"));
-            int i = 0;
-            foreach (var p in paths)
-                dd.AddRange(PathDebugCurvesFromPoints(p, DebugCurve.Colors[Math.Min(DebugCurve.Colors.Length, i++)]));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
-        }
-
-        static IEnumerable<DebugCurve> PathDebugCurvesFromPoints(Path path, string color) {
-            const double startWidth = 0.01;
-            const double endWidth = 3;
-
-            var pts = path.PathPoints.ToArray();
-            double delta = (endWidth - startWidth) / (pts.Length - 1);
-            for (int i = 0; i < pts.Length - 1; i++)
-                yield return new DebugCurve(startWidth + delta * i, color, new LineSegment(pts[i], pts[i + 1]));
-        }
-
-          internal static void ShowParamPaths( Point s, Point e, params Path[] paths ) {
-              ShowOrderedPaths(null,paths,s,e);
-          }
-
-        //         ReSharper disable UnusedMember.Local
-        internal static void ShowOrderedPaths(IEnumerable<Polyline> obstacles, IEnumerable<Path> paths, Point s, Point e) {
-            //           ReSharper restore UnusedMember.Local
-            string[] colors = { "red", "green", "blue", "violet", "rose", "black" };
-
-            const double startWidth = 0.001;
-            const double endWidth = 0.1;
-            var dd = new List<DebugCurve>();
-            if (obstacles != null)
-                dd.AddRange(GetObstacleBoundaries(obstacles, "grey"));
-            int i = 0;
-            foreach (var path in paths)
-                dd.AddRange(GetTestPathAsDebugCurve(startWidth, endWidth, colors[Math.Min(colors.Length - 1, i++)], path));
-
-            var ell = new DebugCurve(1, "black", new Ellipse(0.01, 0.01, s));
-            dd.Add(ell);
-            dd.Add(new DebugCurve(1, "black", new Ellipse(0.02, 0.02, e)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd.Concat(GetObstacleBoundaries(obstacles, "lightblue")));
-        }
-
-        static IEnumerable<DebugCurve> GetTestPathAsDebugCurve(double startWidth, double endWidth, string color, Path path) {
-            if (path.PathEdges.Count() > 0) {
-                int count = path.PathEdges.Count();
-
-                double deltaW = count > 1 ? (endWidth - startWidth)/(count - 1) : 1;
-                    //if count ==1 the value of deltaW does not matter
-                int i = 0;
-                foreach (var e in path.PathEdges)
-                    yield return
-                        new DebugCurve(150, startWidth + deltaW*(i++), color, new LineSegment(e.Source, e.Target));
-            }else {
-                int count = path.PathPoints.Count();
-                var pts = path.PathPoints.ToArray();
-
-                var deltaW = count > 1 ? (endWidth - startWidth) / (count - 1) : 1;
-                //if count ==1 the value of deltaW does not matter
-                for (int i = 0; i < count - 1;i++ )
-                    yield return new DebugCurve(150, startWidth+deltaW*i, color, new LineSegment(pts[i], pts[i+1]));                    
-            }
-        }
-
-        internal static IEnumerable<DebugCurve> GetTestEdgePathAsDebugCurves(double startWidth, double endWidth, string color, Path path) {
-            int count = path.PathPoints.Count();
-
-            double deltaW = count > 1 ? (endWidth - startWidth) / (count - 1) : 1; //if count ==1 the value of deltaW does not matter
-            var points = path.PathPoints.ToArray();
-            for (int i = 0; i < points.Length - 1; i++)
-                yield return new DebugCurve(125, startWidth + deltaW * i, color, new LineSegment(points[i], points[i + 1]));
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static IEnumerable<DebugCurve> GetEdgePathFromPathEdgesAsDebugCurves(double startWidth, double endWidth, string color, Path path) {
-            var points = path.PathPoints.ToArray();
-
-            int count = points.Length;
-
-            double deltaW = count > 1 ? (endWidth - startWidth) / (count - 1) : 1; //if count ==1 the value of deltaW does not matter
-            for (int i = 0; i < points.Length - 1; i++)
-                yield return new DebugCurve(120, startWidth + deltaW * i, color, new LineSegment(points[i], points[i + 1]));
-        }
-         // ReSharper disable UnusedMember.Local
-        
-        static internal void ShowEdgePaths(IEnumerable<Polyline> obstacles, IEnumerable<Path> edgePaths) {
-            // ReSharper restore UnusedMember.Local
-            List<DebugCurve> debCurves = GetDebCurvesOfPaths(obstacles, edgePaths);
-
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debCurves);
-        }
-
-        internal static List<DebugCurve> GetDebCurvesOfPaths(IEnumerable<Polyline> enumerable, IEnumerable<Path> edgePaths) {
-            var debCurves = GetObstacleBoundaries(enumerable, "black");
-            int i = 0;
-
-            foreach (var edgePath in edgePaths)
-                debCurves.AddRange(GetTestEdgePathAsDebugCurves(0.2, 4, DebugCurve.Colors[(i++) % DebugCurve.Colors.Length], edgePath));
-            return debCurves;
-        }
-
-        internal static void ShowPathsInLoop(IEnumerable<Polyline> enumerable, IEnumerable<Path> edgePaths, Point point) {
-            foreach (var edgePath in edgePaths.Where(path=>(path.PathPoints.First()-point).Length<1 ||(path.PathPoints.Last()-point).Length<1 )) {
-                var debCurves = GetObstacleBoundaries(enumerable, "black");
-                debCurves.AddRange(GetTestEdgePathAsDebugCurves(0.1, 4, "red", edgePath));
-                LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debCurves);
-            }
-        }
-
-
-        // ReSharper disable UnusedMember.Local
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowLongSegsWithIdealPositions(Directions dir) {
-            // ReSharper restore UnusedMember.Local
-            var debCurves = GetObstacleBoundaries(Obstacles, "black");
-            int i = 0;
-
-            debCurves.AddRange(LongestNudgedSegs.Select(ls => DebugCurveOfLongSeg(ls, DebugCurve.Colors[i++ % DebugCurve.Colors.Length], dir)));
-
-            DebugCurveCollection.WriteToFile(debCurves, "c:/tmp/longSegs");
-
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debCurves);
-        }
-
-        static DebugCurve DebugCurveOfLongSeg(LongestNudgedSegment ls, string s, Directions dir) {
-            return new DebugCurve(1, s, LineSegOfLongestSeg(ls, dir));
-        }
-
-        static ICurve LineSegOfLongestSeg(LongestNudgedSegment ls, Directions dir) {
-            var projectionToDir = dir == Directions.East ? (PointProjection)(p => p.X) : (p => p.Y);
-            var min = Double.PositiveInfinity;
-            var max = Double.NegativeInfinity;
-            foreach (var edge in ls.Edges) {
-                UpdateMinMaxWithPoint(ref min, ref max, projectionToDir, edge.Source);
-                UpdateMinMaxWithPoint(ref min, ref max, projectionToDir, edge.Target);
-            }
-            return dir == Directions.East
-                       ? new LineSegment(min, -ls.IdealPosition, max, -ls.IdealPosition)
-                       : new LineSegment(ls.IdealPosition, min, ls.IdealPosition, max);
-        }
-
-        static void UpdateMinMaxWithPoint(ref double min, ref double max, PointProjection projectionToDir, Point point) {
-            double p = projectionToDir(point);
-            if (min > p)
-                min = p;
-            if (max < p)
-                max = p;
-        }
-
-
-        // ReSharper disable UnusedMember.Local
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowPathsDebug(IEnumerable<Path> edgePaths) {
-            var debCurves = GetObstacleBoundaries(Obstacles, "black");
-            int i = 0;
-
-            foreach (var edgePath in edgePaths)
-                debCurves.AddRange(GetEdgePathFromPathEdgesAsDebugCurves(0.01, 0.4, DebugCurve.Colors[(i++) % DebugCurve.Colors.Length], edgePath));
-
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debCurves);
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static IEnumerable<DebugCurve> PathDebugCurves(Path path, string color) {
-            var d = path.PathEdges.Select(e => new DebugCurve(70, 0.5, color, new LineSegment(e.Source, e.Target)));
-            return d.Concat(MarkPathVerts(path));
-        }
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private static IEnumerable<DebugCurve> MarkPathVerts(Path path) {
-            bool first = true;
-            var p = new Point();
-            foreach (var p0 in path.PathPoints) {
-                if (first) {
-                    yield return new DebugCurve(200, 1, "violet", CurveFactory.CreateDiamond(5, 5, p0));
-                    first = false;
-                } else
-                    yield return new DebugCurve(100, 0.5, "brown", CurveFactory.CreateEllipse(1.5, 1.5, p0));
-                p = p0;
-            }
-            yield return new DebugCurve(200, 1, "green", CurveFactory.CreateDiamond(3, 3, p));
-        }
-
-        static internal IEnumerable<DebugCurve> PathDebugCurvesFromPoint(Path path) {
-            var l = new List<Point>(path.PathPoints);
-            for (int i = 0; i < l.Count - 1; i++)
-                yield return new DebugCurve(4, "red", new LineSegment(l[i], l[i + 1]));
-        }
-        //
-        // ReSharper disable UnusedMember.Local
-        //        void ShowEdgesOfEdgePath(Path path){
-        // ReSharper restore UnusedMember.Local
-        //            string[] colors = {"red", "brown", "purple"};
-        //            const double w0 = 1;
-        //            const double w1 = 3;
-        //            double dw = (w1 - w0)/path.OrientedSubpaths.Count;
-        //            int i = 0;
-        //            var dc = new List<DebugCurve>();
-        //            foreach (var s in path.OrientedSubpaths){
-        //                dc.AddRange(SubpathDebugCurves(w0 + dw*i, colors[Math.Min(i++, colors.Length - 1)], s));
-        //            }
-        //            LayoutAlgorithmSettings.ShowDebugCurves(dc.ToArray());
-        //        }
-        //
-        //        static IEnumerable<DebugCurve> SubpathDebugCurves(double w, string color, OrientedSubpath subpath){
-        //            return subpath.LinkedPath.Select(e => new DebugCurve(w, color, new LineSegment(e.Source.Point, e.Target.Point)));
-        //        }
-
-
-        static internal List<DebugCurve> GetObstacleBoundaries(IEnumerable<Polyline> obstacles, string color) {
-            var debugCurves = new List<DebugCurve>();
-            if (obstacles != null)
-                debugCurves.AddRange(obstacles.Select(poly => new DebugCurve(50, 0.3, color, poly)));
-            return debugCurves;
-        }
-#endif
+// #if TEST_MSAGL
+//         internal static void ShowPathsFromPoints(IEnumerable<Path> paths, IEnumerable<Polyline> enumerable) {
+//             var dd = new List<DebugCurve>();
+//             if (enumerable != null)
+//                 dd.AddRange(GetObstacleBoundaries(enumerable, "grey"));
+//             int i = 0;
+//             foreach (var p in paths)
+//                 dd.AddRange(PathDebugCurvesFromPoints(p, DebugCurve.Colors[Math.Min(DebugCurve.Colors.Length, i++)]));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
+//         }
+//
+//         static IEnumerable<DebugCurve> PathDebugCurvesFromPoints(Path path, string color) {
+//             const double startWidth = 0.01;
+//             const double endWidth = 3;
+//
+//             var pts = path.PathPoints.ToArray();
+//             double delta = (endWidth - startWidth) / (pts.Length - 1);
+//             for (int i = 0; i < pts.Length - 1; i++)
+//                 yield return new DebugCurve(startWidth + delta * i, color, new LineSegment(pts[i], pts[i + 1]));
+//         }
+//
+//           internal static void ShowParamPaths( Point s, Point e, params Path[] paths ) {
+//               ShowOrderedPaths(null,paths,s,e);
+//           }
+//
+//         //         ReSharper disable UnusedMember.Local
+//         internal static void ShowOrderedPaths(IEnumerable<Polyline> obstacles, IEnumerable<Path> paths, Point s, Point e) {
+//             //           ReSharper restore UnusedMember.Local
+//             string[] colors = { "red", "green", "blue", "violet", "rose", "black" };
+//
+//             const double startWidth = 0.001;
+//             const double endWidth = 0.1;
+//             var dd = new List<DebugCurve>();
+//             if (obstacles != null)
+//                 dd.AddRange(GetObstacleBoundaries(obstacles, "grey"));
+//             int i = 0;
+//             foreach (var path in paths)
+//                 dd.AddRange(GetTestPathAsDebugCurve(startWidth, endWidth, colors[Math.Min(colors.Length - 1, i++)], path));
+//
+//             var ell = new DebugCurve(1, "black", new Ellipse(0.01, 0.01, s));
+//             dd.Add(ell);
+//             dd.Add(new DebugCurve(1, "black", new Ellipse(0.02, 0.02, e)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd.Concat(GetObstacleBoundaries(obstacles, "lightblue")));
+//         }
+//
+//         static IEnumerable<DebugCurve> GetTestPathAsDebugCurve(double startWidth, double endWidth, string color, Path path) {
+//             if (path.PathEdges.Count() > 0) {
+//                 int count = path.PathEdges.Count();
+//
+//                 double deltaW = count > 1 ? (endWidth - startWidth)/(count - 1) : 1;
+//                     //if count ==1 the value of deltaW does not matter
+//                 int i = 0;
+//                 foreach (var e in path.PathEdges)
+//                     yield return
+//                         new DebugCurve(150, startWidth + deltaW*(i++), color, new LineSegment(e.Source, e.Target));
+//             }else {
+//                 int count = path.PathPoints.Count();
+//                 var pts = path.PathPoints.ToArray();
+//
+//                 var deltaW = count > 1 ? (endWidth - startWidth) / (count - 1) : 1;
+//                 //if count ==1 the value of deltaW does not matter
+//                 for (int i = 0; i < count - 1;i++ )
+//                     yield return new DebugCurve(150, startWidth+deltaW*i, color, new LineSegment(pts[i], pts[i+1]));                    
+//             }
+//         }
+//
+//         internal static IEnumerable<DebugCurve> GetTestEdgePathAsDebugCurves(double startWidth, double endWidth, string color, Path path) {
+//             int count = path.PathPoints.Count();
+//
+//             double deltaW = count > 1 ? (endWidth - startWidth) / (count - 1) : 1; //if count ==1 the value of deltaW does not matter
+//             var points = path.PathPoints.ToArray();
+//             for (int i = 0; i < points.Length - 1; i++)
+//                 yield return new DebugCurve(125, startWidth + deltaW * i, color, new LineSegment(points[i], points[i + 1]));
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static IEnumerable<DebugCurve> GetEdgePathFromPathEdgesAsDebugCurves(double startWidth, double endWidth, string color, Path path) {
+//             var points = path.PathPoints.ToArray();
+//
+//             int count = points.Length;
+//
+//             double deltaW = count > 1 ? (endWidth - startWidth) / (count - 1) : 1; //if count ==1 the value of deltaW does not matter
+//             for (int i = 0; i < points.Length - 1; i++)
+//                 yield return new DebugCurve(120, startWidth + deltaW * i, color, new LineSegment(points[i], points[i + 1]));
+//         }
+//          // ReSharper disable UnusedMember.Local
+//         
+//         static internal void ShowEdgePaths(IEnumerable<Polyline> obstacles, IEnumerable<Path> edgePaths) {
+//             // ReSharper restore UnusedMember.Local
+//             List<DebugCurve> debCurves = GetDebCurvesOfPaths(obstacles, edgePaths);
+//
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debCurves);
+//         }
+//
+//         internal static List<DebugCurve> GetDebCurvesOfPaths(IEnumerable<Polyline> enumerable, IEnumerable<Path> edgePaths) {
+//             var debCurves = GetObstacleBoundaries(enumerable, "black");
+//             int i = 0;
+//
+//             foreach (var edgePath in edgePaths)
+//                 debCurves.AddRange(GetTestEdgePathAsDebugCurves(0.2, 4, DebugCurve.Colors[(i++) % DebugCurve.Colors.Length], edgePath));
+//             return debCurves;
+//         }
+//
+//         internal static void ShowPathsInLoop(IEnumerable<Polyline> enumerable, IEnumerable<Path> edgePaths, Point point) {
+//             foreach (var edgePath in edgePaths.Where(path=>(path.PathPoints.First()-point).Length<1 ||(path.PathPoints.Last()-point).Length<1 )) {
+//                 var debCurves = GetObstacleBoundaries(enumerable, "black");
+//                 debCurves.AddRange(GetTestEdgePathAsDebugCurves(0.1, 4, "red", edgePath));
+//                 LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debCurves);
+//             }
+//         }
+//
+//
+//         // ReSharper disable UnusedMember.Local
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowLongSegsWithIdealPositions(Directions dir) {
+//             // ReSharper restore UnusedMember.Local
+//             var debCurves = GetObstacleBoundaries(Obstacles, "black");
+//             int i = 0;
+//
+//             debCurves.AddRange(LongestNudgedSegs.Select(ls => DebugCurveOfLongSeg(ls, DebugCurve.Colors[i++ % DebugCurve.Colors.Length], dir)));
+//
+//             DebugCurveCollection.WriteToFile(debCurves, "c:/tmp/longSegs");
+//
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debCurves);
+//         }
+//
+//         static DebugCurve DebugCurveOfLongSeg(LongestNudgedSegment ls, string s, Directions dir) {
+//             return new DebugCurve(1, s, LineSegOfLongestSeg(ls, dir));
+//         }
+//
+//         static ICurve LineSegOfLongestSeg(LongestNudgedSegment ls, Directions dir) {
+//             var projectionToDir = dir == Directions.East ? (PointProjection)(p => p.X) : (p => p.Y);
+//             var min = Double.PositiveInfinity;
+//             var max = Double.NegativeInfinity;
+//             foreach (var edge in ls.Edges) {
+//                 UpdateMinMaxWithPoint(ref min, ref max, projectionToDir, edge.Source);
+//                 UpdateMinMaxWithPoint(ref min, ref max, projectionToDir, edge.Target);
+//             }
+//             return dir == Directions.East
+//                        ? new LineSegment(min, -ls.IdealPosition, max, -ls.IdealPosition)
+//                        : new LineSegment(ls.IdealPosition, min, ls.IdealPosition, max);
+//         }
+//
+//         static void UpdateMinMaxWithPoint(ref double min, ref double max, PointProjection projectionToDir, Point point) {
+//             double p = projectionToDir(point);
+//             if (min > p)
+//                 min = p;
+//             if (max < p)
+//                 max = p;
+//         }
+//
+//
+//         // ReSharper disable UnusedMember.Local
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowPathsDebug(IEnumerable<Path> edgePaths) {
+//             var debCurves = GetObstacleBoundaries(Obstacles, "black");
+//             int i = 0;
+//
+//             foreach (var edgePath in edgePaths)
+//                 debCurves.AddRange(GetEdgePathFromPathEdgesAsDebugCurves(0.01, 0.4, DebugCurve.Colors[(i++) % DebugCurve.Colors.Length], edgePath));
+//
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debCurves);
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static IEnumerable<DebugCurve> PathDebugCurves(Path path, string color) {
+//             var d = path.PathEdges.Select(e => new DebugCurve(70, 0.5, color, new LineSegment(e.Source, e.Target)));
+//             return d.Concat(MarkPathVerts(path));
+//         }
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         private static IEnumerable<DebugCurve> MarkPathVerts(Path path) {
+//             bool first = true;
+//             var p = new Point();
+//             foreach (var p0 in path.PathPoints) {
+//                 if (first) {
+//                     yield return new DebugCurve(200, 1, "violet", CurveFactory.CreateDiamond(5, 5, p0));
+//                     first = false;
+//                 } else
+//                     yield return new DebugCurve(100, 0.5, "brown", CurveFactory.CreateEllipse(1.5, 1.5, p0));
+//                 p = p0;
+//             }
+//             yield return new DebugCurve(200, 1, "green", CurveFactory.CreateDiamond(3, 3, p));
+//         }
+//
+//         static internal IEnumerable<DebugCurve> PathDebugCurvesFromPoint(Path path) {
+//             var l = new List<Point>(path.PathPoints);
+//             for (int i = 0; i < l.Count - 1; i++)
+//                 yield return new DebugCurve(4, "red", new LineSegment(l[i], l[i + 1]));
+//         }
+//         //
+//         // ReSharper disable UnusedMember.Local
+//         //        void ShowEdgesOfEdgePath(Path path){
+//         // ReSharper restore UnusedMember.Local
+//         //            string[] colors = {"red", "brown", "purple"};
+//         //            const double w0 = 1;
+//         //            const double w1 = 3;
+//         //            double dw = (w1 - w0)/path.OrientedSubpaths.Count;
+//         //            int i = 0;
+//         //            var dc = new List<DebugCurve>();
+//         //            foreach (var s in path.OrientedSubpaths){
+//         //                dc.AddRange(SubpathDebugCurves(w0 + dw*i, colors[Math.Min(i++, colors.Length - 1)], s));
+//         //            }
+//         //            LayoutAlgorithmSettings.ShowDebugCurves(dc.ToArray());
+//         //        }
+//         //
+//         //        static IEnumerable<DebugCurve> SubpathDebugCurves(double w, string color, OrientedSubpath subpath){
+//         //            return subpath.LinkedPath.Select(e => new DebugCurve(w, color, new LineSegment(e.Source.Point, e.Target.Point)));
+//         //        }
+//
+//
+//         static internal List<DebugCurve> GetObstacleBoundaries(IEnumerable<Polyline> obstacles, string color) {
+//             var debugCurves = new List<DebugCurve>();
+//             if (obstacles != null)
+//                 debugCurves.AddRange(obstacles.Select(poly => new DebugCurve(50, 0.3, color, poly)));
+//             return debugCurves;
+//         }
+// #endif
         #endregion
 
         void CreateConstraintsBetweenLongestSegments() {
@@ -585,37 +585,37 @@ namespace Microsoft.Msagl.Routing.Rectilinear.Nudging {
             return direction == Directions.North ? segment.Start.X : -segment.Start.Y;
         }
 
-#if TEST_MSAGL
-        // ReSharper disable UnusedMember.Local
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowSegmentBounds(LongestNudgedSegment segment) {
-            // ReSharper restore UnusedMember.Local
-            var dd = GetObstacleBoundaries(Obstacles, "black");
-            var segtop = segment.Edges.Max(e => Math.Max(e.Source.Y, e.Target.Y));
-            var segbottom = segment.Edges.Min(e => Math.Min(e.Source.Y, e.Target.Y));
-            var segx = segment.Start.X;
-            var seg = new DebugCurve(80, 1, "brown", new LineSegment(new Point(segx, segbottom), new Point(segx, segtop)));
-
-            var leftbound = new DebugCurve(80, 1.0, "red", new LineSegment(new Point(segment.GetLeftBound(), segbottom),
-                                                                           new Point(segment.GetLeftBound(), segtop)));
-            var rightbound = new DebugCurve(80, 1, "green", new LineSegment(new Point(segment.GetRightBound(), segbottom),
-                            new Point(segment.GetRightBound(), segtop)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd.Concat(new[] { seg, leftbound, rightbound }));
-        }
-        // ReSharper disable UnusedMember.Local
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowSegment(LongestNudgedSegment segment) {
-            // ReSharper restore UnusedMember.Local
-            var dd = GetObstacleBoundaries(Obstacles, "black");
-            var segtop = segment.Edges.Max(e => Math.Max(e.Source.Y, e.Target.Y));
-            var segbottom = segment.Edges.Min(e => Math.Min(e.Source.Y, e.Target.Y));
-            var segx = segment.Start.X;
-            var seg = new DebugCurve(80, 1, "brown", new LineSegment(new Point(segx, segbottom), new Point(segx, segtop)));
-
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd.Concat(new[] { seg }));
-
-        }
-#endif
+// #if TEST_MSAGL
+//         // ReSharper disable UnusedMember.Local
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowSegmentBounds(LongestNudgedSegment segment) {
+//             // ReSharper restore UnusedMember.Local
+//             var dd = GetObstacleBoundaries(Obstacles, "black");
+//             var segtop = segment.Edges.Max(e => Math.Max(e.Source.Y, e.Target.Y));
+//             var segbottom = segment.Edges.Min(e => Math.Min(e.Source.Y, e.Target.Y));
+//             var segx = segment.Start.X;
+//             var seg = new DebugCurve(80, 1, "brown", new LineSegment(new Point(segx, segbottom), new Point(segx, segtop)));
+//
+//             var leftbound = new DebugCurve(80, 1.0, "red", new LineSegment(new Point(segment.GetLeftBound(), segbottom),
+//                                                                            new Point(segment.GetLeftBound(), segtop)));
+//             var rightbound = new DebugCurve(80, 1, "green", new LineSegment(new Point(segment.GetRightBound(), segbottom),
+//                             new Point(segment.GetRightBound(), segtop)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd.Concat(new[] { seg, leftbound, rightbound }));
+//         }
+//         // ReSharper disable UnusedMember.Local
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowSegment(LongestNudgedSegment segment) {
+//             // ReSharper restore UnusedMember.Local
+//             var dd = GetObstacleBoundaries(Obstacles, "black");
+//             var segtop = segment.Edges.Max(e => Math.Max(e.Source.Y, e.Target.Y));
+//             var segbottom = segment.Edges.Min(e => Math.Min(e.Source.Y, e.Target.Y));
+//             var segx = segment.Start.X;
+//             var seg = new DebugCurve(80, 1, "brown", new LineSegment(new Point(segx, segbottom), new Point(segx, segtop)));
+//
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd.Concat(new[] { seg }));
+//
+//         }
+// #endif
 
         List<LongestNudgedSegment> LongestNudgedSegs { get; set; }
 

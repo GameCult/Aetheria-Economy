@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2, y: 0}
-  m_SizeDelta: {x: -4, y: 32}
+  m_AnchoredPosition: {x: 6, y: 0}
+  m_SizeDelta: {x: -12, y: 32}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2088721703192714101
 CanvasRenderer:
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 1
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -139,7 +139,7 @@ MonoBehaviour:
     spaceCount: 0
     wordCount: 1
     linkCount: 0
-    lineCount: 9
+    lineCount: 1
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -277,18 +277,27 @@ MonoBehaviour:
   Title: {fileID: 2088721703192714100}
   SectionPrefab: {fileID: 1026668114703092140, guid: 3a149ea40b43fbf47b51ec165cb04e5f,
     type: 3}
-  ListPrefab: {fileID: 6914334813923144328}
-  PropertyPrefab: {fileID: 279061376544739623, guid: 5b8c5126640066e4fabe6e65b7225b3b,
+  ListPrefab: {fileID: 6914334813923144328, guid: ddd907ae814f67a4b8ebe357d4f26e56,
     type: 3}
-  AttributePrefab: {fileID: 0}
-  InputField: {fileID: 0}
-  RangedFloatField: {fileID: 0}
-  ProgressField: {fileID: 0}
-  EnumField: {fileID: 0}
-  BoolField: {fileID: 0}
+  PropertyPrefab: {fileID: 9159917045172241898, guid: be88722a74d512d45a454fe91327a389,
+    type: 3}
+  PropertyLabelPrefab: {fileID: 279061376544739623, guid: 5b8c5126640066e4fabe6e65b7225b3b,
+    type: 3}
+  AttributePrefab: {fileID: 4447025208748278043, guid: 5e3a258a5b91c8246b20962ba6eccb09,
+    type: 3}
+  InputField: {fileID: 6586910564433979167, guid: fb49ef180533e3e488fa39d80cc2423a,
+    type: 3}
+  RangedFloatField: {fileID: 1663396771457720812, guid: c214f62d8f2188140b96ed12798034c8,
+    type: 3}
+  ProgressField: {fileID: 256436433275418348, guid: e6524d59d9bc67545b0eb1304bfb9d4b,
+    type: 3}
+  EnumField: {fileID: 8066691333806154, guid: f19a14cd178d48f49ace9ad217bea2ed, type: 3}
+  BoolField: {fileID: 7661950293931311388, guid: 001ad6a15f0d582458d359c0ae4405ed,
+    type: 3}
   PropertyButton: {fileID: 1613450655389604799, guid: 99bde06e2f0ca504bb95f2a4e3429462,
     type: 3}
-  ButtonField: {fileID: 0}
+  ButtonField: {fileID: 6566784227922820057, guid: 6db1feb4cda7b8c419384cd42c85a5c4,
+    type: 3}
   FoldoutIcon: {fileID: 6485458701090981364}
   FoldoutRotationDamping: 10
   Button: {fileID: 5436107563273525140}
@@ -352,7 +361,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 16, y: 4}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3053647169083004458
 CanvasRenderer:
@@ -444,7 +453,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -16, y: -16}
+  m_AnchoredPosition: {x: -20, y: -16}
   m_SizeDelta: {x: 24, y: 24}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7097941323566313314

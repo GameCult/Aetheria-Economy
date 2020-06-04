@@ -280,129 +280,129 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
         }
 
 #region TEST_MSAGL
-#if TEST_MSAGL
-// ReSharper disable UnusedMember.Local
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "len"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newEntry"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "nbend"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "iters"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "hcost"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ccost"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "so"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "q"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "edges"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String,System.Object[])"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private void TestShowAllPaths(VisibilityVertex source, VertexEntry mostRecentlyExtendedPath) {
-// ReSharper restore UnusedMember.Local
-            var edges = GetAllEdgesTest(source).Select(e => (ICurve) (new LineSegment(e.SourcePoint, e.TargetPoint))).
-                        Select(c => new DebugCurve(c));
-            var q = queue.Select(ent => CurveFactory.CreateDiamond(2, 2, ent.Vertex.Point)).Select(c => new DebugCurve(c));
-            var so = new[] {
-                              new DebugCurve(1, "brown", new Ellipse(3, 3, source.Point)),
-                              new DebugCurve(1, "purple", CurveFactory.CreateDiamond(4, 4, Target.Point)),
-                              new DebugCurve(1, "red", CurveFactory.CreateDiamond(6, 6, mostRecentlyExtendedPath.Vertex.Point))
-                          };
-
-            var pathEdges = new List<DebugCurve>();
-            var newEntries = new List<VertexEntry>();
-            var count = this.visitedVertices.Count;
-            for (int ii = 0; ii < count; ++ii) {
-                var vertex = this.visitedVertices[ii];
-                if (vertex.VertexEntries == null) {
-                    continue;   // this is the source vertex
-                }
-                foreach (var entry in vertex.VertexEntries) {
-                    if (entry == null) {
-                        continue;
-                    }
-                    var color = "green";
-                    if (entry.PreviousEntry == mostRecentlyExtendedPath) {
-                        newEntries.Add(entry);
-                        color = "red";
-                    } else if (!entry.IsClosed) {
-                        color = "yellow";
-                    }
-                    pathEdges.Add(new DebugCurve(2, color, new LineSegment(entry.PreviousVertex.Point, vertex.Point)));
-                }
-            }
-            Console.WriteLine("entry {0} seq = {1} len = {2} nbend = {3} ccost = {4} hcost = {5} iters = {6}/{7}", mostRecentlyExtendedPath,
-                             this.lastDequeueTimestamp,
-                             mostRecentlyExtendedPath.Length, mostRecentlyExtendedPath.NumberOfBends,
-                             this.CombinedCost(mostRecentlyExtendedPath.Length, mostRecentlyExtendedPath.NumberOfBends),
-                             this.HeuristicDistanceFromVertexToTarget(mostRecentlyExtendedPath.Vertex.Point, mostRecentlyExtendedPath.Direction),
-                             this.currentIterations, totalIterations);
-            foreach (var newEntry in newEntries) {
-                Console.WriteLine("   newEntry {0} len = {1} nbend = {2} ccost = {3} hcost = {4}", newEntry,
-                                 newEntry.Length, newEntry.NumberOfBends,
-                                 this.CombinedCost(newEntry.Length, newEntry.NumberOfBends),
-                                 this.HeuristicDistanceFromVertexToTarget(newEntry.Vertex.Point, newEntry.Direction));
-            }
-            DevTraceDisplay(edges.Concat(q).Concat(so).Concat(pathEdges));
-        }
-
-// ReSharper disable UnusedMember.Local
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "len"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "nbend"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "iters"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "so"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "pathEdges"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "edges"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String,System.Object[])"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private void TestShowPath(VisibilityVertex source, IEnumerable<Point> pathPoints, double cost, double length, int numberOfBends) {
-// ReSharper restore UnusedMember.Local
-            var edges = GetAllEdgesTest(source).Select(e => (ICurve) (new LineSegment(e.SourcePoint, e.TargetPoint))).
-                        Select(c => new DebugCurve(c));
-            var so = new[] {
-                              new DebugCurve(1, "brown", new Ellipse(3, 3, source.Point)),
-                              new DebugCurve(1, "purple", CurveFactory.CreateDiamond(4, 4, Target.Point)),
-                          };
-
-            List<DebugCurve> pathEdges = GetPathEdgeDebugCurves(pathPoints, "green");
-            Console.WriteLine("path {0} -> {1} cost = {2} len = {3} nbend = {4} iters = {5}/{6}",
-                            source.Point, this.Target.Point, cost, length, numberOfBends, this.currentIterations, totalIterations);
-            DevTraceDisplay(edges.Concat(so).Concat(pathEdges));
-        }
-
-        internal static List<DebugCurve> GetPathEdgeDebugCurves(IEnumerable<Point> pathPoints, string color) {
-            var pathEdges = new List<DebugCurve>();
-            if (pathPoints != null) {
-                bool first = true;
-                var prevPoint = new Point();
-                foreach (var point in pathPoints) {
-                    if (first) {
-                        prevPoint = point;
-                        first = false;
-                        continue;
-                    }
-                    pathEdges.Add(new DebugCurve(2, color, new LineSegment(prevPoint, point)));
-                    prevPoint = point;
-                }
-            }
-            return pathEdges;
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        private IEnumerable<VisibilityEdge> GetAllEdgesTest(VisibilityVertex vertex) {
-            var processedVertices = new Set<VisibilityVertex>();
-            var q = new Queue<VisibilityVertex>();
-            q.Enqueue(vertex);
-
-            // Target may not be connected to source.
-            bool targetFound = (vertex == this.Target);
-            while (!targetFound) {
-                while (q.Count > 0) {
-                    VisibilityVertex v = q.Dequeue();
-                    if (processedVertices.Contains(v)) {
-                        continue;
-                    }
-                    targetFound |= (v == this.Target);
-                    processedVertices.Insert(v);
-                    foreach (var u in VertsToGo(v).Where(u => !processedVertices.Contains(u))) {
-                        q.Enqueue(u);
-                    }
-                    foreach (VisibilityEdge edge in v.OutEdges) {
-                        yield return edge;
-                    }
-                }
-                q.Enqueue(this.Target);
-                targetFound = true;
-            }
-        }
-
-        private static IEnumerable<VisibilityVertex> VertsToGo(VisibilityVertex visibilityVertex) {
-            foreach (var edge in visibilityVertex.OutEdges) {
-                yield return edge.Target;
-            }
-            foreach (var edge in visibilityVertex.InEdges) {
-                yield return edge.Source;}
-        }
-
-#endif // TEST_MSAGL
+// #if TEST_MSAGL
+// // ReSharper disable UnusedMember.Local
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "len"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "newEntry"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "nbend"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "iters"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "hcost"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ccost"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "so"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "q"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "edges"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String,System.Object[])"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         private void TestShowAllPaths(VisibilityVertex source, VertexEntry mostRecentlyExtendedPath) {
+// // ReSharper restore UnusedMember.Local
+//             var edges = GetAllEdgesTest(source).Select(e => (ICurve) (new LineSegment(e.SourcePoint, e.TargetPoint))).
+//                         Select(c => new DebugCurve(c));
+//             var q = queue.Select(ent => CurveFactory.CreateDiamond(2, 2, ent.Vertex.Point)).Select(c => new DebugCurve(c));
+//             var so = new[] {
+//                               new DebugCurve(1, "brown", new Ellipse(3, 3, source.Point)),
+//                               new DebugCurve(1, "purple", CurveFactory.CreateDiamond(4, 4, Target.Point)),
+//                               new DebugCurve(1, "red", CurveFactory.CreateDiamond(6, 6, mostRecentlyExtendedPath.Vertex.Point))
+//                           };
+//
+//             var pathEdges = new List<DebugCurve>();
+//             var newEntries = new List<VertexEntry>();
+//             var count = this.visitedVertices.Count;
+//             for (int ii = 0; ii < count; ++ii) {
+//                 var vertex = this.visitedVertices[ii];
+//                 if (vertex.VertexEntries == null) {
+//                     continue;   // this is the source vertex
+//                 }
+//                 foreach (var entry in vertex.VertexEntries) {
+//                     if (entry == null) {
+//                         continue;
+//                     }
+//                     var color = "green";
+//                     if (entry.PreviousEntry == mostRecentlyExtendedPath) {
+//                         newEntries.Add(entry);
+//                         color = "red";
+//                     } else if (!entry.IsClosed) {
+//                         color = "yellow";
+//                     }
+//                     pathEdges.Add(new DebugCurve(2, color, new LineSegment(entry.PreviousVertex.Point, vertex.Point)));
+//                 }
+//             }
+//             Console.WriteLine("entry {0} seq = {1} len = {2} nbend = {3} ccost = {4} hcost = {5} iters = {6}/{7}", mostRecentlyExtendedPath,
+//                              this.lastDequeueTimestamp,
+//                              mostRecentlyExtendedPath.Length, mostRecentlyExtendedPath.NumberOfBends,
+//                              this.CombinedCost(mostRecentlyExtendedPath.Length, mostRecentlyExtendedPath.NumberOfBends),
+//                              this.HeuristicDistanceFromVertexToTarget(mostRecentlyExtendedPath.Vertex.Point, mostRecentlyExtendedPath.Direction),
+//                              this.currentIterations, totalIterations);
+//             foreach (var newEntry in newEntries) {
+//                 Console.WriteLine("   newEntry {0} len = {1} nbend = {2} ccost = {3} hcost = {4}", newEntry,
+//                                  newEntry.Length, newEntry.NumberOfBends,
+//                                  this.CombinedCost(newEntry.Length, newEntry.NumberOfBends),
+//                                  this.HeuristicDistanceFromVertexToTarget(newEntry.Vertex.Point, newEntry.Direction));
+//             }
+//             DevTraceDisplay(edges.Concat(q).Concat(so).Concat(pathEdges));
+//         }
+//
+// // ReSharper disable UnusedMember.Local
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "len"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "nbend"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "iters"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "so"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "pathEdges"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "edges"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String,System.Object[])"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         private void TestShowPath(VisibilityVertex source, IEnumerable<Point> pathPoints, double cost, double length, int numberOfBends) {
+// // ReSharper restore UnusedMember.Local
+//             var edges = GetAllEdgesTest(source).Select(e => (ICurve) (new LineSegment(e.SourcePoint, e.TargetPoint))).
+//                         Select(c => new DebugCurve(c));
+//             var so = new[] {
+//                               new DebugCurve(1, "brown", new Ellipse(3, 3, source.Point)),
+//                               new DebugCurve(1, "purple", CurveFactory.CreateDiamond(4, 4, Target.Point)),
+//                           };
+//
+//             List<DebugCurve> pathEdges = GetPathEdgeDebugCurves(pathPoints, "green");
+//             Console.WriteLine("path {0} -> {1} cost = {2} len = {3} nbend = {4} iters = {5}/{6}",
+//                             source.Point, this.Target.Point, cost, length, numberOfBends, this.currentIterations, totalIterations);
+//             DevTraceDisplay(edges.Concat(so).Concat(pathEdges));
+//         }
+//
+//         internal static List<DebugCurve> GetPathEdgeDebugCurves(IEnumerable<Point> pathPoints, string color) {
+//             var pathEdges = new List<DebugCurve>();
+//             if (pathPoints != null) {
+//                 bool first = true;
+//                 var prevPoint = new Point();
+//                 foreach (var point in pathPoints) {
+//                     if (first) {
+//                         prevPoint = point;
+//                         first = false;
+//                         continue;
+//                     }
+//                     pathEdges.Add(new DebugCurve(2, color, new LineSegment(prevPoint, point)));
+//                     prevPoint = point;
+//                 }
+//             }
+//             return pathEdges;
+//         }
+//
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         private IEnumerable<VisibilityEdge> GetAllEdgesTest(VisibilityVertex vertex) {
+//             var processedVertices = new Set<VisibilityVertex>();
+//             var q = new Queue<VisibilityVertex>();
+//             q.Enqueue(vertex);
+//
+//             // Target may not be connected to source.
+//             bool targetFound = (vertex == this.Target);
+//             while (!targetFound) {
+//                 while (q.Count > 0) {
+//                     VisibilityVertex v = q.Dequeue();
+//                     if (processedVertices.Contains(v)) {
+//                         continue;
+//                     }
+//                     targetFound |= (v == this.Target);
+//                     processedVertices.Insert(v);
+//                     foreach (var u in VertsToGo(v).Where(u => !processedVertices.Contains(u))) {
+//                         q.Enqueue(u);
+//                     }
+//                     foreach (VisibilityEdge edge in v.OutEdges) {
+//                         yield return edge;
+//                     }
+//                 }
+//                 q.Enqueue(this.Target);
+//                 targetFound = true;
+//             }
+//         }
+//
+//         private static IEnumerable<VisibilityVertex> VertsToGo(VisibilityVertex visibilityVertex) {
+//             foreach (var edge in visibilityVertex.OutEdges) {
+//                 yield return edge.Target;
+//             }
+//             foreach (var edge in visibilityVertex.InEdges) {
+//                 yield return edge.Source;}
+//         }
+//
+// #endif // TEST_MSAGL
 #endregion // TEST_MSAGL
 
         private void QueueReversedEntryToNeighborVertexIfNeeded(VertexEntry bestEntry, VertexEntry entryFromNeighbor, double weight) {
@@ -699,43 +699,43 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
 #endif // DEVTRACE
         }
 
-#if TEST_MSAGL
-        [Conditional("DEVTRACE")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        private static void DevTraceDisplay(IEnumerable<DebugCurve> debugCurves)
-        {
-#if DEVTRACE
-            if (!ssstDisplay.IsLevel(1))
-            {
-                return;
-            }
-#endif // DEVTRACE
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debugCurves);
-        }
-#endif // TEST_MSAGL
+// #if TEST_MSAGL
+//         [Conditional("DEVTRACE")]
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+//         private static void DevTraceDisplay(IEnumerable<DebugCurve> debugCurves)
+//         {
+// #if DEVTRACE
+//             if (!ssstDisplay.IsLevel(1))
+//             {
+//                 return;
+//             }
+// #endif // DEVTRACE
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(debugCurves);
+//         }
+// #endif // TEST_MSAGL
 
-#if TEST_MSAGL
-        private int currentIterations;
-        private static int totalIterations;
-        private UInt64 lastDequeueTimestamp;
-#endif // TEST_MSAGL
+// #if TEST_MSAGL
+//         private int currentIterations;
+//         private static int totalIterations;
+//         private UInt64 lastDequeueTimestamp;
+// #endif // TEST_MSAGL
 
         [Conditional("TEST_MSAGL")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         private void TestPreDequeue() {
-#if TEST_MSAGL
-            ++currentIterations;
-            ++totalIterations;
-            this.lastDequeueTimestamp = this.queue.PeekTimestamp();
-#endif // TEST_MSAGL
+// #if TEST_MSAGL
+//             ++currentIterations;
+//             ++totalIterations;
+//             this.lastDequeueTimestamp = this.queue.PeekTimestamp();
+// #endif // TEST_MSAGL
         }
 
         [Conditional("TEST_MSAGL")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         private void TestClearIterations() {
-#if TEST_MSAGL
-            currentIterations = 0;
-#endif // TEST_MSAGL
+// #if TEST_MSAGL
+//             currentIterations = 0;
+// #endif // TEST_MSAGL
         }
 
 #endregion // DevTrace

@@ -39,6 +39,7 @@ public class WanderController : ControllerBase, IBehavior
         _data = data;
         _entity = entity;
         _item = item;
+        Task = Guid.NewGuid();
     }
 
     public new bool Update(float delta)

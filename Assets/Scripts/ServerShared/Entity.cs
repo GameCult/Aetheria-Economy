@@ -425,8 +425,8 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     {
         if (Parent != Guid.Empty)
         {
-            var parent = Context.Cache.Get<Entity>(Parent);
-            parent.AddHeat(heat);
+            // var parent = Context.Cache.Get<Entity>(Parent);
+            // parent.AddHeat(heat);
         }
         else
             Temperature += heat / SpecificHeat;

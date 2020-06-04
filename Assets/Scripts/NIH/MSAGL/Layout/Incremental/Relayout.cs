@@ -50,9 +50,9 @@ namespace Microsoft.Msagl.Layout.Initial {
             Func<Cluster, LayoutAlgorithmSettings> clusterSettings) {
             ValidateArg.IsNotNull(graph, "graph");
             ValidateArg.IsNotNull(clusterSettings, "clusterSettings");
-#if TEST_MSAGL
-            graph.SetDebugIds();
-#endif
+// #if TEST_MSAGL
+//             graph.SetDebugIds();
+// #endif
             this.graph = graph;
             this.modifiedNodes = modifiedNodes;
             this.clusterSettings = clusterSettings;

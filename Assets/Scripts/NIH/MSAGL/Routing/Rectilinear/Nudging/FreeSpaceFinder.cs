@@ -133,34 +133,34 @@ namespace Microsoft.Msagl.Routing.Rectilinear.Nudging {
                            rightEdge.TargetPoint.X < leftEdge.SourcePoint.X - ApproximateComparer.DistanceEpsilon);
         }
 
-#if TEST_MSAGL
-// ReSharper disable UnusedMember.Local
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void DebShowEdge(AxisEdge edge, Point point){
-// ReSharper restore UnusedMember.Local
-           // if (InterestingEdge(edge))
-                ShowEdge(edge,point);
-        }
-
-
-// ReSharper disable SuggestBaseTypeForParameter
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowEdge(AxisEdge edge, Point point){
-// ReSharper restore SuggestBaseTypeForParameter
-
-            var dd = GetObstacleBoundaries("black");
-            var seg = new DebugCurve( 1, "red", new LineSegment(edge.Source.Point, edge.Target.Point));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd.Concat(
-                new[]{seg ,new DebugCurve("blue",CurveFactory.CreateEllipse(3, 3, point))}));
-  
-
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        IEnumerable<DebugCurve> GetObstacleBoundaries(string color){
-            return Obstacles.Select(p => new DebugCurve(1, color, p));
-        }
-#endif
+// #if TEST_MSAGL
+// // ReSharper disable UnusedMember.Local
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void DebShowEdge(AxisEdge edge, Point point){
+// // ReSharper restore UnusedMember.Local
+//            // if (InterestingEdge(edge))
+//                 ShowEdge(edge,point);
+//         }
+//
+//
+// // ReSharper disable SuggestBaseTypeForParameter
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowEdge(AxisEdge edge, Point point){
+// // ReSharper restore SuggestBaseTypeForParameter
+//
+//             var dd = GetObstacleBoundaries("black");
+//             var seg = new DebugCurve( 1, "red", new LineSegment(edge.Source.Point, edge.Target.Point));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd.Concat(
+//                 new[]{seg ,new DebugCurve("blue",CurveFactory.CreateEllipse(3, 3, point))}));
+//   
+//
+//         }
+//
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         IEnumerable<DebugCurve> GetObstacleBoundaries(string color){
+//             return Obstacles.Select(p => new DebugCurve(1, color, p));
+//         }
+// #endif
         
 
         /// <summary>
@@ -209,118 +209,118 @@ namespace Microsoft.Msagl.Routing.Rectilinear.Nudging {
                                                   PointToTheRightOfLineOrOnLineLocal(point, side.Start, side.End));
         }
         #region debug
-#if TEST_MSAGL
-        // ReSharper disable UnusedMember.Local
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowPointAndEdge(Point point, AxisEdge edge) {
-// ReSharper restore UnusedMember.Local
-            List<ICurve> curves = GetCurves(point, edge);
-
-            LayoutAlgorithmSettings.Show(curves.ToArray());
-        }
-
-// ReSharper disable UnusedMember.Local
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowPointAndEdgeWithSweepline(Point point, AxisEdge edge) {
-// ReSharper restore UnusedMember.Local
-            List<ICurve> curves = GetCurves(point, edge);
-
-            curves.Add(new LineSegment(SweepDirection * Z + 10 * DirectionPerp, SweepDirection * Z - 10 * DirectionPerp));
-
-            LayoutAlgorithmSettings.Show(curves.ToArray());
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        List<ICurve> GetCurves(Point point, AxisEdge edge) {
-            var ellipse = CurveFactory.CreateEllipse(3, 3, point);
-            var curves = new List<ICurve>(Obstacles.Select(o => o as ICurve)){ellipse,
-                                                                            new LineSegment(edge.Source.Point, edge.Target.Point
-                                                                                )};
-
-            if (edge.RightBound < double.PositiveInfinity) {
-                double rightOffset = edge.RightBound;
-                var del = DirectionPerp * rightOffset;
-                curves.Add(new LineSegment(edge.Source.Point + del, edge.Target.Point + del));
-            }
-            if (edge.LeftBound > double.NegativeInfinity) {
-                double leftOffset = edge.LeftBound;
-                var del = DirectionPerp * leftOffset;
-                curves.Add(new LineSegment(edge.Source.Point + del, edge.Target.Point  + del));
-            }
-
-            curves.AddRange((from e in PathOrders.Keys
-                             let a = e.SourcePoint
-                             let b = e.TargetPoint
-                             select new CubicBezierSegment(a, a*0.8 + b*0.2, a*0.2 + b*0.8, b)).Cast<ICurve>());
-
-            return curves;
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        List<DebugCurve> GetCurvesTest(Point point){
-            var ellipse = CurveFactory.CreateEllipse(3, 3, point);
-            var curves = new List<DebugCurve>(Obstacles.Select(o => new DebugCurve(100, 1, "black", o)))
-                         {new DebugCurve(100, 1, "red", ellipse)};
-            curves.AddRange(from e in edgeContainersTree
-                             from axisEdge in e
-                             let a = axisEdge.Source.Point
-                             let b = axisEdge.Target.Point
-                             select new DebugCurve(100, 1, "green", new LineSegment(a, b)));
-
-
-            curves.AddRange(RightNeighborsCurvesTest(edgeContainersTree));
-
-            return curves;
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        static IEnumerable<DebugCurve> RightNeighborsCurvesTest(IEnumerable<AxisEdgesContainer> rbTree) {
-            foreach (var container in rbTree) {
-                foreach (var edge  in container) {
-                    foreach (var rn in edge.RightNeighbors) {
-                        yield return new DebugCurve(100,1,"brown",new LineSegment(EdgeMidPoint(edge), EdgeMidPoint(rn)));
-                    }
-                }
-            }
-        }
-
-        static Point EdgeMidPoint(AxisEdge edge) {
-            return 0.5*(edge.SourcePoint + edge.TargetPoint);
-        }
-
-        // ReSharper disable UnusedMember.Local
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowAxisEdges() {
-            // ReSharper restore UnusedMember.Local
-            var dd = new List<DebugCurve>(GetObstacleBoundaries("black"));
-            int i = 0;
-            foreach (var axisEdge in AxisEdges) {
-                var color = DebugCurve.Colors[i];
-                dd.Add(new DebugCurve(200, 1, color,
-                                       new LineSegment(axisEdge.Source.Point, axisEdge.Target.Point)));
-                Point perp = axisEdge.Direction == Directions.East ? new Point(0, 1) : new Point(-1, 0);
-                if (axisEdge.LeftBound != double.NegativeInfinity) {
-                    dd.Add(new DebugCurve(200, 0.5, color,
-                        new LineSegment(axisEdge.Source.Point + axisEdge.LeftBound * perp, axisEdge.Target.Point + axisEdge.LeftBound * perp)));
-                }
-                if (axisEdge.RightBound != double.PositiveInfinity) {
-                    dd.Add(new DebugCurve(200, 0.5, color,
-                        new LineSegment(axisEdge.Source.Point - axisEdge.RightBound * perp, axisEdge.Target.Point - axisEdge.RightBound * perp)));
-                }
-                i = (i + 1) % DebugCurve.Colors.Length;
-            }
-            DebugCurveCollection.WriteToFile(dd, "c:/tmp/ae");
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
-        }
-
-// ReSharper disable UnusedMember.Local
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowAtPoint(Point point) {
-// ReSharper restore UnusedMember.Local
-            var curves = GetCurvesTest(point);
-            LayoutAlgorithmSettings.ShowDebugCurves(curves.ToArray());
-        }
-#endif
+// #if TEST_MSAGL
+//         // ReSharper disable UnusedMember.Local
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowPointAndEdge(Point point, AxisEdge edge) {
+// // ReSharper restore UnusedMember.Local
+//             List<ICurve> curves = GetCurves(point, edge);
+//
+//             LayoutAlgorithmSettings.Show(curves.ToArray());
+//         }
+//
+// // ReSharper disable UnusedMember.Local
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowPointAndEdgeWithSweepline(Point point, AxisEdge edge) {
+// // ReSharper restore UnusedMember.Local
+//             List<ICurve> curves = GetCurves(point, edge);
+//
+//             curves.Add(new LineSegment(SweepDirection * Z + 10 * DirectionPerp, SweepDirection * Z - 10 * DirectionPerp));
+//
+//             LayoutAlgorithmSettings.Show(curves.ToArray());
+//         }
+//
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         List<ICurve> GetCurves(Point point, AxisEdge edge) {
+//             var ellipse = CurveFactory.CreateEllipse(3, 3, point);
+//             var curves = new List<ICurve>(Obstacles.Select(o => o as ICurve)){ellipse,
+//                                                                             new LineSegment(edge.Source.Point, edge.Target.Point
+//                                                                                 )};
+//
+//             if (edge.RightBound < double.PositiveInfinity) {
+//                 double rightOffset = edge.RightBound;
+//                 var del = DirectionPerp * rightOffset;
+//                 curves.Add(new LineSegment(edge.Source.Point + del, edge.Target.Point + del));
+//             }
+//             if (edge.LeftBound > double.NegativeInfinity) {
+//                 double leftOffset = edge.LeftBound;
+//                 var del = DirectionPerp * leftOffset;
+//                 curves.Add(new LineSegment(edge.Source.Point + del, edge.Target.Point  + del));
+//             }
+//
+//             curves.AddRange((from e in PathOrders.Keys
+//                              let a = e.SourcePoint
+//                              let b = e.TargetPoint
+//                              select new CubicBezierSegment(a, a*0.8 + b*0.2, a*0.2 + b*0.8, b)).Cast<ICurve>());
+//
+//             return curves;
+//         }
+//
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         List<DebugCurve> GetCurvesTest(Point point){
+//             var ellipse = CurveFactory.CreateEllipse(3, 3, point);
+//             var curves = new List<DebugCurve>(Obstacles.Select(o => new DebugCurve(100, 1, "black", o)))
+//                          {new DebugCurve(100, 1, "red", ellipse)};
+//             curves.AddRange(from e in edgeContainersTree
+//                              from axisEdge in e
+//                              let a = axisEdge.Source.Point
+//                              let b = axisEdge.Target.Point
+//                              select new DebugCurve(100, 1, "green", new LineSegment(a, b)));
+//
+//
+//             curves.AddRange(RightNeighborsCurvesTest(edgeContainersTree));
+//
+//             return curves;
+//         }
+//
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         static IEnumerable<DebugCurve> RightNeighborsCurvesTest(IEnumerable<AxisEdgesContainer> rbTree) {
+//             foreach (var container in rbTree) {
+//                 foreach (var edge  in container) {
+//                     foreach (var rn in edge.RightNeighbors) {
+//                         yield return new DebugCurve(100,1,"brown",new LineSegment(EdgeMidPoint(edge), EdgeMidPoint(rn)));
+//                     }
+//                 }
+//             }
+//         }
+//
+//         static Point EdgeMidPoint(AxisEdge edge) {
+//             return 0.5*(edge.SourcePoint + edge.TargetPoint);
+//         }
+//
+//         // ReSharper disable UnusedMember.Local
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowAxisEdges() {
+//             // ReSharper restore UnusedMember.Local
+//             var dd = new List<DebugCurve>(GetObstacleBoundaries("black"));
+//             int i = 0;
+//             foreach (var axisEdge in AxisEdges) {
+//                 var color = DebugCurve.Colors[i];
+//                 dd.Add(new DebugCurve(200, 1, color,
+//                                        new LineSegment(axisEdge.Source.Point, axisEdge.Target.Point)));
+//                 Point perp = axisEdge.Direction == Directions.East ? new Point(0, 1) : new Point(-1, 0);
+//                 if (axisEdge.LeftBound != double.NegativeInfinity) {
+//                     dd.Add(new DebugCurve(200, 0.5, color,
+//                         new LineSegment(axisEdge.Source.Point + axisEdge.LeftBound * perp, axisEdge.Target.Point + axisEdge.LeftBound * perp)));
+//                 }
+//                 if (axisEdge.RightBound != double.PositiveInfinity) {
+//                     dd.Add(new DebugCurve(200, 0.5, color,
+//                         new LineSegment(axisEdge.Source.Point - axisEdge.RightBound * perp, axisEdge.Target.Point - axisEdge.RightBound * perp)));
+//                 }
+//                 i = (i + 1) % DebugCurve.Colors.Length;
+//             }
+//             DebugCurveCollection.WriteToFile(dd, "c:/tmp/ae");
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(dd);
+//         }
+//
+// // ReSharper disable UnusedMember.Local
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowAtPoint(Point point) {
+// // ReSharper restore UnusedMember.Local
+//             var curves = GetCurvesTest(point);
+//             LayoutAlgorithmSettings.ShowDebugCurves(curves.ToArray());
+//         }
+// #endif
         #endregion
         RBNode<AxisEdgesContainer> GetOrCreateAxisEdgesContainer(AxisEdge edge) {
             var source = edge.Source.Point;

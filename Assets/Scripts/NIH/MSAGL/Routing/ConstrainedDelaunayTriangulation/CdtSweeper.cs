@@ -200,67 +200,67 @@ namespace Microsoft.Msagl.Routing.ConstrainedDelaunayTriangulation {
             return edge.CwTriangle != null || edge.CcwTriangle != null;
         }
 
-#if DEBUG && TEST_MSAGL
-        void ShowFrontWithSite(CdtSite site, params ICurve[] redCurves) {
-            var ls = new List<DebugCurve>();
-
-
-            if (site.Edges != null)
-                foreach (var e in site.Edges)
-                    ls.Add(new DebugCurve(100, 0.001, e.Constrained?"pink":"brown", new LineSegment(e.upperSite.Point, e.lowerSite.Point)));
-
-            ls.Add(new DebugCurve(100,0.01,"brown", new Ellipse(0.5,0.5,site.Point)));
-
-            foreach (var t in Triangles) {
-                for (int i = 0; i < 3; i++) {
-                    var e = t.Edges[i];
-                    ls.Add(new DebugCurve(e.Constrained?(byte)150:(byte)50, e.Constrained?0.002:0.001, e.Constrained? "pink":"navy", new LineSegment(e.upperSite.Point, e.lowerSite.Point)));
-                }
-            }
-
-            foreach (var c in redCurves)
-                ls.Add(new DebugCurve(100, 0.005, "red", c));
-
-
-            foreach (var frontElement in front)
-                ls.Add(new DebugCurve(100, 0.005, "green",
-                                      new LineSegment(frontElement.Edge.upperSite.Point,
-                                                      frontElement.Edge.lowerSite.Point)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
-        }
-        void ShowFront() {
-            ShowFront(Triangles, front, null, null);
-        }
-
-        internal static void ShowFront(IEnumerable<CdtTriangle> cdtTriangles, RbTree<CdtFrontElement> cdtFrontElements, IEnumerable<ICurve> redCurves, IEnumerable<ICurve> blueCurves) {
-            List<DebugCurve> ls = new List<DebugCurve>();
-            if (redCurves != null)
-                foreach (var c in redCurves)
-                    ls.Add(new DebugCurve(100, 0.5, "red", c));
-            if (blueCurves != null)
-                foreach (var c in blueCurves)
-                    ls.Add(new DebugCurve(100, 2, "blue", c));
-
-            if (cdtFrontElements != null)
-                foreach (var frontElement in cdtFrontElements)
-                    ls.Add(new DebugCurve(100, 0.001, "green",
-                                          new LineSegment(frontElement.Edge.upperSite.Point,
-                                                          frontElement.Edge.lowerSite.Point)));
-            foreach (var t in cdtTriangles) {
-                for (int i = 0; i < 3; i++) {
-                    var e = t.Edges[i];
-                    ls.Add(GetDebugCurveOfCdtEdge(e));
-                }
-            }
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
-        }
-
-      static DebugCurve GetDebugCurveOfCdtEdge(CdtEdge e) {
-          if(e.CcwTriangle==null || e.CwTriangle==null)
-              return new DebugCurve(255, 4, e.Constrained ? "brown" : "blue", new LineSegment(e.upperSite.Point, e.lowerSite.Point));
-          return new DebugCurve(100, e.Constrained?0.002:0.001, e.Constrained?"pink":"navy", new LineSegment(e.upperSite.Point, e.lowerSite.Point));
-      }
-#endif
+// #if DEBUG && TEST_MSAGL
+//         void ShowFrontWithSite(CdtSite site, params ICurve[] redCurves) {
+//             var ls = new List<DebugCurve>();
+//
+//
+//             if (site.Edges != null)
+//                 foreach (var e in site.Edges)
+//                     ls.Add(new DebugCurve(100, 0.001, e.Constrained?"pink":"brown", new LineSegment(e.upperSite.Point, e.lowerSite.Point)));
+//
+//             ls.Add(new DebugCurve(100,0.01,"brown", new Ellipse(0.5,0.5,site.Point)));
+//
+//             foreach (var t in Triangles) {
+//                 for (int i = 0; i < 3; i++) {
+//                     var e = t.Edges[i];
+//                     ls.Add(new DebugCurve(e.Constrained?(byte)150:(byte)50, e.Constrained?0.002:0.001, e.Constrained? "pink":"navy", new LineSegment(e.upperSite.Point, e.lowerSite.Point)));
+//                 }
+//             }
+//
+//             foreach (var c in redCurves)
+//                 ls.Add(new DebugCurve(100, 0.005, "red", c));
+//
+//
+//             foreach (var frontElement in front)
+//                 ls.Add(new DebugCurve(100, 0.005, "green",
+//                                       new LineSegment(frontElement.Edge.upperSite.Point,
+//                                                       frontElement.Edge.lowerSite.Point)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
+//         }
+//         void ShowFront() {
+//             ShowFront(Triangles, front, null, null);
+//         }
+//
+//         internal static void ShowFront(IEnumerable<CdtTriangle> cdtTriangles, RbTree<CdtFrontElement> cdtFrontElements, IEnumerable<ICurve> redCurves, IEnumerable<ICurve> blueCurves) {
+//             List<DebugCurve> ls = new List<DebugCurve>();
+//             if (redCurves != null)
+//                 foreach (var c in redCurves)
+//                     ls.Add(new DebugCurve(100, 0.5, "red", c));
+//             if (blueCurves != null)
+//                 foreach (var c in blueCurves)
+//                     ls.Add(new DebugCurve(100, 2, "blue", c));
+//
+//             if (cdtFrontElements != null)
+//                 foreach (var frontElement in cdtFrontElements)
+//                     ls.Add(new DebugCurve(100, 0.001, "green",
+//                                           new LineSegment(frontElement.Edge.upperSite.Point,
+//                                                           frontElement.Edge.lowerSite.Point)));
+//             foreach (var t in cdtTriangles) {
+//                 for (int i = 0; i < 3; i++) {
+//                     var e = t.Edges[i];
+//                     ls.Add(GetDebugCurveOfCdtEdge(e));
+//                 }
+//             }
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
+//         }
+//
+//       static DebugCurve GetDebugCurveOfCdtEdge(CdtEdge e) {
+//           if(e.CcwTriangle==null || e.CwTriangle==null)
+//               return new DebugCurve(255, 4, e.Constrained ? "brown" : "blue", new LineSegment(e.upperSite.Point, e.lowerSite.Point));
+//           return new DebugCurve(100, e.Constrained?0.002:0.001, e.Constrained?"pink":"navy", new LineSegment(e.upperSite.Point, e.lowerSite.Point));
+//       }
+// #endif
 //        int count;
 //         bool db { get { return count == 147; } }
         void PointEvent(CdtSite pi) {
@@ -277,46 +277,46 @@ namespace Microsoft.Msagl.Routing.ConstrainedDelaunayTriangulation {
             TriangulateEmptySpaceToTheLeft(piNode);
         }
 
-#if DEBUG && TEST_MSAGL
-        void TestTriangles() {
-            var usedSites = new Set<CdtSite>();
-            foreach(var t in Triangles)
-                usedSites.InsertRange(t.Sites);
-            foreach (var triangle in Triangles) {
-                TestTriangle(triangle, usedSites);
-            }
-        }
-
-        void TestTriangle(CdtTriangle triangle, Set<CdtSite> usedSites) {
-            var tsites=triangle.Sites;
-            foreach (var site in usedSites) {
-                if (!tsites.Contains(site)) {
-                    if (!SeparatedByConstrainedEdge(triangle, site) && InCircle(site, tsites[0], tsites[1], tsites[2])) {
-                        List<ICurve> redCurves=new List<ICurve>();
-                        redCurves.Add(new Ellipse(2, 2, site.Point));
-                        List<ICurve> blueCurves = new List<ICurve>();
-                        blueCurves.Add(Circumcircle(tsites[0].Point,tsites[1].Point,tsites[2].Point));
-                        ShowFront(Triangles, front, redCurves, blueCurves);
-                    }
-                }
-            }
-        }
-
-        static bool SeparatedByConstrainedEdge(CdtTriangle triangle, CdtSite site) {
-            for (int i = 0; i < 3; i++)
-                if (SeparatedByEdge(triangle, i, site))
-                    return true;
-            return false;
-        }
-
-        static bool SeparatedByEdge(CdtTriangle triangle, int i, CdtSite site) {
-            var e = triangle.Edges[i];
-            var s = triangle.Sites[i+2];
-            var a0 = ApproximateComparer.Sign(Point.SignedDoubledTriangleArea(s.Point, e.upperSite.Point, e.lowerSite.Point));
-            var a1 = ApproximateComparer.Sign(Point.SignedDoubledTriangleArea(site.Point, e.upperSite.Point, e.lowerSite.Point));
-            return a0 * a1 <= 0;
-        }
-#endif
+// #if DEBUG && TEST_MSAGL
+//         void TestTriangles() {
+//             var usedSites = new Set<CdtSite>();
+//             foreach(var t in Triangles)
+//                 usedSites.InsertRange(t.Sites);
+//             foreach (var triangle in Triangles) {
+//                 TestTriangle(triangle, usedSites);
+//             }
+//         }
+//
+//         void TestTriangle(CdtTriangle triangle, Set<CdtSite> usedSites) {
+//             var tsites=triangle.Sites;
+//             foreach (var site in usedSites) {
+//                 if (!tsites.Contains(site)) {
+//                     if (!SeparatedByConstrainedEdge(triangle, site) && InCircle(site, tsites[0], tsites[1], tsites[2])) {
+//                         List<ICurve> redCurves=new List<ICurve>();
+//                         redCurves.Add(new Ellipse(2, 2, site.Point));
+//                         List<ICurve> blueCurves = new List<ICurve>();
+//                         blueCurves.Add(Circumcircle(tsites[0].Point,tsites[1].Point,tsites[2].Point));
+//                         ShowFront(Triangles, front, redCurves, blueCurves);
+//                     }
+//                 }
+//             }
+//         }
+//
+//         static bool SeparatedByConstrainedEdge(CdtTriangle triangle, CdtSite site) {
+//             for (int i = 0; i < 3; i++)
+//                 if (SeparatedByEdge(triangle, i, site))
+//                     return true;
+//             return false;
+//         }
+//
+//         static bool SeparatedByEdge(CdtTriangle triangle, int i, CdtSite site) {
+//             var e = triangle.Edges[i];
+//             var s = triangle.Sites[i+2];
+//             var a0 = ApproximateComparer.Sign(Point.SignedDoubledTriangleArea(s.Point, e.upperSite.Point, e.lowerSite.Point));
+//             var a1 = ApproximateComparer.Sign(Point.SignedDoubledTriangleArea(site.Point, e.upperSite.Point, e.lowerSite.Point));
+//             return a0 * a1 <= 0;
+//         }
+// #endif
         CdtSite LeftCase(CdtSite pi, RBNode<CdtFrontElement> hittedFrontElementNode, out CdtSite rightSite) {
             //left case
             //                if(db)ShowFrontWithSite(pi, new LineSegment(pi.Point, hittedFrontElementNode.Item.Edge.upperSite.Point), new LineSegment(pi.Point, hittedFrontElementNode.Item.Edge.lowerSite.Point));
@@ -559,28 +559,28 @@ namespace Microsoft.Msagl.Routing.ConstrainedDelaunayTriangulation {
             }
         }
 
-#if DEBUG && TEST_MSAGL
-        List<DebugCurve> ShowIllegalEdge(CdtEdge edge, CdtSite pi, int i) {
-            List<DebugCurve> ls = new List<DebugCurve>();
-            ls.Add(new DebugCurve(new Ellipse(2, 2, pi.Point)));
-            for (int j = 0; j < 3; j++) {
-                var ee = edge.CcwTriangle.Edges[j];
-                ls.Add(new DebugCurve(j == i ? "red" : "blue", new LineSegment(ee.upperSite.Point, ee.lowerSite.Point)));
-            }
-            ls.Add(new DebugCurve(100,1, "black", Circumcircle(edge.CcwTriangle.Sites[0].Point,edge.CcwTriangle.Sites[1].Point,edge.CcwTriangle.Sites[2].Point)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
-            return ls;
-        }
-
-        static Ellipse Circumcircle(Point a, Point b, Point c) {
-            var mab = 0.5 * (a + b);
-            var mbc = 0.5 * (c + b);
-            Point center;
-            Point.LineLineIntersection(mab, mab + (b - a).Rotate(Math.PI / 2), mbc, mbc + (b - c).Rotate(Math.PI / 2), out center);
-            var r = (center - a).Length;
-            return new Ellipse(r,r, center);
-        }
-#endif
+// #if DEBUG && TEST_MSAGL
+//         List<DebugCurve> ShowIllegalEdge(CdtEdge edge, CdtSite pi, int i) {
+//             List<DebugCurve> ls = new List<DebugCurve>();
+//             ls.Add(new DebugCurve(new Ellipse(2, 2, pi.Point)));
+//             for (int j = 0; j < 3; j++) {
+//                 var ee = edge.CcwTriangle.Edges[j];
+//                 ls.Add(new DebugCurve(j == i ? "red" : "blue", new LineSegment(ee.upperSite.Point, ee.lowerSite.Point)));
+//             }
+//             ls.Add(new DebugCurve(100,1, "black", Circumcircle(edge.CcwTriangle.Sites[0].Point,edge.CcwTriangle.Sites[1].Point,edge.CcwTriangle.Sites[2].Point)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
+//             return ls;
+//         }
+//
+//         static Ellipse Circumcircle(Point a, Point b, Point c) {
+//             var mab = 0.5 * (a + b);
+//             var mbc = 0.5 * (c + b);
+//             Point center;
+//             Point.LineLineIntersection(mab, mab + (b - a).Rotate(Math.PI / 2), mbc, mbc + (b - c).Rotate(Math.PI / 2), out center);
+//             var r = (center - a).Length;
+//             return new Ellipse(r,r, center);
+//         }
+// #endif
 
         void LegalizeEdgeForOtherCwTriangle(CdtSite pi, CdtEdge edge) {
             var i=edge.CwTriangle.Edges.Index(edge);
@@ -606,17 +606,17 @@ namespace Microsoft.Msagl.Routing.ConstrainedDelaunayTriangulation {
                 LegalizeEdge(pi, e.CcwTriangle.OppositeEdge(pi));
             }
         }
-#if DEBUG && TEST_MSAGL
-        void ShowIllegalEdge(CdtEdge edge, int i, CdtSite pi) {
-            List<DebugCurve> ls=new List<DebugCurve>();
-            ls.Add(new DebugCurve(new Ellipse(2, 2, pi.Point)));
-            for(int j=0;j<3;j++) {
-                var ee=edge.CwTriangle.Edges[j];
-                ls.Add(new DebugCurve(j==i?"red":"blue", new LineSegment(ee.upperSite.Point,ee.lowerSite.Point)));
-            }
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
-        }
-#endif
+// #if DEBUG && TEST_MSAGL
+//         void ShowIllegalEdge(CdtEdge edge, int i, CdtSite pi) {
+//             List<DebugCurve> ls=new List<DebugCurve>();
+//             ls.Add(new DebugCurve(new Ellipse(2, 2, pi.Point)));
+//             for(int j=0;j<3;j++) {
+//                 var ee=edge.CwTriangle.Edges[j];
+//                 ls.Add(new DebugCurve(j==i?"red":"blue", new LineSegment(ee.upperSite.Point,ee.lowerSite.Point)));
+//             }
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
+//         }
+// #endif
         static bool IsIllegal(CdtSite pi, CdtSite a, CdtSite b, CdtSite c) {
             return InCone(pi, a, b, c) && InCircle(pi, a, b, c);
         }
@@ -764,23 +764,23 @@ namespace Microsoft.Msagl.Routing.ConstrainedDelaunayTriangulation {
             edge.upperSite.Edges.Remove(edge); //forget the edge 
             return newEdge;
         }
-#if DEBUG && TEST_MSAGL
-        static void ShowFlip(CdtSite pi, CdtTriangle t, CdtTriangle ot) {
-            List<DebugCurve> ls=new List<DebugCurve>();
-            ls.Add(new DebugCurve(new Ellipse(2,2, pi.Point)));
-            for(int i=0;i<3;i++) {
-                var e=t.Edges[i];
-                ls.Add(new DebugCurve(100, 1, "red", new LineSegment(e.upperSite.Point,e.lowerSite.Point)));
-            }
-            for (int i = 0; i < 3; i++)
-            {
-                var e = ot.Edges[i];
-                ls.Add(new DebugCurve(100, 1, "blue", new LineSegment(e.upperSite.Point, e.lowerSite.Point)));
-            }
-            ls.Add(new DebugCurve(Circumcircle(t.Sites[0].Point, t.Sites[1].Point, t.Sites[2].Point)));
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
-        }
-#endif
+// #if DEBUG && TEST_MSAGL
+//         static void ShowFlip(CdtSite pi, CdtTriangle t, CdtTriangle ot) {
+//             List<DebugCurve> ls=new List<DebugCurve>();
+//             ls.Add(new DebugCurve(new Ellipse(2,2, pi.Point)));
+//             for(int i=0;i<3;i++) {
+//                 var e=t.Edges[i];
+//                 ls.Add(new DebugCurve(100, 1, "red", new LineSegment(e.upperSite.Point,e.lowerSite.Point)));
+//             }
+//             for (int i = 0; i < 3; i++)
+//             {
+//                 var e = ot.Edges[i];
+//                 ls.Add(new DebugCurve(100, 1, "blue", new LineSegment(e.upperSite.Point, e.lowerSite.Point)));
+//             }
+//             ls.Add(new DebugCurve(Circumcircle(t.Sites[0].Point, t.Sites[1].Point, t.Sites[2].Point)));
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(ls);
+//         }
+// #endif
 
         static bool CheckTriangle(CdtTriangle t) {
             if (Point.GetTriangleOrientationWithNoEpsilon(t.Sites[0].Point, t.Sites[1].Point, t.Sites[2].Point) != TriangleOrientation.Counterclockwise) {

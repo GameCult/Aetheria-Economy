@@ -12,7 +12,8 @@ public class PropertiesPanel : MonoBehaviour
     public TextMeshProUGUI Title;
     public RectTransform SectionPrefab;
     public PropertiesList ListPrefab;
-    public PropertyLabel PropertyPrefab;
+    public PropertyButton PropertyPrefab;
+    public PropertyLabel PropertyLabelPrefab;
     public AttributeProperty AttributePrefab;
     public InputField InputField;
     public RangedFloatField RangedFloatField;
@@ -52,7 +53,7 @@ public class PropertiesPanel : MonoBehaviour
 	    SelectedChild = null;
     }
 
-    public virtual RectTransform AddSection(string name)
+    public RectTransform AddSection(string name)
     {
         var section = Instantiate(SectionPrefab, transform);
         section.GetComponentInChildren<TextMeshProUGUI>().text = name;
@@ -60,9 +61,9 @@ public class PropertiesPanel : MonoBehaviour
         return section;
     }
 
-    public virtual PropertyLabel AddProperty(string name, Func<string> read = null, Action<PointerEventData> onClick = null, bool radio = false)
+    public PropertyLabel AddProperty(string name, Func<string> read, Action<PointerEventData> onClick = null, bool radio = false)
     {
-        var property = Instantiate(PropertyPrefab, transform);
+        var property = Instantiate(PropertyLabelPrefab, transform);
         property.Name.text = name;
         if (radio)
         {
@@ -86,7 +87,32 @@ public class PropertiesPanel : MonoBehaviour
         return property;
     }
 
-    public virtual PropertiesList AddList(string name) //, IEnumerable<(string, Func<string>)> elements)
+    public PropertyButton AddProperty(string name, Action<PointerEventData> onClick = null, bool radio = false)
+    {
+	    var property = Instantiate(PropertyPrefab, transform);
+	    property.Label.text = name;
+	    if (radio)
+	    {
+		    RadioSelection = true;
+		    Buttons.Add(property.Button);
+		    property.Button.OnClick += data =>
+		    {
+			    if (data.button == PointerEventData.InputButton.Left)
+			    {
+				    if (SelectedChild != null)
+					    SelectedChild.CurrentState = FlatButtonState.Unselected;
+				    SelectedChild = property.Button;
+				    SelectedChild.CurrentState = FlatButtonState.Selected;
+			    }
+			    onClick?.Invoke(data);
+		    };
+	    }
+	    else if(onClick!=null) property.Button.OnClick += onClick;
+	    Properties.Add(property.gameObject);
+	    return property;
+    }
+
+    public PropertiesList AddList(string name) //, IEnumerable<(string, Func<string>)> elements)
     {
         var list = Instantiate(ListPrefab, transform);
         list.Title.text = name;

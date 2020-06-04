@@ -162,100 +162,100 @@ namespace Microsoft.Msagl.Routing.Spline.Bundling {
 
 
        
-#if DEBUG && TEST_MSAGL
-        /// <summary>
-        /// check the validness of the drawing:
-        /// 1. hubs are not inside loose obstacles
-        /// 2. bundles do not cross loose obstacles
-        /// </summary>
-        internal bool HubPositionsAreOK() {
-            //check polylines
-            foreach (var line in metroGraphData.Metrolines) {
-                var poly = line.Polyline;
-                foreach (var p in poly.PolylinePoints)
-                    Debug.Assert(metroGraphData.PointToStations.ContainsKey(p.Point));
-            }
-
-            foreach (var station in metroGraphData.Stations) {
-                
-                if (!station.IsRealNode && !HubAvoidsObstacles(station.Position, 0, obstaclesToIgnore(station))) {
-                    if (LayoutAlgorithmSettings.ShowDebugCurvesEnumeration != null) {
-                        HubDebugger.ShowHubs(metroGraphData, bundlingSettings, station);
-                        ShowStationWithObstaclesToIgnore(station,  obstacleTree.AllHitItems(station.Position));
-                    }
-                    return false;
-                }
-                //bundles
-                foreach (var adj in station.Neighbors) {
-                    if (ApproximateComparer.Close(adj.Position, station.Position))
-                        return false;
-
-                    if (!EdgeIsLegal(station, adj, station.Position, adj.Position)) {
-                        if (LayoutAlgorithmSettings.ShowDebugCurvesEnumeration != null) {
-                            //debug visualization 
-                            var l = new List<DebugCurve>();
-                            //foreach (var st in metroGraphData.Stations) {
-                            //    l.Add(new DebugCurve(100, 0.5, "grey", st.BoundaryCurve));
-                            //}
-                            foreach (var poly in obstaclesToIgnore(station)) {
-                                l.Add(new DebugCurve(100, 5, "green", poly));
-                            }
-
-                            foreach (var obstacle in obstacleTree.GetAllLeaves()) {
-                                l.Add(new DebugCurve(100, 1, "red", obstacle));
-                            }
-
-                            l.Add(new DebugCurve(1, "blue", station.BoundaryCurve));
-                            l.Add(new DebugCurve(1, "blue", adj.BoundaryCurve));
-
-                            l.Add(new DebugCurve(1, "blue", new LineSegment(adj.Position, adj.Neighbors.First().Position)));
-                            l.Add(new DebugCurve(1, "blue", new LineSegment(station.Position, adj.Position)));
-
-                            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
-                            //end debug visualization
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        void ShowStationWithObstaclesToIgnore(Station station, IEnumerable<Polyline> allHitItems) {
-            var l = new List<DebugCurve>();
-            foreach (var poly in allHitItems) {
-                l.Add(new DebugCurve(100, 0.5, "brown", poly));
-            }
-            if (obstaclesToIgnore(station) != null)
-                foreach (var poly in obstaclesToIgnore(station))
-                    l.Add(new DebugCurve(100, 1, "red", poly));
-
-
-            foreach (var obstacle in obstacleTree.GetAllLeaves())
-                l.Add(new DebugCurve(50, 0.1, "green", obstacle));
-
-            l.Add(new DebugCurve(0.1, "blue", new Ellipse(1, 1, station.Position)));
-
-            LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
-        }
-
-        /// <summary>
-        /// edge doesn't cross obstacles
-        /// NOTE: use method in CdtIntersection insetad!
-        /// </summary>
-        bool EdgeIsLegal(Station stationA, Station stationB, Point a, Point b) {
-            var crossings = InteractiveEdgeRouter.IntersectionsOfLineAndRectangleNodeOverPolyline(new LineSegment(a, b), obstacleTree);
-            Set<Polyline> obstaclesToIgnoreForBundle = ObstaclesToIgnoreForBundle(stationA, stationB);
-            if (crossings.Count < 0) {
-                var l = new List<DebugCurve>();
-                var crossingSet = new Set<ICurve>(crossings.Select(ii => ii.Segment1));
-                l.AddRange(crossingSet.Select(p=>new DebugCurve(100,1,"red",p)));
-                l.AddRange(obstaclesToIgnoreForBundle.Select(p=>new DebugCurve(100,0.5,"green",p)));
-                LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
-            }
-            return crossings.All(intersectionInfo => obstaclesToIgnoreForBundle.Contains((Polyline)intersectionInfo.Segment1));
-        }
-#endif
+// #if DEBUG && TEST_MSAGL
+//         /// <summary>
+//         /// check the validness of the drawing:
+//         /// 1. hubs are not inside loose obstacles
+//         /// 2. bundles do not cross loose obstacles
+//         /// </summary>
+//         internal bool HubPositionsAreOK() {
+//             //check polylines
+//             foreach (var line in metroGraphData.Metrolines) {
+//                 var poly = line.Polyline;
+//                 foreach (var p in poly.PolylinePoints)
+//                     Debug.Assert(metroGraphData.PointToStations.ContainsKey(p.Point));
+//             }
+//
+//             foreach (var station in metroGraphData.Stations) {
+//                 
+//                 if (!station.IsRealNode && !HubAvoidsObstacles(station.Position, 0, obstaclesToIgnore(station))) {
+//                     if (LayoutAlgorithmSettings.ShowDebugCurvesEnumeration != null) {
+//                         HubDebugger.ShowHubs(metroGraphData, bundlingSettings, station);
+//                         ShowStationWithObstaclesToIgnore(station,  obstacleTree.AllHitItems(station.Position));
+//                     }
+//                     return false;
+//                 }
+//                 //bundles
+//                 foreach (var adj in station.Neighbors) {
+//                     if (ApproximateComparer.Close(adj.Position, station.Position))
+//                         return false;
+//
+//                     if (!EdgeIsLegal(station, adj, station.Position, adj.Position)) {
+//                         if (LayoutAlgorithmSettings.ShowDebugCurvesEnumeration != null) {
+//                             //debug visualization 
+//                             var l = new List<DebugCurve>();
+//                             //foreach (var st in metroGraphData.Stations) {
+//                             //    l.Add(new DebugCurve(100, 0.5, "grey", st.BoundaryCurve));
+//                             //}
+//                             foreach (var poly in obstaclesToIgnore(station)) {
+//                                 l.Add(new DebugCurve(100, 5, "green", poly));
+//                             }
+//
+//                             foreach (var obstacle in obstacleTree.GetAllLeaves()) {
+//                                 l.Add(new DebugCurve(100, 1, "red", obstacle));
+//                             }
+//
+//                             l.Add(new DebugCurve(1, "blue", station.BoundaryCurve));
+//                             l.Add(new DebugCurve(1, "blue", adj.BoundaryCurve));
+//
+//                             l.Add(new DebugCurve(1, "blue", new LineSegment(adj.Position, adj.Neighbors.First().Position)));
+//                             l.Add(new DebugCurve(1, "blue", new LineSegment(station.Position, adj.Position)));
+//
+//                             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
+//                             //end debug visualization
+//                             return false;
+//                         }
+//                     }
+//                 }
+//             }
+//
+//             return true;
+//         }
+//
+//         void ShowStationWithObstaclesToIgnore(Station station, IEnumerable<Polyline> allHitItems) {
+//             var l = new List<DebugCurve>();
+//             foreach (var poly in allHitItems) {
+//                 l.Add(new DebugCurve(100, 0.5, "brown", poly));
+//             }
+//             if (obstaclesToIgnore(station) != null)
+//                 foreach (var poly in obstaclesToIgnore(station))
+//                     l.Add(new DebugCurve(100, 1, "red", poly));
+//
+//
+//             foreach (var obstacle in obstacleTree.GetAllLeaves())
+//                 l.Add(new DebugCurve(50, 0.1, "green", obstacle));
+//
+//             l.Add(new DebugCurve(0.1, "blue", new Ellipse(1, 1, station.Position)));
+//
+//             LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
+//         }
+//
+//         /// <summary>
+//         /// edge doesn't cross obstacles
+//         /// NOTE: use method in CdtIntersection insetad!
+//         /// </summary>
+//         bool EdgeIsLegal(Station stationA, Station stationB, Point a, Point b) {
+//             var crossings = InteractiveEdgeRouter.IntersectionsOfLineAndRectangleNodeOverPolyline(new LineSegment(a, b), obstacleTree);
+//             Set<Polyline> obstaclesToIgnoreForBundle = ObstaclesToIgnoreForBundle(stationA, stationB);
+//             if (crossings.Count < 0) {
+//                 var l = new List<DebugCurve>();
+//                 var crossingSet = new Set<ICurve>(crossings.Select(ii => ii.Segment1));
+//                 l.AddRange(crossingSet.Select(p=>new DebugCurve(100,1,"red",p)));
+//                 l.AddRange(obstaclesToIgnoreForBundle.Select(p=>new DebugCurve(100,0.5,"green",p)));
+//                 LayoutAlgorithmSettings.ShowDebugCurvesEnumeration(l);
+//             }
+//             return crossings.All(intersectionInfo => obstaclesToIgnoreForBundle.Contains((Polyline)intersectionInfo.Segment1));
+//         }
+// #endif
     }
 }

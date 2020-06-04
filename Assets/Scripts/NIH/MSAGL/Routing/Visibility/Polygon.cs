@@ -146,21 +146,21 @@ namespace Microsoft.Msagl.Routing.Visibility {
         static public double Distance(Polygon a, Polygon b, out Point p, out Point q) {
             var tp = new TangentPair(a, b);
             tp.FindClosestPoints(out p, out q);
-#if TEST_MSAGL
-            if(!ApproximateComparer.Close((p - q).Length,TestPolygonDist(a,b))) {
-                using(var stream = File.Open(@"c:\tmp\polygonBug",FileMode.Create)) {
-                    var bf = new BinaryFormatter();
-                    bf.Serialize(stream, a);
-                    bf.Serialize(stream, b);                    
-                }
-
-                LayoutAlgorithmSettings.ShowDebugCurves(
-                    new DebugCurve(100, 0.1, "red", a.Polyline),
-                    new DebugCurve(100, 0.1, "blue", b.Polyline),
-                    new DebugCurve(100, 0.1, "black", new LineSegment(p, q)));
-                System.Diagnostics.Debug.Fail("wrong distance between two polygons");
-            }
-#endif
+// #if TEST_MSAGL
+//             if(!ApproximateComparer.Close((p - q).Length,TestPolygonDist(a,b))) {
+//                 using(var stream = File.Open(@"c:\tmp\polygonBug",FileMode.Create)) {
+//                     var bf = new BinaryFormatter();
+//                     bf.Serialize(stream, a);
+//                     bf.Serialize(stream, b);                    
+//                 }
+//
+//                 LayoutAlgorithmSettings.ShowDebugCurves(
+//                     new DebugCurve(100, 0.1, "red", a.Polyline),
+//                     new DebugCurve(100, 0.1, "blue", b.Polyline),
+//                     new DebugCurve(100, 0.1, "black", new LineSegment(p, q)));
+//                 System.Diagnostics.Debug.Fail("wrong distance between two polygons");
+//             }
+// #endif
             return (p - q).Length;
         }
 

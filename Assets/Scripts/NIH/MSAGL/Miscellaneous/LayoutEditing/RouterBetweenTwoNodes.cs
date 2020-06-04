@@ -298,26 +298,26 @@ namespace Microsoft.Msagl.Prototype.LayoutEditing {
             relaxedPoint.PolylinePoint.Point = relaxedPoint.OriginalPosition + v;
         }
 
-#if TEST_MSAGL
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        void ShowPolylineAndObstacles(){
-            List<ICurve> ls = CreateListWithObstaclesAndPolyline();
-            SugiyamaLayoutSettings.Show(ls.ToArray());
-        }
-
-
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        List<ICurve> CreateListWithObstaclesAndPolyline(){
-            var ls = new List<ICurve>();
-            foreach (Polyline poly in obstacleCalculator.TightObstacles)
-                ls.Add(poly);
-            foreach (Polyline poly in obstacleCalculator.LooseObstacles)
-                ls.Add(poly);
-
-            ls.Add(Polyline);
-            return ls;
-        }
-#endif
+// #if TEST_MSAGL
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         void ShowPolylineAndObstacles(){
+//             List<ICurve> ls = CreateListWithObstaclesAndPolyline();
+//             SugiyamaLayoutSettings.Show(ls.ToArray());
+//         }
+//
+//
+//         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
+//         List<ICurve> CreateListWithObstaclesAndPolyline(){
+//             var ls = new List<ICurve>();
+//             foreach (Polyline poly in obstacleCalculator.TightObstacles)
+//                 ls.Add(poly);
+//             foreach (Polyline poly in obstacleCalculator.LooseObstacles)
+//                 ls.Add(poly);
+//
+//             ls.Add(Polyline);
+//             return ls;
+//         }
+// #endif
 
         void SmoothCorners(SmoothedPolyline edgePolyline) {
             Site a = edgePolyline.HeadSite; //the corner start

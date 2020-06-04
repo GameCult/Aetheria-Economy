@@ -47,44 +47,44 @@ namespace Microsoft.Msagl.Core.Layout {
         #endregion
         #region test_msagl
 
-#if TEST_MSAGL
-        static Show show;
-
-        /// <summary>
-        /// Used for debugging purposes to display all kind of intermediate curves.
-        /// </summary>
-        public static Show Show {
-            get { return show; }
-            set { show = value; }
-        }
-
-        /// <summary>
-        /// Used for debugging purposes to display all kind of intermediate curves with widht and color
-        /// </summary>
-        public static ShowDebugCurves ShowDebugCurves { get; set; }
-
-
-        /// <summary>
-        /// Used for debugging purposes to display all kind of intermediate curves with width and color
-        /// </summary>
-        public static ShowDebugCurvesEnumeration ShowDebugCurvesEnumeration { get; set; }
-
-
-        static ShowDatabase showDataBase;
-
-        /// <summary>
-        /// used for debugging purposes to display anchors and paths that are kept in the DataBase
-        /// </summary>
-        public static ShowDatabase ShowDatabase {
-            get { return showDataBase; }
-            set { showDataBase = value; }
-        }
-
-        ///<summary>
-        ///</summary>
-        public static ShowGraph ShowGraph { get; set; }
-
-#endif
+// #if TEST_MSAGL
+//         static Show show;
+//
+//         /// <summary>
+//         /// Used for debugging purposes to display all kind of intermediate curves.
+//         /// </summary>
+//         public static Show Show {
+//             get { return show; }
+//             set { show = value; }
+//         }
+//
+//         /// <summary>
+//         /// Used for debugging purposes to display all kind of intermediate curves with widht and color
+//         /// </summary>
+//         public static ShowDebugCurves ShowDebugCurves { get; set; }
+//
+//
+//         /// <summary>
+//         /// Used for debugging purposes to display all kind of intermediate curves with width and color
+//         /// </summary>
+//         public static ShowDebugCurvesEnumeration ShowDebugCurvesEnumeration { get; set; }
+//
+//
+//         static ShowDatabase showDataBase;
+//
+//         /// <summary>
+//         /// used for debugging purposes to display anchors and paths that are kept in the DataBase
+//         /// </summary>
+//         public static ShowDatabase ShowDatabase {
+//             get { return showDataBase; }
+//             set { showDataBase = value; }
+//         }
+//
+//         ///<summary>
+//         ///</summary>
+//         public static ShowGraph ShowGraph { get; set; }
+//
+// #endif
 
         #endregion
 

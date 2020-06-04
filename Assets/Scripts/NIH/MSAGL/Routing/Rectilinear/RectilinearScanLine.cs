@@ -185,11 +185,11 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
         [Conditional("DEBUG")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         void Assert(bool condition, string message) {
-#if TEST_MSAGL
-            if (!condition) {
-                Test_DumpScanLine();
-            }
-#endif // TEST
+// #if TEST_MSAGL
+//             if (!condition) {
+//                 Test_DumpScanLine();
+//             }
+// #endif // TEST
             Debug.Assert(condition, message);
         }
 
@@ -221,51 +221,51 @@ namespace Microsoft.Msagl.Routing.Rectilinear {
 
         #region DebugCurves
 
-#if TEST_MSAGL
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        internal void Test_DumpScanLine() {
-            DebugCurveCollection.WriteToFile(Test_GetScanLineDebugCurves(), StaticGraphUtility.GetDumpFileName("ScanLine"));
-        }
-#endif // TEST
+// #if TEST_MSAGL
+//         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+//         internal void Test_DumpScanLine() {
+//             DebugCurveCollection.WriteToFile(Test_GetScanLineDebugCurves(), StaticGraphUtility.GetDumpFileName("ScanLine"));
+//         }
+// #endif // TEST
 
-#if TEST_MSAGL
-        internal List<DebugCurve> Test_GetScanLineDebugCurves() {
-// ReSharper restore InconsistentNaming
-            var debugCurves = new List<DebugCurve>();
-
-            // Alternate the colors between green and blue, so that any inconsistency will stand out.
-            // Use red to highlight that.
-            string[] colors = { "green", "blue" };
-            int index = 0;
-            var bbox = new Rectangle();
-            BasicObstacleSide prevSide = null;
-            foreach (var currentSide in SideTree) {
-                string color = colors[index];
-                index ^= 1;
-                if (null == prevSide) {
-                    // Create this the first time through; adding to an empty rectangle leaves 0,0.
-                    bbox = new Rectangle(currentSide.Start, currentSide.End);
-                }
-                else {
-                    if (-1 != Compare(prevSide, currentSide)) {
-                        // Note: we toggled the index, so the red replaces the colour whose turn it is now
-                        // and will leave the red line bracketed by two sides of the same colour.
-                        color = "red";
-                    }
-                    bbox.Add(currentSide.Start);
-                    bbox.Add(currentSide.End);
-                }
-                debugCurves.Add(new DebugCurve(0.1, color, new LineSegment(currentSide.Start, currentSide.End)));
-                prevSide = currentSide;
-            }
-
-            // Add the sweep line.
-            Point start = StaticGraphUtility.RectangleBorderIntersect(bbox, this.linePositionAtLastInsertOrRemove, scanDirection.OppositeDirection);
-            Point end = StaticGraphUtility.RectangleBorderIntersect(bbox, this.linePositionAtLastInsertOrRemove, scanDirection.Direction);
-            debugCurves.Add(new DebugCurve(0.025, "black", new LineSegment(start, end)));
-            return debugCurves;
-        }
-#endif // TEST
+// #if TEST_MSAGL
+//         internal List<DebugCurve> Test_GetScanLineDebugCurves() {
+// // ReSharper restore InconsistentNaming
+//             var debugCurves = new List<DebugCurve>();
+//
+//             // Alternate the colors between green and blue, so that any inconsistency will stand out.
+//             // Use red to highlight that.
+//             string[] colors = { "green", "blue" };
+//             int index = 0;
+//             var bbox = new Rectangle();
+//             BasicObstacleSide prevSide = null;
+//             foreach (var currentSide in SideTree) {
+//                 string color = colors[index];
+//                 index ^= 1;
+//                 if (null == prevSide) {
+//                     // Create this the first time through; adding to an empty rectangle leaves 0,0.
+//                     bbox = new Rectangle(currentSide.Start, currentSide.End);
+//                 }
+//                 else {
+//                     if (-1 != Compare(prevSide, currentSide)) {
+//                         // Note: we toggled the index, so the red replaces the colour whose turn it is now
+//                         // and will leave the red line bracketed by two sides of the same colour.
+//                         color = "red";
+//                     }
+//                     bbox.Add(currentSide.Start);
+//                     bbox.Add(currentSide.End);
+//                 }
+//                 debugCurves.Add(new DebugCurve(0.1, color, new LineSegment(currentSide.Start, currentSide.End)));
+//                 prevSide = currentSide;
+//             }
+//
+//             // Add the sweep line.
+//             Point start = StaticGraphUtility.RectangleBorderIntersect(bbox, this.linePositionAtLastInsertOrRemove, scanDirection.OppositeDirection);
+//             Point end = StaticGraphUtility.RectangleBorderIntersect(bbox, this.linePositionAtLastInsertOrRemove, scanDirection.Direction);
+//             debugCurves.Add(new DebugCurve(0.025, "black", new LineSegment(start, end)));
+//             return debugCurves;
+//         }
+// #endif // TEST
         #endregion // DebugCurves
     }
 }
