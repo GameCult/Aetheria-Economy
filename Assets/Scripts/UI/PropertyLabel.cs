@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class PropertyLabel : MonoBehaviour
+public class PropertyLabel : PropertyButton
 {
-    public TextMeshProUGUI Name;
     public TextMeshProUGUI Value;
-    public FlatFlatButton Button;
 }

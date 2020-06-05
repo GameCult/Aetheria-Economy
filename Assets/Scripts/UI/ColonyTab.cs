@@ -30,7 +30,7 @@ public class ColonyTab : MonoBehaviour
 
     private Guid _selectedColony;
     private GameContext _context;
-    private HardpointData _selectedHardpoint;
+    private Hardpoint _selectedHardpoint;
 
     public void Open(Guid colony)
     {
@@ -79,200 +79,190 @@ public class ColonyTab : MonoBehaviour
         var hull = Context.Cache.Get<Gear>(entity.Hull);
         var hullData = Context.Cache.Get<HullData>(hull.Data);
 
-        // Create item data mapping for cargo similar to what Entity.GearData already does for equipped items
+        // Create item data mapping for cargo
         var cargoData = entity.Cargo.ToDictionary(id => _context.Cache.Get<ItemInstance>(id),
             id => Context.Cache.Get<ItemData>(_context.Cache.Get<ItemInstance>(id).Data));
         
-        //var incompleteGear = entity.IncompleteGear.Keys.Select(id => _context.Cache.Get<Gear>(id));
-        // var incompleteGear = entity.IncompleteGear.Select(x =>
-        // {
-        //     var gear = _context.Cache.Get<Gear>(x.Key);
-        //     var productionTime = _context.Cache.Get<BlueprintData>(gear.Blueprint).ProductionTime;
-        //     var progress = (productionTime - (float) x.Value) / productionTime;
-        //     return (gear, progress);
-        // });
         
-        var gearList = Inventory.AddList("Gear");
-        
-        // Create temporary list including both equipped items and incomplete items
-        // This is necessary because the binding between items and hardpoints is implicit
-        var equippedItems = new List<Gear>(entity.GearData.Keys.Concat(entity.IncompleteGear.Keys.Select(id => _context.Cache.Get<Gear>(id))));
-        
-        // Display an entry in the list for each hardpoint on the entity
-        foreach (var hardpoint in hullData.Hardpoints)
+        Inventory.AddSection("Gear");
+
+        // Skip first hardpoint, that one is always the hull
+        foreach (var hardpoint in entity.Hardpoints.Skip(1))
         {
-            // This corresponds to the first equipped or incomplete gear which matches the hardpoint type
-            var match = equippedItems.FirstOrDefault(g => g.ItemData.HardpointType == hardpoint.Type);
-            
             // These are the items in the inventory which can be equipped to the current hardpoint
             var matchingCargoGear = cargoData
                 .Where(x => 
-                    x.Value is EquippableItemData equippableItemData &&
-                    equippableItemData.HardpointType == hardpoint.Type)
+                    x.Value is GearData gearData &&
+                    gearData.HardpointType == hardpoint.HardpointData.Type)
                 .Select(x => x.Key as Gear)
                 .ToArray();
-            
-            // There is no item in the inventory which can fill the current hardpoint
-            if (match == null)
-            {
-                var matchingBlueprints = blueprints.Where(bp =>
-                    bp.FactoryItem == Guid.Empty &&
-                    Context.Cache.Get<ItemData>(bp.Item) is GearData gearData &&
-                    gearData.HardpointType == hardpoint.Type).ToArray();
-                
-                Action<PointerEventData> onClick = null;
-                if (matchingCargoGear.Any() || matchingBlueprints.Any())
-                    onClick = data =>
-                    {
-                        if (data.button == PointerEventData.InputButton.Left)
-                        {
-                            Details.Clear();
-                            foreach (var blueprint in matchingBlueprints)
-                            {
-                                var blueprintList = Details.AddList(blueprint.Name);
-                                
-                                foreach (var ingredient in blueprint.Ingredients)
-                                {
-                                    var itemData = _context.Cache.Get<ItemData>(ingredient.Key);
-                                    blueprintList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
-                                }
-                                
-                                var bpItemData = _context.Cache.Get<ItemData>(blueprint.Item);
 
-                                if(entity.GetBlueprintIngredients(blueprint, out _, out _))
-                                    blueprintList.AddButton("Build", _ => entity.Build(blueprint, 1, bpItemData.Name, true));
-                            }
-                            Details.RefreshValues();
-                        }
-                        else if (data.button == PointerEventData.InputButton.Right)
+            // Hardpoint has no gear assigned to it
+            if (hardpoint.Gear == null)
+            {
+                // Check whether we're currently building some gear for this hardpoint
+                var incompleteGear = entity.IncompleteGear.Keys
+                    .Select(id => Context.Cache.Get<Gear>(id))
+                    .FirstOrDefault(g => g.ItemData.HardpointType == hardpoint.HardpointData.Type);
+                
+                // We're building something for this hardpoint, show a progress bar!
+                if (incompleteGear != null)
+                {
+                    Inventory.AddProgressField(incompleteGear.Name, () =>
+                    {
+                        var productionTime = _context.Cache.Get<BlueprintData>(incompleteGear.Blueprint).ProductionTime;
+                        return (productionTime - (float) entity.IncompleteGear[incompleteGear.ID]) / productionTime;
+                    });
+                }
+                else // We're not building anything
+                {
+                    // These are the blueprints we could build onto this hardpoint directly
+                    var matchingBlueprints = blueprints.Where(bp =>
+                        bp.FactoryItem == Guid.Empty &&
+                        Context.Cache.Get<ItemData>(bp.Item) is GearData gearData &&
+                        gearData.HardpointType == hardpoint.HardpointData.Type).ToArray();
+                    
+                    Action<PointerEventData> onClick = null;
+                    if (matchingCargoGear.Any() || matchingBlueprints.Any())
+                        onClick = data =>
                         {
-                            ContextMenu.gameObject.SetActive(true);
-                            ContextMenu.Clear();
-                            if (matchingCargoGear.Any())
-                                ContextMenu.AddDropdown("Install", matchingCargoGear
-                                    .Select<Gear, (string, Action, bool)>(gear => (gear.Name, () => entity.Equip(gear), true)));
-                            if(matchingBlueprints.Any())
-                                ContextMenu.AddDropdown("Build", matchingBlueprints
-                                    .Select<BlueprintData, (string, Action, bool)>(blueprint => (blueprint.Name, () => entity.Build(blueprint, 1, _context.Cache.Get<ItemData>(blueprint.Item).Name, true), entity.GetBlueprintIngredients(blueprint, out _, out _))));
-                            ContextMenu.Show();
-                        }
-                    };
-                gearList.AddProperty($"Empty {Enum.GetName(typeof(HardpointType), hardpoint.Type)} Hardpoint", onClick, matchingBlueprints.Any());
+                            if (data.button == PointerEventData.InputButton.Left)
+                                PopulateDetails(entity, matchingBlueprints);
+                            
+                            else if (data.button == PointerEventData.InputButton.Right)
+                            {
+                                ContextMenu.gameObject.SetActive(true);
+                                ContextMenu.Clear();
+                                if (matchingCargoGear.Any())
+                                    ContextMenu.AddDropdown("Install", matchingCargoGear
+                                        .Select<Gear, (string, Action, bool)>(gear => (gear.Name, () => entity.Equip(gear, hardpoint), true)));
+                                if (matchingBlueprints.Any())
+                                    ContextMenu.AddDropdown("Build", matchingBlueprints
+                                        .Select<BlueprintData, (string, Action, bool)>(blueprint =>
+                                            (blueprint.Name, () => 
+                                                    entity.Build(blueprint, 1, _context.Cache.Get<ItemData>(blueprint.Item).Name, true),
+                                                entity.GetBlueprintIngredients(blueprint, out _, out _))));
+                                ContextMenu.Show();
+                            }
+                        };
+                    Inventory.AddProperty($"Empty {Enum.GetName(typeof(HardpointType), hardpoint.HardpointData.Type)} Hardpoint", null, onClick, matchingBlueprints.Any());
+                }
             }
             else
             {
-                if (entity.IncompleteGear.ContainsKey(match.ID))
+                var prop = Inventory.AddProperty(hardpoint.Gear.Name, null, _ =>
                 {
-                    gearList.AddProgressField(match.Name, () =>
-                    {
-                        var productionTime = _context.Cache.Get<BlueprintData>(match.Blueprint).ProductionTime;
-                        return (productionTime - (float) entity.IncompleteGear[match.ID]) / productionTime;
-                    });
-                }
-                else
-                {
-                    var prop = gearList.AddProperty(match.Name, null, _ =>
-                    {
-                        _selectedHardpoint = hardpoint;
-                        PopulateDetails(match, entity);
-                    }, true);
+                    _selectedHardpoint = hardpoint;
+                    PopulateDetails(entity, hardpoint);
+                }, true);
                     
-                    if (hardpoint == _selectedHardpoint) prop.Button.OnPointerClick(new PointerEventData(null){button = PointerEventData.InputButton.Left});
-                }
-                
-
-                equippedItems.Remove(match);
+                if (hardpoint == _selectedHardpoint) prop.Button.OnPointerClick(new PointerEventData(null){button = PointerEventData.InputButton.Left});
             }
         }
         
         if(!entity.Cargo.Any())
-            Inventory.AddProperty("No Cargo");
+            Inventory.AddSection("No Cargo");
         else
         {
-            var cargoList = Inventory.AddList("Cargo");
+            Inventory.AddSection("Cargo");
             foreach (var x in cargoData)
             {
                 if(x.Key is SimpleCommodity simpleCommodity)
-                    cargoList.AddProperty(x.Value.Name, () => simpleCommodity.Quantity.ToString());
+                    Inventory.AddProperty(x.Value.Name, () => simpleCommodity.Quantity.ToString());
                 else
-                    cargoList.AddProperty(x.Value.Name);
+                    Inventory.AddProperty(x.Value.Name);
             }
         }
         Inventory.RefreshValues();
     }
     
-    void PopulateDetails(ItemInstance item, Entity entity)
+    void PopulateDetails(Entity entity, IEnumerable<BlueprintData> blueprints)
     {
         Details.Clear();
-        if (item is Gear gear)
+        foreach (var blueprint in blueprints)
         {
-            var data = gear.ItemData;
-            Details.AddProperty("Durability",
-                () =>
-                    $"{gear.Durability.SignificantDigits(Context.GlobalData.SignificantDigits)}/{Context.Evaluate(data.Durability, gear).SignificantDigits(Context.GlobalData.SignificantDigits)}");
-            foreach (var behavior in entity.ItemBehaviors[gear])
+            var blueprintList = Details.AddList(blueprint.Name);
+                                    
+            foreach (var ingredient in blueprint.Ingredients)
             {
-                if (behavior is Factory factory)
+                var itemData = _context.Cache.Get<ItemData>(ingredient.Key);
+                blueprintList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
+            }
+                                    
+            var bpItemData = _context.Cache.Get<ItemData>(blueprint.Item);
+
+            if(entity.GetBlueprintIngredients(blueprint, out _, out _))
+                blueprintList.AddButton("Build", _ => entity.Build(blueprint, 1, bpItemData.Name, true));
+        }
+        Details.RefreshValues();
+    }
+    
+    void PopulateDetails(Entity entity, Hardpoint hardpoint)
+    {
+        Details.Clear();
+        Details.AddProperty("Durability",
+            () => $"{hardpoint.Gear.Durability.SignificantDigits(Context.GlobalData.SignificantDigits)}/{Context.Evaluate(hardpoint.ItemData.Durability, hardpoint.Gear).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+        foreach (var behavior in hardpoint.Behaviors)
+        {
+            if (behavior is Factory factory)
+            {
+                factory.OnProductionUpdate += () => PopulateDetails(entity, hardpoint);
+                Details.AddField("Production Quality", () => factory.ProductionQuality, f => factory.ProductionQuality = f, 0, 1);
+                var corporation = Context.Cache.Get<Corporation>(entity.Corporation);
+                var compatibleBlueprints = corporation.UnlockedBlueprints
+                    .Select(id => _context.Cache.Get<BlueprintData>(id))
+                    .Where(bp => bp.FactoryItem == hardpoint.ItemData.ID).ToList();
+                if (factory.RetoolingTime > 0)
                 {
-                    factory.OnToolingUpdate += () => PopulateDetails(item, entity);
-                    Details.AddField("Production Quality", () => factory.ProductionQuality, f => factory.ProductionQuality = f, 0, 1);
-                    var corporation = Context.Cache.Get<Corporation>(entity.Corporation);
-                    var compatibleBlueprints = corporation.UnlockedBlueprints
-                        .Select(id => _context.Cache.Get<BlueprintData>(id))
-                        .Where(bp => bp.FactoryItem == data.ID).ToList();
-                    if (factory.RetoolingTime > 0)
+                    Details.AddProgressField("Retooling", () => (factory.ToolingTime - (float) factory.RetoolingTime) / factory.ToolingTime);
+                }
+                else
+                {
+                    Details.AddField("Item", 
+                        () => compatibleBlueprints.FindIndex(bp=>bp.ID== factory.Blueprint) + 1, 
+                        i => factory.Blueprint = i == 0 ? Guid.Empty : compatibleBlueprints[i - 1].ID,
+                        new []{"None"}.Concat(compatibleBlueprints.Select(bp=>bp.Name)).ToArray());
+                    if (factory.Blueprint != Guid.Empty)
                     {
-                        Details.AddProgressField("Retooling", () => (factory.ToolingTime - (float) factory.RetoolingTime) / factory.ToolingTime);
-                    }
-                    else
-                    {
-                        Details.AddField("Item", 
-                            () => compatibleBlueprints.FindIndex(bp=>bp.ID== factory.Blueprint) + 1, 
-                            i => factory.Blueprint = i == 0 ? Guid.Empty : compatibleBlueprints[i - 1].ID,
-                            new []{"None"}.Concat(compatibleBlueprints.Select(bp=>bp.Name)).ToArray());
-                        if (factory.Blueprint != Guid.Empty)
+                        if (factory.ItemUnderConstruction != Guid.Empty)
                         {
-                            if (factory.ItemsUnderConstruction.Any())
+                            Details.AddProgressField("Production", () =>
                             {
-                                Details.AddProgressField("Production", () =>
-                                {
-                                    var itemUnderConstruction = factory.ItemsUnderConstruction[0];
-                                    var itemInstance = _context.Cache.Get<CraftedItemInstance>(itemUnderConstruction);
-                                    var blueprintData = _context.Cache.Get<BlueprintData>(itemInstance.Blueprint);
-                                    return (blueprintData.ProductionTime - (float) entity.IncompleteCargo[itemUnderConstruction]) / blueprintData.ProductionTime;
-                                });
-                            }
-                            else
+                                var itemInstance = _context.Cache.Get<CraftedItemInstance>(factory.ItemUnderConstruction);
+                                var blueprintData = _context.Cache.Get<BlueprintData>(itemInstance.Blueprint);
+                                return (blueprintData.ProductionTime - (float) entity.IncompleteCargo[factory.ItemUnderConstruction]) / blueprintData.ProductionTime;
+                            });
+                        }
+                        else
+                        {
+                            var ingredientsList = Details.AddList("Ingredients Needed");
+                            var blueprintData = _context.Cache.Get<BlueprintData>(factory.Blueprint);
+                            foreach (var ingredient in blueprintData.Ingredients)
                             {
-                                var ingredientsList = Details.AddList("Ingredients Needed");
-                                var blueprintData = _context.Cache.Get<BlueprintData>(factory.Blueprint);
-                                foreach (var ingredient in blueprintData.Ingredients)
-                                {
-                                    var itemData = _context.Cache.Get<ItemData>(ingredient.Key);
-                                    ingredientsList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
-                                }
+                                var itemData = _context.Cache.Get<ItemData>(ingredient.Key);
+                                ingredientsList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
                             }
                         }
                     }
                 }
             }
-            foreach (var behavior in data.Behaviors)
+        }
+        foreach (var behavior in hardpoint.ItemData.Behaviors)
+        {
+            var type = behavior.GetType();
+            if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
             {
-                var type = behavior.GetType();
-                if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
+                foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
                 {
-                    foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
+                    var fieldType = field.FieldType;
+                    if (fieldType == typeof(float))
+                        Details.AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+                    else if (fieldType == typeof(int))
+                        Details.AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
+                    else if (fieldType == typeof(PerformanceStat))
                     {
-                        var fieldType = field.FieldType;
-                        if (fieldType == typeof(float))
-                            Details.AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GlobalData.SignificantDigits)}");
-                        else if (fieldType == typeof(int))
-                            Details.AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
-                        else if (fieldType == typeof(PerformanceStat))
-                        {
-                            var stat = (PerformanceStat) field.GetValue(behavior);
-                            Details.AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear, entity).SignificantDigits(Context.GlobalData.SignificantDigits)}");
-                        }
+                        var stat = (PerformanceStat) field.GetValue(behavior);
+                        Details.AddProperty(field.Name, () => $"{Context.Evaluate(stat, hardpoint.Gear, entity).SignificantDigits(Context.GlobalData.SignificantDigits)}");
                     }
                 }
             }

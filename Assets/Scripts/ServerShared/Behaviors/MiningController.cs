@@ -40,8 +40,8 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
 
     public new void Initialize()
     {
-        _miningTool = _entity.GetBehaviors<MiningTool>().First();
-        _toolSwitch = _entity.GetSwitch(_miningTool);
+        _miningTool = _entity.GetBehavior<MiningTool>();
+        _toolSwitch = _entity.GetSwitch<MiningTool>();
         base.Initialize();
     }
 
@@ -96,11 +96,22 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
     private void OnArriveHome()
     {
         var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
-        if (!_entity.Cargo.ToArray().All(ii => _context.MoveCargo(_entity, homeEntity, _context.Cache.Get<ItemInstance>(ii))))
+        foreach (var item in _entity.Cargo
+            .Select(id => _context.Cache.Get<ItemInstance>(id))
+            .Where(item => item is SimpleCommodity)
+            .Cast<SimpleCommodity>())
         {
-            homeEntity.SetMessage("Colony is out of cargo space. Closing Mining Task.");
-            FinishTask();
-            _taskStarted = false;
+            int supportedQuantity = (int) ((homeEntity.Capacity - homeEntity.OccupiedCapacity) / item.ItemData.Size);
+            var newItem = _entity.RemoveCargo(item, supportedQuantity);
+            homeEntity.AddCargo(newItem);
+            
+            if (supportedQuantity < item.Quantity)
+            {
+                homeEntity.SetMessage("Colony is out of cargo space. Closing Mining Task.");
+                FinishTask();
+                _taskStarted = false;
+                return;
+            }
         }
     }
 

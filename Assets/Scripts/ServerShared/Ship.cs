@@ -10,8 +10,6 @@ using static Unity.Mathematics.math;
 [MessagePackObject]
 public class Ship : Entity
 {
-    [Key("hardpoints")] 
-    public List<Hardpoint> Hardpoints = new List<Hardpoint>();
     
     // [Key("bindings")]   public Dictionary<KeyCode,Guid>    Bindings = new Dictionary<KeyCode,Guid>();
     //[IgnoreMember] public int HullHardpointCount;
@@ -19,7 +17,7 @@ public class Ship : Entity
     // [IgnoreMember] public Dictionary<Targetable, float> Contacts = new Dictionary<Targetable, float>();
     // [IgnoreMember] public Targetable Target;
     
-    public Ship(GameContext context, Guid hull, IEnumerable<Guid> items, IEnumerable<Guid> cargo, Guid zone, Guid corporation) : base(context, hull, items, cargo, zone, corporation)
+    public Ship(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid zone, Guid corporation) : base(context, hull, gear, cargo, zone, corporation)
     {
     }
 

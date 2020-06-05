@@ -61,10 +61,14 @@ public class PropertiesPanel : MonoBehaviour
         return section;
     }
 
-    public PropertyLabel AddProperty(string name, Func<string> read, Action<PointerEventData> onClick = null, bool radio = false)
+    public PropertyButton AddProperty(string name, Func<string> read = null, Action<PointerEventData> onClick = null, bool radio = false)
     {
-        var property = Instantiate(PropertyLabelPrefab, transform);
-        property.Name.text = name;
+	    PropertyButton property;
+	    if(read != null)
+			property = Instantiate(PropertyLabelPrefab, transform);
+	    else
+		    property = Instantiate(PropertyPrefab, transform);
+        property.Label.text = name;
         if (radio)
         {
 	        RadioSelection = true;
@@ -82,34 +86,11 @@ public class PropertiesPanel : MonoBehaviour
             };
         }
         else if(onClick!=null) property.Button.OnClick += onClick;
-        RefreshPropertyValues += () => property.Value.text = read?.Invoke() ?? "";
+
+        if (read != null)
+	        RefreshPropertyValues += () => ((PropertyLabel) property).Value.text = read.Invoke();
         Properties.Add(property.gameObject);
         return property;
-    }
-
-    public PropertyButton AddProperty(string name, Action<PointerEventData> onClick = null, bool radio = false)
-    {
-	    var property = Instantiate(PropertyPrefab, transform);
-	    property.Label.text = name;
-	    if (radio)
-	    {
-		    RadioSelection = true;
-		    Buttons.Add(property.Button);
-		    property.Button.OnClick += data =>
-		    {
-			    if (data.button == PointerEventData.InputButton.Left)
-			    {
-				    if (SelectedChild != null)
-					    SelectedChild.CurrentState = FlatButtonState.Unselected;
-				    SelectedChild = property.Button;
-				    SelectedChild.CurrentState = FlatButtonState.Selected;
-			    }
-			    onClick?.Invoke(data);
-		    };
-	    }
-	    else if(onClick!=null) property.Button.OnClick += onClick;
-	    Properties.Add(property.gameObject);
-	    return property;
     }
 
     public PropertiesList AddList(string name) //, IEnumerable<(string, Func<string>)> elements)

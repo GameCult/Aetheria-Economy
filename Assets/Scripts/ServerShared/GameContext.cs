@@ -488,7 +488,7 @@ public class GameContext
         return 0;
     }
 
-    public float GetHeatCapacity(ItemInstance item)
+    public float GetThermalMass(ItemInstance item)
     {
         var data = GetData(item);
         switch (item)
@@ -570,7 +570,8 @@ public class GameContext
         {
             var ingredientInstances = item.Ingredients.Select(i => Cache.Get<ItemInstance>(i)).ToArray();
             var ingredients = ingredientInstances.Where(i => activeEffects.Any(e => e.Ingredient == i.Data)).ToArray();
-            if(ingredients.Length != activeEffects.Length)
+            var distinctIngredients = ingredients.Select(i => i.Data).Distinct();
+            if(distinctIngredients.Count() != activeEffects.Length)
             {
                 _logger($"Item {item.ID} does not have the ingredients specified by the stat effects of its blueprint!");
                 return 0;
@@ -868,8 +869,7 @@ public class GameContext
     public void SetParent(Entity child, Entity parent)
     {
         child.Parent = parent.ID;
-        parent.Children.Add(child.ID);
-        parent.RecalculateMass();
+        parent.AddChild(child);
     }
 
     public void RemoveParent(Entity child)
@@ -878,8 +878,7 @@ public class GameContext
             return;
 
         var parent = Cache.Get<Entity>(child.Parent);
-        parent.Children.Remove(child.ID);
-        parent.RecalculateMass();
+        parent.RemoveChild(child);
         child.Parent = Guid.Empty;
     }
 
@@ -912,117 +911,105 @@ public class GameContext
         if (efficiency * Random.NextFloat() * _asteroidMiningAccumulator[(asteroidBelt, miner.ID, asteroid)] * resourceCount / GlobalData.MiningDifficulty > 1 && miner.OccupiedCapacity < miner.Capacity - 1)
         {
             _asteroidMiningAccumulator.Remove((asteroidBelt, miner.ID, asteroid));
-            var simpleCommodityTarget = miner.Cargo
-                .Select(i => Cache.Get<ItemInstance>(i))
-                .FirstOrDefault(i => i.Data == resource.Key) as SimpleCommodity;
-            if (simpleCommodityTarget == null)
+            var newSimpleCommodity = new SimpleCommodity
             {
-                var newSimpleCommodity = new SimpleCommodity
-                {
-                    Context = this,
-                    Data = resource.Key,
-                    Quantity = 1
-                };
-                Cache.Add(newSimpleCommodity);
-                miner.Cargo.Add(newSimpleCommodity.ID);
-                miner.RecalculateMass();
-            }
-            else
-            {
-                simpleCommodityTarget.Quantity++;
-                miner.RecalculateMass();
-            }
+                Context = this,
+                Data = resource.Key,
+                Quantity = 1
+            };
+            Cache.Add(newSimpleCommodity);
+            miner.AddCargo(newSimpleCommodity);
         }
     }
 
-    public bool MoveCargo(Entity source, Entity target, ItemInstance item, int quantity = int.MaxValue)
-    {
-        if (item is CraftedItemInstance craftedItemInstance)
-        {
-            var craftedItemData = Cache.Get<CraftedItemData>(craftedItemInstance.Data);
-            if (target.Capacity - target.OccupiedCapacity > craftedItemData.Size)
-            {
-                // Target has the cargo capacity for the item, simply move the instance
-                source.Cargo.Remove(item.ID);
-                target.Cargo.Add(item.ID);
-                source.RecalculateMass();
-                target.RecalculateMass();
-                return true;
-            }
-            return false;
-        }
-        
-        if (item is SimpleCommodity simpleCommoditySource)
-        {
-            quantity = min(quantity, simpleCommoditySource.Quantity);
-            var simpleCommodityData = Cache.Get<SimpleCommodityData>(simpleCommoditySource.Data);
-            var spareCapacity = (int) (target.Capacity - target.OccupiedCapacity);
-            var simpleCommodityTarget = target.Cargo
-                .Select(i => Cache.Get<ItemInstance>(i))
-                .FirstOrDefault(i => i.Data == simpleCommodityData.ID) as SimpleCommodity;
-            var success = spareCapacity >= quantity;
-            quantity = min(quantity, spareCapacity);
-            if (simpleCommodityTarget == null)
-            {
-                if (quantity == simpleCommoditySource.Quantity)
-                {
-                    // Target has the cargo capacity to hold the full quantity,
-                    // and the target has no matching item instance;
-                    // simply move the existing item instance to the target
-                    source.Cargo.Remove(simpleCommoditySource.ID);
-                    target.Cargo.Add(simpleCommoditySource.ID);
-                    source.RecalculateMass();
-                    target.RecalculateMass();
-                    return success;
-                }
-                else
-                {
-                    // Target has the cargo capacity to hold the desired quantity
-                    // and the target has no matching item instance;
-                    // Create a new item instance on the target and decrement the quantity of the source instance
-                    var newSimpleCommodity = new SimpleCommodity
-                    {
-                        Context = this,
-                        Data = simpleCommodityData.ID,
-                        Quantity = simpleCommoditySource.Quantity
-                    };
-                    Cache.Add(newSimpleCommodity);
-                    target.Cargo.Add(newSimpleCommodity.ID);
-                    simpleCommoditySource.Quantity -= quantity;
-                    source.RecalculateMass();
-                    target.RecalculateMass();
-                    return success;
-                }
-            }
-            else
-            {
-                if (quantity == simpleCommoditySource.Quantity)
-                {
-                    // Target has the cargo capacity to hold the full quantity,
-                    // and there is already a matching item instance;
-                    // delete the source entity's item instance and increment the target's quantity
-                    source.Cargo.Remove(simpleCommoditySource.ID);
-                    Cache.Delete(simpleCommoditySource);
-                    simpleCommodityTarget.Quantity += quantity;
-                    source.RecalculateMass();
-                    target.RecalculateMass();
-                    return success;
-                }
-                else
-                {
-                    // Target has the cargo capacity to hold the desired quantity,
-                    // and there is already a matching item instance;
-                    // decrement the source's quantity and increment the target's quantity
-                    simpleCommoditySource.Quantity -= quantity;
-                    simpleCommodityTarget.Quantity += quantity;
-                    source.RecalculateMass();
-                    target.RecalculateMass();
-                    return success;
-                }
-            }
-            
-        }
-        
-        return false;
-    }
+    // public bool MoveCargo(Entity source, Entity target, ItemInstance item, int quantity = int.MaxValue)
+    // {
+    //     if (item is CraftedItemInstance craftedItemInstance)
+    //     {
+    //         var craftedItemData = Cache.Get<CraftedItemData>(craftedItemInstance.Data);
+    //         if (target.Capacity - target.OccupiedCapacity > craftedItemData.Size)
+    //         {
+    //             // Target has the cargo capacity for the item, simply move the instance
+    //             source.Cargo.Remove(item.ID);
+    //             target.Cargo.Add(item.ID);
+    //             source.RecalculateMass();
+    //             target.RecalculateMass();
+    //             return true;
+    //         }
+    //         return false;
+    //     }
+    //     
+    //     if (item is SimpleCommodity simpleCommoditySource)
+    //     {
+    //         quantity = min(quantity, simpleCommoditySource.Quantity);
+    //         var simpleCommodityData = Cache.Get<SimpleCommodityData>(simpleCommoditySource.Data);
+    //         var spareCapacity = (int) (target.Capacity - target.OccupiedCapacity);
+    //         var simpleCommodityTarget = target.Cargo
+    //             .Select(i => Cache.Get<ItemInstance>(i))
+    //             .FirstOrDefault(i => i.Data == simpleCommodityData.ID) as SimpleCommodity;
+    //         var success = spareCapacity >= quantity;
+    //         quantity = min(quantity, spareCapacity);
+    //         if (simpleCommodityTarget == null)
+    //         {
+    //             if (quantity == simpleCommoditySource.Quantity)
+    //             {
+    //                 // Target has the cargo capacity to hold the full quantity,
+    //                 // and the target has no matching item instance;
+    //                 // simply move the existing item instance to the target
+    //                 source.Cargo.Remove(simpleCommoditySource.ID);
+    //                 target.Cargo.Add(simpleCommoditySource.ID);
+    //                 source.RecalculateMass();
+    //                 target.RecalculateMass();
+    //                 return success;
+    //             }
+    //             else
+    //             {
+    //                 // Target has the cargo capacity to hold the desired quantity
+    //                 // and the target has no matching item instance;
+    //                 // Create a new item instance on the target and decrement the quantity of the source instance
+    //                 var newSimpleCommodity = new SimpleCommodity
+    //                 {
+    //                     Context = this,
+    //                     Data = simpleCommodityData.ID,
+    //                     Quantity = simpleCommoditySource.Quantity
+    //                 };
+    //                 Cache.Add(newSimpleCommodity);
+    //                 target.Cargo.Add(newSimpleCommodity.ID);
+    //                 simpleCommoditySource.Quantity -= quantity;
+    //                 source.RecalculateMass();
+    //                 target.RecalculateMass();
+    //                 return success;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             if (quantity == simpleCommoditySource.Quantity)
+    //             {
+    //                 // Target has the cargo capacity to hold the full quantity,
+    //                 // and there is already a matching item instance;
+    //                 // delete the source entity's item instance and increment the target's quantity
+    //                 source.Cargo.Remove(simpleCommoditySource.ID);
+    //                 Cache.Delete(simpleCommoditySource);
+    //                 simpleCommodityTarget.Quantity += quantity;
+    //                 source.RecalculateMass();
+    //                 target.RecalculateMass();
+    //                 return success;
+    //             }
+    //             else
+    //             {
+    //                 // Target has the cargo capacity to hold the desired quantity,
+    //                 // and there is already a matching item instance;
+    //                 // decrement the source's quantity and increment the target's quantity
+    //                 simpleCommoditySource.Quantity -= quantity;
+    //                 simpleCommodityTarget.Quantity += quantity;
+    //                 source.RecalculateMass();
+    //                 target.RecalculateMass();
+    //                 return success;
+    //             }
+    //         }
+    //         
+    //     }
+    //     
+    //     return false;
+    // }
 }

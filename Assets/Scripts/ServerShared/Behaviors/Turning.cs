@@ -29,6 +29,12 @@ public class Turning : IAnalogBehavior
     
     public float Torque { get; private set; }
 
+    public float Axis
+    {
+        get => _input;
+        set => _input = clamp(value, -1, 1);
+    }
+
     public BehaviorData Data => _data;
     
     private TurningData _data;
@@ -41,11 +47,6 @@ public class Turning : IAnalogBehavior
         _data = data;
         Entity = entity;
         Item = item;
-    }
-    
-    public void SetAxis(float value)
-    {
-        _input = clamp(value, -1, 1);
     }
 
     public void Initialize()

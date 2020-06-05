@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using JM.LinqFaster;
 using NaughtyAttributes;
 using RethinkDb.Driver.Net;
 using TMPro;
@@ -389,14 +390,14 @@ public class StrategyGameManager : MonoBehaviour
                 belt.Value.Update();
             }
 
-            foreach (var ship in _zoneShips)
-            {
-                ship.Value.transform.position = float3(ship.Key.Position * ZoneSizeScale, .05f);
-                ship.Value.Icon.transform.up = (Vector2) ship.Key.Direction;
-                var thrusterScale = ship.Value.Thruster.localScale;
-                thrusterScale.x = ship.Key.Axes[ship.Key.GetAxis<Thruster>()].Value;
-                ship.Value.Thruster.localScale = thrusterScale;
-            }
+            // foreach (var ship in _zoneShips)
+            // {
+            //     ship.Value.transform.position = float3(ship.Key.Position * ZoneSizeScale, .05f);
+            //     ship.Value.Icon.transform.up = (Vector2) ship.Key.Direction;
+            //     var thrusterScale = ship.Value.Thruster.localScale;
+            //     thrusterScale.x = ship.Key.GetBehavior<Thruster>().Axis;
+            //     ship.Value.Thruster.localScale = thrusterScale;
+            // }
 
             var entities = _context.GetEntities(_populatedZone);
             var shipGameObjects = _zoneShips.Keys.ToList();
@@ -451,7 +452,7 @@ public class StrategyGameManager : MonoBehaviour
                 _zoneShips[ship].transform.position = float3(ship.Position * ZoneSizeScale, .05f);
                 _zoneShips[ship].Icon.transform.up = (Vector2) ship.Direction;
                 var thrusterScale = _zoneShips[ship].Thruster.localScale;
-                thrusterScale.x = ship.Axes[ship.GetAxis<Thruster>()].Value;
+                thrusterScale.x = ship.GetBehavior<Thruster>().Axis;
                 _zoneShips[ship].Thruster.localScale = thrusterScale;
                 _zoneShips[ship].Message.text = !ship.Messages.Any() ? "" : 
                     string.Join("\n", ship.Messages.OrderByDescending(x=>x.Value).Take(2).Select(x=>x.Key));
@@ -731,7 +732,7 @@ public class StrategyGameManager : MonoBehaviour
             PropertiesPanel.AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
             PropertiesPanel.AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
             var gearList = PropertiesPanel.AddList("Gear");
-            var equippedItems = entity.EquippedItems.Select(g => _context.Cache.Get<Gear>(g));
+            var equippedItems = entity.Hardpoints.Where(hp => hp.Gear != null).Select(hp => hp.Gear);
             foreach(var gear in equippedItems)
                 PopulateGearProperties(gearList.AddList(gear.ItemData.Name), gear, entity);
             if(!entity.Cargo.Any())

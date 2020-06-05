@@ -31,10 +31,10 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     public float2 Velocity;
     
     [JsonProperty("cargo"), Key(6)]
-    public readonly List<Guid> Cargo; // Type: ItemInstance
-    
-    [JsonProperty("equipment"), Key(7)]
-    public readonly List<Guid> EquippedItems; // Type: Gear
+    public readonly HashSet<Guid> Cargo; // Type: ItemInstance
+
+    [JsonProperty("gear"), Key(7)]
+    public readonly List<Guid> Gear;
     
     [JsonProperty("parent"), Key(8)]
     public Guid Parent; // Type: Entity
@@ -64,25 +64,22 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     public Dictionary<Guid, double> IncompleteGear = new Dictionary<Guid, double>();
     //public List<IncompleteItem> IncompleteGear = new List<IncompleteItem>();
     
-    [JsonProperty("incompleteGear"), Key(17)]
+    [JsonProperty("incompleteCargo"), Key(17)]
     public Dictionary<Guid, double> IncompleteCargo = new Dictionary<Guid, double>();
     //public List<IncompleteItem> IncompleteCargo = new List<IncompleteItem>();
     
-    // [IgnoreMember] protected List<IBehavior> Behaviors;
     [IgnoreMember] public Guid Zone;
-    [IgnoreMember] public Dictionary<int, List<IBehavior>> Behaviors;
-    [IgnoreMember] public Dictionary<int, Switch> Switches;
-    [IgnoreMember] public Dictionary<int, Trigger> Triggers;
-    [IgnoreMember] public Dictionary<int, AxisSetting> Axes;
-    [IgnoreMember] public Dictionary<int, float> AxisOverrides = new Dictionary<int, float>();
+    [IgnoreMember] public List<Hardpoint> Hardpoints;
     [IgnoreMember] public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     [IgnoreMember] public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
-    [IgnoreMember] public Dictionary<Gear, EquippableItemData> GearData;
-    [IgnoreMember] public Dictionary<Gear, List<IBehavior>> ItemBehaviors;
+    // [IgnoreMember] public Dictionary<Gear, EquippableItemData> GearData;
+    // [IgnoreMember] public Dictionary<Gear, List<IBehavior>> ItemBehaviors;
+
+    private bool _inventoryChanged;
 
     [IgnoreMember] public float Mass { get; private set; }
     [IgnoreMember] public float OccupiedCapacity { get; private set; }
-    [IgnoreMember] public float SpecificHeat { get; private set; }
+    [IgnoreMember] public float ThermalMass { get; private set; }
     [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
 
     public event Action OnInventoryUpdate;
@@ -104,102 +101,220 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     }
 
 
-    public Entity(GameContext context, Guid hull, IEnumerable<Guid> items, IEnumerable<Guid> cargo, Guid zone, Guid corporation)
+    public Entity(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid zone, Guid corporation)
     {
         Context = context;
         Zone = zone;
         Corporation = corporation;
 
-        EquippedItems = items.ToList();
-        Cargo = cargo.ToList();
+        Gear = gear.ToList();
+        Cargo = new HashSet<Guid>(cargo);
         Hull = hull;
 
+        Hydrate();
+    }
+
+    public void Hydrate()
+    {
+        //var gearIDs = EquippedItems.Append(Hull);
+        //var gear = gearIDs.ToDictionary(id => id, id => Context.Cache.Get<Gear>(id));
+        //GearData = gear.Values.ToDictionary(g => g, g => g.ItemData);
+        
+        Hardpoints = new List<Hardpoint>();
+        Hardpoints.Add(new Hardpoint
+        {
+            HardpointData = new HardpointData{ Type = HardpointType.Hull }
+        });
+        var hull = Context.Cache.Get<Gear>(Hull);
+        Equip(hull, Hardpoints[0]);
+        
+        var hullData = Context.Cache.Get<HullData>(hull.Data);
+        Hardpoints.AddRange(hullData.Hardpoints.Select(hd => new Hardpoint {HardpointData = hd}));
+
+        // Create a copy of the gear list and remove every item actually equipped
+        var remainingGear = new List<Guid>(Gear);
+        foreach (var gearID in Gear)
+            if (Equip(gearID))
+                remainingGear.Remove(gearID);
+
+        foreach (var remaining in remainingGear)
+        {
+            Context.Log($"Item {Context.Cache.Get<Gear>(remaining).Name} equipped on entity {Name} has no compatible hardpoint, moved to cargo.");
+            Gear.Remove(remaining);
+            Cargo.Add(remaining);
+        }
+        
+        foreach (var hardpoint in Hardpoints)
+            if(hardpoint.Gear!=null)
+                foreach (var behavior in hardpoint.Behaviors
+                    .Where(behavior => behavior is IInitializableBehavior))
+                    ((IInitializableBehavior) behavior).Initialize();
+        
         RecalculateMass();
-
-        AddItemBehaviors();
     }
 
-    public void AddItemBehaviors()
+    public void HydrateHardpoint(Hardpoint hardpoint)
     {
-        var gearIDs = EquippedItems.Append(Hull);
-        var gear = gearIDs.ToDictionary(id => id, id => Context.Cache.Get<Gear>(id));
-        GearData = gear.Values.ToDictionary(g => g, g => g.ItemData);
-        
-        // Associate items with behavior list, used for persistence and convenience
-        ItemBehaviors = gearIDs
-            .Where(i=> gear[i].ItemData.Behaviors?.Any()??false)
-            .ToDictionary(i=> gear[i], i => gear[i].ItemData.Behaviors
-                .OrderBy(bd => bd.GetType().GetCustomAttribute<OrderAttribute>()?.Order ?? 0)
-                .Select(bd => bd.CreateInstance(Context, this, gear[i]))
-                .ToList());
+        if (hardpoint.Gear == null)
+        {
+            Context.Log("Attempted to hydrate hardpoint with no gear on it!");
+            return;
+        }
 
-        var behaviorGroups = ItemBehaviors
-            .SelectMany(x => x.Value
-                .Select(b => new {item = x.Key, behavior = b}))
-            .GroupBy(ib => new {ib.item, ib.behavior.Data.Group});
+        hardpoint.Behaviors = hardpoint.Gear.ItemData.Behaviors
+            .Select(bd => bd.CreateInstance(Context, this, hardpoint.Gear))
+            .ToArray();
         
-        Behaviors = behaviorGroups
-            .Select((grouping, i) => new {index = i, group = grouping})
-            .ToDictionary(ig => ig.index, ig => ig.group.Select(x => x.behavior).ToList());
-        
-        Switches = Behaviors
-            .Where(x => x.Value.Any(g => g is Switch))
-            .Select((x, i) => new {index = i, s = x.Value.First(g => g is Switch) as Switch})
-            .ToDictionary(x => x.index, x => x.s);
-        
-        Triggers = Behaviors
-            .Where(x => x.Value.Any(g => g is Trigger))
-            .Select((x, i) => new {index = i, s = x.Value.First(g => g is Trigger) as Trigger})
-            .ToDictionary(x => x.index, x => x.s);
-        
-        Axes = Behaviors
-            .Where(x => x.Value.Any(g => g is IAnalogBehavior))
-            .Select((x, i) => new {index = i, behaviors = x.Value
-                .Where(g => g is IAnalogBehavior)
-                .Cast<IAnalogBehavior>().ToList()})
-            .ToDictionary(x => x.index, x => new AxisSetting{Behaviors = x.behaviors, Value = 0f});
-        
-        // Axes = Behaviors.Values
-        //     .SelectMany(behaviors=>behaviors)
-        //     .Where(b => b is IAnalogBehavior)
-        //     .ToDictionary(b => b as IAnalogBehavior, b => 0f);
-        
-        foreach (var behavior in Behaviors.Values
-            .SelectMany(behaviors=>behaviors)
-            .Where(behavior => behavior is IInitializableBehavior)
-            .Cast<IInitializableBehavior>()) behavior.Initialize();
+        hardpoint.BehaviorGroups = hardpoint.Behaviors
+            .GroupBy(b => b.Data.Group)
+            .OrderBy(g=>g.Key)
+            .Select(g=>new BehaviorGroup { 
+                    Behaviors = g.ToArray(),
+                    //Axis = (IAnalogBehavior) g.FirstOrDefault(b=>b is IAnalogBehavior),
+                    Switch = (Switch) g.FirstOrDefault(b=>b is Switch),
+                    Trigger = (Trigger) g.FirstOrDefault(b=>b is Trigger)
+                })
+            .ToArray();
     }
 
-    public void Equip(Gear gear)
+    public void Equip(Gear gear, Hardpoint hardpoint)
     {
-        if (Cargo.Contains(gear.ID)) Cargo.Remove(gear.ID);
-        else if (IncompleteGear.Any(ig => ig.Key == gear.ID))
-            IncompleteGear.Remove(IncompleteGear.First(ig => ig.Key == gear.ID).Key);
-        else
+        // Hardpoint is occupied, remove existing item from gear list
+        if (hardpoint.Gear != null)
+        {
+            Gear.Remove(hardpoint.Gear.ID);
+            Cargo.Add(hardpoint.Gear.ID);
+        }
+        
+        hardpoint.Gear = gear;
+        HydrateHardpoint(hardpoint);
+        _inventoryChanged = true;
+    }
+
+    public bool Equip(Guid gearID, bool force = false)
+    {
+        // Check all portions of inventory for a matching item
+        if (Cargo.Contains(gearID)) Cargo.Remove(gearID);
+        else if (IncompleteGear.ContainsKey(gearID))
+            IncompleteGear.Remove(gearID);
+        else if(!Gear.Contains(gearID))
             throw new ArgumentException("Attempted to equip gear which is not present in inventory!");
+        
+        var gear = Context.Cache.Get<Gear>(gearID);
+        var gearData = Context.Cache.Get<GearData>(gear.Data);
+        
+        // Find an empty hardpoint of the correct type
+        var hardpoint = Hardpoints
+            .FirstOrDefault(hp => hp.Gear == null && hp.HardpointData.Type == gearData.HardpointType);
 
-        EquippedItems.Add(gear.ID);
-        OnBeforeSerialize();
-        OnAfterDeserialize();
+        // With force option enabled, we'll try to find an empty hardpoint but otherwise any will do
+        if (hardpoint == null && force)
+            hardpoint = Hardpoints
+                .FirstOrDefault(hp => hp.HardpointData.Type == gearData.HardpointType);
+
+        // No compatible hardpoint found, return false
+        if (hardpoint == null)
+            return false;
+
+        Equip(gear, hardpoint);
+        return true;
     }
 
-    // public Guid Build(BlueprintData blueprint)
-    // {
-    //     var gear = Context.CreateInstance(blueprint.Item, blueprint.Quality * .5f, blueprint.Quality);
-    //     IncompleteGear[gear.ID] = blueprint.ProductionTime;
-    //     RecalculateMass();
-    //     return gear.ID;
-    //     // IncompleteGear.Add(new IncompleteItem
-    //     // {
-    //     //     Item = gear.ID,
-    //     //     Blueprint = blueprint.ID,
-    //     //     RemainingTime = blueprint.ProductionTime
-    //     // });
-    // }
-
-    public List<Guid> Build(BlueprintData blueprint, float quality, string name, bool equip = false)
+    public CraftedItemInstance AddCargo(CraftedItemInstance item)
     {
-        if (equip)
+        Cargo.Add(item.ID);
+        Mass += item.Mass;
+        ThermalMass += item.ThermalMass;
+        OccupiedCapacity += item.Size;
+        _inventoryChanged = true;
+        return item;
+    }
+
+    public CraftedItemInstance RemoveCargo(CraftedItemInstance item)
+    {
+        if(!Cargo.Contains(item.ID))
+            throw new ArgumentException("Attempted to remove an item which is not in cargo!");
+        Cargo.Remove(item.ID);
+        Mass -= item.Mass;
+        ThermalMass -= item.ThermalMass;
+        OccupiedCapacity -= item.Size;
+        _inventoryChanged = true;
+        return item;
+    }
+
+    public SimpleCommodity AddCargo(SimpleCommodity item)
+    {
+        // Regardless of whether a match is found, the item's mass and size are added to the entity
+        Mass += item.Mass;
+        ThermalMass += item.ThermalMass;
+        OccupiedCapacity += item.Size;
+        
+        // Try to find an matching instance of the same commodity in cargo
+        var existingCommodityID = Cargo.FirstOrDefault(id =>
+            Context.Cache.Get<ItemInstance>(id) is SimpleCommodity simpleCommodity &&
+            simpleCommodity.ItemData == item.ItemData);
+        
+        // A match was found, delete the original item and increment the quantity of the match
+        if (existingCommodityID != Guid.Empty)
+        {
+            var existingCommodity = Context.Cache.Get<SimpleCommodity>(existingCommodityID);
+            existingCommodity.Quantity += item.Quantity;
+            Context.Cache.Delete(item);
+            return existingCommodity;
+        }
+        
+        // No match was found, simply add the item instance to the cargo
+        Cargo.Add(item.ID);
+        _inventoryChanged = true;
+        return item;
+    }
+
+    public SimpleCommodity RemoveCargo(SimpleCommodity item, int quantity)
+    {
+        if(!Cargo.Contains(item.ID))
+            throw new ArgumentException("Attempted to remove an item which is not in cargo!");
+        
+        // If the quantity matches exactly, huzzah, just remove the instance from cargo
+        if (item.Quantity == quantity)
+            Cargo.Remove(item.ID);
+        else
+        {
+            // Quantity does not match, create new item instance and decrement source quantity
+            var newSimpleCommodity = new SimpleCommodity
+            {
+                Context = Context,
+                Data = item.Data,
+                Quantity = quantity
+            };
+            item.Quantity -= quantity;
+            item = newSimpleCommodity;
+        }
+        
+        Mass -= item.Mass;
+        ThermalMass -= item.ThermalMass;
+        OccupiedCapacity -= item.Size;
+
+        _inventoryChanged = true;
+        return item;
+    }
+
+    public void AddChild(Entity entity)
+    {
+        Mass += entity.Mass;
+        ThermalMass += entity.ThermalMass;
+        Children.Add(entity.ID);
+    }
+
+    public void RemoveChild(Entity entity)
+    {
+        Mass -= entity.Mass;
+        ThermalMass -= entity.ThermalMass;
+        Children.Remove(entity.ID);
+    }
+
+    public Guid Build(BlueprintData blueprint, float quality, string name, bool direct = false)
+    {
+        if (direct)
         {
             if(blueprint.FactoryItem!=Guid.Empty)
                 throw new ArgumentException("Attempted to directly build a blueprint which requires a factory!");
@@ -207,109 +322,70 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             if(blueprintItem == null)
                 throw new ArgumentException("Attempted to directly build a blueprint for a missing or incompatible item!");
         }
+
+        //var newItemID = Guid.Empty;
+
+        // GetBlueprintIngredients will assign the output lists with the items matching the blueprint, and return false if they are not found
+        if (!GetBlueprintIngredients(blueprint, out var simpleIngredients, out var compoundIngredients))
+            return Guid.Empty;
         
-        var newItems = new List<Guid>();
-        if (GetBlueprintIngredients(blueprint, out var simpleIngredients, out var compoundIngredients))
+        // These will be bundled with the data for the compound commodity instance
+        var ingredients = new List<ItemInstance>();
+        ingredients.AddRange(compoundIngredients.Select(RemoveCargo));
+        ingredients.AddRange(simpleIngredients.Select(sc => RemoveCargo(sc, blueprint.Ingredients[sc.Data])));
+            
+        var blueprintItemData = Context.Cache.Get(blueprint.Item);
+        
+        // Creating new crafted item instances is a bit more complicated
+        if (blueprintItemData is CraftedItemData)
         {
-            var ingredients = new List<ItemInstance>();
-            ingredients.AddRange(compoundIngredients);
-            foreach (var compoundCommodity in compoundIngredients)
-            {
-                Cargo.Remove(compoundCommodity.ID);
-            }
-            foreach (var simpleCommodity in simpleIngredients)
-            {
-                var blueprintQuantity = blueprint.Ingredients
-                    .First(ingredient => ingredient.Key == simpleCommodity.ItemData.ID).Value;
-                if (simpleCommodity.Quantity == blueprintQuantity)
-                {
-                    ingredients.Add(simpleCommodity);
-                    Cargo.Remove(simpleCommodity.ID);
-                }
-                else
-                {
-                    var newSimpleCommodity = new SimpleCommodity
-                    {
-                        Context = Context,
-                        Data = simpleCommodity.Data,
-                        Quantity = blueprintQuantity
-                    };
-                    simpleCommodity.Quantity -= blueprintQuantity;
-                    ingredients.Add(newSimpleCommodity);
-                }
-            }
+            CraftedItemInstance newItem;
             
-            var blueprintItemData = Context.Cache.Get(blueprint.Item);
-            
-            if (blueprintItemData is CraftedItemData)
+            if (blueprintItemData is EquippableItemData equippableItemData)
             {
-                for (int i = 0; i < blueprint.Quantity; i++)
-                {
-                    CraftedItemInstance newItem;
-                
-                    if (blueprintItemData is EquippableItemData equippableItemData)
-                    {
-                        var newGear = new Gear
-                        {
-                            Context = Context,
-                            Data = blueprintItemData.ID,
-                            Ingredients = ingredients.Select(ii=>ii.ID).ToList(),
-                            Quality = quality,
-                            Blueprint = blueprint.ID,
-                            Name = name
-                        };
-                        newGear.Durability = Context.Evaluate(equippableItemData.Durability, newGear);
-                        newItem = newGear;
-                    }
-                    else
-                    {
-                        newItem = new CompoundCommodity
-                        {
-                            Context = Context,
-                            Data = blueprintItemData.ID,
-                            Ingredients = ingredients.Select(ii=>ii.ID).ToList(),
-                            Quality = quality,
-                            Blueprint = blueprint.ID,
-                            Name = name
-                        };
-                    }
-                    Context.Cache.Add(newItem);
-                    if (equip)
-                        IncompleteGear[newItem.ID] = blueprint.ProductionTime;
-                    else 
-                        IncompleteCargo[newItem.ID] = blueprint.ProductionTime;
-                    newItems.Add(newItem.ID);
-                    // IncompleteCargo.Add(new IncompleteItem
-                    // {
-                    //     Item = newItem.ID,
-                    //     Blueprint = blueprint.ID,
-                    //     RemainingTime = blueprint.ProductionTime
-                    // });
-                }
-            }
-            else
-            {
-                var newSimpleCommodity = new SimpleCommodity
+                var newGear = new Gear
                 {
                     Context = Context,
                     Data = blueprintItemData.ID,
-                    Quantity = blueprint.Quantity
+                    Ingredients = ingredients.Select(ii=>ii.ID).ToList(),
+                    Quality = quality,
+                    Blueprint = blueprint.ID,
+                    Name = name,
+                    SourceEntity = ID
                 };
-                Context.Cache.Add(newSimpleCommodity);
-                IncompleteCargo[newSimpleCommodity.ID] = blueprint.ProductionTime;
-                newItems.Add(newSimpleCommodity.ID);
-                // IncompleteCargo.Add(new IncompleteItem
-                // {
-                //     Item = newSimpleCommodity.ID,
-                //     Blueprint = blueprint.ID,
-                //     RemainingTime = blueprint.ProductionTime
-                // });
+                newGear.Durability = Context.Evaluate(equippableItemData.Durability, newGear);
+                newItem = newGear;
             }
-                
-            RecalculateMass();
+            else
+            {
+                newItem = new CompoundCommodity
+                {
+                    Context = Context,
+                    Data = blueprintItemData.ID,
+                    Ingredients = ingredients.Select(ii=>ii.ID).ToList(),
+                    Quality = quality,
+                    Blueprint = blueprint.ID,
+                    Name = name,
+                    SourceEntity = ID
+                };
+            }
+            Context.Cache.Add(newItem);
+            if (direct)
+                IncompleteGear[newItem.ID] = blueprint.ProductionTime;
+            else 
+                IncompleteCargo[newItem.ID] = blueprint.ProductionTime;
+            return newItem.ID;
         }
 
-        return newItems;
+        var newSimpleCommodity = new SimpleCommodity
+        {
+            Context = Context,
+            Data = blueprintItemData.ID,
+            Quantity = 1
+        };
+        Context.Cache.Add(newSimpleCommodity);
+        IncompleteCargo[newSimpleCommodity.ID] = blueprint.ProductionTime;
+        return newSimpleCommodity.ID;
     }
 
     public bool GetBlueprintIngredients(BlueprintData blueprint, out List<SimpleCommodity> simpleIngredients,
@@ -349,23 +425,21 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     public void RecalculateMass()
     {
         Mass = Context.Cache.Get<Gear>(Hull).Mass + 
-            EquippedItems.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.Mass) + 
+            Gear.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.Mass) + 
             IncompleteGear.Select(i => Context.Cache.Get<Gear>(i.Key)).Sum(i => i.Mass) + 
             Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.Mass) + 
             IncompleteCargo.Select(i => Context.Cache.Get<ItemInstance>(i.Key)).Sum(ii => ii.Mass) + 
             Children.Select(i => Context.Cache.Get<Entity>(i)).Sum(c=>c.Mass);
         
-        SpecificHeat = Context.Cache.Get<Gear>(Hull).HeatCapacity + 
-                       EquippedItems.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.HeatCapacity) +
-                       IncompleteGear.Select(i => Context.Cache.Get<Gear>(i.Key)).Sum(i => i.HeatCapacity) + 
-                       Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.HeatCapacity) + 
-                       IncompleteCargo.Select(i => Context.Cache.Get<ItemInstance>(i.Key)).Sum(ii => ii.HeatCapacity) + 
-                       Children.Select(i => Context.Cache.Get<Entity>(i)).Sum(c=>c.SpecificHeat);
+        ThermalMass = Context.Cache.Get<Gear>(Hull).ThermalMass + 
+                       Gear.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.ThermalMass) +
+                       IncompleteGear.Select(i => Context.Cache.Get<Gear>(i.Key)).Sum(i => i.ThermalMass) + 
+                       Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.ThermalMass) + 
+                       IncompleteCargo.Select(i => Context.Cache.Get<ItemInstance>(i.Key)).Sum(ii => ii.ThermalMass) + 
+                       Children.Select(i => Context.Cache.Get<Entity>(i)).Sum(c=>c.ThermalMass);
 
-        OccupiedCapacity = EquippedItems.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.ItemData.Size) +
-                           Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => Context.GetSize(ii));
-        
-        OnInventoryUpdate?.Invoke();
+        OccupiedCapacity = Gear.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.Size) +
+                           Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.Size);
     }
 
     public void ClearInventoryListeners()
@@ -373,52 +447,54 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         OnInventoryUpdate = null;
     }
 
+    public T GetBehavior<T>() where T : class, IBehavior
+    {
+        foreach (var hardpoint in Hardpoints)
+            if(hardpoint.Gear!=null)
+                foreach (var behavior in hardpoint.Behaviors)
+                    if (behavior is T b)
+                        return b;
+        return null;
+    }
+
     public IEnumerable<T> GetBehaviors<T>() where T : class, IBehavior
     {
-        foreach (var behaviors in Behaviors.Values)
-            foreach (var behavior in behaviors)
-                if (behavior is T b)
-                    yield return b;
+        foreach (var hardpoint in Hardpoints)
+            if(hardpoint.Gear!=null)
+                foreach (var behavior in hardpoint.Behaviors)
+                    if (behavior is T b)
+                        yield return b;
     }
 
     public IEnumerable<T> GetBehaviorData<T>() where T : BehaviorData
     {
-        foreach (var behaviors in Behaviors.Values)
-            foreach (var behavior in behaviors)
-                if (behavior.Data is T b)
-                    yield return b;
+        foreach (var hardpoint in Hardpoints)
+            if(hardpoint.Gear!=null)
+                foreach (var behavior in hardpoint.Behaviors)
+                    if (behavior.Data is T b)
+                        yield return b;
     }
 
-    public int GetAxis(IAnalogBehavior behavior)
+    public Switch GetSwitch<T>() where T : class, IBehavior
     {
-        var axis = Axes.FirstOrDefault(x => x.Value.Behaviors.Contains(behavior));
-        if (axis.IsNull())
-            return -1;
-        return axis.Key;
+        foreach (var hardpoint in Hardpoints)
+            if(hardpoint.Gear!=null)
+                foreach (var group in hardpoint.BehaviorGroups)
+                    foreach(var behavior in group.Behaviors)
+                        if (behavior is T)
+                            return group.Switch;
+        return null;
     }
 
-    public int GetAxis<T>() where T : class, IBehavior
+    public Trigger GetTrigger<T>() where T : class, IBehavior
     {
-        foreach (var axis in Axes)
-            foreach (var behavior in axis.Value.Behaviors)
-                if (behavior is T)
-                    return axis.Key;
-        return -1;
-    }
-
-    public int GetSwitch<T>() where T : class, IBehavior
-    {
-        var s = Behaviors
-            .FirstOrDefault(x => x.Value.Any(g => g is Switch) && x.Value.Any(g => g is T))
-            .Value.First(g => g is Switch) as Switch;
-        return Switches.FirstOrDefault(kvp => kvp.Value == s).Key;
-    }
-
-    public Switch GetSwitch(IBehavior behavior)
-    {
-        return Behaviors
-            .FirstOrDefault(x => x.Value.Any(g => g == behavior))
-            .Value.First(g => g is Switch) as Switch;
+        foreach (var hardpoint in Hardpoints)
+            if(hardpoint.Gear!=null)
+                foreach (var group in hardpoint.BehaviorGroups)
+                    foreach(var behavior in group.Behaviors)
+                        if (behavior is T)
+                            return group.Trigger;
+        return null;
     }
 
     public void AddHeat(float heat)
@@ -429,29 +505,25 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             // parent.AddHeat(heat);
         }
         else
-            Temperature += heat / SpecificHeat;
+            Temperature += heat / ThermalMass;
 
     }
 
     public virtual void Update(float delta)
     {
-        foreach(var axis in Axes)
-            foreach(var analogBehavior in axis.Value.Behaviors)
-                analogBehavior.SetAxis(AxisOverrides.ContainsKey(axis.Key) ? AxisOverrides[axis.Key] : Axes[axis.Key].Value);
-
-        foreach (var group in Behaviors.Values)
-            foreach(var behavior in group)
-                if(!behavior.Update(delta))
-                    break;
-        
-        foreach (var behaviors in Behaviors.Values)
-            foreach (var behavior in behaviors.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
+        foreach (var hardpoint in Hardpoints.Where(hp=>hp.Gear!=null))
+        {
+            foreach (var group in hardpoint.BehaviorGroups)
+                foreach(var behavior in group.Behaviors)
+                    if(!behavior.Update(delta))
+                        break;
+            
+            foreach (var behavior in hardpoint.Behaviors.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
                 behavior.AlwaysUpdate(delta);
-
-        foreach (var item in EquippedItems
-            .Select(item => Context.Cache.Get<Gear>(item))
-            .Where(item => item.ItemData.Performance(Temperature) < .01f))
-            item.Durability -= delta;
+            
+            if(hardpoint.Gear.ItemData.Performance(Temperature) < .01f)
+                hardpoint.Gear.Durability -= delta;
+        }
 
         if (Parent != Guid.Empty)
         {
@@ -462,11 +534,11 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         }
 
         // Processing stale item data properly was a pain in my ass, so the shortcut is just persisting and restoring everything
-        if (GearData.Any(kvp => kvp.Key.ItemData != kvp.Value))
-        {
-            OnBeforeSerialize();
-            OnAfterDeserialize();
-        }
+        // if (Hardpoints.Any(hp => hp.Gear.ItemData != hp.ItemData))
+        // {
+        //     OnBeforeSerialize();
+        //     OnAfterDeserialize();
+        // }
 
         foreach (var message in Messages.Keys.ToArray())
         {
@@ -478,10 +550,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         foreach (var incompleteGear in IncompleteGear.Keys.ToArray())
         {
             IncompleteGear[incompleteGear] = IncompleteGear[incompleteGear] - delta;
-            if (IncompleteGear[incompleteGear] < 0)
-            {
-                Equip(Context.Cache.Get<Gear>(incompleteGear));
-            }
+            if (IncompleteGear[incompleteGear] < 0) Equip(incompleteGear);
         }
 
         // Here's the PITA way
@@ -548,9 +617,9 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         // Filter item behavior collections by those with any persistent behaviors
         // For each item create an object containing the item ID and a list of persistent behaviors
         // Then turn that into a dictionary mapping from item ID to an array of every behaviors persistent data
-        PersistedBehaviors = ItemBehaviors
-            .Where(x => x.Value.Any(b=>b is IPersistentBehavior))
-            .Select(x => new {gear=x.Key, behaviors = x.Value
+        PersistedBehaviors = Hardpoints
+            .Where(hp => hp.Behaviors.Any(b=>b is IPersistentBehavior))
+            .Select(hp => new {gear=hp.Gear, behaviors = hp.Behaviors
                 .Where(b=>b is IPersistentBehavior)
                 .Cast<IPersistentBehavior>()})
             .ToDictionary(x=> x.gear.ID, x=>x.behaviors.Select(b => b.Store()).ToArray());
@@ -558,32 +627,34 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
     public void OnAfterDeserialize()
     {
-        AddItemBehaviors();
-        
-        RecalculateMass();
+        Hydrate();
 
         // Iterate only over the behaviors of items which contain persistent data
         // Filter the behaviors for each item to get the persistent ones, then cast them and combine with the persisted data array for that item
-        foreach (var persistentBehaviorData in ItemBehaviors
-            .Where(itemBehaviors => PersistedBehaviors.ContainsKey(itemBehaviors.Key.ID)).
-            SelectMany(itemBehaviors => itemBehaviors.Value
+        foreach (var persistentBehaviorData in Hardpoints
+            .Where(hardpoint => PersistedBehaviors.ContainsKey(hardpoint.Gear.ID)).
+            SelectMany(hardpoint => hardpoint.Behaviors
                 .Where(b=> b is IPersistentBehavior)
                 .Cast<IPersistentBehavior>()
-                .Zip(PersistedBehaviors[itemBehaviors.Key.ID], (behavior, data) => new{behavior, data})))
+                .Zip(PersistedBehaviors[hardpoint.Gear.ID], (behavior, data) => new{behavior, data})))
             persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
     }
 }
 
-public class AxisSetting
+//[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class Hardpoint
 {
-    public float Value;
-    public List<IAnalogBehavior> Behaviors;
+    public Gear Gear;
+    public EquippableItemData ItemData;
+    public HardpointData HardpointData;
+    public IBehavior[] Behaviors;
+    public BehaviorGroup[] BehaviorGroups;
 }
 
-[MessagePackObject]
-public class IncompleteItem
+public class BehaviorGroup
 {
-    [Key(0)] public Guid Item;
-    [Key(1)] public Guid Blueprint;
-    [Key(2)] public double RemainingTime;
+    public IBehavior[] Behaviors;
+    public Trigger Trigger;
+    public Switch Switch;
+    //public IAnalogBehavior Axis;
 }

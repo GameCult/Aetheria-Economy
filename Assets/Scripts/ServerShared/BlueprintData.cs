@@ -18,43 +18,40 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     [JsonProperty("item"), Key(3)]  
     public Guid Item;
 
-    [InspectableField, JsonProperty("quantity"), Key(4)]
-    public int Quantity;
-
-    [InspectableField, JsonProperty("productionTime"), Key(5)]
+    [InspectableField, JsonProperty("productionTime"), Key(4)]
     public float ProductionTime;
 
-    [InspectableField, JsonProperty("quality"), Key(6)]
+    [InspectableField, JsonProperty("quality"), Key(5)]
     public float Quality;
 
-    [InspectableField, JsonProperty("qualityExponent"), Key(7)]
+    [InspectableField, JsonProperty("qualityExponent"), Key(6)]
     public float QualityExponent = 1;
 
-    [InspectableField, JsonProperty("productionExponent"), Key(8)]
+    [InspectableField, JsonProperty("productionExponent"), Key(7)]
     public float ProductionExponent = 1;
 
-    [InspectableField, JsonProperty("randomExponent"), Key(9)]
+    [InspectableField, JsonProperty("randomExponent"), Key(8)]
     public float RandomExponent = 1;
 
-    [InspectableField, JsonProperty("qualityFloor"), Key(10)]
+    [InspectableField, JsonProperty("qualityFloor"), Key(9)]
     public float QualityFloor = .25f;
 
-    [InspectableField, JsonProperty("statEffects"), Key(11)]
+    [InspectableField, JsonProperty("statEffects"), Key(10)]
     public List<BlueprintStatEffect> StatEffects = new List<BlueprintStatEffect>();
 
-    [InspectableField, JsonProperty("researchTime"), Key(12)]
+    [InspectableField, JsonProperty("researchTime"), Key(11)]
     public float ResearchTime;
     
-    [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("researchDependencies"), Key(13)]
+    [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("researchDependencies"), Key(12)]
     public List<Guid> Dependencies = new List<Guid>();
 
-    [InspectableDatabaseLink(typeof(CraftedItemData)), JsonProperty("factoryItem"), Key(14)]
+    [InspectableDatabaseLink(typeof(CraftedItemData)), JsonProperty("factoryItem"), Key(13)]
     public Guid FactoryItem;
 
-    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("resourceRequirements"), Key(15)]  
+    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("resourceRequirements"), Key(14)]  
     public Dictionary<Guid, int> ResourceRequirements = new Dictionary<Guid, int>();
     
-    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("productionProfile"), Key(16)]  
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("productionProfile"), Key(15)]  
     public Dictionary<Guid, float> ProductionProfile = new Dictionary<Guid, float>();
     
     [IgnoreMember] public string EntryName

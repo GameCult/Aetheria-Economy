@@ -54,15 +54,17 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
             if (statField != null)
             {
                 if (typeof(EquippableItemData).IsAssignableFrom(targetType))
-                    _stats = Entity.EquippedItems.Append(Entity.Hull)
-                        .Select(id => Context.Cache.Get<Gear>(id))
+                    _stats = Entity.Hardpoints
+                        .Select(hp => hp.Gear)
+                        .Where(gear => gear != null)
                         .Where(gear => _data.RequireBehavior == null || gear.ItemData.Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
                         .Where(gear => gear.ItemData.GetType() == targetType)
                         .Select(gear => statField.GetValue(gear.ItemData) as PerformanceStat)
                         .ToArray();
                 else
-                    _stats = Entity.EquippedItems.Append(Entity.Hull)
-                        .Select(id => Context.Cache.Get<Gear>(id))
+                    _stats = Entity.Hardpoints
+                        .Select(hp => hp.Gear)
+                        .Where(gear => gear != null)
                         .Where(gear => _data.RequireBehavior == null || gear.ItemData.Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
                         .SelectMany(gear => gear.ItemData.Behaviors)
                         .Where(behaviorData => behaviorData.GetType() == targetType)

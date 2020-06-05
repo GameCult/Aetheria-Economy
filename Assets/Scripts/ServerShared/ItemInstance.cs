@@ -22,7 +22,8 @@ public abstract class ItemInstance : DatabaseEntry
     [JsonProperty("data"), Key(1)]  public Guid Data;
 
     public float Mass => Context.GetMass(this);
-    public float HeatCapacity => Context.GetHeatCapacity(this);
+    public float ThermalMass => Context.GetThermalMass(this);
+    public float Size => Context.GetSize(this);
 }
 
 [Union(0, typeof(CompoundCommodity)), 
@@ -38,6 +39,8 @@ public abstract class CraftedItemInstance : ItemInstance
     [JsonProperty("blueprint"), Key(4)]  public Guid Blueprint;
     
     [JsonProperty("name"), Key(5)]  public string Name;
+    
+    [JsonProperty("sourceEntity"), Key(6)]  public Guid SourceEntity;
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -54,15 +57,7 @@ public class SimpleCommodity : ItemInstance
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class Gear : CraftedItemInstance
 {
-    [JsonProperty("durability"), Key(5)]  public float Durability;
+    [JsonProperty("durability"), Key(7)]  public float Durability;
 
     public EquippableItemData ItemData => Context.GetData(this);
-}
-
-[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class Hardpoint
-{
-    [JsonProperty("item"), Key(0)]  public Gear Item;
-    
-    [IgnoreMember] public HardpointData HardpointData;
 }

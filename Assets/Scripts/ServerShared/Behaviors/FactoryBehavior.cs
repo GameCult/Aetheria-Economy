@@ -27,7 +27,7 @@ public class Factory : IBehavior, IPersistentBehavior
     public float ProductionQuality;
     public double RetoolingTime;
     public string ItemName;
-    public List<Guid> ItemsUnderConstruction = new List<Guid>();
+    public Guid ItemUnderConstruction;
     
     public Entity Entity { get; }
     public Gear Item { get; }
@@ -47,20 +47,21 @@ public class Factory : IBehavior, IPersistentBehavior
                 _blueprint = value;
                 RetoolingTime = ToolingTime;
                 _retooling = true;
-                OnToolingUpdate?.Invoke();
-                OnToolingUpdate = null;
+                OnProductionUpdate?.Invoke();
+                OnProductionUpdate = null;
                 ItemName = Context.Cache.Get<BlueprintData>(value).Name;
             }
         }
     }
 
-    public event Action OnToolingUpdate;
+    public event Action OnProductionUpdate;
     
     private FactoryData _data;
     
     private Guid _blueprint;
     private int _assignedPopulation;
     private bool _retooling = false;
+    private float _currentProductionQuality;
 
     public Factory(GameContext context, FactoryData data, Entity entity, Gear item)
     {
@@ -86,40 +87,37 @@ public class Factory : IBehavior, IPersistentBehavior
         if (_retooling)
         {
             _retooling = false;
-            OnToolingUpdate?.Invoke();
-            OnToolingUpdate = null;
+            OnProductionUpdate?.Invoke();
         }
 
-        if (ItemsUnderConstruction.Any())
+        if (ItemUnderConstruction != Guid.Empty)
         {
-            var finishedConstruction = false;
-            foreach (var item in ItemsUnderConstruction.ToArray())
+            Entity.IncompleteCargo[ItemUnderConstruction] =
+                Entity.IncompleteCargo[ItemUnderConstruction] - delta * (_assignedPopulation + _data.AutomationPoints) /
+                pow(lerp(blueprint.QualityFloor, 1, saturate(_currentProductionQuality)),
+                    blueprint.ProductionExponent);
+            
+            if(Entity.IncompleteCargo[ItemUnderConstruction] < 0)
             {
-                Entity.IncompleteCargo[item] =
-                    Entity.IncompleteCargo[item] - delta * (_assignedPopulation + _data.AutomationPoints) /
-                    pow(lerp(blueprint.QualityFloor, 1, saturate(ProductionQuality)),
-                        blueprint.ProductionExponent);
-                if(Entity.IncompleteCargo[item] < 0)
-                {
-                    Entity.Cargo.Add(item);
-                    Entity.IncompleteCargo.Remove(item);
-                    ItemsUnderConstruction.Remove(item);
-                    finishedConstruction = true;
-                }
+                var item = Context.Cache.Get<ItemInstance>(ItemUnderConstruction);
+                if (item is SimpleCommodity simpleCommodity)
+                    Entity.AddCargo(simpleCommodity);
+                else if (item is CraftedItemInstance craftedItemInstance)
+                    Entity.AddCargo(craftedItemInstance);
+                Entity.IncompleteCargo.Remove(ItemUnderConstruction);
+                ItemUnderConstruction = Guid.Empty;
             }
-            if(finishedConstruction)
-                Entity.RecalculateMass();
 
             return true;
         }
 
         // Applying exponents to two random numbers and adding them produces a range of interesting probability distributions for quality
-        ItemsUnderConstruction = Entity.Build(blueprint, blueprint.Quality *
+        ItemUnderConstruction = Entity.Build(blueprint, blueprint.Quality *
             pow(ProductionQuality, blueprint.QualityExponent) *
             (pow(Context.Random.NextFloat(), blueprint.RandomExponent) +
              pow(Context.Random.NextFloat(), blueprint.RandomExponent)) / 2, ItemName);
-        if(ItemsUnderConstruction.Any())
-            Entity.RecalculateMass(); // TODO: FIX THIS UGLY HACK, needed to update UI
+        
+        OnProductionUpdate?.Invoke();
         
         return false;
     }

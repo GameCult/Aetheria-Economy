@@ -23,7 +23,7 @@ public interface IBehavior
 
 public interface IAnalogBehavior : IBehavior
 {
-    void SetAxis(float value);
+    float Axis { get; set; }
 }
 
 public interface IDisposableBehavior

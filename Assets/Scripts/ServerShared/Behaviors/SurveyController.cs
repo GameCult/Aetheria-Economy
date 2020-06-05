@@ -42,8 +42,8 @@ public class SurveyController : ControllerBase, IBehavior, IPersistentBehavior, 
 
     public new void Initialize()
     {
-        _scanningTool = _entity.GetBehaviors<ResourceScanner>().First();
-        _toolSwitch = _entity.GetSwitch(_scanningTool);
+        _scanningTool = _entity.GetBehavior<ResourceScanner>();
+        _toolSwitch = _entity.GetSwitch<ResourceScanner>();
         base.Initialize();
     }
 

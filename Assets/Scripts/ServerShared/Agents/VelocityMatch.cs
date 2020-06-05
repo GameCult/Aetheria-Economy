@@ -12,18 +12,14 @@ public class VelocityMatch : AgentBehavior
     private Thruster _thrust;
     private Turning _turning;
     private const float TargetThreshold = .1f;
-    private int _thrustAxis;
-    private int _turningAxis;
 
     private GameContext _context;
 
     public VelocityMatch(GameContext context, Entity entity, ControllerData controllerData) : base(context, entity, controllerData)
     {
         _context = context;
-        _thrust = Entity.GetBehaviors<Thruster>().FirstOrDefault();
-        _turning = Entity.GetBehaviors<Turning>().FirstOrDefault();
-        _thrustAxis = Entity.GetAxis<Thruster>();
-        _turningAxis = Entity.GetAxis<Turning>();
+        _thrust = Entity.GetBehavior<Thruster>();
+        _turning = Entity.GetBehavior<Turning>();
     }
 
     public void Clear()
@@ -38,8 +34,8 @@ public class VelocityMatch : AgentBehavior
             var deltaV = TargetVelocity - Entity.Velocity;
             if(length(deltaV) < TargetThreshold)
                 OnMatch?.Invoke();
-            Entity.Axes[_turningAxis].Value = TurningInput(deltaV);
-            Entity.Axes[_thrustAxis].Value = ThrustInput(deltaV);
+            _turning.Axis = TurningInput(deltaV);
+            _thrust.Axis = ThrustInput(deltaV);
         }
     }
     

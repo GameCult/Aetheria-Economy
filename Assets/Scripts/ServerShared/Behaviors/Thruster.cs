@@ -29,6 +29,12 @@ public class Thruster : IAnalogBehavior
     
     public float Thrust { get; private set; }
 
+    public float Axis
+    {
+        get => _input;
+        set => _input = saturate(value);
+    }
+
     public BehaviorData Data => _data;
     
     private ThrusterData _data;
@@ -41,11 +47,6 @@ public class Thruster : IAnalogBehavior
         _data = data;
         Entity = entity;
         Item = item;
-    }
-    
-    public void SetAxis(float value)
-    {
-        _input = saturate(value);
     }
 
     public bool Update(float delta)

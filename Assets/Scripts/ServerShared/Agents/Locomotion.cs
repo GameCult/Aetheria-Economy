@@ -13,16 +13,12 @@ public class Locomotion : AgentBehavior
     private Thruster _thrust;
     private Turning _turning;
     private VelocityLimit _velocityLimit;
-    private int _thrustAxis;
-    private int _turningAxis;
 
     public Locomotion(GameContext context, Entity entity, ControllerData controllerData) : base(context, entity, controllerData)
     {
         _velocityLimit = Entity.GetBehaviors<VelocityLimit>().FirstOrDefault();
-        _thrust = Entity.GetBehaviors<Thruster>().FirstOrDefault();
-        _turning = Entity.GetBehaviors<Turning>().FirstOrDefault();
-        _thrustAxis = Entity.GetAxis<Thruster>();
-        _turningAxis = Entity.GetAxis<Turning>();
+        _thrust = Entity.GetBehavior<Thruster>();
+        _turning = Entity.GetBehavior<Turning>();
     }
 
     public override void Update(float delta)
@@ -43,15 +39,15 @@ public class Locomotion : AgentBehavior
             {
                 float2 tangential = Entity.Velocity - dot(normalize(diff), normalize(Entity.Velocity)) * Entity.Velocity;
                 float2 adjustedDirection = normalize(diff) - tangential * TangentSensitivity;
-                Entity.Axes[_turningAxis].Value = TurningInput(adjustedDirection);
-                Entity.Axes[_thrustAxis].Value = 1;
+                _turning.Axis = TurningInput(adjustedDirection);
+                _thrust.Axis = 1;
             }
             // We have plenty of space, use exact maneuvering
             else
             {
                 var deltaV = desiredVelocity - Entity.Velocity;
-                Entity.Axes[_turningAxis].Value = TurningInput(deltaV);
-                Entity.Axes[_thrustAxis].Value = ThrustInput(deltaV);
+                _turning.Axis = TurningInput(deltaV);
+                _thrust.Axis = ThrustInput(deltaV);
             }
         }
     }
