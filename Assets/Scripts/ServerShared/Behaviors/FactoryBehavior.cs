@@ -47,14 +47,11 @@ public class Factory : IBehavior, IPersistentBehavior
                 _blueprint = value;
                 RetoolingTime = ToolingTime;
                 _retooling = true;
-                OnProductionUpdate?.Invoke();
-                OnProductionUpdate = null;
+                Item.Change();
                 ItemName = Context.Cache.Get<BlueprintData>(value).Name;
             }
         }
     }
-
-    public event Action OnProductionUpdate;
     
     private FactoryData _data;
     
@@ -87,7 +84,7 @@ public class Factory : IBehavior, IPersistentBehavior
         if (_retooling)
         {
             _retooling = false;
-            OnProductionUpdate?.Invoke();
+            Item.Change();
         }
 
         if (ItemUnderConstruction != Guid.Empty)
@@ -106,6 +103,7 @@ public class Factory : IBehavior, IPersistentBehavior
                     Entity.AddCargo(craftedItemInstance);
                 Entity.IncompleteCargo.Remove(ItemUnderConstruction);
                 ItemUnderConstruction = Guid.Empty;
+                Item.Change();
             }
 
             return true;
@@ -117,7 +115,8 @@ public class Factory : IBehavior, IPersistentBehavior
             (pow(Context.Random.NextFloat(), blueprint.RandomExponent) +
              pow(Context.Random.NextFloat(), blueprint.RandomExponent)) / 2, ItemName);
         
-        OnProductionUpdate?.Invoke();
+        if(ItemUnderConstruction!=Guid.Empty)
+            Item.Change();
         
         return false;
     }

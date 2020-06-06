@@ -75,15 +75,25 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     // [IgnoreMember] public Dictionary<Gear, EquippableItemData> GearData;
     // [IgnoreMember] public Dictionary<Gear, List<IBehavior>> ItemBehaviors;
 
-    private bool _inventoryChanged;
-
     [IgnoreMember] public float Mass { get; private set; }
     [IgnoreMember] public float OccupiedCapacity { get; private set; }
     [IgnoreMember] public float ThermalMass { get; private set; }
     [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
 
-    public event Action OnInventoryUpdate;
-    
+    public class InventoryEvent : IDynamicProperties
+    {
+        public event Action OnChanged;
+
+        public void Change()
+        {
+            OnChanged?.Invoke();
+        }
+    }
+    private bool _cargoChanged;
+    public InventoryEvent CargoEvent = new InventoryEvent();
+    private bool _gearChanged;
+    public InventoryEvent GearEvent = new InventoryEvent();
+
     public float Capacity
     {
         get
@@ -161,6 +171,8 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             return;
         }
 
+        hardpoint.ItemData = hardpoint.Gear.ItemData;
+
         hardpoint.Behaviors = hardpoint.Gear.ItemData.Behaviors
             .Select(bd => bd.CreateInstance(Context, this, hardpoint.Gear))
             .ToArray();
@@ -184,11 +196,12 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         {
             Gear.Remove(hardpoint.Gear.ID);
             Cargo.Add(hardpoint.Gear.ID);
+            _cargoChanged = true;
         }
         
         hardpoint.Gear = gear;
         HydrateHardpoint(hardpoint);
-        _inventoryChanged = true;
+        _gearChanged = true;
     }
 
     public bool Equip(Guid gearID, bool force = false)
@@ -226,7 +239,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         Mass += item.Mass;
         ThermalMass += item.ThermalMass;
         OccupiedCapacity += item.Size;
-        _inventoryChanged = true;
+        _cargoChanged = true;
         return item;
     }
 
@@ -238,7 +251,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         Mass -= item.Mass;
         ThermalMass -= item.ThermalMass;
         OccupiedCapacity -= item.Size;
-        _inventoryChanged = true;
+        _cargoChanged = true;
         return item;
     }
 
@@ -260,12 +273,13 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             var existingCommodity = Context.Cache.Get<SimpleCommodity>(existingCommodityID);
             existingCommodity.Quantity += item.Quantity;
             Context.Cache.Delete(item);
+            _cargoChanged = true;
             return existingCommodity;
         }
         
         // No match was found, simply add the item instance to the cargo
         Cargo.Add(item.ID);
-        _inventoryChanged = true;
+        _cargoChanged = true;
         return item;
     }
 
@@ -294,7 +308,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         ThermalMass -= item.ThermalMass;
         OccupiedCapacity -= item.Size;
 
-        _inventoryChanged = true;
+        _cargoChanged = true;
         return item;
     }
 
@@ -440,11 +454,6 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
         OccupiedCapacity = Gear.Select(i => Context.Cache.Get<Gear>(i)).Sum(i => i.Size) +
                            Cargo.Select(i => Context.Cache.Get<ItemInstance>(i)).Sum(ii => ii.Size);
-    }
-
-    public void ClearInventoryListeners()
-    {
-        OnInventoryUpdate = null;
     }
 
     public T GetBehavior<T>() where T : class, IBehavior
@@ -605,6 +614,17 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         //     foreach (var axis in ItemBehaviors[staleItem].Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
         //         Axes[axis] = 0;
         // }
+
+        if (_cargoChanged)
+        {
+            CargoEvent.Change();
+            _cargoChanged = false;
+        }
+        if (_gearChanged)
+        {
+            GearEvent.Change();
+            _gearChanged = false;
+        }
     }
 
     public void SetMessage(string message)

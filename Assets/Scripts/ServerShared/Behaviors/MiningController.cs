@@ -99,13 +99,14 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
         foreach (var item in _entity.Cargo
             .Select(id => _context.Cache.Get<ItemInstance>(id))
             .Where(item => item is SimpleCommodity)
-            .Cast<SimpleCommodity>())
+            .Cast<SimpleCommodity>()
+            .ToArray())
         {
-            int supportedQuantity = (int) ((homeEntity.Capacity - homeEntity.OccupiedCapacity) / item.ItemData.Size);
-            var newItem = _entity.RemoveCargo(item, supportedQuantity);
+            int quantity = min((int) ((homeEntity.Capacity - homeEntity.OccupiedCapacity) / item.ItemData.Size), item.Quantity);
+            var newItem = _entity.RemoveCargo(item, quantity);
             homeEntity.AddCargo(newItem);
             
-            if (supportedQuantity < item.Quantity)
+            if (quantity < item.Quantity)
             {
                 homeEntity.SetMessage("Colony is out of cargo space. Closing Mining Task.");
                 FinishTask();

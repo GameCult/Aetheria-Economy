@@ -55,9 +55,16 @@ public class SimpleCommodity : ItemInstance
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class Gear : CraftedItemInstance
+public class Gear : CraftedItemInstance, IDynamicProperties
 {
     [JsonProperty("durability"), Key(7)]  public float Durability;
 
     public EquippableItemData ItemData => Context.GetData(this);
+    
+    public event Action OnChanged;
+
+    public void Change()
+    {
+        OnChanged?.Invoke();
+    }
 }

@@ -108,7 +108,8 @@ public class StrategyGameManager : MonoBehaviour
     private Guid _selectedOrbit = Guid.Empty;
     private Guid _selectedTowingTarget = Guid.Empty;
     private float _orbitRadius;
-    private Guid _selectedEntity;
+    private Guid _selectedObject;
+    private Guid _selectedColony;
     
     void Start()
     {
@@ -122,6 +123,7 @@ public class StrategyGameManager : MonoBehaviour
             _context = new GameContext(_cache, Debug.Log);
             ColonyTab.Context = _context;
             TechTree.Context = _context;
+            PropertiesPanel.Context = _context;
             _context.MapLayers = _cache.GetAll<GalaxyMapLayerData>().ToDictionary(ml => ml.Name);
             _context.GalaxyZones = _cache.GetAll<ZoneData>()
                 .ToDictionary(z => z.ID, z => new SimplifiedZoneData
@@ -215,7 +217,7 @@ public class StrategyGameManager : MonoBehaviour
                             for(int i=0; i<loadout.Value; i++)
                                 entities.Add(_context.CreateEntity(_selectedZone, newCorp.ID, loadout.Key));
                         var colony = entities.First(e => e is OrbitalEntity);
-                        _selectedEntity = colony.ID;
+                        _selectedColony = colony.ID;
                         foreach (var ship in entities.Where(e => e is Ship))
                         {
                             foreach (var controller in ship.GetBehaviors<ControllerBase>())
@@ -302,7 +304,7 @@ public class StrategyGameManager : MonoBehaviour
             
             if (_currentTab == ColonyTabButton)
             {
-                ColonyTab.Open(_selectedEntity);
+                ColonyTab.Open(_selectedColony);
             }
         };
         
@@ -441,7 +443,12 @@ public class StrategyGameManager : MonoBehaviour
                     zoneShip.Icon.GetComponent<ClickableCollider>().OnClick += (collider, data) => 
                     {
                         if (data.button == PointerEventData.InputButton.Left)
-                            Select(ship.ID);
+                        {
+                            if (data.clickCount == 1)
+                                Select(ship.ID);
+                            else if (data.clickCount == 2)
+                                ColonyTabButton.OnPointerClick(data);
+                        }
                         else if (data.button == PointerEventData.InputButton.Right) 
                             ShowContextMenu(ship.ID);
                     };
@@ -480,7 +487,6 @@ public class StrategyGameManager : MonoBehaviour
                     {
                         if (data.button == PointerEventData.InputButton.Left)
                         {
-                            _selectedEntity = orbital.ID;
                             if (data.clickCount == 1)
                                 Select(orbital.ID);
                             else if (data.clickCount == 2)
@@ -670,7 +676,8 @@ public class StrategyGameManager : MonoBehaviour
 
     void Select(Guid clickTarget)
     {
-        var targetObject = _context.Cache.Get(clickTarget);
+        _selectedObject = clickTarget;
+        var targetObject = _context.Cache.Get(_selectedObject);
 
         if (targetObject is PlanetData planet)
         {
@@ -717,39 +724,7 @@ public class StrategyGameManager : MonoBehaviour
 
         if (targetObject is Entity entity)
         {
-            PropertiesPanel.Clear();
-            PropertiesPanel.Title.text = entity.Name;
-            var hull = _context.Cache.Get<Gear>(entity.Hull);
-            var hullData = _context.Cache.Get<HullData>(hull.Data);
-            PropertiesPanel.AddSection(
-                hullData.HullType == HullType.Ship ? "Drone Ship" :
-                hullData.HullType == HullType.Station ? "Colony" :
-                "Weapons Platform");
-            PopulateGearProperties(PropertiesPanel.AddList(hullData.Name), hull, entity);
-            //PropertiesPanel.AddProperty("Hull", () => $"{hullData.Name}");
-            PropertiesPanel.AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{entity.Capacity:0}");
-            PropertiesPanel.AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(_context.GlobalData.SignificantDigits)}");
-            PropertiesPanel.AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
-            PropertiesPanel.AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
-            var gearList = PropertiesPanel.AddList("Gear");
-            var equippedItems = entity.Hardpoints.Where(hp => hp.Gear != null).Select(hp => hp.Gear);
-            foreach(var gear in equippedItems)
-                PopulateGearProperties(gearList.AddList(gear.ItemData.Name), gear, entity);
-            if(!entity.Cargo.Any())
-                PropertiesPanel.AddProperty("No Cargo");
-            else
-            {
-                var cargoList = PropertiesPanel.AddList("Cargo");
-                foreach (var itemID in entity.Cargo)
-                {
-                    var itemInstance = _context.Cache.Get<ItemInstance>(itemID);
-                    var data = _context.Cache.Get<ItemData>(itemInstance.Data);
-                    if(itemInstance is SimpleCommodity simpleCommodity)
-                        cargoList.AddProperty(data.Name, () => simpleCommodity.Quantity.ToString());
-                    else
-                        cargoList.AddProperty(data.Name);
-                }
-            }
+            PropertiesPanel.Inspect(entity);
         }
 
         if (targetObject is ZoneData zone)
@@ -763,31 +738,6 @@ public class StrategyGameManager : MonoBehaviour
         PropertiesPanel.RefreshValues();
     }
 
-    void PopulateGearProperties(PropertiesList panel, Gear gear, Entity entity)
-    {
-        var data = gear.ItemData;
-        panel.AddProperty("Durability", () => $"{gear.Durability.SignificantDigits(_context.GlobalData.SignificantDigits)}/{_context.Evaluate(data.Durability, gear).SignificantDigits(_context.GlobalData.SignificantDigits)}");
-        foreach (var behavior in data.Behaviors)
-        {
-            var type = behavior.GetType();
-            if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
-            {
-                foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
-                {
-                    var fieldType = field.FieldType;
-                    if (fieldType == typeof(float))
-                        panel.AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(_context.GlobalData.SignificantDigits)}");
-                    else if (fieldType == typeof(int))
-                        panel.AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
-                    else if (fieldType == typeof(PerformanceStat))
-                    {
-                        var stat = (PerformanceStat) field.GetValue(behavior);
-                        panel.AddProperty(field.Name, () => $"{_context.Evaluate(stat, gear, entity).SignificantDigits(_context.GlobalData.SignificantDigits)}");
-                    }
-                }
-            }
-        }
-    }
 
     void PopulateGalaxy()
     {
