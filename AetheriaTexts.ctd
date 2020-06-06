@@ -1,0 +1,498 @@
+<?xml version="1.0" ?>
+<cherrytree>
+	<node custom_icon_id="0" foreground="#a52a2a" is_bold="False" name="Tutorial" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591402810.0" ts_lastsave="1591403898.52" unique_id="3">
+		<rich_text></rich_text>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Introduction/Survey Task" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403624.27" ts_lastsave="1591403624.27" unique_id="9">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591402825.83" ts_lastsave="1591403911.86" unique_id="4">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591402838.97" ts_lastsave="1591403958.45" unique_id="5">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591402853.07" ts_lastsave="1591404292.33" unique_id="6">
+				<rich_text>Chippy: Hi there, Subsidiary, and welcome into the warm, ooey-gooey embrace of Miss Terri’s Sugariffic Snack Company! Quite literally. Bring it in, fellow jellyhead!
+
+Player: A) I’ve made a huge mistake
+    B) Sorry, but ‘Etiquette for CEOS, Bog Monsters, and Gentlefolk’ clearly states that there’s no hugging in space.
+    C) Alright! Gooey candy hugs!
+
+Chippy: (A or B) That’s alright! At Miss Terri’s, we respect your personal boundaries. After all, we all fall into the inescapable toffee-like embrace of death eventually. Ha! Ha! Ha! Right then…
+
+    C) You’re going to fit in just Wonderfully (tm) here! Right then…
+
+[player has a chance to look at the UI and all that]
+
+
+Chippy: I see that you haven’t quite gotten started yet. Would you like a guided tour of the process? What am I saying, “would.” You get the tour. I get the tour. Everyone gets the tour! It’s just that tour-able!
+
+
+Player: a) Wait, wait…did you just say “tour-able” or “terrible”?
+    B)No point in waiting! Let’s go!
+    
+
+Chippy: (option a) Ha! Ha! Ha! You’re funny; I like that.
+
+[Player: No, but actually—
+
+Chippy: Goody goody gumdrops, the tour starts now! And, as everyone knows, there are no questions on a tour.
+
+Player: I don’t think that’s t—
+
+Chippy: Don’t think! Thinking’s for those pigeons over at Finch. Here at Miss Terri’s, we </rich_text>
+				<rich_text style="italic">live</rich_text>
+				<rich_text>. ]
+
+Chippy: The first ritua—I mean, the first task, yes, the first task one must undertake on arrival in a given sector is to conduct a survey of the local resources. You must know what you’re working with before you set up your candy vats, or you’ll end up like poor Sally Lunn, who set up shop in a sector with just helium, and…well, it wasn’t a good season for the La-Li-Pop Super Basso Choir, I’ll tell you that. And I do so look forward to their Terrisday concerts,only--Right. Right. Where was I? Ah. Surveys. Drones! Survey drones! Release the drones, your loyal sugar seekers, and reap the nectar of sweet, sweet data. And don’t forget to give thanks to Miss Terri as you dispatch them!
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403382.94" ts_lastsave="1591404623.45" unique_id="7">
+				<rich_text>Threefra: </rich_text>
+				<rich_text style="italic">You're </rich_text>
+				<rich_text>the new subsidiary? Really? Debt, they're really scraping the bottom of the gene pool here, huh?
+
+Player: a) (sarcastically) Practically the ocean floor here. So if you don't mind, I'm just going to go and make a crash of things myself, yeah? [Option to leave tutorial. Threefra Approves of you]
+
+B) Nice to meet you too. I assume you work for Finch?
+
+C] Yes, I'm the new subsidiary, but if you keep talking like that, you'll be the new sub-zero. (Edit later, maybe delete so we get the whole ‘form’ spiel regardless. Eh. think about it.)
+
+Threefra: b) Stating the obvious? Bad start. That's a mark on the form.
+
+Player: What form?
+
+Threefra: ...are you sure you didn't mean to incorporate with ColferV? They like 'em stupid over there. -</rich_text>
+				<rich_text style="italic">sighs- </rich_text>
+				<rich_text>The form. The Finch Cybernetics Personnel Qualities and Character Form. A very thorough form, with a clever little formula that renders all your subjective qualities into objective and qualitative data. Really. Did you not read </rich_text>
+				<rich_text style="italic">any </rich_text>
+				<rich_text>of the welcome packet?
+
+Player: a1) it was 100terrabytes, so no, I did not.
+
+B1) The welcome packet mentions 63 forms, so I thought a little specificity might help.
+
+
+Threefra a1) At last, a shred of wisdom.
+
+B1) Bloody--you actually read it? The thing's 100 terabytes! Yeah...I don't know if I should give you points or deduct them for that. Hmm. Would you say that counts as dilligent or completely bonkers? Actually, never mind, we have more important things to do.
+
+
+ C) (Threefra laughs.)Alright, fair enough. Down to business, then.
+
+Threefra: The name’s Threefra Scalarian, copyright Finch Cybernetics, use it or not, I don’t care. Now, I, for my evils, have been given orders to make sure you aren’t a complete embarrassment to the Symposium who have so beneficently allowed you to earn to credits for their coffins.
+
+Player: A) You mean credits for </rich_text>
+				<rich_text style="italic">my</rich_text>
+				<rich_text> coffins.
+    B) Threefra? That’s an unusual name.
+    C) say nothing
+
+Threefra A) I remember when I was that naive…no, wait, no I don’t. Because I’m not an idiot. Are you </rich_text>
+				<rich_text style="italic">sure</rich_text>
+				<rich_text> you didn’t mean to incorporate with ColferV? Well, here’s a little something for you to think about in the future, if you live that long: You know Fig’s Third Law? What goes up must come down, equal and opposite, so on and so on? Well, here’s the Third Law of Economics: What goes up goes directly into the 100% Targith moonsilk pockets of the MegaCorps. So keep your head down and your credit account encrypted.
+
+ThreeFra: B) At least I’m not called &lt;pilot’s name&gt;. Look, we can’t all come from credits. My parents were debtors. They couldn’t buy a proper name. So raising little “Try-new-RavenDefense-flash-bangers-three-for-a-credit” meant they at least had the credits to feed me. And it’s not like I’m going to go around calling myself ‘banger’. Yes, I could buy a new name. And no, I’m not going to.
+
+
+Threefra: All clear? Now that all that’s out of the way, let’s hurry up and get this over with. I can feel my neurons self destructing with every passing second. Right. The first thing you should be doing when setting up orbit in an unknown sector is taking a survey of the local resources. This is customarily accomplished by the use of surveys drones, although of course, you’re welcome to throw on your life support suit and go scrabbling around on planetary surfaces like our ancestors of old. Who knows, you might even find a molecule of something before your telomeres decay completely. But as fun as that would be, I really have to recommend the survey drones.
+
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403423.35" ts_lastsave="1591404905.51" unique_id="8">
+				<rich_text>Vincenti: Ah! Right on time! It’s the newest addition to the Lucent Media menagerie. We’ve been expecting you!
+
+Player: A) We? Who’s ‘we?’ I don’t see anyone else here.
+    Vincenti: A) Of course not! Why should you? It’s just you and me here. Completely alone. Unobserved. Not another lifeform in scanner range. But ‘we’ just sounds so much more welcoming, doesn’t it?
+ Player: a1) ...I suppose.
+    
+Player: B) Oh you, didn’t get the memo? I’m exempt from the training. The ‘Problems with Authority  and Reckless Disregard for Future Liability Exemption’, as noted in clause X, subsection √-1 of the Subsidiary contract and liabilities?’ 
+    Vincenti: Is that a real thing? Well then. We’ll see you next round, then! [exit tutorial.]
+
+Player: C) That’s me. Reporting for the training module, as contracted.
+
+Vincenti: C) Right down to business, is it? Ooh, we have ourselves a go getter, here. We can work with that. Systems go, then.
+
+Vincenti: I’m Vincenti Verdegris--that’s Vin-centive, like a performance reward of Olillian star-distilled wine, the ‘-ve’ is implied, and Ver-degree, like your inevitable upward trajectory--and a very warm welcome to you, from all of us at Lucent Media. It’s time to begin!
+
+Player: A) You don’t need to sound out your name; I sort of figured it out when you </rich_text>
+				<rich_text style="italic">told me what it was</rich_text>
+				<rich_text>.
+
+Vincenti: a) Ah, but did you really? Your name is your brand, subsidiary. And a good first lesson is to make sure everyone learns yours.
+
+Player B) The ‘-ve’ is implied by what?
+
+Vincenti: b) What?
+
+Player: b1) You said the ‘-ve’ is implied. What’s it implied by? Because I didn’t hear anything that sounded remotely like an implication.
+
+Vincenti: b1) The implication? My dear neophyte, the ‘-ve’ implicates itself! The ‘-ve’ always implicates itself. To imply otherwise would be impliable. Now, to business, yes? Or we’ll find ourselves on the cutting room floor. And that is not a place anyone wants to be.
+
+Player: C) Let’s get this show on the upload.
+
+Vincenti: c) That’s what we like to hear! Right then.
+
+
+Vincenti: Your first task, specially selected and curated for your skill level by the all seeing, all knowing rgOS, is a simple one. Look around you. Your ship (colony?) hangs in orbit in the heart of an unexplored sector, surrounded by planets and asteroids and suns, each one a cosmic mystery. What lies beneath their alien surfaces? It’s your job to find out.
+
+Vincenti: Now, you have been provided with a survey drone, courtesy and copyright of Starmaker R&amp;D. So go forth and see what the sector holds for you!
+</rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Mining Task" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403682.45" ts_lastsave="1591403682.45" unique_id="10">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403911.86" ts_lastsave="1591403914.66" unique_id="21">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403958.45" ts_lastsave="1591403962.45" unique_id="31">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404005.55" ts_lastsave="1591404416.56" unique_id="43">
+				<rich_text>Chippy: Ah, the drones return to the hive, plump with their collected data. What harvest have they reaped?
+
+Player: You really like bees, huh.
+
+Chippy: Actually, I never cared much for the Anglish alphabet. And talk about a non-sequitur! Really, [name] you should be paying more attention.
+
+Player: Uh…never mind.
+
+
+Chippy: Well, as our drones—it doesn’t even begin with ‘bee’; really, I don’t know how you’re going to go around slinging these baseless accusations without even—ahem. Right. As our </rich_text>
+				<rich_text style="italic">dee</rich_text>
+				<rich_text>rones have returned, dripping with knowledge, it is our task now to tap the sweet syrupy core hidden beneath the stony exterior. Mine!
+
+Player: Your what?
+
+Chippy: No, Mine! Your mine. Ore mine. Not be mine, no, no bees here!
+
+Player: A) Are…are you alright?
+B) Just forget the [redacted] bees!
+
+Chippy: A)  Well, I haven’t left yet, have I? No, no one leaves the tour! Not even Chippy. But you—yes, you, [name], will </rich_text>
+				<rich_text style="italic">never</rich_text>
+				<rich_text> leave if you don’t learn the basics of mining. So:
+
+B) Chippy: You brought them up! I wish someone had brought me up. But from the primordial candy I was born and to the candy I will return, all praises to Miss Terri. And you will be back in the candy vat before your time, if you don’t learn how to mine!
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404031.36" ts_lastsave="1591404654.67" unique_id="54">
+				<rich_text>Threefra: See? Easy. And you have to love those drones. Beautiful little things, aren’t they? You’d almost think they were organic. Finch-made, of course. Well, Wingspan Aeronautics, but that’s one of Dr. Epps’ original companies, isn’t it? Squares and rectangles, squares and rectangles.
+
+Player: A) Dr Epps? Who’s that?
+    B) Valuable data. What next?
+
+ Threefra:A) Who’s Dr. Ep--? Are you actually standing there pretending you don’t recognize the name of Finch’s founder? A word of advice: jokes are supposed to be funny. At least, I hope that was a joke. I really, really do. And that’s a mark down, because, as everyone knows and as codified in the Finch Cybernetics Code of Conduct, section 34!, re: ‘comedic relief in the workplace’’, puns are the only acceptable form of humour. 
+
+Player: A) A joke. Yes. Definitely. Imagine me not knowing something like that! I’d have to be from ancient Earth or something. Ha. Imagine. What next?
+
+Threefra: Next? Next, we mine. Well, you mine. I mean, technically the mining drones mine, because having them survey would be unnecessarily confusing, but that’s a bit pedantic, isn’t it? Anyway. Mining. You’ve got all those lovely resources hanging about in asteroids and such where they won’t do anyone any good, and so, it’s now your task to dig ‘em out and haul ‘em over. Got it? Good.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404084.03" ts_lastsave="1591404921.82" unique_id="65">
+				<rich_text>Vincenti: Excellent, excellent! </rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Towing Task" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403699.05" ts_lastsave="1591403699.05" unique_id="11">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403920.01" ts_lastsave="1591403921.62" unique_id="22">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403960.69" ts_lastsave="1591403964.49" unique_id="32">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404008.12" ts_lastsave="1591404442.5" unique_id="44">
+				<rich_text>
+Chippy: See? Easy Chees-os Gunk and Freeze-os! And not one bee, I’ll have you note. But I see you’re itching to move on to bigger things—or possibly enjoying the thrilling effects of Miss Terri’s Snortable Itching Candy (tm), it’s hard to know!—so let us continue on the grand, and inescapable, tour. So. You will observe that your colony and those resources are hither and yonk, respectively. (Some old Anglish for you there; the shortened form of the old saying, “I’m too far away to hit her, someone yonk my ship over”, yonk, of course, being a regional variant of “to yeet”.) That’s no good for efficient production! Your caramel will be toffee before you can haul them over. Fortunately, Miss Terri, sweet is her name, always provides. That’s your towing drone. Follow the tour, and before you know it you’ll be tow to toe with those resource sources.      </rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404033.33" ts_lastsave="1591404730.91" unique_id="55">
+				<rich_text>Threefra: Well, you managed that with minimal catastrophic collapses. Nice job. But there’s still a lot of work to be done before you start scraping within oort-cloud distance of competent. Now, I suppose you’ve noticed the major problem here? 
+
+Player: A) Looks good to me!
+     B) The problem is that you’re sitting in my chair. It’s not public property, Threefra, Copyright of Finch Cybernetics.
+    C) I certainly have. We’re here, and all the lovely, valuable resources are over there. It’s a criminal waste of time and fuel expenditure.
+
+Threefra: A) That’s a mark down. Another one. You’re not really top-of-the-line programming, are you? Alright, well, since apparently you need to be led by the nose to what’s in front of you: the problem we have now--problem, in this context, means ‘something which causes unnecessary complications in our supply chain’, not ‘here’s a polynomial equation’, in case you were wondering--is that all those nice resources we need for making our fun explod-y toys are what experts refer to as ‘way the fuck over there’. And that, shockingly, is not conducive to efficient manufacturing. So. Since the mines will not come to manufacturing, manufacturing must go to the mines. And, since brighter minds have been at work on this issue, we have these lovely tow drones ready and able to get us there. So get hauling.
+
+B) Firm assertion of property rights, that’s a point in your favour. I was wondering when you’d notice.  Alright, alright. [Threefra rises from your chair with a broad sweep of her arm] Fun over, back to work on your other problem. The other problem, of course, being that all those lovely resources are just too far away to be convenient. So you, sole proprietor and sitter of the comfy chair, need to get your tow drones out and haul us over, since planets are generally a bit on the heavy side and the Council does make such disapproving expressions when you go disrupting orbital systems.
+
+C) Exactly. Full marks. And how do we fix this? Tow drones, obviously. So get going.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404085.75" ts_lastsave="1591404110.36" unique_id="66">
+				<rich_text></rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Infrastructure Creation" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403714.54" ts_lastsave="1591403714.54" unique_id="12">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403923.02" ts_lastsave="1591403924.36" unique_id="23">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403965.74" ts_lastsave="1591403967.16" unique_id="33">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404010.24" ts_lastsave="1591404452.25" unique_id="45">
+				<rich_text>Chippy: Much better! So close you can practically lick the superheated hydrogen. Though I should warn you, it does not taste as good as it looks.
+
+Player: A) *lick the superheated hydrogen* (player fails tutorial. How do you fail a tutorial? By licking a sun, you idiot.)
+B) I’ll pass, thanks.
+
+Chippy: Well, I should think so. Leaves a nasty taste in the mouth. Now, I see you’ve got your data, you’ve got your resources, and you’ve got yourself settled in lollipop distance of the best raw materials the sector has to offer. Time to build, build, build! Get those factories up and running. Fill the fizz reactors, burn your offerings! It is time to create.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404035.6" ts_lastsave="1591404753.08" unique_id="56">
+				<rich_text>
+Threefra: Right, so we’re here, the resources are here, everyone’s here. And since unused and unleveraged resources are just credits jettisoned out the airlock, it’s time to put them to work. Clear? Wonderful. Get going.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404110.36" ts_lastsave="1591404113.11" unique_id="67">
+				<rich_text></rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Commodity Production" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403733.27" ts_lastsave="1591403733.27" unique_id="13">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403925.44" ts_lastsave="1591403926.74" unique_id="24">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403967.97" ts_lastsave="1591403969.67" unique_id="34">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404012.3" ts_lastsave="1591404466.64" unique_id="46">
+				<rich_text>Chippy: *singing* self-warming chocolate drops, get ‘em while they’re hot…taste that toasty roasty marshmallow when they poppppppp…chew them bite them drink them fight them, do them all by turns, Miss Terri’s isn’t liable for any degree of burns…  Sorry, I got bored. You sure took your time with that, huh? Well, better get moving, then. The tour waits for none of us.
+
+Player: A) I mean…you’re waiting. And conducting the tour.
+    B) *impatient gesture*
+
+Chippy: A) That’s what it wants you to think.  
+
+Chippy: (a &amp; b) So. Onward! Quick, quick, we don’t want to fall behind. No, not again. Chippy won’t fall behind again. Be merciful, Our Lady of the Candy Vats! Always merciful. Always cruel. Who knows? And now you know the secrets of raw materials and basic infrastructure, it’s time to more on to more complex things. Like candy! Just follow the tour here, quick, quick…
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404040.15" ts_lastsave="1591404769.0" unique_id="57">
+				<rich_text>Threefra: Wow! Amazing! Look at that, you're nearly ready now! Just kidding; you’ve got a long way to go yet. In more ways than one. But the Symposium wants us trying these new psychoanalytical worker improvement methods the Neuro-Sociology researchers have cooked up, so...they’re supposed to increase productivity, so you’d best increase productivity, or the scientists will sulk, and you know how scientists are when something undercuts their research.
+
+Player: A) Negative results produce as much valuable data as positive ones, they should know that. Plus, Neuro-Soc is grade-A orbiting space junk. Do they believe in the healing power of Miss Terri’s Rock Candy, too?
+B) Oooh, yeah. The ‘There Goes Our Funding” sulks. Those are the </rich_text>
+				<rich_text style="italic">worst.</rich_text>
+				<rich_text> For some reason they always end up with me being asked to test wildly unstable explosive weaponry, too. Right then. Let’s get producing.
+C) Oh...sure? Productivity up 110% percent. Great job, research team, commendations and canapes all around, now let’s get on with it.
+D) You know, you </rich_text>
+				<rich_text style="italic">could</rich_text>
+				<rich_text> try being a little more encouraging…
+
+Threefra: A) But they don’t produce that all important funding. And space junk has its place, which is far away from practical operations. Oh, And don’t mention the T word around here. The higher ups really get antsy about it. That stuff gets in your head, you know.
+
+B) Don’t I know it. I once got ordered--well, asked, but with implications, if you follow--I got “ordered” to test this one marketing analytics bastard’s homemade grenades and I swear on my debts they were literally socks stuffed full of whatever explode-y thing with a fuse tied on. Yep. Socks. And he was marketing analytics, not even defense adjacent---well. Never mind. Let’s move on. Productivity here we come. 
+ C) Ignoring the blatant disregard of the Official Statute Relating to the Misuse of Percentages, I appreciate your grasp of the situation. Now…
+D) I could, but that implies I believe you have the possibility for improvement. And I don’t, in case that wasn’t made clear by the flashing red icons on your assessment. Now, the sooner we get done with this, the sooner we get done with each other, so…
+
+
+Threefra: You have factories, but they’re no good to anyone sitting idle til the heat death of the universe. So, now you have the infrastructure for things more complex than slabs of steel, it’s time to make use of it.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404115.2" ts_lastsave="1591404116.88" unique_id="68">
+				<rich_text></rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Trading Task (BUY!)" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403748.84" ts_lastsave="1591403748.84" unique_id="14">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403928.09" ts_lastsave="1591403929.69" unique_id="25">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403972.57" ts_lastsave="1591403973.73" unique_id="35">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404014.27" ts_lastsave="1591404497.87" unique_id="47">
+				<rich_text>Chippy: Look at you go. We’re spinning with sugar, now! And while we’re flush with the sucralose glow of creation, you’ll notice that your workers are beginning to feel the first pangs of yearning. They want, you see. We all want. Want is the swallower of galaxies. Want is the unstoppable force that meets the immovable object, sees it turn to look at the screen and say, “I could do with one of those”. Want will drink the sweet syrupy marrow from your bones and extract a blood price for the favour. And why not? What were you really using your marrow for, anyway?
+
+Player: A) I don’t know about you, but mine makes my blood cells.
+
+    B) Do…do you need a hug, Chippy?
+
+Chippy: A) And think about how much more efficient you’d be if you didn’t have to deal with them, oozing smugly out all over the place and demanding to be watered.
+
+Chippy B) Do you mean…do I </rich_text>
+				<rich_text style="italic">want</rich_text>
+				<rich_text> a hug? Ha! Ha! Ha! Very clever. Cruel. And clever. You’ll excel in this galaxy.
+
+
+Chippy: But as they want, you must fulfill. They demand, and you supply. And as for the details, the Tour…supplies.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404042.21" ts_lastsave="1591404788.54" unique_id="58">
+				<rich_text>Threefra: So, the crushing g-forces of economy are well in motion here. Congratulations. But--and there is always a caveat; if you can remember nothing else I’ve said remember that--the economic leviathan can’t be placated by production alone. Everything needs to </rich_text>
+				<rich_text style="italic">move</rich_text>
+				<rich_text>. Motion, motion, motion; that’s the only way to survive. The universe keeps expanding, and we keep up or die.
+
+Player: A) That’s a little bit grim, don’t you think?
+B) I’m not sure I follow.
+C) So it goes. 
+
+Threefra: A) Of course it’s grim. The universe is grim. The question is, are you going to let that vast empty grimness swallow you up just to grind you back down into the dust from whence you came, or are you going to look out into the abyss and decide that if evolution didn’t give you wings to cross it, you’ll bloody well make them yourself?
+B) I’m not even marking you down at this point. It’s just cruel. I’m talking about supply and demand, alright? You know what that is, don’t you?
+C) And goes, and goes, and goes. But that brings us back to your next task.
+
+Threefra: So, all philosophy aside, we reach the practical matter of demand. Your workers--you see them down there? All those little tiny people running your factories and clawing one another apart for a scrap of the profits? Well, after a certain point, food and water and shelter just don’t cut it any more. People will start wanting more than the base necessities. And you, beneficent overseer, had better provide.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404118.92" ts_lastsave="1591404120.73" unique_id="69">
+				<rich_text></rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Trading Task (SELL!)" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403758.31" ts_lastsave="1591403758.31" unique_id="15">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403932.89" ts_lastsave="1591403934.01" unique_id="26">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403976.88" ts_lastsave="1591403978.85" unique_id="36">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404016.87" ts_lastsave="1591404514.27" unique_id="48">
+				<rich_text>
+Chippy: And the reverse, of course. Demand, supply. Fill the gaps. Pour sugar into the gaping maw of commerce til it tires of it and demands fried potatoes instead.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404044.81" ts_lastsave="1591404801.34" unique_id="59">
+				<rich_text>Threefra: Now your workers are happy, your trading partners are happy, everyone’s happy. Except you, of course, because you haven’t got your share of those sweet sweet credits yet. But you’re about to fix that. Go ahead. Get that inventory out of your factories and into your credit account...and the Symposium’s, of course.</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404121.36" ts_lastsave="1591404123.15" unique_id="70">
+				<rich_text></rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Survey Task (Rifle Through the Neighbour's Space Cabinets)" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403802.64" ts_lastsave="1591403802.64" unique_id="16">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403935.38" ts_lastsave="1591403936.62" unique_id="27">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403981.25" ts_lastsave="1591403982.41" unique_id="37">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404018.48" ts_lastsave="1591404523.21" unique_id="49">
+				<rich_text>Chippy: *loud chewing*
+
+Player: A) Spit it out or I’ll hit it out.
+    B) What is that? “Chewy-Gooey-Ooey-Eyeballz—tastes just like the real thing!” Oooooh. Can I have one?
+
+
+Chippy: A) *Swallowing* Don’t disrespect the candy. I’ll let it pass just this once, because you’re about as raw as a duck dipped in Acid Energy Solution, but I’ve got my eye on you.
+
+    B) *Swallowing* Of course! Chewy-Gooey-Ooey-Eyeballz are for sharing!
+
+Chippy: Now, we’re all nice and cozy here in this little sector, but, as you know, all soda fountains must eventually run dry. So, as the universe expands, so must we—and not just with Sugariffic Snack Co.’S Amazing Stomach-Expanding Truffles—and so the Tour has another task for you. Send your survey drone off into the neighbouring sector, and see what strange data flowers grow from its polleny radar.
+
+Player: A)That doesn’t even make—you know what? Never mind. I’m not even going there.
+    B) Now you’re just yonking my chain.
+
+Chippy: A) What? Oh, well, I’m sure it wasn’t important.
+    B)I regret to inform you that Miss Terri’s Sugariffic Snack Company does not approve of the yonking of chains on company time.
+
+Chippy: Now release your drones so they may drink the nectar of the sector’s resource veins.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404070.56" ts_lastsave="1591404814.76" unique_id="60">
+				<rich_text>Threefra: Right. Now we’re cooking with fusion. [option if player selected all the ‘not very bright’ choices: Don’t do that, though. I normally wouldn’t feel the need to clarify, but I’m pretty sure you’d try it and end up as a SteakIsh(™)-scented hole in the ground. Actually, now that I think about it, maybe you should try it.] But, though space is infinite, resources are not. Particularly on a galactic scale. Ergo, in the time honoured tradition of the human race, it’s time to move in on someone else’s turf. So wipe the stardust off your survey drones and have a good rifle through the neighbour’s metaphorical storage lockers. Odds are, you’ll find something that would look better in yours.</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404123.9" ts_lastsave="1591404125.27" unique_id="71">
+				<rich_text></rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Trading Job (COMBAT DRONE!)" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403830.33" ts_lastsave="1591403830.33" unique_id="17">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403938.55" ts_lastsave="1591404559.72" unique_id="28">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403983.33" ts_lastsave="1591403984.46" unique_id="38">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404020.25" ts_lastsave="1591404543.74" unique_id="50">
+				<rich_text>Chippy: Oooh, look at that. Absolutely dripping with resources. Now, when your neighbour has better supplies than you, the only thing to do is supply them with a better reason to give them up. And so Miss Terri, bubbly be Her gum, once again provides. Combat drones! Not related in any way to the mighty wombat, though one often hopes. But they’ll leave your enemies with the sting of defeat swelling in their throats.</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404072.72" ts_lastsave="1591404837.09" unique_id="61">
+				<rich_text>Threefra: I think those [resources survey drones picked up] would match your factories nicely, subsidiary. And, oh look, I don’t see a Finch-recognized resource rights deed anywhere in my oh-so-thorough search of the local database. You know what that means?
+
+Player: A) We should apply to the local Found Property Office for the rights?
+Threefra: A) Well, </rich_text>
+				<rich_text style="italic">you</rich_text>
+				<rich_text> can, but I’m not floating around for a century and a half while you wait for some oil age computer to send an auto reply saying “Sorry, we couldn’t process your request. Please try again.” I, finchself, would think for half a second and take a “force may endure” approach. You do know what that means? It’s an old Earth saying that means “she who has the bigger force keeps the property rights. ”  
+Player: B) It means mine, of course.
+Threefra: B) You’re blasting right, it does.
+
+Player:C) [if player has selected all the ‘clever’ options] It means your search function is plasma hosed. Look, I turned up the resource rights in a millisecond, and it says they belong to Corvus Corp--
+Threefra: C) You ran a blasting sear--of course you did. But no, no, I’m quite certain you’re mistaken. In fact, I must very firmly insist that you are.
+Player: C1) Wait, isn’t Corvus a subsidiary of Finch? I think I heard that somewhere--right, I did, it says so right here. Listen, Threefra Scalarian, copyright Finch Cybernetics, I’m all for swiping resources out from under other Megas, but I’m not stupid enough to try pulling one over my own parent corp. I like my genome where it is, thanks.
+Threefra: C1) Are you...okay. Look. Finch likes to make sure its subsidiaries are up to their very high standard--but not too high, you follow? And they have to employ a certain amount of deception in the process, or it doesn’t work. You see it coming, you break the test. Finch doesn’t like it when you break their tests. You receiving what I’m radioing? So just cool down on the database queries, finish out the test module, and please try and act surprised when the thing you are definitely not expecting happens, got it? I actually almost respect the amount of grey matter clogging up your skull, and it would be annoying to have it explosively splurting out a pin-sized hole in your suit, and not only because brains are a pain to get out of Silicra. 
+Player: C2) ...This conversation isn’t over.  
+Threefra: It is for now.
+Player: Fair enough...for now.
+
+Threefra: Moving forward, with all due and undue speed, since we’re going to be venturing into uncharted, unincorporated territory (prev option C addition: stress ‘uncharted, unincorporated’), we’re going to want some protection. Enter the combat drone. You don’t have one right now, so you’re going to have to turn to the free market to provide. Go forth and purchase, subsidiary.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404125.87" ts_lastsave="1591404127.12" unique_id="72">
+				<rich_text></rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Completely Unexpected Attack" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403865.76" ts_lastsave="1591403865.76" unique_id="18">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404559.72" ts_lastsave="1591404561.66" unique_id="76">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403985.21" ts_lastsave="1591403986.23" unique_id="39">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404021.97" ts_lastsave="1591404554.31" unique_id="51">
+				<rich_text> 
+Chippy: Beautiful. I do like this bit. I’ve always thought—oh. Look. What’s that, viciously attacking your miners? It must be space pirates. Oh no. Save us.
+
+Chippy: Oh, look at that worker—sixteen distinguishable pieces, that’s got to be a record!
+
+Chippy: I guess you could deploy your new combat drone—I mean, if you’re not too busy watching your miners be shot, melted, dissolved, torn apart, and hurled into the uncaring vacuum of space.
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404074.82" ts_lastsave="1591404859.17" unique_id="62">
+				<rich_text>Threefra: Not bad for a hunk of scrap metal. Now--
+• We spawn a “pirate” ship which immediately attacks the player’s miners
+
+Threefra: You seem to be under attack. How unfortunate. Do you maybe want to do something about that?
+
+(option C option: Threefra: Can you please at least </rich_text>
+				<rich_text style="italic">try</rich_text>
+				<rich_text> and look like you weren’t expecting this? And yes, you’re allowed to explode them. They’re unmanned drones. Exploding is, in fact, encouraged. And I’m not yonking your chain on that. I’m in the same ship as you, genius.)</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404127.78" ts_lastsave="1591404129.13" unique_id="73">
+				<rich_text></rich_text>
+			</node>
+		</node>
+		<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404078.58" ts_lastsave="1591404078.58" unique_id="64">
+			<rich_text></rich_text>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Congratulations on Not Being Dead" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403898.52" ts_lastsave="1591403898.52" unique_id="20">
+			<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403946.68" ts_lastsave="1591403954.3" unique_id="30">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#ffa500" is_bold="False" name="AU" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403988.68" ts_lastsave="1591403989.92" unique_id="41">
+				<rich_text></rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#a020f0" is_bold="False" name="MISS TERRI'S" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404025.98" ts_lastsave="1591404606.65" unique_id="53">
+				<rich_text>
+Chippy: You survived! Yay! On behalf of Miss Terri’s Sugariffic Snack Company, I congratulate you on your impressive lack of deadness. You’re not dead, are you? Because that would be awkward, I mean, me sitting here chatting with a corpse. People might start thinking I’ve gone Bite-Size BananaNut Cakes(tm). Not a corpse? Yes? Fantabulous. What was I saying? Right, right. Miss Terri’s Sugariffic Snack Company congratulates you on surviving your initiation into the crunchy candy coating of her chocolate-adjacent beneficence. That’s right! You just exploded (x number) of our own loyal fighters, sent to their brutal, agonizing deaths for the privilege of being part of the time-honoured Trial of the Subsidiary. And you passed! Yay!   
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404076.78" ts_lastsave="1591404874.96" unique_id="63">
+				<rich_text>Threefra: Well, I suppose you met the minimum acceptable casualty threshold. Not bad, not bad. You might even make it with Finch, after all. 
+Player: So you’re giving me high marks on the Assessment, then?
+Threefra: [threefra grins and pointedly deletes the ‘assessment’ from her [tablet?holoscreen?brain?] There is no “Finch Cybernetics Personnel Qualities and Character Form”. The test...was </rich_text>
+				<rich_text style="italic">that</rich_text>
+				<rich_text>. [she points at the wreckage of the ‘pirate’ ship.] And you passed. Well done.
+[If player has consistently selected the ‘I’m an idiot’ options: Lucky for you. If this thing was real you would have scored so low we’d have to measure you in Kelvins.]
+[Option C clever option: Threefra: Right. You followed the rules. You did the expected. Thank you. You’ve got my highest recommendation and a serious bit of advice from someone who’s been exactly where you are and ended up, well, here: never, </rich_text>
+				<rich_text style="italic">ever</rich_text>
+				<rich_text> let anyone know you’ve already figured it out. It’s only an advantage if you can stay a step ahead, and once you let them know, well, they’ll just push you over and trample you instead. Got it? Good.]
+</rich_text>
+			</node>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404131.69" ts_lastsave="1591404133.08" unique_id="75">
+				<rich_text></rich_text>
+			</node>
+		</node>
+	</node>
+</cherrytree>
