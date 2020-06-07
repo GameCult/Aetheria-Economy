@@ -36,6 +36,11 @@ public class PropertiesPanel : MonoBehaviour
     protected event Action<GameObject> OnPropertyAdded;
     protected IDynamicProperties ChangeSource;
     protected Action OnPropertiesChanged;
+    
+    public void Start()
+    {
+	    OnPropertyAdded += go => go.SetActive(true);
+    }
 
     public virtual void Update()
     {
@@ -47,10 +52,10 @@ public class PropertiesPanel : MonoBehaviour
 	    RemoveListener();
     }
 
-    private void OnDisable()
-    {
-	    RemoveListener();
-    }
+    // private void OnDisable()
+    // {
+	   //  RemoveListener();
+    // }
 
     public void Clear()
     {
@@ -169,13 +174,17 @@ public class PropertiesPanel : MonoBehaviour
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.Standard;
 		field.Field.onValueChanged.AddListener(val => write(val));
+		// field.Field.text = read();
 		RefreshPropertyValues += () =>
 		{
 			var s = read();
 			if (field.Field.text != s)
 			{
 				field.Field.text = s;
-				field.Field.Rebuild(CanvasUpdate.Layout);
+				// TODO Find out what's going on with the TMP Input Field
+				// BODY Setting an input field value causes the text to layout wrong, current workaround is disabling and enabling the gameobject
+				field.gameObject.SetActive(false);
+				Observable.NextFrame().Subscribe(_ => OnPropertyAdded?.Invoke(field.gameObject));
 			}
 		};
 		Properties.Add(field.gameObject);
@@ -411,13 +420,13 @@ public class PropertiesPanel : MonoBehaviour
 		RemoveListener();
 
 		ChangeSource = hardpoint.Gear;
-		OnPropertiesChanged = () => Observable.NextFrame().Subscribe(unit => InspectGearInternal());
+		OnPropertiesChanged = InspectGearInternal;
 		ChangeSource.OnChanged += OnPropertiesChanged;
 		InspectGearInternal();
 
 		void InspectGearInternal()
 		{
-			Debug.Log($"Refreshing {hardpoint.Gear.Name} properties");
+			//Debug.Log($"Refreshing {hardpoint.Gear.Name} properties");
 			Clear();
 			AddItemProperties(hardpoint.Gear);
 			foreach (var behavior in hardpoint.ItemData.Behaviors)
@@ -476,6 +485,7 @@ public class PropertiesPanel : MonoBehaviour
 	                        }
 	                        else
 	                        {
+		                        //AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
 		                        AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
 	                            var ingredientsList = AddList("Ingredients Needed");
 	                            var blueprintData = Context.Cache.Get<BlueprintData>(factory.Blueprint);
