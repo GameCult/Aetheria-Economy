@@ -49,10 +49,13 @@ public class Factory : IBehavior, IPersistentBehavior
             if (value != _blueprint)
             {
                 _blueprint = value;
-                RetoolingTime = ToolingTime;
-                _retooling = true;
                 Active = false;
-                ItemName = Context.Cache.Get<ItemData>(Context.Cache.Get<BlueprintData>(value).Item).Name;
+                if(value != Guid.Empty)
+                {
+                    ItemName = Context.Cache.Get<ItemData>(Context.Cache.Get<BlueprintData>(value).Item).Name;
+                    RetoolingTime = ToolingTime;
+                    _retooling = true;
+                }
                 Item.Change();
             }
         }

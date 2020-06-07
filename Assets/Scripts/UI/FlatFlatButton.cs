@@ -12,6 +12,7 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public float StateDamping;
 //    public RectTransform Tab;
     public Image Fill;
+    public TextMeshProUGUI Label;
     public FlatButtonState CurrentState = FlatButtonState.Unselected;
     public bool DisableClickWhenSelected = true;
 
@@ -20,6 +21,8 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public Color HoverColor;
     public Color ClickColor;
     public Color DisabledColor;
+    public Color EnabledTextColor;
+    public Color DisabledTextColor;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -67,6 +70,9 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 break;
         }
 
+        if (Label != null)
+            Label.color = Color.Lerp(Label.color,
+                CurrentState == FlatButtonState.Disabled ? DisabledTextColor : EnabledTextColor, StateDamping * Time.deltaTime);
         Fill.color = Color.Lerp(Fill.color, appearance, StateDamping * Time.deltaTime);
     }
 }

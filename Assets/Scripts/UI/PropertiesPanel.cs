@@ -12,6 +12,7 @@ using UnityEngine.UI;
 
 public class PropertiesPanel : MonoBehaviour
 {
+	public DropdownMenu Dropdown;
     public TextMeshProUGUI Title;
     public RectTransform SectionPrefab;
     public PropertiesList ListPrefab;
@@ -121,6 +122,7 @@ public class PropertiesPanel : MonoBehaviour
     {
         var list = Instantiate(ListPrefab, transform);
         list.Context = Context;
+        list.Dropdown = Dropdown;
         list.Title.text = name;
         // foreach (var element in elements)
         // {
@@ -266,9 +268,20 @@ public class PropertiesPanel : MonoBehaviour
 	{
 		var field = Instantiate(EnumField, transform);
 		field.Label.text = name;
-		field.Dropdown.options = enumOptions.Select(s => new TMP_Dropdown.OptionData(s)).ToList();
-		field.Dropdown.onValueChanged.AddListener(val => write(val));
-		RefreshPropertyValues += () => field.Dropdown.value = read();
+		field.Dropdown.OnClick += data =>
+		{
+			var selected = read();
+			Dropdown.gameObject.SetActive(true);
+			Dropdown.Clear();
+			for (int i = 0; i < enumOptions.Length; i++)
+			{
+				var index = i;
+				Dropdown.AddOption(enumOptions[i], () => write(index), index == selected);
+			}
+
+			Dropdown.Show((RectTransform) field.Dropdown.transform);
+		};
+		RefreshPropertyValues += () => field.Dropdown.Label.text = enumOptions[read()];
 		Properties.Add(field.gameObject);
 		OnPropertyAdded?.Invoke(field.gameObject);
 	}

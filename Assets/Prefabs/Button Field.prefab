@@ -218,7 +218,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.4180913, b: 1, a: 0.15294118}
+  m_Color: {r: 0, g: 0.1164044, b: 0.28, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -246,13 +246,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StateDamping: 10
   Fill: {fileID: 790814198576895813}
+  Label: {fileID: 0}
   CurrentState: 0
   DisableClickWhenSelected: 1
-  UnselectedColor: {r: 0, g: 0.4180913, b: 1, a: 0.15294118}
+  UnselectedColor: {r: 0, g: 0.1164044, b: 0.28, a: 1}
   SelectedColor: {r: 1, g: 0.44583336, b: 0.050000012, a: 0.65882355}
-  HoverColor: {r: 0, g: 0.4180913, b: 1, a: 0.5019608}
+  HoverColor: {r: 0, g: 0.29125005, b: 0.699, a: 1}
   ClickColor: {r: 1, g: 0.44583336, b: 0.050000012, a: 1}
-  DisabledColor: {r: 0, g: 0, b: 0, a: 0}
+  DisabledColor: {r: 0.14959699, g: 0.21268159, b: 0.301, a: 1}
+  EnabledTextColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
+  DisabledTextColor: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
 --- !u!114 &226212841
 MonoBehaviour:
   m_ObjectHideFlags: 0

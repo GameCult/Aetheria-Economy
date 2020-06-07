@@ -88,6 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2bf4a7080061d42a87046c37bf0c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Dropdown: {fileID: 0}
   Title: {fileID: 5116519198747529738}
   SectionPrefab: {fileID: 1026668114703092140, guid: 3a149ea40b43fbf47b51ec165cb04e5f,
     type: 3}
@@ -105,13 +106,15 @@ MonoBehaviour:
     type: 3}
   ProgressField: {fileID: 256436433275418348, guid: e6524d59d9bc67545b0eb1304bfb9d4b,
     type: 3}
-  EnumField: {fileID: 8066691333806154, guid: f19a14cd178d48f49ace9ad217bea2ed, type: 3}
+  EnumField: {fileID: 1444953514731475975, guid: f19a14cd178d48f49ace9ad217bea2ed,
+    type: 3}
   BoolField: {fileID: 7661950293931311388, guid: 001ad6a15f0d582458d359c0ae4405ed,
     type: 3}
   PropertyButton: {fileID: 1613450655389604799, guid: 99bde06e2f0ca504bb95f2a4e3429462,
     type: 3}
   ButtonField: {fileID: 6566784227922820057, guid: 6db1feb4cda7b8c419384cd42c85a5c4,
     type: 3}
+  SelectedChild: {fileID: 0}
 --- !u!1 &2378632238144827086
 GameObject:
   m_ObjectHideFlags: 0

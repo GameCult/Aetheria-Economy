@@ -6,5 +6,5 @@ using UnityEngine;
 public class EnumField : MonoBehaviour
 {
     public TextMeshProUGUI Label;
-    public TMP_Dropdown Dropdown;
+    public FlatFlatButton Dropdown;
 }

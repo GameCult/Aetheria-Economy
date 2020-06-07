@@ -880,6 +880,7 @@
     <Compile Include="Assets\Scripts\UI\ContextMenuOption.cs" />
     <Compile Include="Assets\Scripts\UI\CorporationMenuItem.cs" />
     <Compile Include="Assets\Scripts\UI\DragHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\DropdownMenu.cs" />
     <Compile Include="Assets\Scripts\UI\EnumField.cs" />
     <Compile Include="Assets\Scripts\UI\FlatButton.cs" />
     <Compile Include="Assets\Scripts\UI\FlatFlatButton.cs" />

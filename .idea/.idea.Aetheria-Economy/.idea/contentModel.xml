@@ -1767,6 +1767,7 @@
             <e p="ContextMenuOption.cs" t="Include" />
             <e p="CorporationMenuItem.cs" t="Include" />
             <e p="DragHandler.cs" t="Include" />
+            <e p="DropdownMenu.cs" t="Include" />
             <e p="EnumField.cs" t="Include" />
             <e p="FlatButton.cs" t="Include" />
             <e p="FlatFlatButton.cs" t="Include" />
