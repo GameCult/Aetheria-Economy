@@ -22,7 +22,16 @@ public class PropertiesList : PropertiesPanel
     public void Start()
     {
         Button.OnClick += _ => ToggleExpand();
-        SetExpanded(true, true);
+        OnPropertyAdded += go => go.SetActive(_expanded);
+        //SetExpanded(true, true);
+    }
+
+    public override void Update()
+    {
+        RefreshValues();
+        _foldoutRotation =
+            Mathf.Lerp(_foldoutRotation, _targetFoldoutRotation, FoldoutRotationDamping * Time.deltaTime);
+        FoldoutIcon.transform.localRotation = Quaternion.Euler(0,0, _foldoutRotation);
     }
 
     public void ToggleExpand() => SetExpanded(!_expanded, false);
@@ -40,13 +49,6 @@ public class PropertiesList : PropertiesPanel
             _foldoutRotation = _targetFoldoutRotation;
             FoldoutIcon.transform.localRotation = Quaternion.Euler(0,0, _foldoutRotation);
         }
-    }
-
-    private void Update()
-    {
-        _foldoutRotation =
-            Mathf.Lerp(_foldoutRotation, _targetFoldoutRotation, FoldoutRotationDamping * Time.deltaTime);
-        FoldoutIcon.transform.localRotation = Quaternion.Euler(0,0, _foldoutRotation);
     }
 
     // public override PropertyLabel AddProperty(string name, Func<string> read = null, Action<PointerEventData> onClick = null, bool radio = false)

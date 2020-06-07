@@ -5,8 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class PropertiesPanel : MonoBehaviour
 {
@@ -31,10 +33,11 @@ public class PropertiesPanel : MonoBehaviour
     protected event Action RefreshPropertyValues;
     protected bool RadioSelection = false;
 
+    protected event Action<GameObject> OnPropertyAdded;
     protected IDynamicProperties ChangeSource;
     protected Action OnPropertiesChanged;
 
-    protected void Update()
+    public virtual void Update()
     {
 	    RefreshValues();
     }
@@ -72,6 +75,7 @@ public class PropertiesPanel : MonoBehaviour
         var section = Instantiate(SectionPrefab, transform);
         section.GetComponentInChildren<TextMeshProUGUI>().text = name;
         Properties.Add(section.gameObject);
+        OnPropertyAdded?.Invoke(section.gameObject);
         return section;
     }
 
@@ -104,6 +108,7 @@ public class PropertiesPanel : MonoBehaviour
         if (read != null)
 	        RefreshPropertyValues += () => ((PropertyLabel) property).Value.text = read.Invoke();
         Properties.Add(property.gameObject);
+        OnPropertyAdded?.Invoke(property.gameObject);
         return property;
     }
 
@@ -122,6 +127,7 @@ public class PropertiesPanel : MonoBehaviour
         // }
         //RefreshPropertyValues += () => list.RefreshValues();
         Properties.Add(list.gameObject);
+        OnPropertyAdded?.Invoke(list.gameObject);
         return list;
     }
 
@@ -133,6 +139,7 @@ public class PropertiesPanel : MonoBehaviour
         attributeInstance.LowLabel.text = attribute.LowName;
         RefreshPropertyValues += () => attributeInstance.Slider.value = read();
         Properties.Add(attributeInstance.gameObject);
+        OnPropertyAdded?.Invoke(attributeInstance.gameObject);
         return attributeInstance;
     }
 
@@ -142,6 +149,7 @@ public class PropertiesPanel : MonoBehaviour
 	    button.Label.text = name;
 	    button.Button.OnClick += onClick;
 	    Properties.Add(button.gameObject);
+	    OnPropertyAdded?.Invoke(button.gameObject);
 	    return button;
     }
 
@@ -152,6 +160,7 @@ public class PropertiesPanel : MonoBehaviour
 	    button.ButtonLabel.text = label;
 	    button.Button.OnClick += onClick;
 	    Properties.Add(button.gameObject);
+	    OnPropertyAdded?.Invoke(button.gameObject);
     }
 	
 	public void AddField(string name, Func<string> read, Action<string> write)
@@ -160,8 +169,17 @@ public class PropertiesPanel : MonoBehaviour
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.Standard;
 		field.Field.onValueChanged.AddListener(val => write(val));
-		RefreshPropertyValues += () => field.Field.text = read();
+		RefreshPropertyValues += () =>
+		{
+			var s = read();
+			if (field.Field.text != s)
+			{
+				field.Field.text = s;
+				field.Field.Rebuild(CanvasUpdate.Layout);
+			}
+		};
 		Properties.Add(field.gameObject);
+		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 
 	public void AddField(string name, Func<float> read, Action<float> write)
@@ -172,6 +190,7 @@ public class PropertiesPanel : MonoBehaviour
 		field.Field.onValueChanged.AddListener(val => write(float.Parse(val)));
 		RefreshPropertyValues += () => field.Field.text = read().ToString(CultureInfo.InvariantCulture);
 		Properties.Add(field.gameObject);
+		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 	
 	public void AddField(string name, Func<int> read, Action<int> write)
@@ -182,6 +201,7 @@ public class PropertiesPanel : MonoBehaviour
 		field.Field.onValueChanged.AddListener(val => write(int.Parse(val)));
 		RefreshPropertyValues += () => field.Field.text = read().ToString(CultureInfo.InvariantCulture);
 		Properties.Add(field.gameObject);
+		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 	
 	public void AddField(string name, Func<float> read, Action<float> write, float min, float max)
@@ -194,6 +214,7 @@ public class PropertiesPanel : MonoBehaviour
 		field.Slider.onValueChanged.AddListener(val => write(val));
 		RefreshPropertyValues += () => field.Slider.value = read();
 		Properties.Add(field.gameObject);
+		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 	
 	public void AddProgressField(string name, Func<float> read)
@@ -206,6 +227,7 @@ public class PropertiesPanel : MonoBehaviour
 		//field.Slider.onValueChanged.AddListener(val => write(val));
 		RefreshPropertyValues += () => field.Slider.value = read();
 		Properties.Add(field.gameObject);
+		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 	
 	public void AddField(string name, Func<int> read, Action<int> write, int min, int max)
@@ -218,6 +240,7 @@ public class PropertiesPanel : MonoBehaviour
 		field.Slider.onValueChanged.AddListener(val => write(Mathf.RoundToInt(val)));
 		RefreshPropertyValues += () => field.Slider.value = read();
 		Properties.Add(field.gameObject);
+		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 	
 	public void AddField(string name, Func<bool> read, Action<bool> write)
@@ -227,6 +250,7 @@ public class PropertiesPanel : MonoBehaviour
 		field.Toggle.onValueChanged.AddListener(val => write(val));
 		RefreshPropertyValues += () => field.Toggle.isOn = read();
 		Properties.Add(field.gameObject);
+		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 	
 	public void AddField(string name, Func<int> read, Action<int> write, string[] enumOptions)
@@ -237,6 +261,7 @@ public class PropertiesPanel : MonoBehaviour
 		field.Dropdown.onValueChanged.AddListener(val => write(val));
 		RefreshPropertyValues += () => field.Dropdown.value = read();
 		Properties.Add(field.gameObject);
+		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 
 	void RemoveListener()
@@ -261,9 +286,14 @@ public class PropertiesPanel : MonoBehaviour
         AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GlobalData.SignificantDigits)}");
         AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
         AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
+
+        var hardpointList = AddList("Gear");
+        hardpointList.InspectHardpoints(entity);
+        hardpointList.SetExpanded(false,true);
         
-        AddList("Gear").InspectHardpoints(entity);
-        AddList("Cargo").InspectCargo(entity);
+        var cargoList = AddList("Cargo");
+	    cargoList.InspectCargo(entity);
+        cargoList.SetExpanded(false,true);
         
         RefreshValues();
 	}
@@ -281,8 +311,12 @@ public class PropertiesPanel : MonoBehaviour
 		{
 			Clear();
 			var equippedItems = entity.Hardpoints.Where(hp => hp.Gear != null);
-			foreach(var hardpoint in equippedItems)
-				AddList(hardpoint.ItemData.Name).Inspect(entity, hardpoint);
+			foreach (var hardpoint in equippedItems)
+			{
+				var propertyList = AddList(hardpoint.Gear.Name);
+				propertyList.Inspect(entity, hardpoint);
+				propertyList.SetExpanded(false,true);
+			}
 			RefreshValues();
 		}
 	}
@@ -299,16 +333,76 @@ public class PropertiesPanel : MonoBehaviour
 		void InspectCargoInternal()
 		{
 			Clear();
-			foreach (var itemID in entity.Cargo)
+			foreach (var itemID in entity.Cargo.Where(id => Context.Cache.Get<ItemInstance>(id) is SimpleCommodity))
 			{
-				var itemInstance = Context.Cache.Get<ItemInstance>(itemID);
-				var data = Context.Cache.Get<ItemData>(itemInstance.Data);
-				if(itemInstance is SimpleCommodity simpleCommodity)
-					AddProperty(data.Name, () => simpleCommodity.Quantity.ToString());
-				else
-					AddProperty(data.Name);
+				var simpleCommodity = Context.Cache.Get<SimpleCommodity>(itemID);
+				var data = simpleCommodity.ItemData;
+				var propertiesList = AddList($"{simpleCommodity.Quantity.ToString()} {data.Name}");
+				propertiesList.AddItemProperties(simpleCommodity);
+				propertiesList.RefreshValues();
+				propertiesList.SetExpanded(false, true);
 			}
+
+			foreach (var group in entity.Cargo
+				.Select(id => Context.Cache.Get<ItemInstance>(id))
+				.Where(item => item is CraftedItemInstance)
+				.Cast<CraftedItemInstance>()
+				.GroupBy(craftedItem => (craftedItem.Data, craftedItem.Name, Context.Cache.Get<Corporation>(Context.Cache.Get<Entity>(craftedItem.SourceEntity).Corporation))))
+			{
+				if (group.Count() == 1)
+				{
+					var item = group.First();
+					var propertiesList = AddList(item.Name);
+					propertiesList.AddItemProperties(item);
+					propertiesList.RefreshValues();
+					propertiesList.SetExpanded(false, true);
+				}
+				else
+				{
+					var instanceList = AddList($"{group.Count().ToString()} {group.Key.Name}");
+					foreach (var item in group)
+					{
+						var propertiesList = instanceList.AddList(item.Name);
+						propertiesList.AddItemProperties(item);
+						propertiesList.RefreshValues();
+						propertiesList.SetExpanded(false, true);
+					}
+					instanceList.SetExpanded(false, true);
+				}
+			}
+
 			RefreshValues();
+		}
+	}
+
+	public void AddItemProperties(ItemInstance item)
+	{
+		var data = Context.Cache.Get<ItemData>(item.Data);
+		AddProperty("Type", () => data.Name);
+		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
+		if (item is SimpleCommodity simpleCommodity)
+			AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
+		AddProperty("Mass", () => item.Mass.SignificantDigits(Context.GlobalData.SignificantDigits));
+		AddProperty("Thermal Mass", () => item.ThermalMass.SignificantDigits(Context.GlobalData.SignificantDigits));
+		AddProperty("Size", () => item.Size.SignificantDigits(Context.GlobalData.SignificantDigits));
+		if (item is Gear gear)
+		{
+			var gearData = gear.ItemData;
+			AddProperty("Durability", () =>
+				$"{gear.Durability.SignificantDigits(Context.GlobalData.SignificantDigits)}/{Context.Evaluate(gearData.Durability, gear).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+		}
+		if (item is CraftedItemInstance craftedItemInstance)
+		{
+			var entity = Context.Cache.Get<Entity>(craftedItemInstance.SourceEntity);
+			if (entity != null)
+			{
+				var corporation = Context.Cache.Get<Corporation>(entity.Corporation);
+				AddProperty("Manufacturer", () => corporation.Name);
+			}
+			else
+			{
+				AddProperty("Manufacturer", () => "God");
+			}
 		}
 	}
 
@@ -317,14 +411,15 @@ public class PropertiesPanel : MonoBehaviour
 		RemoveListener();
 
 		ChangeSource = hardpoint.Gear;
-		OnPropertiesChanged = InspectGearInternal;
+		OnPropertiesChanged = () => Observable.NextFrame().Subscribe(unit => InspectGearInternal());
 		ChangeSource.OnChanged += OnPropertiesChanged;
 		InspectGearInternal();
 
 		void InspectGearInternal()
 		{
+			Debug.Log($"Refreshing {hardpoint.Gear.Name} properties");
 			Clear();
-			AddProperty("Durability", () => $"{hardpoint.Gear.Durability.SignificantDigits(Context.GlobalData.SignificantDigits)}/{Context.Evaluate(hardpoint.ItemData.Durability, hardpoint.Gear).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+			AddItemProperties(hardpoint.Gear);
 			foreach (var behavior in hardpoint.ItemData.Behaviors)
 			{
 				var type = behavior.GetType();
@@ -347,6 +442,8 @@ public class PropertiesPanel : MonoBehaviour
 			}
 	        foreach (var behavior in hardpoint.Behaviors)
 	        {
+		        if (behavior is Thermotoggle thermotoggle)
+			        AddField("Target Temperature", () => thermotoggle.TargetTemperature, temp => thermotoggle.TargetTemperature = temp);
 	            if (behavior is Factory factory)
 	            {
 	                AddField("Production Quality", () => factory.ProductionQuality, f => factory.ProductionQuality = f, 0, 1);
@@ -364,9 +461,10 @@ public class PropertiesPanel : MonoBehaviour
 	                        () => compatibleBlueprints.FindIndex(bp=>bp.ID== factory.Blueprint) + 1, 
 	                        i => factory.Blueprint = i == 0 ? Guid.Empty : compatibleBlueprints[i - 1].ID,
 	                        new []{"None"}.Concat(compatibleBlueprints.Select(bp=>bp.Name)).ToArray());
+	                    AddField("Active", () => factory.Active, active => factory.Active = active);
 	                    if (factory.Blueprint != Guid.Empty)
 	                    {
-	                        if (factory.ItemUnderConstruction != Guid.Empty)
+	                        if (factory.Active && factory.ItemUnderConstruction != Guid.Empty)
 	                        {
 	                            AddProgressField("Production", () =>
 	                            {
@@ -378,6 +476,7 @@ public class PropertiesPanel : MonoBehaviour
 	                        }
 	                        else
 	                        {
+		                        AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
 	                            var ingredientsList = AddList("Ingredients Needed");
 	                            var blueprintData = Context.Cache.Get<BlueprintData>(factory.Blueprint);
 	                            foreach (var ingredient in blueprintData.Ingredients)
@@ -385,6 +484,7 @@ public class PropertiesPanel : MonoBehaviour
 	                                var itemData = Context.Cache.Get<ItemData>(ingredient.Key);
 	                                ingredientsList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
 	                            }
+	                            ingredientsList.SetExpanded(false, true);
 	                            ingredientsList.RefreshValues();
 	                        }
 	                    }

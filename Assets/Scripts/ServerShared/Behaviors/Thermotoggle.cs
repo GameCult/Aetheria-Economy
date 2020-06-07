@@ -20,6 +20,7 @@ public class ThermotoggleData : BehaviorData
 
 public class Thermotoggle : IBehavior
 {
+    public float TargetTemperature;
     private ThermotoggleData _data;
 
     private Entity Entity { get; }
@@ -34,10 +35,11 @@ public class Thermotoggle : IBehavior
         Entity = entity;
         Item = item;
         Context = context;
+        TargetTemperature = data.TargetTemperature;
     }
 
     public bool Update(float delta)
     {
-        return Entity.Temperature < _data.TargetTemperature ^ _data.HighPass;
+        return Entity.Temperature < TargetTemperature ^ _data.HighPass;
     }
 }

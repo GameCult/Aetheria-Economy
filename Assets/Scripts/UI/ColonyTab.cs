@@ -70,6 +70,7 @@ public class ColonyTab : MonoBehaviour
         foreach (var attribute in entity.Personality.Keys)
             personalityList.AddPersonalityProperty(Context.Cache.Get<PersonalityAttribute>(attribute),
                 () => entity.Personality[attribute]);
+        personalityList.SetExpanded(false, true);
         
         General.RefreshValues();
     }
@@ -92,7 +93,7 @@ public class ColonyTab : MonoBehaviour
 
         void RefreshInventory()
         {
-            Debug.Log("Refreshing Inventory!");
+            //Debug.Log("Refreshing Inventory!");
 
             // Create item data mapping for cargo
             var cargoData = entity.Cargo.ToDictionary(id => _context.Cache.Get<ItemInstance>(id),
@@ -185,12 +186,48 @@ public class ColonyTab : MonoBehaviour
             else
             {
                 Inventory.AddSection("Cargo");
-                foreach (var x in cargoData)
+                foreach (var itemID in entity.Cargo.Where(id => Context.Cache.Get<ItemInstance>(id) is SimpleCommodity))
                 {
-                    if(x.Key is SimpleCommodity simpleCommodity)
-                        Inventory.AddProperty(x.Value.Name, () => simpleCommodity.Quantity.ToString());
+                    var simpleCommodity = Context.Cache.Get<SimpleCommodity>(itemID);
+                    var data = simpleCommodity.ItemData;
+                    Inventory.AddProperty(data.Name, () => simpleCommodity.Quantity.ToString(), eventData =>
+                    {
+                        Details.Clear();
+                        Details.AddItemProperties(simpleCommodity);
+                        Details.RefreshValues();
+                    });
+                }
+
+                foreach (var group in entity.Cargo
+                    .Select(id => Context.Cache.Get<ItemInstance>(id))
+                    .Where(item => item is CraftedItemInstance)
+                    .Cast<CraftedItemInstance>()
+                    .GroupBy(craftedItem => (craftedItem.Data, craftedItem.Name, Context.Cache.Get<Corporation>(Context.Cache.Get<Entity>(craftedItem.SourceEntity).Corporation))))
+                {
+                    if (group.Count() == 1)
+                    {
+                        var item = group.First();
+                        Inventory.AddProperty(item.Name, null, eventData =>
+                        {
+                            Details.Clear();
+                            Details.AddItemProperties(item);
+                            Details.RefreshValues();
+                        });
+                    }
                     else
-                        Inventory.AddProperty(x.Value.Name);
+                    {
+                        var instanceList = Inventory.AddList(group.Key.Name);
+                        foreach (var item in group)
+                        {
+                            instanceList.AddProperty(item.Name, null, eventData =>
+                            {
+                                Details.Clear();
+                                Details.AddItemProperties(item);
+                                Details.RefreshValues();
+                            });
+                        }
+                        instanceList.SetExpanded(false, true);
+                    }
                 }
             }
             Inventory.RefreshValues();
@@ -213,9 +250,14 @@ public class ColonyTab : MonoBehaviour
             var bpItemData = _context.Cache.Get<ItemData>(blueprint.Item);
 
             if(entity.GetBlueprintIngredients(blueprint, out _, out _))
-                blueprintList.AddButton("Build", _ => entity.Build(blueprint, 1, bpItemData.Name, true));
+                blueprintList.AddButton("Build", _ =>
+                {
+                    entity.Build(blueprint, 1, bpItemData.Name, true);
+                    Details.Clear();
+                });
             
             blueprintList.RefreshValues();
+            blueprintList.SetExpanded(false, true);
         }
         Details.RefreshValues();
     }

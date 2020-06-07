@@ -16,6 +16,9 @@ public class FactoryData : BehaviorData
     [InspectableField, JsonProperty("automation"), Key(2)]
     public int AutomationPoints;
     
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("productionProfile"), Key(3)]  
+    public Dictionary<Guid, float> ProductionProfile = new Dictionary<Guid, float>();
+    
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
     {
         return new Factory(context, this, entity, item);
@@ -28,6 +31,7 @@ public class Factory : IBehavior, IPersistentBehavior
     public double RetoolingTime;
     public string ItemName;
     public Guid ItemUnderConstruction;
+    public bool Active;
     
     public Entity Entity { get; }
     public Gear Item { get; }
@@ -47,8 +51,9 @@ public class Factory : IBehavior, IPersistentBehavior
                 _blueprint = value;
                 RetoolingTime = ToolingTime;
                 _retooling = true;
+                Active = false;
+                ItemName = Context.Cache.Get<ItemData>(Context.Cache.Get<BlueprintData>(value).Item).Name;
                 Item.Change();
-                ItemName = Context.Cache.Get<BlueprintData>(value).Name;
             }
         }
     }
@@ -74,18 +79,6 @@ public class Factory : IBehavior, IPersistentBehavior
         var blueprint = Context.Cache.Get<BlueprintData>(_blueprint);
         if (blueprint == null)
             return false;
-        
-        if (RetoolingTime > 0)
-        {
-            RetoolingTime -= delta;
-            return false;
-        }
-
-        if (_retooling)
-        {
-            _retooling = false;
-            Item.Change();
-        }
 
         if (ItemUnderConstruction != Guid.Empty)
         {
@@ -108,19 +101,35 @@ public class Factory : IBehavior, IPersistentBehavior
 
             return true;
         }
-
-        // Applying exponents to two random numbers and adding them produces a range of interesting probability distributions for quality
-        ItemUnderConstruction = Entity.Build(blueprint, blueprint.Quality *
-            pow(ProductionQuality, blueprint.QualityExponent) *
-            (pow(Context.Random.NextFloat(), blueprint.RandomExponent) +
-             pow(Context.Random.NextFloat(), blueprint.RandomExponent)) / 2, ItemName);
         
-        if(ItemUnderConstruction!=Guid.Empty)
+        if (RetoolingTime > 0)
+        {
+            RetoolingTime -= delta;
+            return false;
+        }
+
+        if (_retooling)
+        {
+            _retooling = false;
             Item.Change();
+        }
+
+        if (Active)
+        {
+            // Applying exponents to two random numbers and adding them produces a range of interesting probability distributions for quality
+            ItemUnderConstruction = Entity.Build(blueprint, blueprint.Quality *
+                pow(ProductionQuality, blueprint.QualityExponent) *
+                (pow(Context.Random.NextFloat(), blueprint.RandomExponent) +
+                 pow(Context.Random.NextFloat(), blueprint.RandomExponent)) / 2, ItemName);
+        
+            if(ItemUnderConstruction!=Guid.Empty)
+                Item.Change();
+        }
         
         return false;
     }
 
+    // TODO Update Factory Persistence
     public PersistentBehaviorData Store()
     {
         return new FactoryPersistence

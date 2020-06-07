@@ -51,9 +51,6 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("resourceRequirements"), Key(14)]  
     public Dictionary<Guid, int> ResourceRequirements = new Dictionary<Guid, int>();
     
-    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("productionProfile"), Key(15)]  
-    public Dictionary<Guid, float> ProductionProfile = new Dictionary<Guid, float>();
-    
     [IgnoreMember] public string EntryName
     {
         get => Name;

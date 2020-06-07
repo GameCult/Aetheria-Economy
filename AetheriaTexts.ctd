@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <cherrytree>
-	<node custom_icon_id="0" foreground="#a52a2a" is_bold="False" name="Tutorial" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591402810.0" ts_lastsave="1591403898.52" unique_id="3">
+	<node custom_icon_id="0" foreground="#a52a2a" is_bold="False" name="Tutorial" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591402810.0" ts_lastsave="1591463775.78" unique_id="3">
 		<rich_text></rich_text>
 		<node custom_icon_id="0" foreground="" is_bold="False" name="Introduction/Survey Task" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403624.27" ts_lastsave="1591403624.27" unique_id="9">
 			<rich_text></rich_text>
@@ -462,9 +462,6 @@ Threefra: You seem to be under attack. How unfortunate. Do you maybe want to do 
 				<rich_text></rich_text>
 			</node>
 		</node>
-		<node custom_icon_id="0" foreground="#2a612a" is_bold="False" name="Finch Cybernetics" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404078.58" ts_lastsave="1591404078.58" unique_id="64">
-			<rich_text></rich_text>
-		</node>
 		<node custom_icon_id="0" foreground="" is_bold="False" name="Congratulations on Not Being Dead" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403898.52" ts_lastsave="1591403898.52" unique_id="20">
 			<rich_text></rich_text>
 			<node custom_icon_id="0" foreground="#4d4d4d" is_bold="False" name="ColferV" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403946.68" ts_lastsave="1591403954.3" unique_id="30">
@@ -493,6 +490,150 @@ Threefra: [threefra grins and pointedly deletes the ‘assessment’ from her [t
 			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404131.69" ts_lastsave="1591404133.08" unique_id="75">
 				<rich_text></rich_text>
 			</node>
+		</node>
+	</node>
+	<node custom_icon_id="0" foreground="" is_bold="False" name="Documentation" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591463775.78" ts_lastsave="1591463792.94" unique_id="77">
+		<rich_text></rich_text>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Company Chart" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591463792.94" ts_lastsave="1591465153.02" unique_id="78">
+			<rich_text>
+</rich_text>
+			<rich_text justification="left"></rich_text>
+			<table char_offset="1" col_max="140" col_min="40">
+				<row>
+					<cell></cell>
+					<cell></cell>
+					<cell></cell>
+					<cell></cell>
+					<cell></cell>
+					<cell></cell>
+				</row>
+				<row>
+					<cell>
+
+Finch Cybernetics
+</cell>
+					<cell>To improve upon the basic, inefficient human form to the advancement of the species and to increase competitiveness with local flora and fauna</cell>
+					<cell>Ptarmigan Stealth Tech
+
+Bird of Paradise Beauty Products
+
+Finch Medical
+
+New Flight Aeronautics
+
+Plexcorp</cell>
+					<cell>“The search for knowledge is the duty of all intelligent beings.”
+
+The human body is frail and limiting. Make it better.
+(Move past it entirely)</cell>
+					<cell>Colorado Epps, second in command to the original founder, his mind preserved in an android body.
+(or is it?)</cell>
+					<cell>Skin-like implants for changeable tattoos, which were then sold to the military as camouflage. Also gave them the patent for programmable fake skin, which significantly helped their development of true androids. </cell>
+				</row>
+				<row>
+					<cell>Lucent Media Enterprises</cell>
+					<cell>Encourage scientific and social progress via known dopamine reward channels, e.g., social media response, celebrity status, and the concept of positive reinforcement as a whole </cell>
+					<cell>Skylight Media
+
+Lucent Talent Search 
+
+VIt Energy Drinks
+
+Nightlife Energy
+
+Lucent Computing
+
+&lt;various mining &amp; weapons corps&gt;</cell>
+					<cell>“People will do anything for the adulation or loathing of their peers. We at Lucent have harnessed that heretofore destructive tendency for the benefit of all.”
+
+Weaponized reality shows for technological advancement.</cell>
+					<cell>Three siblings run Lucent together, each head of their own specialty.</cell>
+					<cell>IDK, the future internet? (how does it differ from the current? I don’t know yet. I’d have to think about it.)
+
+Nuclear Fusion reactors?</cell>
+				</row>
+				<row>
+					<cell>ColferV</cell>
+					<cell>It is a truth universally acknowledged that nothing is as useful in diplomacy and warfare as a gigantic nuclear arsenal</cell>
+					<cell>Seal Shipworks
+
+ColferV Security
+
+Deep Six Funerary Services
+
+BBx Media
+
+IV Medical</cell>
+					<cell>“Impervious strength is the only good defense.”
+
+Humanity is doomed unless we can outgun or outrun all comers.
+
+The other major corporations are either complacent or destructively reckless and neither of those can be trusted in a hostile universe.
+
+Slow, careful, inevitable expansion.
+
+Build barricades. Expand. Eventually, the balance shifts.</cell>
+					<cell>Buckeye Jones, notoriously paranoid and less notoriously entirely justified in it.</cell>
+					<cell>Railguns, SmartArmour, and probably a very small but key part of a spaceship, which they charge out the nose for.</cell>
+				</row>
+				<row>
+					<cell>Miss Terri’s Sugariffic Snack Company</cell>
+					<cell>Company representatives could not be reached for comment. We attempted entry into the local headquarters, only to wake up two light years away, dressed in shirts proclaiming us “Winners of East Helsinki Annual Pie Eating Contest” and reeking of coconut and burnt sugar.
+
+Upon questioning, all members of the reporting team agreed that none of them had ever been to East Helsinki, and, indeed, weren’t sure whether it actually existed. </cell>
+					<cell>Rock Candy Mining Corp
+
+XL Pharmaceuticals
+
+Jawbreaker Company (mercenaries)
+
+Probably a good deal more that no one has been able to trace</cell>
+					<cell>“It’s called my business because it’s none of yours.”
+
+Who *is* Miss Terri, and how did she come to be running what is essentially the universe’s largest drug cartel?
+
+
+Candy for all!
+Suspiciously experimental substances for some!
+
+
+I feel that an argument could be made for a cult based on Twinkies.</cell>
+					<cell>Miss Terri (last name unknown)</cell>
+					<cell>Various snacks and the chemical composition and incidentals thereof</cell>
+				</row>
+				<row>
+					<cell>Aeronautics Unlimited</cell>
+					<cell>Quick expansion and retrieval of resources is key to a successful quarter, every quarter.</cell>
+					<cell>ARgos Mining
+
+Regen Filtration and Shipware
+
+Blast-Rite(tm)
+
+AU Medical</cell>
+					<cell>“Exploration. Extrication. Extermination. 
+
+…in a purely metaphorical sense, of course.”
+
+It’s a space chase resource race at an unbelievable pace…
+
+And if you stumble on their secret base, well,they’ll shoot you in the face. : )</cell>
+					<cell>Valeria Corrigant </cell>
+					<cell>Ion thrusters (A big deal when space travel was just kicking off, and a major reason they are still important now)
+
+Lightsails?
+
+Very speedy destructive mining tech</cell>
+				</row>
+				<row>
+					<cell>Corporation</cell>
+					<cell>Philosophy</cell>
+					<cell>Subsidiaries</cell>
+					<cell>Overview</cell>
+					<cell>Leadership</cell>
+					<cell>Tech</cell>
+				</row>
+			</table>
 		</node>
 	</node>
 </cherrytree>

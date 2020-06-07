@@ -813,7 +813,7 @@ public class GameContext
                 Ingredients = ingredients.Select(i=>i.ID).ToList(),
                 Quality = Random.NextFloat(qualityMin, qualityMax),
                 Blueprint = blueprint.ID,
-                Name = $"Generic {item.Name}"
+                Name = $"{item.Name}"
             };
             newGear.Durability = Evaluate(equippableItemData.Durability, newGear);
             Cache.Add(newGear);
@@ -827,7 +827,7 @@ public class GameContext
             Ingredients = ingredients.Select(i=>i.ID).ToList(),
             Quality = Random.NextFloat(qualityMin, qualityMax),
             Blueprint = blueprint.ID,
-            Name = $"Generic {item.Name}"
+            Name = $"{item.Name}"
         };
         Cache.Add(newCommodity);
         return newCommodity;
