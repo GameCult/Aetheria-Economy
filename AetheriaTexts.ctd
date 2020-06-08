@@ -188,8 +188,39 @@ Player: A) A joke. Yes. Definitely. Imagine me not knowing something like that! 
 Threefra: Next? Next, we mine. Well, you mine. I mean, technically the mining drones mine, because having them survey would be unnecessarily confusing, but that’s a bit pedantic, isn’t it? Anyway. Mining. You’ve got all those lovely resources hanging about in asteroids and such where they won’t do anyone any good, and so, it’s now your task to dig ‘em out and haul ‘em over. Got it? Good.
 </rich_text>
 			</node>
-			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404084.03" ts_lastsave="1591404921.82" unique_id="65">
-				<rich_text>Vincenti: Excellent, excellent! </rich_text>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404084.03" ts_lastsave="1591573849.88" unique_id="65">
+				<rich_text>Vincenti: You figured out the survey drone. Well done. Not that it's a difficult task for </rich_text>
+				<rich_text style="italic">you</rich_text>
+				<rich_text>, of course. No, no, Lucent always chooses the best! And Vincenti Verdegris can always spot that special something that means success! And with that glowing bright on the motivational board of our minds, let's blaze ahead. We now know what's out there. And we also know that it's not doing anyone much good just gathering stardust. So, Subsidiary, what's your next task?
+
+Player: A) Aren't you supposed to be telling me that?
+
+    Vincenti:   A) Mmm...yes. Technically. But that's rather tedious, don't you think? Taskmaster orders, subsidiary runs to comply...well, it's all a bit predictable. Predictability is death's much more disappointing personal assistant. And no one wants to be foisted off on the PA.
+
+    Player: a1) ...I mean, if the alternative is death--
+            a2) You're right. I'd never let death snub me like that. I'm </rich_text>
+				<rich_text style="italic">[subsidiary name]</rich_text>
+				<rich_text>. And I intend to make sure everyone--and everything--knows it.
+            
+            Vincenti: a1) --Then you make death get off his throne of skulls and meet you in person. Exactly!
+                           a2) And they will. [you think, for a moment, that you hear Vincenti whisper to some unseen person something that sounds like ‘make sure that gets in the edit’] But if you want that to happen, we have to get moving. And that means it's time to mine!
+                           
+Player: B) I think we ought to go and mine them.
+
+    Vincenti: B) Correct! You're on a barrell roll here, aren't you?
+    
+ Player: C) Well, since the resources are over there, and we're all the way over here...I suppose I ought to put my spacesuit on, huh?
+ 
+    Vincenti: C) ...Ha ha! Playing the comedy angle, eh? Good choice, good choice. Everyone loves a wit. Now the actual answer, of course, is...mine! The verb, not the possessive, of course, for the homophone-challenged.
+    
+    Player: C1) I wasn't joking.
+        Vincenti: C1: Take it from those who know--you were joking. Right?
+        
+        Player: C1a...right.
+        
+       Player:  C2) Roger, that's me. Always the funny one. Ha. Ha. Of course the answer is to mine. 
+       
+       Vincenti: And so, with all that in mind...we mine!</rich_text>
 			</node>
 		</node>
 		<node custom_icon_id="0" foreground="" is_bold="False" name="Towing Task" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403699.05" ts_lastsave="1591403699.05" unique_id="11">
@@ -218,8 +249,37 @@ B) Firm assertion of property rights, that’s a point in your favour. I was won
 C) Exactly. Full marks. And how do we fix this? Tow drones, obviously. So get going.
 </rich_text>
 			</node>
-			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404085.75" ts_lastsave="1591404110.36" unique_id="66">
-				<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404085.75" ts_lastsave="1591575699.89" unique_id="66">
+				<rich_text>Vincenti: Well, well. Resources aquired, just like that. You're tearing through these basics like a Mulch-a-Munch through composted biodrones! But are you ready for the next task?
+
+Player: A) Of course I am.
+            Vincenti: A) Of course you are! Wonderful, wonderful. We've got ourselves a go-getter here!
+            
+            Player a1) [if player asked who ‘we’ was earlier]...No, really, who's ‘we’ and who are you talking to?
+            Vincenti: a1) ‘We’...is all of us.
+            Player: ab) I know that; I have a dictionary download, same as you. But I'm asking who, specifically, is ‘us’?
+            Vincenti: ‘Us’ is We, of course!
+            Player: Well, 'we're' starting to give me the deep space jeebies, Vincenti.
+            Vincenti: That sounds like a personal problem. Now...onwards, sans questions, yes?
+            
+            A2) I try. So what now?
+
+Player: B) That depends on what the next task is, I suppose.
+
+        Vincenti B) Ah, clever, clever. It always pays to be careful. So think carefully about this: those resources we've just    mined are not exactly a stone's throw away, are they? No, no, they're not even an orbital slingshot away. So, our clever and cautious subsidiary, what do you think we ought to do now?
+
+        Player b1) [Same options as above re: ‘who the hell is we, you weirdo?’]
+
+        Player b2) Well, we should probably call on those conveniently hovering towing drones to pull us closer.
+
+         Vincenti   b2) Exactly. Well done, well done! 
+         
+         Player b3) Depends on how many Consolidation statutes you're comfortable with breaking.
+         
+         Vincenti b3) *laughs* For liability purposes Lucent representatives must refrain from answering that question, so just imagine for a moment you are a law abiding citizen acting in accordance with all relevant rules and regulations. Tedious, of course, but we can't have everything, can we?
+         
+    
+    Vincenti: And so, tow. Bring us to our resources, subsidiary.</rich_text>
 			</node>
 		</node>
 		<node custom_icon_id="0" foreground="" is_bold="False" name="Infrastructure Creation" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403714.54" ts_lastsave="1591403714.54" unique_id="12">
@@ -244,8 +304,8 @@ Chippy: Well, I should think so. Leaves a nasty taste in the mouth. Now, I see y
 Threefra: Right, so we’re here, the resources are here, everyone’s here. And since unused and unleveraged resources are just credits jettisoned out the airlock, it’s time to put them to work. Clear? Wonderful. Get going.
 </rich_text>
 			</node>
-			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404110.36" ts_lastsave="1591404113.11" unique_id="67">
-				<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404110.36" ts_lastsave="1591576031.1" unique_id="67">
+				<rich_text>Vicenti: Now the gap between here and there has become less of a vast ocean and more of a pleasantly splashable puddle--go ahead, get your metaphorical feet wet--it's time to put our resources to work. Let's see what you can build!</rich_text>
 			</node>
 		</node>
 		<node custom_icon_id="0" foreground="" is_bold="False" name="Commodity Production" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403733.27" ts_lastsave="1591403733.27" unique_id="13">
@@ -289,8 +349,8 @@ D) I could, but that implies I believe you have the possibility for improvement.
 Threefra: You have factories, but they’re no good to anyone sitting idle til the heat death of the universe. So, now you have the infrastructure for things more complex than slabs of steel, it’s time to make use of it.
 </rich_text>
 			</node>
-			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404115.2" ts_lastsave="1591404116.88" unique_id="68">
-				<rich_text></rich_text>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404115.2" ts_lastsave="1591576083.71" unique_id="68">
+				<rich_text>Vincenti: </rich_text>
 			</node>
 		</node>
 		<node custom_icon_id="0" foreground="" is_bold="False" name="Trading Task (BUY!)" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403748.84" ts_lastsave="1591403748.84" unique_id="14">
