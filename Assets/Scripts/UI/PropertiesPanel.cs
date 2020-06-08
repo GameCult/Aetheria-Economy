@@ -9,6 +9,8 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 public class PropertiesPanel : MonoBehaviour
 {
@@ -26,6 +28,7 @@ public class PropertiesPanel : MonoBehaviour
     public BoolField BoolField;
     public PropertyButton PropertyButton;
     public ButtonField ButtonField;
+    public IncrementField IncrementField;
     [HideInInspector] public FlatFlatButton SelectedChild;
     [HideInInspector] public GameContext Context;
 
@@ -211,6 +214,27 @@ public class PropertiesPanel : MonoBehaviour
 		field.Field.contentType = TMP_InputField.ContentType.IntegerNumber;
 		field.Field.onValueChanged.AddListener(val => write(int.Parse(val)));
 		RefreshPropertyValues += () => field.Field.text = read().ToString(CultureInfo.InvariantCulture);
+		Properties.Add(field.gameObject);
+		OnPropertyAdded?.Invoke(field.gameObject);
+	}
+	
+	public void AddIncrementField(string name, Func<int> read, Action<int> write, Func<int> min, Func<int> max)
+	{
+		var field = Instantiate(IncrementField, transform);
+		field.Label.text = name;
+		field.Increment.OnClick += data => write(read() + 1);
+		field.Decrement.OnClick += data => write(read() - 1);
+		RefreshPropertyValues += () =>
+		{
+			var val = read();
+			var minval = min();
+			var maxval = max();
+			if (val < minval || val > maxval)
+				write(val = clamp(val, minval, maxval));
+			field.Value.text = val.ToString(CultureInfo.InvariantCulture);
+			field.Increment.CurrentState = val == maxval ? FlatButtonState.Disabled : FlatButtonState.Unselected;
+			field.Decrement.CurrentState = val == minval ? FlatButtonState.Disabled : FlatButtonState.Unselected;
+		};
 		Properties.Add(field.gameObject);
 		OnPropertyAdded?.Invoke(field.gameObject);
 	}
@@ -464,6 +488,11 @@ public class PropertiesPanel : MonoBehaviour
 			}
 	        foreach (var behavior in hardpoint.Behaviors)
 	        {
+		        if(behavior is IPopulationAssignment populationAssignment)
+			        AddIncrementField("Assigned Population", 
+				        () => populationAssignment.AssignedPopulation, 
+				        p => populationAssignment.AssignedPopulation = p,
+				        () => 0, () => entity.Population - entity.AssignedPopulation + populationAssignment.AssignedPopulation);
 		        if (behavior is Thermotoggle thermotoggle)
 			        AddField("Target Temperature", () => thermotoggle.TargetTemperature, temp => thermotoggle.TargetTemperature = temp);
 	            if (behavior is Factory factory)

@@ -15,8 +15,11 @@ public class FactoryData : BehaviorData
 
     [InspectableField, JsonProperty("automation"), Key(2)]
     public int AutomationPoints;
+
+    [InspectableField, JsonProperty("automationQuality"), Key(3)]
+    public float AutomationQuality = .5f;
     
-    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("productionProfile"), Key(3)]  
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("productionProfile"), Key(4)]  
     public Dictionary<Guid, float> ProductionProfile = new Dictionary<Guid, float>();
     
     public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
@@ -25,13 +28,14 @@ public class FactoryData : BehaviorData
     }
 }
 
-public class Factory : IBehavior, IPersistentBehavior
+public class Factory : IBehavior, IPersistentBehavior, IPopulationAssignment
 {
     public float ProductionQuality;
     public double RetoolingTime;
     public string ItemName;
     public Guid ItemUnderConstruction;
     public bool Active;
+    public int AssignedPopulation { get; set; }
     
     public Entity Entity { get; }
     public Gear Item { get; }
@@ -64,7 +68,6 @@ public class Factory : IBehavior, IPersistentBehavior
     private FactoryData _data;
     
     private Guid _blueprint;
-    private int _assignedPopulation;
     private bool _retooling = false;
     private float _currentProductionQuality;
 
@@ -86,7 +89,7 @@ public class Factory : IBehavior, IPersistentBehavior
         if (ItemUnderConstruction != Guid.Empty)
         {
             Entity.IncompleteCargo[ItemUnderConstruction] =
-                Entity.IncompleteCargo[ItemUnderConstruction] - delta * (_assignedPopulation + _data.AutomationPoints) /
+                Entity.IncompleteCargo[ItemUnderConstruction] - delta * (AssignedPopulation + _data.AutomationPoints) /
                 pow(lerp(blueprint.QualityFloor, 1, saturate(_currentProductionQuality)),
                     blueprint.ProductionExponent);
             
@@ -99,6 +102,9 @@ public class Factory : IBehavior, IPersistentBehavior
                     Entity.AddCargo(craftedItemInstance);
                 Entity.IncompleteCargo.Remove(ItemUnderConstruction);
                 ItemUnderConstruction = Guid.Empty;
+                foreach (var attribute in _data.ProductionProfile)
+                    Entity.Personality[attribute.Key] = lerp(Entity.Personality[attribute.Key], attribute.Value,
+                        Context.GlobalData.ProductionPersonalityLerp * ((float) AssignedPopulation / Entity.Population));
                 Item.Change();
             }
 
@@ -119,11 +125,20 @@ public class Factory : IBehavior, IPersistentBehavior
 
         if (Active)
         {
-            // Applying exponents to two random numbers and adding them produces a range of interesting probability distributions for quality
-            ItemUnderConstruction = Entity.Build(blueprint, blueprint.Quality *
+            var profileDistance = 0f;
+            if (_data.ProductionProfile.Any())
+                profileDistance = _data.ProductionProfile.Sum(x => abs(x.Value - Entity.Personality[x.Key])) /
+                                  _data.ProductionProfile.Count;
+            var personalityQuality = 
+                (_data.AutomationPoints * _data.AutomationQuality + AssignedPopulation * (1 - profileDistance)) / 
+                (_data.AutomationPoints + AssignedPopulation);
+            ItemUnderConstruction = Entity.Build(blueprint, 
+                blueprint.Quality *
+                pow(personalityQuality, blueprint.PersonalityExponent) *
                 pow(ProductionQuality, blueprint.QualityExponent) *
-                (pow(Context.Random.NextFloat(), blueprint.RandomExponent) +
-                 pow(Context.Random.NextFloat(), blueprint.RandomExponent)) / 2, ItemName);
+                // Applying exponents to two random numbers and averaging them produces a range of interesting probability distributions for quality
+                (pow(Context.Random.NextFloat(), blueprint.RandomQualityExponent) +
+                 pow(Context.Random.NextFloat(), blueprint.RandomQualityExponent)) / 2, ItemName);
         
             if(ItemUnderConstruction!=Guid.Empty)
                 Item.Change();
@@ -139,7 +154,7 @@ public class Factory : IBehavior, IPersistentBehavior
         {
             Blueprint = _blueprint,
             RetoolingTime = RetoolingTime,
-            AssignedPopulation = _assignedPopulation,
+            AssignedPopulation = AssignedPopulation,
             ProductionQuality = ProductionQuality
         };
     }
@@ -149,7 +164,7 @@ public class Factory : IBehavior, IPersistentBehavior
         var factoryPersistence = data as FactoryPersistence;
         _blueprint = factoryPersistence.Blueprint;
         RetoolingTime = factoryPersistence.RetoolingTime;
-        _assignedPopulation = factoryPersistence.AssignedPopulation;
+        AssignedPopulation = factoryPersistence.AssignedPopulation;
         ProductionQuality = factoryPersistence.ProductionQuality;
     }
 }

@@ -886,6 +886,7 @@
     <Compile Include="Assets\Scripts\UI\FlatFlatButton.cs" />
     <Compile Include="Assets\Scripts\UI\GalaxyZone.cs" />
     <Compile Include="Assets\Scripts\UI\Icons.cs" />
+    <Compile Include="Assets\Scripts\UI\IncrementField.cs" />
     <Compile Include="Assets\Scripts\UI\InputField.cs" />
     <Compile Include="Assets\Scripts\UI\LoginScreen.cs" />
     <Compile Include="Assets\Scripts\UI\MouseHover.cs" />

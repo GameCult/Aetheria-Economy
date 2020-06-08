@@ -65,7 +65,7 @@ public class ColonyTab : MonoBehaviour
         General.AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GlobalData.SignificantDigits)}");
         General.AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
         General.AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
-        General.AddProperty("Population", () => $"{entity.Population}");
+        General.AddProperty("Assigned Population", () => $"{entity.AssignedPopulation}/{entity.Population}");
         var personalityList = General.AddList("Personality");
         foreach (var attribute in entity.Personality.Keys)
             personalityList.AddPersonalityProperty(Context.Cache.Get<PersonalityAttribute>(attribute),

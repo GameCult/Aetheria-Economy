@@ -163,6 +163,9 @@ public class GlobalData : DatabaseEntry
 
     [InspectableField, JsonProperty("significantDigits"), Key(51)]
     public int SignificantDigits = 3;
+
+    [InspectableField, JsonProperty("productionPersonalityLerp"), Key(52)]
+    public float ProductionPersonalityLerp = .05f;
     
     public float PlanetRadius(float mass)
     {

@@ -47,6 +47,11 @@ public interface IPersistentBehavior//<T> where T : IBehavior
     void Restore(PersistentBehaviorData data);
 }
 
+public interface IPopulationAssignment
+{
+    int AssignedPopulation { get; set; }
+}
+
 public interface IController
 {
     bool Available { get; }

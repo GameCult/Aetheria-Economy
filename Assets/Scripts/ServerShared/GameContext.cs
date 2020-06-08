@@ -744,7 +744,7 @@ public class GameContext
             {
                 Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}",
                 Temperature = 293,
-                Population = 1
+                Population = 4
             };
             var parentCorp = Cache.Get<MegaCorporation>(corpData.Parent);
             foreach (var attribute in parentCorp.Personality)
