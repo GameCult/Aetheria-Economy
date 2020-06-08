@@ -552,7 +552,7 @@ Threefra: [threefra grins and pointedly deletes the ‘assessment’ from her [t
 			</node>
 		</node>
 	</node>
-	<node custom_icon_id="0" foreground="" is_bold="False" name="Documentation" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591463775.78" ts_lastsave="1591463792.94" unique_id="77">
+	<node custom_icon_id="0" foreground="" is_bold="False" name="Documentation" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591463775.78" ts_lastsave="1591577087.84" unique_id="77">
 		<rich_text></rich_text>
 		<node custom_icon_id="0" foreground="" is_bold="False" name="Company Chart" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591463792.94" ts_lastsave="1591465153.02" unique_id="78">
 			<rich_text>
@@ -694,6 +694,20 @@ Very speedy destructive mining tech</cell>
 					<cell>Tech</cell>
 				</row>
 			</table>
+		</node>
+		<node custom_icon_id="0" foreground="" is_bold="False" name="Timeline" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591577087.84" ts_lastsave="1591577088.87" unique_id="79">
+			<rich_text>
+(Sol, From Terran Federation Exodus)
+-243 Void Pirate Exodus
+-242 Sol Enforcement Exodus
+-0 Terran Federation Exodus
+
+(Elysium, From Game Start)
+-242 Federation arrives in Elysium
+-130 Federation develops warp drive technology (not FTL)
+-50 Federation mandates exclusive warp drive use in deep space due to alien noise complaints
+-2 Enforcemers arrives in Elysium
+-1 Pirates arrive in Elysium</rich_text>
 		</node>
 	</node>
 </cherrytree>
