@@ -349,8 +349,8 @@ D) I could, but that implies I believe you have the possibility for improvement.
 Threefra: You have factories, but they’re no good to anyone sitting idle til the heat death of the universe. So, now you have the infrastructure for things more complex than slabs of steel, it’s time to make use of it.
 </rich_text>
 			</node>
-			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404115.2" ts_lastsave="1591576083.71" unique_id="68">
-				<rich_text>Vincenti: </rich_text>
+			<node custom_icon_id="0" foreground="#6ab2f9" is_bold="False" name="Lucent Media" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591404115.2" ts_lastsave="1591576962.46" unique_id="68">
+				<rich_text>Vincenti: Up and running, swift, swift. Amazing!</rich_text>
 			</node>
 		</node>
 		<node custom_icon_id="0" foreground="" is_bold="False" name="Trading Task (BUY!)" prog_lang="custom-colors" readonly="False" tags="" ts_creation="1591403748.84" ts_lastsave="1591403748.84" unique_id="14">
