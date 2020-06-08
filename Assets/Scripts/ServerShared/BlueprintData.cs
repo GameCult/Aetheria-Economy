@@ -31,24 +31,27 @@ public class BlueprintData : DatabaseEntry, INamedEntry
     public float ProductionExponent = 1;
 
     [InspectableField, JsonProperty("randomExponent"), Key(8)]
-    public float RandomExponent = 1;
+    public float RandomQualityExponent = 1;
 
-    [InspectableField, JsonProperty("qualityFloor"), Key(9)]
+    [InspectableField, JsonProperty("personalityExponent"), Key(9)]
+    public float PersonalityExponent = 1;
+
+    [InspectableField, JsonProperty("qualityFloor"), Key(10)]
     public float QualityFloor = .25f;
 
-    [InspectableField, JsonProperty("statEffects"), Key(10)]
+    [InspectableField, JsonProperty("statEffects"), Key(11)]
     public List<BlueprintStatEffect> StatEffects = new List<BlueprintStatEffect>();
 
-    [InspectableField, JsonProperty("researchTime"), Key(11)]
+    [InspectableField, JsonProperty("researchTime"), Key(12)]
     public float ResearchTime;
     
-    [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("researchDependencies"), Key(12)]
+    [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("researchDependencies"), Key(13)]
     public List<Guid> Dependencies = new List<Guid>();
 
-    [InspectableDatabaseLink(typeof(CraftedItemData)), JsonProperty("factoryItem"), Key(13)]
+    [InspectableDatabaseLink(typeof(CraftedItemData)), JsonProperty("factoryItem"), Key(14)]
     public Guid FactoryItem;
 
-    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("resourceRequirements"), Key(14)]  
+    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("resourceRequirements"), Key(15)]  
     public Dictionary<Guid, int> ResourceRequirements = new Dictionary<Guid, int>();
     
     [IgnoreMember] public string EntryName

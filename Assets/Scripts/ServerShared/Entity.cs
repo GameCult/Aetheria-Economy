@@ -75,6 +75,9 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     // [IgnoreMember] public Dictionary<Gear, EquippableItemData> GearData;
     // [IgnoreMember] public Dictionary<Gear, List<IBehavior>> ItemBehaviors;
 
+    private List<IPopulationAssignment> PopulationAssignments = new List<IPopulationAssignment>();
+
+    [IgnoreMember] public int AssignedPopulation => PopulationAssignments.Sum(pa => pa.AssignedPopulation);
     [IgnoreMember] public float Mass { get; private set; }
     [IgnoreMember] public float OccupiedCapacity { get; private set; }
     [IgnoreMember] public float ThermalMass { get; private set; }
@@ -187,6 +190,10 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                     Trigger = (Trigger) g.FirstOrDefault(b=>b is Trigger)
                 })
             .ToArray();
+        
+        foreach(var behavior in hardpoint.Behaviors)
+            if(behavior is IPopulationAssignment populationAssignment)
+                PopulationAssignments.Add(populationAssignment);
     }
 
     public void Equip(Gear gear, Hardpoint hardpoint)
