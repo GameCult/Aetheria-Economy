@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 32
+    m_Left: 16
     m_Right: 8
     m_Top: 40
     m_Bottom: -8
@@ -299,6 +299,8 @@ MonoBehaviour:
   PropertyButton: {fileID: 1613450655389604799, guid: 99bde06e2f0ca504bb95f2a4e3429462,
     type: 3}
   ButtonField: {fileID: 6566784227922820057, guid: 6db1feb4cda7b8c419384cd42c85a5c4,
+    type: 3}
+  IncrementField: {fileID: 5486709585343280439, guid: 9c14c92a1a08b0a4fb4f6aa6f8504082,
     type: 3}
   SelectedChild: {fileID: 0}
   FoldoutIcon: {fileID: 6485458701090981364}

@@ -13,6 +13,29 @@ using static Unity.Mathematics.math;
 
 public static class UnityExtensions
 {
+	public static T FindInParents<T>(this GameObject go) where T : Component
+	{
+		if (go == null) return null;
+		var comp = go.GetComponent<T>();
+
+		if (comp != null)
+			return comp;
+
+		Transform t = go.transform.parent;
+		while (t != null && comp == null)
+		{
+			comp = t.gameObject.GetComponent<T>();
+			t = t.parent;
+		}
+		return comp;
+	}
+
+	public static bool ContainsWorldPoint(this RectTransform rectTransform, Vector3 point)
+	{
+		Vector2 localMousePosition = rectTransform.InverseTransformPoint(point);
+		return rectTransform.rect.Contains(localMousePosition);
+	}
+	
 	public static void BroadcastAll(string fun, System.Object msg) {
 		GameObject[] gos = (GameObject[])GameObject.FindObjectsOfType(typeof(GameObject));
 		foreach (GameObject go in gos) {

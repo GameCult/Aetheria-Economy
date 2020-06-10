@@ -1298,7 +1298,7 @@
             <e p="Extensions.cs" t="Include" />
             <e p="GameContext.cs" t="Include" />
             <e p="GlobalData.cs" t="Include" />
-            <e p="IDynamicProperties.cs" t="Include" />
+            <e p="IChangeSource.cs" t="Include" />
             <e p="ItemData.cs" t="Include" />
             <e p="ItemInstance.cs" t="Include" />
             <e p="JsonConverters.cs" t="Include" />

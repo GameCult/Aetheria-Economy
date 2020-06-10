@@ -38,7 +38,7 @@ public class PropertiesPanel : MonoBehaviour
     protected bool RadioSelection = false;
 
     protected event Action<GameObject> OnPropertyAdded;
-    protected IDynamicProperties ChangeSource;
+    protected IChangeSource ChangeSource;
     protected Action OnPropertiesChanged;
     
     public void Start()
@@ -186,8 +186,6 @@ public class PropertiesPanel : MonoBehaviour
 			if (field.Field.text != s)
 			{
 				field.Field.text = s;
-				// TODO Find out what's going on with the TMP Input Field
-				// BODY Setting an input field value causes the text to layout wrong, current workaround is disabling and enabling the gameobject
 				field.gameObject.SetActive(false);
 				Observable.NextFrame().Subscribe(_ => OnPropertyAdded?.Invoke(field.gameObject));
 			}
@@ -202,7 +200,16 @@ public class PropertiesPanel : MonoBehaviour
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.DecimalNumber;
 		field.Field.onValueChanged.AddListener(val => write(float.Parse(val)));
-		RefreshPropertyValues += () => field.Field.text = read().ToString(CultureInfo.InvariantCulture);
+		RefreshPropertyValues += () =>
+		{
+			var s = read().ToString(CultureInfo.InvariantCulture);
+			if (field.Field.text != s)
+			{
+				field.Field.text = s;
+				field.gameObject.SetActive(false);
+				Observable.NextFrame().Subscribe(_ => OnPropertyAdded?.Invoke(field.gameObject));
+			}
+		};
 		Properties.Add(field.gameObject);
 		OnPropertyAdded?.Invoke(field.gameObject);
 	}
@@ -213,7 +220,16 @@ public class PropertiesPanel : MonoBehaviour
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.IntegerNumber;
 		field.Field.onValueChanged.AddListener(val => write(int.Parse(val)));
-		RefreshPropertyValues += () => field.Field.text = read().ToString(CultureInfo.InvariantCulture);
+		RefreshPropertyValues += () =>
+		{
+			var s = read().ToString(CultureInfo.InvariantCulture);
+			if (field.Field.text != s)
+			{
+				field.Field.text = s;
+				field.gameObject.SetActive(false);
+				Observable.NextFrame().Subscribe(_ => OnPropertyAdded?.Invoke(field.gameObject));
+			}
+		};
 		Properties.Add(field.gameObject);
 		OnPropertyAdded?.Invoke(field.gameObject);
 	}
@@ -310,10 +326,14 @@ public class PropertiesPanel : MonoBehaviour
 		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 
-	void RemoveListener()
+	public void RemoveListener()
 	{
 		if (ChangeSource != null)
+		{
 			ChangeSource.OnChanged -= OnPropertiesChanged;
+			ChangeSource = null;
+			OnPropertiesChanged = null;
+		}
 	}
 	
 	public void Inspect(Entity entity)
@@ -328,10 +348,7 @@ public class PropertiesPanel : MonoBehaviour
             "Platform");
         //AddList(hullData.Name).Inspect(hull, entity);
         //PropertiesPanel.AddProperty("Hull", () => $"{hullData.Name}");
-        AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{entity.Capacity:0}");
-        AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GlobalData.SignificantDigits)}");
-        AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
-        AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehaviors<Reactor>().First().Capacitance:0}");
+        AddEntityProperties(entity);
 
         var hardpointList = AddList("Gear");
         hardpointList.InspectHardpoints(entity);
@@ -384,7 +401,7 @@ public class PropertiesPanel : MonoBehaviour
 				var simpleCommodity = Context.Cache.Get<SimpleCommodity>(itemID);
 				var data = simpleCommodity.ItemData;
 				var propertiesList = AddList($"{simpleCommodity.Quantity.ToString()} {data.Name}");
-				propertiesList.AddItemProperties(simpleCommodity);
+				propertiesList.AddItemProperties(entity, simpleCommodity);
 				propertiesList.RefreshValues();
 				propertiesList.SetExpanded(false, true);
 			}
@@ -399,7 +416,7 @@ public class PropertiesPanel : MonoBehaviour
 				{
 					var item = group.First();
 					var propertiesList = AddList(item.Name);
-					propertiesList.AddItemProperties(item);
+					propertiesList.AddItemProperties(entity, item);
 					propertiesList.RefreshValues();
 					propertiesList.SetExpanded(false, true);
 				}
@@ -409,7 +426,7 @@ public class PropertiesPanel : MonoBehaviour
 					foreach (var item in group)
 					{
 						var propertiesList = instanceList.AddList(item.Name);
-						propertiesList.AddItemProperties(item);
+						propertiesList.AddItemProperties(entity, item);
 						propertiesList.RefreshValues();
 						propertiesList.SetExpanded(false, true);
 					}
@@ -421,11 +438,32 @@ public class PropertiesPanel : MonoBehaviour
 		}
 	}
 
-	public void AddItemProperties(ItemInstance item)
+	public void AddEntityProperties(Entity entity)
+	{
+		AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{entity.Capacity:0}");
+		AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GlobalData.SignificantDigits)}");
+		AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
+		AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehavior<Reactor>()?.Capacitance??0:0}");
+	}
+
+	public void AddItemProperties(Entity entity, ItemInstance item)
 	{
 		var data = Context.Cache.Get<ItemData>(item.Data);
 		AddProperty("Type", () => data.Name);
 		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
+		if (item is CraftedItemInstance craftedItemInstance)
+		{
+			var sourceEntity = Context.Cache.Get<Entity>(craftedItemInstance.SourceEntity);
+			if (sourceEntity != null)
+			{
+				var corporation = Context.Cache.Get<Corporation>(sourceEntity.Corporation);
+				AddProperty("Manufacturer", () => corporation.Name);
+			}
+			else
+			{
+				AddProperty("Manufacturer", () => "GameCult");
+			}
+		}
 		if (item is SimpleCommodity simpleCommodity)
 			AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
 		AddProperty("Mass", () => item.Mass.SignificantDigits(Context.GlobalData.SignificantDigits));
@@ -436,20 +474,47 @@ public class PropertiesPanel : MonoBehaviour
 			var gearData = gear.ItemData;
 			AddProperty("Durability", () =>
 				$"{gear.Durability.SignificantDigits(Context.GlobalData.SignificantDigits)}/{Context.Evaluate(gearData.Durability, gear).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+			foreach (var behavior in gearData.Behaviors)
+			{
+				var type = behavior.GetType();
+				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
+				{
+					foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
+					{
+						var fieldType = field.FieldType;
+						if (fieldType == typeof(float))
+							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+						else if (fieldType == typeof(int))
+							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
+						else if (fieldType == typeof(PerformanceStat))
+						{
+							var stat = (PerformanceStat) field.GetValue(behavior);
+							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear, entity).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+						}
+					}
+				}
+			}
 		}
-		if (item is CraftedItemInstance craftedItemInstance)
+	}
+
+	public void InspectChildren(Entity entity, Action<Entity> onSelect)
+	{
+		RemoveListener();
+
+		ChangeSource = entity.ChildEvent;
+		OnPropertiesChanged = InspectChildrenInternal;
+		ChangeSource.OnChanged += OnPropertiesChanged;
+		InspectChildrenInternal();
+
+		void InspectChildrenInternal()
 		{
-			var entity = Context.Cache.Get<Entity>(craftedItemInstance.SourceEntity);
-			if (entity != null)
+			foreach (var child in entity.Children)
 			{
-				var corporation = Context.Cache.Get<Corporation>(entity.Corporation);
-				AddProperty("Manufacturer", () => corporation.Name);
-			}
-			else
-			{
-				AddProperty("Manufacturer", () => "God");
+				var childEntity = Context.Cache.Get<Entity>(child);
+				AddProperty(childEntity.Name, null, data => onSelect(childEntity), true);
 			}
 		}
+		
 	}
 
 	public void Inspect(Entity entity, Hardpoint hardpoint)
@@ -465,84 +530,67 @@ public class PropertiesPanel : MonoBehaviour
 		{
 			//Debug.Log($"Refreshing {hardpoint.Gear.Name} properties");
 			Clear();
-			AddItemProperties(hardpoint.Gear);
-			foreach (var behavior in hardpoint.ItemData.Behaviors)
+			if (hardpoint.Gear != null)
 			{
-				var type = behavior.GetType();
-				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
-				{
-					foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
-					{
-						var fieldType = field.FieldType;
-						if (fieldType == typeof(float))
-							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GlobalData.SignificantDigits)}");
-						else if (fieldType == typeof(int))
-							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
-						else if (fieldType == typeof(PerformanceStat))
-						{
-							var stat = (PerformanceStat) field.GetValue(behavior);
-							AddProperty(field.Name, () => $"{Context.Evaluate(stat, hardpoint.Gear, entity).SignificantDigits(Context.GlobalData.SignificantDigits)}");
-						}
-					}
-				}
+				AddItemProperties(entity, hardpoint.Gear);
+		        foreach (var behavior in hardpoint.Behaviors)
+		        {
+			        if(behavior is IPopulationAssignment populationAssignment)
+				        AddIncrementField("Assigned Population", 
+					        () => populationAssignment.AssignedPopulation, 
+					        p => populationAssignment.AssignedPopulation = p,
+					        () => 0, () => entity.Population - entity.AssignedPopulation + populationAssignment.AssignedPopulation);
+			        if (behavior is Thermotoggle thermotoggle)
+				        AddField("Target Temperature", () => thermotoggle.TargetTemperature, temp => thermotoggle.TargetTemperature = temp);
+		            if (behavior is Factory factory)
+		            {
+		                AddField("Production Quality", () => factory.ProductionQuality, f => factory.ProductionQuality = f, 0, 1);
+		                var corporation = Context.Cache.Get<Corporation>(entity.Corporation);
+		                var compatibleBlueprints = corporation.UnlockedBlueprints
+		                    .Select(id => Context.Cache.Get<BlueprintData>(id))
+		                    .Where(bp => bp.FactoryItem == hardpoint.ItemData.ID).ToList();
+		                if (factory.RetoolingTime > 0)
+		                {
+		                    AddProgressField("Retooling", () => (factory.ToolingTime - (float) factory.RetoolingTime) / factory.ToolingTime);
+		                }
+		                else
+		                {
+		                    AddField("Item", 
+		                        () => compatibleBlueprints.FindIndex(bp=>bp.ID== factory.Blueprint) + 1, 
+		                        i => factory.Blueprint = i == 0 ? Guid.Empty : compatibleBlueprints[i - 1].ID,
+		                        new []{"None"}.Concat(compatibleBlueprints.Select(bp=>bp.Name)).ToArray());
+		                    AddField("Active", () => factory.Active, active => factory.Active = active);
+		                    if (factory.Blueprint != Guid.Empty)
+		                    {
+		                        if (factory.Active && factory.ItemUnderConstruction != Guid.Empty)
+		                        {
+		                            AddProgressField("Production", () =>
+		                            {
+			                            if (factory.ItemUnderConstruction == Guid.Empty) return 1;
+			                            var itemInstance = Context.Cache.Get<CraftedItemInstance>(factory.ItemUnderConstruction);
+			                            var blueprintData = Context.Cache.Get<BlueprintData>(itemInstance.Blueprint);
+			                            return (blueprintData.ProductionTime - (float) entity.IncompleteCargo[factory.ItemUnderConstruction]) / blueprintData.ProductionTime;
+		                            });
+		                        }
+		                        else
+		                        {
+			                        //AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
+			                        AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
+		                            var ingredientsList = AddList("Ingredients Needed");
+		                            var blueprintData = Context.Cache.Get<BlueprintData>(factory.Blueprint);
+		                            foreach (var ingredient in blueprintData.Ingredients)
+		                            {
+		                                var itemData = Context.Cache.Get<ItemData>(ingredient.Key);
+		                                ingredientsList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
+		                            }
+		                            ingredientsList.SetExpanded(false, true);
+		                            ingredientsList.RefreshValues();
+		                        }
+		                    }
+		                }
+		            }
+		        }
 			}
-	        foreach (var behavior in hardpoint.Behaviors)
-	        {
-		        if(behavior is IPopulationAssignment populationAssignment)
-			        AddIncrementField("Assigned Population", 
-				        () => populationAssignment.AssignedPopulation, 
-				        p => populationAssignment.AssignedPopulation = p,
-				        () => 0, () => entity.Population - entity.AssignedPopulation + populationAssignment.AssignedPopulation);
-		        if (behavior is Thermotoggle thermotoggle)
-			        AddField("Target Temperature", () => thermotoggle.TargetTemperature, temp => thermotoggle.TargetTemperature = temp);
-	            if (behavior is Factory factory)
-	            {
-	                AddField("Production Quality", () => factory.ProductionQuality, f => factory.ProductionQuality = f, 0, 1);
-	                var corporation = Context.Cache.Get<Corporation>(entity.Corporation);
-	                var compatibleBlueprints = corporation.UnlockedBlueprints
-	                    .Select(id => Context.Cache.Get<BlueprintData>(id))
-	                    .Where(bp => bp.FactoryItem == hardpoint.ItemData.ID).ToList();
-	                if (factory.RetoolingTime > 0)
-	                {
-	                    AddProgressField("Retooling", () => (factory.ToolingTime - (float) factory.RetoolingTime) / factory.ToolingTime);
-	                }
-	                else
-	                {
-	                    AddField("Item", 
-	                        () => compatibleBlueprints.FindIndex(bp=>bp.ID== factory.Blueprint) + 1, 
-	                        i => factory.Blueprint = i == 0 ? Guid.Empty : compatibleBlueprints[i - 1].ID,
-	                        new []{"None"}.Concat(compatibleBlueprints.Select(bp=>bp.Name)).ToArray());
-	                    AddField("Active", () => factory.Active, active => factory.Active = active);
-	                    if (factory.Blueprint != Guid.Empty)
-	                    {
-	                        if (factory.Active && factory.ItemUnderConstruction != Guid.Empty)
-	                        {
-	                            AddProgressField("Production", () =>
-	                            {
-		                            if (factory.ItemUnderConstruction == Guid.Empty) return 1;
-		                            var itemInstance = Context.Cache.Get<CraftedItemInstance>(factory.ItemUnderConstruction);
-		                            var blueprintData = Context.Cache.Get<BlueprintData>(itemInstance.Blueprint);
-		                            return (blueprintData.ProductionTime - (float) entity.IncompleteCargo[factory.ItemUnderConstruction]) / blueprintData.ProductionTime;
-	                            });
-	                        }
-	                        else
-	                        {
-		                        //AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
-		                        AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
-	                            var ingredientsList = AddList("Ingredients Needed");
-	                            var blueprintData = Context.Cache.Get<BlueprintData>(factory.Blueprint);
-	                            foreach (var ingredient in blueprintData.Ingredients)
-	                            {
-	                                var itemData = Context.Cache.Get<ItemData>(ingredient.Key);
-	                                ingredientsList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
-	                            }
-	                            ingredientsList.SetExpanded(false, true);
-	                            ingredientsList.RefreshValues();
-	                        }
-	                    }
-	                }
-	            }
-	        }
 			RefreshValues();
 		}
 	}

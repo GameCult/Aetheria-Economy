@@ -333,13 +333,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StateDamping: 10
   Fill: {fileID: 3871492197986661902}
+  Label: {fileID: 0}
   CurrentState: 0
   DisableClickWhenSelected: 1
+  DragObject: {fileID: 9159917045172241900}
   UnselectedColor: {r: 0, g: 0.4180913, b: 1, a: 0.15294118}
   SelectedColor: {r: 1, g: 0.44583336, b: 0.050000012, a: 0.65882355}
   HoverColor: {r: 0, g: 0.4180913, b: 1, a: 0.29803923}
   ClickColor: {r: 0, g: 0.4180913, b: 1, a: 0.7490196}
   DisabledColor: {r: 0, g: 0, b: 0, a: 0}
+  EnabledTextColor: {r: 0, g: 0, b: 0, a: 0}
+  DisabledTextColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &9159917045172241898
 MonoBehaviour:
   m_ObjectHideFlags: 0

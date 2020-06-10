@@ -113,7 +113,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Extensions.cs" />
     <Compile Include="Assets\Scripts\ServerShared\GameContext.cs" />
     <Compile Include="Assets\Scripts\ServerShared\GlobalData.cs" />
-    <Compile Include="Assets\Scripts\ServerShared\IDynamicProperties.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\IChangeSource.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ItemData.cs" />
     <Compile Include="Assets\Scripts\ServerShared\ItemInstance.cs" />
     <Compile Include="Assets\Scripts\ServerShared\JsonConverters.cs" />

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public event Action<PointerEventData> OnClick;
     public float StateDamping;
@@ -15,6 +15,7 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public TextMeshProUGUI Label;
     public FlatButtonState CurrentState = FlatButtonState.Unselected;
     public bool DisableClickWhenSelected = true;
+    public RectTransform DragObject;
 
     public Color UnselectedColor;
     public Color SelectedColor;
@@ -23,6 +24,11 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public Color DisabledColor;
     public Color EnabledTextColor;
     public Color DisabledTextColor;
+
+    public Func<PointerEventData, bool> DragSuccess;
+    private int _siblingIndex;
+    private Transform _dragParent;
+    private Vector3 _dragPositionOffset;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -45,6 +51,40 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
                 Fill.color = ClickColor;
                 OnClick(eventData);
             }
+        }
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (DragSuccess == null || DragObject == null) return;
+        
+        var canvas = gameObject.FindInParents<Canvas>();
+        if (canvas == null)
+            return;
+        
+        _siblingIndex = DragObject.GetSiblingIndex();
+        _dragParent = DragObject.parent;
+        
+        DragObject.SetParent(canvas.transform, true);
+        _dragPositionOffset = DragObject.position - (Vector3)eventData.position;
+        DragObject.SetAsLastSibling();
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        var targetPosition = (Vector3)eventData.position + _dragPositionOffset;
+        //Debug.Log($"Moving drag object to {targetPosition}");
+        DragObject.position = targetPosition;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if(DragSuccess(eventData))
+            Destroy(DragObject.gameObject);
+        else
+        {
+            DragObject.parent = _dragParent;
+            DragObject.SetSiblingIndex(_siblingIndex);
         }
     }
 

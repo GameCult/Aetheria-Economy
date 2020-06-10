@@ -83,7 +83,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     [IgnoreMember] public float ThermalMass { get; private set; }
     [IgnoreMember] public float Visibility => VisibilitySources.Values.Sum();
 
-    public class InventoryEvent : IDynamicProperties
+    public class ChangeEvent : IChangeSource
     {
         public event Action OnChanged;
 
@@ -93,9 +93,12 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         }
     }
     private bool _cargoChanged;
-    public InventoryEvent CargoEvent = new InventoryEvent();
+    public ChangeEvent CargoEvent = new ChangeEvent();
+    
     private bool _gearChanged;
-    public InventoryEvent GearEvent = new InventoryEvent();
+    public ChangeEvent GearEvent = new ChangeEvent();
+
+    public ChangeEvent ChildEvent = new ChangeEvent();
 
     public float Capacity
     {
@@ -196,16 +199,24 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                 PopulationAssignments.Add(populationAssignment);
     }
 
-    public void Equip(Gear gear, Hardpoint hardpoint)
+    public void Unequip(Hardpoint hardpoint)
     {
-        // Hardpoint is occupied, remove existing item from gear list
         if (hardpoint.Gear != null)
         {
             Gear.Remove(hardpoint.Gear.ID);
             Cargo.Add(hardpoint.Gear.ID);
+            hardpoint.Gear = null;
             _cargoChanged = true;
+            _gearChanged = true;
         }
-        
+    }
+
+    public void Equip(Gear gear, Hardpoint hardpoint)
+    {
+        // Hardpoint is occupied, remove existing item from gear list
+        if (hardpoint.Gear != null) Unequip(hardpoint);
+        if (Cargo.Contains(gear.ID)) Cargo.Remove(gear.ID);
+
         hardpoint.Gear = gear;
         HydrateHardpoint(hardpoint);
         _gearChanged = true;
@@ -307,6 +318,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                 Data = item.Data,
                 Quantity = quantity
             };
+            Context.Cache.Add(newSimpleCommodity);
             item.Quantity -= quantity;
             item = newSimpleCommodity;
         }
@@ -324,6 +336,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         Mass += entity.Mass;
         ThermalMass += entity.ThermalMass;
         Children.Add(entity.ID);
+        ChildEvent.Change();
     }
 
     public void RemoveChild(Entity entity)
@@ -331,6 +344,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         Mass -= entity.Mass;
         ThermalMass -= entity.ThermalMass;
         Children.Remove(entity.ID);
+        ChildEvent.Change();
     }
 
     public Guid Build(BlueprintData blueprint, float quality, string name, bool direct = false)
