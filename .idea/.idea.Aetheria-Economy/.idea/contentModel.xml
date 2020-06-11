@@ -1291,7 +1291,7 @@
             <e p="BlueprintData.cs" t="Include" />
             <e p="Corporations.cs" t="Include" />
             <e p="DatabaseCache.cs" t="Include" />
-            <e p="DatabaseItems.cs" t="Include" />
+            <e p="DatabaseEntry.cs" t="Include" />
             <e p="Economy.Shared.Unity.asmdef" t="Include" />
             <e p="Entity.cs" t="Include" />
             <e p="Enums.cs" t="Include" />
@@ -1302,6 +1302,7 @@
             <e p="ItemData.cs" t="Include" />
             <e p="ItemInstance.cs" t="Include" />
             <e p="JsonConverters.cs" t="Include" />
+            <e p="LoadoutData.cs" t="Include" />
             <e p="MathFormatters.cs" t="Include" />
             <e p="MathResolver.cs" t="Include" />
             <e p="Messages.cs" t="Include" />
@@ -1745,6 +1746,7 @@
               </e>
             </e>
             <e p="OrbitalEntity.cs" t="Include" />
+            <e p="PlayerData.cs" t="Include" />
             <e p="Rect.cs" t="Include" />
             <e p="RegisterResolver.cs" t="Include" />
             <e p="Ship.cs" t="Include" />

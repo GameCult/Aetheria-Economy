@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using JsonKnownTypes;
 using MessagePack;
@@ -29,7 +28,7 @@ public interface INamedEntry
  Union(8, typeof(GalaxyMapLayerData)),
  Union(9, typeof(GlobalData)), 
  Union(10, typeof(ZoneData)), 
- Union(11, typeof(Player)), 
+ Union(11, typeof(PlayerData)), 
  Union(12, typeof(Corporation)),
  Union(13, typeof(MegaCorporation)),
  Union(14, typeof(OrbitalEntity)), 
@@ -50,48 +49,4 @@ public abstract class DatabaseEntry
     [JsonProperty("id"), Key(0)]
     public Guid ID = Guid.NewGuid();
     [IgnoreMember] public GameContext Context { get; set; }
-}
-
-[RethinkTable("Users"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class Player : DatabaseEntry, INamedEntry
-{
-    [JsonProperty("email"), Key(1)]
-    public string Email;
-
-    [JsonProperty("password"), Key(2)]
-    public string Password;
-
-    [JsonProperty("username"), Key(3)]
-    public string Username;
-
-    [JsonProperty("corporation"), Key(4)]
-    public Guid Corporation;
-    
-    [IgnoreMember] public string EntryName
-    {
-        get => Username;
-        set => Username = value;
-    }
-}
-
-[RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class LoadoutData : DatabaseEntry, INamedEntry
-{
-    [InspectableField, JsonProperty("name"), Key(1)]
-    public string Name;
-
-    [InspectableDatabaseLink(typeof(HullData)), JsonProperty("hull"), Key(2)]  
-    public Guid Hull;
-
-    [JsonProperty("items"), Key(3)]  
-    public List<Guid> Items = new List<Guid>();
-
-    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("resourceRequirements"), Key(4)]  
-    public Dictionary<Guid, int> SimpleCargo = new Dictionary<Guid, int>();
-
-    [IgnoreMember] public string EntryName
-    {
-        get => Name;
-        set => Name = value;
-    }
 }

@@ -140,6 +140,7 @@ public class ColonyTab : MonoBehaviour
         if (child)
         {
             panel.Title.text = entity.Name;
+            panel.AddField("Active", () => entity.Active, active => entity.Active = active);
             panel.AddSection("General");
             panel.AddEntityProperties(entity);
         }
@@ -303,8 +304,17 @@ public class ColonyTab : MonoBehaviour
                         }
                         else if (data.clickCount == 2 && item is Gear gear)
                         {
-                            // Equip Item
-                            entity.Equip(gear.ID, true);
+                            // Item is a hull, create a ship entity and make it a child
+                            if (gear.ItemData is HullData)
+                            {
+                                entity.RemoveCargo(gear);
+                                var ship = new Ship(Context, gear.ID, Enumerable.Empty<Guid>(), Enumerable.Empty<Guid>(), entity.Zone, entity.Corporation);
+                                ship.Name = gear.Name;
+                                _context.Cache.Add(ship);
+                                _context.SetParent(ship, entity);
+                            }
+                            else // Equip Item
+                                entity.Equip(gear.ID, true);
                         }
                     }
                 };
@@ -341,7 +351,7 @@ public class ColonyTab : MonoBehaviour
                 }
                 else
                 {
-                    var instanceList = panel.AddList(group.Key.Name);
+                    var instanceList = panel.AddList($"{group.Count().ToString()} {group.Key.Name}");
                     foreach (var item in group)
                     {
                         var button = instanceList.AddProperty(item.Name, null, eventData => onClick(item, eventData), true).Button;

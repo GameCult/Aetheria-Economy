@@ -120,7 +120,7 @@ public class GameContext
             {
                 // Create a list of available controllers for this task type
                 var availableControllers = CorporationControllers[corporation.ID]
-                    .Where(controller => controller.TaskType == tasks.Key && controller.Available).ToList();
+                    .Where(controller => controller.Available && controller.TaskType == tasks.Key).ToList();
                 
                 // Iterate over the highest priority tasks for which controllers are available
                 foreach (var task in tasks.OrderByDescending(task => task.Priority).Take(availableControllers.Count))
@@ -649,7 +649,7 @@ public class GameContext
             return null;
         }
 
-        var gearData = loadoutData.Items
+        var gearData = loadoutData.Gear
             .Take(hullData.Hardpoints.Count)
             .Where(id => id != Guid.Empty)
             .Select(id => Cache.Get<GearData>(id))
@@ -658,18 +658,6 @@ public class GameContext
         if (gearData.Any(g=>g==null))
         {
             _logger("Attempted to spawn loadout with invalid gear ID");
-            return null;
-        }
-
-        var cargoData = loadoutData.Items
-            .Skip(hullData.Hardpoints.Count)
-            .Where(id => id != Guid.Empty)
-            .Select(id => Cache.Get<CraftedItemData>(id))
-            .ToArray();
-
-        if (cargoData.Any(g=>g==null))
-        {
-            _logger("Attempted to spawn loadout with invalid cargo ID");
             return null;
         }
 
@@ -682,6 +670,16 @@ public class GameContext
         
         foreach(var g in gear)
             Cache.Add(g);
+
+        var cargoData = loadoutData.CompoundCargo
+            .SelectMany(x => Enumerable.Repeat(Cache.Get<CraftedItemData>(x.Key), x.Value))
+            .ToArray();
+
+        if (cargoData.Any(g=>g==null))
+        {
+            _logger("Attempted to spawn loadout with invalid cargo ID");
+            return null;
+        }
 
         var cargo = cargoData
             .Select(gd => CreateInstance(gd.ID, GlobalData.StartingGearQualityMin, GlobalData.StartingGearQualityMax))
@@ -716,6 +714,7 @@ public class GameContext
             {
                 Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}"
             };
+            entity.Active = true;
             Cache.Add(entity);
 
             ZoneEntities[zone][entity.ID] = entity;
@@ -746,6 +745,7 @@ public class GameContext
                 Temperature = 293,
                 Population = 4
             };
+            entity.Active = true;
             var parentCorp = Cache.Get<MegaCorporation>(corpData.Parent);
             foreach (var attribute in parentCorp.Personality)
                 entity.Personality[attribute.Key] = attribute.Value;
@@ -792,15 +792,45 @@ public class GameContext
             _logger("Attempted to create crafted item instance which has no blueprint!");
             return null;
         }
-        
-        var ingredients = blueprint.Ingredients.SelectMany(ci =>
+
+        bool invalidIngredientFound = false;
+        ItemData invalidIngredient = null;
+        var ingredients = new List<ItemInstance>();
+        foreach (var ingredient in blueprint.Ingredients)
+        {
+            var itemData = Cache.Get<ItemData>(ingredient.Key);
+            if (itemData is SimpleCommodityData)
             {
-                var ingredient = Cache.Get(ci.Key);
-                return ingredient is SimpleCommodityData
-                    ? (IEnumerable<ItemInstance>) new[] {CreateInstance(ci.Key, ci.Value)}
-                    : Enumerable.Range(0, ci.Value).Select(i => CreateInstance(ci.Key, qualityMin, qualityMax));
-            })
-            .ToList();
+                var itemInstance = CreateInstance(ingredient.Key, ingredient.Value);
+                if(itemInstance == null)
+                {
+                    invalidIngredientFound = true;
+                    invalidIngredient = itemData;
+                }
+                else ingredients.Add(itemInstance);
+            }
+            else
+            {
+                for (int i = 0; i < ingredient.Value; i++)
+                {
+                    var itemInstance = CreateInstance(ingredient.Key, qualityMin, qualityMax);
+                    if (itemInstance == null)
+                    {
+                        invalidIngredientFound = true;
+                        invalidIngredient = itemData;
+                        break;
+                    }
+
+                    ingredients.Add(itemInstance);
+                }
+            }
+            
+        }
+        
+        if (invalidIngredientFound)
+        {
+            _logger($"Unable to create crafted item ingredient: {invalidIngredient?.Name??"null"} for item {item.Name}");
+        }
         
         Cache.AddAll(ingredients);
         

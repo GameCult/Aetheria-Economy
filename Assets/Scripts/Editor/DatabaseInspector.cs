@@ -1112,14 +1112,14 @@ public class DatabaseInspector : EditorWindow
             {
                 // Reserve slots in the loadout for all equippable (non-hull) hardpoints
                 var hardpoints = loadoutHull.Hardpoints.Where(h => h.Type != HardpointType.Hull).ToArray();
-                if (loadout.Items.Count < hardpoints.Length)
-                    loadout.Items.AddRange(Enumerable.Repeat(Guid.Empty, hardpoints.Length - loadout.Items.Count));
+                if (loadout.Gear.Count < hardpoints.Length)
+                    loadout.Gear.AddRange(Enumerable.Repeat(Guid.Empty, hardpoints.Length - loadout.Gear.Count));
         
                 Space();
                 using (var h = new HorizontalScope())
                 {
-                    GUILayout.Label($"Equipped Items: {loadout.Items.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Size ?? 0)}/{loadoutHull.Capacity.Min}", EditorStyles.boldLabel);
-                    GUILayout.Label($"Mass: {loadout.Items.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Mass ?? 0)}", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"Equipped Items: {loadout.Gear.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Size ?? 0)}/{loadoutHull.Capacity.Min}", EditorStyles.boldLabel);
+                    GUILayout.Label($"Mass: {loadout.Gear.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Mass ?? 0)}", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
                 }
         
                 int itemIndex = 0;
@@ -1129,11 +1129,11 @@ public class DatabaseInspector : EditorWindow
                     {
                         var hp = hardpoints[itemIndex];
                         
-                        var loadoutItem = DatabaseCache.Get(loadout.Items[itemIndex]) as EquippableItemData;
+                        var loadoutItem = DatabaseCache.Get(loadout.Gear[itemIndex]) as EquippableItemData;
         
                         if (loadoutItem != null && loadoutItem.HardpointType != hp.Type)
                         {
-                            loadout.Items[itemIndex] = Guid.Empty;
+                            loadout.Gear[itemIndex] = Guid.Empty;
                             Debug.Log($"Invalid Item \"{loadoutItem.Name}\" in {Enum.GetName(typeof(HardpointType),hp.Type)} hardpoint for loadout \"{loadout.Name}\"");
                             GUI.changed = true;
                         }
@@ -1151,7 +1151,7 @@ public class DatabaseInspector : EditorWindow
                                 else if (currentEventType == EventType.DragPerform && good)
                                 {
                                     DragAndDrop.AcceptDrag();
-                                    loadout.Items[itemIndex] = guid;
+                                    loadout.Gear[itemIndex] = guid;
         
                                     GUI.changed = true;
                                 }
@@ -1166,46 +1166,16 @@ public class DatabaseInspector : EditorWindow
                                 var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
                                 GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
                                 if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
-                                    loadout.Items[itemIndex] = Guid.Empty;
+                                    loadout.Gear[itemIndex] = Guid.Empty;
                             }
                         }
                     }
                 }
-        
-                Space();
-                LabelField("Cargo", EditorStyles.boldLabel);
                 
-                using (var v = new VerticalScope(GUI.skin.box))
+                for (; itemIndex < loadout.Gear.Count; itemIndex++)
                 {
-                    if (v.rect.Contains(current.mousePosition) &&
-                        (currentEventType == EventType.DragUpdated || currentEventType == EventType.DragPerform))
-                    {
-                        var guid = (Guid) DragAndDrop.GetGenericData("Item");
-                        var dragItem = DatabaseCache.Get(guid) as CraftedItemData;
-                        if (currentEventType == EventType.DragUpdated)
-                            DragAndDrop.visualMode = dragItem != null ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
-                        else if (currentEventType == EventType.DragPerform && dragItem != null)
-                        {
-                            DragAndDrop.AcceptDrag();
-                                    
-                            loadout.Items.Add(guid);
-                            GUI.changed = true;
-                        }
-                    }
-                    if(itemIndex == loadout.Items.Count)
-                        GUILayout.Label("Nothing Here!");
-                    for (; itemIndex < loadout.Items.Count; itemIndex++)
-                    {
-                        var loadoutItem = DatabaseCache.Get(loadout.Items[itemIndex]) as ItemData;
-                        using (var h = new HorizontalScope(_list.ListItemStyle))
-                        {
-                            GUILayout.Label(loadoutItem?.Name ?? "Invalid Item");
-                            var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                            GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
-                            if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
-                                loadout.Items.RemoveAt(itemIndex--);
-                        }
-                    }
+                    loadout.Gear.RemoveAt(itemIndex--);
+                    GUI.changed = true;
                 }
             }
         }

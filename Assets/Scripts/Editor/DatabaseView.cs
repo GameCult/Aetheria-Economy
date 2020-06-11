@@ -355,7 +355,7 @@ public class DatabaseListView : EditorWindow
                                             _databaseCache.Add(blueprint);
                                             Select(blueprint);
                                         }
-                                        GUILayout.Space(30);
+                                        GUILayout.Space(40);
                                         GUILayout.Label("New Blueprint");
                                         var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
                                         GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor,

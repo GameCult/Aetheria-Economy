@@ -29,7 +29,7 @@ public abstract class ControllerData : BehaviorData
 public abstract class ControllerBase : IBehavior, IController, IInitializableBehavior
 {
     public Guid HomeEntity;
-    public bool Available => Task == Guid.Empty;
+    public bool Available => _spaceworthy && Task == Guid.Empty;
     public abstract TaskType TaskType { get; }
     public Guid Zone => _entity.Zone;
     public BehaviorData Data => _controllerData;
@@ -49,12 +49,14 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     private ControllerData _controllerData;
     private MovementPhase _movementPhase;
     private Action _onFinishMoving;
+    private bool _spaceworthy;
 
     public ControllerBase(GameContext context, ControllerData data, Entity entity)
     {
         _context = context;
         _controllerData = data;
         _entity = entity;
+        entity.GearEvent.OnChanged += () => _spaceworthy = entity.GetBehavior<Thruster>() != null && entity.GetBehavior<Reactor>() != null;
     }
     
     public void Initialize()

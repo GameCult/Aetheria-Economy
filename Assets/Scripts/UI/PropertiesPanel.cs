@@ -440,6 +440,7 @@ public class PropertiesPanel : MonoBehaviour
 
 	public void AddEntityProperties(Entity entity)
 	{
+		AddField("Name", () => entity.Name, name => entity.Name = name);
 		AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{entity.Capacity:0}");
 		AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GlobalData.SignificantDigits)}");
 		AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
@@ -508,6 +509,7 @@ public class PropertiesPanel : MonoBehaviour
 
 		void InspectChildrenInternal()
 		{
+			Clear();
 			foreach (var child in entity.Children)
 			{
 				var childEntity = Context.Cache.Get<Entity>(child);

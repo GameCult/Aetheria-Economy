@@ -66,6 +66,9 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     
     [JsonProperty("incompleteCargo"), Key(17)]
     public Dictionary<Guid, double> IncompleteCargo = new Dictionary<Guid, double>();
+
+    [JsonProperty("active"), Key(18)]
+    public bool Active { get; set; }
     //public List<IncompleteItem> IncompleteCargo = new List<IncompleteItem>();
     
     [IgnoreMember] public Guid Zone;
@@ -130,6 +133,11 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         Hydrate();
     }
 
+    // private void GenerateHardpoints()
+    // {
+    //     
+    // }
+
     public void Hydrate()
     {
         //var gearIDs = EquippedItems.Append(Hull);
@@ -162,9 +170,6 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         
         foreach (var hardpoint in Hardpoints)
             if(hardpoint.Gear!=null)
-                foreach (var behavior in hardpoint.Behaviors
-                    .Where(behavior => behavior is IInitializableBehavior))
-                    ((IInitializableBehavior) behavior).Initialize();
         
         RecalculateMass();
     }
@@ -193,10 +198,14 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                     Trigger = (Trigger) g.FirstOrDefault(b=>b is Trigger)
                 })
             .ToArray();
-        
-        foreach(var behavior in hardpoint.Behaviors)
+
+        foreach (var behavior in hardpoint.Behaviors)
+        {
             if(behavior is IPopulationAssignment populationAssignment)
                 PopulationAssignments.Add(populationAssignment);
+            if(behavior is IInitializableBehavior initializableBehavior)
+                initializableBehavior.Initialize();
+        }
     }
 
     public void Unequip(Hardpoint hardpoint)
@@ -541,6 +550,8 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
     public virtual void Update(float delta)
     {
+        if (!Active)
+            return;
         foreach (var hardpoint in Hardpoints.Where(hp=>hp.Gear!=null))
         {
             foreach (var group in hardpoint.BehaviorGroups)

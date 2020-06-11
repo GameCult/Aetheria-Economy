@@ -142,10 +142,10 @@ public class StrategyGameManager : MonoBehaviour
                 _context.PlaceMegas();
             }
 
-            var player = _cache.GetAll<Player>().FirstOrDefault();
+            var player = _cache.GetAll<PlayerData>().FirstOrDefault();
             if (player == null)
             {
-                player = new Player
+                player = new PlayerData
                 {
                     Context = _context,
                     Username = Environment.UserName
