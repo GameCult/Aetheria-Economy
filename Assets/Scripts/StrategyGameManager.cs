@@ -305,6 +305,7 @@ public class StrategyGameManager : MonoBehaviour
             if (_currentTab == ColonyTabButton)
             {
                 PropertiesPanel.Clear();
+                PropertiesPanel.RemoveListener();
                 ColonyTab.Open(_selectedColony);
             }
         };

@@ -63,7 +63,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public void Clear()
     {
-	    RemoveListener();
+	    //RemoveListener();
         foreach(var property in Properties)
             Destroy(property);
         Properties.Clear();
