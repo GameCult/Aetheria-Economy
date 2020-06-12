@@ -63,6 +63,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public void Clear()
     {
+	    RemoveListener();
         foreach(var property in Properties)
             Destroy(property);
         Properties.Clear();
@@ -187,7 +188,11 @@ public class PropertiesPanel : MonoBehaviour
 			{
 				field.Field.text = s;
 				field.gameObject.SetActive(false);
-				Observable.NextFrame().Subscribe(_ => OnPropertyAdded?.Invoke(field.gameObject));
+				Observable.NextFrame().Subscribe(_ =>
+				{
+					if(field != null)
+						OnPropertyAdded?.Invoke(field.gameObject);
+				});
 			}
 		};
 		Properties.Add(field.gameObject);
@@ -410,7 +415,13 @@ public class PropertiesPanel : MonoBehaviour
 				.Select(id => Context.Cache.Get<ItemInstance>(id))
 				.Where(item => item is CraftedItemInstance)
 				.Cast<CraftedItemInstance>()
-				.GroupBy(craftedItem => (craftedItem.Data, craftedItem.Name, Context.Cache.Get<Corporation>(Context.Cache.Get<Entity>(craftedItem.SourceEntity).Corporation))))
+				.GroupBy(craftedItem => 
+				{
+					var corp = "GameCult";
+					if (craftedItem.SourceEntity != Guid.Empty)
+						corp = Context.Cache.Get<Corporation>(Context.Cache.Get<Entity>(craftedItem.SourceEntity).Corporation).Name;
+					return (craftedItem.Data, craftedItem.Name, corp);
+				}))
 			{
 				if (group.Count() == 1)
 				{
@@ -524,6 +535,8 @@ public class PropertiesPanel : MonoBehaviour
 		RemoveListener();
 
 		ChangeSource = hardpoint.Gear;
+		if (ChangeSource == null)
+			return;
 		OnPropertiesChanged = InspectGearInternal;
 		ChangeSource.OnChanged += OnPropertiesChanged;
 		InspectGearInternal();

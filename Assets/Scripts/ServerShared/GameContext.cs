@@ -709,15 +709,9 @@ public class GameContext
 
         if (hullData.HullType == HullType.Ship)
         {
-            var entity = new Ship(this, hull.ID, gear.Select(g => g.ID),
-                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), zone, corporation)
-            {
-                Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}"
-            };
+            var entity = CreateShip(hull.ID, gear.Select(g => g.ID),
+                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), zone, corporation, loadoutData.Name);
             entity.Active = true;
-            Cache.Add(entity);
-
-            ZoneEntities[zone][entity.ID] = entity;
             return entity;
         }
 
@@ -756,6 +750,19 @@ public class GameContext
         }
 
         return null;
+    }
+
+    public Ship CreateShip(Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid zone, Guid corporation, string typeName)
+    {
+
+        var ship = new Ship(this, hull, gear, cargo, zone, corporation)
+        {
+            Name = $"{typeName} {Random.NextInt(1,255):X}"
+        };
+        Cache.Add(ship);
+
+        ZoneEntities[zone][ship.ID] = ship;
+        return ship;
     }
     
     public SimpleCommodity CreateInstance(Guid data, int count)

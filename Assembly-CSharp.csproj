@@ -876,6 +876,7 @@
     <Compile Include="Assets\Scripts\UI\ClickCatcher.cs" />
     <Compile Include="Assets\Scripts\UI\ClickRaycaster.cs" />
     <Compile Include="Assets\Scripts\UI\ColonyTab.cs" />
+    <Compile Include="Assets\Scripts\UI\ConfirmationDialog.cs" />
     <Compile Include="Assets\Scripts\UI\ContextMenu.cs" />
     <Compile Include="Assets\Scripts\UI\ContextMenuOption.cs" />
     <Compile Include="Assets\Scripts\UI\CorporationMenuItem.cs" />

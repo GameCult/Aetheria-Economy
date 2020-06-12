@@ -41,6 +41,7 @@ public interface INamedEntry
  Union(21, typeof(Mining)), 
  Union(22, typeof(StationTowing)), 
  Union(23, typeof(Survey)), 
+ Union(24, typeof(HaulingTask)), 
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 //[Union(21, typeof(ContractData))]
 //[Union(22, typeof(Station))]

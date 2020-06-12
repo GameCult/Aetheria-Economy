@@ -1245,6 +1245,7 @@
               <e p="AgentBehavior.cs" t="Include" />
               <e p="AgentTask.cs" t="Include" />
               <e p="Aim.cs" t="Include" />
+              <e p="HaulingTask.cs" t="Include" />
               <e p="Locomotion.cs" t="Include" />
               <e p="Mining.cs" t="Include" />
               <e p="StationTowing.cs" t="Include" />
@@ -1259,6 +1260,7 @@
               <e p="Cooldown.cs" t="Include" />
               <e p="EnergyDraw.cs" t="Include" />
               <e p="FactoryBehavior.cs" t="Include" />
+              <e p="HaulingController.cs" t="Include" />
               <e p="Heat.cs" t="Include" />
               <e p="Hitscan.cs" t="Include" />
               <e p="ItemUsage.cs" t="Include" />
@@ -1765,6 +1767,7 @@
             <e p="ClickCatcher.cs" t="Include" />
             <e p="ClickRaycaster.cs" t="Include" />
             <e p="ColonyTab.cs" t="Include" />
+            <e p="ConfirmationDialog.cs" t="Include" />
             <e p="ContextMenu.cs" t="Include" />
             <e p="ContextMenuOption.cs" t="Include" />
             <e p="CorporationMenuItem.cs" t="Include" />

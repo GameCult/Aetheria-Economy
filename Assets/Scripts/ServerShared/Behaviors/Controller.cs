@@ -43,6 +43,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     protected List<SimplifiedZoneData> Path;
     protected Guid Task;
     protected bool Moving;
+    protected bool Waiting;
     
     private GameContext _context;
     private Entity _entity;
@@ -50,6 +51,8 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     private MovementPhase _movementPhase;
     private Action _onFinishMoving;
     private bool _spaceworthy;
+    private float _waitTime;
+    private Action _onFinishWaiting;
 
     public ControllerBase(GameContext context, ControllerData data, Entity entity)
     {
@@ -87,6 +90,18 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
             {
                 GoHome();
             }
+        }
+        
+        if (Waiting)
+        {
+            _waitTime -= delta;
+            if (_waitTime < 0)
+            {
+                Waiting = false;
+                _onFinishWaiting?.Invoke();
+            }
+
+            return true;
         }
 
         if (Moving)
@@ -163,6 +178,13 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
             _context.SetParent(_entity, homeEntity);
             onFinish?.Invoke();
         }));
+    }
+
+    public void Wait(float time, Action onFinish = null)
+    {
+        _waitTime = time;
+        Waiting = true;
+        _onFinishWaiting = onFinish;
     }
 
     public void MoveTo(Entity entity, bool matchVelocity = true, Action onFinish = null)

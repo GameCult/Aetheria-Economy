@@ -20,7 +20,6 @@
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>Server</Path>
-      <Path>Temp</Path>
       <Path>obj</Path>
     </explicitExcludes>
   </component>

@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentBehavior.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentTask.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\Aim.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\HaulingTask.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\Locomotion.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\Mining.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Agents\StationTowing.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Cooldown.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\EnergyDraw.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\FactoryBehavior.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\HaulingController.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Heat.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Hitscan.cs" />
     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ItemUsage.cs" />

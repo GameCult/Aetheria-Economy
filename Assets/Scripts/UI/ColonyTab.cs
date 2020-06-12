@@ -17,8 +17,8 @@ public class ColonyTab : MonoBehaviour
     public PropertiesPanel ChildInventory;
     public PropertiesPanel Details;
     public ContextMenu ContextMenu;
+    public ConfirmationDialog ConfirmationDialog;
 
-    [HideInInspector]
     public GameContext Context
     {
         get => _context;
@@ -242,6 +242,37 @@ public class ColonyTab : MonoBehaviour
             panel.AddSection("No Cargo");
         else
         {
+            Action<Guid, int> showHaulingDialog = (id, maxQuantity) =>
+            {
+                var itemData = Context.Cache.Get<ItemData>(id);
+                ConfirmationDialog.gameObject.SetActive(true);
+                ConfirmationDialog.Clear();
+                ConfirmationDialog.Title.text = $"Haul {itemData.Name}";
+                var quantity = maxQuantity;
+                var colonies = Context.Cache.GetAll<Entity>()
+                    .Where(e => e.Corporation == entity.Corporation && e is OrbitalEntity && e != entity).ToArray();
+                var colonyNames = colonies.Select(c => c.Name).ToArray();
+                ConfirmationDialog.AddField("Quantity", () => quantity, i => quantity = clamp(i, 1, maxQuantity));
+                var selectedColony = 0;
+                ConfirmationDialog.AddField("Target Colony", () => selectedColony, i => selectedColony = i,
+                    colonyNames);
+                ConfirmationDialog.Show(() =>
+                {
+                    var haulingTask = new HaulingTask
+                    {
+                        Context = Context,
+                        ItemType = id,
+                        Origin = entity.ID,
+                        Quantity = quantity,
+                        Target = colonies[selectedColony].ID,
+                        Zone = entity.Zone
+                    };
+                    Context.Cache.Add(haulingTask);
+                    var corp = Context.Cache.Get<Corporation>(entity.Corporation);
+                    corp.Tasks.Add(haulingTask.ID);
+                });
+            };
+            
             panel.AddSection("Cargo");
             foreach (var itemID in entity.Cargo.Where(id => Context.Cache.Get<ItemInstance>(id) is SimpleCommodity))
             {
@@ -249,10 +280,20 @@ public class ColonyTab : MonoBehaviour
                 var data = simpleCommodity.ItemData;
                 panel.AddProperty(data.Name, () => simpleCommodity.Quantity.ToString(), eventData =>
                 {
-                    Details.Clear();
-                    Details.RemoveListener();
-                    Details.AddItemProperties(entity, simpleCommodity);
-                    Details.RefreshValues();
+                    if (eventData.button == PointerEventData.InputButton.Left)
+                    {
+                        Details.Clear();
+                        Details.RemoveListener();
+                        Details.AddItemProperties(entity, simpleCommodity);
+                        Details.RefreshValues();
+                    }
+                    else if (eventData.button == PointerEventData.InputButton.Right)
+                    {
+                        ContextMenu.gameObject.SetActive(true);
+                        ContextMenu.Clear();
+                        ContextMenu.AddOption("Haul", () => showHaulingDialog(simpleCommodity.Data, simpleCommodity.Quantity));
+                        ContextMenu.Show();
+                    }
                 }, true).Button.DragSuccess = eventData =>
                 {
                     Entity targetEntity = null;
@@ -266,12 +307,19 @@ public class ColonyTab : MonoBehaviour
 
                     if (targetEntity != null)
                     {
-                        int quantity = min((int) ((targetEntity.Capacity - targetEntity.OccupiedCapacity) / simpleCommodity.ItemData.Size), simpleCommodity.Quantity);
-                        if (quantity > 0)
+                        int maxQuantity = min((int) ((targetEntity.Capacity - targetEntity.OccupiedCapacity) / simpleCommodity.ItemData.Size), simpleCommodity.Quantity);
+                        if (maxQuantity > 0)
                         {
-                            var newItem = entity.RemoveCargo(simpleCommodity, quantity);
-                            targetEntity.AddCargo(newItem);
-                            return true;
+                            ConfirmationDialog.gameObject.SetActive(true);
+                            ConfirmationDialog.Clear();
+                            ConfirmationDialog.Title.text = $"Move {simpleCommodity.ItemData.Name}";
+                            var quantity = maxQuantity;
+                            ConfirmationDialog.AddField("Quantity", () => quantity, i => quantity = clamp(i, 1, maxQuantity));
+                            ConfirmationDialog.Show(() =>
+                            {
+                                var newItem = entity.RemoveCargo(simpleCommodity, quantity);
+                                targetEntity.AddCargo(newItem);
+                            });
                         }
                     }
 
@@ -288,7 +336,7 @@ public class ColonyTab : MonoBehaviour
                     var corp = "GameCult";
                     if (craftedItem.SourceEntity != Guid.Empty)
                         corp = Context.Cache.Get<Corporation>(Context.Cache.Get<Entity>(craftedItem.SourceEntity).Corporation).Name;
-                    return (craftedItem.Data, craftedItem.Name, corp) ;
+                    return (craftedItem.Data, craftedItem.Name, corp);
                 }))
             {
                 Action<CraftedItemInstance, PointerEventData> onClick = (item, data) =>
@@ -308,14 +356,20 @@ public class ColonyTab : MonoBehaviour
                             if (gear.ItemData is HullData)
                             {
                                 entity.RemoveCargo(gear);
-                                var ship = new Ship(Context, gear.ID, Enumerable.Empty<Guid>(), Enumerable.Empty<Guid>(), entity.Zone, entity.Corporation);
-                                ship.Name = gear.Name;
-                                _context.Cache.Add(ship);
+                                var ship = Context.CreateShip(gear.ID, Enumerable.Empty<Guid>(),
+                                    Enumerable.Empty<Guid>(), entity.Zone, entity.Corporation, gear.Name);
                                 _context.SetParent(ship, entity);
                             }
                             else // Equip Item
                                 entity.Equip(gear.ID, true);
                         }
+                    }
+                    else if (data.button == PointerEventData.InputButton.Right)
+                    {
+                        ContextMenu.gameObject.SetActive(true);
+                        ContextMenu.Clear();
+                        ContextMenu.AddOption("Haul", () => showHaulingDialog(item.Data, group.Count()));
+                        ContextMenu.Show();
                     }
                 };
                 Func<PointerEventData, CraftedItemInstance, bool> dragSuccess = (data, item) =>

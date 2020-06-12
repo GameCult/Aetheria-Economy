@@ -10,6 +10,7 @@ using UnityEngine;
  Union(0, typeof(StationTowing)),
  Union(1, typeof(Mining)),
  Union(2, typeof(Survey)),
+ Union(3, typeof(HaulingTask)),
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 public abstract class AgentTask : DatabaseEntry
 {

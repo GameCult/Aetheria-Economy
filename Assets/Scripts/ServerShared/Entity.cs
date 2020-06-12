@@ -170,6 +170,13 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         
         foreach (var hardpoint in Hardpoints)
             if(hardpoint.Gear!=null)
+                foreach (var behavior in hardpoint.Behaviors)
+                {
+                    if(behavior is IPopulationAssignment populationAssignment)
+                        PopulationAssignments.Add(populationAssignment);
+                    if(behavior is IInitializableBehavior initializableBehavior)
+                        initializableBehavior.Initialize();
+                }
         
         RecalculateMass();
     }
@@ -199,13 +206,6 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                 })
             .ToArray();
 
-        foreach (var behavior in hardpoint.Behaviors)
-        {
-            if(behavior is IPopulationAssignment populationAssignment)
-                PopulationAssignments.Add(populationAssignment);
-            if(behavior is IInitializableBehavior initializableBehavior)
-                initializableBehavior.Initialize();
-        }
     }
 
     public void Unequip(Hardpoint hardpoint)
@@ -550,20 +550,34 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
 
     public virtual void Update(float delta)
     {
-        if (!Active)
-            return;
-        foreach (var hardpoint in Hardpoints.Where(hp=>hp.Gear!=null))
+        if (Active)
         {
-            foreach (var group in hardpoint.BehaviorGroups)
+            foreach (var hardpoint in Hardpoints.Where(hp=>hp.Gear!=null))
+            {
+                foreach (var group in hardpoint.BehaviorGroups)
                 foreach(var behavior in group.Behaviors)
                     if(!behavior.Update(delta))
                         break;
             
-            foreach (var behavior in hardpoint.Behaviors.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
-                behavior.AlwaysUpdate(delta);
+                foreach (var behavior in hardpoint.Behaviors.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
+                    behavior.AlwaysUpdate(delta);
             
-            if(hardpoint.Gear.ItemData.Performance(Temperature) < .01f)
-                hardpoint.Gear.Durability -= delta;
+                if(hardpoint.Gear.ItemData.Performance(Temperature) < .01f)
+                    hardpoint.Gear.Durability -= delta;
+            }
+
+            foreach (var message in Messages.Keys.ToArray())
+            {
+                Messages[message] = Messages[message] - delta;
+                if (Messages[message] < 0)
+                    Messages.Remove(message);
+            }
+
+            foreach (var incompleteGear in IncompleteGear.Keys.ToArray())
+            {
+                IncompleteGear[incompleteGear] = IncompleteGear[incompleteGear] - delta;
+                if (IncompleteGear[incompleteGear] < 0) Equip(incompleteGear);
+            }
         }
 
         if (Parent != Guid.Empty)
@@ -573,79 +587,6 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             Velocity = parent.Velocity;
             Temperature = parent.Temperature;
         }
-
-        // Processing stale item data properly was a pain in my ass, so the shortcut is just persisting and restoring everything
-        // if (Hardpoints.Any(hp => hp.Gear.ItemData != hp.ItemData))
-        // {
-        //     OnBeforeSerialize();
-        //     OnAfterDeserialize();
-        // }
-
-        foreach (var message in Messages.Keys.ToArray())
-        {
-            Messages[message] = Messages[message] - delta;
-            if (Messages[message] < 0)
-                Messages.Remove(message);
-        }
-
-        foreach (var incompleteGear in IncompleteGear.Keys.ToArray())
-        {
-            IncompleteGear[incompleteGear] = IncompleteGear[incompleteGear] - delta;
-            if (IncompleteGear[incompleteGear] < 0) Equip(incompleteGear);
-        }
-
-        // Here's the PITA way
-        // foreach (var staleItem in GearData
-        //     .Where(kvp=>kvp.Key.ItemData!=kvp.Value)
-        //     .Select(kvp=>kvp.Key))
-        // {
-        //     // Item is stale, there's an updated one in the database cache
-        //     //var actualItem = Context.Cache.Get<Gear>(staleItem.ID);
-        //     var staleBehaviors = ItemBehaviors[staleItem];
-        //     ItemBehaviors.Remove(staleItem);
-        //     
-        //     // We'll be reloading the item along with its behaviors, some data must be persisted
-        //     var persistentData = staleBehaviors
-        //         .Where(b => b is IPersistentBehavior)
-        //         .Cast<IPersistentBehavior>()
-        //         .Select(b => b.Store());
-        //     
-        //     // Regenerate the behavior list for the updated item
-        //     ItemBehaviors[staleItem] = staleItem.ItemData.Behaviors
-        //         .Select(bd => bd.CreateInstance(Context, this, staleItem))
-        //         .OrderBy(b => b.GetType().GetCustomAttribute<UpdateOrderAttribute>()?.Order ?? 0).ToList();
-        //     
-        //     foreach(var behavior in ItemBehaviors[staleItem])
-        //         behavior.Initialize();
-        //     
-        //     // Restore state for persisted behaviors
-        //     foreach(var persistentBehaviorData in ItemBehaviors[staleItem]
-        //         .Where(b => b is IPersistentBehavior)
-        //         .Cast<IPersistentBehavior>()
-        //         .Zip(persistentData, (behavior, data) => new {behavior, data}))
-        //         persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
-        //     
-        //     // Regenerate activated behavior bindings
-        //     if (Bindings.ContainsKey(staleItem))
-        //     {
-        //         Bindings.Remove(staleItem);
-        //         Bindings[staleItem] = ItemBehaviors[staleItem]
-        //             .Where(b => b is IActivatedBehavior)
-        //             .Cast<IActivatedBehavior>().ToList();
-        //     }
-        //
-        //     // Remove axis bindings and overrides for analog behaviors
-        //     foreach (var axis in staleBehaviors.Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
-        //     {
-        //         Axes.Remove(axis);
-        //         if (AxisOverrides.ContainsKey(axis))
-        //             AxisOverrides.Remove(axis);
-        //     }
-        //
-        //     // Regenerate axis bindings for analog behaviors
-        //     foreach (var axis in ItemBehaviors[staleItem].Where(b => b is IAnalogBehavior).Cast<IAnalogBehavior>())
-        //         Axes[axis] = 0;
-        // }
 
         if (_cargoChanged)
         {
