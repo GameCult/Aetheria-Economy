@@ -88,7 +88,7 @@ public class ColonyTab : MonoBehaviour
         foreach (var attribute in entity.Personality.Keys)
             personalityList.AddPersonalityProperty(Context.Cache.Get<PersonalityAttribute>(attribute),
                 () => entity.Personality[attribute]);
-        personalityList.SetExpanded(false, true);
+        // personalityList.SetExpanded(false, true);
 
         var childList = General.AddList("Children");
         childList.InspectChildren(entity, child =>
@@ -96,7 +96,7 @@ public class ColonyTab : MonoBehaviour
             _selectedChild = child;
             UpdateInventory(child, ChildInventory);
         });
-        childList.SetExpanded(false, true);
+        // childList.SetExpanded(false, true);
         
         General.RefreshValues();
     }
@@ -357,7 +357,7 @@ public class ColonyTab : MonoBehaviour
                             {
                                 entity.RemoveCargo(gear);
                                 var ship = Context.CreateShip(gear.ID, Enumerable.Empty<Guid>(),
-                                    Enumerable.Empty<Guid>(), entity.Zone, entity.Corporation, gear.Name);
+                                    Enumerable.Empty<Guid>(), entity.Zone, entity.Corporation, _parentEntity.ID, gear.Name);
                                 _context.SetParent(ship, entity);
                             }
                             else // Equip Item
@@ -412,7 +412,7 @@ public class ColonyTab : MonoBehaviour
                         button.DisableClickWhenSelected = false;
                         button.DragSuccess = data => dragSuccess(data, item);
                     }
-                    instanceList.SetExpanded(false, true);
+                    // instanceList.SetExpanded(false, true);
                 }
             }
         }
@@ -443,7 +443,7 @@ public class ColonyTab : MonoBehaviour
                 });
             
             blueprintList.RefreshValues();
-            blueprintList.SetExpanded(false, true);
+            // blueprintList.SetExpanded(false, true);
         }
         Details.RefreshValues();
     }

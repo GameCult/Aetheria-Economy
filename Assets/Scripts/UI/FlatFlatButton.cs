@@ -56,7 +56,11 @@ public class FlatFlatButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (DragSuccess == null || DragObject == null) return;
+        if (DragSuccess == null || DragObject == null)
+        {
+            eventData.pointerDrag = null;
+            return;
+        }
         
         var canvas = gameObject.FindInParents<Canvas>();
         if (canvas == null)

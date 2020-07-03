@@ -344,6 +344,7 @@ public class TechTreeMsagl : MonoBehaviour
                         var ingredientData = Context.Cache.Get<ItemData>(ingredient.Key);
                         ingredientsList.AddProperty(ingredientData.Name, () => ingredient.Value.ToString());
                     }
+                    ingredientsList.SetExpanded(true, true);
                     
                     var dependenciesList = PropertiesPanel.AddList("Dependencies");
                     foreach (var dependency in blueprint.Dependencies)
@@ -351,12 +352,14 @@ public class TechTreeMsagl : MonoBehaviour
                         var dependencyBlueprint = Context.Cache.Get<BlueprintData>(dependency);
                         dependenciesList.AddProperty(dependencyBlueprint.Name);
                     }
+                    dependenciesList.SetExpanded(true, true);
                     
                     var descendantsList = PropertiesPanel.AddList("Descendants");
                     foreach (var descendant in Blueprints.Where(bp => bp.Dependencies.Any(dep => blueprint.ID == dep)))
                     {
                         descendantsList.AddProperty(descendant.Name);
                     }
+                    descendantsList.SetExpanded(true, true);
                 };
             _techInstances.Add(tech.GetComponent<Prototype>());
         }

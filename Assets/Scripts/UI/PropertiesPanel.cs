@@ -40,8 +40,10 @@ public class PropertiesPanel : MonoBehaviour
     protected event Action<GameObject> OnPropertyAdded;
     protected IChangeSource ChangeSource;
     protected Action OnPropertiesChanged;
+
+    public int Children => Properties.Count + Buttons.Count;
     
-    public void Start()
+    public void Awake()
     {
 	    OnPropertyAdded += go => go.SetActive(true);
     }
@@ -357,11 +359,11 @@ public class PropertiesPanel : MonoBehaviour
 
         var hardpointList = AddList("Gear");
         hardpointList.InspectHardpoints(entity);
-        hardpointList.SetExpanded(false,true);
+        //hardpointList.SetExpanded(false,true);
         
         var cargoList = AddList("Cargo");
 	    cargoList.InspectCargo(entity);
-        cargoList.SetExpanded(false,true);
+        //cargoList.SetExpanded(false,true);
         
         RefreshValues();
 	}
@@ -373,7 +375,18 @@ public class PropertiesPanel : MonoBehaviour
 		ChangeSource = entity.GearEvent;
 		OnPropertiesChanged = InspectGearInternal;
 		ChangeSource.OnChanged += OnPropertiesChanged;
-		InspectGearInternal();
+		if (this is PropertiesList list)
+		{
+			if (list.Expanded)
+				InspectGearInternal();
+			else
+				list.OnExpand += b =>
+				{
+					if (b) InspectGearInternal();
+				};
+		}
+		else
+			InspectGearInternal();
 
 		void InspectGearInternal()
 		{
@@ -383,7 +396,7 @@ public class PropertiesPanel : MonoBehaviour
 			{
 				var propertyList = AddList(hardpoint.Gear.Name);
 				propertyList.Inspect(entity, hardpoint);
-				propertyList.SetExpanded(false,true);
+				//propertyList.SetExpanded(false,true);
 			}
 			RefreshValues();
 		}
@@ -396,7 +409,18 @@ public class PropertiesPanel : MonoBehaviour
 		ChangeSource = entity.CargoEvent;
 		OnPropertiesChanged = InspectCargoInternal;
 		ChangeSource.OnChanged += OnPropertiesChanged;
-		InspectCargoInternal();
+		if (this is PropertiesList list)
+		{
+			if (list.Expanded)
+				InspectCargoInternal();
+			else
+				list.OnExpand += b =>
+				{
+					if (b) InspectCargoInternal();
+				};
+		}
+		else
+			InspectCargoInternal();
 		
 		void InspectCargoInternal()
 		{
@@ -408,7 +432,7 @@ public class PropertiesPanel : MonoBehaviour
 				var propertiesList = AddList($"{simpleCommodity.Quantity.ToString()} {data.Name}");
 				propertiesList.AddItemProperties(entity, simpleCommodity);
 				propertiesList.RefreshValues();
-				propertiesList.SetExpanded(false, true);
+				//propertiesList.SetExpanded(false, true);
 			}
 
 			foreach (var group in entity.Cargo
@@ -429,19 +453,21 @@ public class PropertiesPanel : MonoBehaviour
 					var propertiesList = AddList(item.Name);
 					propertiesList.AddItemProperties(entity, item);
 					propertiesList.RefreshValues();
-					propertiesList.SetExpanded(false, true);
+					//propertiesList.SetExpanded(false, true);
 				}
 				else
 				{
 					var instanceList = AddList($"{group.Count().ToString()} {group.Key.Name}");
-					foreach (var item in group)
+					instanceList.OnExpand += b =>
 					{
-						var propertiesList = instanceList.AddList(item.Name);
-						propertiesList.AddItemProperties(entity, item);
-						propertiesList.RefreshValues();
-						propertiesList.SetExpanded(false, true);
-					}
-					instanceList.SetExpanded(false, true);
+						if (!b || instanceList.Children > 0) return;
+						foreach (var item in group)
+						{
+							var propertiesList = instanceList.AddList(item.Name);
+							propertiesList.AddItemProperties(entity, item);
+							propertiesList.RefreshValues();
+						}
+					};
 				}
 			}
 
@@ -527,7 +553,6 @@ public class PropertiesPanel : MonoBehaviour
 				AddProperty(childEntity.Name, null, data => onSelect(childEntity), true);
 			}
 		}
-		
 	}
 
 	public void Inspect(Entity entity, Hardpoint hardpoint)
@@ -539,7 +564,18 @@ public class PropertiesPanel : MonoBehaviour
 			return;
 		OnPropertiesChanged = InspectGearInternal;
 		ChangeSource.OnChanged += OnPropertiesChanged;
-		InspectGearInternal();
+		if (this is PropertiesList list)
+		{
+			if (list.Expanded)
+				InspectGearInternal();
+			else
+				list.OnExpand += b =>
+				{
+					if (b) InspectGearInternal();
+				};
+		}
+		else
+			InspectGearInternal();
 
 		void InspectGearInternal()
 		{
@@ -598,7 +634,7 @@ public class PropertiesPanel : MonoBehaviour
 		                                var itemData = Context.Cache.Get<ItemData>(ingredient.Key);
 		                                ingredientsList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
 		                            }
-		                            ingredientsList.SetExpanded(false, true);
+		                            // ingredientsList.SetExpanded(false, true);
 		                            ingredientsList.RefreshValues();
 		                        }
 		                    }

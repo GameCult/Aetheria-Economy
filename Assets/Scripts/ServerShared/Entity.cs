@@ -68,9 +68,27 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     public Dictionary<Guid, double> IncompleteCargo = new Dictionary<Guid, double>();
 
     [JsonProperty("active"), Key(18)]
-    public bool Active { get; set; }
+    private bool _active;
+    public bool Active
+    {
+        get => _active;
+        set
+        {
+            _active = value;
+            if (_active)
+            {
+                foreach (var hardpoint in Hardpoints)
+                    if(hardpoint.Gear!=null)
+                        foreach (var behavior in hardpoint.Behaviors)
+                        {
+                            if(behavior is IInitializableBehavior initializableBehavior)
+                                initializableBehavior.Initialize();
+                        }
+            }
+        }
+    }
     //public List<IncompleteItem> IncompleteCargo = new List<IncompleteItem>();
-    
+
     [IgnoreMember] public Guid Zone;
     [IgnoreMember] public List<Hardpoint> Hardpoints;
     [IgnoreMember] public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
@@ -168,15 +186,16 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
             Cargo.Add(remaining);
         }
         
-        foreach (var hardpoint in Hardpoints)
-            if(hardpoint.Gear!=null)
-                foreach (var behavior in hardpoint.Behaviors)
-                {
-                    if(behavior is IPopulationAssignment populationAssignment)
-                        PopulationAssignments.Add(populationAssignment);
-                    if(behavior is IInitializableBehavior initializableBehavior)
-                        initializableBehavior.Initialize();
-                }
+        if (_active)
+        {
+            foreach (var hardpoint in Hardpoints)
+                if(hardpoint.Gear!=null)
+                    foreach (var behavior in hardpoint.Behaviors)
+                    {
+                        if(behavior is IInitializableBehavior initializableBehavior)
+                            initializableBehavior.Initialize();
+                    }
+        }
         
         RecalculateMass();
     }
@@ -206,6 +225,11 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
                 })
             .ToArray();
 
+        foreach (var behavior in hardpoint.Behaviors)
+        {
+            if(behavior is IPopulationAssignment populationAssignment)
+                PopulationAssignments.Add(populationAssignment);
+        }
     }
 
     public void Unequip(Hardpoint hardpoint)

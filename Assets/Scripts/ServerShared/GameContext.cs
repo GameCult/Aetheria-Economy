@@ -710,7 +710,7 @@ public class GameContext
         if (hullData.HullType == HullType.Ship)
         {
             var entity = CreateShip(hull.ID, gear.Select(g => g.ID),
-                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), zone, corporation, loadoutData.Name);
+                cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), zone, corporation, Guid.Empty, loadoutData.Name);
             entity.Active = true;
             return entity;
         }
@@ -752,12 +752,13 @@ public class GameContext
         return null;
     }
 
-    public Ship CreateShip(Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid zone, Guid corporation, string typeName)
+    public Ship CreateShip(Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid zone, Guid corporation, Guid homeEntity, string typeName)
     {
 
         var ship = new Ship(this, hull, gear, cargo, zone, corporation)
         {
-            Name = $"{typeName} {Random.NextInt(1,255):X}"
+            Name = $"{typeName} {Random.NextInt(1,255):X}",
+            HomeEntity = homeEntity
         };
         Cache.Add(ship);
 

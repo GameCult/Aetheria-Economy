@@ -14,12 +14,15 @@ public class PropertiesList : PropertiesPanel
     public VerticalLayoutGroup LayoutGroup;
     public int FoldedPadding = -8;
     public int ExpandedPadding = 8;
+    public event Action<bool> OnExpand;
 
     private bool _expanded = false;
     private float _targetFoldoutRotation = 0;
     private float _foldoutRotation = 0;
 
-    public void Start()
+    public bool Expanded => _expanded;
+
+    public new void Awake()
     {
         Button.OnClick += _ => ToggleExpand();
         OnPropertyAdded += go => go.SetActive(_expanded);
@@ -49,6 +52,7 @@ public class PropertiesList : PropertiesPanel
             _foldoutRotation = _targetFoldoutRotation;
             FoldoutIcon.transform.localRotation = Quaternion.Euler(0,0, _foldoutRotation);
         }
+        OnExpand?.Invoke(_expanded);
     }
 
     // public override PropertyLabel AddProperty(string name, Func<string> read = null, Action<PointerEventData> onClick = null, bool radio = false)

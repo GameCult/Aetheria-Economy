@@ -28,7 +28,7 @@ public abstract class ControllerData : BehaviorData
 
 public abstract class ControllerBase : IBehavior, IController, IInitializableBehavior
 {
-    public Guid HomeEntity;
+    protected Guid HomeEntity => (_entity as Ship)?.HomeEntity ?? Guid.Empty;
     public bool Available => _spaceworthy && Task == Guid.Empty;
     public abstract TaskType TaskType { get; }
     public Guid Zone => _entity.Zone;
@@ -59,15 +59,24 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
         _context = context;
         _controllerData = data;
         _entity = entity;
-        entity.GearEvent.OnChanged += () => _spaceworthy = entity.GetBehavior<Thruster>() != null && entity.GetBehavior<Reactor>() != null;
+        entity.GearEvent.OnChanged += () =>
+        {
+            _spaceworthy = entity.GetBehavior<Thruster>() != null && entity.GetBehavior<Reactor>() != null;
+            if(_spaceworthy)
+                CreateBehaviors();
+        };
     }
-    
-    public void Initialize()
+
+    public void CreateBehaviors()
     {
         Locomotion = new Locomotion(_context, _entity, _controllerData);
         VelocityMatch = new VelocityMatch(_context, _entity, _controllerData);
         Aim = new Aim(_context, _entity, _controllerData);
-        
+    }
+    
+    public void Initialize()
+    {
+        CreateBehaviors();
         _context.CorporationControllers[_entity.Corporation].Add(this);
     }
     

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using MessagePack;
+using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
@@ -16,6 +17,8 @@ public class Ship : Entity
 
     // [IgnoreMember] public Dictionary<Targetable, float> Contacts = new Dictionary<Targetable, float>();
     // [IgnoreMember] public Targetable Target;
+    [JsonProperty("homeEntity"), Key(19)]
+    public Guid HomeEntity;
     
     public Ship(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid zone, Guid corporation) : base(context, hull, gear, cargo, zone, corporation)
     {

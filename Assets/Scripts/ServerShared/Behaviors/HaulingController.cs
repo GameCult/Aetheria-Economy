@@ -84,7 +84,8 @@ public class HaulingController : ControllerBase, IBehavior, IPersistentBehavior
         {
             var itemMatches = target.Cargo
                 .Select(id => _context.Cache.Get<CraftedItemInstance>(id))
-                .Where(ii => ii != null && ii.Data == haulingTask.ItemType);
+                .Where(ii => ii != null && ii.Data == haulingTask.ItemType)
+                .ToArray();
             if(!itemMatches.Any())
                 FinishTask();
             foreach (var match in itemMatches)

@@ -213,6 +213,7 @@ public class StrategyGameManager : MonoBehaviour
                         ZoneTabButton.OnPointerClick(null);
                         
                         var entities = new List<Entity>();
+                        
                         foreach(var loadout in parentCorp.InitialFleet)
                             for(int i=0; i<loadout.Value; i++)
                                 entities.Add(_context.CreateEntity(_selectedZone, newCorp.ID, loadout.Key));
@@ -220,8 +221,7 @@ public class StrategyGameManager : MonoBehaviour
                         _selectedColony = colony.ID;
                         foreach (var ship in entities.Where(e => e is Ship))
                         {
-                            foreach (var controller in ship.GetBehaviors<ControllerBase>())
-                                controller.HomeEntity = colony.ID;
+                            ((Ship)ship).HomeEntity = colony.ID;
 
                             _context.SetParent(ship, colony);
                         }
@@ -719,6 +719,7 @@ public class StrategyGameManager : MonoBehaviour
                             var itemData = _context.Cache.Get<SimpleCommodityData>(resource.Key);
                             list.AddProperty(itemData.Name, () => $"{resource.Value:0}");
                         }
+                        list.SetExpanded(true, true);
                     }
                 }
             }
