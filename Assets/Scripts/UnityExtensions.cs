@@ -83,4 +83,7 @@ public static class UnityExtensions
 
 		return result;
 	}
+	
+	public static Vector3 Flatland(this Vector2 v) => new Vector3(v.x,0,v.y);
+	public static Vector2 Flatland(this Vector3 v) => new Vector2(v.x,v.z);
 }

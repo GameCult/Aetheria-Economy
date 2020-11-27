@@ -66,7 +66,7 @@ public class HaulingController : ControllerBase, IBehavior, IPersistentBehavior
     void OnPickup()
     {
         var haulingTask = _context.Cache.Get<HaulingTask>(Task);
-        var target = _context.ZoneEntities[_entity.Zone][haulingTask.Origin] as OrbitalEntity;
+        var target = Zone.Entities[haulingTask.Origin] as OrbitalEntity;
         
         _context.SetParent(_entity, target);
         var itemData = _context.Cache.Get<ItemData>(haulingTask.ItemType);
@@ -101,7 +101,7 @@ public class HaulingController : ControllerBase, IBehavior, IPersistentBehavior
 
         var target = _context.Cache.Get<Entity>(haulingTask.Target);
 
-        MoveTo(target.Zone, OnTargetZoneArrival);
+        MoveTo(target.Zone.Data.ID, OnTargetZoneArrival);
     }
     
     void OnTargetZoneArrival()
@@ -114,7 +114,7 @@ public class HaulingController : ControllerBase, IBehavior, IPersistentBehavior
     void OnDelivery()
     {
         var haulingTask = _context.Cache.Get<HaulingTask>(Task);
-        var target = _context.ZoneEntities[_entity.Zone][haulingTask.Target] as OrbitalEntity;
+        var target = Zone.Entities[haulingTask.Target] as OrbitalEntity;
         
         _context.SetParent(_entity, target);
         

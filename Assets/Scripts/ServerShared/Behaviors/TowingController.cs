@@ -61,7 +61,7 @@ public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
     void OnPickup()
     {
         var towingTask = _context.Cache.Get<StationTowing>(Task);
-        var target = _context.ZoneEntities[_entity.Zone][towingTask.Station] as OrbitalEntity;
+        var target = Zone.Entities[towingTask.Station] as OrbitalEntity;
         
         _context.SetParent(target, _entity);
         
@@ -69,22 +69,22 @@ public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
 
         MoveTo(() =>
         {
-            var orbitParent = _context.GetOrbitPosition(towingTask.OrbitParent);
+            var orbitParent = Zone.GetOrbitPosition(towingTask.OrbitParent);
             var parentToUs = _entity.Position - orbitParent;
             return orbitParent + normalize(parentToUs) * towingTask.OrbitDistance;
-        }, () => _context.GetOrbitVelocity(towingTask.OrbitParent), OnDelivery);
+        }, () => Zone.GetOrbitVelocity(towingTask.OrbitParent), OnDelivery);
     }
     
     void OnDelivery()
     {
         var towingTask = _context.Cache.Get<StationTowing>(Task);
-        var target = _context.ZoneEntities[_entity.Zone][towingTask.Station] as OrbitalEntity;
+        var target = Zone.Entities[towingTask.Station] as OrbitalEntity;
         
         _context.RemoveParent(target);
         
         _entity.SetMessage("Target delivered. Returning Home.");
 
-        var orbit = _context.CreateOrbit(towingTask.Zone, towingTask.OrbitParent, _entity.Position);
+        var orbit = Zone.CreateOrbit(towingTask.OrbitParent, _entity.Position);
         target.OrbitData = orbit.ID;
 
         FinishTask();

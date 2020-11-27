@@ -2,6 +2,7 @@
 <module type="RIDER_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$/../.." />
+    <content url="file://$MODULE_DIR$/../../../NodeGraphProcessor/Assets/com.alelievr.NodeGraphProcessor" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

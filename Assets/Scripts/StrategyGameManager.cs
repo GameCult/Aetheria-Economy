@@ -9,9 +9,9 @@ using NaughtyAttributes;
 using RethinkDb.Driver.Net;
 using TMPro;
 using UnityEngine;
-using Unity.Mathematics;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using Random = UnityEngine.Random;
@@ -84,7 +84,7 @@ public class StrategyGameManager : MonoBehaviour
     // private GalaxyResponseMessage _galaxyResponse;
     private TabButton _currentTab;
     private bool _galaxyPopulated;
-    private Guid _populatedZone;
+    private Zone _currentZone;
     private Guid _selectedZone;
     private GalaxyZone _selectedGalaxyZone;
     private Dictionary<Guid, GalaxyZone> _galaxyZoneObjects = new Dictionary<Guid, GalaxyZone>();
@@ -124,7 +124,6 @@ public class StrategyGameManager : MonoBehaviour
             ColonyTab.Context = _context;
             TechTree.Context = _context;
             PropertiesPanel.Context = _context;
-            _context.MapLayers = _cache.GetAll<GalaxyMapLayerData>().ToDictionary(ml => ml.Name);
             _context.GalaxyZones = _cache.GetAll<ZoneData>()
                 .ToDictionary(z => z.ID, z => new SimplifiedZoneData
                 {
@@ -260,7 +259,7 @@ public class StrategyGameManager : MonoBehaviour
                 if(_currentTab==GalaxyTabButton && _selectedZone == zone.Zone.ID)
                     Select(_selectedZone);
                     
-                if (_currentTab == ZoneTabButton && _populatedZone != zone.Zone.ID) PopulateZone();
+                if (_currentTab == ZoneTabButton && _currentZone.Data.ID != zone.Zone.ID) PopulateZone();
             });
         }
         
@@ -280,9 +279,9 @@ public class StrategyGameManager : MonoBehaviour
             {
                 PropertiesPanelView.gameObject.SetActive(true);
                 var zone = _cache.Get<ZoneData>(_selectedZone);
-                if (_populatedZone != _selectedZone && zone != null)
+                if (zone != null && (_currentZone == null || _currentZone.Data.ID != _selectedZone))
                     PopulateZone();
-                Select(_populatedZone);
+                Select(_currentZone.Data.ID);
                 Camera.transform.position = -Vector3.forward;
                 if (zone != null)
                     Camera.orthographicSize = zone.Radius * ZoneSizeScale;
@@ -329,7 +328,7 @@ public class StrategyGameManager : MonoBehaviour
                             OrbitDistance = _orbitRadius,
                             OrbitParent = _selectedOrbit,
                             Station = _selectedTowingTarget,
-                            Zone = _populatedZone
+                            Zone = _currentZone.Data.ID
                         };
                         _cache.Add(towingTask);
                         playerCorp.Tasks.Add(towingTask.ID);
@@ -337,10 +336,10 @@ public class StrategyGameManager : MonoBehaviour
                         OrbitLineRenderer.gameObject.SetActive(false);
                     }
                     else
-                        Select(_populatedZone);
+                        Select(_currentZone.Data.ID);
                 }
                 else if (data.button == PointerEventData.InputButton.Right) 
-                    ShowContextMenu(_populatedZone);
+                    ShowContextMenu(_currentZone.Data.ID);
             }
             else if (_currentTab == TechTabButton) PopulateTechProperties();
         };
@@ -380,11 +379,11 @@ public class StrategyGameManager : MonoBehaviour
             _galaxyCameraPos = Camera.transform.position;
             _galaxyOrthoSize = Camera.orthographicSize;
         }
-        if (_currentTab == ZoneTabButton && _populatedZone == _selectedZone)
+        if (_currentTab == ZoneTabButton && _currentZone.Data.ID == _selectedZone)
         {
             foreach (var planet in _zoneGravityObjects)
             {
-                planet.Value.transform.position = float3(_context.GetOrbitPosition(planet.Key) * ZoneSizeScale, .1f);
+                planet.Value.transform.position = float3(_currentZone.GetOrbitPosition(planet.Key) * ZoneSizeScale, .1f);
                 planet.Value.Message.text = "";
             }
 
@@ -403,7 +402,7 @@ public class StrategyGameManager : MonoBehaviour
             //     ship.Value.Thruster.localScale = thrusterScale;
             // }
 
-            var entities = _context.GetEntities(_populatedZone);
+            var entities = _currentZone.Entities.Values;
             var shipGameObjects = _zoneShips.Keys.ToList();
             var orbitalGameObjects = _zoneOrbitals.Keys.ToList();
             var zoneShips = entities.Where(e => e is Ship && e.Parent == Guid.Empty).Cast<Ship>();
@@ -519,7 +518,7 @@ public class StrategyGameManager : MonoBehaviour
 
             if (_orbitSelectMode)
             {
-                var center = _context.GetOrbitPosition(_selectedOrbit) * ZoneSizeScale;
+                var center = _currentZone.GetOrbitPosition(_selectedOrbit) * ZoneSizeScale;
                 var mousePos = Camera.ScreenToWorldPoint(Input.mousePosition);
                 var radius = length(float2(mousePos.x, mousePos.y)  - center);
                 _orbitRadius = radius / ZoneSizeScale;
@@ -576,7 +575,7 @@ public class StrategyGameManager : MonoBehaviour
         ContextMenu.Clear();
         if (targetObject is PlanetData planet)
         {
-            if (planet.Belt)
+            if (planet is AsteroidBeltData)
             {
                 ContextMenu.AddOption("Create Mining Task", () =>
                 {
@@ -584,7 +583,7 @@ public class StrategyGameManager : MonoBehaviour
                     {
                         Asteroids = clickTarget,
                         Context = _context,
-                        Zone = _populatedZone
+                        Zone = _currentZone.Data.ID
                     };
                     _cache.Add(task);
                     _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
@@ -596,7 +595,7 @@ public class StrategyGameManager : MonoBehaviour
                 {
                     Planets = new List<Guid>(new []{clickTarget}),
                     Context = _context,
-                    Zone = _populatedZone
+                    Zone = _currentZone.Data.ID
                 };
                 _cache.Add(task);
                 _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
@@ -632,39 +631,39 @@ public class StrategyGameManager : MonoBehaviour
         {
             ContextMenu.AddOption("Survey All", () =>
             {
-                var planets = zone.Planets.ToList();
-                var task = new Survey
-                {
-                    Planets = planets,
-                    Context = _context,
-                    Zone = _populatedZone
-                };
-                _cache.Add(task);
-                _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
+                // var planets = zone.Planets.ToList();
+                // var task = new Survey
+                // {
+                //     Planets = planets,
+                //     Context = _context,
+                //     Zone = _currentZone.Data.ID
+                // };
+                // _cache.Add(task);
+                // _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
             });
             ContextMenu.AddOption("Survey Planets", () =>
             {
-                var planets = zone.Planets.Where(id => !_cache.Get<PlanetData>(id).Belt).ToList();
-                var task = new Survey
-                {
-                    Planets = planets,
-                    Context = _context,
-                    Zone = _populatedZone
-                };
-                _cache.Add(task);
-                _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
+                // var planets = zone.Planets.Where(id => !_cache.Get<PlanetData>(id).Belt).ToList();
+                // var task = new Survey
+                // {
+                //     Planets = planets,
+                //     Context = _context,
+                //     Zone = _currentZone.Data.ID
+                // };
+                // _cache.Add(task);
+                // _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
             });
             ContextMenu.AddOption("Survey Asteroids", () =>
             {
-                var planets = zone.Planets.Where(id => _cache.Get<PlanetData>(id).Belt).ToList();
-                var task = new Survey
-                {
-                    Planets = planets,
-                    Context = _context,
-                    Zone = _populatedZone
-                };
-                _cache.Add(task);
-                _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
+                // var planets = zone.Planets.Where(id => _cache.Get<PlanetData>(id).Belt).ToList();
+                // var task = new Survey
+                // {
+                //     Planets = planets,
+                //     Context = _context,
+                //     Zone = _currentZone.Data.ID
+                // };
+                // _cache.Add(task);
+                // _cache.Get<Corporation>(_playerCorporation).Tasks.Add(task.ID);
             });
 
         }
@@ -691,7 +690,7 @@ public class StrategyGameManager : MonoBehaviour
             {
                 PropertiesPanel.Clear();
                 PropertiesPanel.Title.text = planet.Name;
-                if(planet.Belt)
+                if(planet is AsteroidBeltData)
                     PropertiesPanel.AddSection("Asteroid Belt");
                 else
                     PropertiesPanel.AddSection(
@@ -735,7 +734,7 @@ public class StrategyGameManager : MonoBehaviour
             PropertiesPanel.Clear();
             PropertiesPanel.Title.text = zone.Name;
             PropertiesPanel.AddSection("Sector");
-            PropertiesPanel.AddProperty("Planets", () => $"{zone.Planets.Length}");
+            // PropertiesPanel.AddProperty("Planets", () => $"{zone.Planets.Length}");
         }
         
         PropertiesPanel.RefreshValues();
@@ -814,25 +813,26 @@ public class StrategyGameManager : MonoBehaviour
 
     void GenerateZone(Guid zone)
     {
-        var zoneData = _cache.Get<ZoneData>(zone);
-        float2 position;
-        do
-        {
-            position = float2(Random.value, Random.value);
-        } while (_context.MapLayers["StarDensity"].Evaluate(position, _context.GlobalData) < .1f);
-        
-        OrbitData[] orbits;
-        PlanetData[] planets;
-        ZoneGenerator.GenerateZone(
-            context: _context,
-            zone: zoneData,
-            mapLayers: _context.MapLayers.Values,
-            resources: _cache.GetAll<SimpleCommodityData>().Where(i=>i.ResourceDensity.Any()),
-            orbitData: out orbits,
-            planetsData: out planets);
-        _cache.AddAll(orbits);
-        _cache.AddAll(planets);
-        zoneData.Visited = true;
+        // var zoneData = _cache.Get<ZoneData>(zone);
+        //
+        // // float2 position;
+        // // do
+        // // {
+        // //     position = float2(Random.value, Random.value);
+        // // } while (_context.MapLayers["StarDensity"].Evaluate(position, _context.GlobalData) < .1f);
+        //
+        // OrbitData[] orbits;
+        // PlanetData[] planets;
+        // ZoneGenerator.GenerateZone(
+        //     context: _context,
+        //     zone: zoneData,
+        //     mapLayers: _context.MapLayers.Values,
+        //     resources: _cache.GetAll<SimpleCommodityData>().Where(i=>i.ResourceDensity.Any()),
+        //     orbitData: out orbits,
+        //     planetsData: out planets);
+        // _cache.AddAll(orbits);
+        // _cache.AddAll(planets);
+        // zoneData.Visited = true;
     }
 
     void PopulateZone()
@@ -847,23 +847,15 @@ public class StrategyGameManager : MonoBehaviour
         foreach (var ship in _zoneShips.Values) Destroy(ship.gameObject);
         _zoneShips.Clear();
         
-        _populatedZone = _selectedZone;
+        _currentZone = _context.GetZone(_selectedZone);
 
-        var zoneData = _cache.Get<ZoneData>(_populatedZone);
-
-        if (TestMode && !zoneData.Visited)
-        {
-            GenerateZone(_populatedZone);
-        }
-
-        _context.ForceLoadZone = _populatedZone;
+        //_context.ForceLoadZone = _populatedZone;
         
         float zoneDepth = 0;
 
-        foreach (var planet in _context.ZonePlanets[_populatedZone])
+        foreach (var planetData in _currentZone.Planets.Values)
         {
-            var planetData = _cache.Get<PlanetData>(planet);
-            if (!planetData.Belt)
+            if (!(planetData is AsteroidBeltData))
             {
                 var planetObject = Instantiate(ZoneGravityObjectPrefab, ZoneRoot);
                 _zoneGravityObjects[planetData.Orbit] = planetObject;
@@ -893,7 +885,7 @@ public class StrategyGameManager : MonoBehaviour
             {
                 var beltObject = Instantiate(BeltPrefab, ZoneRoot);
                 var collider = beltObject.GetComponent<MeshCollider>();
-                var belt = new AsteroidBelt(_context, beltObject, collider, planetData.ID, AsteroidSpritesheetWidth, AsteroidSpritesheetHeight, ZoneSizeScale);
+                var belt = new AsteroidBelt(_context, _currentZone, beltObject, collider, planetData.ID, AsteroidSpritesheetWidth, AsteroidSpritesheetHeight, ZoneSizeScale);
                 _zoneBelts[_cache.Get<OrbitData>(planetData.Orbit).Parent] = belt;
                 beltObject.GetComponent<ClickableCollider>().OnClick += (_, data) =>
                 {
@@ -905,17 +897,17 @@ public class StrategyGameManager : MonoBehaviour
             }
         }
 
-        var radius = (zoneData.Radius * ZoneSizeScale * 2);
+        var radius = (_currentZone.Data.Radius * ZoneSizeScale * 2);
         _backgroundMaterial.SetFloat("_ClipDistance", radius);
         _backgroundMaterial.SetFloat("_HeightRange", zoneDepth + _boundaryMaterial.GetFloat("_Depth"));
         ZoneBoundary.transform.localScale = Vector3.one * radius;
         
-        foreach (var wormhole in zoneData.Wormholes)
+        foreach (var wormhole in _currentZone.Data.Wormholes)
         {
             var otherZone = _context.GalaxyZones[wormhole];
             var wormholeObject = Instantiate(ZoneGravityObjectPrefab, ZoneRoot);
             _wormholes.Add(wormholeObject);
-            wormholeObject.transform.position = (Vector2) (_context.WormholePosition(zoneData.ID, wormhole) * ZoneSizeScale);
+            wormholeObject.transform.position = (Vector2) (_currentZone.WormholePosition(wormhole) * ZoneSizeScale);
             wormholeObject.GravityMesh.gameObject.SetActive(false);
             wormholeObject.Icon.material.SetTexture("_MainTex", WormholeSprite);
             wormholeObject.Label.text = otherZone.Name;
@@ -949,10 +941,8 @@ public class StrategyGameManager : MonoBehaviour
             Debug.Log("Expected arguments: Wanderer count, Patroller count, Orbital count!");
             return;
         }
-        
-        var zoneData = _cache.Get<ZoneData>(_populatedZone);
 
-        if (zoneData == null)
+        if (_currentZone == null)
         {
             Debug.Log("Attempted to spawn ship but no zone is populated!");
             return;
@@ -974,7 +964,7 @@ public class StrategyGameManager : MonoBehaviour
                 return;
             }
 
-            colonyList.Add(_context.CreateEntity(_populatedZone, _playerCorporation, loadoutData.ID));
+            colonyList.Add(_context.CreateEntity(_currentZone.Data.ID, _playerCorporation, loadoutData.ID));
         }
 
         int wanderers;
@@ -992,7 +982,7 @@ public class StrategyGameManager : MonoBehaviour
                 return;
             }
 
-            var entity = _context.CreateEntity(_populatedZone, _playerCorporation, loadoutData.ID);
+            var entity = _context.CreateEntity(_currentZone.Data.ID, _playerCorporation, loadoutData.ID);
             entity.GetBehaviors<WanderController>().First().WanderTarget = _context.Random.NextFloat() > .5f
                 ? WanderTarget.Planets
                 : WanderTarget.Orbitals;
@@ -1014,7 +1004,7 @@ public class StrategyGameManager : MonoBehaviour
                 return;
             }
 
-            var entity = _context.CreateEntity(_populatedZone, _playerCorporation, loadoutData.ID);
+            var entity = _context.CreateEntity(_currentZone.Data.ID, _playerCorporation, loadoutData.ID);
             //_context.SetParent(entity, colonyList[_context.Random.NextInt(colonyList.Count)]);
         }
     }
@@ -1024,9 +1014,7 @@ public class StrategyGameManager : MonoBehaviour
         if (!TestMode)
             return;
         
-        var zoneData = _cache.Get<ZoneData>(_populatedZone);
-
-        if (zoneData == null)
+        if (_currentZone == null)
         {
             Debug.Log("Attempted to spawn ship but no zone is populated!");
             return;
@@ -1039,7 +1027,7 @@ public class StrategyGameManager : MonoBehaviour
             return;
         }
 
-        _context.CreateEntity(_populatedZone, _playerCorporation, loadoutData.ID);
+        _context.CreateEntity(_currentZone.Data.ID, _playerCorporation, loadoutData.ID);
 
         // Parse first argument as hull name, default to Fighter if argument missing
         // HullData hullData;
@@ -1109,15 +1097,14 @@ public class StrategyGameManager : MonoBehaviour
             return;
         }
         
-        if(_populatedZone!=Guid.Empty)
-            _context.UnloadZone(_populatedZone);
+        if(_currentZone.Data.ID == zoneData.ID)
+            _context.UnloadZone(_currentZone.Data.ID);
         _cache.Delete(zoneData);
         _context.GalaxyZones.Remove(zoneData.ID);
         
         var newZone = zoneData.Copy();
         newZone.ID = Guid.NewGuid();
         newZone.Name = newZone.ID.ToString().Substring(0, 8);
-        newZone.Visited = false;
 
         var linkedZones = _cache.GetAll<ZoneData>().Where(z => z.Wormholes.Any(w => w == zoneData.ID)).ToArray();
         foreach (var linkedZone in linkedZones)
@@ -1160,7 +1147,7 @@ public class StrategyGameManager : MonoBehaviour
         _cache.Add(newZone);
 
         _selectedZone = newZone.ID;
-        _populatedZone = Guid.Empty;
+        _currentZone = null;
         
         if(_currentTab == ZoneTabButton)
             PopulateZone();
@@ -1182,16 +1169,18 @@ public class AsteroidBelt
     private Mesh _mesh;
     private float _zoneScale;
     private float _size;
+    private Zone _zone;
 
-    public AsteroidBelt(GameContext context, MeshFilter meshFilter, MeshCollider collider, Guid data, int spritesheetWidth, int spritesheetHeight, float zoneScale)
+    public AsteroidBelt(GameContext context, Zone zone, MeshFilter meshFilter, MeshCollider collider, Guid data, int spritesheetWidth, int spritesheetHeight, float zoneScale)
     {
         Transform = collider.transform;
         _context = context;
+        _zone = zone;
         _data = data;
         _filter = meshFilter;
         _collider = collider;
         _zoneScale = zoneScale;
-        var planetData = context.Cache.Get<PlanetData>(data);
+        var planetData = context.Cache.Get<AsteroidBeltData>(data);
         var orbitData = context.Cache.Get<OrbitData>(planetData.Orbit);
         _orbit = orbitData.Parent;
         _vertices = new Vector3[planetData.Asteroids.Length*4];
@@ -1241,8 +1230,8 @@ public class AsteroidBelt
 
     public void Update()
     {
-        var planetData = _context.Cache.Get<PlanetData>(_data);
-        var asteroidTransforms = _context.GetAsteroidTransforms(_data);
+        var planetData = _context.Cache.Get<AsteroidBeltData>(_data);
+        var asteroidTransforms = _zone.GetAsteroidTransforms(_data);
         for (var i = 0; i < planetData.Asteroids.Length; i++)
         {
             var rotation = Quaternion.Euler(0, 0, asteroidTransforms[i].z);
@@ -1253,7 +1242,7 @@ public class AsteroidBelt
             _vertices[i * 4 + 3] = rotation * new Vector3(asteroidTransforms[i].w * _zoneScale,-asteroidTransforms[i].w * _zoneScale,0) + position;
         }
 
-        _mesh.bounds = new Bounds((Vector2) _context.GetOrbitPosition(_orbit) * _zoneScale, Vector3.one * (_size * _zoneScale * 2));
+        _mesh.bounds = new Bounds((Vector2) _zone.GetOrbitPosition(_orbit) * _zoneScale, Vector3.one * (_size * _zoneScale * 2));
         _mesh.vertices = _vertices;
         _collider.sharedMesh = _mesh;
     }

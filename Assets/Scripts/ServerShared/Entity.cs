@@ -89,7 +89,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     }
     //public List<IncompleteItem> IncompleteCargo = new List<IncompleteItem>();
 
-    [IgnoreMember] public Guid Zone;
+    [IgnoreMember] public Zone Zone;
     [IgnoreMember] public List<Hardpoint> Hardpoints;
     [IgnoreMember] public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     [IgnoreMember] public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
@@ -138,7 +138,7 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
     }
 
 
-    public Entity(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid zone, Guid corporation)
+    public Entity(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Zone zone, Guid corporation)
     {
         Context = context;
         Zone = zone;

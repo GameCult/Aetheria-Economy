@@ -31,7 +31,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     protected Guid HomeEntity => (_entity as Ship)?.HomeEntity ?? Guid.Empty;
     public bool Available => _spaceworthy && Task == Guid.Empty;
     public abstract TaskType TaskType { get; }
-    public Guid Zone => _entity.Zone;
+    public Zone Zone => _entity.Zone;
     public BehaviorData Data => _controllerData;
     
     protected Locomotion Locomotion;
@@ -182,7 +182,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
             _context.SetParent(_entity, homeEntity);
             onFinish?.Invoke();
         });
-        else MoveTo(homeEntity.Zone, () => MoveTo(homeEntity, true, () =>
+        else MoveTo(homeEntity.Zone.Data.ID, () => MoveTo(homeEntity, true, () =>
         {
             _context.SetParent(_entity, homeEntity);
             onFinish?.Invoke();
@@ -228,14 +228,14 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
 
     public void MoveTo(Guid zone, Action onFinish = null)
     {
-        var path = _context.FindPath(_context.GalaxyZones[Zone], _context.GalaxyZones[zone]);
+        var path = _context.FindPath(_context.GalaxyZones[Zone.Data.ID], _context.GalaxyZones[zone]);
 
         void OnNextZone()
         {
             path.RemoveAt(0);
             if (path.Count > 0)
             {
-                MoveTo(_context.WormholePosition(_entity.Zone, Path[0].ZoneID), false, OnNextZone);
+                MoveTo(Zone.WormholePosition(Path[0].ZoneID), false, OnNextZone);
             }
             else
             {

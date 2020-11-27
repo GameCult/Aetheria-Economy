@@ -5,21 +5,33 @@ using System.Globalization;
 using System.Linq;
 using MessagePack;
 using Unity.Mathematics;
+using UnityEngine;
 using static Unity.Mathematics.math;
 using Random = Unity.Mathematics.Random;
 
 public class ZoneGenerator
 {
-
-	public static void GenerateZone(
+	public static ZonePack GenerateZone(
 		GameContext context,
-		ZoneData zone,
+		string name,
+		float2 position,
 		IEnumerable<GalaxyMapLayerData> mapLayers,
 		IEnumerable<SimpleCommodityData> resources,
-		out OrbitData[] orbitData,
-		out PlanetData[] planetsData)
+		float mass = 0,
+		float radius = 0)
 	{
-		var zoneRadius = context.Random.NextPowerDistribution(
+		var zone = new ZoneData
+		{
+			Name = name, 
+			Position = position
+		};
+		
+		var pack = new ZonePack
+		{
+			Data = zone
+		};
+		
+		var zoneRadius = radius != 0 ? radius : context.Random.NextPowerDistribution(
 			context.GlobalData.MinimumZoneRadius,
 			context.GlobalData.MaximumZoneRadius,
 			context.GlobalData.ZoneRadiusExponent,
@@ -31,7 +43,7 @@ public class ZoneGenerator
 					.Evaluate(zone.Position, context.GlobalData)));
 		zone.Radius = zoneRadius;
 		
-		var zoneMass = context.Random.NextPowerDistribution(
+		var zoneMass = mass != 0 ? mass : context.Random.NextPowerDistribution(
 			context.GlobalData.MinimumZoneMass,
 			context.GlobalData.MaximumZoneMass,
 			context.GlobalData.ZoneMassExponent,
@@ -48,26 +60,25 @@ public class ZoneGenerator
 		var planets = GenerateEntities(context, zone, zoneMass, zoneRadius);
         
         // Create collections to map between zone generator output and database entries
-        var orbitMap = new Dictionary<Planet, OrbitData>();
-        var orbitInverseMap = new Dictionary<OrbitData, Planet>();
+        var orbitMap = new Dictionary<GeneratorPlanet, OrbitData>();
+        var orbitInverseMap = new Dictionary<OrbitData, GeneratorPlanet>();
         
         // Create orbit database entries
-        orbitData = planets.Select(planet =>
+        pack.Orbits = planets.Select(planet =>
         {
             var data = new OrbitData
             {
                 Distance = planet.Distance,
                 Period = planet.Period,
-                Phase = planet.Phase,
-                Zone = zone.ID
+                Phase = planet.Phase
             };
             orbitMap[planet] = data;
             orbitInverseMap[data] = planet;
             return data;
-        }).ToArray();
+        }).ToList();
 
         // Link OrbitData parents to database GUIDs
-        foreach (var data in orbitData)
+        foreach (var data in pack.Orbits)
             data.Parent = orbitInverseMap[data].Parent != null
                 ? orbitMap[orbitInverseMap[data].Parent].ID
                 : Guid.Empty;
@@ -75,34 +86,50 @@ public class ZoneGenerator
         // Cache resource densities
         var resourceMaps = mapLayers.ToDictionary(m => m.ID, m => m.Evaluate(zone.Position, context.GlobalData));
         
-        planetsData = planets.Where(p=>!p.Empty).Select(planet =>
+        pack.Planets = planets.Where(p=>!p.Empty).Select(planet =>
         {
-	        Dictionary<Guid, float> dictionary = new Dictionary<Guid, float>();
+	        Dictionary<Guid, float> planetResources = new Dictionary<Guid, float>();
+	        BodyType bodyType = planet.Belt ? BodyType.Asteroid :
+		        planet.Mass > context.GlobalData.SunMass ? BodyType.Sun :
+		        planet.Mass > context.GlobalData.GasGiantMass ? BodyType.GasGiant :
+		        planet.Mass > context.GlobalData.PlanetMass ? BodyType.Planet : BodyType.Planetoid;
+	        
 	        foreach (var r in resources)
 	        {
-		        var bodyType = (planet.Belt ? BodyType.Asteroid :
-			        planet.Mass > context.GlobalData.SunMass ? BodyType.Sun :
-			        planet.Mass > context.GlobalData.GasGiantMass ? BodyType.GasGiant :
-			        planet.Mass > context.GlobalData.PlanetMass ? BodyType.Planet : BodyType.Planetoid);
 		        if ((bodyType & r.ResourceBodyType) != 0)
 		        {
 			        float quantity = ResourceValue(r, context, r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]));
-			        if (r.Floor < quantity) dictionary.Add(r.ID, quantity);
+			        if (r.Floor < quantity) planetResources.Add(r.ID, quantity);
 		        }
 	        }
 
-	        var planetData = new PlanetData
-            {
-                Mass = planet.Mass,
-                Orbit = orbitMap[planet].ID,
-                Zone = zone.ID,
-                Belt = planet.Belt,
-                Resources = dictionary
-            };
+	        PlanetData planetData;
+	        switch (bodyType)
+	        {
+		        case BodyType.Asteroid:
+			        planetData = new AsteroidBeltData();
+			        break;
+		        case BodyType.Planetoid:
+		        case BodyType.Planet:
+			        planetData = new PlanetData();
+			        break;
+		        case BodyType.GasGiant:
+			        planetData = new GasGiantData();
+			        break;
+		        case BodyType.Sun:
+			        planetData = new SunData();
+			        break;
+		        default:
+			        throw new ArgumentOutOfRangeException();
+	        }
+
+	        planetData.Mass = planet.Mass;
+	        planetData.Orbit = orbitMap[planet].ID;
+	        planetData.Resources = planetResources;
             planetData.Name = planetData.ID.ToString().Substring(0, 8);
-            if (planet.Belt)
+            if (planetData is AsteroidBeltData beltData)
             {
-	            planetData.Asteroids = 
+	            beltData.Asteroids = 
 		            Enumerable.Range(0, (int) (pow(planetData.Mass, context.GlobalData.BeltMassExponent) / context.GlobalData.BeltMassRatio * orbitMap[planet].Distance))
 			            .Select(_ => new Asteroid
 			            {
@@ -114,11 +141,27 @@ public class ZoneGenerator
 				            RotationSpeed = context.Random.NextFloat() * context.GlobalData.AsteroidRotationSpeed
 			            }).ToArray();
             }
+            else if (planetData is GasGiantData gas)
+            {
+	            var grad = new Gradient();
+	            var times = Enumerable.Range(0, 5).Select(i => (float) i / 4).ToArray();
+	            grad.alphaKeys = times.Select(f => new GradientAlphaKey(1, f)).ToArray();
+	            grad.colorKeys = times.Select(f => new GradientColorKey(UnityEngine.Random.ColorHSV(), f)).ToArray();
+	            gas.Colors = grad;
+	            gas.AlbedoRotationSpeed = 1;
+	            gas.FirstOffsetRotationSpeed = 1;
+	            gas.FirstOffsetDomainRotationSpeed = 1;
+	            gas.SecondOffsetRotationSpeed = 1;
+	            gas.SecondOffsetDomainRotationSpeed = 1;
+	            if (planetData is SunData sun)
+	            {
+		            sun.FogTintColor = sun.LightColor = UnityEngine.Random.ColorHSV();
+	            }
+            }
             return planetData;
-        }).ToArray();
+        }).ToList();
 
-        zone.Planets = planetsData.Select(pd => pd.ID).ToArray();
-        zone.Orbits = orbitData.Select(od => od.ID).ToList();
+        return pack;
 	}
 	
 	static float ResourceValue(SimpleCommodityData resource, GameContext context, float density)
@@ -127,15 +170,15 @@ public class ZoneGenerator
 			1 / lerp(context.GlobalData.ResourceDensityMinimum, context.GlobalData.ResourceDensityMaximum, density));
 	}
 
-	public static Planet[] GenerateEntities(GameContext context, ZoneData data, float mass, float radius)
+	public static GeneratorPlanet[] GenerateEntities(GameContext context, ZoneData data, float mass, float radius)
 	{
 		var random = new Random();
 		random.InitState(unchecked((uint)data.Name.GetHashCode()));
 		
-		var root = new Planet
+		var root = new GeneratorPlanet
 		{
 			Context = context,
-			Mass = mass, 
+			Mass = mass,
 			ChildDistanceMaximum = radius * .75f,
 			ChildDistanceMinimum = context.GlobalData.PlanetRadius(mass)
 		};
@@ -194,7 +237,7 @@ public class ZoneGenerator
 			? root.AllPlanets().Where(p => p != root && p.Parent != root && p.Mass > context.GlobalData.SatelliteCreationMassFloor)
 			: root.AllPlanets().Where(p => p != root && p.Mass > context.GlobalData.SatelliteCreationMassFloor);
 
-		var binaries = new List<Planet>();
+		var binaries = new List<GeneratorPlanet>();
 		foreach (var planet in satelliteCandidates)
 		{
 			// There's a chance of generating satellites for each qualified planet
@@ -233,7 +276,7 @@ public class ZoneGenerator
 // All orbiting bodies are referred to here as "Planets"
 // This goes back to the original etymology for the word planet, which is traveler,
 // Because they were objects we observed to move in the sky instead of remaining fixed like the stars
-public class Planet
+public class GeneratorPlanet
 {
 	public GameContext Context;
 	public float Distance;
@@ -244,11 +287,11 @@ public class Planet
 	public float ChildDistanceMaximum;
 	public bool Empty = false;
 	public bool Belt = false;
-	public List<Planet> Children = new List<Planet>(); // Planets orbiting this one are referred to as children
-	public Planet Parent;
+	public List<GeneratorPlanet> Children = new List<GeneratorPlanet>(); // Planets orbiting this one are referred to as children
+	public GeneratorPlanet Parent;
 
 	// Recursively gather all planets in the hierarchy
-	public IEnumerable<Planet> AllPlanets()
+	public IEnumerable<GeneratorPlanet> AllPlanets()
 	{
 		return new[]{this}.Concat(Children.SelectMany(c=>c.AllPlanets()));
 	}
@@ -283,7 +326,7 @@ public class Planet
 		
 		for (int i = 0; i < vertices; i++)
 		{
-			var child = new Planet
+			var child = new GeneratorPlanet
 			{
 				Context = Context,
 				Parent = this,
@@ -293,7 +336,7 @@ public class Planet
 				ChildDistanceMaximum = (i % 2 == 0 ? p0ChildDist : p1ChildDist)
 			};
 			child.ChildDistanceMinimum = Context.GlobalData.PlanetRadius(child.Mass) * 2;
-			child.Period = Context.OrbitalPeriod(child.Distance);
+			child.Period = Context.GlobalData.OrbitalPeriod(child.Distance);
 			Children.Add(child);
 		}
 
@@ -346,7 +389,7 @@ public class Planet
 			// Only instantiate children above the mass floor
 			if (masses[i] > Context.GlobalData.MassFloor)
 			{
-				var child = new Planet
+				var child = new GeneratorPlanet
 				{
 					Context = Context,
 					Parent = this,
@@ -354,7 +397,7 @@ public class Planet
 					Distance = distances[i],
 					Phase = Context.Random.NextFloat()
 				};
-				child.Period = Context.OrbitalPeriod(child.Distance);
+				child.Period = Context.GlobalData.OrbitalPeriod(child.Distance);
 				child.ChildDistanceMinimum = Context.GlobalData.PlanetRadius(child.Mass) * 2;
 				// Maximum child distance of child is the smallest distance to either of its neighbors
 				child.ChildDistanceMaximum = min(i == 0 ? child.Distance - ChildDistanceMinimum : child.Distance - distances[i - 1],

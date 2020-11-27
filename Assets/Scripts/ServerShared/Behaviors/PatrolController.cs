@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
@@ -19,7 +20,7 @@ public class PatrolController : IBehavior, IController, IInitializableBehavior
 {
     public TaskType TaskType => TaskType.None;
     public bool Available => false;
-    public Guid Zone => _entity.Zone;
+    public Zone Zone => _entity.Zone;
     public BehaviorData Data => _data;
     
     private PatrolControllerData _data;
@@ -45,7 +46,7 @@ public class PatrolController : IBehavior, IController, IInitializableBehavior
 
     public bool Update(float delta)
     {
-        _locomotion.Objective = _context.GetOrbitPosition(_targetOrbit);
+        _locomotion.Objective = Zone.GetOrbitPosition(_targetOrbit);
         _locomotion.Update(delta);
         
         if(length(_entity.Position - _locomotion.Objective) < _data.TargetDistance)
@@ -61,7 +62,6 @@ public class PatrolController : IBehavior, IController, IInitializableBehavior
     
     private void RandomTarget()
     {
-        var entities = _context.ZonePlanets[_entity.Zone];
-        _targetOrbit = _context.Cache.Get<PlanetData>(entities[_context.Random.NextInt(entities.Length)]).Orbit;
+        _targetOrbit = Zone.Planets.Keys.ToArray()[_context.Random.NextInt(Zone.Planets.Count)];
     }
 }

@@ -192,6 +192,11 @@ public class DatabaseListView : EditorWindow
             {
                 _databaseCache.Save(new DirectoryInfo(Application.dataPath).Parent.FullName);
             }
+
+            if (GUILayout.Button("Load"))
+            {
+                _databaseCache.Load(new DirectoryInfo(Application.dataPath).Parent.FullName);
+            }
         }
 
         using (new HorizontalScope())

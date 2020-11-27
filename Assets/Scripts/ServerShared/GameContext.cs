@@ -12,9 +12,8 @@ using float4 = Unity.Mathematics.float4;
 public class GameContext
 {
     public Random Random = new Random((uint) (DateTime.Now.Ticks%uint.MaxValue));
-    public Dictionary<Guid, Guid[]> ZonePlanets = new Dictionary<Guid, Guid[]>();
-    public Dictionary<Guid, Dictionary<Guid, Entity>> ZoneEntities = new Dictionary<Guid, Dictionary<Guid, Entity>>();
     public Dictionary<string, GalaxyMapLayerData> MapLayers = new Dictionary<string, GalaxyMapLayerData>();
+    public SimpleCommodityData[] Resources;
     public Dictionary<Guid, List<IController>> CorporationControllers = new Dictionary<Guid, List<IController>>();
     public Dictionary<Guid, SimplifiedZoneData> GalaxyZones;
     
@@ -26,37 +25,24 @@ public class GameContext
     private double _time;
     private float _deltaTime;
     private GlobalData _globalData;
-    private HashSet<Guid> _loadedZones = new HashSet<Guid>();
-    private HashSet<Guid> _orbits = new HashSet<Guid>();
-    private Dictionary<Guid, float2> _orbitVelocities = new Dictionary<Guid, float2>();
-    private Dictionary<Guid, float2> _orbitPositions = new Dictionary<Guid, float2>();
-    private Dictionary<Guid, float2> _previousOrbitPositions = new Dictionary<Guid, float2>();
-    private Dictionary<Guid, float4[]> _asteroidTransforms = new Dictionary<Guid, float4[]>(); // x, y, rotation, scale
-    private Dictionary<Guid, float4[]> _previousAsteroidTransforms = new Dictionary<Guid, float4[]>(); // x, y, rotation, scale
-    private Dictionary<(Guid, int), float> _asteroidRespawnTimers = new Dictionary<(Guid, int), float>();
-    private Dictionary<(Guid, int), float> _asteroidDamage = new Dictionary<(Guid, int), float>();
-    private Dictionary<(Guid, Guid, int), float> _asteroidMiningAccumulator = new Dictionary<(Guid, Guid, int), float>();
-    private Guid _forceLoadZone;
-    private Type[] _statObjects;
+    private Dictionary<Guid, Zone> _zones = new Dictionary<Guid, Zone>();
+    // private Guid _forceLoadZone;
     
     public GlobalData GlobalData => _globalData ?? (_globalData = Cache.GetAll<GlobalData>().FirstOrDefault());
     public DatabaseCache Cache { get; }
 
-    public Type[] StatObjects => _statObjects ?? (_statObjects = typeof(BehaviorData).GetAllChildClasses()
-        .Concat(typeof(EquippableItemData).GetAllChildClasses()).ToArray());
-
-    public Guid ForceLoadZone
-    {
-        get => _forceLoadZone;
-        set
-        {
-            if(_forceLoadZone != Guid.Empty && ZoneEntities[_forceLoadZone].Count == 0)
-                UnloadZone(_forceLoadZone);
-            _forceLoadZone = value;
-            if(!_loadedZones.Contains(_forceLoadZone))
-                LoadZone(_forceLoadZone);
-        }
-    }
+    // public Guid ForceLoadZone
+    // {
+    //     get => _forceLoadZone;
+    //     set
+    //     {
+    //         if(_forceLoadZone != Guid.Empty && ZoneEntities[_forceLoadZone].Count == 0)
+    //             UnloadZone(_forceLoadZone);
+    //         _forceLoadZone = value;
+    //         if(!_loadedZones.Contains(_forceLoadZone))
+    //             LoadZone(_forceLoadZone);
+    //     }
+    // }
 
     public double Time
     {
@@ -69,18 +55,13 @@ public class GameContext
         }
     }
 
-    public float2 WormholePosition(Guid zone, Guid other)
-    {
-        var zoneData = Cache.Get<ZoneData>(zone);
-        var direction = Cache.Get<ZoneData>(other).Position - zoneData.Position;
-        return normalize(direction) * zoneData.Radius * .95f;
-    }
-
     // private readonly Dictionary<CraftedItemData, int> Tier = new Dictionary<CraftedItemData, int>();
 
     public GameContext(DatabaseCache cache, Action<string> logger)
     {
         Cache = cache;
+        MapLayers = cache.GetAll<GalaxyMapLayerData>().ToDictionary(ml => ml.Name);
+        Resources = cache.GetAll<SimpleCommodityData>().Where(i => i.ResourceDensity.Any()).ToArray();
         _logger = logger;
         // var globalData = Cache.GetAll<GlobalData>().FirstOrDefault();
         // if (globalData == null)
@@ -97,20 +78,9 @@ public class GameContext
 
     public void Update()
     {
-        _previousOrbitPositions = _orbitPositions;
-        _orbitPositions = new Dictionary<Guid, float2>(_orbits.Count);
+        foreach(var zone in _zones.Values)
+            zone.Update(_deltaTime);
         
-        foreach(var orbit in _orbits)
-        {
-            _orbitPositions[orbit] = GetOrbitPosition(orbit);
-            _orbitVelocities[orbit] = _previousOrbitPositions.ContainsKey(orbit)
-                ? (_orbitPositions[orbit] - _previousOrbitPositions[orbit]) / _deltaTime
-                : float2.zero;
-        }
-
-        foreach (var asteroids in _asteroidTransforms.Keys)
-            UpdateAsteroidTransforms(asteroids);
-
         foreach (var corporation in Cache.GetAll<Corporation>())
         {
             foreach (var tasks in corporation.Tasks
@@ -127,10 +97,10 @@ public class GameContext
                 {
                     // Find the nearest controller for this task
                     IController nearestController = availableControllers[0];
-                    List<SimplifiedZoneData> nearestControllerPath = FindPath(GalaxyZones[availableControllers.First().Zone], GalaxyZones[task.Zone], true);
+                    List<SimplifiedZoneData> nearestControllerPath = FindPath(GalaxyZones[availableControllers.First().Zone.Data.ID], GalaxyZones[task.Zone], true);
                     foreach (var controller in availableControllers.Skip(1))
                     {
-                        var path = FindPath(GalaxyZones[controller.Zone], GalaxyZones[task.Zone], true);
+                        var path = FindPath(GalaxyZones[controller.Zone.Data.ID], GalaxyZones[task.Zone], true);
                         if (path.Count < nearestControllerPath.Count)
                         {
                             nearestControllerPath = path;
@@ -143,208 +113,53 @@ public class GameContext
             }
         }
         
-        foreach (var kvp in ZoneEntities)
-        {
-            foreach (var entity in kvp.Value.Values) entity.Update(_deltaTime);
-        }
     }
 
-    public IEnumerable<Entity> GetEntities(Guid zone)
+    public Zone GetZone(Guid zone)
     {
-        return ZoneEntities[zone].Values;
+        if (_zones.ContainsKey(zone)) return _zones[zone];
+        
+        // var zoneData = Cache.Get<ZoneData>(zone);
+        // if (zoneData == null) throw new ArgumentException("Zone parameter is not a valid zone ID!", nameof(zone));
+        //
+        // return GetZone(zoneData);
+        return null;
     }
 
-    public void LoadZone(Guid zone)
+    public Zone GetZone(ZonePack zonePack)
     {
-        var zoneData = Cache.Get<ZoneData>(zone);
-
-        _loadedZones.Add(zone);
-        
-        foreach (var orbit in zoneData.Orbits) _orbits.Add(orbit);
-
-        // TODO: Associate planets with stored entities for planetary colonies
-        ZonePlanets[zone] = zoneData.Planets;
-
-        foreach (var belt in zoneData.Planets
-            .Select(id => Cache.Get<PlanetData>(id))
-            .Where(p => p.Belt))
-        {
-            _asteroidTransforms[belt.ID] = new float4[belt.Asteroids.Length];
-            _previousAsteroidTransforms[belt.ID] = new float4[belt.Asteroids.Length];
-        }
-        
-        // TODO: Load stored entities
-        ZoneEntities[zone] = new Dictionary<Guid, Entity>();
+        var z = new Zone(this, zonePack);
+        _zones.Add(zonePack.Data.ID, z);
+        return z;
     }
 
     public void UnloadZone(Guid zone)
     {
-        var zoneData = Cache.Get<ZoneData>(zone);
-
-        _loadedZones.Remove(zone);
-        ZoneEntities.Remove(zone);
-        ZonePlanets.Remove(zone);
-        foreach (var orbit in zoneData.Orbits) _orbits.Remove(orbit);
-        foreach (var belt in zoneData.Planets
-            .Select(id => Cache.Get<PlanetData>(id))
-            .Where(p => p.Belt))
-        {
-            _asteroidTransforms.Remove(belt.ID);
-            _previousAsteroidTransforms.Remove(belt.ID);
-        }
+        _zones.Remove(zone);
     }
 
-    public void Warp(Entity entity, Guid targetZone)
-    {
-        if (length(entity.Position - WormholePosition(entity.Zone, targetZone)) < GlobalData.WarpDistance)
-        {
-            var sourceZone = entity.Zone;
-            
-            // Remove entity from source zone
-            ZoneEntities[sourceZone].Remove(entity.ID);
-            
-            // Unload source zone if empty and unobserved
-            if(ForceLoadZone != sourceZone && ZoneEntities[sourceZone].Count == 0)
-                UnloadZone(sourceZone);
-            
-            // Load target zone if not yet loaded
-            if(!_loadedZones.Contains(targetZone))
-                LoadZone(targetZone);
-            
-            entity.Zone = targetZone;
-            entity.Position = WormholePosition(targetZone, sourceZone);
-            ZoneEntities[targetZone][entity.ID] = entity;
-        }
-    }
-
-    // Determine orbital position recursively, caching parent positions to avoid repeated calculations
-    public float2 GetOrbitPosition(Guid orbit)
-    {
-        // Root orbit is fixed at center
-        if(orbit==Guid.Empty)
-            return float2.zero;
-        
-        if (!_orbitPositions.ContainsKey(orbit))
-        {
-            var orbitData = Cache.Get<OrbitData>(orbit);
-            float2 pos = float2.zero;
-            if (orbitData.Period > .01f)
-            {
-                var phase = (float) frac(Time / orbitData.Period * GlobalData.OrbitSpeedMultiplier);
-                pos = OrbitData.Evaluate(frac(phase + orbitData.Phase)) * orbitData.Distance;
-            }
-
-            _orbitPositions[orbit] = GetOrbitPosition(orbitData.Parent) + pos;
-        }
-
-        var position = _orbitPositions[orbit];
-        if (float.IsNaN(position.x))
-        {
-            Log("Orbit position is NaN, something went very wrong!");
-            return float2.zero;
-        }
-        return _orbitPositions[orbit];
-    }
-
-    public float2 GetOrbitVelocity(Guid orbit)
-    {
-        return _orbitVelocities.ContainsKey(orbit) ? _orbitVelocities[orbit] : float2.zero;
-    }
-
-    public int NearestAsteroid(Guid planetDataID, float2 position)
-    {
-        var planetData = Cache.Get<PlanetData>(planetDataID);
-
-        var asteroidPositions = GetAsteroidTransforms(planetDataID);
-
-        int nearest = 0;
-        float nearestDistance = Single.MaxValue;
-        for (int i = 0; i < planetData.Asteroids.Length; i++)
-        {
-            var dist = lengthsq(asteroidPositions[i].xy - position);
-            if (AsteroidExists(planetDataID, i) && dist < nearestDistance)
-            {
-                nearest = i;
-                nearestDistance = dist;
-            }
-        }
-
-        return nearest;
-    }
-
-    public bool AsteroidExists(Guid planetDataID, int asteroid) =>
-        !_asteroidRespawnTimers.ContainsKey((planetDataID, asteroid));
-
-    public float2 GetAsteroidVelocity(Guid planetDataID, int asteroid)
-    {
-        return (_asteroidTransforms[planetDataID][asteroid].xy - _previousAsteroidTransforms[planetDataID][asteroid].xy) / _deltaTime;
-    }
-
-    public float4 GetAsteroidTransform(Guid planetDataID, int asteroid)
-    {
-        return _asteroidTransforms[planetDataID][asteroid];
-    }
-
-    public float4[] GetAsteroidTransforms(Guid planetDataID)
-    {
-        return _asteroidTransforms[planetDataID];
-    }
-
-    private void UpdateAsteroidTransforms(Guid planetDataID)
-    {
-        var planetData = Cache.Get<PlanetData>(planetDataID);
-        
-        Array.Copy(_asteroidTransforms[planetDataID], _previousAsteroidTransforms[planetDataID], planetData.Asteroids.Length);
-        
-        var orbitData = Cache.Get<OrbitData>(planetData.Orbit);
-        var orbitPosition = GetOrbitPosition(orbitData.Parent);
-        for (var i = 0; i < planetData.Asteroids.Length; i++)
-        {
-            var size = planetData.Asteroids[i].Size;
-            if(_asteroidRespawnTimers.ContainsKey((planetDataID, i))) size = 0;
-            else if (_asteroidDamage.ContainsKey((planetDataID, i)))
-            {
-                var hpLerp = unlerp(GlobalData.AsteroidSizeMin, GlobalData.AsteroidSizeMax, size);
-                var asteroidHitpoints = lerp(GlobalData.AsteroidHitpointsMin, GlobalData.AsteroidHitpointsMax, pow(hpLerp, GlobalData.AsteroidHitpointsPower));
-                var sizeLerp = (asteroidHitpoints - _asteroidDamage[(planetDataID, i)]) / asteroidHitpoints;
-                size = lerp(GlobalData.AsteroidSizeMin, size, sizeLerp);
-            }
-        
-            _asteroidTransforms[planetDataID][i] = float4(
-                OrbitData.Evaluate((float) frac(Time / OrbitalPeriod(planetData.Asteroids[i].Distance) * GlobalData.OrbitSpeedMultiplier +
-                                                planetData.Asteroids[i].Phase)) * planetData.Asteroids[i].Distance + orbitPosition,
-                (float) (Time * planetData.Asteroids[i].RotationSpeed % 360.0), size);
-        }
-    }
-
-    public OrbitData CreateOrbit(Guid zone, Guid parent, float2 position)
-    {
-        var parentPosition = GetOrbitPosition(parent);
-        var delta = position - parentPosition;
-        var distance = length(delta);
-        var period = OrbitalPeriod(distance);
-        var phase = atan2(delta.y, delta.x) / (PI * 2);
-        var currentPhase = frac(Time / period * GlobalData.OrbitSpeedMultiplier);
-        var storedPhase = (float) frac(phase - currentPhase);
-
-        var orbit = new OrbitData
-        {
-            Context = this,
-            Distance = distance,
-            Parent = parent,
-            Period = period,
-            Phase = storedPhase,
-            Zone = zone
-        };
-        Cache.Add(orbit);
-        _orbits.Add(orbit.ID);
-        return orbit;
-    }
-
-    public float OrbitalPeriod(float distance)
-    {
-        return pow(distance, GlobalData.OrbitPeriodExponent) * GlobalData.OrbitPeriodMultiplier;
-    }
+    // public void Warp(Entity entity, Guid targetZone)
+    // {
+    //     if (length(entity.Position - WormholePosition(entity.Zone, targetZone)) < GlobalData.WarpDistance)
+    //     {
+    //         var sourceZone = entity.Zone;
+    //         
+    //         // Remove entity from source zone
+    //         ZoneEntities[sourceZone].Remove(entity.ID);
+    //         
+    //         // Unload source zone if empty and unobserved
+    //         if(ForceLoadZone != sourceZone && ZoneEntities[sourceZone].Count == 0)
+    //             UnloadZone(sourceZone);
+    //         
+    //         // Load target zone if not yet loaded
+    //         if(!_loadedZones.Contains(targetZone))
+    //             LoadZone(targetZone);
+    //         
+    //         entity.Zone = targetZone;
+    //         entity.Position = WormholePosition(targetZone, sourceZone);
+    //         ZoneEntities[targetZone][entity.ID] = entity;
+    //     }
+    // }
 
     public void PlaceMegas()
     {
@@ -368,28 +183,28 @@ public class GameContext
                         mega.HomeZone = zone.ID;
                     }
                     break;
-                case MegaPlacementType.Planets:
-                    foreach (var mega in megaPlacement)
-                    {
-                        var zone = availableZones
-                            .MaxBy(z => z.Planets.Length);
-                        availableZones.Remove(zone);
-                        mega.HomeZone = zone.ID;
-                    }
-                    break;
-                case MegaPlacementType.Resources:
-                    foreach (var mega in megaPlacement)
-                    {
-                        var zone = availableZones
-                            .MaxBy(z => z.Planets
-                                .SelectMany(id=>Cache.Get<PlanetData>(id).Resources
-                                    .Select(r=>r.Key))
-                                .Distinct()
-                                .Count());
-                        availableZones.Remove(zone);
-                        mega.HomeZone = zone.ID;
-                    }
-                    break;
+                // case MegaPlacementType.Planets:
+                //     foreach (var mega in megaPlacement)
+                //     {
+                //         var zone = availableZones
+                //             .MaxBy(z => z.Planets.Length);
+                //         availableZones.Remove(zone);
+                //         mega.HomeZone = zone.ID;
+                //     }
+                //     break;
+                // case MegaPlacementType.Resources:
+                //     foreach (var mega in megaPlacement)
+                //     {
+                //         var zone = availableZones
+                //             .MaxBy(z => z.Planets
+                //                 .SelectMany(id=>Cache.Get<PlanetData>(id).Resources
+                //                     .Select(r=>r.Key))
+                //                 .Distinct()
+                //                 .Count());
+                //         availableZones.Remove(zone);
+                //         mega.HomeZone = zone.ID;
+                //     }
+                //     break;
                 case MegaPlacementType.Connected:
                     foreach (var mega in megaPlacement)
                     {
@@ -623,7 +438,7 @@ public class GameContext
         return result;
     }
 
-    public Entity CreateEntity(Guid zone, Guid corporation, Guid loadout)
+    public Entity CreateEntity(Guid zoneID, Guid corporation, Guid loadout)
     {
         if (!(Cache.Get(loadout) is LoadoutData loadoutData))
         {
@@ -637,7 +452,7 @@ public class GameContext
             return null;
         }
 
-        if (!(Cache.Get(zone) is ZoneData zoneData))
+        if (!(Cache.Get(zoneID) is ZoneData zoneData))
         {
             _logger("Attempted to spawn entity with invalid zone ID");
             return null;
@@ -703,9 +518,8 @@ public class GameContext
         if(hull==null)
             return null;
 
-        // Load target zone if not yet loaded
-        if (!_loadedZones.Contains(zone))
-            LoadZone(zone);
+        // Get target zone
+        var zone = _zones[zoneID];
 
         if (hullData.HullType == HullType.Ship)
         {
@@ -722,15 +536,12 @@ public class GameContext
             {
                 Context = this,
                 Distance = distance,
-                Parent = _orbits
-                    .Select(id => Cache.Get<OrbitData>(id))
-                    .First(orbitData => orbitData.Zone == zone && orbitData.Parent == Guid.Empty).ID,
-                Period = OrbitalPeriod(distance),
-                Phase = Random.NextFloat(),
-                Zone = zone
+                Parent = zone.Orbits.Values.Select(o=>o.Data)
+                    .First(orbitData => orbitData.Parent == Guid.Empty).ID,
+                Period = _globalData.OrbitalPeriod(distance),
+                Phase = Random.NextFloat()
             };
-            Cache.Add(orbit);
-            _orbits.Add(orbit.ID);
+            zone.AddOrbit(orbit);
             
             var entity = new OrbitalEntity(this, hull.ID, gear.Select(g => g.ID),
                 cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), orbit.ID, zone, corporation)
@@ -745,14 +556,14 @@ public class GameContext
                 entity.Personality[attribute.Key] = attribute.Value;
             Cache.Add(entity);
 
-            ZoneEntities[zone][entity.ID] = entity;
+            zone.Entities[entity.ID] = entity;
             return entity;
         }
 
         return null;
     }
 
-    public Ship CreateShip(Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid zone, Guid corporation, Guid homeEntity, string typeName)
+    public Ship CreateShip(Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Zone zone, Guid corporation, Guid homeEntity, string typeName)
     {
 
         var ship = new Ship(this, hull, gear, cargo, zone, corporation)
@@ -762,7 +573,7 @@ public class GameContext
         };
         Cache.Add(ship);
 
-        ZoneEntities[zone][ship.ID] = ship;
+        zone.Entities[ship.ID] = ship;
         return ship;
     }
     
@@ -918,46 +729,6 @@ public class GameContext
         var parent = Cache.Get<Entity>(child.Parent);
         parent.RemoveChild(child);
         child.Parent = Guid.Empty;
-    }
-
-    public void MineAsteroid(Entity miner, Guid asteroidBelt, int asteroid, float damage, float efficiency, float penetration)
-    {
-        var planetData = Cache.Get<PlanetData>(asteroidBelt);
-        var asteroidTransform = GetAsteroidTransform(asteroidBelt, asteroid);
-        var hpLerp = unlerp(GlobalData.AsteroidSizeMin, GlobalData.AsteroidSizeMax, asteroidTransform.w);
-        var asteroidHitpoints = lerp(GlobalData.AsteroidHitpointsMin, GlobalData.AsteroidHitpointsMax, pow(hpLerp, GlobalData.AsteroidHitpointsPower));
-        
-        if (!_asteroidDamage.ContainsKey((asteroidBelt, asteroid)))
-            _asteroidDamage[(asteroidBelt, asteroid)] = 0;
-        _asteroidDamage[(asteroidBelt, asteroid)] = _asteroidDamage[(asteroidBelt, asteroid)] + damage;
-        
-        if (!_asteroidMiningAccumulator.ContainsKey((asteroidBelt, miner.ID, asteroid)))
-            _asteroidMiningAccumulator[(asteroidBelt, miner.ID, asteroid)] = 0;
-        _asteroidMiningAccumulator[(asteroidBelt, miner.ID, asteroid)] = _asteroidMiningAccumulator[(asteroidBelt, miner.ID, asteroid)] + damage;
-        
-        if (_asteroidDamage[(asteroidBelt, asteroid)] > asteroidHitpoints)
-        {
-            _asteroidRespawnTimers[(asteroidBelt, asteroid)] =
-                lerp(GlobalData.AsteroidRespawnMin, GlobalData.AsteroidRespawnMax, hpLerp);
-            _asteroidDamage.Remove((asteroidBelt, asteroid));
-            _asteroidMiningAccumulator.Remove((asteroidBelt, miner.ID, asteroid));
-            return;
-        }
-
-        var resourceCount = planetData.Resources.Sum(x => x.Value);
-        var resource = planetData.Resources.MaxBy(x => pow(x.Value, 1f / penetration) * Random.NextFloat());
-        if (efficiency * Random.NextFloat() * _asteroidMiningAccumulator[(asteroidBelt, miner.ID, asteroid)] * resourceCount / GlobalData.MiningDifficulty > 1 && miner.OccupiedCapacity < miner.Capacity - 1)
-        {
-            _asteroidMiningAccumulator.Remove((asteroidBelt, miner.ID, asteroid));
-            var newSimpleCommodity = new SimpleCommodity
-            {
-                Context = this,
-                Data = resource.Key,
-                Quantity = 1
-            };
-            Cache.Add(newSimpleCommodity);
-            miner.AddCargo(newSimpleCommodity);
-        }
     }
 
     // public bool MoveCargo(Entity source, Entity target, ItemInstance item, int quantity = int.MaxValue)

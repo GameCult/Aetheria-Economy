@@ -30,7 +30,7 @@ public static class RethinkConnection
             }
         };
         
-        var connection = R.Connection().Hostname(connectionString).Port(RethinkDBConstants.DefaultPort).Timeout(60).Connect();
+        var connection = R.Connection().Hostname(connectionString).Port(RethinkDBConstants.DefaultPort+1).Timeout(60).Connect();
         Debug.Log("Connected to RethinkDB");
 
         if (syncLocalChanges)

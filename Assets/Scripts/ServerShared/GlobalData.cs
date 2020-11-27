@@ -171,6 +171,11 @@ public class GlobalData : DatabaseEntry
     {
         return pow(mass, 1 / RadiusPower);
     }
+    
+    public float OrbitalPeriod(float distance)
+    {
+        return pow(distance, OrbitPeriodExponent) * OrbitPeriodMultiplier;
+    }
 }
 
 [Inspectable, Serializable, RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]

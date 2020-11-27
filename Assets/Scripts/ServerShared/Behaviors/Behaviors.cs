@@ -56,7 +56,7 @@ public interface IController
 {
     bool Available { get; }
     TaskType TaskType { get; }
-    Guid Zone { get; }
+    Zone Zone { get; }
     void AssignTask(Guid task);
 }
 

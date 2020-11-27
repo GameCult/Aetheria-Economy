@@ -57,13 +57,13 @@ public class WanderController : ControllerBase, IBehavior
     {
         if (WanderTarget == WanderTarget.Planets)
         {
-            var planets = _context.ZonePlanets[_entity.Zone];
-            var randomPlanet = _context.Cache.Get<PlanetData>(planets[_context.Random.NextInt(planets.Length)]);
-            MoveTo(() => _context.GetOrbitPosition(randomPlanet.Orbit), () => _context.GetOrbitVelocity(randomPlanet.Orbit));
+            var planets = Zone.Planets.Values.ToArray();
+            var randomPlanet = planets[_context.Random.NextInt(planets.Length)];
+            MoveTo(() => Zone.GetOrbitPosition(randomPlanet.Orbit), () => Zone.GetOrbitVelocity(randomPlanet.Orbit));
         }
         else if (WanderTarget == WanderTarget.Orbitals)
         {
-            var entities = _context.ZoneEntities[_entity.Zone].Values.ToArray();
+            var entities = Zone.Entities.Values.ToArray();
             var randomEntity = entities[_context.Random.NextInt(entities.Length)];
             MoveTo(randomEntity, true, () =>
             {

@@ -66,11 +66,11 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
         var planetData = Context.Cache.Get<PlanetData>(ScanTarget);
         if (planetData != null)
         {
-            if (planetData.Belt)
+            if (planetData is AsteroidBeltData beltData)
             {
                 if(Asteroid > -1 &&
-                   Asteroid < planetData.Asteroids.Length &&
-                   length(Entity.Position - Context.GetAsteroidTransform(ScanTarget, Asteroid).xy) < Range)
+                   Asteroid < beltData.Asteroids.Length &&
+                   length(Entity.Position - Entity.Zone.GetAsteroidTransform(ScanTarget, Asteroid).xy) < Range)
                 {
                     _scanTime += delta;
                     if (_scanTime > ScanDuration)
@@ -83,7 +83,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
             }
             else
             {
-                if(length(Entity.Position - Context.GetOrbitPosition(planetData.Orbit)) < Range)
+                if(length(Entity.Position - Entity.Zone.GetOrbitPosition(planetData.Orbit)) < Range)
                 {
                     _scanTime += delta;
                     if (_scanTime > ScanDuration)

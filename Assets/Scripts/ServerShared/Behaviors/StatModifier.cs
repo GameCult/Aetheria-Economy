@@ -35,6 +35,11 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
     public BehaviorData Data => _data;
 
     private PerformanceStat[] _stats;
+    
+    private static Type[] _statObjects;
+
+    private static Type[] StatObjects => _statObjects ?? (_statObjects = typeof(BehaviorData).GetAllChildClasses()
+        .Concat(typeof(EquippableItemData).GetAllChildClasses()).ToArray());
 
     public StatModifier(GameContext context, StatModifierData data, Entity entity, Gear item)
     {
@@ -46,7 +51,7 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
 
     public void Initialize()
     {
-        var targetType = Context.StatObjects.FirstOrDefault(so => so.Name == _data.Stat.Target);
+        var targetType = StatObjects.FirstOrDefault(so => so.Name == _data.Stat.Target);
         if (targetType != null)
         {
             var statField = targetType.GetFields()

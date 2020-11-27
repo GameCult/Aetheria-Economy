@@ -20,7 +20,7 @@ public class Ship : Entity
     [JsonProperty("homeEntity"), Key(19)]
     public Guid HomeEntity;
     
-    public Ship(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid zone, Guid corporation) : base(context, hull, gear, cargo, zone, corporation)
+    public Ship(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Zone zone, Guid corporation) : base(context, hull, gear, cargo, zone, corporation)
     {
     }
 

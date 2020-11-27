@@ -111,30 +111,30 @@ public class SurveyController : ControllerBase, IBehavior, IPersistentBehavior, 
     private void NextPlanet()
     {
         var surveyTask = _context.Cache.Get<Survey>(Task);
-        var planets = surveyTask.Planets.Select(id => _context.Cache.Get<PlanetData>(id));
+        var planets = surveyTask.Planets.Select(id => Zone.Planets[id]);
         var nearestPlanet = planets.MinBy(p => lengthsq(_entity.Position - GetPosition(p)));
-        _asteroid = nearestPlanet.Belt ? _context.NearestAsteroid(nearestPlanet.ID, _entity.Position) : -1;
+        _asteroid = nearestPlanet is AsteroidBeltData ? Zone.NearestAsteroid(nearestPlanet.ID, _entity.Position) : -1;
         _targetPlanet = nearestPlanet.ID;
     }
 
     private float2 GetPosition(PlanetData planet, int asteroid = -1)
     {
-        if (planet.Belt)
+        if (planet is AsteroidBeltData)
         {
-            if(asteroid == -1) asteroid = _context.NearestAsteroid(planet.ID, _entity.Position);
-            return _context.GetAsteroidTransform(planet.ID, asteroid).xy;
+            if(asteroid == -1) asteroid = Zone.NearestAsteroid(planet.ID, _entity.Position);
+            return Zone.GetAsteroidTransform(planet.ID, asteroid).xy;
         }
-        return _context.GetOrbitPosition(planet.Orbit);
+        return Zone.GetOrbitPosition(planet.Orbit);
     }
 
     private float2 GetVelocity(PlanetData planet, int asteroid = -1)
     {
-        if (planet.Belt)
+        if (planet is AsteroidBeltData)
         {
-            if(asteroid == -1) asteroid = _context.NearestAsteroid(planet.ID, _entity.Position);
-            return _context.GetAsteroidVelocity(planet.ID, asteroid);
+            if(asteroid == -1) asteroid = Zone.NearestAsteroid(planet.ID, _entity.Position);
+            return Zone.GetAsteroidVelocity(planet.ID, asteroid);
         }
-        return _context.GetOrbitVelocity(planet.Orbit);
+        return Zone.GetOrbitVelocity(planet.Orbit);
     }
 
     public PersistentBehaviorData Store()

@@ -265,7 +265,7 @@ public class ColonyTab : MonoBehaviour
                         Origin = entity.ID,
                         Quantity = quantity,
                         Target = colonies[selectedColony].ID,
-                        Zone = entity.Zone
+                        Zone = entity.Zone.Data.ID
                     };
                     Context.Cache.Add(haulingTask);
                     var corp = Context.Cache.Get<Corporation>(entity.Corporation);

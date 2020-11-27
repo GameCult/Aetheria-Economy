@@ -9,7 +9,7 @@ public class OrbitalEntity : Entity
 {
     public Guid OrbitData;
     
-    public OrbitalEntity(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid orbit, Guid zone, Guid corporation) : base(context, hull, gear, cargo, zone, corporation)
+    public OrbitalEntity(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid orbit, Zone zone, Guid corporation) : base(context, hull, gear, cargo, zone, corporation)
     {
         OrbitData = orbit;
     }
@@ -18,8 +18,8 @@ public class OrbitalEntity : Entity
     {
         if (OrbitData != Guid.Empty)
         {
-            Position = Context.GetOrbitPosition(OrbitData);
-            Velocity = Context.GetOrbitVelocity(OrbitData);
+            Position = Zone.GetOrbitPosition(OrbitData);
+            Velocity = Zone.GetOrbitVelocity(OrbitData);
         }
         
         base.Update(delta);

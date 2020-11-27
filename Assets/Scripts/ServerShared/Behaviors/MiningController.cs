@@ -61,22 +61,22 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
                 {
                     if (_entity.OccupiedCapacity < _entity.Capacity - 1)
                     {
-                        var asteroidTransform = _context.GetAsteroidTransform(miningTask.Asteroids, _asteroid);
+                        var asteroidTransform = Zone.GetAsteroidTransform(miningTask.Asteroids, _asteroid);
                         if (length(_entity.Position - asteroidTransform.xy) - asteroidTransform.w > _miningTool.Range)
                         {
                             _entity.SetMessage("Moving to target asteroid.");
-                            MoveTo(() => _context.GetAsteroidTransform(miningTask.Asteroids, _asteroid).xy, 
-                                () => _context.GetAsteroidVelocity(miningTask.Asteroids, _asteroid));
+                            MoveTo(() => Zone.GetAsteroidTransform(miningTask.Asteroids, _asteroid).xy, 
+                                () => Zone.GetAsteroidVelocity(miningTask.Asteroids, _asteroid));
                             _toolSwitch.Activated = false;
                         }
                         else
                         {
-                            if (_context.AsteroidExists(miningTask.Asteroids, _asteroid))
+                            if (Zone.AsteroidExists(miningTask.Asteroids, _asteroid))
                             {
                                 _miningTool.AsteroidBelt = miningTask.Asteroids;
                                 _miningTool.Asteroid = _asteroid;
                                 _toolSwitch.Activated = true;
-                                Aim.Objective = _context.GetAsteroidTransform(miningTask.Asteroids, _asteroid).xy;
+                                Aim.Objective = Zone.GetAsteroidTransform(miningTask.Asteroids, _asteroid).xy;
                                 Aim.Update(delta);
                             }
                             else NextAsteroid();
@@ -119,7 +119,7 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
     private void NextAsteroid()
     {
         var miningTask = _context.Cache.Get<Mining>(Task);
-        _asteroid = _context.NearestAsteroid(miningTask.Asteroids, _entity.Position);
+        _asteroid = Zone.NearestAsteroid(miningTask.Asteroids, _entity.Position);
         _entity.SetMessage("Selecting new asteroid.");
     }
 
