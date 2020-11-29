@@ -8,10 +8,14 @@ using float2 = Unity.Mathematics.float2;
 
 public class Zone
 {
+    public float ZoneDepth;
+    public float ZoneDepthExponent;
+    public float ZoneDepthRadius;
+    public GravitySettings GravitySettings;
     //public HashSet<Guid> Planets = new HashSet<Guid>();
     public Dictionary<Guid, Entity> Entities = new Dictionary<Guid, Entity>();
     //public Dictionary<Guid, OrbitData> Orbits = new Dictionary<Guid, OrbitData>();
-    public Dictionary<Guid, PlanetData> Planets = new Dictionary<Guid, PlanetData>();
+    public Dictionary<Guid, BodyData> Planets = new Dictionary<Guid, BodyData>();
 
     public Dictionary<Guid, Orbit> Orbits = new Dictionary<Guid, Orbit>();
     public Dictionary<Guid, AsteroidBelt> AsteroidBelts = new Dictionary<Guid, AsteroidBelt>();
@@ -178,7 +182,7 @@ public class Zone
             belt.Transforms[i] = float4(
                 OrbitData.Evaluate((float) frac(_context.Time / _context.GlobalData.OrbitalPeriod(beltData.Asteroids[i].Distance) * _context.GlobalData.OrbitSpeedMultiplier +
                                                 beltData.Asteroids[i].Phase)) * beltData.Asteroids[i].Distance + orbitPosition,
-                (float) (_context.Time * beltData.Asteroids[i].RotationSpeed % 360.0), size);
+                (float) (_context.Time * beltData.Asteroids[i].RotationSpeed % (PI * 2)), size);
         }
     }
 
@@ -243,6 +247,73 @@ public class Zone
             _context.Cache.Add(newSimpleCommodity);
             miner.AddCargo(newSimpleCommodity);
         }
+    }
+    public float GetHeight(float2 position)
+    {
+        float result = -PowerPulse(length(position)/ZoneDepthRadius, ZoneDepthExponent) * ZoneDepth;
+        foreach (var body in Planets.Values)
+        {
+            if (body is AsteroidBeltData) continue;
+            
+            var p = (position - GetOrbitPosition(body.Orbit));
+            var dist = length(p);
+            var gravityRadius = GravitySettings.GravityRadius.Evaluate(body.Mass.Value) * body.GravityRadiusMultiplier.Value;
+            if (dist < gravityRadius)
+            {
+                var depth = GravitySettings.GravityDepth.Evaluate(body.Mass.Value) * body.GravityDepthMultiplier.Value;
+                result -= PowerPulse(dist / gravityRadius, body.GravityDepthExponent.Value) * depth;
+            }
+
+            if (body is GasGiantData)
+            {
+                var waveRadius = GravitySettings.WaveRadius.Evaluate(body.Mass.Value) * body.GravityRadiusMultiplier.Value;
+                if(dist < waveRadius)
+                {
+                    var depth = GravitySettings.WaveDepth.Evaluate(body.Mass.Value) * body.GravityDepthMultiplier.Value;
+                    var frequency = GravitySettings.WaveFrequency.Evaluate(body.Mass.Value);
+                    var speed = GravitySettings.WaveSpeed.Evaluate(body.Mass.Value);
+                    result -= RadialWaves(dist / gravityRadius, 8, 1.5f, frequency, (float) (_context.Time * speed)) * depth;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public float2 GetForce(float2 position)
+    {
+        var normal = GetNormal(position);
+        var f = new float2(normal.x, normal.z);
+        return f * GravitySettings.GravityStrength * lengthsq(f);// * Mathf.Abs(GetHeight(position));
+    }
+
+    public static float PowerPulse(float x, float exponent)
+    {
+        x = clamp(x, -1, 1);
+        return pow((x + 1) * (1 - x), exponent);
+    }
+
+    public static float RadialWaves(float x, float maskExponent, float sineExponent, float frequency, float phase)
+    {
+        return PowerPulse(x, maskExponent) * cos(pow(x, sineExponent) * frequency + phase);
+    }
+
+    public float3 GetNormal(float2 pos, float step, float mul)
+    {
+        float hL = GetHeight(new float2(pos.x - step, pos.y)) * mul;
+        float hR = GetHeight(new float2(pos.x + step, pos.y)) * mul;
+        float hD = GetHeight(new float2(pos.x, pos.y - step)) * mul;
+        float hU = GetHeight(new float2(pos.x, pos.y + step)) * mul;
+
+        // Deduce terrain normal
+        float3 normal = new float3((hL - hR), (hD - hU), 2);
+        normalize(normal);
+        return new float3(normal.x, normal.z, normal.y);
+    }
+    
+    public float3 GetNormal(float2 pos)
+    {
+        return GetNormal(pos, .1f, 1);
     }
 
     public override int GetHashCode()

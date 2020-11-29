@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using MessagePack;
 using Unity.Mathematics;
-using UnityEngine;
 using static Unity.Mathematics.math;
 using Random = Unity.Mathematics.Random;
 
@@ -103,7 +102,7 @@ public class ZoneGenerator
 		        }
 	        }
 
-	        PlanetData planetData;
+	        BodyData planetData;
 	        switch (bodyType)
 	        {
 		        case BodyType.Asteroid:
@@ -123,14 +122,14 @@ public class ZoneGenerator
 			        throw new ArgumentOutOfRangeException();
 	        }
 
-	        planetData.Mass = planet.Mass;
+	        planetData.Mass.Value = planet.Mass;
 	        planetData.Orbit = orbitMap[planet].ID;
 	        planetData.Resources = planetResources;
-            planetData.Name = planetData.ID.ToString().Substring(0, 8);
+            planetData.Name.Value = planetData.ID.ToString().Substring(0, 8);
             if (planetData is AsteroidBeltData beltData)
             {
 	            beltData.Asteroids = 
-		            Enumerable.Range(0, (int) (pow(planetData.Mass, context.GlobalData.BeltMassExponent) / context.GlobalData.BeltMassRatio * orbitMap[planet].Distance))
+		            Enumerable.Range(0, (int) (pow(planetData.Mass.Value, context.GlobalData.BeltMassExponent) / context.GlobalData.BeltMassRatio * orbitMap[planet].Distance))
 			            .Select(_ => new Asteroid
 			            {
 				            Distance = context.Random.NextFloat(orbitMap[planet].Distance * .5f, orbitMap[planet].Distance * 1.5f),
@@ -143,19 +142,17 @@ public class ZoneGenerator
             }
             else if (planetData is GasGiantData gas)
             {
-	            var grad = new Gradient();
 	            var times = Enumerable.Range(0, 5).Select(i => (float) i / 4).ToArray();
-	            grad.alphaKeys = times.Select(f => new GradientAlphaKey(1, f)).ToArray();
-	            grad.colorKeys = times.Select(f => new GradientColorKey(UnityEngine.Random.ColorHSV(), f)).ToArray();
-	            gas.Colors = grad;
-	            gas.AlbedoRotationSpeed = 1;
-	            gas.FirstOffsetRotationSpeed = 1;
-	            gas.FirstOffsetDomainRotationSpeed = 1;
-	            gas.SecondOffsetRotationSpeed = 1;
-	            gas.SecondOffsetDomainRotationSpeed = 1;
+	            gas.Colors.Value = times.Select(time => float4(context.Random.NextFloat3(),time)).ToArray();
+	            gas.AlbedoRotationSpeed.Value = -3;
+	            gas.FirstOffsetRotationSpeed.Value = 5;
+	            gas.FirstOffsetDomainRotationSpeed.Value = 0;
+	            gas.SecondOffsetRotationSpeed.Value = 10;
+	            gas.SecondOffsetDomainRotationSpeed.Value = -25;
 	            if (planetData is SunData sun)
 	            {
-		            sun.FogTintColor = sun.LightColor = UnityEngine.Random.ColorHSV();
+		            sun.FogTintColor.Value = sun.LightColor.Value = context.Random.NextFloat3();
+		            gas.FirstOffsetDomainRotationSpeed.Value = 5;
 	            }
             }
             return planetData;

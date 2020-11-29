@@ -11,7 +11,7 @@ public class BlueNoiseProvider : MonoBehaviour
     
     private Camera _camera;
     
-    void Start()
+    private void Start()
     {
         _camera = Camera.main;
         

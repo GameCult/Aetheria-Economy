@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Mathematics.math;
 
 //[ExecuteInEditMode]
 public class SunMaterial : MonoBehaviour
@@ -39,14 +40,23 @@ public class SunMaterial : MonoBehaviour
         _secondOffsetRotation = Random.value * Mathf.PI;
         _albedoRotation = Random.value * Mathf.PI;
     }
+    
+    public void ApplyGradient(Gradient gradient)
+    {
+        var tex = gradient.ToTexture();
+        if (_material.HasProperty("_ColorRamp"))
+        {
+            _material.SetTexture("_ColorRamp", tex);
+        }
+    }
 
     private void OnWillRenderObject()
     {
-        _firstOffsetDomainRotation = FirstOffsetDomainRotationSpeed * SpeedMultiplier * Time.time;
-        _firstOffsetRotation = FirstOffsetRotationSpeed * SpeedMultiplier * Time.time;
-        _secondOffsetDomainRotation = SecondOffsetDomainRotationSpeed * SpeedMultiplier * Time.time;
-        _secondOffsetRotation = SecondOffsetRotationSpeed * SpeedMultiplier * Time.time;
-        _albedoRotation = AlbedoRotationSpeed * SpeedMultiplier * Time.time;
+        _firstOffsetDomainRotation += FirstOffsetDomainRotationSpeed * SpeedMultiplier * Time.deltaTime;
+        _firstOffsetRotation += FirstOffsetRotationSpeed * SpeedMultiplier * Time.deltaTime;
+        _secondOffsetDomainRotation += SecondOffsetDomainRotationSpeed * SpeedMultiplier * Time.deltaTime;
+        _secondOffsetRotation += SecondOffsetRotationSpeed * SpeedMultiplier * Time.deltaTime;
+        _albedoRotation += AlbedoRotationSpeed * SpeedMultiplier * Time.deltaTime;
 
         _material.SetVector("_LightingDirection", LightingDirection);
         _material.SetMatrix("_FirstOffsetDomainRotation", Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0, Mathf.Rad2Deg * _firstOffsetDomainRotation, 0), Vector3.one));

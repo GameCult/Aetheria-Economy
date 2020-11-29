@@ -49,13 +49,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Body: {fileID: 7852221720971737229}
-  GridSnap: {fileID: 7131508045814422020}
   GravityWell: {fileID: 7852221720969441484}
   Icon: {fileID: 7852221720964551246}
   SunMaterial: {fileID: 7852221720971737234}
   GradientMapper: {fileID: 7852221720971737235}
   GravityWaves: {fileID: 7852221720741322894}
-  WaveScroll: {fileID: 8130921747063694541}
   FogTint: {fileID: 7852221720816817929}
   Light: {fileID: 8064377225639657765}
 --- !u!1 &7852221720741322899
@@ -69,8 +67,6 @@ GameObject:
   - component: {fileID: 7852221720741322892}
   - component: {fileID: 7852221720741322895}
   - component: {fileID: 7852221720741322894}
-  - component: {fileID: 7852221720741322893}
-  - component: {fileID: 8130921747063694541}
   m_Layer: 10
   m_Name: Gravity Waves
   m_TagString: Untagged
@@ -141,33 +137,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7852221720741322893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7852221720741322899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a13344dbee46f384881bd54203513967, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GravityMaterial: {fileID: 0}
-  Shader: 
---- !u!114 &8130921747063694541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7852221720741322899}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59ee45f9f67763845b92c04c774eaaf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 1
 --- !u!1 &7852221720816817935
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,7 +310,6 @@ GameObject:
   - component: {fileID: 7852221720969441490}
   - component: {fileID: 7852221720969441485}
   - component: {fileID: 7852221720969441484}
-  - component: {fileID: 7852221720969441491}
   m_Layer: 9
   m_Name: Gravity Well
   m_TagString: Untagged
@@ -412,20 +380,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7852221720969441491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7852221720969441489}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a13344dbee46f384881bd54203513967, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GravityMaterial: {fileID: 0}
-  Shader: 
 --- !u!1 &7852221720971737232
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,7 +395,6 @@ GameObject:
   - component: {fileID: 7852221720971737235}
   - component: {fileID: 7852221720971737234}
   - component: {fileID: 8064377225639657765}
-  - component: {fileID: 7131508045814422020}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -649,22 +602,3 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &7131508045814422020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7852221720971737232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac1be54714e52c640b08fe5059519a37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SnapPosition: 1
-  SnapRotation: 0
-  ApplyForces: 0
-  ForceScale: 1
-  Offset: 0
-  NormalMultiplier: 100
-  GravityGradientStep: 0.01

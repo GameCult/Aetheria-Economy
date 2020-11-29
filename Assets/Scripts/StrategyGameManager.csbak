@@ -573,7 +573,7 @@ public class StrategyGameManager : MonoBehaviour
         var targetObject = _context.Cache.Get(clickTarget);
         ContextMenu.gameObject.SetActive(true);
         ContextMenu.Clear();
-        if (targetObject is PlanetData planet)
+        if (targetObject is BodyData planet)
         {
             if (planet is AsteroidBeltData)
             {
@@ -680,7 +680,7 @@ public class StrategyGameManager : MonoBehaviour
         _selectedObject = clickTarget;
         var targetObject = _context.Cache.Get(_selectedObject);
 
-        if (targetObject is PlanetData planet)
+        if (targetObject is BodyData planet)
         {
             if (_orbitSelectMode)
             {

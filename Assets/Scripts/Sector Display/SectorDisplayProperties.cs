@@ -9,13 +9,8 @@ public class SectorDisplayProperties : ScriptableObject
     public float DefaultViewDistance;
     public float DefaultMinimapDistance;
     public ExponentialCurve BodyDiameter;
-    public ExponentialCurve GravityDepth;
-    public ExponentialCurve GravityRadius;
-    public ExponentialCurve WaveDepth;
-    public ExponentialCurve WaveRadius;
-    public ExponentialCurve WaveFrequency;
-    public ExponentialCurve WaveSpeed;
+    public GravitySettings GravitySettings;
     public ExponentialCurve FogTintRadius;
     public ExponentialCurve LightRadius;
-    public Gradient DefaultGradient;
 }
+

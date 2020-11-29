@@ -110,15 +110,15 @@
 		
 		half patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
 		half floorDist = -pos.y-(surface);//+_GridFloorOffset);
-		half floorDensity = saturate(floorDist/_GridFloorBlend)*_GridFloorDensity;
+		half floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
 		half fillDensity = saturate(-pos.y * _GridFillDensity);
 		
-        half fogTex = (patchDensity + floorDensity);
+        half fogDensity = patchDensity + saturate(floorDensity);
         //half blend = pow(max(-fogTex,1),2);
 		half noise = triNoise3d(pos*_NoiseFrequency, _NoiseSpeed) + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
-		float alpha = min(max(fogTex * (1 - noise * _NoiseStrength) + fillDensity, _AlphaFloor), .99);
-		float tint = (pow(1-alpha, _TintExponent));
-		return float4((tint*_Tint*lightTint).rgb, (fade)*alpha);
+		float alpha = min(max(fogDensity * (1 - noise * _NoiseStrength) + fillDensity, _AlphaFloor), .99);
+		float albedo = (pow(1-alpha, _TintExponent));
+		return float4((albedo*_Tint*lightTint).rgb, (fade)*alpha);
 		//return float4(tint.xxx,saturate(fogTex)) * _Tint;
 		// return max(clamp((-abs(pos.y+displacement)+patch)/_GridPatchDensity,0,1),
 		//         max(clamp((pos.y+(surface+_GridCeilingOffset)*_GridCeilingFollow)/_GridCeilingDensity,0,1),

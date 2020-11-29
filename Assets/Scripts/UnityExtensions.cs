@@ -83,6 +83,26 @@ public static class UnityExtensions
 
 		return result;
 	}
+
+	private const int GradSteps = 32;
+	public static Texture2D ToTexture(this Gradient g)
+	{
+		var tex = new Texture2D(GradSteps, 1) {wrapMode = TextureWrapMode.Clamp};
+		for (int x = 0; x < GradSteps; x++)
+		{
+			tex.SetPixel(x, 0, g.Evaluate( (float)x / GradSteps));
+		}
+		tex.Apply();
+		return tex;
+	}
+
+	public static Gradient ToGradient(this float4[] keys)
+	{
+		var grad = new Gradient();
+		grad.alphaKeys = new[] {new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1)};
+		grad.colorKeys = keys.Select(k => new GradientColorKey(k.xyz, k.w)).ToArray();
+		return grad;
+	}
 	
 	public static Vector3 Flatland(this Vector2 v) => new Vector3(v.x,0,v.y);
 	public static Vector2 Flatland(this Vector3 v) => new Vector2(v.x,v.z);

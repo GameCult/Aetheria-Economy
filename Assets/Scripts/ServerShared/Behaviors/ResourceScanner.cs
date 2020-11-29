@@ -63,7 +63,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
 
     public bool Update(float delta)
     {
-        var planetData = Context.Cache.Get<PlanetData>(ScanTarget);
+        var planetData = Context.Cache.Get<BodyData>(ScanTarget);
         if (planetData != null)
         {
             if (planetData is AsteroidBeltData beltData)

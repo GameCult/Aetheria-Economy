@@ -14,6 +14,14 @@ public class DatabaseListView : EditorWindow
 {
     // Singleton to avoid multiple instances of window. 
     private static DatabaseListView _instance;
+    public static DatabaseListView Instance => _instance ?? (DatabaseListView)GetWindow<DatabaseListView>();
+    [MenuItem("Window/Aetheria Database Tools")]
+    static void Init() => Instance.Show();
+    private void Awake()
+    {
+        _instance = this;
+    }
+    
     public Guid SelectedItem;
     public GUIStyle SelectedStyle;
 
@@ -43,39 +51,9 @@ public class DatabaseListView : EditorWindow
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
-    // Set instance on reloading the window, else it gets lost after script reload (due to PlayMode changes, ...).
-    public DatabaseListView()
-    {
-        _instance = this;
-    }
-
-    public static DatabaseListView ShowWindow()
-    {
-        if (_instance == null)
-        {
-            // "Get existing open window or if none, make a new one:" says documentation.
-            // But if called after script reloads a second instance will be opened! => Custom singleton required.
-            DatabaseListView window = GetWindow<DatabaseListView>();
-            window.titleContent = new GUIContent("DB List");
-            _instance = window;
-            _instance.InitStyles();
-            window.Show();
-        }
-        else
-            _instance.Focus();
-
-        return _instance;
-    }
-
     public GUIStyle ListItemStyle =>
         (_listItemStyle = !_listItemStyle) ? _listStyleEven : _listStyleOdd;
-
-    [MenuItem("Window/Aetheria Database Tools")]
-    static void Init()
-    {
-        ShowWindow();
-    }
-
+    
     void OnEnable()
     {
         // Create database cache
@@ -114,7 +92,8 @@ public class DatabaseListView : EditorWindow
         _databaseCache.OnDataDeleteRemote += _ => EditorDispatcher.Dispatch(Repaint);
 
         DatabaseInspector.DatabaseCache = _databaseCache;
-        _inspector = DatabaseInspector.ShowWindow();
+        _inspector = DatabaseInspector.Instance;
+        _inspector.Show();
         
         _itemTypes = typeof(ItemData).GetAllChildClasses()
             .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null).ToArray();

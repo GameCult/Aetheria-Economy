@@ -64,7 +64,7 @@ public class SurveyController : ControllerBase, IBehavior, IPersistentBehavior, 
                     if (!corporation.PlanetSurveyFloor.ContainsKey(_targetPlanet) ||
                         corporation.PlanetSurveyFloor[_targetPlanet] + .5f < _scanningTool.MinimumDensity)
                     {
-                        var planetData = _context.Cache.Get<PlanetData>(_targetPlanet);
+                        var planetData = _context.Cache.Get<BodyData>(_targetPlanet);
                         MoveTo(() =>
                             {
                                 var target = GetPosition(planetData, _asteroid);
@@ -88,7 +88,7 @@ public class SurveyController : ControllerBase, IBehavior, IPersistentBehavior, 
             {
                 if (!Moving)
                 {
-                    var planetData = _context.Cache.Get<PlanetData>(_targetPlanet);
+                    var planetData = _context.Cache.Get<BodyData>(_targetPlanet);
                     if ((!corporation.PlanetSurveyFloor.ContainsKey(_targetPlanet) ||
                         corporation.PlanetSurveyFloor[_targetPlanet] + .5f < _scanningTool.MinimumDensity) &&
                         length(_entity.Position - GetPosition(planetData, _asteroid)) < _scanningTool.Range)
@@ -117,7 +117,7 @@ public class SurveyController : ControllerBase, IBehavior, IPersistentBehavior, 
         _targetPlanet = nearestPlanet.ID;
     }
 
-    private float2 GetPosition(PlanetData planet, int asteroid = -1)
+    private float2 GetPosition(BodyData planet, int asteroid = -1)
     {
         if (planet is AsteroidBeltData)
         {
@@ -127,7 +127,7 @@ public class SurveyController : ControllerBase, IBehavior, IPersistentBehavior, 
         return Zone.GetOrbitPosition(planet.Orbit);
     }
 
-    private float2 GetVelocity(PlanetData planet, int asteroid = -1)
+    private float2 GetVelocity(BodyData planet, int asteroid = -1)
     {
         if (planet is AsteroidBeltData)
         {

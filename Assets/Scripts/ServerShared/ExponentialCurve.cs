@@ -20,3 +20,28 @@ public class ExponentialCurve
     
     public float Evaluate(float value) => Multiplier * pow(value, Exponent) + Constant;
 }
+
+[Serializable, MessagePackObject, JsonObject]
+public class GravitySettings
+{
+    [JsonProperty("gravityDepth"), Key(0)]
+    public ExponentialCurve GravityDepth;
+    
+    [JsonProperty("gravityRadius"), Key(1)]
+    public ExponentialCurve GravityRadius;
+    
+    [JsonProperty("waveDepth"), Key(2)]
+    public ExponentialCurve WaveDepth;
+    
+    [JsonProperty("waveRadius"), Key(3)]
+    public ExponentialCurve WaveRadius;
+    
+    [JsonProperty("waveFrequency"), Key(4)]
+    public ExponentialCurve WaveFrequency;
+    
+    [JsonProperty("waveSpeed"), Key(5)]
+    public ExponentialCurve WaveSpeed;
+    
+    [JsonProperty("gravityStrength"), Key(6)]
+    public float GravityStrength;
+}

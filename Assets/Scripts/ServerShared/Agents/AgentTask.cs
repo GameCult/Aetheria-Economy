@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using JsonKnownTypes;
 using MessagePack;
 using Newtonsoft.Json;
-using UnityEngine;
 
 [MessagePackObject, 
  Union(0, typeof(StationTowing)),

@@ -53,10 +53,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="ActionGameManager.cs" t="Include" />
-          <e p="BlueNoiseProvider.cs" t="Include" />
           <e p="CameraPerlinOrbit.cs" t="Include" />
-          <e p="ConsoleController.cs" t="Include" />
-          <e p="ConsoleView.cs" t="Include" />
           <e p="CopyTransform.cs" t="Include" />
           <e p="CultClient.cs" t="Include" />
           <e p="Editor" t="Include">
@@ -65,11 +62,10 @@
             <e p="EditorDispatch.cs" t="Include" />
             <e p="GalaxyEditor.cs" t="Include" />
             <e p="SerializerTestWindow.cs" t="Include" />
+            <e p="ZoneEditor.cs" t="Include" />
           </e>
           <e p="Galaxy.cs" t="Include" />
-          <e p="GradientMapper.cs" t="Include" />
           <e p="Gravity.cs" t="Include" />
-          <e p="GravityObject.cs" t="Include" />
           <e p="InitialSettings.cs" t="Include" />
           <e p="MarkovNameGenerator.cs" t="Include" />
           <e p="NIH" t="Include">
@@ -138,6 +134,10 @@
                 <e p="LZ4Codec.Unsafe64.Dirty.cs" t="Include" />
               </e>
               <e p="MessagePack.asmdef" t="Include" />
+              <e p="MessagePack.ReactiveProperty" t="Include">
+                <e p="Formatters.cs" t="Include" />
+                <e p="ReactivePropertyResolver.cs" t="Include" />
+              </e>
               <e p="MessagePackCode.cs" t="Include" />
               <e p="MessagePackCompression.cs" t="Include" />
               <e p="MessagePackReader.cs" t="Include" />
@@ -1241,13 +1241,17 @@
                   <e p="ThreadPoolScheduler_UnityWinRT.cs" t="Include" />
                 </e>
               </e>
+              <e p="UniRx.asmdef" t="Include" />
             </e>
             <e p="XKCDColors.cs" t="Include" />
           </e>
           <e p="Prototype.cs" t="Include" />
           <e p="RethinkConnection.cs" t="Include" />
           <e p="Sector Display" t="Include">
+            <e p="BlueNoiseProvider.cs" t="Include" />
             <e p="GasGiantObject.cs" t="Include" />
+            <e p="GradientMapper.cs" t="Include" />
+            <e p="GravityObject.cs" t="Include" />
             <e p="PlanetObject.cs" t="Include" />
             <e p="SectorDisplayProperties.cs" t="Include" />
             <e p="SectorRenderer.cs" t="Include" />
@@ -1776,7 +1780,6 @@
             <e p="ZoneData.cs" t="Include" />
             <e p="ZoneGenerator.cs" t="Include" />
           </e>
-          <e p="StrategyGameManager.cs" t="Include" />
           <e p="TechTreeMsagl.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="AttributeProperty.cs" t="Include" />
@@ -1788,6 +1791,8 @@
             <e p="ClickRaycaster.cs" t="Include" />
             <e p="ColonyTab.cs" t="Include" />
             <e p="ConfirmationDialog.cs" t="Include" />
+            <e p="ConsoleController.cs" t="Include" />
+            <e p="ConsoleView.cs" t="Include" />
             <e p="ContextMenu.cs" t="Include" />
             <e p="ContextMenuOption.cs" t="Include" />
             <e p="CorporationMenuItem.cs" t="Include" />
@@ -1878,6 +1883,7 @@
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive" />
       <e p="Temp\bin" t="ExcludeRecursive" />
+      <e p="UniRx.csproj" t="IncludeRecursive" />
     </e>
     <e p="D:\WIP4\Projects\NodeGraphProcessor\Assets\com.alelievr.NodeGraphProcessor\Editor" t="Include">
       <e p="BaseGraphWindow.cs" t="Include" />

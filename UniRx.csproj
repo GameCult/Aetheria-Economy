@@ -12,10 +12,10 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{c511ef21-dc27-883d-b027-9a4b6f36bae4}</ProjectGuid>
+    <ProjectGuid>{4d885cb7-1f9e-abb3-b070-7265b432ecda}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>MessagePack</AssemblyName>
+    <AssemblyName>UniRx</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -29,7 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -39,7 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
@@ -50,104 +50,247 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\NIH\MessagePack\LZ4\LZ4Codec.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\LZ4\LZ4Codec.Unsafe32.Dirty.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\DynamicObjectResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\ExpressionUtility.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\T4\TupleFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\TypelessFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\UnsafeMemory.Low.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\ExtensionHeader.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\NativeDecimalResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\NativeDateTimeResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\ThreadsafeTypeKeyHashTable.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\SequenceReaderExtensions.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\ByteArrayStringHashTable.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\CollectionHelpers`2.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\DictionaryFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\Sequence`1.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\ContractlessReflectionObjectResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\LZ4\LZ4Codec.Unsafe.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackSerializer.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackStreamReader.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\StreamPolyfillExtensions.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackSerializerOptions.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\T4\MessagePackReader.Integers.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\StandardResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\IgnoreFormatter`1.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\UnsafeBinaryFormatters.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\TypelessObjectResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Unity\Extension\UnityBlitResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\BuiltinResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\TypelessContractlessStandardResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\NilFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\LZ4\LZ4Codec.Unsafe64.Dirty.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackWriter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePack.ReactiveProperty\Formatters.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\LZ4\LZ4Codec.Safe64.Dirty.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackSerializer.NonGeneric.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\DynamicGenericResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\DynamicEnumAsStringResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\T4\PrimitiveFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\StaticCompositeResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\AutomataDictionary.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\T4\UnsafeMemory.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\CollectionFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackSecurity.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\NullableFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Unity\MessagePackWindow.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\ReflectionExtensions.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\HashCode.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\ThisLibraryExtensionTypeCodes.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\DynamicObjectTypeFallbackFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\EnumAsStringFormatter`1.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\PrimitiveObjectResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\BufferWriter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackReader.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\LZ4\LZ4Codec.Helper.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Nil.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\GuidBits.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\AsymmetricKeyHashTable.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\StringEncoding.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\CachingFormatterResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\GenericEnumFormatter`1.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\StandardClassLibraryFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\BitOperations.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackCompression.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\CompositeResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePack.ReactiveProperty\ReactivePropertyResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\TinyJsonReader.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\T4\ValueTupleFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\SequenceReader.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\ILGeneratorExtensions.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\DateTimeConstants.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\SequencePool.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\DynamicUnionResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Annotations\Attributes.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackCode.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\LZ4\LZ4Codec.Safe.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\ExtensionResult.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\IMessagePackFormatter`1.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\FarmHash.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\CodeGenHelpers.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\PrimitiveObjectFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Unity\Extension\UnsafeBlitFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Unity\UnityResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\DateTimeFormatters.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\DynamicEnumResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Utilities.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Internal\DynamicAssembly.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Formatters\MultiDimensionalArrayFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Annotations\IMessagePackSerializationCallbackReceiver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Unity\Formatters.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackSerializer.Json.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\AttributeFormatterResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\LZ4\LZ4Codec.Safe32.Dirty.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\Resolvers\NativeGuidResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\IFormatterResolver.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\T4\ForceSizePrimitiveFormatter.cs" />
-     <Compile Include="Assets\Scripts\NIH\MessagePack\MessagePackSerializationException.cs" />
-     <None Include="Assets\Scripts\NIH\MessagePack\MessagePack.asmdef" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\System\Tuple.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\ZipLatest.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Pair.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\ToList.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\AsUnitObservable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Empty.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Schedulers\ThreadPoolScheduler.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\MainThreadDispatcher.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableCancelTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\InternalUtil\ReflectionAccessor.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample12_ReactiveProperty.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\OperatorObservableBase.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\PresenterBase.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableMoveTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Scan.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableUpdateTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableVisibleTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\IgnoreElements.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableTriggerBase.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\RepeatSafe.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\TypedMonoBehaviour.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Throttle.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Throw.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\PairWise.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Concat.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Notifiers\CountNotifier.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\SampleFrame.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\SelectWhere.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Schedulers\IScheduler.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\WithLatestFrom.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\First.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Notifiers\ScheduledNotifier.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Subjects\AsyncSubject.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\RefCount.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Binding.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Amb.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\DictionaryDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\AsyncOperationExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Subjects\BehaviorSubject.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Creation.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\ForEachAsync.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Subjects\ReplaySubject.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Awaiter.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservablePointerClickTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\CompositeDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableDestroyTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\MultipleAssignmentDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableTriggerExtensions.Component.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Diagnostics\UnityDebugSink.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\CoroutineAsyncBridge.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\InspectableReactiveProperty.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\InternalUtil\ListObserver.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableUpdateSelectedTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableScrollTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableEndDragTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableLateUpdateTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\FrameInterval.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Aggregate.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Wait.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\ScheduledDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Synchronize.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\OperatorObserverBase.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\InternalUtil\ImmutableList.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Subjects\ConnectableObservable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Notifiers\MessageBroker.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Distinct.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample04_ConvertFromUnityCallback.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\InternalUtil\ScheduledItem.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\CancellationToken.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityWinRTBridge\ThreadPoolScheduler_UnityWinRT.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.ErrorHandling.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservablePointerExitTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Tasks\TaskObservableExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Notification.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\SelectMany.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\SubscribeOnMainThread.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Subjects\SubjectExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\TimeoutFrame.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample13_ToDoApp.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\LazyTask.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableDropTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityWinRTBridge\Thread.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Range.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Repeat.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableEventTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\DisposableExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\SubscribeOn.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\UnityUIComponentExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\InternalUtil\AscynLock.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Diagnostics\Logger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\TakeWhile.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\ScenePlaybackDetector.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableTriggerExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableBeginDragTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableEnableTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample11_Logger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Start.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Switch.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\InternalUtil\MicroCoroutine.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Asynchronous\WebRequestExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Delay.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\CancellationDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Return.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableAnimatorTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\ThrottleFirstFrame.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableSelectTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\SkipUntil.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Diagnostics\LogEntry.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample10_MainThreadDispatcher.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\FrameInterval.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Schedulers\Scheduler.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\DelayFrame.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.FromAsync.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\DelaySubscription.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Dematerialize.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\SingleAssignmentDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\InternalUtil\PriorityQueue.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\FromEvent.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\ToObservable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Observable.Unity.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\WhereSelect.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Subjects\ISubject.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableMouseTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\DistinctUntilChanged.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Do.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableTriggerTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Timeout.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\ReactiveProperty.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\WhenAll.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\BatchFrame.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Timestamped.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Last.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\ToArray.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\ObservableMonoBehaviour.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Finally.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\SkipWhile.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableCollisionTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\StartWith.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableTrigger2DTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\ObserveExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableParticleTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample09_EventHandling.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Cast.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservablePointerDownTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\AotSafeExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\TakeLast.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\ReactiveDictionary.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableInitializePotentialDragTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Buffer.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\FromCoroutine.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Single.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Notifiers\BooleanNotifier.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableTransformChangedTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\SerialDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\GroupBy.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\LifetimeDisposableExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Diagnostics\LogEntryExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Blocking.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\RepeatUntil.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\System\IObservable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Schedulers\ImmediateScheduler.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\StableCompositeDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\CombineLatest.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\ICancelable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservablePointerUpTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\Disposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Create.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\System\IProgress.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableCollision2DTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Defer.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Paging.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Take.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\TakeUntil.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Merge.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Conversions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\InternalUtil\ThreadSafeQueueWorker.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservablePointerEnterTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\AsSingleUnitObservable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\TimeInterval.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Subjects\Subject.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\UnityEventExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableFixedUpdateTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Joins.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Skip.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Never.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\System\Unit.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\System\IOptimizedObservable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableDeselectTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\YieldInstructionCache.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\MainThreadScheduler.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Diagnostics\ObservableLogger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableDragTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Catch.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\UnityGraphicExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample07_OrchestratIEnumerator.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample02_ObservableTriggers.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Where.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Select.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Concurrency.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\RefCountDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\DefaultIfEmpty.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableRectTransformTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Aggregate.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\AsObservable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\InspectorDisplayDrawer.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Toolkit\ObjectPool.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\TimeInterval.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\ContinueWith.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableCanvasGroupChangedTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\DelayFrameSubscription.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Schedulers\CurrentThreadScheduler.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Disposables\BooleanDisposable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Diagnostics\ObservableDebugExtensions.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample03_GameObjectAsObservable.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableStateMachineTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Materialize.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\FrameTimeInterval.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Timer.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\System\IObserver.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Triggers\ObservableSubmitTrigger.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observer.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\ObserveOn.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Zip.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\ReactiveCollection.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Timestamp.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\UnityEqualityComparer.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\Sample.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\ReactiveCommand.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\SynchronizedObserver.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\Operators\ThrottleFrame.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\OfType.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\EventPattern.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Examples\Sample08_DetectDoubleClick.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Concatenate.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Time.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Operators\ThrottleFirst.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\UnityEngineBridge\UniRxSynchronizationContext.cs" />
+     <Compile Include="Assets\Scripts\NIH\UniRx\Scripts\Observable.Events.cs" />
+     <None Include="Assets\Scripts\NIH\UniRx\UniRx.asmdef" />
+     <None Include="Assets\Scripts\NIH\UniRx\ReadMe.txt" />
  <Reference Include="UnityEditor.UI">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
@@ -733,12 +876,6 @@
  <Reference Include="System.Xml.XPath.XDocument">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XPath.XDocument.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="UniRx.csproj">
-      <Project>{4d885cb7-1f9e-abb3-b070-7265b432ecda}</Project>
-      <Name>UniRx</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

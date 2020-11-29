@@ -15,6 +15,6 @@ public class WaveScroll : MonoBehaviour
 	}
 	
 	void Update () {
-        _material.SetFloat("_Phase", _phase+=Time.deltaTime*Speed);
+        _material.SetFloat("_Phase", _phase=Time.time*Speed);
     }
 }

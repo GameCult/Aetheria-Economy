@@ -6,9 +6,6 @@ using Newtonsoft.Json;
 // TODO: USE THIS EVERYWHERE
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 public interface INamedEntry
 {
@@ -33,7 +30,7 @@ public interface INamedEntry
  Union(13, typeof(MegaCorporation)),
  Union(14, typeof(OrbitalEntity)), 
  Union(15, typeof(OrbitData)), 
- Union(16, typeof(PlanetData)),
+ Union(16, typeof(BodyData)),
  Union(17, typeof(PersonalityAttribute)),
  Union(18, typeof(AgentTask)),
  Union(19, typeof(LoadoutData)),
@@ -45,6 +42,7 @@ public interface INamedEntry
  Union(25, typeof(AsteroidBeltData)), 
  Union(26, typeof(GasGiantData)), 
  Union(27, typeof(SunData)), 
+ Union(28, typeof(PlanetData)), 
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 //[Union(21, typeof(ContractData))]
 //[Union(22, typeof(Station))]

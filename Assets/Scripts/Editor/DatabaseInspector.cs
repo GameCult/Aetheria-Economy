@@ -17,8 +17,9 @@ public class DatabaseInspector : EditorWindow
     public static DatabaseCache DatabaseCache;
     public DatabaseEntry entry;
     
-    // Singleton to avoid multiple instances of window. 
+    // Singleton to avoid multiple instances of window.
     private static DatabaseInspector _instance;
+    public static DatabaseInspector Instance => _instance ?? GetWindow<DatabaseInspector>();
     
     private DatabaseListView _list;
     private GUIStyle _labelStyle;
@@ -36,32 +37,12 @@ public class DatabaseInspector : EditorWindow
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
-    // Set instance on reloading the window, else it gets lost after script reload (due to PlayMode changes, ...).
-    public DatabaseInspector()
-    {
-        _instance = this;
-    }
-
-    public static DatabaseInspector ShowWindow()
-    {
-        if (_instance == null)
-        {
-            // "Get existing open window or if none, make a new one:" says documentation.
-            // But if called after script reloads a second instance will be opened! => Custom singleton required.
-            DatabaseInspector window = GetWindow<DatabaseInspector>();
-            window.titleContent = new GUIContent("DB Inspector");
-            _instance = window;
-            window.Show();
-        }
-        else
-            _instance.Focus();
-
-        return _instance;
-    }
 
     void OnEnable()
     {
-        _list = DatabaseListView.ShowWindow();
+        _instance = this;
+        _list = DatabaseListView.Instance;
+        _list.Show();
         DatabaseCache.OnDataUpdateLocal += _ => Repaint();
         DatabaseCache.OnDataUpdateRemote += _ => EditorDispatcher.Dispatch(Repaint);
         wantsMouseMove = true;

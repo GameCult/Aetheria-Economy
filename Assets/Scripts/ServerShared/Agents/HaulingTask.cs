@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
-using UnityEngine;
 
 public class HaulingTask : AgentTask
 {

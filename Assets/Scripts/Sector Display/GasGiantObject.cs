@@ -7,5 +7,4 @@ public class GasGiantObject : PlanetObject
     public SunMaterial SunMaterial;
     public GradientMapper GradientMapper;
     public MeshRenderer GravityWaves;
-    public WaveScroll WaveScroll;
 }

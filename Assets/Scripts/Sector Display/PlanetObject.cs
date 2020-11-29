@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlanetObject : MonoBehaviour
 {
     public MeshRenderer Body;
-    public SnapToGrid GridSnap;
     public MeshRenderer GravityWell;
     public MeshRenderer Icon;
 }

@@ -16,8 +16,9 @@ using Object = UnityEngine.Object;
 public class ConsoleController
 {
 	public static Component MessageReceiver;
-    private static ConsoleController instance;
-    private static Regex permittedCharacters = new Regex("[^a-zA-Z0-9 -]");
+    private static ConsoleController _instance;
+    private static Regex _permittedCharacters = new Regex("[^a-zA-Z0-9 -]");
+    private static Dictionary<string, Action<string[]>> _commands = new Dictionary<string, Action<string[]>>();
 
     private ConsoleController()
     {
@@ -25,14 +26,14 @@ public class ConsoleController
 
     public static ConsoleController Instance
     {
-        get
-        {
-            if (instance == null)
-            {
-                instance = new ConsoleController();
-            }
-            return instance;
-        }
+        get => _instance ?? (_instance = new ConsoleController());
+    }
+
+    public static void AddCommand(string command, Action<string[]> action)
+    {
+	    var lower = command.ToLowerInvariant();
+	    if(!_commands.ContainsKey(lower))
+		    _commands.Add(lower, action);
     }
 
     #region Event declarations
@@ -48,34 +49,30 @@ public class ConsoleController
 	/// How many log lines should be retained?
 	/// Note that strings submitted to appendLogLine with embedded newlines will be counted as a single line.
 	/// </summary>
-	const int ScrollbackSize = 100;
+	private const int ScrollbackSize = 100;
 
-	Queue<string> _scrollback = new Queue<string>(ScrollbackSize);
-	List<string> _commandHistory = new List<string>();
+	private readonly Queue<string> _scrollback = new Queue<string>(ScrollbackSize);
+	private readonly List<string> _commandHistory = new List<string>();
 
 	public string[] Log { get; private set; } //Copy of scrollback as an array for easier use by ConsoleView
 	
 	public void AppendLogLine(string line) {
-		//Debug.Log(line);
-		
-		if (_scrollback.Count >= ConsoleController.ScrollbackSize) {
+		if (_scrollback.Count >= ScrollbackSize) {
 			_scrollback.Dequeue();
 		}
 		_scrollback.Enqueue(line);
 		
 		Log = _scrollback.ToArray();
-		if (LogChanged != null) {
-			LogChanged(Log);
-		}
+		LogChanged?.Invoke(Log);
 	}
 	
 	public void RunCommandString(string commandString) {
-		AppendLogLine("$ " + commandString);
+		AppendLogLine($"$ {commandString}");
 		
 		string[] commandSplit = ParseArguments(commandString);
 		string[] args = {"",""};
 		if (commandSplit.Length < 1) {
-			AppendLogLine(string.Format("Unable to process command '{0}'", commandString));
+			AppendLogLine($"Unable to process command '{commandString}'");
 			return;
 			
 		}
@@ -84,14 +81,19 @@ public class ConsoleController
 			args = new string[numArgs];
 			Array.Copy(commandSplit, 1, args, 0, numArgs);
 		}
-		MessageReceiver.SendMessage(commandSplit[0].ToLower(), args, SendMessageOptions.DontRequireReceiver);
+
+		var cmd = commandSplit[0].ToLower();
+		if(_commands.ContainsKey(cmd))
+			_commands[cmd].Invoke(args);
+		else AppendLogLine("Invalid command!");
+		//MessageReceiver.SendMessage(commandSplit[0].ToLower(), args, SendMessageOptions.DontRequireReceiver);
 		_commandHistory.Add(commandString);
 	}
 	
 	static string[] ParseArguments(string commandString)
 	{
-		LinkedList<char> parmChars = new LinkedList<char>(commandString.ToCharArray());
-		bool inQuote = false;
+		var parmChars = new LinkedList<char>(commandString.ToCharArray());
+		var inQuote = false;
 		var node = parmChars.First;
 		while (node != null)
 		{
@@ -105,12 +107,12 @@ public class ConsoleController
 			}
 			node = next;
 		}
-		char[] parmCharsArr = new char[parmChars.Count];
+		var parmCharsArr = new char[parmChars.Count];
 		parmChars.CopyTo(parmCharsArr, 0);
 		var args = new string(parmCharsArr).Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
 		for (var i = 0; i < args.Length; i++)
 		{
-			args[i] = permittedCharacters.Replace(args[i], "");
+			args[i] = _permittedCharacters.Replace(args[i], "");
 		}
 		return args;
 	}
