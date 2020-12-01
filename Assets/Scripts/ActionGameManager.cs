@@ -12,6 +12,7 @@ using float2 = Unity.Mathematics.float2;
 
 public class ActionGameManager : MonoBehaviour
 {
+    public GameSettings Settings;
     public SectorRenderer SectorRenderer;
     public CinemachineVirtualCamera TopDownCamera;
     public CinemachineVirtualCamera FollowCamera;
@@ -38,27 +39,27 @@ public class ActionGameManager : MonoBehaviour
         var zonePack = File.Exists(zoneFile) ? 
             MessagePackSerializer.Deserialize<ZonePack>(File.ReadAllBytes(zoneFile)) : 
             ZoneGenerator.GenerateZone(
-                context: Context,
-                name: Guid.NewGuid().ToString().Substring(0,8),
-                position: float2.zero,
-                mapLayers: Context.MapLayers.Values,
+                settings: Settings.ZoneSettings,
+                mapLayers: Context.MapLayers,
                 resources: Context.Resources,
-                mass: 100000,
-                radius: 1500
+                mass: Settings.DefaultZoneMass,
+                radius: Settings.DefaultZoneRadius
             );
         
-        Zone = Context.GetZone(zonePack);
-        SectorRenderer.Context = Context;
+        Zone = new Zone(Settings.PlanetSettings, zonePack);
         SectorRenderer.LoadZone(Zone);
 
         ConsoleController.AddCommand("editmode", _ => ToggleEditMode());
-        // ConsoleController.AddCommand("savezone", args =>
-        // {
-        //     if (args.Length > 0)
-        //         Zone.Value.Data.Name = args[0];
-        //     SaveZone();
-        // });
+        ConsoleController.AddCommand("savezone", args =>
+        {
+            if (args.Length > 0)
+                Zone.Data.Name = args[0];
+            SaveZone();
+        });
     }
+
+    public void SaveZone() => File.WriteAllBytes(
+        Path.Combine(_filePath.FullName, $"{Zone.Data.Name}.zone"), MessagePackSerializer.Serialize(Zone.Pack()));
 
     public void ToggleEditMode()
     {
@@ -74,6 +75,6 @@ public class ActionGameManager : MonoBehaviour
             _time += Time.deltaTime;
             Context.Time = Time.time;
         }
-        Context.Update();
+        Zone.Update(_time, Time.deltaTime);
     }
 }

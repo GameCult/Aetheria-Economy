@@ -62,7 +62,6 @@
             <e p="EditorDispatch.cs" t="Include" />
             <e p="GalaxyEditor.cs" t="Include" />
             <e p="SerializerTestWindow.cs" t="Include" />
-            <e p="ZoneEditor.cs" t="Include" />
           </e>
           <e p="Galaxy.cs" t="Include" />
           <e p="Gravity.cs" t="Include" />
@@ -1249,11 +1248,11 @@
           <e p="RethinkConnection.cs" t="Include" />
           <e p="Sector Display" t="Include">
             <e p="BlueNoiseProvider.cs" t="Include" />
+            <e p="GameSettings.cs" t="Include" />
             <e p="GasGiantObject.cs" t="Include" />
             <e p="GradientMapper.cs" t="Include" />
             <e p="GravityObject.cs" t="Include" />
             <e p="PlanetObject.cs" t="Include" />
-            <e p="SectorDisplayProperties.cs" t="Include" />
             <e p="SectorRenderer.cs" t="Include" />
             <e p="SnapToGrid.cs" t="Include" />
             <e p="SunMaterial.cs" t="Include" />
@@ -1774,6 +1773,7 @@
             <e p="PlayerData.cs" t="Include" />
             <e p="Rect.cs" t="Include" />
             <e p="RegisterResolver.cs" t="Include" />
+            <e p="Settings.cs" t="Include" />
             <e p="Ship.cs" t="Include" />
             <e p="TypeFormatterResolver.cs" t="Include" />
             <e p="Zone.cs" t="Include" />

@@ -22,26 +22,16 @@ public class ExponentialCurve
 }
 
 [Serializable, MessagePackObject, JsonObject]
-public class GravitySettings
+public class ExponentialLerp
 {
-    [JsonProperty("gravityDepth"), Key(0)]
-    public ExponentialCurve GravityDepth;
+    [JsonProperty("exponent"), Key(0)]
+    public float Exponent;
     
-    [JsonProperty("gravityRadius"), Key(1)]
-    public ExponentialCurve GravityRadius;
+    [JsonProperty("max"), Key(1)]
+    public float Minimum;
     
-    [JsonProperty("waveDepth"), Key(2)]
-    public ExponentialCurve WaveDepth;
+    [JsonProperty("min"), Key(2)]
+    public float Maximum;
     
-    [JsonProperty("waveRadius"), Key(3)]
-    public ExponentialCurve WaveRadius;
-    
-    [JsonProperty("waveFrequency"), Key(4)]
-    public ExponentialCurve WaveFrequency;
-    
-    [JsonProperty("waveSpeed"), Key(5)]
-    public ExponentialCurve WaveSpeed;
-    
-    [JsonProperty("gravityStrength"), Key(6)]
-    public float GravityStrength;
+    public float Evaluate(float value) => Minimum + pow(saturate(value), Exponent) * (Maximum - Minimum);
 }

@@ -29,6 +29,7 @@ public class VolumeSampling : MonoBehaviour
         
         // Shader needs this matrix to generate world space rays
         _volMaterial.SetMatrix("_CamProj", (_camera.projectionMatrix * _camera.worldToCameraMatrix).inverse);
+        _volMaterial.SetMatrix("_CamInvProj", (_camera.projectionMatrix * _camera.worldToCameraMatrix).inverse);
         
         // Shader needs to know the position and scale of cameras used to render input textures
         if(GridTransform != null)

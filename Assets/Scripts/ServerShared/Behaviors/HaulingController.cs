@@ -68,7 +68,7 @@ public class HaulingController : ControllerBase, IBehavior, IPersistentBehavior
         var haulingTask = _context.Cache.Get<HaulingTask>(Task);
         var target = Zone.Entities[haulingTask.Origin] as OrbitalEntity;
         
-        _context.SetParent(_entity, target);
+        _entity.SetParent(target);
         var itemData = _context.Cache.Get<ItemData>(haulingTask.ItemType);
         int quantity = min((int) ((_entity.Capacity - _entity.OccupiedCapacity) / itemData.Size), haulingTask.Quantity - _itemsDelivered);
         if (itemData is SimpleCommodityData)
@@ -116,7 +116,7 @@ public class HaulingController : ControllerBase, IBehavior, IPersistentBehavior
         var haulingTask = _context.Cache.Get<HaulingTask>(Task);
         var target = Zone.Entities[haulingTask.Target] as OrbitalEntity;
         
-        _context.SetParent(_entity, target);
+        _entity.SetParent(target);
         
         var itemData = _context.Cache.Get<ItemData>(haulingTask.ItemType);
         if (itemData is SimpleCommodityData)

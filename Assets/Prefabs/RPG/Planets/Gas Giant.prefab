@@ -51,7 +51,6 @@ MonoBehaviour:
   GravityWell: {fileID: 3973935121058605871}
   Icon: {fileID: 3973935121358855037}
   SunMaterial: {fileID: 3973935122748960685}
-  GradientMapper: {fileID: 3973935122748960681}
   GravityWaves: {fileID: 3973935122114073485}
 --- !u!1 &3973935121058605867
 GameObject:
@@ -308,7 +307,6 @@ GameObject:
   - component: {fileID: 3973935122748960684}
   - component: {fileID: 3973935122748960683}
   - component: {fileID: 3973935122748960682}
-  - component: {fileID: 3973935122748960681}
   - component: {fileID: 3973935122748960685}
   m_Layer: 0
   m_Name: Sphere
@@ -393,50 +391,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3973935122748960681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3973935122748960663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d2f8d4338ab9044cb603b1d3e8f189a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GradientMapDimensions: {x: 32, y: 1}
-  Gradient:
-    serializedVersion: 2
-    key0: {r: 0.20392157, g: 0.23391679, b: 0.32941177, a: 1}
-    key1: {r: 0.8314088, g: 1, b: 0.34901965, a: 1}
-    key2: {r: 1, g: 1, b: 1, a: 0}
-    key3: {r: 0.09173481, g: 0.054901946, b: 0.6156863, a: 0}
-    key4: {r: 0.16108933, g: 0.18867922, b: 0.16568764, a: 0}
-    key5: {r: 1, g: 1, b: 1, a: 0}
-    key6: {r: 0.287, g: 0.287, b: 0.287, a: 0}
-    key7: {r: 1, g: 1, b: 1, a: 0}
-    ctime0: 9830
-    ctime1: 19468
-    ctime2: 32189
-    ctime3: 40285
-    ctime4: 59174
-    ctime5: 65535
-    ctime6: 41056
-    ctime7: 65535
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_NumColorKeys: 6
-    m_NumAlphaKeys: 2
-  Testing: 0
-  Texture: {fileID: 0}
 --- !u!114 &3973935122748960685
 MonoBehaviour:
   m_ObjectHideFlags: 0

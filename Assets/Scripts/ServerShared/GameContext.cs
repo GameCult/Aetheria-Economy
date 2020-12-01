@@ -7,6 +7,7 @@ using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using Random = Unity.Mathematics.Random;
 using JM.LinqFaster;
+using UniRx;
 using float4 = Unity.Mathematics.float4;
 
 public class GameContext
@@ -15,7 +16,7 @@ public class GameContext
     public Dictionary<string, GalaxyMapLayerData> MapLayers = new Dictionary<string, GalaxyMapLayerData>();
     public SimpleCommodityData[] Resources;
     public Dictionary<Guid, List<IController>> CorporationControllers = new Dictionary<Guid, List<IController>>();
-    public Dictionary<Guid, SimplifiedZoneData> GalaxyZones;
+    public Dictionary<Guid, ZoneDefinition> GalaxyZones;
     
     private Action<string> _logger;
 
@@ -76,67 +77,67 @@ public class GameContext
         _logger(s);
     }
 
-    public void Update()
-    {
-        foreach(var zone in _zones.Values)
-            zone.Update(_deltaTime);
-        
-        foreach (var corporation in Cache.GetAll<Corporation>())
-        {
-            foreach (var tasks in corporation.Tasks
-                .Select(id => Cache.Get<AgentTask>(id)) // Fetch the tasks from the database cache
-                .Where(task => !task.Reserved) // Filter out tasks that have already been reserved
-                .GroupBy(task => task.Type)) // Group tasks by type
-            {
-                // Create a list of available controllers for this task type
-                var availableControllers = CorporationControllers[corporation.ID]
-                    .Where(controller => controller.Available && controller.TaskType == tasks.Key).ToList();
-                
-                // Iterate over the highest priority tasks for which controllers are available
-                foreach (var task in tasks.OrderByDescending(task => task.Priority).Take(availableControllers.Count))
-                {
-                    // Find the nearest controller for this task
-                    IController nearestController = availableControllers[0];
-                    List<SimplifiedZoneData> nearestControllerPath = FindPath(GalaxyZones[availableControllers.First().Zone.Data.ID], GalaxyZones[task.Zone], true);
-                    foreach (var controller in availableControllers.Skip(1))
-                    {
-                        var path = FindPath(GalaxyZones[controller.Zone.Data.ID], GalaxyZones[task.Zone], true);
-                        if (path.Count < nearestControllerPath.Count)
-                        {
-                            nearestControllerPath = path;
-                            nearestController = controller;
-                        }
-                    }
-                    task.Reserved = true;
-                    nearestController.AssignTask(task.ID);
-                }
-            }
-        }
-        
-    }
+    // public void Update()
+    // {
+    //     foreach(var zone in _zones.Values)
+    //         zone.Update((float) Time, _deltaTime);
+    //     
+    //     foreach (var corporation in Cache.GetAll<Corporation>())
+    //     {
+    //         foreach (var tasks in corporation.Tasks
+    //             .Select(id => Cache.Get<AgentTask>(id)) // Fetch the tasks from the database cache
+    //             .Where(task => !task.Reserved) // Filter out tasks that have already been reserved
+    //             .GroupBy(task => task.Type)) // Group tasks by type
+    //         {
+    //             // Create a list of available controllers for this task type
+    //             var availableControllers = CorporationControllers[corporation.ID]
+    //                 .Where(controller => controller.Available && controller.TaskType == tasks.Key).ToList();
+    //             
+    //             // Iterate over the highest priority tasks for which controllers are available
+    //             foreach (var task in tasks.OrderByDescending(task => task.Priority).Take(availableControllers.Count))
+    //             {
+    //                 // Find the nearest controller for this task
+    //                 IController nearestController = availableControllers[0];
+    //                 List<ZoneDefinition> nearestControllerPath = FindPath(GalaxyZones[availableControllers.First().Zone.Data.ID], GalaxyZones[task.Zone], true);
+    //                 foreach (var controller in availableControllers.Skip(1))
+    //                 {
+    //                     var path = FindPath(GalaxyZones[controller.Zone.Data.ID], GalaxyZones[task.Zone], true);
+    //                     if (path.Count < nearestControllerPath.Count)
+    //                     {
+    //                         nearestControllerPath = path;
+    //                         nearestController = controller;
+    //                     }
+    //                 }
+    //                 task.Reserved = true;
+    //                 nearestController.AssignTask(task.ID);
+    //             }
+    //         }
+    //     }
+    //     
+    // }
 
-    public Zone GetZone(Guid zone)
-    {
-        if (_zones.ContainsKey(zone)) return _zones[zone];
-        
-        // var zoneData = Cache.Get<ZoneData>(zone);
-        // if (zoneData == null) throw new ArgumentException("Zone parameter is not a valid zone ID!", nameof(zone));
-        //
-        // return GetZone(zoneData);
-        return null;
-    }
-
-    public Zone GetZone(ZonePack zonePack)
-    {
-        var z = new Zone(this, zonePack);
-        _zones.Add(zonePack.Data.ID, z);
-        return z;
-    }
-
-    public void UnloadZone(Guid zone)
-    {
-        _zones.Remove(zone);
-    }
+    // public Zone GetZone(Guid zone)
+    // {
+    //     if (_zones.ContainsKey(zone)) return _zones[zone];
+    //     
+    //     // var zoneData = Cache.Get<ZoneData>(zone);
+    //     // if (zoneData == null) throw new ArgumentException("Zone parameter is not a valid zone ID!", nameof(zone));
+    //     //
+    //     // return GetZone(zoneData);
+    //     return null;
+    // }
+    //
+    // public Zone GetZone(ZonePack zonePack)
+    // {
+    //     var z = new Zone(this, zonePack);
+    //     _zones.Add(zonePack.Data.ID, z);
+    //     return z;
+    // }
+    //
+    // public void UnloadZone(Guid zone)
+    // {
+    //     _zones.Remove(zone);
+    // }
 
     // public void Warp(Entity entity, Guid targetZone)
     // {
@@ -535,10 +536,9 @@ public class GameContext
             var orbit = new OrbitData
             {
                 Context = this,
-                Distance = distance,
+                Distance = new ReactiveProperty<float>(distance),
                 Parent = zone.Orbits.Values.Select(o=>o.Data)
                     .First(orbitData => orbitData.Parent == Guid.Empty).ID,
-                Period = _globalData.OrbitalPeriod(distance),
                 Phase = Random.NextFloat()
             };
             zone.AddOrbit(orbit);
@@ -686,10 +686,10 @@ public class GameContext
     {
         public float Cost;
         public DijkstraNode Parent;
-        public SimplifiedZoneData Zone;
+        public ZoneDefinition Zone;
     }
 	
-    public List<SimplifiedZoneData> FindPath(SimplifiedZoneData source, SimplifiedZoneData target, bool bestFirst = false)
+    public List<ZoneDefinition> FindPath(ZoneDefinition source, ZoneDefinition target, bool bestFirst = false)
     {
         SortedList<float,DijkstraNode> members = new SortedList<float,DijkstraNode>{{0,new DijkstraNode{Zone = source}}};
         List<DijkstraNode> searched = new List<DijkstraNode>();
@@ -713,22 +713,6 @@ public class GameContext
                 members.Add(bestFirst ? dijkstraStar.Cost + length(dijkstraStar.Zone.Position - target.Position) : dijkstraStar.Cost, dijkstraStar);
             searched.Add(s);
         }
-    }
-
-    public void SetParent(Entity child, Entity parent)
-    {
-        child.Parent = parent.ID;
-        parent.AddChild(child);
-    }
-
-    public void RemoveParent(Entity child)
-    {
-        if (child.Parent == Guid.Empty)
-            return;
-
-        var parent = Cache.Get<Entity>(child.Parent);
-        parent.RemoveChild(child);
-        child.Parent = Guid.Empty;
     }
 
     // public bool MoveCargo(Entity source, Entity target, ItemInstance item, int quantity = int.MaxValue)

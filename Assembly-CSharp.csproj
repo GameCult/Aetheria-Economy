@@ -195,7 +195,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\Persistence\DoubleStreamElement.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\OverlapRemoval\OverlapRemovalNode.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\Station.cs" />
-     <Compile Include="Assets\Scripts\Sector Display\SectorDisplayProperties.cs" />
+     <Compile Include="Assets\Scripts\Sector Display\GameSettings.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\ValidateArg.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\Persistence\CurveStreamElement.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\Nudging\PointByDelegateComparer.cs" />

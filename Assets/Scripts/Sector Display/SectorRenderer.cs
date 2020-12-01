@@ -11,7 +11,7 @@ using Unity.Mathematics;
 public class SectorRenderer : MonoBehaviour
 {
     public Transform FogCameraParent;
-    public SectorDisplayProperties Properties;
+    public GameSettings Settings;
     public Transform SectorRoot;
     public Transform SectorBrushes;
     public CinemachineVirtualCamera SceneCamera;
@@ -33,11 +33,9 @@ public class SectorRenderer : MonoBehaviour
     public Texture2D PlanetoidIcon;
     public Texture2D PlanetIcon;
     
-    private Dictionary<Guid, Transform> _planets = new Dictionary<Guid, Transform>();
+    private Dictionary<Guid, PlanetObject> _planets = new Dictionary<Guid, PlanetObject>();
     private Zone _zone;
     private float _viewDistance;
-    
-    public GameContext Context { get; set; }
 
     public float ViewDistance
     {
@@ -63,16 +61,15 @@ public class SectorRenderer : MonoBehaviour
 
     void Start()
     {
-        ViewDistance = Properties.DefaultViewDistance;
-        MinimapDistance = Properties.DefaultMinimapDistance;
+        ViewDistance = Settings.DefaultViewDistance;
+        MinimapDistance = Settings.DefaultMinimapDistance;
     }
 
     public void LoadZone(Zone zone)
     {
         _zone = zone;
-        _zone.GravitySettings = Properties.GravitySettings;
         SectorBrushes.localScale = zone.Data.Radius * 2 * Vector3.one;
-        _zone.ZoneDepth = 50;
+        _zone.ZoneDepth = 125;
         _zone.ZoneDepthExponent = .25f;
         _zone.ZoneDepthRadius = zone.Data.Radius * 2;
         ClearZone();
@@ -108,30 +105,24 @@ public class SectorRenderer : MonoBehaviour
                     planet = Instantiate(Sun, SectorRoot);
                     var sun = (SunObject) planet;
                     sunData.LightColor.Subscribe(c => sun.Light.color = c);
-                    sunData.Mass.Subscribe(m => sun.Light.range = Properties.LightRadius.Evaluate(m));
+                    sunData.Mass.Subscribe(m => sun.Light.range = Settings.PlanetSettings.LightRadius.Evaluate(m));
                     sunData.FogTintColor.Subscribe(c => sun.FogTint.material.SetColor("_Color", c));
-                    sunData.Mass.Subscribe(m => sun.FogTint.transform.localScale = Properties.FogTintRadius.Evaluate(m) * Vector3.one);
+                    sunData.Mass.Subscribe(m => sun.FogTint.transform.localScale = Settings.PlanetSettings.FogTintRadius.Evaluate(m) * Vector3.one);
                 }
                 else planet = Instantiate(GasGiant, SectorRoot);
 
                 var gas = (GasGiantObject) planet;
-                gasGiantData.Colors.Subscribe(c => gas.GradientMapper.ApplyGradient(c.ToGradient()));
+                var gasGiant = _zone.PlanetInstances[planetData.ID] as GasGiant;
+                gasGiantData.Colors.Subscribe(c => gas.Body.material.SetTexture("_ColorRamp", c.ToGradient().ToTexture()));
                 gasGiantData.AlbedoRotationSpeed.Subscribe(f => gas.SunMaterial.AlbedoRotationSpeed = f);
                 gasGiantData.FirstOffsetRotationSpeed.Subscribe(f => gas.SunMaterial.FirstOffsetRotationSpeed = f);
                 gasGiantData.SecondOffsetRotationSpeed.Subscribe(f => gas.SunMaterial.SecondOffsetRotationSpeed = f);
                 gasGiantData.FirstOffsetDomainRotationSpeed.Subscribe(f => gas.SunMaterial.FirstOffsetDomainRotationSpeed = f);
                 gasGiantData.SecondOffsetDomainRotationSpeed.Subscribe(f => gas.SunMaterial.SecondOffsetDomainRotationSpeed = f);
-                planetData.Mass.CombineLatest(planetData.GravityRadiusMultiplier,
-                        (mass, radius) => Properties.GravitySettings.WaveRadius.Evaluate(mass) * radius)
-                    .Subscribe(f => gas.GravityWaves.transform.localScale = f * Vector3.one);
-                planetData.Mass.CombineLatest(planetData.GravityDepthMultiplier,
-                        (mass, depth) => Properties.GravitySettings.WaveDepth.Evaluate(mass) * depth)
-                    .Subscribe(f => gas.GravityWaves.material.SetFloat("_Depth", f));
-                planetData.Mass.Subscribe(f =>
-                {
-                    gas.GravityWaves.material.SetFloat("_Frequency", Properties.GravitySettings.WaveFrequency.Evaluate(f));
+                gasGiant.GravityWavesRadius.Subscribe(f => gas.GravityWaves.transform.localScale = f * Vector3.one);
+                gasGiant.GravityWavesDepth.Subscribe(f => gas.GravityWaves.material.SetFloat("_Depth", f));
+                planetData.Mass.Subscribe(f => gas.GravityWaves.material.SetFloat("_Frequency", Settings.PlanetSettings.WaveFrequency.Evaluate(f)));
                     //gas.WaveScroll.Speed = Properties.GravitySettings.WaveSpeed.Evaluate(f);
-                });
             }
             else
             {
@@ -139,21 +130,12 @@ public class SectorRenderer : MonoBehaviour
                 //planet.Icon.material.mainTexture = planetData.Mass > Context.GlobalData.PlanetMass ? PlanetIcon : PlanetoidIcon;
             }
 
-            planetData.Mass.Subscribe(mass =>
-            {
-                var diameter = Properties.BodyDiameter.Evaluate(mass);
-                planet.Body.transform.localScale = diameter * Vector3.one;
-                //planet.GridSnap.Offset = diameter * 2;
-            });
-            
-            planetData.Mass.CombineLatest(planetData.GravityRadiusMultiplier,
-                    (mass, radius) => Properties.GravitySettings.GravityRadius.Evaluate(mass) * radius)
-                .Subscribe(f => planet.GravityWell.transform.localScale = f * Vector3.one);
-            planetData.Mass.CombineLatest(planetData.GravityDepthMultiplier,
-                    (mass, depth) => Properties.GravitySettings.GravityDepth.Evaluate(mass) * depth)
-                .Subscribe(f => planet.GravityWell.material.SetFloat("_Depth", f));
-            
-            _planets.Add(planetData.ID, planet.transform);
+            var planetInstance = _zone.PlanetInstances[planetData.ID];
+            planetInstance.BodyRadius.Subscribe(f => planet.Body.transform.localScale = f * Vector3.one);
+            planetInstance.GravityWellRadius.Subscribe(f => planet.GravityWell.transform.localScale = f * Vector3.one);
+            planetInstance.GravityWellDepth.Subscribe(f => planet.GravityWell.material.SetFloat("_Depth", f));
+
+            _planets.Add(planetData.ID, planet);
         }
     }
 
@@ -167,7 +149,7 @@ public class SectorRenderer : MonoBehaviour
                     .Skip((int) (((float)i / AsteroidMeshes.Length) * belt.Transforms.Length))
                     .Take((int) (1f / AsteroidMeshes.Length * belt.Transforms.Length))
                     .Select(v => Matrix4x4.TRS(
-                        new Vector3(v.x, _zone.GetHeight(v.xy) + 5, v.y),
+                        new Vector3(v.x, _zone.GetHeight(v.xy), v.y),
                         Quaternion.Euler(cos(v.z + (float) i / AsteroidMeshes.Length) * 100, sin(v.z + (float) i / AsteroidMeshes.Length) * 100, 0),
                         Vector3.one * (v.w)))
                     .ToArray();
@@ -180,12 +162,18 @@ public class SectorRenderer : MonoBehaviour
     {
         foreach (var planet in _planets)
         {
-            var p = _zone.GetOrbitPosition(_zone.Planets[planet.Key].Orbit);
-            planet.Value.position = new Vector3(p.x, _zone.GetHeight(p) + 10, p.y);
+            var planetInstance = _zone.PlanetInstances[planet.Key];
+            var p = _zone.GetOrbitPosition(planetInstance.BodyData.Orbit);
+            planet.Value.transform.position = new Vector3(p.x, _zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, p.y);
+            if(planet.Value is GasGiantObject gasGiantObject && !(planet.Value is SunObject))
+            {
+                var toParent = normalize(_zone.GetOrbitPosition(_zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);
+                gasGiantObject.SunMaterial.LightingDirection = new Vector3(toParent.x, 0, toParent.y); 
+            }
         }
 
-        var pos = FogCameraParent.position;
-        FogMaterial.SetVector("_GridTransform", new Vector4(pos.x,pos.z,_viewDistance*2));
+        var fogPos = FogCameraParent.position;
+        FogMaterial.SetVector("_GridTransform", new Vector4(fogPos.x,fogPos.z,_viewDistance*2));
         
     }
 }

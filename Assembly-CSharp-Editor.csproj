@@ -86,7 +86,6 @@
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\MethodDrawers\ButtonMethodDrawer.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\Attributes\NativePropertyDrawerAttribute.cs" />
      <Compile Include="Assets\Scripts\Editor\SerializerTestWindow.cs" />
-     <Compile Include="Assets\Scripts\Editor\ZoneEditor.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\PropertyDrawers\PropertyDrawer.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\CodeGeneration\PropertyValidatorDatabase.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\PropertyDrawConditions\PropertyDrawCondition.cs" />

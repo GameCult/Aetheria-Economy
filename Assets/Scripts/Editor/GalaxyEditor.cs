@@ -70,9 +70,9 @@ public class GalaxyEditor : Editor
 		}
 		
 		GUILayout.Label("Preview", EditorStyles.boldLabel);
-		_galaxyMat.SetFloat("Arms", galaxy.MapData.GlobalData.Arms);
-		_galaxyMat.SetFloat("Twist", galaxy.MapData.GlobalData.Twist);
-		_galaxyMat.SetFloat("TwistPower", galaxy.MapData.GlobalData.TwistPower);
+		_galaxyMat.SetFloat("Arms", galaxy.MapData.ShapeSettings.Arms);
+		_galaxyMat.SetFloat("Twist", galaxy.MapData.ShapeSettings.Twist);
+		_galaxyMat.SetFloat("TwistPower", galaxy.MapData.ShapeSettings.TwistExponent);
 		_galaxyMat.SetFloat("SpokeOffset", _currentLayer.SpokeOffset);
 		_galaxyMat.SetFloat("SpokeScale", _currentLayer.SpokeScale);
 		_galaxyMat.SetFloat("CoreBoost", _currentLayer.CoreBoost);
@@ -168,7 +168,7 @@ public class GalaxyEditor : Editor
 					var accum = 0f;
 					foreach (var hp in points.Select(p=>p+Random.insideUnitCircle * ((points[0]-points[1]).magnitude/2)))
 					{
-						var den = galaxy.MapData.StarDensity.Evaluate(hp, galaxy.MapData.GlobalData);
+						var den = galaxy.MapData.StarDensity.Evaluate(hp, galaxy.MapData.ShapeSettings);
 						if(!float.IsNaN(den))
 							accum += saturate(den) * Random.value;
 //						else
@@ -292,7 +292,7 @@ public class GalaxyEditor : Editor
 							R.Db("Aetheria").Table("Galaxy").Insert(data).Run(_connection);
 						}
 						
-						R.Db("Aetheria").Table("Galaxy").Insert(galaxy.MapData.GlobalData).Run(_connection);
+						R.Db("Aetheria").Table("Galaxy").Insert(galaxy.MapData.ShapeSettings).Run(_connection);
 					}
 					
 					EditorGUI.EndDisabledGroup();

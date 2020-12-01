@@ -48,6 +48,7 @@ public class DatabaseListView : EditorWindow
     private Dictionary<Guid, HashSet<Guid>> _itemBlueprints = new Dictionary<Guid, HashSet<Guid>>();
     private HashSet<Guid> _itemBlueprintFoldouts = new HashSet<Guid>();
     private HashSet<string> _itemGroupFoldouts = new HashSet<string>();
+    private DirectoryInfo _filePath;
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
@@ -56,6 +57,7 @@ public class DatabaseListView : EditorWindow
     
     void OnEnable()
     {
+        _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
         // Create database cache
         _databaseCache = new DatabaseCache();
         
@@ -169,12 +171,12 @@ public class DatabaseListView : EditorWindow
 
             if (GUILayout.Button("Save"))
             {
-                _databaseCache.Save(new DirectoryInfo(Application.dataPath).Parent.FullName);
+                _databaseCache.Save(_filePath.FullName);
             }
 
             if (GUILayout.Button("Load"))
             {
-                _databaseCache.Load(new DirectoryInfo(Application.dataPath).Parent.FullName);
+                _databaseCache.Load(_filePath.FullName);
             }
         }
 

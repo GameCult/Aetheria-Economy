@@ -40,7 +40,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     protected Func<float2> TargetPosition;
     protected Func<float2> TargetVelocity;
     protected bool MatchVelocity;
-    protected List<SimplifiedZoneData> Path;
+    protected List<ZoneDefinition> Path;
     protected Guid Task;
     protected bool Moving;
     protected bool Waiting;
@@ -116,7 +116,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
         if (Moving)
         {
             if(_entity.Parent!=Guid.Empty)
-                _context.RemoveParent(_entity);
+                _entity.RemoveParent();
 
             var targetPosition = TargetPosition();
             var distance = length(targetPosition - _entity.Position);
@@ -179,12 +179,12 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
         var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
         if (Zone == homeEntity.Zone) MoveTo(homeEntity, true, () =>
         {
-            _context.SetParent(_entity, homeEntity);
+            _entity.SetParent(homeEntity);
             onFinish?.Invoke();
         });
         else MoveTo(homeEntity.Zone.Data.ID, () => MoveTo(homeEntity, true, () =>
         {
-            _context.SetParent(_entity, homeEntity);
+            _entity.SetParent(homeEntity);
             onFinish?.Invoke();
         }));
     }
@@ -235,7 +235,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
             path.RemoveAt(0);
             if (path.Count > 0)
             {
-                MoveTo(Zone.WormholePosition(Path[0].ZoneID), false, OnNextZone);
+                MoveTo(Zone.WormholePosition(Path[0]), false, OnNextZone);
             }
             else
             {

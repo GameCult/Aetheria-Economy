@@ -358,7 +358,7 @@ public class ColonyTab : MonoBehaviour
                                 entity.RemoveCargo(gear);
                                 var ship = Context.CreateShip(gear.ID, Enumerable.Empty<Guid>(),
                                     Enumerable.Empty<Guid>(), entity.Zone, entity.Corporation, _parentEntity.ID, gear.Name);
-                                _context.SetParent(ship, entity);
+                                ship.SetParent(entity);
                             }
                             else // Equip Item
                                 entity.Equip(gear.ID, true);

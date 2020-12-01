@@ -52,7 +52,6 @@ MonoBehaviour:
   GravityWell: {fileID: 7852221720969441484}
   Icon: {fileID: 7852221720964551246}
   SunMaterial: {fileID: 7852221720971737234}
-  GradientMapper: {fileID: 7852221720971737235}
   GravityWaves: {fileID: 7852221720741322894}
   FogTint: {fileID: 7852221720816817929}
   Light: {fileID: 8064377225639657765}
@@ -392,7 +391,6 @@ GameObject:
   - component: {fileID: 7852221720971737230}
   - component: {fileID: 7852221720971737229}
   - component: {fileID: 7852221720971737228}
-  - component: {fileID: 7852221720971737235}
   - component: {fileID: 7852221720971737234}
   - component: {fileID: 8064377225639657765}
   m_Layer: 0
@@ -478,50 +476,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7852221720971737235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7852221720971737232}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d2f8d4338ab9044cb603b1d3e8f189a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GradientMapDimensions: {x: 32, y: 1}
-  Gradient:
-    serializedVersion: 2
-    key0: {r: 0, g: 0, b: 0, a: 1}
-    key1: {r: 0.70199996, g: 0, b: 0, a: 1}
-    key2: {r: 0.88699996, g: 0.32692656, b: 0.04688985, a: 0}
-    key3: {r: 0.36200017, g: 0.043000042, b: 1, a: 0}
-    key4: {r: 1, g: 1, b: 1, a: 0}
-    key5: {r: 1, g: 0.99469995, b: 0.45098042, a: 0}
-    key6: {r: 0.287, g: 0.287, b: 0.287, a: 0}
-    key7: {r: 1, g: 1, b: 1, a: 0}
-    ctime0: 0
-    ctime1: 6695
-    ctime2: 19184
-    ctime3: 30257
-    ctime4: 65535
-    ctime5: 45707
-    ctime6: 41056
-    ctime7: 65535
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_NumColorKeys: 5
-    m_NumAlphaKeys: 2
-  Testing: 0
-  Texture: {fileID: 0}
 --- !u!114 &7852221720971737234
 MonoBehaviour:
   m_ObjectHideFlags: 0

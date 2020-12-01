@@ -63,7 +63,7 @@ public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
         var towingTask = _context.Cache.Get<StationTowing>(Task);
         var target = Zone.Entities[towingTask.Station] as OrbitalEntity;
         
-        _context.SetParent(target, _entity);
+        target.SetParent(_entity);
         
         _entity.SetMessage("Entering delivery phase.");
 
@@ -80,7 +80,7 @@ public class TowingController : ControllerBase, IBehavior, IPersistentBehavior
         var towingTask = _context.Cache.Get<StationTowing>(Task);
         var target = Zone.Entities[towingTask.Station] as OrbitalEntity;
         
-        _context.RemoveParent(target);
+        target.RemoveParent();
         
         _entity.SetMessage("Target delivered. Returning Home.");
 

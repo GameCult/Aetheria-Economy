@@ -1,5 +1,6 @@
 ﻿Shader "VolSample/Volume Render" {
 	Properties{
+		_MainTex( "", 2D ) = "white" {}
 		_Surface("Surface", 2D) = "black" {}
 		_Patch("Patch", 2D) = "black" {}
 		_Displacement("Displacement", 2D) = "black" {}
@@ -43,6 +44,7 @@
 	// Shared shader code for pixel view rays, given screen pos and camera frame vectors.
 	// Camera vectors are passed in as this shader is run from a post proc camera, so the unity built-in values are not useful.
 	uniform float4x4 _CamProj;
+	uniform float4x4 _CamInvProj;
 	uniform float3 _CamPos;
 	uniform float3 _CamForward;
 	uniform float3 _CamRight;
@@ -137,7 +139,7 @@
 		}
 	}
 	
-	float4 RayMarch( in float3 origin, in float3 direction, in float zbuf, in float2 screenUV )
+	float4 RayMarch( in float3 origin, in float3 direction, in float zbuf, in float2 screenUV, out float depth )
 	{
 		half rand = nrand(screenUV + frac(_Time.x));
         //half rand = tex2D(_DitheringTex, screenUV * _DitheringCoords.xy + _DitheringCoords.zw).r;
@@ -159,6 +161,8 @@
 
 			rayDist += step;
 		}
+
+		depth = rayDist;
 
 		return pow( sum, 1 / _Gamma );
 	}
@@ -196,12 +200,33 @@
 		rayOrigin = _WorldSpaceCameraPos;
 		
 		float2 p = 2.0*(q - 0.5);
-		float4 d = mul(_CamProj, float4(p, 1, 1));
+		float4 d = mul(_CamProj, float4(p, 0, 1));
 		d.xyz /= d.w;
+		//rd = (d - rayOrigin);
 		rd = normalize(d - rayOrigin);
+		rayOrigin = d;
+		//rayOrigin += _ProjectionParams.y * rd;
 	}
 	
-	float4 frag( v2f i ) : SV_Target
+	inline float LinearEyeDepthToOutDepth(float z)
+	{
+	    return (1 - _ZBufferParams.w * z) / (_ZBufferParams.z * z);
+	}
+	
+	float3 DepthToWorld(float2 uv, float depth) {
+		float z = (1-depth) * 2.0 - 1.0;
+
+		float4 clipSpacePosition = float4(uv * 2.0 - 1.0, z, 1.0);
+
+		float4 viewSpacePosition = mul(_CamInvProj,clipSpacePosition);
+		viewSpacePosition /= viewSpacePosition.w;
+
+		float4 worldSpacePosition = mul(unity_ObjectToWorld,viewSpacePosition);
+
+		return worldSpacePosition.xyz;
+	}
+	
+	float4 frag( v2f i ) : SV_Target //out float outDepth : SV_Depth
 	{
 		float2 q = i.screenPos.xy / i.screenPos.w;
 
@@ -212,29 +237,38 @@
 		// z buffer / scene depth for this pixel
 		float4 screenPos = UNITY_PROJ_COORD( i.screenPos );
 		float2 screenUV = screenPos.xy / screenPos.w;
-		float depthValue = LinearEyeDepth( tex2Dproj( _CameraDepthTexture, screenPos ).r );
+		float depthSample = tex2Dproj( _CameraDepthTexture, screenPos ).r;
+		//float depthValue = LinearEyeDepth(depthSample);
 
+		float3 worldDepth = DepthToWorld(screenPos, depthSample);
+		float depthValue = length(worldDepth-rayOrigin);
 		// march through volume
-		float4 clouds = RayMarch( rayOrigin, rayDirection, depthValue, screenUV );
+		float rayDist;
+		float4 clouds = RayMarch( rayOrigin, rayDirection, depthValue, screenUV, rayDist );
 
+			float3 bgcol = tex2Dlod( _MainTex, float4(q, 0., 0.) );
 		// add in camera render colours, if not zfar (so we exclude skybox)
 		if(clouds.a < .99 && depthValue < _DepthCeiling + _DepthBlend)
 		{
-			float3 bgcol = tex2Dlod( _MainTex, float4(q, 0., 0.) );
 
 			// Blend out camera render when outside marching range
 			if( depthValue >= _DepthCeiling )
 				clouds.a = lerp(clouds.a, 1, (depthValue - _DepthCeiling) / _DepthBlend);
 			
-			clouds.xyz += (1. - clouds.a) * bgcol;
+			clouds.xyz = lerp(clouds.xyz, bgcol, 1-clouds.a);
+			//clouds.xyz += (1. - clouds.a) * bgcol;
 			// assume zbuffer represents opaque surface
 			clouds.a = 1.;
+			
 		}
 		
 		// else
 		// {
-		// 	clouds.xyz = lerp(clouds.xyz, bgcol, );
+		// 	clouds.xyz = lerp(clouds.xyz, bgcol, 1-clouds.a);
 		// }
+		//clouds.rgb *= clouds.a;
+
+		//outDepth = LinearEyeDepthToOutDepth(min(depthValue, rayDist));
 
 		return clouds;
 		/*
@@ -243,6 +277,7 @@
 		// post processing
 		return postProcessing( col, q );*/
 	}
+	
 
 	ENDCG
 

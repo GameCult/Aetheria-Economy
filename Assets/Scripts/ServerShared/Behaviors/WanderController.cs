@@ -67,7 +67,7 @@ public class WanderController : ControllerBase, IBehavior
             var randomEntity = entities[_context.Random.NextInt(entities.Length)];
             MoveTo(randomEntity, true, () =>
             {
-                _context.SetParent(_entity, randomEntity);
+                _entity.SetParent(randomEntity);
                 _dockTime = _context.Random.NextFloat(_data.RandomDockTime);
             });
         }

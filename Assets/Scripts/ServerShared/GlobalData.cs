@@ -29,7 +29,7 @@ public class GlobalData : DatabaseEntry
     [InspectableField, JsonProperty("radiusPower"), Key(7)]  
     public float RadiusPower = 1.75f;
 
-    [InspectableField, JsonProperty("massFloor"), Key(8)]  
+    [InspectableField, JsonProperty("massFloor"), Key(8)]
     public float MassFloor = 1;
 
     [InspectableField, JsonProperty("sunMass"), Key(9)]  
@@ -80,12 +80,6 @@ public class GlobalData : DatabaseEntry
     [InspectableField, JsonProperty("orbitPeriodMultiplier"), Key(23)]  
     public float OrbitPeriodMultiplier = 1f;
 
-    [InspectableField, JsonProperty("gravityRadiusExponent"), Key(24)]  
-    public float GravityRadiusExponent = 1.5f;
-
-    [InspectableField, JsonProperty("gravityRadiusMultiplier"), Key(25)]  
-    public float GravityRadiusMultiplier = 1f;
-
     [InspectableField, JsonProperty("beltProbability"), Key(26)]  
     public float BeltProbability = .05f;
 
@@ -115,9 +109,6 @@ public class GlobalData : DatabaseEntry
 
     [InspectableField, JsonProperty("warpDistance"), Key(35)]
     public float WarpDistance = 25;
-
-    [InspectableField, JsonProperty("orbitSpeedMultiplier"), Key(36)]
-    public float OrbitSpeedMultiplier = .25f;
     
     [InspectableField, JsonProperty("targetPersistenceDuration"), Key(37)]  
     public float TargetPersistenceDuration = 3;
@@ -171,11 +162,6 @@ public class GlobalData : DatabaseEntry
     {
         return pow(mass, 1 / RadiusPower);
     }
-    
-    public float OrbitalPeriod(float distance)
-    {
-        return pow(distance, OrbitPeriodExponent) * OrbitPeriodMultiplier;
-    }
 }
 
 [Inspectable, Serializable, RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -223,14 +209,14 @@ public class GalaxyMapLayerData : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("name"), Key(14)]  
     public string Name;
 
-    public float Evaluate(float2 uv, GlobalData data)
+    public float Evaluate(float2 uv, GalaxyShapeSettings settings)
     {
         float2 offset = -float2(.5f, .5f)+uv;
         float circle = (.5f-length(offset))*2;
-        float angle = pow(length(offset)*2,data.TwistPower) * data.Twist;
+        float angle = pow(length(offset)*2,settings.TwistExponent) * settings.Twist;
         float2 t = float2(offset.x*cos(angle) - offset.y*sin(angle), offset.x*sin(angle) + offset.y*cos(angle));
         float atan = atan2(t.y,t.x);
-        float spokes = (sin(atan*data.Arms) + SpokeOffset) * SpokeScale;
+        float spokes = (sin(atan*settings.Arms) + SpokeOffset) * SpokeScale;
         float noise = fBm(uv + float2(NoisePosition), NoiseOctaves, NoiseFrequency, NoiseOffset, NoiseAmplitude, NoiseLacunarity, NoiseGain);
         float shape = lerp(spokes - EdgeReduction * length(offset), 1, pow(circle, CoreBoostPower) * CoreBoost) + CoreBoostOffset;
         float gal = max(shape - noise * saturate(circle), 0);

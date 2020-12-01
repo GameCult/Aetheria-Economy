@@ -94,13 +94,13 @@ public class GalaxyRequestMessage : Message
 [MessagePackObject]
 public class GalaxyResponseMessage : Message
 {
-    [Key(0)] public SimplifiedZoneData[] Zones;
+    [Key(0)] public ZoneDefinition[] Zones;
     [Key(1)] public GalaxyMapLayerData StarDensity;
     [Key(2)] public GlobalData GlobalData;
 }
 
 [MessagePackObject]
-public class SimplifiedZoneData
+public class ZoneDefinition
 {
     [Key(0)] public Guid ZoneID;
     [Key(1)] public Guid[] Links;

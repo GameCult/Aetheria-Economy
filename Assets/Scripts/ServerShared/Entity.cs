@@ -379,6 +379,22 @@ public abstract class Entity : DatabaseEntry, IMessagePackSerializationCallbackR
         Children.Remove(entity.ID);
         ChildEvent.Change();
     }
+    
+    public void SetParent(Entity parent)
+    {
+        Parent = parent.ID;
+        parent.AddChild(this);
+    }
+
+    public void RemoveParent()
+    {
+        if (Parent == Guid.Empty)
+            return;
+
+        var parent = Zone.Entities[Parent];
+        parent.RemoveChild(this);
+        Parent = Guid.Empty;
+    }
 
     public Guid Build(BlueprintData blueprint, float quality, string name, bool direct = false)
     {

@@ -21,7 +21,7 @@ public class Galaxy : ScriptableObject
 [Serializable]
 public class GalaxyMapData
 {
-	public GlobalData GlobalData = new GlobalData();
+	public GalaxyShapeSettings ShapeSettings = new GalaxyShapeSettings();
 	
 	[HideInInspector]
 	public GalaxyMapLayerData StarDensity;

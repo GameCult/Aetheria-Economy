@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Sector Display Properties", menuName = "Aetheria/Sector Display Properties")]
-public class SectorDisplayProperties : ScriptableObject
+public class GameSettings : ScriptableObject
 {
+    public float DefaultZoneRadius;
+    public float DefaultZoneMass;
     public float DefaultViewDistance;
     public float DefaultMinimapDistance;
-    public ExponentialCurve BodyDiameter;
-    public GravitySettings GravitySettings;
-    public ExponentialCurve FogTintRadius;
-    public ExponentialCurve LightRadius;
+    public PlanetSettings PlanetSettings;
+    public ZoneGenerationSettings ZoneSettings;
 }
 
