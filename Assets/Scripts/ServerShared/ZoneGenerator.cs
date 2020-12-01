@@ -142,7 +142,7 @@ public class ZoneGenerator
 		            Enumerable.Range(0, (int) (settings.AsteroidCount.Evaluate(beltData.Mass.Value * orbitMap[planet].Distance.Value)))
 			            .Select(_ => new Asteroid
 			            {
-				            Distance = random.NextFloat(orbitMap[planet].Distance.Value * .5f, orbitMap[planet].Distance.Value * 1.5f),
+				            Distance = random.NextFloat(orbitMap[planet].Distance.Value, orbitMap[planet].Distance.Value + settings.AsteroidBeltWidth.Evaluate(orbitMap[planet].Distance.Value)),
 				            Phase = random.NextFloat(),
 				            Size = random.NextFloat(),
 				            RotationSpeed = settings.AsteroidRotationSpeed.Evaluate(random.NextFloat())
@@ -152,18 +152,46 @@ public class ZoneGenerator
             }
             else if (planetData is GasGiantData gas)
             {
-	            var times = Enumerable.Range(0, 5).Select(i => (float) i / 4).ToArray();
-	            gas.Colors.Value = times.Select(time => float4(random.NextFloat3(),time)).ToArray();
-	            gas.AlbedoRotationSpeed.Value = -3;
-	            gas.FirstOffsetRotationSpeed.Value = 5;
-	            gas.FirstOffsetDomainRotationSpeed.Value = 0;
-	            gas.SecondOffsetRotationSpeed.Value = 10;
-	            gas.SecondOffsetDomainRotationSpeed.Value = -25;
-	            if (planetData is SunData sun)
+	            if (gas is SunData sun)
 	            {
-		            sun.FogTintColor.Value = sun.LightColor.Value = random.NextFloat3();
+		            float primary = random.NextFloat();
+		            float secondary = frac(primary + 1 + settings.SunSecondaryColorDistance * (random.NextFloat() > .5 ? 1 : -1));
+		            gas.Colors.Value = new []
+		            {
+			            float4(ColorMath.HsvToRgb(float3(primary, settings.SunColorSaturation, .5f)), 0),
+			            float4(ColorMath.HsvToRgb(float3(secondary, settings.SunColorSaturation, 1)), 1)
+		            };
+		            sun.FogTintColor.Value = ColorMath.HsvToRgb(float3(primary, settings.SunFogTintSaturation, 1));
+			        sun.LightColor.Value = ColorMath.HsvToRgb(float3(primary, settings.SunLightSaturation, 1));
 		            gas.FirstOffsetDomainRotationSpeed.Value = 5;
 	            }
+	            else
+	            {
+		            // Define primary color and two adjacent colors
+		            float primary = random.NextFloat();
+		            float right = frac(primary + settings.GasGiantBandColorSeparation);
+		            float left = frac(primary + 1 - settings.GasGiantBandColorSeparation);
+		            
+		            // Create n time keys from 0 to 1
+		            var bandCount = (int) (settings.GasGiantBandCount.Evaluate(random.NextFloat()) + .5f);
+		            var times = Enumerable.Range(0, bandCount)
+			            .Select(i => (float) i / (bandCount-1));
+		            
+		            // Each band has a chance of being either the primary or one of the adjacent hues
+		            // Saturation and Value are random with curves applied
+		            gas.Colors.Value = times
+			            .Select(time => float4(ColorMath.HsvToRgb(float3(
+				            random.NextFloat() > settings.GasGiantBandAltColorChance ? primary : (random.NextFloat() > .5f ? right : left),
+				            settings.GasGiantBandSaturation.Evaluate(random.NextFloat()),
+				            settings.GasGiantBandSaturation.Evaluate(random.NextFloat()))),time))
+			            .ToArray();
+		            
+		            gas.FirstOffsetDomainRotationSpeed.Value = 0;
+	            }
+	            gas.AlbedoRotationSpeed.Value = -3;
+	            gas.FirstOffsetRotationSpeed.Value = 5;
+	            gas.SecondOffsetRotationSpeed.Value = 10;
+	            gas.SecondOffsetDomainRotationSpeed.Value = -25;
             }
             return planetData;
         }).ToList();

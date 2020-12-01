@@ -10,6 +10,7 @@ public class GameSettings : ScriptableObject
     public float DefaultZoneMass;
     public float DefaultViewDistance;
     public float DefaultMinimapDistance;
+    public int AsteroidMeshCount = 5;
     public PlanetSettings PlanetSettings;
     public ZoneGenerationSettings ZoneSettings;
 }

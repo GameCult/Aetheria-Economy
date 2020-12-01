@@ -488,7 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2eb8fe081f14940a7208cbdc3d97f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpeedMultiplier: 0.01
+  SpeedMultiplier: 0.0025
   FirstOffsetDomainRotationSpeed: 5
   FirstOffsetRotationSpeed: 5
   SecondOffsetDomainRotationSpeed: 10

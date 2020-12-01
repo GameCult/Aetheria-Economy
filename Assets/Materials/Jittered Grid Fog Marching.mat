@@ -43,21 +43,22 @@ Material:
     - _AlphaFloor: 0
     - _DepthBlend: 256
     - _DepthCeiling: 1792
-    - _Gamma: 0.75
+    - _Gamma: 0.3
     - _GridCeilingBlend: -300
     - _GridCeilingDensity: 0.01
     - _GridCeilingFollow: 0
     - _GridCeilingOffset: 0
-    - _GridFillDensity: 0.00001
-    - _GridFloorBlend: 10
-    - _GridFloorDensity: 1
-    - _GridFloorOffset: 0
+    - _GridFillDensity: 0.000006
+    - _GridFloorBlend: 100
+    - _GridFloorDensity: 4
+    - _GridFloorOffset: 29.9
     - _GridPatchBlend: 200
     - _GridPatchDensity: 6
     - _NoiseFrequency: 0.01
     - _NoiseSpeed: 0.02
-    - _NoiseStrength: 2
-    - _TintExponent: 20
+    - _NoiseStrength: 75
+    - _StepExponent: 2
+    - _TintExponent: 4
     m_Colors:
-    - _Tint: {r: 1.4980392, g: 1.4980392, b: 1.4980392, a: 1}
+    - _Tint: {r: 0.319, g: 0.319, b: 0.319, a: 1}
   m_BuildTextureStacks: []

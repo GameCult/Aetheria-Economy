@@ -7,6 +7,7 @@ using UniRx;
 using UnityEngine;
 using static Unity.Mathematics.math;
 using Unity.Mathematics;
+using Random = UnityEngine.Random;
 
 public class SectorRenderer : MonoBehaviour
 {
@@ -14,14 +15,17 @@ public class SectorRenderer : MonoBehaviour
     public GameSettings Settings;
     public Transform SectorRoot;
     public Transform SectorBrushes;
-    public CinemachineVirtualCamera SceneCamera;
+    public MeshRenderer SectorBoundaryBrush;
+    public CinemachineVirtualCamera[] SceneCameras;
     public Camera[] FogCameras;
     public Camera[] MinimapCameras;
     public Material FogMaterial;
     public float FogFarFadeFraction = .125f;
     public float FarPlaneDistanceMultiplier = 2;
-    public Mesh[] AsteroidMeshes;
-    public Material AsteroidMaterial;
+    public InstancedMesh[] AsteroidMeshes;
+
+    // public Mesh[] AsteroidMeshes;
+    // public Material AsteroidMaterial;
     
     [Header("Prefabs")]
     public GameObject Belt;
@@ -34,8 +38,11 @@ public class SectorRenderer : MonoBehaviour
     public Texture2D PlanetIcon;
     
     private Dictionary<Guid, PlanetObject> _planets = new Dictionary<Guid, PlanetObject>();
+    private Dictionary<Guid, InstancedMesh[]> _beltMeshes = new Dictionary<Guid, InstancedMesh[]>();
     private Zone _zone;
     private float _viewDistance;
+    
+    public float Time { get; set; }
 
     public float ViewDistance
     {
@@ -44,7 +51,8 @@ public class SectorRenderer : MonoBehaviour
             _viewDistance = value;
             foreach (var camera in FogCameras)
                 camera.orthographicSize = value;
-            SceneCamera.m_Lens.FarClipPlane = value * FarPlaneDistanceMultiplier;
+            foreach(var camera in SceneCameras)
+                camera.m_Lens.FarClipPlane = value * FarPlaneDistanceMultiplier;
             FogMaterial.SetFloat("_DepthCeiling", value - FogFarFadeFraction * value);
             FogMaterial.SetFloat("_DepthBlend", FogFarFadeFraction * value);
         }
@@ -69,9 +77,6 @@ public class SectorRenderer : MonoBehaviour
     {
         _zone = zone;
         SectorBrushes.localScale = zone.Data.Radius * 2 * Vector3.one;
-        _zone.ZoneDepth = 125;
-        _zone.ZoneDepthExponent = .25f;
-        _zone.ZoneDepthRadius = zone.Data.Radius * 2;
         ClearZone();
         foreach(var p in zone.Planets.Values)
             LoadPlanet(p);
@@ -86,6 +91,7 @@ public class SectorRenderer : MonoBehaviour
                 DestroyImmediate(planet.gameObject);
             }
             _planets.Clear();
+            _beltMeshes.Clear();
         }
     }
 
@@ -93,7 +99,10 @@ public class SectorRenderer : MonoBehaviour
     {
         if (planetData is AsteroidBeltData beltData)
         {
-            
+            var meshes = AsteroidMeshes.ToList();
+            while(meshes.Count > Settings.AsteroidMeshCount)
+                meshes.RemoveAt(Random.Range(0,meshes.Count));
+            _beltMeshes[planetData.ID] = meshes.ToArray();
         }
         else
         {
@@ -113,7 +122,7 @@ public class SectorRenderer : MonoBehaviour
 
                 var gas = (GasGiantObject) planet;
                 var gasGiant = _zone.PlanetInstances[planetData.ID] as GasGiant;
-                gasGiantData.Colors.Subscribe(c => gas.Body.material.SetTexture("_ColorRamp", c.ToGradient().ToTexture()));
+                gasGiantData.Colors.Subscribe(c => gas.Body.material.SetTexture("_ColorRamp", c.ToGradient(!(planetData is SunData)).ToTexture()));
                 gasGiantData.AlbedoRotationSpeed.Subscribe(f => gas.SunMaterial.AlbedoRotationSpeed = f);
                 gasGiantData.FirstOffsetRotationSpeed.Subscribe(f => gas.SunMaterial.FirstOffsetRotationSpeed = f);
                 gasGiantData.SecondOffsetRotationSpeed.Subscribe(f => gas.SunMaterial.SecondOffsetRotationSpeed = f);
@@ -139,41 +148,52 @@ public class SectorRenderer : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        foreach(var belt in _zone.AsteroidBelts.Values)
-        {
-            for (int i = 0; i < AsteroidMeshes.Length; i++)
-            {
-                var matrices = belt.Transforms
-                    .Skip((int) (((float)i / AsteroidMeshes.Length) * belt.Transforms.Length))
-                    .Take((int) (1f / AsteroidMeshes.Length * belt.Transforms.Length))
-                    .Select(v => Matrix4x4.TRS(
-                        new Vector3(v.x, _zone.GetHeight(v.xy), v.y),
-                        Quaternion.Euler(cos(v.z + (float) i / AsteroidMeshes.Length) * 100, sin(v.z + (float) i / AsteroidMeshes.Length) * 100, 0),
-                        Vector3.one * (v.w)))
-                    .ToArray();
-                Graphics.DrawMeshInstanced(AsteroidMeshes[i], 0, AsteroidMaterial, matrices);
-            }
-        }
-    }
-
     void LateUpdate()
     {
+        foreach(var belt in _zone.AsteroidBelts)
+        {
+            var meshes = _beltMeshes[belt.Key];
+            for (int i = 0; i < meshes.Length; i++)
+            {
+                var matrices = belt.Value.Transforms
+                    .Skip((int) (((float)i / meshes.Length) * belt.Value.Transforms.Length))
+                    .Take((int) (1f / meshes.Length * belt.Value.Transforms.Length))
+                    .Select((v, x) => Matrix4x4.TRS(
+                        new Vector3(v.x, _zone.GetHeight(v.xy), v.y),
+                        Quaternion.Euler(cos(v.z + (float) i / meshes.Length) * 100, sin(v.z + (float) i / meshes.Length) * 100, (float)x/belt.Value.Transforms.Length * 360),
+                        Vector3.one * v.w))
+                    .ToArray();
+                Graphics.DrawMeshInstanced(meshes[i].Mesh, 0, meshes[i].Material, matrices);
+            }
+        }
+        
         foreach (var planet in _planets)
         {
             var planetInstance = _zone.PlanetInstances[planet.Key];
             var p = _zone.GetOrbitPosition(planetInstance.BodyData.Orbit);
             planet.Value.transform.position = new Vector3(p.x, _zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, p.y);
-            if(planet.Value is GasGiantObject gasGiantObject && !(planet.Value is SunObject))
+            if(planet.Value is GasGiantObject gasGiantObject)
             {
-                var toParent = normalize(_zone.GetOrbitPosition(_zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);
-                gasGiantObject.SunMaterial.LightingDirection = new Vector3(toParent.x, 0, toParent.y); 
+                gasGiantObject.GravityWaves.material.SetFloat("_Phase", Time * Settings.PlanetSettings.WaveSpeed.Evaluate(planetInstance.BodyData.Mass.Value));
+                if(!(planet.Value is SunObject))
+                {
+                    var toParent = normalize(_zone.GetOrbitPosition(_zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);
+                    gasGiantObject.SunMaterial.LightingDirection = new Vector3(toParent.x, 0, toParent.y);
+                }
             }
         }
 
         var fogPos = FogCameraParent.position;
+        SectorBoundaryBrush.material.SetFloat("_Power", Settings.PlanetSettings.ZoneDepthExponent);
+        SectorBoundaryBrush.material.SetFloat("_Depth", Settings.PlanetSettings.ZoneDepth + Settings.PlanetSettings.ZoneBoundaryFog);
+        FogMaterial.SetFloat("_GridOffset", Settings.PlanetSettings.ZoneBoundaryFog);
         FogMaterial.SetVector("_GridTransform", new Vector4(fogPos.x,fogPos.z,_viewDistance*2));
-        
     }
+}
+
+[Serializable]
+public class InstancedMesh
+{
+    public Mesh Mesh;
+    public Material Material;
 }

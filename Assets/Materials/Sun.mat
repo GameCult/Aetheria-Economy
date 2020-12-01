@@ -68,18 +68,18 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Alpha: 200
+    - _Alpha: 500
     - _AlphaPower: 10000
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _DensityAlbedoExponent: 2
+    - _DensityAlbedoExponent: 3
     - _DensityDepthExponent: 1
     - _DepthBoost: 0.5
     - _DepthBoostPower: 0.68
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EdgeTransparency: 1
-    - _Emission: 300
+    - _Emission: 500
     - _EmissionFadePower: 2
     - _FadePower: 1
     - _FirstOffsetDepthExponent: -4

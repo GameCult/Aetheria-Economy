@@ -9,6 +9,9 @@ using static Unity.Mathematics.math;
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
 public class PlanetSettings
 {
+    public float ZoneDepthExponent;
+    public float ZoneDepth;
+    public float ZoneBoundaryFog;
     public ExponentialCurve GravityDepth;
     public ExponentialCurve GravityRadius;
     public ExponentialCurve WaveDepth;
@@ -59,9 +62,21 @@ public class ZoneGenerationSettings
     public float BeltProbability = .05f;
     public float BeltMassCeiling = 500f;
 
+    public ExponentialCurve AsteroidBeltWidth;
     public ExponentialCurve AsteroidCount;
     public ExponentialLerp AsteroidRotationSpeed;
 
     public float ResourceDensityMinimum = .1f;
     public float ResourceDensityMaximum = 1.5f;
+
+    public float SunColorSaturation = .75f;
+    public float SunSecondaryColorDistance = .25f;
+    public float SunLightSaturation = .5f;
+    public float SunFogTintSaturation = .5f;
+    
+    public ExponentialLerp GasGiantBandCount;
+    public float GasGiantBandColorSeparation = .25f;
+    public float GasGiantBandAltColorChance = .25f;
+    public ExponentialLerp GasGiantBandSaturation;
+    public ExponentialLerp GasGiantBandBrightness;
 }

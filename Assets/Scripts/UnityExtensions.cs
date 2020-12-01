@@ -96,9 +96,10 @@ public static class UnityExtensions
 		return tex;
 	}
 
-	public static Gradient ToGradient(this float4[] keys)
+	public static Gradient ToGradient(this float4[] keys, bool sharp = false)
 	{
 		var grad = new Gradient();
+		grad.mode = sharp ? GradientMode.Fixed : GradientMode.Blend;
 		grad.alphaKeys = new[] {new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1)};
 		grad.colorKeys = keys.Select(k => new GradientColorKey(k.xyz, k.w)).ToArray();
 		return grad;

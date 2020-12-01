@@ -1,6 +1,7 @@
 ﻿Shader "VolSample/Volume Render" {
 	Properties{
 		_MainTex( "", 2D ) = "white" {}
+		_StepExponent("Step Exponent", float) = 1
 		_Surface("Surface", 2D) = "black" {}
 		_Patch("Patch", 2D) = "black" {}
 		_Displacement("Displacement", 2D) = "black" {}
@@ -39,7 +40,7 @@
 	#define SAMPLE_COUNT 256
 
 	// spacing between samples
-	#define SAMPLE_PERIOD 8
+	//#define SAMPLE_PERIOD 16
 
 	// Shared shader code for pixel view rays, given screen pos and camera frame vectors.
 	// Camera vectors are passed in as this shader is run from a post proc camera, so the unity built-in values are not useful.
@@ -49,6 +50,8 @@
 	uniform float3 _CamForward;
 	uniform float3 _CamRight;
 	uniform float  _HalfFov;
+	
+	uniform float  _StepExponent;
 	
 	uniform float3 _GridTransform;
 	
@@ -101,45 +104,48 @@
 		return rz;
 	}
 
-	float4 VolumeSampleColor(float3 pos, float fade)
+	float4 VolumeSampleColor(float3 pos)
 	{
 	    float2 uv = -(pos.xz-_GridTransform.xy)/_GridTransform.z + float2(.5,.5);
 		
-	    half surface = tex2Dlod(_Surface, half4(uv, 0, 0)).r;
-	    half patch = tex2Dlod(_Patch, half4(uv, 0, 0)).r;
-	    half displacement = tex2Dlod(_Displacement, half4(uv, 0, 0)).r;
-		half4 lightTint = tex2Dlod(_TintTexture, half4(uv, 0, 0));
+	    float surface = tex2Dlod(_Surface, half4(uv, 0, 0)).r;
+	    float patch = tex2Dlod(_Patch, half4(uv, 0, 0)).r;
+	    float displacement = tex2Dlod(_Displacement, half4(uv, 0, 0)).r;
+		float4 lightTint = tex2Dlod(_TintTexture, half4(uv, 0, 0));
 		
-		half patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
-		half floorDist = -pos.y-(surface);//+_GridFloorOffset);
-		half floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
-		half fillDensity = saturate(-pos.y * _GridFillDensity);
-		
-        half fogDensity = patchDensity + saturate(floorDensity);
+		float noise = pow(triNoise3d(pos*_NoiseFrequency, _NoiseSpeed),2);// + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
+		pos.y += noise * _NoiseStrength;
+		float patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
+		float floorDist = -pos.y-(surface)+_GridFloorOffset;
+		float floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
+		float fillDensity = saturate(-pos.y * _GridFillDensity);
+		//
+        float fogDensity = patchDensity + max(0,floorDensity);
         //half blend = pow(max(-fogTex,1),2);
-		half noise = triNoise3d(pos*_NoiseFrequency, _NoiseSpeed) + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
-		float alpha = min(max(fogDensity * (1 - noise * _NoiseStrength) + fillDensity, _AlphaFloor), .99);
+		//float alpha = min(max(fogDensity * (1 - noise * _NoiseStrength) + fillDensity, _AlphaFloor), .99);
+		float alpha = min(max(max(fogDensity, 0) + fillDensity, _AlphaFloor), .99);
 		float albedo = (pow(1-alpha, _TintExponent));
-		return float4((albedo*_Tint*lightTint).rgb, (fade)*alpha);
+		return float4((albedo*_Tint*lightTint).rgb, alpha);
 		//return float4(tint.xxx,saturate(fogTex)) * _Tint;
 		// return max(clamp((-abs(pos.y+displacement)+patch)/_GridPatchDensity,0,1),
 		//         max(clamp((pos.y+(surface+_GridCeilingOffset)*_GridCeilingFollow)/_GridCeilingDensity,0,1),
 		//             clamp((-pos.y-(surface+_GridFloorOffset))/_GridFloorDensity,0,1)));
 	}
 	
-	void RaymarchStep( in float3 pos, in float stepSize, in float weight, in float fade, inout float4 sum )
+	void RaymarchStep( in float3 pos, in float stepSize, in float weight, inout float4 sum )
 	{
 		if( sum.a <= 0.99 )
 		{
-			float4 col = VolumeSampleColor( pos, fade );
+			float4 col = VolumeSampleColor( pos );
+			col.rgb *= weight;
 
 			//float lerpc = col.a * (1.0 - sum.a);
 			//sum = float4(lerp(sum.rgb, col.rgb, lerpc), sum.a + wt * stepSize * lerpc);
-			sum += weight * stepSize * col * col.a * (1.0 - sum.a);
+			sum += stepSize * col * col.a * (1.0 - sum.a);
 		}
 	}
 	
-	float4 RayMarch( in float3 origin, in float3 direction, in float zbuf, in float2 screenUV, out float depth )
+	float4 RayMarch( in float3 origin, in float3 direction, in float zbuf, in float2 screenUV )
 	{
 		half rand = nrand(screenUV + frac(_Time.x));
         //half rand = tex2D(_DitheringTex, screenUV * _DitheringCoords.xy + _DitheringCoords.zw).r;
@@ -147,24 +153,29 @@
 		float4 sum = (float4)0.;
 
 		// setup sampling
-		float step = SAMPLE_PERIOD,
-		rayDist = step * rand;
+		//float step = SAMPLE_PERIOD,
+		//rayDist = step * rand;
 
+		float offset = (1.0/SAMPLE_COUNT)*rand;
+		float prevRayDist = 0;
+		float rayDist = 0;
 		for( int i = 0; i < SAMPLE_COUNT; i++ )
 		{
+			prevRayDist = rayDist;
+			rayDist = pow((float)i/SAMPLE_COUNT + offset,_StepExponent) * _DepthCeiling;
 			float distToSurf = zbuf - rayDist;
 			if( distToSurf <= 0.001 || sum.a > .99) break;
 
-			float wt = (distToSurf >= step) ? 1. : distToSurf / step;
+			float step = rayDist - prevRayDist;
+			//float wt = (distToSurf >= step) ? 1. : distToSurf / step;
 
-			RaymarchStep( origin + rayDist * direction, step, wt, saturate((_DepthCeiling + _DepthBlend - rayDist) / _DepthBlend), sum );
+			RaymarchStep( origin + rayDist * direction, step, 1-rayDist/_DepthCeiling, sum );
 
 			rayDist += step;
 		}
 
-		depth = rayDist;
-
-		return pow( sum, 1 / _Gamma );
+		sum.rgb = pow( sum.rgb, 1 / _Gamma );
+		return sum;
 	}
 
 	struct v2f
@@ -237,30 +248,31 @@
 		// z buffer / scene depth for this pixel
 		float4 screenPos = UNITY_PROJ_COORD( i.screenPos );
 		float2 screenUV = screenPos.xy / screenPos.w;
+		
 		float depthSample = tex2Dproj( _CameraDepthTexture, screenPos ).r;
 		//float depthValue = LinearEyeDepth(depthSample);
 
 		float3 worldDepth = DepthToWorld(screenPos, depthSample);
 		float depthValue = length(worldDepth-rayOrigin);
+		
 		// march through volume
-		float rayDist;
-		float4 clouds = RayMarch( rayOrigin, rayDirection, depthValue, screenUV, rayDist );
+		float4 clouds = RayMarch( rayOrigin, rayDirection, depthValue, screenUV );
 
 			float3 bgcol = tex2Dlod( _MainTex, float4(q, 0., 0.) );
 		// add in camera render colours, if not zfar (so we exclude skybox)
-		if(clouds.a < .99 && depthValue < _DepthCeiling + _DepthBlend)
+		if(clouds.a < .99 && depthValue < _DepthCeiling)
 		{
 
 			// Blend out camera render when outside marching range
-			if( depthValue >= _DepthCeiling )
-				clouds.a = lerp(clouds.a, 1, (depthValue - _DepthCeiling) / _DepthBlend);
+			if( depthValue >= _DepthCeiling - _DepthBlend )
+				clouds.a = lerp(clouds.a, 1, (depthValue - (_DepthCeiling - _DepthBlend)) / _DepthBlend);
 			
-			clouds.xyz = lerp(clouds.xyz, bgcol, 1-clouds.a);
-			//clouds.xyz += (1. - clouds.a) * bgcol;
+			//clouds.xyz = lerp(clouds.xyz, bgcol, 1-clouds.a);
+			clouds.xyz += (1. - clouds.a) * bgcol;
 			// assume zbuffer represents opaque surface
-			clouds.a = 1.;
 			
 		}
+		clouds.a = 1.;
 		
 		// else
 		// {

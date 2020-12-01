@@ -10,9 +10,6 @@ using Random = Unity.Mathematics.Random;
 
 public class Zone
 {
-    public float ZoneDepth;
-    public float ZoneDepthExponent;
-    public float ZoneDepthRadius;
     //public HashSet<Guid> Planets = new HashSet<Guid>();
     public Dictionary<Guid, Entity> Entities = new Dictionary<Guid, Entity>();
     //public Dictionary<Guid, OrbitData> Orbits = new Dictionary<Guid, OrbitData>();
@@ -266,7 +263,7 @@ public class Zone
     }
     public float GetHeight(float2 position)
     {
-        float result = -PowerPulse(length(position)/ZoneDepthRadius, ZoneDepthExponent) * ZoneDepth;
+        float result = -PowerPulse(length(position)/(Data.Radius*2), _settings.ZoneDepthExponent) * _settings.ZoneDepth;
         foreach (var body in PlanetInstances.Values)
         {
             var p = (position - GetOrbitPosition(body.BodyData.Orbit));

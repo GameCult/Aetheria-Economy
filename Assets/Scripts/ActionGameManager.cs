@@ -76,5 +76,6 @@ public class ActionGameManager : MonoBehaviour
             Context.Time = Time.time;
         }
         Zone.Update(_time, Time.deltaTime);
+        SectorRenderer.Time = _time;
     }
 }

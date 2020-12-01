@@ -1312,6 +1312,7 @@
               <e p="Weapon.cs" t="Include" />
             </e>
             <e p="BlueprintData.cs" t="Include" />
+            <e p="ColorMath.cs" t="Include" />
             <e p="Corporations.cs" t="Include" />
             <e p="DatabaseCache.cs" t="Include" />
             <e p="DatabaseEntry.cs" t="Include" />

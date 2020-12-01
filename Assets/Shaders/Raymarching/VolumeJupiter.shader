@@ -163,7 +163,7 @@ Shader "Aetheria/Volume Jupiter"
 				float density = pow(max(depth,0),_DensityDepthExponent) * pow(albedo,_DensityAlbedoExponent) * max(1 - noise,0.01);
 				float lighting = pow(saturate(dot(normalize(rayPos),_LightingDirection)+_LightingWrap),_LightingPower) + _LightingAmbient;
 				alphaAccum += density;
-				accum += tex2D(_ColorRamp, rayPos.y+.5f) * lighting * density / depth;
+				accum += tex2D(_ColorRamp, secondSamplePosition.y+.5f) * lighting * density / depth;
 				            
 				rayPos += rayStep;
 			}
