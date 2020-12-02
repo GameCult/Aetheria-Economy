@@ -285,7 +285,6 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\IMetroMapOrderingAlgorithm.cs" />
      <Compile Include="Assets\Scripts\UI\ZoneShip.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\LayerArrays.cs" />
-     <Compile Include="Assets\Grid.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\CdtIntersections.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\GraphAlgorithms\TopologicalSort.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\RTree\RTree.cs" />
@@ -673,6 +672,8 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\BasicReflectionEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\IntEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\PointPairOrder.cs" />
+     <Compile Include="Assets\Scripts\AetheriaInput.cs" />
+     <Compile Include="Assets\Scripts\UI\MinimapCameraTrack.cs" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Shaders\Clouds.shader" />

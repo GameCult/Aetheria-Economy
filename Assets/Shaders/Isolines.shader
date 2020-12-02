@@ -3,17 +3,17 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Color ("Color", Color) = (.5,.5,.5,1)
-		_AngleColor ("Angle Color", Color) = (.5,.5,.5,1)
-		_DangerColor ("Danger Color", Color) = (.5,.5,.5,1)
-		_StartHeight("Start Height", Float) = 0
-		_HeightRange("Height Range", Float) = 100
+		[HDR] _Color ("Color", Color) = (.5,.5,.5,1)
+		[HDR] _AngleColor ("Angle Color", Color) = (.5,.5,.5,1)
+		[HDR] _DangerColor ("Danger Color", Color) = (.5,.5,.5,1)
+		_StartDepth("Start Depth", Float) = 0
+		_DepthRange("Height Range", Float) = 100
 		_LineWidth("Line Width", Float) = .1
 		_LineFade("Line Fade", Float) = .1
 		_AngleWidth("Angle Width", Float) = .1
 		_AngleFade("Angle Fade", Float) = .1
 		_DangerSteepness("Danger Steepness", Float) = .1
-		_ClipDistance("Clip Distance", Float) = 10
+		//_ClipDistance("Clip Distance", Float) = 10
 	}
 	SubShader
 	{
@@ -51,14 +51,14 @@
 			float4 _Color;
 			float4 _AngleColor;
 			float4 _DangerColor;
-			float _StartHeight;
-			float _HeightRange;
+			float _StartDepth;
+			float _DepthRange;
 			float _LineWidth;
 			float _LineFade;
 			float _AngleWidth;
 			float _AngleFade;
 			float _DangerSteepness;
-			float _ClipDistance;
+			//float _ClipDistance;
 			
 			v2f vert (appdata v)
 			{
@@ -78,23 +78,23 @@
 			
 			fixed4 frag (v2f IN) : SV_Target
 			{
-			    clip(1-length(IN.uvw)/_ClipDistance);
+			    //clip(1-length(IN.uvw)/_ClipDistance);
 				// sample the texture
 				half h = -tex2D(_MainTex, IN.uv).r;
 				float4 col = float4(0,0,0,0);
-				float blend = smoothstep(_StartHeight, _StartHeight + _HeightRange / 32, -h);
+				float blend = smoothstep(_StartDepth, _StartDepth + _DepthRange / 32, -h);
 				
 				// Calculate the direction in which the surface is facing
 				float2 plan = calcGrad(IN.uv, h);
 				
 				float planmag = length(plan);
 				
-				float dangerblend = smoothstep(0,_DangerSteepness * 600, planmag * _ScreenParams.y / unity_OrthoParams.y);
+				float dangerblend = smoothstep(0,_DangerSteepness, planmag * _ScreenParams.y / unity_OrthoParams.y);
 				
 				// Loop over isolines, computing a pseudo distance field for a number of height values
-				float spacing = _HeightRange / 20;
-				for (int ih = 0; ih < 20; ih++) {
-					float isoline = abs(h - _StartHeight + (ih*spacing));
+				float spacing = _DepthRange / 20;
+				for (int ih = 1; ih <= 21; ih++) {
+					float isoline = abs(h + _StartDepth + (ih*spacing));
 					//float2 isograd = float2(ddx(isoline), ddy(isoline));
 					//float isomag = length(isograd);
 					col += (1-smoothstep(_LineWidth, _LineWidth * _LineFade, isoline / planmag)) * lerp(_Color,_DangerColor,dangerblend) * blend; // Isoline

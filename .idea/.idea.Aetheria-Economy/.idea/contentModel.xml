@@ -9,7 +9,6 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="Grid.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">
@@ -53,6 +52,7 @@
         </e>
         <e p="Scripts" t="Include">
           <e p="ActionGameManager.cs" t="Include" />
+          <e p="AetheriaInput.cs" t="Include" />
           <e p="CameraPerlinOrbit.cs" t="Include" />
           <e p="CopyTransform.cs" t="Include" />
           <e p="CultClient.cs" t="Include" />
@@ -1807,6 +1807,7 @@
             <e p="IncrementField.cs" t="Include" />
             <e p="InputField.cs" t="Include" />
             <e p="LoginScreen.cs" t="Include" />
+            <e p="MinimapCameraTrack.cs" t="Include" />
             <e p="MouseHover.cs" t="Include" />
             <e p="PropertiesList.cs" t="Include" />
             <e p="PropertiesPanel.cs" t="Include" />

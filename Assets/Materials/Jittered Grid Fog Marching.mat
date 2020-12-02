@@ -41,8 +41,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AlphaFloor: 0
-    - _DepthBlend: 256
-    - _DepthCeiling: 1792
+    - _DepthBlend: 512
+    - _DepthCeiling: 4096
     - _Gamma: 0.3
     - _GridCeilingBlend: -300
     - _GridCeilingDensity: 0.01

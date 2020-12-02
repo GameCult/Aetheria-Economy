@@ -7,6 +7,7 @@ using MessagePack;
 using UniRx;
 using UnityEngine;
 using Unity.Mathematics;
+using UnityEngine.InputSystem;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 
@@ -16,10 +17,13 @@ public class ActionGameManager : MonoBehaviour
     public SectorRenderer SectorRenderer;
     public CinemachineVirtualCamera TopDownCamera;
     public CinemachineVirtualCamera FollowCamera;
+    //public PlayerInput Input;
     
     private DirectoryInfo _filePath;
     private bool _editMode;
     private float _time;
+    private AetheriaInput _input;
+    private int _zoomLevelIndex;
     
     public DatabaseCache Cache { get; private set; }
     public GameContext Context { get; private set; }
@@ -48,6 +52,16 @@ public class ActionGameManager : MonoBehaviour
         
         Zone = new Zone(Settings.PlanetSettings, zonePack);
         SectorRenderer.LoadZone(Zone);
+
+        _input = new AetheriaInput();
+        _input.Player.Enable();
+
+        _zoomLevelIndex = Settings.DefaultMinimapZoom;
+        _input.Player.MinimapZoom.performed += context =>
+        {
+            _zoomLevelIndex = (_zoomLevelIndex + 1) % Settings.MinimapZoomLevels.Length;
+            SectorRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
+        };
 
         ConsoleController.AddCommand("editmode", _ => ToggleEditMode());
         ConsoleController.AddCommand("savezone", args =>

@@ -16,6 +16,7 @@ public class SectorRenderer : MonoBehaviour
     public Transform SectorRoot;
     public Transform SectorBrushes;
     public MeshRenderer SectorBoundaryBrush;
+    public MeshRenderer MinimapGravityQuad;
     public CinemachineVirtualCamera[] SceneCameras;
     public Camera[] FogCameras;
     public Camera[] MinimapCameras;
@@ -28,7 +29,6 @@ public class SectorRenderer : MonoBehaviour
     // public Material AsteroidMaterial;
     
     [Header("Prefabs")]
-    public GameObject Belt;
     public PlanetObject Planet;
     public GasGiantObject GasGiant;
     public SunObject Sun;
@@ -41,6 +41,7 @@ public class SectorRenderer : MonoBehaviour
     private Dictionary<Guid, InstancedMesh[]> _beltMeshes = new Dictionary<Guid, InstancedMesh[]>();
     private Zone _zone;
     private float _viewDistance;
+    private float _maxDepth;
     
     public float Time { get; set; }
 
@@ -53,7 +54,7 @@ public class SectorRenderer : MonoBehaviour
                 camera.orthographicSize = value;
             foreach(var camera in SceneCameras)
                 camera.m_Lens.FarClipPlane = value * FarPlaneDistanceMultiplier;
-            FogMaterial.SetFloat("_DepthCeiling", value - FogFarFadeFraction * value);
+            FogMaterial.SetFloat("_DepthCeiling", value);
             FogMaterial.SetFloat("_DepthBlend", FogFarFadeFraction * value);
         }
     }
@@ -63,18 +64,22 @@ public class SectorRenderer : MonoBehaviour
         set
         {
             foreach(var camera in MinimapCameras)
-                camera.orthographicSize = value * 2;
+                camera.orthographicSize = value;
+            MinimapGravityQuad.transform.localScale = value * 2 * Vector3.one;
+            foreach (var planet in _planets.Values)
+                planet.Icon.transform.localScale = Settings.IconSize / 256 * value * Vector3.one;
         }
     }
 
     void Start()
     {
         ViewDistance = Settings.DefaultViewDistance;
-        MinimapDistance = Settings.DefaultMinimapDistance;
+        MinimapDistance = Settings.MinimapZoomLevels[Settings.DefaultMinimapZoom];
     }
 
     public void LoadZone(Zone zone)
     {
+        _maxDepth = 0;
         _zone = zone;
         SectorBrushes.localScale = zone.Data.Radius * 2 * Vector3.one;
         ClearZone();
@@ -142,7 +147,11 @@ public class SectorRenderer : MonoBehaviour
             var planetInstance = _zone.PlanetInstances[planetData.ID];
             planetInstance.BodyRadius.Subscribe(f => planet.Body.transform.localScale = f * Vector3.one);
             planetInstance.GravityWellRadius.Subscribe(f => planet.GravityWell.transform.localScale = f * Vector3.one);
-            planetInstance.GravityWellDepth.Subscribe(f => planet.GravityWell.material.SetFloat("_Depth", f));
+            planetInstance.GravityWellDepth.Subscribe(f =>
+            {
+                if (f > _maxDepth) _maxDepth = f;
+                planet.GravityWell.material.SetFloat("_Depth", f);
+            });
 
             _planets.Add(planetData.ID, planet);
         }
@@ -186,8 +195,15 @@ public class SectorRenderer : MonoBehaviour
         var fogPos = FogCameraParent.position;
         SectorBoundaryBrush.material.SetFloat("_Power", Settings.PlanetSettings.ZoneDepthExponent);
         SectorBoundaryBrush.material.SetFloat("_Depth", Settings.PlanetSettings.ZoneDepth + Settings.PlanetSettings.ZoneBoundaryFog);
+        var startDepth = Zone.PowerPulse(Settings.MinimapZoneGravityRange, Settings.PlanetSettings.ZoneDepthExponent) * Settings.PlanetSettings.ZoneDepth;
+        var depthRange = Settings.PlanetSettings.ZoneDepth - startDepth + _maxDepth;
+        MinimapGravityQuad.material.SetFloat("_StartDepth", startDepth);
+        MinimapGravityQuad.material.SetFloat("_DepthRange", depthRange);
         FogMaterial.SetFloat("_GridOffset", Settings.PlanetSettings.ZoneBoundaryFog);
         FogMaterial.SetVector("_GridTransform", new Vector4(fogPos.x,fogPos.z,_viewDistance*2));
+        var gravPos = MinimapGravityQuad.transform.position;
+        gravPos.y = -Settings.PlanetSettings.ZoneDepth - _maxDepth;
+        MinimapGravityQuad.transform.position = gravPos;
     }
 }
 
