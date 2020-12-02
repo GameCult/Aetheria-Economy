@@ -15,8 +15,10 @@ public class ActionGameManager : MonoBehaviour
 {
     public GameSettings Settings;
     public SectorRenderer SectorRenderer;
+    public MapView MapView;
     public CinemachineVirtualCamera TopDownCamera;
     public CinemachineVirtualCamera FollowCamera;
+    public GameObject GameplayUI;
     //public PlayerInput Input;
     
     private DirectoryInfo _filePath;
@@ -55,12 +57,30 @@ public class ActionGameManager : MonoBehaviour
 
         _input = new AetheriaInput();
         _input.Player.Enable();
+        _input.Global.Enable();
+        _input.UI.Enable();
 
         _zoomLevelIndex = Settings.DefaultMinimapZoom;
         _input.Player.MinimapZoom.performed += context =>
         {
             _zoomLevelIndex = (_zoomLevelIndex + 1) % Settings.MinimapZoomLevels.Length;
             SectorRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
+        };
+
+        _input.Global.MapToggle.performed += context =>
+        {
+            MapView.enabled = !MapView.enabled;
+            GameplayUI.SetActive(!MapView.enabled);
+            if (MapView.enabled)
+            {
+                MapView.BindInput(_input.UI);
+                _input.Player.Disable();
+            }
+            else
+            {
+                _input.Player.Enable();
+                SectorRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
+            }
         };
 
         ConsoleController.AddCommand("editmode", _ => ToggleEditMode());

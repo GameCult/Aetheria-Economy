@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Resources/Aetheria-Economy.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Resources/Aetheria.inputactions'
 
 using System;
 using System.Collections;
@@ -12,7 +12,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     public @AetheriaInput()
     {
         asset = InputActionAsset.FromJson(@"{
-    ""name"": ""Aetheria-Economy"",
+    ""name"": ""Aetheria"",
     ""maps"": [
         {
             ""name"": ""Player"",
@@ -344,6 +344,14 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""1a877e6d-221e-4815-a289-aa93412c8d87"",
                     ""expectedControlType"": ""Quaternion"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Drag"",
+                    ""type"": ""Value"",
+                    ""id"": ""0c96ec22-9571-46c8-94bf-199e70e919ed"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -766,6 +774,44 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""618fb60f-5dc7-47ec-8dbf-fdc3d4c515a1"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": ""ScaleVector2(x=1.25,y=1.25)"",
+                    ""groups"": """",
+                    ""action"": ""Drag"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Global"",
+            ""id"": ""2e2023b8-ce3b-4cb3-a12a-ff4ac610f11b"",
+            ""actions"": [
+                {
+                    ""name"": ""Map Toggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""e43f020b-dec0-43d2-a83b-1390d45819be"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""7eadec25-7b3f-4d69-92b7-c756f5f9b0dd"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Map Toggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -851,6 +897,10 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_UI_RightClick = m_UI.FindAction("RightClick", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        m_UI_Drag = m_UI.FindAction("Drag", throwIfNotFound: true);
+        // Global
+        m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
+        m_Global_MapToggle = m_Global.FindAction("Map Toggle", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -967,6 +1017,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_UI_RightClick;
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
+    private readonly InputAction m_UI_Drag;
     public struct UIActions
     {
         private @AetheriaInput m_Wrapper;
@@ -981,6 +1032,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @RightClick => m_Wrapper.m_UI_RightClick;
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
+        public InputAction @Drag => m_Wrapper.m_UI_Drag;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1020,6 +1072,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @TrackedDeviceOrientation.started -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnTrackedDeviceOrientation;
+                @Drag.started -= m_Wrapper.m_UIActionsCallbackInterface.OnDrag;
+                @Drag.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnDrag;
+                @Drag.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnDrag;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1054,10 +1109,46 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
+                @Drag.started += instance.OnDrag;
+                @Drag.performed += instance.OnDrag;
+                @Drag.canceled += instance.OnDrag;
             }
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Global
+    private readonly InputActionMap m_Global;
+    private IGlobalActions m_GlobalActionsCallbackInterface;
+    private readonly InputAction m_Global_MapToggle;
+    public struct GlobalActions
+    {
+        private @AetheriaInput m_Wrapper;
+        public GlobalActions(@AetheriaInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @MapToggle => m_Wrapper.m_Global_MapToggle;
+        public InputActionMap Get() { return m_Wrapper.m_Global; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(GlobalActions set) { return set.Get(); }
+        public void SetCallbacks(IGlobalActions instance)
+        {
+            if (m_Wrapper.m_GlobalActionsCallbackInterface != null)
+            {
+                @MapToggle.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMapToggle;
+                @MapToggle.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMapToggle;
+                @MapToggle.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMapToggle;
+            }
+            m_Wrapper.m_GlobalActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @MapToggle.started += instance.OnMapToggle;
+                @MapToggle.performed += instance.OnMapToggle;
+                @MapToggle.canceled += instance.OnMapToggle;
+            }
+        }
+    }
+    public GlobalActions @Global => new GlobalActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1122,5 +1213,10 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        void OnDrag(InputAction.CallbackContext context);
+    }
+    public interface IGlobalActions
+    {
+        void OnMapToggle(InputAction.CallbackContext context);
     }
 }

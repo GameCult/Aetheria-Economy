@@ -54,7 +54,6 @@
           <e p="ActionGameManager.cs" t="Include" />
           <e p="AetheriaInput.cs" t="Include" />
           <e p="CameraPerlinOrbit.cs" t="Include" />
-          <e p="CopyTransform.cs" t="Include" />
           <e p="CultClient.cs" t="Include" />
           <e p="Editor" t="Include">
             <e p="DatabaseInspector.cs" t="Include" />
@@ -1248,10 +1247,12 @@
           <e p="RethinkConnection.cs" t="Include" />
           <e p="Sector Display" t="Include">
             <e p="BlueNoiseProvider.cs" t="Include" />
+            <e p="CopyTransform.cs" t="Include" />
             <e p="GameSettings.cs" t="Include" />
             <e p="GasGiantObject.cs" t="Include" />
             <e p="GradientMapper.cs" t="Include" />
             <e p="GravityObject.cs" t="Include" />
+            <e p="MapView.cs" t="Include" />
             <e p="PlanetObject.cs" t="Include" />
             <e p="SectorRenderer.cs" t="Include" />
             <e p="SnapToGrid.cs" t="Include" />

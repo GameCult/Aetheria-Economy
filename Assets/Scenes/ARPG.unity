@@ -4679,6 +4679,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828461d20e2142546814879a0a0f44b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &346000246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 346000247}
+  m_Layer: 5
+  m_Name: Gameplay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &346000247
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 346000246}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 488443579}
+  m_Father: {fileID: 761574181}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &355950000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5595,7 +5631,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 761574181}
+    m_TransformParent: {fileID: 346000247}
     m_Modifications:
     - target: {fileID: 2352149239973948581, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
@@ -5625,17 +5661,17 @@ PrefabInstance:
     - target: {fileID: 2352149240678857104, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2352149240678857104, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2352149240678857104, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2352149240678857104, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
@@ -5645,7 +5681,7 @@ PrefabInstance:
     - target: {fileID: 2352149240678857104, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2352149240678857104, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
@@ -5665,12 +5701,12 @@ PrefabInstance:
     - target: {fileID: 2352149240678857104, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 10
+      value: -900
       objectReference: {fileID: 0}
     - target: {fileID: 2352149240678857104, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 10
+      value: -480.1105
       objectReference: {fileID: 0}
     - target: {fileID: 2352149240678857104, guid: f032e3ceed591844e80327e865f2c582,
         type: 3}
@@ -5752,7 +5788,7 @@ GameObject:
   - component: {fileID: 488792362}
   - component: {fileID: 488792363}
   m_Layer: 0
-  m_Name: GravityCamera
+  m_Name: Map Gravity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9637,7 +9673,7 @@ RectTransform:
   - {fileID: 53415401}
   - {fileID: 721750121}
   - {fileID: 1723136546}
-  - {fileID: 488443579}
+  - {fileID: 346000247}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11874,6 +11910,7 @@ GameObject:
   - component: {fileID: 1009503731}
   - component: {fileID: 1009503732}
   - component: {fileID: 1009503733}
+  - component: {fileID: 1009503734}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -11912,8 +11949,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   SectorRenderer: {fileID: 1009503731}
+  MapView: {fileID: 1009503734}
   TopDownCamera: {fileID: 887677622}
   FollowCamera: {fileID: 887677622}
+  GameplayUI: {fileID: 346000246}
 --- !u!4 &1009503730
 Transform:
   m_ObjectHideFlags: 0
@@ -12127,6 +12166,23 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 2115559089}
+--- !u!114 &1009503734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009503727}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d9e45f376fcfe409f3a4f26ccb4f3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Main: {fileID: 2115559089}
+  MinimapGravity: {fileID: 488792362}
+  Minimap: {fileID: 970624071}
+  GravityRenderer: {fileID: 509767789}
+  ZoomSpeed: 0.001
 --- !u!1 &1015214589
 GameObject:
   m_ObjectHideFlags: 0
@@ -13723,7 +13779,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1273980439
 RectTransform:
   m_ObjectHideFlags: 0

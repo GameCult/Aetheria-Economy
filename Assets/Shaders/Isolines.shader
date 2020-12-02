@@ -97,7 +97,7 @@
 					float isoline = abs(h + _StartDepth + (ih*spacing));
 					//float2 isograd = float2(ddx(isoline), ddy(isoline));
 					//float isomag = length(isograd);
-					col += (1-smoothstep(_LineWidth, _LineWidth * _LineFade, isoline / planmag)) * lerp(_Color,_DangerColor,dangerblend) * blend; // Isoline
+					col += (1-smoothstep(_LineWidth, _LineWidth * _LineFade, isoline / planmag * _ScreenParams.y)) * lerp(_Color,_DangerColor,dangerblend) * blend; // Isoline
 				}
 				
 				float angle = atan2(plan.y,plan.x) / 3.1415926536 + 1;
@@ -115,7 +115,7 @@
 				    float isoline = abs(angle - ia / 6.0);// ;
 					//float2 isograd = float2(ddx_fine(isoline), ddy_fine(isoline));
 					//float isomag = min(length(isograd),0.025); // isomag is huge over atan2 boundary so clamp it to avoid false positives
-					col += (1-smoothstep(_AngleWidth, _AngleWidth * _AngleFade, isoline / (angmag))) * lerp(_AngleColor,_DangerColor,dangerblend) * blend; // Isoline
+					col += (1-smoothstep(_AngleWidth, _AngleWidth * _AngleFade, isoline / angmag * _ScreenParams.y)) * lerp(_AngleColor,_DangerColor,dangerblend) * blend; // Isoline
 				}
                 
                 //return float4(1,0,0,1);
