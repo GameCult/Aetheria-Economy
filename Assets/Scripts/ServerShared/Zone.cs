@@ -19,7 +19,7 @@ public class Zone
     public Dictionary<Guid, Orbit> Orbits = new Dictionary<Guid, Orbit>();
     public Dictionary<Guid, AsteroidBelt> AsteroidBelts = new Dictionary<Guid, AsteroidBelt>();
     
-    private HashSet<Guid> _updatedOrbits;
+    private HashSet<Guid> _updatedOrbits = new HashSet<Guid>();
 
     private PlanetSettings _settings;
     private float _time;
@@ -44,13 +44,13 @@ public class Zone
             switch (planet)
             {
                 case AsteroidBeltData belt:
-                    AsteroidBelts[belt.ID] = new AsteroidBelt(belt.Asteroids.Length);
+                    AsteroidBelts[belt.ID] = new AsteroidBelt(belt);
                     break;
                 case GasGiantData gas:
-                    PlanetInstances.Add(gas.ID, new GasGiant(settings, gas));
+                    PlanetInstances.Add(gas.ID, new GasGiant(settings, gas, Orbits[planet.Orbit]));
                     break;
                 default:
-                    PlanetInstances.Add(planet.ID, new Planet(settings, planet));
+                    PlanetInstances.Add(planet.ID, new Planet(settings, planet, Orbits[planet.Orbit]));
                     break;
             }
         }
@@ -79,7 +79,7 @@ public class Zone
     public void Update(float time, float deltaTime)
     {
         _time = time;
-        _updatedOrbits = new HashSet<Guid>();
+        _updatedOrbits.Clear();
         foreach (var orbit in Orbits)
         {
             orbit.Value.PreviousPosition = orbit.Value.Position;
@@ -266,24 +266,24 @@ public class Zone
         float result = -PowerPulse(length(position)/(Data.Radius*2), _settings.ZoneDepthExponent) * _settings.ZoneDepth;
         foreach (var body in PlanetInstances.Values)
         {
-            var p = (position - GetOrbitPosition(body.BodyData.Orbit));
-            var dist = length(p);
+            var p = (position - body.Orbit.Position); //GetOrbitPosition(body.BodyData.Orbit)
+            var dist = lengthsq(p);
             var gravityRadius = body.GravityWellRadius.Value;
-            if (dist < gravityRadius)
+            if (dist < gravityRadius*gravityRadius)
             {
                 var depth = body.GravityWellDepth.Value;
-                result -= PowerPulse(dist / gravityRadius, body.BodyData.GravityDepthExponent.Value) * depth;
+                result -= PowerPulse(sqrt(dist) / gravityRadius, body.BodyData.GravityDepthExponent.Value) * depth;
             }
 
             if (body is GasGiant gas)
             {
                 var waveRadius = gas.GravityWavesRadius.Value;
-                if(dist < waveRadius)
+                if(dist < waveRadius*waveRadius)
                 {
                     var depth = gas.GravityWavesDepth.Value;
                     var frequency = _settings.WaveFrequency.Evaluate(body.BodyData.Mass.Value);
                     var speed = _settings.WaveSpeed.Evaluate(body.BodyData.Mass.Value);
-                    result -= RadialWaves(dist / waveRadius, 8, 1.5f, frequency, _time * speed) * depth;
+                    result -= RadialWaves(sqrt(dist) / waveRadius, 8, 1.5f, frequency, _time * speed) * depth;
                 }
             }
         }
@@ -337,13 +337,15 @@ public class Zone
 
 public class Planet
 {
+    public Orbit Orbit;
     public BodyData BodyData;
     public ReadOnlyReactiveProperty<float> GravityWellDepth;
     public ReadOnlyReactiveProperty<float> GravityWellRadius;
     public ReadOnlyReactiveProperty<float> BodyRadius;
 
-    public Planet(PlanetSettings settings, BodyData data)
+    public Planet(PlanetSettings settings, BodyData data, Orbit orbit)
     {
+        Orbit = orbit;
         BodyData = data;
         BodyRadius = new ReadOnlyReactiveProperty<float>(
             data.Mass.CombineLatest(data.BodyRadiusMultiplier,
@@ -364,7 +366,7 @@ public class GasGiant : Planet
     public ReadOnlyReactiveProperty<float> GravityWavesRadius;
     public ReadOnlyReactiveProperty<float> GravityWavesSpeed;
 
-    public GasGiant(PlanetSettings settings, GasGiantData data) : base(settings, data)
+    public GasGiant(PlanetSettings settings, GasGiantData data, Orbit orbit) : base(settings, data, orbit)
     {
         GasGiantData = data;
         GravityWavesDepth = new ReadOnlyReactiveProperty<float>(
@@ -386,16 +388,18 @@ public class GasGiant : Planet
 
 public class AsteroidBelt
 {
+    public AsteroidBeltData Data;
     public float4[] Transforms; // x, y, rotation, scale
     public float4[] PreviousTransforms; // x, y, rotation, scale
     public Dictionary<int, float> RespawnTimers = new Dictionary<int, float>();
     public Dictionary<int, float> Damage = new Dictionary<int, float>();
     public Dictionary<(Guid, int), float> MiningAccumulator = new Dictionary<(Guid, int), float>();
 
-    public AsteroidBelt(int count)
+    public AsteroidBelt(AsteroidBeltData data)
     {
-        Transforms = new float4[count];
-        PreviousTransforms = new float4[count];
+        Data = data;
+        Transforms = new float4[data.Asteroids.Length];
+        PreviousTransforms = new float4[data.Asteroids.Length];
     }
 }
 

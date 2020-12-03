@@ -14,6 +14,7 @@ public class GameSettings : ScriptableObject
     public int DefaultMinimapZoom;
     public float IconSize;
     public int AsteroidMeshCount = 5;
+    public float MinimapAsteroidSize = 3;
     public PlanetSettings PlanetSettings;
     public ZoneGenerationSettings ZoneSettings;
 }

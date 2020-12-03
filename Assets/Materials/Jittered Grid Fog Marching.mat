@@ -57,6 +57,7 @@ Material:
     - _NoiseFrequency: 0.01
     - _NoiseSpeed: 0.02
     - _NoiseStrength: 75
+    - _SafetyDistance: 50
     - _StepExponent: 2
     - _TintExponent: 4
     m_Colors:

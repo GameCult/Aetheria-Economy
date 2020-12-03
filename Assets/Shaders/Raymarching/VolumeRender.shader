@@ -22,6 +22,7 @@
 		_NoiseStrength("Noise Strength", float) = 1
 		_NoiseFrequency("Noise Frequency", float) = 1
 		_NoiseSpeed("Noise Speed", float) = 1
+		_SafetyDistance("Safety Distance", float) = 20
 	}
 	
 	CGINCLUDE;
@@ -70,7 +71,8 @@
 				_DepthBlend,
 				_NoiseFrequency,
 				_NoiseStrength,
-				_NoiseSpeed;
+				_NoiseSpeed,
+				_SafetyDistance;
 	
 	// Dithering
 	sampler2D _DitheringTex;
@@ -109,27 +111,27 @@
 	    float2 uv = -(pos.xz-_GridTransform.xy)/_GridTransform.z + float2(.5,.5);
 		
 	    float surface = tex2Dlod(_Surface, half4(uv, 0, 0)).r;
-	    float patch = tex2Dlod(_Patch, half4(uv, 0, 0)).r;
-	    float displacement = tex2Dlod(_Displacement, half4(uv, 0, 0)).r;
-		float4 lightTint = tex2Dlod(_TintTexture, half4(uv, 0, 0));
+			float4 lightTint = tex2Dlod(_TintTexture, half4(uv, 0, 0));
+			float fillDensity = saturate(-pos.y * _GridFillDensity);
+
+		if(pos.y + surface - _GridFloorOffset < _SafetyDistance)
+		{
+			float patch = tex2Dlod(_Patch, half4(uv, 0, 0)).r;
+			float displacement = tex2Dlod(_Displacement, half4(uv, 0, 0)).r;
 		
-		float noise = pow(triNoise3d(pos*_NoiseFrequency, _NoiseSpeed),2);// + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
-		pos.y += noise * _NoiseStrength;
-		float patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
-		float floorDist = -pos.y-(surface)+_GridFloorOffset;
-		float floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
-		float fillDensity = saturate(-pos.y * _GridFillDensity);
-		//
-        float fogDensity = patchDensity + max(0,floorDensity);
-        //half blend = pow(max(-fogTex,1),2);
-		//float alpha = min(max(fogDensity * (1 - noise * _NoiseStrength) + fillDensity, _AlphaFloor), .99);
-		float alpha = min(max(max(fogDensity, 0) + fillDensity, _AlphaFloor), .99);
-		float albedo = (pow(1-alpha, _TintExponent));
-		return float4((albedo*_Tint*lightTint).rgb, alpha);
-		//return float4(tint.xxx,saturate(fogTex)) * _Tint;
-		// return max(clamp((-abs(pos.y+displacement)+patch)/_GridPatchDensity,0,1),
-		//         max(clamp((pos.y+(surface+_GridCeilingOffset)*_GridCeilingFollow)/_GridCeilingDensity,0,1),
-		//             clamp((-pos.y-(surface+_GridFloorOffset))/_GridFloorDensity,0,1)));
+			float noise = pow(triNoise3d(pos*_NoiseFrequency, _NoiseSpeed),2);// + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
+			pos.y += noise * _NoiseStrength;
+			float patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
+			float floorDist = -pos.y-(surface)+_GridFloorOffset;
+			float floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
+			float fogDensity = patchDensity + max(0,floorDensity);
+			float alpha = min(max(max(fogDensity, 0) + fillDensity, _AlphaFloor), .99);
+			float albedo = (pow(1-alpha, _TintExponent));
+			return float4((albedo*_Tint*lightTint).rgb, alpha);
+		}
+
+		float albedo = pow(1-fillDensity, _TintExponent);
+		return float4((albedo*_Tint*lightTint).rgb, fillDensity);
 	}
 	
 	void RaymarchStep( in float3 pos, in float stepSize, in float weight, inout float4 sum )
