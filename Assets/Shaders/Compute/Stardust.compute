@@ -1,0 +1,132 @@
+﻿//Tell unity that we have defined a kernel
+#pragma kernel UpdateParticles
+
+//Store Particle data in a struct
+struct Particle
+{
+	float3 position;
+	float3 color;
+	float size;
+};
+
+RWStructuredBuffer<Particle> particles;
+
+// Use this texture to spawn particles over terrain
+Texture2D Heightmap;
+SamplerState samplerHeightmap; 
+
+// Use this texture to choose the color of the particle
+Texture2D HueTexture;
+SamplerState samplerHueTexture; 
+
+uniform float4x4 noiseOffsetMatrix;
+
+float time;
+float3 transform;
+float spacing;
+float ceilingHeight;
+float floorHeight;
+float maximumSize;
+float minimumSize;
+float heightExponent;
+uint span;
+
+//================
+//Bonus: Random number generator
+//Using xorshift, and thread ID as a seed. If you only use xorshift, 
+//there is too much correlation, so we first hash the seed id in RandomFirst()
+//See: http://www.reedbeta.com/blog/2013/01/12/quick-and-easy-gpu-random-numbers-in-d3d11/
+
+uint rngState;
+
+#define UINT_MAXF 4294967290.0f
+
+
+float RandomFirst(uint a, uint b)
+{
+	//wang hash the seed first to get rid of correlation.
+    a = (a ^ 61) ^ (a >> 16);
+    a *= 9;
+    a = a ^ (a >> 4);
+    a *= 0x27d4eb2d;
+	a = a ^ (a >> 15);
+	
+	b -= (b<<6);
+	b ^= (a>>17);
+	b -= (b<<9);
+	b ^= (a<<4);
+	b -= (b<<3);
+	b ^= (b<<10);
+	b ^= (b>>15);
+
+	rngState = a ^ b;
+
+	return (float)rngState / UINT_MAXF;
+}
+
+
+float RandomValue()
+{
+	// Xorshift algorithm from George Marsaglia's paper
+	//You could use RandomFirst() all the time - it'd just be more expensive.
+    rngState ^= (rngState << 13);
+    rngState ^= (rngState >> 17);
+    rngState ^= (rngState << 5);
+    return (float) rngState / UINT_MAXF;
+}
+
+#define HASHSCALE 0.1031
+
+float hash(float p)
+{
+	float3 p3  = frac(p.xxx * HASHSCALE);
+	p3 += dot(p3, p3.yzx + 19.19);
+	return frac((p3.x + p3.y) * p3.z);
+}
+
+float fade(float t) { return t*t*t*(t*(6.*t-15.)+10.); }
+
+float grad(float hash, float p)
+{
+	int i = int(1e4*hash);
+	return (i & 1) == 0 ? p : -p;
+}
+
+float perlinNoise1D(float p)
+{
+	float pi = floor(p), pf = p - pi, w = fade(pf);
+	return lerp(grad(hash(pi), pf), grad(hash(pi + 1.0), pf - 1.0), w) * 2.0;
+}
+
+const float4 irrationals = float4(1.41421, 3.14159, 2.71828, 1.61803);
+float noise(float p)
+{
+	return (sin(irrationals.x * p) + sin(irrationals.y * p) + sin(irrationals.z * p) + sin(irrationals.w * p))/4;
+}
+
+const uint offset = 65535;
+const float randomRange = 2048;
+
+//Since we only have a long list of particles, our thread group is just a flat block of threads in the x direction
+//128 threads in a group is a good amount for a couple of reasons
+[numthreads(128, 1, 1)]
+void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThreadID)
+{
+	int x = id % span - span / 2;
+	int y = id / span - span / 2;
+
+	int xt = (int)(transform.x / spacing);
+	int yt = (int)(transform.y / spacing);
+	uint xp = x + xt + offset;
+	uint yp = y + yt + offset;
+
+	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomFirst(xp, yp), 0.0f), 0.0f).rgb;
+	
+	particles[id.x].position = float3(
+		x * spacing + xt * spacing + perlinNoise1D(RandomValue()*1024+time)*spacing, 0,
+		y * spacing + yt * spacing + perlinNoise1D(RandomValue()*1024+time)*spacing);
+	float2 puv = float2(.5,.5) - (particles[id.x].position.xz - transform.xy) / (transform.z);
+    float gravDepth = Heightmap.SampleLevel(samplerHeightmap, puv, 0.0f).r;
+    particles[id.x].position.y = lerp(-gravDepth + floorHeight, ceilingHeight, pow(RandomValue(), heightExponent)) + perlinNoise1D(RandomValue()*1024+time)*spacing/2;
+	particles[id.x].size = lerp(minimumSize, maximumSize, RandomValue());
+}

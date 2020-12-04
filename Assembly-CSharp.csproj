@@ -675,6 +675,7 @@
      <Compile Include="Assets\Scripts\AetheriaInput.cs" />
      <Compile Include="Assets\Scripts\UI\MinimapCameraTrack.cs" />
      <Compile Include="Assets\Scripts\Sector Display\MapView.cs" />
+     <Compile Include="Assets\Shaders\Compute\Stardust.cs" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Shaders\Clouds.shader" />
@@ -687,6 +688,8 @@
      <None Include="Assets\Shaders\GalaxyMap.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoise3D.cginc" />
+     <None Include="Assets\Shaders\Compute\Stardust.compute" />
+     <None Include="Assets\Shaders\Compute\Stardust.shader" />
      <None Include="Assets\Shaders\Brushes\PowerBrush.shader" />
      <None Include="Assets\Shaders\DitheredParticles.shader" />
      <None Include="Assets\Shaders\Raymarching\VolumeJupiter.shader" />

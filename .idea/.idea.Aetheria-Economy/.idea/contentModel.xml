@@ -1840,6 +1840,11 @@
             <e p="SimplexBrush.shader" t="Include" />
           </e>
           <e p="Clouds.shader" t="Include" />
+          <e p="Compute" t="Include">
+            <e p="Stardust.compute" t="Include" />
+            <e p="Stardust.cs" t="Include" />
+            <e p="Stardust.shader" t="Include" />
+          </e>
           <e p="Dither Functions.cginc" t="Include" />
           <e p="DitheredParticles.shader" t="Include" />
           <e p="GalaxyMap.shader" t="Include" />
