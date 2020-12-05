@@ -56,7 +56,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AngleFade: 3
+    - _AngleFade: 5
     - _AngleWidth: 100
     - _BumpScale: 1
     - _ClipDistance: 1000
@@ -69,7 +69,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _HeightRange: 50
-    - _LineFade: 3
+    - _LineFade: 5
     - _LineWidth: 100
     - _Metallic: 0
     - _Mode: 0

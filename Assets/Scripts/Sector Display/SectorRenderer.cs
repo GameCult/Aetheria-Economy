@@ -18,7 +18,7 @@ public class SectorRenderer : MonoBehaviour
     public Transform SectorBrushes;
     public MeshRenderer SectorBoundaryBrush;
     public MeshRenderer MinimapGravityQuad;
-    public CinemachineVirtualCamera[] SceneCameras;
+    public CinemachineVirtualCamera SceneCamera;
     public Camera[] FogCameras;
     public Camera[] MinimapCameras;
     public Material FogMaterial;
@@ -27,6 +27,12 @@ public class SectorRenderer : MonoBehaviour
     public InstancedMesh[] AsteroidMeshes;
     public int AsteroidSpritesheetWidth = 4;
     public int AsteroidSpritesheetHeight = 4;
+    public LODHandler LODHandler;
+    public bool Tour;
+    public float TourSwitchTime = 5f;
+    public float TourFollowDistance = 30f;
+    public float TourHeightOffset = 15;
+    public float TourFollowOffsetDegrees;
 
     // public Mesh[] AsteroidMeshes;
     // public Material AsteroidMaterial;
@@ -49,7 +55,14 @@ public class SectorRenderer : MonoBehaviour
     private Zone _zone;
     private float _viewDistance;
     private float _maxDepth;
-    
+
+    private int _tourIndex = -1;
+    private float _tourTimer;
+    private List<(Transform, Transform)> _tourPlanets = new List<(Transform, Transform)>();
+    private CinemachineTransposer _transposer;
+    private PlanetObject _root;
+    private bool _rootFound;
+
     public float Time { get; set; }
 
     public float ViewDistance
@@ -59,8 +72,7 @@ public class SectorRenderer : MonoBehaviour
             _viewDistance = value;
             foreach (var camera in FogCameras)
                 camera.orthographicSize = value;
-            foreach(var camera in SceneCameras)
-                camera.m_Lens.FarClipPlane = value * FarPlaneDistanceMultiplier;
+            SceneCamera.m_Lens.FarClipPlane = value * FarPlaneDistanceMultiplier;
             FogMaterial.SetFloat("_DepthCeiling", value);
             FogMaterial.SetFloat("_DepthBlend", FogFarFadeFraction * value);
         }
@@ -82,6 +94,9 @@ public class SectorRenderer : MonoBehaviour
     {
         ViewDistance = Settings.DefaultViewDistance;
         MinimapDistance = Settings.MinimapZoomLevels[Settings.DefaultMinimapZoom];
+        
+        _tourTimer = TourSwitchTime;
+        _transposer = SceneCamera.GetCinemachineComponent<CinemachineTransposer>();
     }
 
     public void LoadZone(Zone zone)
@@ -92,6 +107,34 @@ public class SectorRenderer : MonoBehaviour
         ClearZone();
         foreach(var p in zone.Planets.Values)
             LoadPlanet(p);
+        
+        foreach (var x in _planets)
+        {
+            if (!(zone.Planets[x.Key] is GasGiantData))
+            {
+                var parentOrbit = _zone.Orbits[_zone.Planets[x.Key].Orbit].Data.Parent;
+                PlanetObject parent;
+                if (parentOrbit == Guid.Empty)
+                    parent = _root;
+                else
+                {
+                    var parentPlanetData = _zone.Planets.Values.FirstOrDefault(p => p.Orbit == parentOrbit);
+                    if(parentPlanetData == null)
+                    {
+                        parentOrbit = _zone.Orbits[parentOrbit].Data.Parent;
+                        parentPlanetData = _zone.Planets.Values.FirstOrDefault(p => p.Orbit == parentOrbit);
+                    }
+
+                    if (parentPlanetData == null)
+                        parent = _root;
+                    else if (!_planets.TryGetValue(parentPlanetData.ID, out parent))
+                    {
+                        Debug.Log("WTF!");
+                    }
+                }
+                _tourPlanets.Add((x.Value.Body.transform, parent.Body.transform));
+            }
+        }
     }
 
     public void ClearZone()
@@ -105,6 +148,7 @@ public class SectorRenderer : MonoBehaviour
             _planets.Clear();
             _beltMeshes.Clear();
             _beltMatrices.Clear();
+            _tourPlanets.Clear();
         }
     }
 
@@ -162,6 +206,11 @@ public class SectorRenderer : MonoBehaviour
             else
             {
                 planet = Instantiate(Planet, ZoneRoot);
+                var possibleSettings = Settings.BodySettingsCollections
+                    .Where(p => p.MinimumMass < planetData.Mass.Value)
+                    .MaxBy(p => p.MinimumMass).BodySettings;
+                planet.Generator.body = possibleSettings[Random.Range(0, possibleSettings.Length)];
+                //Debug.Log($"Generating planet with {planetData.Mass} mass! Choosing {planet.Generator.body.name} settings!");
                 //planet.Icon.material.mainTexture = planetData.Mass > Context.GlobalData.PlanetMass ? PlanetIcon : PlanetoidIcon;
             }
 
@@ -175,6 +224,37 @@ public class SectorRenderer : MonoBehaviour
             });
 
             _planets[planetData.ID] = planet;
+            if (!_rootFound)
+            {
+                _rootFound = true;
+                _root = planet;
+            }
+        }
+        LODHandler.FindPlanets();
+    }
+
+    private void Update()
+    {
+        if (Tour)
+        {
+            _tourTimer -= UnityEngine.Time.deltaTime;
+            if (_tourTimer < 0)
+            {
+                _tourTimer = TourSwitchTime;
+                _tourIndex = (_tourIndex + 1) % _tourPlanets.Count;
+                SceneCamera.Follow = _tourPlanets[_tourIndex].Item1;
+                SceneCamera.LookAt = _tourPlanets[_tourIndex].Item2;
+                if(_tourIndex==0) Debug.Log("Tour Complete!");
+            }
+            // if(_tourIndex>=0)
+            // {
+            //     var offset = (SceneCamera.Follow.position - SceneCamera.LookAt.position);
+            //     offset.y = 0;
+            //     offset = offset.normalized * TourFollowDistance;
+            //     offset.y = TourHeightOffset;
+            //     offset = Quaternion.AngleAxis(TourFollowOffsetDegrees, Vector3.up) * offset;
+            //     _transposer.m_FollowOffset = offset;
+            // }
         }
     }
 
@@ -218,6 +298,7 @@ public class SectorRenderer : MonoBehaviour
                     gasGiantObject.SunMaterial.LightingDirection = new Vector3(toParent.x, 0, toParent.y);
                 }
             }
+            else planet.Value.Body.transform.rotation *= Quaternion.AngleAxis(Settings.PlanetRotationSpeed, Vector3.up);
         }
 
         var fogPos = FogCameraParent.position;

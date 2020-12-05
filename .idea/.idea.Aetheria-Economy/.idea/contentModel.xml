@@ -5,6 +5,7 @@
     <e p="C:\Users\rwven\AppData\local\JetBrains\Rider2020.2\resharper-host\local\Transient\Rider\v202\SolutionCaches\_Aetheria-Economy.1410242644.00" t="ExcludeRecursive" />
     <e p="D:\WIP4\Projects\Aetheria-Economy" t="IncludeRecursive">
       <e p="Aetheria-Economy.sln" t="IncludeFlat" />
+      <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
@@ -28,6 +29,121 @@
               <e p="Util" t="Include">
                 <e p="TestButtonHandler.cs" t="Include" />
               </e>
+            </e>
+          </e>
+          <e p="Celestial Body" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="CameraUtility.cs" t="Include" />
+              <e p="CelestialBodyGenerator.cs" t="Include" />
+              <e p="CelestialBodySettings.cs" t="Include" />
+              <e p="Editor" t="Include">
+                <e p="GeneratorEditor.cs" t="Include" />
+                <e p="TextureCombinerEditor.cs" t="Include" />
+                <e p="TextureEditor.cs" t="Include" />
+              </e>
+              <e p="LODHandler.cs" t="Include" />
+              <e p="MeshBaker.cs" t="Include" />
+              <e p="NoiseSettings" t="Include">
+                <e p="CraterSettings.cs" t="Include" />
+                <e p="RidgeNoiseSettings.cs" t="Include" />
+                <e p="SimpleNoiseSettings.cs" t="Include" />
+              </e>
+              <e p="Normalizer.cs" t="Include" />
+              <e p="OceanSettings.cs" t="Include" />
+              <e p="SceneCam" t="Include">
+                <e p="Editor" t="Include">
+                  <e p="SceneCamEditor.cs" t="Include" />
+                </e>
+                <e p="SceneCamManager.cs" t="Include" />
+              </e>
+              <e p="Script Utilities" t="Include">
+                <e p="ChanceTest.cs" t="Include" />
+                <e p="ComputeHelper.cs" t="Include" />
+                <e p="MathUtility.cs" t="Include" />
+                <e p="PRNG.cs" t="Include" />
+                <e p="ShaderHelper.cs" t="Include" />
+                <e p="TextureHelper.cs" t="Include" />
+              </e>
+              <e p="Shaders" t="Include">
+                <e p="Compute" t="Include">
+                  <e p="Atmosphere" t="Include">
+                    <e p="AtmosphereTexture.compute" t="Include" />
+                  </e>
+                  <e p="Height" t="Include">
+                    <e p="AlienHeight.compute" t="Include" />
+                    <e p="EarthHeight.compute" t="Include" />
+                    <e p="MoatHeight.compute" t="Include" />
+                    <e p="MoonHeight.compute" t="Include" />
+                    <e p="ShatteredHeight.compute" t="Include" />
+                  </e>
+                  <e p="Other" t="Include">
+                    <e p="OceanMask.shader" t="Include" />
+                    <e p="PerturbPoints.compute" t="Include" />
+                    <e p="PerturbPointsPlatelike.compute" t="Include" />
+                    <e p="SteepnessCompute.compute" t="Include" />
+                  </e>
+                  <e p="Shading" t="Include">
+                    <e p="EarthShading.compute" t="Include" />
+                    <e p="MoonShading.compute" t="Include" />
+                  </e>
+                  <e p="Textures" t="Include">
+                    <e p="Blur.compute" t="Include" />
+                    <e p="Spots.compute" t="Include" />
+                    <e p="TextureGenerator.compute" t="Include" />
+                  </e>
+                </e>
+                <e p="Includes" t="Include">
+                  <e p="Craters.cginc" t="Include" />
+                  <e p="FractalNoise.cginc" t="Include" />
+                  <e p="Math.cginc" t="Include" />
+                  <e p="SimplexNoise.cginc" t="Include" />
+                  <e p="SimplexNoise2.cginc" t="Include" />
+                  <e p="SimplexNoise3.cginc" t="Include" />
+                  <e p="Triplanar.cginc" t="Include" />
+                </e>
+                <e p="PostProcessing" t="Include">
+                  <e p="Atmosphere.shader" t="Include" />
+                  <e p="OceanEffect.shader" t="Include" />
+                  <e p="Test.shader" t="Include" />
+                </e>
+                <e p="Surface" t="Include">
+                  <e p="Alien.shader" t="Include" />
+                  <e p="Earth.shader" t="Include" />
+                  <e p="MoonA.shader" t="Include" />
+                  <e p="MoonB.shader" t="Include" />
+                </e>
+              </e>
+              <e p="Shading" t="Include">
+                <e p="AlienShading.cs" t="Include" />
+                <e p="CelestialBodyShading.cs" t="Include" />
+                <e p="ColourHelper.cs" t="Include" />
+                <e p="EarthShading.cs" t="Include" />
+                <e p="MoonShading.cs" t="Include" />
+                <e p="TestShading.cs" t="Include" />
+              </e>
+              <e p="Shape" t="Include">
+                <e p="AlienShape.cs" t="Include" />
+                <e p="CelestialBodyShape.cs" t="Include" />
+                <e p="EarthShape.cs" t="Include" />
+                <e p="MoatShape.cs" t="Include" />
+                <e p="MoonShape.cs" t="Include" />
+                <e p="ShatteredShape.cs" t="Include" />
+              </e>
+              <e p="SphereMesh.cs" t="Include" />
+              <e p="Test" t="Include">
+                <e p="Phase.shader" t="Include" />
+                <e p="RayStepTest.cs" t="Include" />
+              </e>
+              <e p="Texture Gen" t="Include">
+                <e p="NoiseGenerator.cs" t="Include" />
+                <e p="SpotsTexture.cs" t="Include" />
+                <e p="TextureCombiner.cs" t="Include" />
+                <e p="TextureGenerator.cs" t="Include" />
+                <e p="TextureViewer.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Textures" t="Include">
+              <e p="_Sources.txt" t="Include" />
             </e>
           </e>
           <e p="Grpc.Core" t="Include">
@@ -63,6 +179,7 @@
             <e p="SerializerTestWindow.cs" t="Include" />
           </e>
           <e p="Galaxy.cs" t="Include" />
+          <e p="GameSettings.cs" t="Include" />
           <e p="Gravity.cs" t="Include" />
           <e p="InitialSettings.cs" t="Include" />
           <e p="MarkovNameGenerator.cs" t="Include" />
@@ -1248,7 +1365,6 @@
           <e p="Sector Display" t="Include">
             <e p="BlueNoiseProvider.cs" t="Include" />
             <e p="CopyTransform.cs" t="Include" />
-            <e p="GameSettings.cs" t="Include" />
             <e p="GasGiantObject.cs" t="Include" />
             <e p="GradientMapper.cs" t="Include" />
             <e p="GravityObject.cs" t="Include" />

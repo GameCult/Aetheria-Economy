@@ -187,6 +187,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8859079004937162792}
   - component: {fileID: 8287217960984982033}
+  - component: {fileID: -7153121627769399805}
   m_Layer: 0
   m_Name: Planet
   m_TagString: Untagged
@@ -226,6 +227,27 @@ MonoBehaviour:
   Body: {fileID: 8859079005270853338}
   GravityWell: {fileID: 8859079004671924338}
   Icon: {fileID: 8859079003226229098}
+  Generator: {fileID: -7153121627769399805}
+--- !u!114 &-7153121627769399805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8859079004937162791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbe3bd5182f0f47d6a8a90fe1aaadc52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resolutionSettings:
+    lod0: 300
+    lod1: 100
+    lod2: 50
+    collider: 25
+  previewMode: 0
+  logTimers: 0
+  body: {fileID: 0}
 --- !u!1 &8859079005270853335
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,7 +261,7 @@ GameObject:
   - component: {fileID: 8859079005270853338}
   - component: {fileID: 8859079005270853337}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Terrain Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

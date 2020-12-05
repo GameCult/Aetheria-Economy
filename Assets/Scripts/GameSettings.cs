@@ -15,7 +15,15 @@ public class GameSettings : ScriptableObject
     public float IconSize;
     public int AsteroidMeshCount = 5;
     public float MinimapAsteroidSize = 3;
+    public float PlanetRotationSpeed = 1;
+    public BodySettingsCollection[] BodySettingsCollections;
     public PlanetSettings PlanetSettings;
     public ZoneGenerationSettings ZoneSettings;
 }
 
+[Serializable]
+public class BodySettingsCollection
+{
+    public float MinimumMass;
+    public CelestialBodySettings[] BodySettings;
+}

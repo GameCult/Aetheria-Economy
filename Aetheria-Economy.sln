@@ -7,15 +7,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Economy.Shared.Unity", "Eco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniRx", "UniRx.csproj", "{4d885cb7-1f9e-abb3-b070-7265b432ecda}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{a442877d-fc0d-6756-0a98-3ca4312f9253}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagePack", "MessagePack.csproj", "{c511ef21-dc27-883d-b027-9a4b6f36bae4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.alelievr.NodeGraphProcessor.Runtime", "com.alelievr.NodeGraphProcessor.Runtime.csproj", "{4cc9ece5-0f74-bceb-733d-48f6e84c547b}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{a442877d-fc0d-6756-0a98-3ca4312f9253}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{a7fc89e3-14ca-fb82-7d67-c13788bee74a}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "com.alelievr.NodeGraphProcessor.Editor", "com.alelievr.NodeGraphProcessor.Editor.csproj", "{a4e83803-35fe-e54d-5974-2af6595e46a5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor-firstpass", "Assembly-CSharp-Editor-firstpass.csproj", "{b813e4c7-10f6-4f4d-0de5-991510834dc3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,10 @@ Global
 		{4d885cb7-1f9e-abb3-b070-7265b432ecda}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4d885cb7-1f9e-abb3-b070-7265b432ecda}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4d885cb7-1f9e-abb3-b070-7265b432ecda}.Release|Any CPU.Build.0 = Release|Any CPU
+		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Release|Any CPU.Build.0 = Release|Any CPU
 		{c511ef21-dc27-883d-b027-9a4b6f36bae4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{c511ef21-dc27-883d-b027-9a4b6f36bae4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{c511ef21-dc27-883d-b027-9a4b6f36bae4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -43,10 +49,6 @@ Global
 		{4cc9ece5-0f74-bceb-733d-48f6e84c547b}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4cc9ece5-0f74-bceb-733d-48f6e84c547b}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4cc9ece5-0f74-bceb-733d-48f6e84c547b}.Release|Any CPU.Build.0 = Release|Any CPU
-		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Release|Any CPU.Build.0 = Release|Any CPU
 		{a7fc89e3-14ca-fb82-7d67-c13788bee74a}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{a7fc89e3-14ca-fb82-7d67-c13788bee74a}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{a7fc89e3-14ca-fb82-7d67-c13788bee74a}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,6 +57,10 @@ Global
 		{a4e83803-35fe-e54d-5974-2af6595e46a5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{a4e83803-35fe-e54d-5974-2af6595e46a5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{a4e83803-35fe-e54d-5974-2af6595e46a5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{b813e4c7-10f6-4f4d-0de5-991510834dc3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{b813e4c7-10f6-4f4d-0de5-991510834dc3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{b813e4c7-10f6-4f4d-0de5-991510834dc3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{b813e4c7-10f6-4f4d-0de5-991510834dc3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

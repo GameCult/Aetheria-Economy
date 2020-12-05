@@ -788,6 +788,10 @@
       <Project>{f084b629-16e6-9ccd-eff8-10a39db37a52}</Project>
       <Name>Assembly-CSharp</Name>
     </ProjectReference>
+    <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
+      <Project>{b813e4c7-10f6-4f4d-0de5-991510834dc3}</Project>
+      <Name>Assembly-CSharp-Editor-firstpass</Name>
+    </ProjectReference>
     <ProjectReference Include="Economy.Shared.Unity.csproj">
       <Project>{c2362ba6-dee9-92b9-0779-f5fcf5968986}</Project>
       <Name>Economy.Shared.Unity</Name>

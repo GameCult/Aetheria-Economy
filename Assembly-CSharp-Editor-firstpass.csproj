@@ -50,13 +50,10 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Plugins\IMP\Editor\ImposterBakeWindow.cs" />
-     <Compile Include="Assets\Plugins\IMP\Editor\IMPGenerator.cs" />
-     <Compile Include="Assets\Plugins\IMP\Editor\BillboardImposterInspector.cs" />
-     <None Include="Assets\Plugins\IMP\Editor\Shaders\ImposterBakeAlbedo.shader" />
-     <None Include="Assets\Plugins\IMP\Editor\Shaders\ImposterProcessing.shader" />
-     <None Include="Assets\Plugins\IMP\Editor\Shaders\ImposterBakeWorldNormalDepth.shader" />
-     <None Include="Assets\Plugins\IMP\Editor\Shaders\ImposterProcessing.compute" />
+     <Compile Include="Assets\Plugins\Celestial Body\Scripts\SceneCam\Editor\SceneCamEditor.cs" />
+     <Compile Include="Assets\Plugins\Celestial Body\Scripts\Editor\TextureEditor.cs" />
+     <Compile Include="Assets\Plugins\Celestial Body\Scripts\Editor\TextureCombinerEditor.cs" />
+     <Compile Include="Assets\Plugins\Celestial Body\Scripts\Editor\GeneratorEditor.cs" />
  <Reference Include="UnityEditor.TestRunner">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
  </Reference>
@@ -75,8 +72,14 @@
  <Reference Include="Unity.InputSystem">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.Recorder.Editor">
+ <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.Editor.dll</HintPath>
+ </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Recorder">
+ <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
@@ -84,17 +87,26 @@
  <Reference Include="Unity.Timeline">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.Postprocessing.Editor">
+ <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.XR.LegacyInputHelpers">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Rider.Editor">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.Recorder.Base">
+ <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.Base.dll</HintPath>
+ </Reference>
  <Reference Include="Unity.Mathematics">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
  </Reference>
  <Reference Include="Unity.2D.Sprite.Editor">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Postprocessing.Runtime">
+ <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
  </Reference>
  <Reference Include="Unity.2D.Tilemap.Editor">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
@@ -122,21 +134,6 @@
  </Reference>
  <Reference Include="UnityEditor.UI">
  <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Postprocessing.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Postprocessing.Runtime">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Recorder.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Recorder">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Recorder.Base">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.Base.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -730,10 +727,6 @@
       <Project>{c2362ba6-dee9-92b9-0779-f5fcf5968986}</Project>
       <Name>Economy.Shared.Unity</Name>
     </ProjectReference>
-    <ProjectReference Include="MessagePack.csproj">
-      <Project>{c511ef21-dc27-883d-b027-9a4b6f36bae4}</Project>
-      <Name>MessagePack</Name>
-    </ProjectReference>
     <ProjectReference Include="com.alelievr.NodeGraphProcessor.Runtime.csproj">
       <Project>{4cc9ece5-0f74-bceb-733d-48f6e84c547b}</Project>
       <Name>com.alelievr.NodeGraphProcessor.Runtime</Name>
@@ -741,6 +734,14 @@
     <ProjectReference Include="com.alelievr.NodeGraphProcessor.Editor.csproj">
       <Project>{a4e83803-35fe-e54d-5974-2af6595e46a5}</Project>
       <Name>com.alelievr.NodeGraphProcessor.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="UniRx.csproj">
+      <Project>{4d885cb7-1f9e-abb3-b070-7265b432ecda}</Project>
+      <Name>UniRx</Name>
+    </ProjectReference>
+    <ProjectReference Include="MessagePack.csproj">
+      <Project>{c511ef21-dc27-883d-b027-9a4b6f36bae4}</Project>
+      <Name>MessagePack</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

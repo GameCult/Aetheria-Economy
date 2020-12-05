@@ -51,7 +51,7 @@ Material:
     - _GridFillDensity: 0.000006
     - _GridFloorBlend: 100
     - _GridFloorDensity: 4
-    - _GridFloorOffset: 29.9
+    - _GridFloorOffset: 25
     - _GridPatchBlend: 200
     - _GridPatchDensity: 6
     - _NoiseFrequency: 0.01
