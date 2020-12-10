@@ -9,7 +9,7 @@ public class VelocityLimitData : BehaviorData
     [InspectableField, JsonProperty("topSpeed"), Key(1), RuntimeInspectable]  
     public PerformanceStat TopSpeed = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new VelocityLimit(context, this, entity, item);
     }
@@ -19,8 +19,8 @@ public class VelocityLimitData : BehaviorData
 public class VelocityLimit : IBehavior
 {
     public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
+    public EquippedItem Item { get; }
+    public ItemManager Context { get; }
     
     public float Limit { get; private set; }
 
@@ -28,7 +28,7 @@ public class VelocityLimit : IBehavior
     
     private VelocityLimitData _data;
 
-    public VelocityLimit(GameContext context, VelocityLimitData data, Entity entity, Gear item)
+    public VelocityLimit(ItemManager context, VelocityLimitData data, Entity entity, EquippedItem item)
     {
         Context = context;
         _data = data;
@@ -42,7 +42,7 @@ public class VelocityLimit : IBehavior
 
     public bool Update(float delta)
     {
-        Limit = Context.Evaluate(_data.TopSpeed, Item, Entity);
+        Limit = Context.Evaluate(_data.TopSpeed, Item.EquippableItem, Entity);
         if (length(Entity.Velocity) > Limit)
             Entity.Velocity = normalize(Entity.Velocity) * Limit;
         return true;

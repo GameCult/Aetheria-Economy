@@ -15,7 +15,7 @@ public class TurningData : BehaviorData
     [InspectableField, JsonProperty("heat"), Key(3)]  
     public PerformanceStat Heat = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Turning(context, this, entity, item);
     }
@@ -24,8 +24,8 @@ public class TurningData : BehaviorData
 public class Turning : IAnalogBehavior
 {
     public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
+    public EquippedItem Item { get; }
+    public ItemManager Context { get; }
     
     public float Torque { get; private set; }
 
@@ -41,7 +41,7 @@ public class Turning : IAnalogBehavior
     
     private float _input;
 
-    public Turning(GameContext context, TurningData data, Entity entity, Gear item)
+    public Turning(ItemManager context, TurningData data, Entity entity, EquippedItem item)
     {
         Context = context;
         _data = data;
@@ -55,10 +55,10 @@ public class Turning : IAnalogBehavior
 
     public bool Update(float delta)
     {
-        Torque = Context.Evaluate(_data.Torque, Item, Entity);
+        Torque = Context.Evaluate(_data.Torque, Item.EquippableItem, Entity);
         Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque / Entity.Mass * delta));
-        Entity.AddHeat(abs(_input) * Context.Evaluate(_data.Heat, Item, Entity) * delta);
-        Entity.VisibilitySources[this] = abs(_input) * Context.Evaluate(_data.Visibility, Item, Entity);
+        Item.Temperature += (abs(_input) * Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta) / Context.GetThermalMass(Item.EquippableItem);
+        Entity.VisibilitySources[this] = abs(_input) * Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
         return true;
     }
 

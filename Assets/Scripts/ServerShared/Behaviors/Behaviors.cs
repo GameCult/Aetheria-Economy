@@ -41,6 +41,11 @@ public interface IAlwaysUpdatedBehavior
     void AlwaysUpdate(float delta);
 }
 
+public interface IOrderedBehavior
+{
+    int Order { get; }
+}
+
 public interface IPersistentBehavior//<T> where T : IBehavior
 {
     PersistentBehaviorData Store();
@@ -52,12 +57,12 @@ public interface IPopulationAssignment
     int AssignedPopulation { get; set; }
 }
 
-public interface IController
+public interface IController<T> where T: AgentTask
 {
     bool Available { get; }
-    TaskType TaskType { get; }
+    //TaskType TaskType { get; }
     Zone Zone { get; }
-    void AssignTask(Guid task);
+    void AssignTask(T task);
 }
 
 [MessagePackObject,
@@ -106,5 +111,5 @@ public abstract class BehaviorData
     [InspectableField, JsonProperty("group"), Key(0)]
     public int Group;
     
-    public abstract IBehavior CreateInstance(GameContext context, Entity entity, Gear item);
+    public abstract IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item);
 }

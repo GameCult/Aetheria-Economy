@@ -12,7 +12,7 @@ public class ThermotoggleData : BehaviorData
     [InspectableField, JsonProperty("highPass"), Key(2)]
     public bool HighPass;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Thermotoggle(context, this, entity, item);
     }
@@ -24,12 +24,12 @@ public class Thermotoggle : IBehavior
     private ThermotoggleData _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public Thermotoggle(GameContext context, ThermotoggleData data, Entity entity, Gear item)
+    public Thermotoggle(ItemManager context, ThermotoggleData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -40,6 +40,6 @@ public class Thermotoggle : IBehavior
 
     public bool Update(float delta)
     {
-        return Entity.Temperature < TargetTemperature ^ _data.HighPass;
+        return Item.Temperature < TargetTemperature ^ _data.HighPass;
     }
 }

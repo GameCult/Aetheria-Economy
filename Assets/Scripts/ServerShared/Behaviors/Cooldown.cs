@@ -9,7 +9,7 @@ public class CooldownData : BehaviorData
     [InspectableField, JsonProperty("cooldown"), Key(1), RuntimeInspectable]
     public PerformanceStat Cooldown = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Cooldown(context, this, entity, item);
     }
@@ -18,16 +18,15 @@ public class CooldownData : BehaviorData
 public class Cooldown : IBehavior, IAlwaysUpdatedBehavior
 {
     private CooldownData _data;
+    public BehaviorData Data => _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
-
-    public BehaviorData Data => _data;
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     private float _cooldown; // Normalized
 
-    public Cooldown(GameContext context, CooldownData data, Entity entity, Gear item)
+    public Cooldown(ItemManager context, CooldownData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -49,6 +48,6 @@ public class Cooldown : IBehavior, IAlwaysUpdatedBehavior
 
     public void AlwaysUpdate(float delta)
     {
-        _cooldown -= delta / Context.Evaluate(_data.Cooldown, Item, Entity);
+        _cooldown -= delta / Context.Evaluate(_data.Cooldown, Item.EquippableItem, Entity);
     }
 }

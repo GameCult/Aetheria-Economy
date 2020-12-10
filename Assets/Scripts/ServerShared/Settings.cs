@@ -80,3 +80,18 @@ public class ZoneGenerationSettings
     public ExponentialLerp GasGiantBandSaturation;
     public ExponentialLerp GasGiantBandBrightness;
 }
+
+[Serializable, MessagePackObject(keyAsPropertyName: true), JsonObject]
+public class GameplaySettings
+{
+    public float WarpDistance = 25;
+    public float DockingDistance = 25;
+    public int SignificantDigits = 3;
+    public float ProductionPersonalityLerp = .05f;
+    public float MessageDuration = 4f;
+    public float TargetPersistenceDuration = 3;
+    public ExponentialLerp StartingGearQuality;
+    public float HeatRadiationExponent = 1;
+    public float HeatRadiationMultiplier = 1;
+    
+}

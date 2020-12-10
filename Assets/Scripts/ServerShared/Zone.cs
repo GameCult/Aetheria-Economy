@@ -11,7 +11,7 @@ using Random = Unity.Mathematics.Random;
 public class Zone
 {
     //public HashSet<Guid> Planets = new HashSet<Guid>();
-    public Dictionary<Guid, Entity> Entities = new Dictionary<Guid, Entity>();
+    public List<Entity> Entities = new List<Entity>();
     //public Dictionary<Guid, OrbitData> Orbits = new Dictionary<Guid, OrbitData>();
     public Dictionary<Guid, BodyData> Planets = new Dictionary<Guid, BodyData>();
     public Dictionary<Guid, Planet> PlanetInstances = new Dictionary<Guid, Planet>();
@@ -55,7 +55,7 @@ public class Zone
             }
         }
         
-        foreach (var entity in pack.Entities) Entities.Add(entity.ID, entity);
+        foreach (var entity in pack.Entities) Entities.Add(entity);
 
         // TODO: Associate planets with stored entities for planetary colonies
     }
@@ -65,7 +65,7 @@ public class Zone
         return new ZonePack
         {
             Data = Data,
-            Entities = Entities.Values.ToList(),
+            Entities = Entities,
             Orbits = Orbits.Values.Select(o=>o.Data).ToList(),
             Planets = Planets.Values.ToList()
         };
@@ -90,7 +90,7 @@ public class Zone
         foreach (var asteroids in AsteroidBelts.Keys)
             UpdateAsteroidTransforms(asteroids);
         
-        foreach (var entity in Entities.Values) entity.Update(deltaTime);
+        foreach (var entity in Entities) entity.Update(deltaTime);
     }
 
     public float2 WormholePosition(ZoneDefinition target)
@@ -236,29 +236,30 @@ public class Zone
             belt.Damage[asteroid] = 0;
         belt.Damage[asteroid] = belt.Damage[asteroid] + damage;
         
-        if (!belt.MiningAccumulator.ContainsKey((miner.ID, asteroid)))
-            belt.MiningAccumulator[(miner.ID, asteroid)] = 0;
-        belt.MiningAccumulator[(miner.ID, asteroid)] = belt.MiningAccumulator[(miner.ID, asteroid)] + damage;
+        if (!belt.MiningAccumulator.ContainsKey((miner, asteroid)))
+            belt.MiningAccumulator[(miner, asteroid)] = 0;
+        belt.MiningAccumulator[(miner, asteroid)] = belt.MiningAccumulator[(miner, asteroid)] + damage;
         
         if (belt.Damage[asteroid] > asteroidHitpoints)
         {
             belt.RespawnTimers[asteroid] = _settings.AsteroidRespawnTime.Evaluate(size);
             belt.Damage.Remove(asteroid);
-            belt.MiningAccumulator.Remove((miner.ID, asteroid));
+            belt.MiningAccumulator.Remove((miner, asteroid));
             return;
         }
 
         var resourceCount = beltData.Resources.Sum(x => x.Value);
         var resource = beltData.Resources.MaxBy(x => pow(x.Value, 1f / penetration) * _random.NextFloat());
-        if (efficiency * _random.NextFloat() * belt.MiningAccumulator[(miner.ID, asteroid)] * resourceCount / _settings.MiningDifficulty > 1 && miner.OccupiedCapacity < miner.Capacity - 1)
+        if (efficiency * _random.NextFloat() * belt.MiningAccumulator[(miner, asteroid)] * resourceCount / _settings.MiningDifficulty > 1)
         {
-            belt.MiningAccumulator.Remove((miner.ID, asteroid));
-            var newSimpleCommodity = new SimpleCommodity
-            {
-                Data = resource.Key,
-                Quantity = 1
-            };
-            miner.AddCargo(newSimpleCommodity);
+            belt.MiningAccumulator.Remove((miner, asteroid));
+            // var newSimpleCommodity = new SimpleCommodity
+            // {
+            //     Data = resource.Key,
+            //     Quantity = 1
+            // };
+            // TODO: Drop item onto the Grid
+            //miner.AddCargo(newSimpleCommodity);
         }
     }
     public float GetHeight(float2 position)
@@ -393,7 +394,7 @@ public class AsteroidBelt
     public float4[] PreviousTransforms; // x, y, rotation, scale
     public Dictionary<int, float> RespawnTimers = new Dictionary<int, float>();
     public Dictionary<int, float> Damage = new Dictionary<int, float>();
-    public Dictionary<(Guid, int), float> MiningAccumulator = new Dictionary<(Guid, int), float>();
+    public Dictionary<(Entity, int), float> MiningAccumulator = new Dictionary<(Entity, int), float>();
 
     public AsteroidBelt(AsteroidBeltData data)
     {

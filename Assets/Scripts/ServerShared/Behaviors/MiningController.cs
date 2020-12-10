@@ -10,117 +10,110 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship), Order(-100)]
 public class MiningControllerData : ControllerData
 {
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new MiningController(context, this, entity, item);
     }
 }
 
-public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, IInitializableBehavior
+public class MiningController : ControllerBase<Mining>, IBehavior, IPersistentBehavior, IInitializableBehavior
 {
-    public override TaskType TaskType => TaskType.Mine;
     public BehaviorData Data => _data;
     
     private MiningControllerData _data;
-    private GameContext _context;
-    private Entity _entity;
-    private Gear _item;
+    private EquippedItem Item { get; }
     private bool _taskStarted;
     private int _asteroid = -1;
     private MiningTool _miningTool;
     private Switch _toolSwitch;
     
-    public MiningController(GameContext context, MiningControllerData data, Entity entity, Gear item) : base(context, data, entity)
+    public MiningController(ItemManager itemManager, MiningControllerData data, Entity entity, EquippedItem item) : base(itemManager, data, entity)
     {
-        _context = context;
         _data = data;
-        _entity = entity;
-        _item = item;
+        Item = item;
     }
 
     public new void Initialize()
     {
-        _miningTool = _entity.GetBehavior<MiningTool>();
-        _toolSwitch = _entity.GetSwitch<MiningTool>();
+        _miningTool = Entity.GetBehavior<MiningTool>();
+        _toolSwitch = Entity.GetSwitch<MiningTool>();
         base.Initialize();
     }
 
     public new bool Update(float delta)
     {
-        var miningTask = _context.Cache.Get<Mining>(Task);
-        if (miningTask != null)
-        {
-            if (!_taskStarted)
-            {
-                NextAsteroid();
-                _taskStarted = true;
-            }
-            else
-            {
-                if (!Moving)
-                {
-                    if (_entity.OccupiedCapacity < _entity.Capacity - 1)
-                    {
-                        var asteroidTransform = Zone.GetAsteroidTransform(miningTask.Asteroids, _asteroid);
-                        if (length(_entity.Position - asteroidTransform.xy) - asteroidTransform.w > _miningTool.Range)
-                        {
-                            _entity.SetMessage("Moving to target asteroid.");
-                            MoveTo(() => Zone.GetAsteroidTransform(miningTask.Asteroids, _asteroid).xy, 
-                                () => Zone.GetAsteroidVelocity(miningTask.Asteroids, _asteroid));
-                            _toolSwitch.Activated = false;
-                        }
-                        else
-                        {
-                            if (Zone.AsteroidExists(miningTask.Asteroids, _asteroid))
-                            {
-                                _miningTool.AsteroidBelt = miningTask.Asteroids;
-                                _miningTool.Asteroid = _asteroid;
-                                _toolSwitch.Activated = true;
-                                Aim.Objective = Zone.GetAsteroidTransform(miningTask.Asteroids, _asteroid).xy;
-                                Aim.Update(delta);
-                            }
-                            else NextAsteroid();
-                        }
-                    }
-                    else
-                    {
-                        _entity.SetMessage("Out of cargo space. Returning home to offload cargo.");
-                        GoHome(OnArriveHome);
-                    }
-                }
-            }
-        }
+        // if (Task != null)
+        // {
+        //     if (!_taskStarted)
+        //     {
+        //         NextAsteroid();
+        //         _taskStarted = true;
+        //     }
+        //     else
+        //     {
+        //         if (!Moving)
+        //         {
+        //             if (_entity.OccupiedCapacity < _entity.Capacity - 1)
+        //             {
+        //                 var asteroidTransform = Zone.GetAsteroidTransform(Task.Asteroids, _asteroid);
+        //                 if (length(_entity.Position - asteroidTransform.xy) - asteroidTransform.w > _miningTool.Range)
+        //                 {
+        //                     _entity.SetMessage("Moving to target asteroid.");
+        //                     MoveTo(() => Zone.GetAsteroidTransform(Task.Asteroids, _asteroid).xy, 
+        //                         () => Zone.GetAsteroidVelocity(Task.Asteroids, _asteroid));
+        //                     _toolSwitch.Activated = false;
+        //                 }
+        //                 else
+        //                 {
+        //                     if (Zone.AsteroidExists(Task.Asteroids, _asteroid))
+        //                     {
+        //                         _miningTool.AsteroidBelt = Task.Asteroids;
+        //                         _miningTool.Asteroid = _asteroid;
+        //                         _toolSwitch.Activated = true;
+        //                         Aim.Objective = Zone.GetAsteroidTransform(Task.Asteroids, _asteroid).xy;
+        //                         Aim.Update(delta);
+        //                     }
+        //                     else NextAsteroid();
+        //                 }
+        //             }
+        //             else
+        //             {
+        //                 _entity.SetMessage("Out of cargo space. Returning home to offload cargo.");
+        //                 GoHome(OnArriveHome);
+        //             }
+        //         }
+        //     }
+        // }
         return base.Update(delta);
     }
 
-    private void OnArriveHome()
-    {
-        var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
-        foreach (var item in _entity.Cargo
-            .Select(id => _context.Cache.Get<ItemInstance>(id))
-            .Where(item => item is SimpleCommodity)
-            .Cast<SimpleCommodity>()
-            .ToArray())
-        {
-            int quantity = min((int) ((homeEntity.Capacity - homeEntity.OccupiedCapacity) / item.ItemData.Size), item.Quantity);
-            var newItem = _entity.RemoveCargo(item, quantity);
-            homeEntity.AddCargo(newItem);
-            
-            if (quantity < item.Quantity)
-            {
-                homeEntity.SetMessage("Colony is out of cargo space. Closing Mining Task.");
-                FinishTask();
-                _taskStarted = false;
-                return;
-            }
-        }
-    }
+    // private void OnArriveHome()
+    // {
+    //     var homeEntity = _context.ItemData.Get<Entity>(HomeEntity);
+    //     foreach (var item in _entity.Cargo
+    //         .Select(id => _context.ItemData.Get<ItemInstance>(id))
+    //         .Where(item => item is SimpleCommodity)
+    //         .Cast<SimpleCommodity>()
+    //         .ToArray())
+    //     {
+    //         int quantity = min((int) ((homeEntity.Capacity - homeEntity.OccupiedCapacity) / _context.GetData(item).Size), item.Quantity);
+    //         var newItem = _entity.RemoveCargo(item, quantity);
+    //         homeEntity.AddCargo(newItem);
+    //         
+    //         if (quantity < item.Quantity)
+    //         {
+    //             homeEntity.SetMessage("Colony is out of cargo space. Closing Mining Task.");
+    //             FinishTask();
+    //             _taskStarted = false;
+    //             return;
+    //         }
+    //     }
+    // }
 
     private void NextAsteroid()
     {
-        var miningTask = _context.Cache.Get<Mining>(Task);
-        _asteroid = Zone.NearestAsteroid(miningTask.Asteroids, _entity.Position);
-        _entity.SetMessage("Selecting new asteroid.");
+        _asteroid = Zone.NearestAsteroid(Task.Asteroids, Entity.Position);
+        Entity.SetMessage("Selecting new asteroid.");
     }
 
     public PersistentBehaviorData Store()
@@ -141,5 +134,5 @@ public class MiningController : ControllerBase, IBehavior, IPersistentBehavior, 
 public class MiningControllerPersistence : PersistentBehaviorData
 {
     [JsonProperty("task"), Key(0)]
-    public Guid Task;
+    public Mining Task;
 }

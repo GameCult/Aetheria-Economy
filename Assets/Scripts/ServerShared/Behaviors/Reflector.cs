@@ -12,7 +12,7 @@ public class ReflectorData : BehaviorData
     // [InspectableAnimationCurve, JsonProperty("visibility"), Key(1)]  
     // public float4[] VisibilityCurve;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Reflector(context, this, entity, item);
     }
@@ -21,14 +21,14 @@ public class ReflectorData : BehaviorData
 public class Reflector : IBehavior
 {
     public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
+    public EquippedItem Item { get; }
+    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     
     private ReflectorData _data;
 
-    public Reflector(GameContext context, ReflectorData data, Entity entity, Gear item)
+    public Reflector(ItemManager context, ReflectorData data, Entity entity, EquippedItem item)
     {
         Context = context;
         _data = data;

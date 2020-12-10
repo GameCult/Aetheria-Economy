@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
+using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
@@ -26,13 +27,16 @@ public abstract class ControllerData : BehaviorData
     public float TargetDistance = 10;
 }
 
-public abstract class ControllerBase : IBehavior, IController, IInitializableBehavior
+public abstract class ControllerBase<T> : IBehavior, IController<T>, IInitializableBehavior where T : AgentTask
 {
-    protected Guid HomeEntity => (_entity as Ship)?.HomeEntity ?? Guid.Empty;
-    public bool Available => _spaceworthy && Task == Guid.Empty;
-    public abstract TaskType TaskType { get; }
-    public Zone Zone => _entity.Zone;
+    protected Entity HomeEntity => (Entity as Ship)?.HomeEntity;
+    public bool Available => _spaceworthy && Task == null;
+    //public abstract TaskType TaskType { get; }
+    public Zone Zone => Entity.Zone;
     public BehaviorData Data => _controllerData;
+    
+    protected ItemManager ItemManager { get; }
+    protected Entity Entity { get; }
     
     protected Locomotion Locomotion;
     protected VelocityMatch VelocityMatch;
@@ -40,13 +44,11 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     protected Func<float2> TargetPosition;
     protected Func<float2> TargetVelocity;
     protected bool MatchVelocity;
-    protected List<ZoneDefinition> Path;
-    protected Guid Task;
+    // protected List<ZoneDefinition> Path;
+    protected T Task;
     protected bool Moving;
     protected bool Waiting;
     
-    private GameContext _context;
-    private Entity _entity;
     private ControllerData _controllerData;
     private MovementPhase _movementPhase;
     private Action _onFinishMoving;
@@ -54,33 +56,36 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
     private float _waitTime;
     private Action _onFinishWaiting;
 
-    public ControllerBase(GameContext context, ControllerData data, Entity entity)
+    public ControllerBase(ItemManager itemManager, ControllerData data, Entity entity)
     {
-        _context = context;
+        ItemManager = itemManager;
+        Entity = entity;
         _controllerData = data;
-        _entity = entity;
-        entity.GearEvent.OnChanged += () =>
-        {
-            _spaceworthy = entity.GetBehavior<Thruster>() != null && entity.GetBehavior<Reactor>() != null;
-            if(_spaceworthy)
-                CreateBehaviors();
-        };
+        CheckSpaceworthiness();
+        entity.EquippedItems.ObserveAdd().Subscribe(added => CheckSpaceworthiness());
+    }
+
+    private void CheckSpaceworthiness()
+    {
+        _spaceworthy = Entity.GetBehavior<Thruster>() != null && Entity.GetBehavior<Reactor>() != null;
+        if(_spaceworthy)
+            CreateBehaviors();
     }
 
     public void CreateBehaviors()
     {
-        Locomotion = new Locomotion(_context, _entity, _controllerData);
-        VelocityMatch = new VelocityMatch(_context, _entity, _controllerData);
-        Aim = new Aim(_context, _entity, _controllerData);
+        Locomotion = new Locomotion(ItemManager, Entity, _controllerData);
+        VelocityMatch = new VelocityMatch(ItemManager, Entity, _controllerData);
+        Aim = new Aim(ItemManager, Entity, _controllerData);
     }
     
     public void Initialize()
     {
         CreateBehaviors();
-        _context.CorporationControllers[_entity.Corporation].Add(this);
+        // _context.CorporationControllers[_entity.Corporation].Add(this);
     }
     
-    public void AssignTask(Guid task)
+    public void AssignTask(T task)
     {
         Task = task;
         Moving = false;
@@ -91,7 +96,7 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
         if (Available)
         {
             // No task is assigned and we're at home, do nothing!
-            if (_entity.Parent == HomeEntity)
+            if (Entity.Parent == HomeEntity)
                 return false;
             
             // No task is assigned, but we're not home, go home!
@@ -115,11 +120,11 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
 
         if (Moving)
         {
-            if(_entity.Parent!=Guid.Empty)
-                _entity.RemoveParent();
+            if(Entity.Parent!=null)
+                Entity.RemoveParent();
 
             var targetPosition = TargetPosition();
-            var distance = length(targetPosition - _entity.Position);
+            var distance = length(targetPosition - Entity.Position);
             if (MatchVelocity)
             {
                 var targetVelocity = TargetVelocity();
@@ -165,28 +170,24 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
 
     public void FinishTask()
     {
-        if (Task == Guid.Empty)
+        if (Task == null)
             return;
         
-        var task = _context.Cache.Get(Task);
-        _context.Cache.Delete(task);
-        _context.Cache.Get<Corporation>(_entity.Corporation).Tasks.Remove(task.ID);
-        Task = Guid.Empty;
+        Task = null;
     }
 
     public void GoHome(Action onFinish = null)
     {
-        var homeEntity = _context.Cache.Get<Entity>(HomeEntity);
-        if (Zone == homeEntity.Zone) MoveTo(homeEntity, true, () =>
+        MoveTo(HomeEntity, true, () =>
         {
-            _entity.SetParent(homeEntity);
+            Entity.SetParent(HomeEntity);
             onFinish?.Invoke();
         });
-        else MoveTo(homeEntity.Zone.Data.ID, () => MoveTo(homeEntity, true, () =>
-        {
-            _entity.SetParent(homeEntity);
-            onFinish?.Invoke();
-        }));
+        // else MoveTo(homeEntity.Zone.Data.ID, () => MoveTo(homeEntity, true, () =>
+        // {
+        //     _entity.SetParent(homeEntity);
+        //     onFinish?.Invoke();
+        // }));
     }
 
     public void Wait(float time, Action onFinish = null)
@@ -226,25 +227,25 @@ public abstract class ControllerBase : IBehavior, IController, IInitializableBeh
         _onFinishMoving = onFinish;
     }
 
-    public void MoveTo(Guid zone, Action onFinish = null)
-    {
-        var path = _context.FindPath(_context.GalaxyZones[Zone.Data.ID], _context.GalaxyZones[zone]);
-
-        void OnNextZone()
-        {
-            path.RemoveAt(0);
-            if (path.Count > 0)
-            {
-                MoveTo(Zone.WormholePosition(Path[0]), false, OnNextZone);
-            }
-            else
-            {
-                onFinish?.Invoke();
-            }
-        }
-        
-        OnNextZone();
-    }
+    // public void MoveTo(Guid zone, Action onFinish = null)
+    // {
+    //     var path = _context.FindPath(_context.GalaxyZones[Zone.Data.ID], _context.GalaxyZones[zone]);
+    //
+    //     void OnNextZone()
+    //     {
+    //         path.RemoveAt(0);
+    //         if (path.Count > 0)
+    //         {
+    //             MoveTo(Zone.WormholePosition(Path[0]), false, OnNextZone);
+    //         }
+    //         else
+    //         {
+    //             onFinish?.Invoke();
+    //         }
+    //     }
+    //     
+    //     OnNextZone();
+    // }
 }
 
 public enum MovementPhase

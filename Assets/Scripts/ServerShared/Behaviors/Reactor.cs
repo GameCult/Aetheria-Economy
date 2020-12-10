@@ -19,7 +19,7 @@ public class ReactorData : BehaviorData
     [InspectableField, JsonProperty("underload"), Key(5), RuntimeInspectable]  
     public PerformanceStat ThrottlingFactor = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Reactor(context, this, entity, item);
     }
@@ -30,13 +30,13 @@ public class Reactor : IBehavior
     private ReactorData _data;
 
     public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
+    public EquippedItem Item { get; }
+    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     public float Capacitance;
 
-    public Reactor(GameContext context, ReactorData data, Entity entity, Gear item)
+    public Reactor(ItemManager context, ReactorData data, Entity entity, EquippedItem item)
     {
         Context = context;
         _data = data;
@@ -46,22 +46,22 @@ public class Reactor : IBehavior
 
     public bool Update(float delta)
     {
-        Capacitance = Context.Evaluate(_data.Capacitance, Item, Entity);
-        var charge = Context.Evaluate(_data.Charge, Item, Entity) * delta;
-        var efficiency = Context.Evaluate(_data.Efficiency, Item, Entity);
+        Capacitance = Context.Evaluate(_data.Capacitance, Item.EquippableItem, Entity);
+        var charge = Context.Evaluate(_data.Charge, Item.EquippableItem, Entity) * delta;
+        var efficiency = Context.Evaluate(_data.Efficiency, Item.EquippableItem, Entity);
 
-        Entity.AddHeat(charge / efficiency);
+        Item.Temperature += (charge / efficiency) / Context.GetThermalMass(Item.EquippableItem);
         Entity.Energy += charge;
 
         if (Entity.Energy > Capacitance)
         {
-            Entity.AddHeat(-(Entity.Energy - Capacitance) / efficiency * (1 - 1 / Context.Evaluate(_data.ThrottlingFactor, Item, Entity)));
+            Item.Temperature -= (Entity.Energy - Capacitance) / efficiency * (1 - 1 / Context.Evaluate(_data.ThrottlingFactor, Item.EquippableItem, Entity)) / Context.GetThermalMass(Item.EquippableItem);
             Entity.Energy = Capacitance;
         }
 
         if (Entity.Energy < 0)
         {
-            Entity.AddHeat( -Entity.Energy / Context.Evaluate(_data.OverloadEfficiency, Item, Entity));
+            Item.Temperature += -Entity.Energy / Context.Evaluate(_data.OverloadEfficiency, Item.EquippableItem, Entity) / Context.GetThermalMass(Item.EquippableItem);
             Entity.Energy = 0;
         }
         return true;

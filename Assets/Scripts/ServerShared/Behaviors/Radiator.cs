@@ -9,7 +9,7 @@ public class RadiatorData : BehaviorData
     [InspectableField, JsonProperty("emissivity"), Key(1), RuntimeInspectable]  
     public PerformanceStat Emissivity = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Radiator(context, this, entity, item);
     }
@@ -18,8 +18,8 @@ public class RadiatorData : BehaviorData
 public class Radiator : IBehavior
 {
     public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
+    public EquippedItem Item { get; }
+    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
@@ -27,7 +27,7 @@ public class Radiator : IBehavior
     
     private RadiatorData _data;
 
-    public Radiator(GameContext context, RadiatorData data, Entity entity, Gear item)
+    public Radiator(ItemManager context, RadiatorData data, Entity entity, EquippedItem item)
     {
         Context = context;
         _data = data;
@@ -37,9 +37,9 @@ public class Radiator : IBehavior
 
     public bool Update(float delta)
     {
-        Emissivity = Context.Evaluate(_data.Emissivity, Item, Entity);
-        var rad = pow(Entity.Temperature, Context.GlobalData.HeatRadiationPower) * Context.GlobalData.HeatRadiationMultiplier * Emissivity;
-        Entity.Temperature -= rad * delta;
+        Emissivity = Context.Evaluate(_data.Emissivity, Item.EquippableItem, Entity);
+        var rad = pow(Item.Temperature, Context.GameplaySettings.HeatRadiationExponent) * Context.GameplaySettings.HeatRadiationMultiplier * Emissivity;
+        Item.Temperature -= rad * delta;
         Entity.VisibilitySources[this] = rad;
         return true;
     }

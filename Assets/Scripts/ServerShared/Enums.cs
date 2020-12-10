@@ -10,6 +10,7 @@ public enum LauncherCaliber
 public enum HardpointType
 {
     Hull,
+    Thermal,
     Thruster,
     WarpThruster,
     Reactor,

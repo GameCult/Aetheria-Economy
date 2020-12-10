@@ -12,7 +12,7 @@ public class Aim : AgentBehavior
     private Turning _turning;
     private VelocityLimit _velocityLimit;
 
-    public Aim(GameContext context, Entity entity, ControllerData controllerData) : base(context, entity, controllerData)
+    public Aim(ItemManager context, Entity entity, ControllerData controllerData) : base(context, entity, controllerData)
     {
         _velocityLimit = Entity.GetBehaviors<VelocityLimit>().FirstOrDefault();
         _thrust = Entity.GetBehavior<Thruster>();

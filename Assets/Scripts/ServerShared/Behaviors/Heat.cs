@@ -12,7 +12,7 @@ public class HeatData : BehaviorData
     [InspectableField, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Heat(context, this, entity, item);
     }
@@ -23,12 +23,12 @@ public class Heat : IBehavior
     private HeatData _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public Heat(GameContext context, HeatData data, Entity entity, Gear item)
+    public Heat(ItemManager context, HeatData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -38,7 +38,7 @@ public class Heat : IBehavior
 
     public bool Update(float delta)
     {
-        Entity.AddHeat(Context.Evaluate(_data.Heat, Item, Entity) * (_data.PerSecond ? delta : 1));
+        Item.Temperature += Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * (_data.PerSecond ? delta : 1) / Context.GetThermalMass(Item.EquippableItem);
         return true;
     }
 }

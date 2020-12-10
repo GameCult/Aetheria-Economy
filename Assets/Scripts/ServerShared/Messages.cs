@@ -96,7 +96,7 @@ public class GalaxyResponseMessage : Message
 {
     [Key(0)] public ZoneDefinition[] Zones;
     [Key(1)] public GalaxyMapLayerData StarDensity;
-    [Key(2)] public GlobalData GlobalData;
+    // [Key(2)] public GlobalData GlobalData;
 }
 
 [MessagePackObject]

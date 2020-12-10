@@ -101,9 +101,11 @@ public static class UnityExtensions
 		var grad = new Gradient();
 		grad.mode = sharp ? GradientMode.Fixed : GradientMode.Blend;
 		grad.alphaKeys = new[] {new GradientAlphaKey(1, 0), new GradientAlphaKey(1, 1)};
-		grad.colorKeys = keys.Select(k => new GradientColorKey(k.xyz, k.w)).ToArray();
+		grad.colorKeys = keys.Select(k => new GradientColorKey(k.xyz.ToColor(), k.w)).ToArray();
 		return grad;
 	}
+	
+	public static Color ToColor(this float3 v) => new Color(v.x,v.y,v.z);
 	
 	public static Vector3 Flatland(this Vector2 v) => new Vector3(v.x,0,v.y);
 	public static Vector2 Flatland(this Vector3 v) => new Vector2(v.x,v.z);

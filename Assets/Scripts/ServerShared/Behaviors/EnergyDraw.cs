@@ -12,23 +12,24 @@ public class EnergyDrawData : BehaviorData
     [InspectableField, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new EnergyDraw(context, this, entity, item);
     }
 }
 
-public class EnergyDraw : IBehavior
+public class EnergyDraw : IBehavior, IOrderedBehavior
 {
     private EnergyDrawData _data;
 
+    public int Order => -100;
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public EnergyDraw(GameContext context, EnergyDrawData data, Entity entity, Gear item)
+    public EnergyDraw(ItemManager context, EnergyDrawData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -38,7 +39,7 @@ public class EnergyDraw : IBehavior
 
     public bool Update(float delta)
     {
-        Entity.Energy -= Context.Evaluate(_data.Draw, Item, Entity) * (_data.PerSecond ? delta : 1);
+        Entity.Energy -= Context.Evaluate(_data.Draw, Item.EquippableItem, Entity) * (_data.PerSecond ? delta : 1);
         return true;
     }
 }

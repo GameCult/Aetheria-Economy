@@ -19,6 +19,7 @@ public class GameSettings : ScriptableObject
     public BodySettingsCollection[] BodySettingsCollections;
     public PlanetSettings PlanetSettings;
     public ZoneGenerationSettings ZoneSettings;
+    public GameplaySettings GameplaySettings;
 }
 
 [Serializable]

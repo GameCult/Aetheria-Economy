@@ -10,6 +10,21 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Allegorithmic" t="Include">
+          <e p="Plugins" t="Include">
+            <e p="engine_build_info.txt" t="Include" />
+            <e p="EULA.txt" t="Include" />
+            <e p="Substance.EditorHelper" t="Include">
+              <e p="Scripter.cs" t="Include" />
+              <e p="Substance.EditorHelper.asmdef" t="Include" />
+            </e>
+            <e p="Substance.Platform" t="Include">
+              <e p="NativeFunctions.cs" t="Include" />
+              <e p="Substance.Platform.asmdef" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="FitToCamera.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">
@@ -1389,6 +1404,7 @@
               <e p="StationTowing.cs" t="Include" />
               <e p="Survey.cs" t="Include" />
               <e p="VelocityMatch.cs" t="Include" />
+              <e p="WanderTask.cs" t="Include" />
             </e>
             <e p="Attributes.cs" t="Include" />
             <e p="Behaviors" t="Include">
@@ -1438,11 +1454,10 @@
             <e p="Enums.cs" t="Include" />
             <e p="ExponentialCurve.cs" t="Include" />
             <e p="Extensions.cs" t="Include" />
-            <e p="GameContext.cs" t="Include" />
             <e p="GlobalData.cs" t="Include" />
-            <e p="IChangeSource.cs" t="Include" />
             <e p="ItemData.cs" t="Include" />
             <e p="ItemInstance.cs" t="Include" />
+            <e p="ItemManager.cs" t="Include" />
             <e p="JsonConverters.cs" t="Include" />
             <e p="LoadoutData.cs" t="Include" />
             <e p="MathFormatters.cs" t="Include" />
@@ -1907,7 +1922,6 @@
             <e p="ClickableCollider.cs" t="Include" />
             <e p="ClickCatcher.cs" t="Include" />
             <e p="ClickRaycaster.cs" t="Include" />
-            <e p="ColonyTab.cs" t="Include" />
             <e p="ConfirmationDialog.cs" t="Include" />
             <e p="ConsoleController.cs" t="Include" />
             <e p="ConsoleView.cs" t="Include" />
@@ -1970,6 +1984,7 @@
             <e p="VolumeRender.shader" t="Include" />
             <e p="VolumeSun.shader" t="Include" />
           </e>
+          <e p="ViewNormalEmissive.shader" t="Include" />
         </e>
         <e p="TextMesh Pro" t="Include">
           <e p="Fonts" t="Include">
@@ -2000,116 +2015,14 @@
           </e>
         </e>
       </e>
-      <e p="com.alelievr.NodeGraphProcessor.Editor.csproj" t="IncludeRecursive" />
-      <e p="com.alelievr.NodeGraphProcessor.Runtime.csproj" t="IncludeRecursive" />
       <e p="Economy.Shared.Unity.csproj" t="IncludeRecursive" />
       <e p="MessagePack.csproj" t="IncludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive" />
+      <e p="Substance.EditorHelper.csproj" t="IncludeRecursive" />
+      <e p="Substance.Platform.csproj" t="IncludeRecursive" />
       <e p="Temp\bin" t="ExcludeRecursive" />
       <e p="UniRx.csproj" t="IncludeRecursive" />
-    </e>
-    <e p="D:\WIP4\Projects\NodeGraphProcessor\Assets\com.alelievr.NodeGraphProcessor\Editor" t="Include">
-      <e p="BaseGraphWindow.cs" t="Include" />
-      <e p="Callbacks" t="Include">
-        <e p="NodeGraphProcessorMenuItems.cs" t="Include" />
-        <e p="OnBaseGraphDeleted.cs" t="Include" />
-      </e>
-      <e p="com.alelievr.NodeGraphProcessor.Editor.asmdef" t="Include" />
-      <e p="EditorAttributes.cs" t="Include" />
-      <e p="GraphInspector.cs" t="Include" />
-      <e p="Logic" t="Include">
-        <e p="EdgeConnectorListener.cs" t="Include" />
-      </e>
-      <e p="NodeInspectorObject.cs" t="Include" />
-      <e p="Resources" t="Include">
-        <e p="GraphProcessorElements" t="Include">
-          <e p="PinnedElement.uxml" t="Include" />
-        </e>
-        <e p="GraphProcessorStyles" t="Include">
-          <e p="BaseGraphView.uss" t="Include" />
-          <e p="BaseNodeView.uss" t="Include" />
-          <e p="BaseStackNodeView.uss" t="Include" />
-          <e p="EdgeView.uss" t="Include" />
-          <e p="ExposedParameterView.uss" t="Include" />
-          <e p="GroupView.uss" t="Include" />
-          <e p="InspectorView.uss" t="Include" />
-          <e p="NodeSettings.uss" t="Include" />
-          <e p="PinnedElementView.uss" t="Include" />
-          <e p="PortView.uss" t="Include" />
-          <e p="RelayNode.uss" t="Include" />
-        </e>
-        <e p="NodeTemplate.cs.txt" t="Include" />
-        <e p="NodeViewTemplate.cs.txt" t="Include" />
-        <e p="UXML" t="Include">
-          <e p="NodeSettings.uxml" t="Include" />
-        </e>
-      </e>
-      <e p="Utils" t="Include">
-        <e p="BaseEdgeConnector.cs" t="Include" />
-        <e p="BaseEdgeDragHelper.cs" t="Include" />
-        <e p="CopyPasteHelper.cs" t="Include" />
-        <e p="FieldFactory.cs" t="Include" />
-        <e p="NodeProvider.cs" t="Include" />
-        <e p="StackNodeViewProvider.cs" t="Include" />
-      </e>
-      <e p="Views" t="Include">
-        <e p="BaseGraphView.cs" t="Include" />
-        <e p="BaseNodeView.cs" t="Include" />
-        <e p="BaseStackNodeView.cs" t="Include" />
-        <e p="CreateNodeMenuWindow.cs" t="Include" />
-        <e p="EdgeView.cs" t="Include" />
-        <e p="ExposedParameterFieldView.cs" t="Include" />
-        <e p="ExposedParameterPropertyView.cs" t="Include" />
-        <e p="ExposedParameterView.cs" t="Include" />
-        <e p="GroupView.cs" t="Include" />
-        <e p="MiniMapView.cs" t="Include" />
-        <e p="NodeBadgeView.cs" t="Include" />
-        <e p="NodeSettingsView.cs" t="Include" />
-        <e p="ParameterNodeView.cs" t="Include" />
-        <e p="PinnedElementView.cs" t="Include" />
-        <e p="PortView.cs" t="Include" />
-        <e p="ProcessorView.cs" t="Include" />
-        <e p="RelayNodeView.cs" t="Include" />
-        <e p="StickyNoteView.cs" t="Include" />
-        <e p="ToolbarView.cs" t="Include" />
-      </e>
-    </e>
-    <e p="D:\WIP4\Projects\NodeGraphProcessor\Assets\com.alelievr.NodeGraphProcessor\Runtime" t="Include">
-      <e p="com.alelievr.NodeGraphProcessor.Runtime.asmdef" t="Include" />
-      <e p="Elements" t="Include">
-        <e p="BaseNode.cs" t="Include" />
-        <e p="BaseStackNode.cs" t="Include" />
-        <e p="Group.cs" t="Include" />
-        <e p="NodePort.cs" t="Include" />
-        <e p="ParameterNode.cs" t="Include" />
-        <e p="PinnedElement.cs" t="Include" />
-        <e p="RelayNode.cs" t="Include" />
-        <e p="StickyNote.cs" t="Include" />
-      </e>
-      <e p="Graph" t="Include">
-        <e p="Attributes.cs" t="Include" />
-        <e p="BaseGraph.cs" t="Include" />
-      </e>
-      <e p="PackageInfo.cs" t="Include" />
-      <e p="Processing" t="Include">
-        <e p="BaseGraphProcessor.cs" t="Include" />
-        <e p="CustomPortIO.cs" t="Include" />
-        <e p="JobGraphProcessor.cs" t="Include" />
-        <e p="ProcessGraphProcessor.cs" t="Include" />
-        <e p="TypeAdapter.cs" t="Include" />
-      </e>
-      <e p="Utils" t="Include">
-        <e p="AppDomainExtension.cs" t="Include" />
-        <e p="ExceptionToLog.cs" t="Include" />
-        <e p="GraphUtils.cs" t="Include" />
-        <e p="JsonSerializer.cs" t="Include" />
-        <e p="MessageType.cs" t="Include" />
-        <e p="SerializableEdge.cs" t="Include" />
-        <e p="SerializableType.cs" t="Include" />
-        <e p="SerrializableObject.cs" t="Include" />
-        <e p="TypeExtension.cs" t="Include" />
-      </e>
     </e>
   </component>
 </project>

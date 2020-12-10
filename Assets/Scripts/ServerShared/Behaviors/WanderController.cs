@@ -14,32 +14,26 @@ public class WanderControllerData : ControllerData
     [InspectableField, JsonProperty("randomDockTime"), Key(6)]  
     public float RandomDockTime = 5;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new WanderController(context, this, entity, item);
     }
 }
 
-public class WanderController : ControllerBase, IBehavior
+public class WanderController : ControllerBase<WanderTask>, IBehavior
 {
     public WanderTarget WanderTarget;
-    public override TaskType TaskType => TaskType.None;
     public BehaviorData Data => _data;
     
     private WanderControllerData _data;
-    private GameContext _context;
-    private Entity _entity;
-    private Gear _item;
+    private EquippedItem Item { get; }
     private Guid _target;
     private float _dockTime = -1;
     
-    public WanderController(GameContext context, WanderControllerData data, Entity entity, Gear item) : base(context, data, entity)
+    public WanderController(ItemManager itemManager, WanderControllerData data, Entity entity, EquippedItem item) : base(itemManager, data, entity)
     {
-        _context = context;
         _data = data;
-        _entity = entity;
-        _item = item;
-        Task = Guid.NewGuid();
+        Item = item;
     }
 
     public new bool Update(float delta)
@@ -58,17 +52,17 @@ public class WanderController : ControllerBase, IBehavior
         if (WanderTarget == WanderTarget.Planets)
         {
             var planets = Zone.Planets.Values.ToArray();
-            var randomPlanet = planets[_context.Random.NextInt(planets.Length)];
+            var randomPlanet = planets[ItemManager.Random.NextInt(planets.Length)];
             MoveTo(() => Zone.GetOrbitPosition(randomPlanet.Orbit), () => Zone.GetOrbitVelocity(randomPlanet.Orbit));
         }
         else if (WanderTarget == WanderTarget.Orbitals)
         {
-            var entities = Zone.Entities.Values.ToArray();
-            var randomEntity = entities[_context.Random.NextInt(entities.Length)];
+            var entities = Zone.Entities.Where(e=>e is OrbitalEntity).ToArray();
+            var randomEntity = entities[ItemManager.Random.NextInt(entities.Length)];
             MoveTo(randomEntity, true, () =>
             {
-                _entity.SetParent(randomEntity);
-                _dockTime = _context.Random.NextFloat(_data.RandomDockTime);
+                Entity.SetParent(randomEntity);
+                _dockTime = ItemManager.Random.NextFloat(_data.RandomDockTime);
             });
         }
     }

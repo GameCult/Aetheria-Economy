@@ -1,11 +1,5 @@
 {
   "dependencies": {
-    "com.alelievr.node-graph-processor": {
-      "version": "file:D:/WIP4/Projects/NodeGraphProcessor/Assets/com.alelievr.NodeGraphProcessor",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,

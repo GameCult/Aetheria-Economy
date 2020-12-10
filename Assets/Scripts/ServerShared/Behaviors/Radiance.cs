@@ -9,7 +9,7 @@ public class RadianceData : BehaviorData
     [InspectableField, JsonProperty("radiance"), Key(1), RuntimeInspectable]
     public PerformanceStat Radiance = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Radiance(context, this, entity, item);
     }
@@ -20,12 +20,12 @@ public class Radiance : IBehavior
     private RadianceData _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public Radiance(GameContext context, RadianceData data, Entity entity, Gear item)
+    public Radiance(ItemManager context, RadianceData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;

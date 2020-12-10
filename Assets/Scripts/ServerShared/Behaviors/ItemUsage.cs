@@ -10,7 +10,7 @@ public class ItemUsageData : BehaviorData
     [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("item"), Key(1), RuntimeInspectable]  
     public Guid Item;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new ItemUsage(context, this, entity, item);
     }
@@ -21,12 +21,12 @@ public class ItemUsage : IBehavior
     private ItemUsageData _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public ItemUsage(GameContext context, ItemUsageData data, Entity entity, Gear item)
+    public ItemUsage(ItemManager context, ItemUsageData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -36,19 +36,15 @@ public class ItemUsage : IBehavior
 
     public bool Update(float delta)
     {
-        var cargoInstances = Entity.Cargo.Select(c => Context.Cache.Get<ItemInstance>(c));
-        if (cargoInstances.FirstOrDefault(c => c.Data == _data.Item) is SimpleCommodity item)
-        {
-            if (item.Quantity > 1)
-                item.Quantity--;
-            else
-            {
-                Entity.Cargo.Remove(item.ID);
-                Context.Cache.Delete(item);
-            }
+        var cargo = Entity.FindItemInCargo(_data.Item);
+        if (cargo == null) return false;
 
-            return true;
-        }
-        return false;
+        var item = cargo.ItemsOfType[_data.Item][0];
+        if (item is SimpleCommodity simpleCommodity)
+            cargo.Remove(simpleCommodity, 1);
+        if (item is CraftedItemInstance craftedItemInstance)
+            cargo.Remove(craftedItemInstance);
+        
+        return true;
     }
 }

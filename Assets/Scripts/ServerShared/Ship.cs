@@ -17,10 +17,9 @@ public class Ship : Entity
 
     // [IgnoreMember] public Dictionary<Targetable, float> Contacts = new Dictionary<Targetable, float>();
     // [IgnoreMember] public Targetable Target;
-    [JsonProperty("homeEntity"), Key(19)]
-    public Guid HomeEntity;
+    public Entity HomeEntity;
     
-    public Ship(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Zone zone, Guid corporation) : base(context, hull, gear, cargo, zone, corporation)
+    public Ship(ItemManager itemManager, Zone zone, EquippableItem hull) : base(itemManager, zone, hull)
     {
     }
 

@@ -15,7 +15,7 @@ public class ThrusterData : BehaviorData
     [InspectableField, JsonProperty("heat"), Key(3)]  
     public PerformanceStat Heat = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Thruster(context, this, entity, item);
     }
@@ -24,8 +24,8 @@ public class ThrusterData : BehaviorData
 public class Thruster : IAnalogBehavior
 {
     public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
+    public EquippedItem Item { get; }
+    public ItemManager Context { get; }
     
     public float Thrust { get; private set; }
 
@@ -41,7 +41,7 @@ public class Thruster : IAnalogBehavior
     
     private float _input;
 
-    public Thruster(GameContext context, ThrusterData data, Entity entity, Gear item)
+    public Thruster(ItemManager context, ThrusterData data, Entity entity, EquippedItem item)
     {
         Context = context;
         _data = data;
@@ -51,10 +51,10 @@ public class Thruster : IAnalogBehavior
 
     public bool Update(float delta)
     {
-        Thrust = Context.Evaluate(_data.Thrust, Item, Entity);
+        Thrust = Context.Evaluate(_data.Thrust, Item.EquippableItem, Entity);
         Entity.Velocity += Entity.Direction * _input * Thrust / Entity.Mass * delta;
-        Entity.AddHeat(_input * Context.Evaluate(_data.Heat, Item, Entity) * delta);
-        Entity.VisibilitySources[this] = _input * Context.Evaluate(_data.Visibility, Item, Entity);
+        Item.Temperature += (_input * Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta) / Context.GetThermalMass(Item.EquippableItem);
+        Entity.VisibilitySources[this] = _input * Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
         return true;
     }
 }

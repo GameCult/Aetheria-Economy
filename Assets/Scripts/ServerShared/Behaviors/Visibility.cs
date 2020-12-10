@@ -12,7 +12,7 @@ public class VisibilityData : BehaviorData
     [InspectableField, JsonProperty("visibilityDecay"), Key(2)]  
     public PerformanceStat VisibilityDecay = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Visibility(context, this, entity, item);
     }
@@ -23,14 +23,14 @@ public class Visibility : IBehavior, IAlwaysUpdatedBehavior
     private VisibilityData _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
     private float _cooldown; // Normalized
 
-    public Visibility(GameContext context, VisibilityData data, Entity entity, Gear item)
+    public Visibility(ItemManager context, VisibilityData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -40,14 +40,14 @@ public class Visibility : IBehavior, IAlwaysUpdatedBehavior
 
     public bool Update(float delta)
     {
-        Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item, Entity);
+        Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
         return true;
     }
 
     public void AlwaysUpdate(float delta)
     {
         // TODO: Time independent decay?
-        Entity.VisibilitySources[this] *= Context.Evaluate(_data.VisibilityDecay, Item, Entity);
+        Entity.VisibilitySources[this] *= Context.Evaluate(_data.VisibilityDecay, Item.EquippableItem, Entity);
         
         if (Entity.VisibilitySources[this] < 0.01f) Entity.VisibilitySources.Remove(this);
     }

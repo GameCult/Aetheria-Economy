@@ -13,9 +13,9 @@ public class VelocityMatch : AgentBehavior
     private Turning _turning;
     private const float TargetThreshold = .1f;
 
-    private GameContext _context;
+    private ItemManager _context;
 
-    public VelocityMatch(GameContext context, Entity entity, ControllerData controllerData) : base(context, entity, controllerData)
+    public VelocityMatch(ItemManager context, Entity entity, ControllerData controllerData) : base(context, entity, controllerData)
     {
         _context = context;
         _thrust = Entity.GetBehavior<Thruster>();

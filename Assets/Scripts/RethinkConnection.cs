@@ -105,7 +105,6 @@ public static class RethinkConnection
             {
                 var filter = ((Table) operation).Filter(o =>
                     o["$type"] == typeof(GalaxyMapLayerData).Name || 
-                    o["$type"] == typeof(GlobalData).Name ||
                     o["$type"] == typeof(MegaCorporation).Name);
                 status.GalaxyEntries = filter.Count().RunAtom<int>(connection);
                 operation = filter;

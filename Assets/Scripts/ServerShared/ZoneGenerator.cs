@@ -11,24 +11,24 @@ using Random = Unity.Mathematics.Random;
 
 public class ZoneGenerator
 {
+	// public static ZonePack GenerateZone(
+	// 	ZoneGenerationSettings settings,
+	// 	Dictionary<string,GalaxyMapLayerData> mapLayers,
+	// 	IEnumerable<SimpleCommodityData> resources,
+	// 	string name,
+	// 	float2 position)
+	// {
+	// 	var random = new Random(Convert.ToUInt32(abs(name.GetHashCode())));
+	// 	var radius = settings.ZoneRadius.Evaluate(random.NextFloat() * mapLayers["Radius"].Evaluate(position, settings.ShapeSettings));
+	// 	var mass = settings.ZoneMass.Evaluate(random.NextFloat() * mapLayers["Mass"].Evaluate(position, settings.ShapeSettings));
+	//
+	// 	return GenerateZone(settings, mapLayers, resources, name, position, mass, radius, random);
+	// }
+
 	public static ZonePack GenerateZone(
 		ZoneGenerationSettings settings,
-		Dictionary<string,GalaxyMapLayerData> mapLayers,
-		IEnumerable<SimpleCommodityData> resources,
-		string name,
-		float2 position)
-	{
-		var random = new Random(Convert.ToUInt32(abs(name.GetHashCode())));
-		var radius = settings.ZoneRadius.Evaluate(random.NextFloat() * mapLayers["Radius"].Evaluate(position, settings.ShapeSettings));
-		var mass = settings.ZoneMass.Evaluate(random.NextFloat() * mapLayers["Mass"].Evaluate(position, settings.ShapeSettings));
-
-		return GenerateZone(settings, mapLayers, resources, name, position, mass, radius, random);
-	}
-
-	public static ZonePack GenerateZone(
-		ZoneGenerationSettings settings,
-		Dictionary<string,GalaxyMapLayerData> mapLayers,
-		IEnumerable<SimpleCommodityData> resources,
+		// Dictionary<string,GalaxyMapLayerData> mapLayers,
+		// IEnumerable<SimpleCommodityData> resources,
 		float mass,
 		float radius)
 	{
@@ -36,13 +36,13 @@ public class ZoneGenerator
 		var position = float2(0f);
 		var random = new Random(Convert.ToUInt32(abs(name.GetHashCode())));
 		
-		return GenerateZone(settings, mapLayers, resources, name, position, mass, radius, random);
+		return GenerateZone(settings, name, position, mass, radius, random);
 	}
 	
 	private static ZonePack GenerateZone(
 		ZoneGenerationSettings settings,
-		Dictionary<string,GalaxyMapLayerData> mapLayers,
-		IEnumerable<SimpleCommodityData> resources,
+		// Dictionary<string,GalaxyMapLayerData> mapLayers,
+		// IEnumerable<SimpleCommodityData> resources,
 		string name,
 		float2 position,
 		float mass,
@@ -92,25 +92,25 @@ public class ZoneGenerator
                 : Guid.Empty;
         
         // Cache resource densities
-        var resourceMaps = mapLayers.Values
-	        .ToDictionary(m => m.ID, m => m.Evaluate(zone.Position, settings.ShapeSettings));
+        // var resourceMaps = mapLayers.Values
+	       //  .ToDictionary(m => m.ID, m => m.Evaluate(zone.Position, settings.ShapeSettings));
         
         pack.Planets = planets.Where(p=>!p.Empty).Select(planet =>
         {
-	        Dictionary<Guid, float> planetResources = new Dictionary<Guid, float>();
+	        // Dictionary<Guid, float> planetResources = new Dictionary<Guid, float>();
 	        BodyType bodyType = planet.Belt ? BodyType.Asteroid :
 		        planet.Mass > settings.SunMass ? BodyType.Sun :
 		        planet.Mass > settings.GasGiantMass ? BodyType.GasGiant :
 		        planet.Mass > settings.PlanetMass ? BodyType.Planet : BodyType.Planetoid;
 	        
-	        foreach (var r in resources)
-	        {
-		        if ((bodyType & r.ResourceBodyType) != 0)
-		        {
-			        float quantity = ResourceValue(ref random, settings, r, r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]));
-			        if (r.Floor < quantity) planetResources.Add(r.ID, quantity);
-		        }
-	        }
+	        // foreach (var r in resources)
+	        // {
+		       //  if ((bodyType & r.ResourceBodyType) != 0)
+		       //  {
+			      //   float quantity = ResourceValue(ref random, settings, r, r.ResourceDensity.Aggregate(1f, (m, rdm) => m * resourceMaps[rdm]));
+			      //   if (r.Floor < quantity) planetResources.Add(r.ID, quantity);
+		       //  }
+	        // }
 
 	        BodyData planetData;
 	        switch (bodyType)
@@ -134,7 +134,7 @@ public class ZoneGenerator
 
 	        planetData.Mass.Value = planet.Mass;
 	        planetData.Orbit = orbitMap[planet].ID;
-	        planetData.Resources = planetResources;
+	        // planetData.Resources = planetResources;
             planetData.Name.Value = planetData.ID.ToString().Substring(0, 8);
             if (planetData is AsteroidBeltData beltData)
             {
@@ -199,11 +199,11 @@ public class ZoneGenerator
         return pack;
 	}
 	
-	static float ResourceValue(ref Random random, ZoneGenerationSettings settings, SimpleCommodityData resource, float density)
-	{
-		return random.NextPowerDistribution(resource.Minimum, resource.Maximum, resource.Exponent,
-			1 / lerp(settings.ResourceDensityMinimum, settings.ResourceDensityMaximum, density));
-	}
+	// static float ResourceValue(ref Random random, ZoneGenerationSettings settings, SimpleCommodityData resource, float density)
+	// {
+	// 	return random.NextPowerDistribution(resource.Minimum, resource.Maximum, resource.Exponent,
+	// 		1 / lerp(settings.ResourceDensityMinimum, settings.ResourceDensityMaximum, density));
+	// }
 
 	public static GeneratorPlanet[] GenerateEntities(ZoneGenerationSettings settings, ref Random random, ZoneData zone)
 	{

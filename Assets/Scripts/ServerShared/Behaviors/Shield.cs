@@ -12,7 +12,7 @@ public class ShieldData : BehaviorData
     [InspectableField, JsonProperty("shielding"), Key(2), RuntimeInspectable]  
     public PerformanceStat Shielding = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Shield(context, this, entity, item);
     }
@@ -21,14 +21,14 @@ public class ShieldData : BehaviorData
 public class Shield : IBehavior
 {
     public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
+    public EquippedItem Item { get; }
+    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     
     private ShieldData _data;
 
-    public Shield(GameContext context, ShieldData data, Entity entity, Gear item)
+    public Shield(ItemManager context, ShieldData data, Entity entity, EquippedItem item)
     {
         Context = context;
         _data = data;

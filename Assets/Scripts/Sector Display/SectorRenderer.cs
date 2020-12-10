@@ -18,6 +18,7 @@ public class SectorRenderer : MonoBehaviour
     public Transform SectorBrushes;
     public MeshRenderer SectorBoundaryBrush;
     public MeshRenderer MinimapGravityQuad;
+    public MeshRenderer MinimapTintQuad;
     public CinemachineVirtualCamera SceneCamera;
     public Camera[] FogCameras;
     public Camera[] MinimapCameras;
@@ -183,9 +184,9 @@ public class SectorRenderer : MonoBehaviour
                 {
                     planet = Instantiate(Sun, ZoneRoot);
                     var sun = (SunObject) planet;
-                    sunData.LightColor.Subscribe(c => sun.Light.color = c);
+                    sunData.LightColor.Subscribe(c => sun.Light.color = c.ToColor());
                     sunData.Mass.Subscribe(m => sun.Light.range = Settings.PlanetSettings.LightRadius.Evaluate(m));
-                    sunData.FogTintColor.Subscribe(c => sun.FogTint.material.SetColor("_Color", c));
+                    sunData.FogTintColor.Subscribe(c => sun.FogTint.material.SetColor("_Color", c.ToColor()));
                     sunData.Mass.Subscribe(m => sun.FogTint.transform.localScale = Settings.PlanetSettings.FogTintRadius.Evaluate(m) * Vector3.one);
                 }
                 else planet = Instantiate(GasGiant, ZoneRoot);
@@ -313,6 +314,7 @@ public class SectorRenderer : MonoBehaviour
         var gravPos = MinimapGravityQuad.transform.position;
         gravPos.y = -Settings.PlanetSettings.ZoneDepth - _maxDepth;
         MinimapGravityQuad.transform.position = gravPos;
+        MinimapTintQuad.transform.position = gravPos - Vector3.up*10;
     }
 }
 

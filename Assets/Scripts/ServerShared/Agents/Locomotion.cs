@@ -14,7 +14,7 @@ public class Locomotion : AgentBehavior
     private Turning _turning;
     private VelocityLimit _velocityLimit;
 
-    public Locomotion(GameContext context, Entity entity, ControllerData controllerData) : base(context, entity, controllerData)
+    public Locomotion(ItemManager context, Entity entity, ControllerData controllerData) : base(context, entity, controllerData)
     {
         _velocityLimit = Entity.GetBehaviors<VelocityLimit>().FirstOrDefault();
         _thrust = Entity.GetBehavior<Thruster>();

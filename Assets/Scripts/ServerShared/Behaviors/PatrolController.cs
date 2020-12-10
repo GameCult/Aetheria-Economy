@@ -10,58 +10,50 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship), Order(-100)]
 public class PatrolControllerData : ControllerData
 {
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new PatrolController(context, this, entity, item);
     }
 }
 
-public class PatrolController : IBehavior, IController, IInitializableBehavior
+public class PatrolController : IBehavior, IInitializableBehavior
 {
-    public TaskType TaskType => TaskType.None;
-    public bool Available => false;
-    public Zone Zone => _entity.Zone;
     public BehaviorData Data => _data;
     
     private PatrolControllerData _data;
-    private GameContext _context;
-    private Entity _entity;
-    private Gear _item;
+    private ItemManager Context { get; }
+    private Entity Entity { get; }
+    private EquippedItem Item { get; }
     private Locomotion _locomotion;
     private Guid _targetOrbit;
     
-    public PatrolController(GameContext context, PatrolControllerData data, Entity entity, Gear item)
+    public PatrolController(ItemManager context, PatrolControllerData data, Entity entity, EquippedItem item)
     {
-        _context = context;
+        Context = context;
         _data = data;
-        _entity = entity;
-        _item = item;
+        Entity = entity;
+        Item = item;
     }
     
     public void Initialize()
     {
-        _locomotion = new Locomotion(_context, _entity, _data);
+        _locomotion = new Locomotion(Context, Entity, _data);
         RandomTarget();
     }
 
     public bool Update(float delta)
     {
-        _locomotion.Objective = Zone.GetOrbitPosition(_targetOrbit);
+        _locomotion.Objective = Entity.Zone.GetOrbitPosition(_targetOrbit);
         _locomotion.Update(delta);
         
-        if(length(_entity.Position - _locomotion.Objective) < _data.TargetDistance)
+        if(length(Entity.Position - _locomotion.Objective) < _data.TargetDistance)
             RandomTarget();
         
         return true;
     }
-
-    public void AssignTask(Guid task)
-    {
-        throw new NotImplementedException();
-    }
     
     private void RandomTarget()
     {
-        _targetOrbit = Zone.Planets.Keys.ToArray()[_context.Random.NextInt(Zone.Planets.Count)];
+        _targetOrbit = Entity.Zone.Planets.Keys.ToArray()[Context.Random.NextInt(Entity.Zone.Planets.Count)];
     }
 }

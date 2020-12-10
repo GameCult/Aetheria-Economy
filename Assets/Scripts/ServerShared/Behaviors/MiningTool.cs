@@ -20,7 +20,7 @@ public class MiningToolData : BehaviorData
     [InspectableField, JsonProperty("range"), Key(4)]
     public PerformanceStat Range = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new MiningTool(context, this, entity, item);
     }
@@ -34,13 +34,13 @@ public class MiningTool : IBehavior
     private MiningToolData _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     public float Range { get; private set; }
 
-    public MiningTool(GameContext context, MiningToolData data, Entity entity, Gear item)
+    public MiningTool(ItemManager context, MiningToolData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -50,7 +50,7 @@ public class MiningTool : IBehavior
 
     public bool Update(float delta)
     {
-        Range = Context.Evaluate(_data.Range, Item, Entity);
+        Range = Context.Evaluate(_data.Range, Item.EquippableItem, Entity);
         var asteroidTransform = Entity.Zone.GetAsteroidTransform(AsteroidBelt, Asteroid);
         if (AsteroidBelt != Guid.Empty && 
             Entity.Zone.AsteroidExists(AsteroidBelt, Asteroid) && 
@@ -60,9 +60,9 @@ public class MiningTool : IBehavior
                 Entity,
                 AsteroidBelt,
                 Asteroid,
-                Context.Evaluate(_data.DamagePerSecond, Item, Entity) * delta,
-                Context.Evaluate(_data.Efficiency, Item, Entity),
-                Context.Evaluate(_data.Penetration, Item, Entity));
+                Context.Evaluate(_data.DamagePerSecond, Item.EquippableItem, Entity) * delta,
+                Context.Evaluate(_data.Efficiency, Item.EquippableItem, Entity),
+                Context.Evaluate(_data.Penetration, Item.EquippableItem, Entity));
             return true;
         }
 

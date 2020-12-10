@@ -37,7 +37,7 @@ public class LauncherData : WeaponData
     [InspectableField, JsonProperty("lockOnTime"), Key(15)]
     public PerformanceStat LockOnTime = new PerformanceStat();
 
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Launcher(context, this, entity, item);
     }
@@ -52,13 +52,13 @@ public class Launcher : IBehavior, IAlwaysUpdatedBehavior
     
     private LauncherData _data;
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
     private float _firingVisibility;
     
     public BehaviorData Data => _data;
 
-    public Launcher(GameContext context, LauncherData m, Entity entity, Gear item)
+    public Launcher(ItemManager context, LauncherData m, Entity entity, EquippedItem item)
     {
         Context = context;
         _data  = m;

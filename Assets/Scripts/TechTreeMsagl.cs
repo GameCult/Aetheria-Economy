@@ -67,7 +67,7 @@ public class TechTreeMsagl : MonoBehaviour
     public Material TechArrowMaterial;
     public Material TechLinkMaterial;
 
-    public GameContext Context;
+    public ItemManager Context;
 
     private List<Prototype> _ringInstances = new List<Prototype>();
     private List<Prototype> _techInstances = new List<Prototype>();
@@ -334,14 +334,14 @@ public class TechTreeMsagl : MonoBehaviour
                     var blueprint = (BlueprintData) vertex.UserData;
                     PropertiesPanel.Title.text = blueprint.Name;
                     PropertiesPanel.AddProperty("Research Time", () => $"{blueprint.ResearchTime:0.##} MH");
-                    PropertiesPanel.AddProperty("Produces", () => $"{Context.Cache.Get<ItemData>(blueprint.Item).Name}");
+                    PropertiesPanel.AddProperty("Produces", () => $"{Context.ItemData.Get<ItemData>(blueprint.Item).Name}");
                     PropertiesPanel.AddProperty("Production Quality", () => $"{Mathf.RoundToInt(blueprint.Quality * 100)}%");
                     PropertiesPanel.AddProperty("Production Time", () => $"{blueprint.ProductionTime:0.##} MH");
                     
                     var ingredientsList = PropertiesPanel.AddList("Ingredients");
                     foreach (var ingredient in blueprint.Ingredients)
                     {
-                        var ingredientData = Context.Cache.Get<ItemData>(ingredient.Key);
+                        var ingredientData = Context.ItemData.Get<ItemData>(ingredient.Key);
                         ingredientsList.AddProperty(ingredientData.Name, () => ingredient.Value.ToString());
                     }
                     ingredientsList.SetExpanded(true, true);
@@ -349,7 +349,7 @@ public class TechTreeMsagl : MonoBehaviour
                     var dependenciesList = PropertiesPanel.AddList("Dependencies");
                     foreach (var dependency in blueprint.Dependencies)
                     {
-                        var dependencyBlueprint = Context.Cache.Get<BlueprintData>(dependency);
+                        var dependencyBlueprint = Context.ItemData.Get<BlueprintData>(dependency);
                         dependenciesList.AddProperty(dependencyBlueprint.Name);
                     }
                     dependenciesList.SetExpanded(true, true);

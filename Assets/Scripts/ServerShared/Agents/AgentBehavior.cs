@@ -18,10 +18,10 @@ public abstract class AgentBehavior
     protected float TurningInput(float2 deltaV) => clamp(-Entity.Direction.AngleDiff(deltaV) * ControllerData.TurningSensitivity, -1, 1);
 
     protected ControllerData ControllerData;
-    protected GameContext Context;
+    protected ItemManager Context;
     protected Entity Entity;
 
-    public AgentBehavior(GameContext context, Entity entity, ControllerData controllerData)
+    public AgentBehavior(ItemManager context, Entity entity, ControllerData controllerData)
     {
         Context = context;
         Entity = entity;

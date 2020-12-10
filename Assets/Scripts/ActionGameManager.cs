@@ -28,7 +28,7 @@ public class ActionGameManager : MonoBehaviour
     private int _zoomLevelIndex;
     
     public DatabaseCache Cache { get; private set; }
-    public GameContext Context { get; private set; }
+    public ItemManager Context { get; private set; }
     public Zone Zone { get; private set; }
 
     void Start()
@@ -37,7 +37,7 @@ public class ActionGameManager : MonoBehaviour
         _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
         Cache = new DatabaseCache();
         Cache.Load(_filePath.FullName);
-        Context = new GameContext(Cache, Debug.Log);
+        Context = new ItemManager(Cache, Settings.GameplaySettings, Debug.Log);
 
         var zoneFile = Path.Combine(_filePath.FullName, "Home.zone");
         
@@ -46,8 +46,8 @@ public class ActionGameManager : MonoBehaviour
             MessagePackSerializer.Deserialize<ZonePack>(File.ReadAllBytes(zoneFile)) : 
             ZoneGenerator.GenerateZone(
                 settings: Settings.ZoneSettings,
-                mapLayers: Context.MapLayers,
-                resources: Context.Resources,
+                // mapLayers: Context.MapLayers,
+                // resources: Context.Resources,
                 mass: Settings.DefaultZoneMass,
                 radius: Settings.DefaultZoneRadius
             );
@@ -79,6 +79,7 @@ public class ActionGameManager : MonoBehaviour
             else
             {
                 _input.Player.Enable();
+                SectorRenderer.ViewDistance = Settings.DefaultViewDistance;
                 SectorRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
             }
         };

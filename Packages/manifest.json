@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.alelievr.node-graph-processor": "file:D:/WIP4/Projects/NodeGraphProcessor/Assets/com.alelievr.NodeGraphProcessor",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.2d.tilemap": "1.0.0",
     "com.unity.cinemachine": "2.6.3",

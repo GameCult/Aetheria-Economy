@@ -17,7 +17,7 @@ public class ResourceScannerData : BehaviorData
     [InspectableField, JsonProperty("scanDuration"), Key(3), RuntimeInspectable]
     public PerformanceStat ScanDuration = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new ResourceScanner(context, this, entity, item);
     }
@@ -32,8 +32,8 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
     private Guid _scanTarget;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     public float Range { get; private set; }
@@ -53,7 +53,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
         }
     }
 
-    public ResourceScanner(GameContext context, ResourceScannerData data, Entity entity, Gear item)
+    public ResourceScanner(ItemManager context, ResourceScannerData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -63,7 +63,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
 
     public bool Update(float delta)
     {
-        var planetData = Context.Cache.Get<BodyData>(ScanTarget);
+        var planetData = Context.ItemData.Get<BodyData>(ScanTarget);
         if (planetData != null)
         {
             if (planetData is AsteroidBeltData beltData)
@@ -75,7 +75,8 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
                     _scanTime += delta;
                     if (_scanTime > ScanDuration)
                     {
-                        Context.Cache.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;
+                        // TODO: Implement Scanning!
+                        //Context.ItemData.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;
                         _scanTime = 0;
                     }
                     return true;
@@ -88,7 +89,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
                     _scanTime += delta;
                     if (_scanTime > ScanDuration)
                     {
-                        Context.Cache.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;
+                        //Context.ItemData.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;
                         _scanTime = 0;
                     }
                     return true;
@@ -100,8 +101,8 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
 
     public void AlwaysUpdate(float delta)
     {
-        Range = Context.Evaluate(_data.Range, Item, Entity);
-        MinimumDensity = Context.Evaluate(_data.MinimumDensity, Item, Entity);
-        ScanDuration = Context.Evaluate(_data.ScanDuration, Item, Entity);
+        Range = Context.Evaluate(_data.Range, Item.EquippableItem, Entity);
+        MinimumDensity = Context.Evaluate(_data.MinimumDensity, Item.EquippableItem, Entity);
+        ScanDuration = Context.Evaluate(_data.ScanDuration, Item.EquippableItem, Entity);
     }
 }

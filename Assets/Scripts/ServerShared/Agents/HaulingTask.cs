@@ -9,10 +9,10 @@ public class HaulingTask : AgentTask
     public override TaskType Type => TaskType.Haul;
     
     [JsonProperty("origin"), Key(4)]
-    public Guid Origin;
+    public Entity Origin;
     
     [JsonProperty("target"), Key(5)]
-    public Guid Target;
+    public Entity Target;
     
     [JsonProperty("itemType"), Key(6)]
     public Guid ItemType;

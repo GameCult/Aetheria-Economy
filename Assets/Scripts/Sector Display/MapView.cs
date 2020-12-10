@@ -11,6 +11,7 @@ public class MapView : MonoBehaviour
     public Camera Minimap;
     public MeshRenderer GravityRenderer;
     public float ZoomSpeed;
+    public SectorRenderer SectorRenderer;
 
     private Transform _minimapTransform;
     private CopyTransform _minimapCopyTransform;
@@ -52,6 +53,7 @@ public class MapView : MonoBehaviour
 
     void SetZoom()
     {
+        SectorRenderer.ViewDistance = _viewDistance * _aspectRatio;
         Minimap.orthographicSize = MinimapGravity.orthographicSize = _viewDistance;
         _gravityRendererTransform.localScale = new Vector3(_viewDistance*_aspectRatio*2, _viewDistance*2, 1);
     }
@@ -83,7 +85,7 @@ public class MapView : MonoBehaviour
             gravPos.z = pos.z;
 
             _gravityRendererTransform.position = gravPos;
-            _minimapTransform.position = _minimapGravityTransform.position = pos;
+            Main.transform.position = _minimapTransform.position = _minimapGravityTransform.position = pos;
         }
     }
 

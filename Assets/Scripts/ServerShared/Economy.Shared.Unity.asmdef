@@ -2,9 +2,9 @@
     "name": "Economy.Shared.Unity",
     "references": [
         "MessagePack",
-        "MagicOnion.Abstractions",
         "Unity.Mathematics",
-        "UniRx"
+        "UniRx",
+        "com.alelievr.NodeGraphProcessor.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

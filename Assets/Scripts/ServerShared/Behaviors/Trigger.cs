@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20)]
 public class TriggerData : BehaviorData
 {
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Trigger(context, this, entity, item);
     }
@@ -17,8 +17,8 @@ public class Trigger : IBehavior
     private TriggerData _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
@@ -29,7 +29,7 @@ public class Trigger : IBehavior
         _pulled = true;
     }
 
-    public Trigger(GameContext context, TriggerData data, Entity entity, Gear item)
+    public Trigger(ItemManager context, TriggerData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;

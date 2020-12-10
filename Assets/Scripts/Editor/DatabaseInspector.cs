@@ -60,31 +60,31 @@ public class DatabaseInspector : EditorWindow
             Inspect(obj, field, inspectablesOnly);
         }
 
-        if (obj is GalaxyMapLayerData mapLayer)
-        {
-            var global = DatabaseCache.GetAll<GlobalData>().FirstOrDefault();
-            if (global != null)
-            {
-                GUILayout.Label("Preview", EditorStyles.boldLabel);
-                _galaxyMat.SetFloat("Arms", global.Arms);
-                _galaxyMat.SetFloat("Twist", global.Twist);
-                _galaxyMat.SetFloat("TwistPower", global.TwistPower);
-                _galaxyMat.SetFloat("SpokeOffset", mapLayer.SpokeOffset);
-                _galaxyMat.SetFloat("SpokeScale", mapLayer.SpokeScale);
-                _galaxyMat.SetFloat("CoreBoost", mapLayer.CoreBoost);
-                _galaxyMat.SetFloat("CoreBoostOffset", mapLayer.CoreBoostOffset);
-                _galaxyMat.SetFloat("CoreBoostPower", mapLayer.CoreBoostPower);
-                _galaxyMat.SetFloat("EdgeReduction", mapLayer.EdgeReduction);
-                _galaxyMat.SetFloat("NoisePosition", mapLayer.NoisePosition);
-                _galaxyMat.SetFloat("NoiseAmplitude", mapLayer.NoiseAmplitude);
-                _galaxyMat.SetFloat("NoiseOffset", mapLayer.NoiseOffset);
-                _galaxyMat.SetFloat("NoiseGain", mapLayer.NoiseGain);
-                _galaxyMat.SetFloat("NoiseLacunarity", mapLayer.NoiseLacunarity);
-                _galaxyMat.SetFloat("NoiseFrequency", mapLayer.NoiseFrequency);
-                var rect = GetControlRect(false, Screen.width);
-                EditorGUI.DrawPreviewTexture(rect, _white, _galaxyMat);
-            }
-        }
+        // if (obj is GalaxyMapLayerData mapLayer)
+        // {
+        //     var global = DatabaseCache.GetAll<GlobalData>().FirstOrDefault();
+        //     if (global != null)
+        //     {
+        //         GUILayout.Label("Preview", EditorStyles.boldLabel);
+        //         _galaxyMat.SetFloat("Arms", global.Arms);
+        //         _galaxyMat.SetFloat("Twist", global.Twist);
+        //         _galaxyMat.SetFloat("TwistPower", global.TwistPower);
+        //         _galaxyMat.SetFloat("SpokeOffset", mapLayer.SpokeOffset);
+        //         _galaxyMat.SetFloat("SpokeScale", mapLayer.SpokeScale);
+        //         _galaxyMat.SetFloat("CoreBoost", mapLayer.CoreBoost);
+        //         _galaxyMat.SetFloat("CoreBoostOffset", mapLayer.CoreBoostOffset);
+        //         _galaxyMat.SetFloat("CoreBoostPower", mapLayer.CoreBoostPower);
+        //         _galaxyMat.SetFloat("EdgeReduction", mapLayer.EdgeReduction);
+        //         _galaxyMat.SetFloat("NoisePosition", mapLayer.NoisePosition);
+        //         _galaxyMat.SetFloat("NoiseAmplitude", mapLayer.NoiseAmplitude);
+        //         _galaxyMat.SetFloat("NoiseOffset", mapLayer.NoiseOffset);
+        //         _galaxyMat.SetFloat("NoiseGain", mapLayer.NoiseGain);
+        //         _galaxyMat.SetFloat("NoiseLacunarity", mapLayer.NoiseLacunarity);
+        //         _galaxyMat.SetFloat("NoiseFrequency", mapLayer.NoiseFrequency);
+        //         var rect = GetControlRect(false, Screen.width);
+        //         EditorGUI.DrawPreviewTexture(rect, _white, _galaxyMat);
+        //     }
+        // }
         
         if (obj is EquippableItemData equippableItemData)
         {
@@ -973,8 +973,8 @@ public class DatabaseInspector : EditorWindow
                     GUILayout.Label("", GUILayout.Width(width));
                     if (!isSimple)
                     {
-                        GUILayout.Label("H", _labelStyle);
-                        value.HeatDependent = Toggle(value.HeatDependent);
+                        // GUILayout.Label("H", _labelStyle);
+                        // value.HeatDependent = Toggle(value.HeatDependent);
                         GUILayout.Label("D", _labelStyle);
                         value.DurabilityDependent = Toggle(value.DurabilityDependent);
                         GUILayout.Label("QEx", _labelStyle, GUILayout.Width(labelWidth + 5));
@@ -1099,7 +1099,7 @@ public class DatabaseInspector : EditorWindow
                 Space();
                 using (var h = new HorizontalScope())
                 {
-                    GUILayout.Label($"Equipped Items: {loadout.Gear.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Size ?? 0)}/{loadoutHull.Capacity.Min}", EditorStyles.boldLabel);
+                    // GUILayout.Label($"Equipped Items: {loadout.Gear.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Size ?? 0)}/{loadoutHull.Capacity.Min}", EditorStyles.boldLabel);
                     GUILayout.Label($"Mass: {loadout.Gear.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Mass ?? 0)}", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
                 }
         

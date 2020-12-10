@@ -12,7 +12,7 @@ public class StationTowing : AgentTask
     [IgnoreMember] public override TaskType Type => TaskType.Tow;
     
     [JsonProperty("station"), Key(4)]
-    public Guid Station;
+    public OrbitalEntity Station;
     
     [JsonProperty("orbitParent"), Key(5)]
     public Guid OrbitParent;

@@ -16,7 +16,7 @@ public class ProjectileWeaponData : WeaponData
     [InspectableField, JsonProperty("bulletVelocity"), Key(9)]  
     public PerformanceStat Velocity = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new ProjectileWeapon(context, this, entity, item);
     }
@@ -26,12 +26,12 @@ public class ProjectileWeapon : IBehavior
 {
     private ProjectileWeaponData _data;
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
     
     public BehaviorData Data => _data;
 
-    public ProjectileWeapon(GameContext context, ProjectileWeaponData c, Entity entity, Gear item)
+    public ProjectileWeapon(ItemManager context, ProjectileWeaponData c, Entity entity, EquippedItem item)
     {
         Context = context;
         _data = c;

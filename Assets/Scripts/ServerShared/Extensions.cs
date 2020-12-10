@@ -29,12 +29,12 @@ public static class Extensions
         peer.Send(MessagePackSerializer.Serialize(message as Message), method);
     }
 
-    public static float Performance(this EquippableItemData itemData, float temperature)
-    {
-        return saturate(itemData.HeatPerformanceCurve.Evaluate(saturate(
-            (temperature - itemData.MinimumTemperature) /
-            (itemData.MaximumTemperature - itemData.MinimumTemperature))));
-    }
+    // public static float Performance(this EquippableItemData itemData, float temperature)
+    // {
+    //     return saturate(itemData.HeatPerformanceCurve.Evaluate(saturate(
+    //         (temperature - itemData.MinimumTemperature) /
+    //         (itemData.MaximumTemperature - itemData.MinimumTemperature))));
+    // }
 	
     public static string SplitCamelCase( this string str )
     {
