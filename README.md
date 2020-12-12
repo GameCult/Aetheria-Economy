@@ -85,6 +85,10 @@ In order to make an item craftable in-game, that item needs to be associated wit
 
 ## Contributing
 
+### Contributor Agreement
+
+By pushing to this repository or submitting a pull request, you are implicitly providing us (GameCult) an unconditional license giving us permission to relicense your work as we see fit. This means that your contribution will automatically be under the same license as this repository, but also grants us the right to release your contribution under a different license should we see fit. This agreement exists mostly because we have witnessed the difficulties some open source projects have had when they did not have such a contributor agreement in place.
+
 ### Getting the Files
 
 In order to checkout the project, you need a git client (Github's zip download will not work!). You also need to have installed [Git LFS (Large File Storage)](https://git-lfs.github.com/). This is necessary because assets in gamedev projects can get rather large, and Git is essentially a text versioning system that does not by itself support that use case well. After installing LFS you'll need a Git client. I recommend [Github Desktop](https://desktop.github.com/), which has a nice simplified workflow and integrates with the site. For more advanced users, there's nothing wrong with using the command line or a more comprehensive client like [GitKraken](https://www.gitkraken.com/), but beginners beware that it's easy to shoot yourself in the foot that way.
@@ -161,6 +165,10 @@ Below that is an editor for map layer data which allows the creation of a densit
 After the map layer data section is a foldout containing tools which allow you to generate stars according to the star density map. Stars are placed by accumulating density while walking over a space-filling Hilbert curve, maintaining some minimum distance between stars. This isn't as good as a proper sampling algorithm like Poisson disk sampling or Mitchell’s best-candidate algorithm, but it gets the job done ([please feel free to contribute a better sampling algorithm!](https://github.com/rwvens/Aetheria-Economy/issues/15)).
 
 After generating stars, you can generate the links between them, which performs a Delaunay Tessellation, and then remove some proportion of links until the desired sparsity is reached. The algorithm for filtering star links is also not ideal, [there's an issue for fixing that, too!](https://github.com/rwvens/Aetheria-Economy/issues/25)
+
+## License
+
+The majority of this repository is under the Mozilla Public License and therefore available for anyone to use. This does not apply to any content found within any directory labeled "NIH", "Plugins", or any subdirectory thereof. Works in such directories are excluded from our license and subject to the copyright and licensing placed upon them by their creators.
 
 ## Contact Us
 
