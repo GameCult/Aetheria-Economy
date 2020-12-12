@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 using static Unity.Mathematics.math;
+using int2 = Unity.Mathematics.int2;
 
 public class InventoryPanel : MonoBehaviour
 {
@@ -15,6 +16,17 @@ public class InventoryPanel : MonoBehaviour
     public Prototype NodePrototype;
 
     private Dictionary<int2, GameObject> _nodeInstances;
+    private int2[] _offsets = new[]
+    {
+        int2(0, 1),
+        int2(1, 0),
+        int2(0, -1),
+        int2(-1, 0),
+        int2(1, 1),
+        int2(1, -1),
+        int2(-1, -1),
+        int2(-1, 1)
+    };
 
     public void Display(ItemManager manager, Entity entity)
     {
@@ -35,43 +47,27 @@ public class InventoryPanel : MonoBehaviour
                     var interior = hullData.InteriorCells[v];
                     var item = entity.GearOccupancy[v.x, v.y];
                     var hardpoint = entity.Hardpoints[v.x, v.y];
+
+
+                    bool HardpointMatch(int2 offset) => !(hullData.Shape[v + offset] &&
+                                                     entity.Hardpoints[v.x + offset.x, v.y + offset.y] == hardpoint &&
+                                                     entity.GearOccupancy[v.x + offset.x, v.y + offset.y] == item);
+
+                    bool NoHardpointMatch(int2 offset) => !(hullData.Shape[v + offset] && (
+                        !interior && !hullData.InteriorCells[v + offset] && entity.Hardpoints[v.x + offset.x, v.y + offset.y] == null ||
+                        interior && item != null && entity.GearOccupancy[v.x + offset.x, v.y + offset.y] == item));
+                    
                     if (hardpoint != null)
                     {
-                        if (hullData.Shape[v + int2(0, 1)] && 
-                            entity.Hardpoints[v.x, v.y + 1] == hardpoint && 
-                            entity.GearOccupancy[v.x, v.y + 1] == item)
-                            spriteIndex += 1;
-                        if (hullData.Shape[v + int2(1, 0)] && 
-                            entity.Hardpoints[v.x + 1, v.y] == hardpoint && 
-                            entity.GearOccupancy[v.x + 1, v.y] == item)
-                            spriteIndex += 2;
-                        if (hullData.Shape[v + int2(0, -1)] && 
-                            entity.Hardpoints[v.x, v.y - 1] == hardpoint && 
-                            entity.GearOccupancy[v.x, v.y - 1] == item)
-                            spriteIndex += 4;
-                        if (hullData.Shape[v + int2(-1, 0)] && 
-                            entity.Hardpoints[v.x - 1, v.y] == hardpoint && 
-                            entity.GearOccupancy[v.x - 1, v.y] == item)
-                            spriteIndex += 8;
+                        for(int i = 0; i < 8; i++)
+                            if (HardpointMatch(_offsets[i]))
+                                spriteIndex += 1 << i;
                     }
                     else
                     {
-                        if (hullData.Shape[v + int2(0, 1)] && (
-                            !interior && !hullData.InteriorCells[v + int2(0, 1)] && entity.Hardpoints[v.x, v.y + 1] == null ||
-                            interior && item != null && entity.GearOccupancy[v.x, v.y + 1] == item))
-                            spriteIndex += 1;
-                        if (hullData.Shape[v + int2(1, 0)] && (
-                            !interior && !hullData.InteriorCells[v + int2(1, 0)] && entity.Hardpoints[v.x + 1, v.y] == null ||
-                            interior && item != null && entity.GearOccupancy[v.x + 1, v.y] == item))
-                            spriteIndex += 2;
-                        if (hullData.Shape[v + int2(0, -1)] && (
-                            !interior && !hullData.InteriorCells[v + int2(0, -1)] && entity.Hardpoints[v.x, v.y - 1] == null ||
-                            interior && item != null && entity.GearOccupancy[v.x, v.y - 1] == item))
-                            spriteIndex += 4;
-                        if (hullData.Shape[v + int2(-1, 0)] && (
-                            !interior && !hullData.InteriorCells[v + int2(-1, 0)] && entity.Hardpoints[v.x - 1, v.y] == null ||
-                            interior && item != null && entity.GearOccupancy[v.x - 1, v.y] == item))
-                            spriteIndex += 8;
+                        for(int i = 0; i < 8; i++)
+                            if (NoHardpointMatch(_offsets[i]))
+                                spriteIndex += 1 << i;
                     }
 
                     if (spriteIndex == 15)

@@ -192,6 +192,7 @@
             <e p="EditorDispatch.cs" t="Include" />
             <e p="GalaxyEditor.cs" t="Include" />
             <e p="SerializerTestWindow.cs" t="Include" />
+            <e p="SpriteProcessor.cs" t="Include" />
           </e>
           <e p="Galaxy.cs" t="Include" />
           <e p="GameSettings.cs" t="Include" />

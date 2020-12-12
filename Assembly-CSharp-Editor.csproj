@@ -107,6 +107,7 @@
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\NativePropertyDrawers\ShowNativePropertyNativePropertyDrawer.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\CodeGeneration\PropertyDrawConditionDatabase.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\PropertyMetas\OnValueChangedPropertyMeta.cs" />
+     <Compile Include="Assets\Scripts\Editor\SpriteProcessor.cs" />
      <None Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\CodeGeneration\Templates\MethodDrawerDatabaseTemplate.txt" />
      <None Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\CodeGeneration\Templates\PropertyValidatorDatabaseTemplate.txt" />
      <None Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\CodeGeneration\Templates\PropertyDrawerDatabaseTemplate.txt" />
