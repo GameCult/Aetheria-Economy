@@ -44,9 +44,9 @@ public abstract class Entity
 
 
     private bool _active;
-    private EquippedItem[,] _gearOccupancy;
-    private EquippedItem[,] _thermalOccupancy;
-    private HardpointData[,] _hardpoints;
+    public EquippedItem[,] GearOccupancy;
+    public EquippedItem[,] ThermalOccupancy;
+    public HardpointData[,] Hardpoints;
     
     public ItemManager ItemManager { get; }
     public int AssignedPopulation => PopulationAssignments.Sum(pa => pa.AssignedPopulation);
@@ -77,20 +77,21 @@ public abstract class Entity
         ItemManager = itemManager;
         Zone = zone;
         Hull = hull;
+        MapShip();
     }
 
     private void MapShip()
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
-        _gearOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
-        _thermalOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
-        _hardpoints = new HardpointData[hullData.Shape.Width, hullData.Shape.Height];
+        GearOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
+        ThermalOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
+        Hardpoints = new HardpointData[hullData.Shape.Width, hullData.Shape.Height];
         foreach (var hardpoint in hullData.Hardpoints)
         {
             foreach (var hardpointCoord in hardpoint.Shape.Coordinates)
             {
                 var hullCoord = hardpoint.Position + hardpointCoord;
-                _hardpoints[hullCoord.x, hullCoord.y] = hardpoint;
+                Hardpoints[hullCoord.x, hullCoord.y] = hardpoint;
             }
         }
     }
@@ -193,7 +194,7 @@ public abstract class Entity
         foreach (var i in itemData.Shape.Coordinates)
         {
             var itemCoord = item.Position + itemData.Shape.Rotate(i, item.EquippableItem.Rotation);
-            (itemData.HardpointType == HardpointType.Thermal ? _thermalOccupancy : _gearOccupancy)[itemCoord.x, itemCoord.y] = null;
+            (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[itemCoord.x, itemCoord.y] = null;
         }
 
         return item.EquippableItem;
@@ -211,12 +212,12 @@ public abstract class Entity
                 // If there is any gear already occupying that space, it won't fit
                 // Thermal items have their own layer and do not collide with gear
                 var itemCoord = hullCoord + itemData.Shape.Rotate(i, item.Rotation);
-                if (!hullData.InteriorCells[itemCoord] || (itemData.HardpointType == HardpointType.Thermal ? _thermalOccupancy : _gearOccupancy)[itemCoord.x, itemCoord.y] != null) return false;
+                if (!hullData.InteriorCells[itemCoord] || (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[itemCoord.x, itemCoord.y] != null) return false;
             }
         }
         else
         {
-            var hardpoint = _hardpoints[hullCoord.x, hullCoord.y];
+            var hardpoint = Hardpoints[hullCoord.x, hullCoord.y];
             
             // If there's no hardpoint there, it won't fit
             if (hardpoint == null) return false;
@@ -233,7 +234,7 @@ public abstract class Entity
                 // If there is any gear already occupying that space, it won't fit
                 // Items placed in hardpoints are automatically aligned to hardpoint rotation
                 var itemCoord = hardpoint.Position + itemData.Shape.Rotate(i, hardpoint.Rotation);
-                if (_gearOccupancy[itemCoord.x, itemCoord.y] != null) return false;
+                if (GearOccupancy[itemCoord.x, itemCoord.y] != null) return false;
             }
         }
 
@@ -320,7 +321,7 @@ public abstract class Entity
             foreach (var i in itemData.Shape.Coordinates)
             {
                 var occupiedCoord = hullCoord + itemData.Shape.Rotate(i, item.Rotation);
-                (itemData.HardpointType == HardpointType.Thermal ? _thermalOccupancy : _gearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
+                (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
             }
                 
             Hydrate(equippedItem);
@@ -334,7 +335,7 @@ public abstract class Entity
             foreach (var i in itemData.Shape.Coordinates)
             {
                 var occupiedCoord = hullCoord + i;
-                (itemData.HardpointType == HardpointType.Thermal ? _thermalOccupancy : _gearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
+                (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
             }
                 
             Hydrate(equippedItem);

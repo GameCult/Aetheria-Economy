@@ -18,19 +18,17 @@ public enum LauncherCaliber
 public enum HardpointType
 {
     Hull,
+    Tool,
     Thermal,
     Thruster,
     WarpThruster,
     Reactor,
     Radiator,
     Shield,
-    Cooler,
     Sensors,
-    Tool,
     Energy,
     Ballistic,
     Launcher,
-    Infrastructure,
     ControlModule
 }
 

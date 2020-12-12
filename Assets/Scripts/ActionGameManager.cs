@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Cinemachine;
 using MessagePack;
 using UniRx;
@@ -19,6 +20,7 @@ public class ActionGameManager : MonoBehaviour
     public CinemachineVirtualCamera TopDownCamera;
     public CinemachineVirtualCamera FollowCamera;
     public GameObject GameplayUI;
+    public InventoryPanel InventoryPanel;
     //public PlayerInput Input;
     
     private DirectoryInfo _filePath;
@@ -27,23 +29,23 @@ public class ActionGameManager : MonoBehaviour
     private AetheriaInput _input;
     private int _zoomLevelIndex;
     
-    public DatabaseCache Cache { get; private set; }
-    public ItemManager Context { get; private set; }
+    public DatabaseCache ItemData { get; private set; }
+    public ItemManager ItemManager { get; private set; }
     public Zone Zone { get; private set; }
 
     void Start()
     {
         ConsoleController.MessageReceiver = this;
         _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
-        Cache = new DatabaseCache();
-        Cache.Load(_filePath.FullName);
-        Context = new ItemManager(Cache, Settings.GameplaySettings, Debug.Log);
+        ItemData = new DatabaseCache();
+        ItemData.Load(_filePath.FullName);
+        ItemManager = new ItemManager(ItemData, Settings.GameplaySettings, Debug.Log);
 
         var zoneFile = Path.Combine(_filePath.FullName, "Home.zone");
         
         // If the game has already been run, there will be a Home file containing a ZonePack; if not, generate one
         var zonePack = File.Exists(zoneFile) ? 
-            MessagePackSerializer.Deserialize<ZonePack>(File.ReadAllBytes(zoneFile)) : 
+            MessagePackSerializer.Deserialize<ZonePack>(File.ReadAllBytes(zoneFile)): 
             ZoneGenerator.GenerateZone(
                 settings: Settings.ZoneSettings,
                 // mapLayers: Context.MapLayers,
@@ -91,6 +93,11 @@ public class ActionGameManager : MonoBehaviour
                 Zone.Data.Name = args[0];
             SaveZone();
         });
+
+        var hullType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Ship);
+        var hull = ItemManager.CreateInstance(hullType, 0, 1) as EquippableItem;
+        var entity = new Ship(ItemManager, Zone, hull);
+        InventoryPanel.Display(ItemManager, entity);
     }
 
     public void SaveZone() => File.WriteAllBytes(
@@ -108,7 +115,7 @@ public class ActionGameManager : MonoBehaviour
         if(!_editMode)
         {
             _time += Time.deltaTime;
-            Context.Time = Time.time;
+            ItemManager.Time = Time.time;
         }
         Zone.Update(_time, Time.deltaTime);
         SectorRenderer.Time = _time;

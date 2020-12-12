@@ -411,14 +411,13 @@ public class ItemManager
     //     return ship;
     // }
     
-    public SimpleCommodity CreateInstance(Guid data, int count)
+    public SimpleCommodity CreateInstance(SimpleCommodityData item, int count)
     {
-        var item = ItemData.Get<SimpleCommodityData>(data);
         if (item != null)
         {
             var newItem = new SimpleCommodity
             {
-                Data = data,
+                Data = item.ID,
                 Quantity = count
             };
             //ItemData.Add(newItem);
@@ -429,16 +428,15 @@ public class ItemManager
         return null;
     }
     
-    public CraftedItemInstance CreateInstance(Guid data, float qualityMin, float qualityMax)
+    public CraftedItemInstance CreateInstance(CraftedItemData item, float qualityMin, float qualityMax)
     {
-        var item = ItemData.Get<CraftedItemData>(data);
         if (item == null)
         {
             _logger("Attempted to create crafted item instance using missing or incorrect item id!");
             return null;
         }
 
-        var blueprint = ItemData.GetAll<BlueprintData>().FirstOrDefault(b => b.Item == data);
+        var blueprint = ItemData.GetAll<BlueprintData>().FirstOrDefault(b => b.Item == item.ID);
         if (blueprint == null)
         {
             _logger("Attempted to create crafted item instance which has no blueprint!");
@@ -451,9 +449,9 @@ public class ItemManager
         foreach (var ingredient in blueprint.Ingredients)
         {
             var itemData = ItemData.Get<ItemData>(ingredient.Key);
-            if (itemData is SimpleCommodityData)
+            if (itemData is SimpleCommodityData simpleIngredientData)
             {
-                var itemInstance = CreateInstance(ingredient.Key, ingredient.Value);
+                var itemInstance = CreateInstance(simpleIngredientData, ingredient.Value);
                 if(itemInstance == null)
                 {
                     invalidIngredientFound = true;
@@ -463,9 +461,10 @@ public class ItemManager
             }
             else
             {
+                var craftedIngredientData = ItemData.Get<CraftedItemData>(ingredient.Key);
                 for (int i = 0; i < ingredient.Value; i++)
                 {
-                    var itemInstance = CreateInstance(ingredient.Key, qualityMin, qualityMax);
+                    var itemInstance = CreateInstance(craftedIngredientData, qualityMin, qualityMax);
                     if (itemInstance == null)
                     {
                         invalidIngredientFound = true;
@@ -488,7 +487,7 @@ public class ItemManager
         {
             var newGear = new EquippableItem
             {
-                Data = data,
+                Data = item.ID,
                 Ingredients = ingredients,
                 Quality = Random.NextFloat(qualityMin, qualityMax),
                 Blueprint = blueprint.ID,
@@ -500,7 +499,7 @@ public class ItemManager
 
         var newCommodity = new CompoundCommodity
         {
-            Data = data,
+            Data = item.ID,
             Ingredients = ingredients,
             Quality = Random.NextFloat(qualityMin, qualityMax),
             Blueprint = blueprint.ID,

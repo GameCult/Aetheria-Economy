@@ -90,11 +90,27 @@ public class Shape
 
     private IEnumerable<int2> EnumerateShapeCoordinates()
     {
-        for(int x = 0; x < Width; x++)
+        for (int y = 0; y < Height; y++)
         {
-            for (int y = 0; y < Height; y++)
+            for(int x = 0; x < Width; x++)
             {
                 if(Cells[x,y]) yield return int2(x, y);
+            }
+        }
+    }
+
+    private int2[] _cachedAllShapeCoordinates;
+    
+    [IgnoreMember]
+    public int2[] AllCoordinates => _cachedAllShapeCoordinates ?? (_cachedAllShapeCoordinates = EnumerateAllShapeCoordinates().ToArray());
+
+    private IEnumerable<int2> EnumerateAllShapeCoordinates()
+    {
+        for (int y = 0; y < Height; y++)
+        {
+            for(int x = 0; x < Width; x++)
+            {
+                yield return int2(x, y);
             }
         }
     }
@@ -306,7 +322,7 @@ public class HardpointData : ITintInspector
                     x => ColorMath.HsvToRgb(float3((float)(int)x/hardpointTypes.Length, 1, 1)));
             }
 
-            return _tintColors[Type];
+            return _tintColors.ContainsKey(Type) ? _tintColors[Type] : _tintColors[HardpointType.Hull];
         }
     }
     private static Dictionary<HardpointType, float3> _tintColors;
