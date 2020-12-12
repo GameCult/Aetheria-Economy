@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using static Unity.Mathematics.math;
 using static UnityEditor.EditorGUILayout;
+using int2 = Unity.Mathematics.int2;
 using Object = UnityEngine.Object;
 
 public class DatabaseInspector : EditorWindow
@@ -19,7 +20,7 @@ public class DatabaseInspector : EditorWindow
     
     // Singleton to avoid multiple instances of window.
     private static DatabaseInspector _instance;
-    public static DatabaseInspector Instance => _instance ?? GetWindow<DatabaseInspector>();
+    public static DatabaseInspector Instance => _instance ? _instance : GetWindow<DatabaseInspector>();
     
     private DatabaseListView _list;
     private GUIStyle _labelStyle;
@@ -31,9 +32,13 @@ public class DatabaseInspector : EditorWindow
     private string[] _hardpointTypes;
     private const int width = 150;
     private const int labelWidth = 20;
+    private const int toggleWidth = 18;
+    private const int arrowWidth = 22;
     private Material _galaxyMat;
     private Texture2D _white;
     private GUIStyle _warning;
+    private HashSet<int> _listItemFoldouts = new HashSet<int>();
+    private Material _schematicMat;
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
@@ -48,6 +53,7 @@ public class DatabaseInspector : EditorWindow
         wantsMouseMove = true;
         _hardpointTypes = Enum.GetNames(typeof(HardpointType));
         _galaxyMat = new Material(Shader.Find("Unlit/GalaxyMap"));
+        _schematicMat = new Material(Shader.Find("Legacy Shaders/Particles/Additive"));
         _white = Color.white.ToTexture();
         _warning = new GUIStyle(EditorStyles.boldLabel);
         _warning.normal.textColor = Color.red;
@@ -144,6 +150,10 @@ public class DatabaseInspector : EditorWindow
             else 
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (int) value));
         }
+        else if (type == typeof(int2))
+        {
+            field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (int2) field.GetValue(obj)));
+        }
         else if (type.IsEnum)
         {
             var isflags = type.GetCustomAttributes<FlagsAttribute>().Any();
@@ -165,6 +175,7 @@ public class DatabaseInspector : EditorWindow
         else if (type == typeof(Type) && inspectable is InspectableTypeAttribute typeAttribute) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (Type) value, typeAttribute.Type));
         else if (type == typeof(GameObject)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (GameObject) value));
         else if (type == typeof(AnimationCurve)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (AnimationCurve) value));
+        else if (type == typeof(Shape)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (Shape) value, (obj is HullData hull) ? hull : null));
         else if (type == typeof(PerformanceStat)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (PerformanceStat) value, field.GetCustomAttribute<SimplePerformanceStatAttribute>() != null));
         else if (type == typeof(PerformanceStat[]))
         {
@@ -177,7 +188,7 @@ public class DatabaseInspector : EditorWindow
                     stats = new PerformanceStat[damageTypes.Length];
                 for (var i = 0; i < stats.Length; i++)
                 {
-                    stats[i] = Inspect(damageTypes[i].SplitCamelCase(), stats[i]);
+                    Inspect(damageTypes[i].SplitCamelCase(), stats[i]);
                 }
                 field.SetValue(obj, stats);
             }
@@ -336,12 +347,40 @@ public class DatabaseInspector : EditorWindow
                     }
                     foreach (var o in list)
                     {
+                        bool _tinted = false;
+                        var originalColor = GUI.backgroundColor;
+                        if (o is ITintInspector tint)
+                        {
+                            _tinted = true;
+                            GUI.backgroundColor = tint.TintColor.ToColor();
+                        }
+                        
                         using (new VerticalScope(_list.ListItemStyle))
                         {
                             using (new HorizontalScope())
                             {
                                 //if (listType.IsInterface)
-                                GUILayout.Label(o.GetType().Name.SplitCamelCase(), EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
+                                if(Foldout(_listItemFoldouts.Contains(o.GetHashCode()), o.ToString(), true))
+                                    _listItemFoldouts.Add(o.GetHashCode());
+                                else
+                                    _listItemFoldouts.Remove(o.GetHashCode());
+                                // using (var h = new HorizontalScope())
+                                // {
+                                    // if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
+                                    // {
+                                    //     if(_listItemFoldouts.Contains(o.GetHashCode()))
+                                    //         _listItemFoldouts.Remove(o.GetHashCode());
+                                    //     else
+                                    //         _listItemFoldouts.Add(o.GetHashCode());
+                                    // }
+                                    // var foldoutRect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                                    // if (Event.current.type == EventType.Repaint)
+                                    // {
+                                    //     var controlId = GUIUtility.GetControlID(1337, FocusType.Keyboard, position);
+                                    //     EditorStyles.foldout.Draw(foldoutRect, GUIContent.none, controlId, !_listItemFoldouts.Contains(o.GetHashCode()));
+                                    // }
+                                    // GUILayout.Label(o.ToString(), EditorStyles.boldLabel, GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.ExpandWidth(true));
+                                // }
 
                                 var rect = GetControlRect(false,
                                     GUILayout.Width(EditorGUIUtility.singleLineHeight));
@@ -353,11 +392,16 @@ public class DatabaseInspector : EditorWindow
                                     break;
                                 }
                             }
-                            
-                            Space();
+                            if(_listItemFoldouts.Contains(o.GetHashCode()))
+                            {
+                                Space();
 
-                            Inspect(o, inspectablesOnly);
+                                Inspect(o, inspectablesOnly);
+                            }
                         }
+                        
+                        if(_tinted)
+                            GUI.backgroundColor = originalColor;
                     }
                     using (new HorizontalScope(_list.ListItemStyle))
                     {
@@ -537,6 +581,27 @@ public class DatabaseInspector : EditorWindow
         {
             GUILayout.Label(label, GUILayout.Width(width));
             return DelayedIntField(value);
+        }
+    }
+
+    public int2 Inspect(string label, int2 value)
+    {
+        using (var h = new HorizontalScope())
+        {
+            GUILayout.Label(label, GUILayout.Width(width));
+            GUILayout.Label("X", GUILayout.Width(labelWidth));
+            value.x = DelayedIntField(value.x);
+            GUILayout.Label("Y", GUILayout.Width(labelWidth));
+            value.y = DelayedIntField(value.y);
+            if (GUILayout.Button("\u2190", GUILayout.Width(arrowWidth)))
+                value.x--;
+            if (GUILayout.Button("\u2192", GUILayout.Width(arrowWidth)))
+                value.x++;
+            if (GUILayout.Button("\u2191", GUILayout.Width(arrowWidth)))
+                value.y++;
+            if (GUILayout.Button("\u2193", GUILayout.Width(arrowWidth)))
+                value.y--;
+            return value;
         }
     }
 
@@ -951,9 +1016,83 @@ public class DatabaseInspector : EditorWindow
             }
         }
     }
+
+    public Shape Inspect(string label, Shape value, HullData hull = null)
+    {
+        if(value == null)
+        {
+            value = new Shape(1, 1);
+            value[int2.zero] = true;
+        }
+        using (new VerticalScope())
+        {
+            Texture2D schematic = null;
+            if(hull != null && !string.IsNullOrEmpty(hull.Schematic))
+                schematic = AssetDatabase.LoadAssetAtPath<Texture2D>(hull.Schematic);
+            using (new HorizontalScope())
+            {
+                GUILayout.Label(label, GUILayout.Width(width));
+                GUILayout.Label("Size", GUILayout.ExpandWidth(false));
+                if(schematic == null)
+                {
+                    GUILayout.Label("X", GUILayout.Width(labelWidth));
+                    value.Width = DelayedIntField(value.Width);
+                    GUILayout.Label("Y", GUILayout.Width(labelWidth));
+                    value.Height = DelayedIntField(value.Height);
+                }
+                else
+                {
+                    GUILayout.Label("X", GUILayout.Width(labelWidth));
+                    value.Width = DelayedIntField(value.Width);
+                    value.Height = Mathf.RoundToInt(value.Width * ((float)schematic.height / schematic.width));
+                    GUILayout.Label("Y", GUILayout.Width(labelWidth));
+                    LabelField($"{value.Height}");
+                }
+            }
+
+            using (new HorizontalScope())
+            {
+                GUILayout.Label("", GUILayout.Width(width));
+                using (var a = new VerticalScope())
+                {
+                    if(schematic != null)
+                    {
+                        EditorGUI.DrawPreviewTexture(a.rect, schematic, _schematicMat);
+                    }
+                    for (var y = value.Height - 1; y >= 0; y--)
+                    {
+                        using (new HorizontalScope())
+                        {
+                            for (var x = 0; x < value.Width; x++)
+                            {
+                                var oldColor = GUI.backgroundColor;
+                                if(hull != null)
+                                {
+                                    var hardpoint = hull.Hardpoints
+                                        .FirstOrDefault(hp =>
+                                            hp.Shape.Coordinates
+                                                .Select(v => v + hp.Position)
+                                                .Any(v => v.x == x && v.y == y));
+                                    if (hardpoint != null)
+                                        GUI.backgroundColor = hardpoint.TintColor.ToColor();
+                                }
+                                value[int2(x, y)] = Toggle(value[int2(x, y)], GUILayout.Width(toggleWidth));
+                                GUI.backgroundColor = oldColor;
+                            }
+                        }
+                    }
+                }
+                GUILayout.FlexibleSpace();
+            }
+        }
+
+        return value;
+    }
     
     public PerformanceStat Inspect(string label, PerformanceStat value, bool isSimple = false)
     {
+        if(value == null)
+            value = new PerformanceStat();
         using (new VerticalScope())
         {
             using (new HorizontalScope())
@@ -1004,9 +1143,9 @@ public class DatabaseInspector : EditorWindow
             // }
 
             Space();
-
-            return value;
         }
+
+        return value;
     }
 
     public void OnGUI()
@@ -1036,6 +1175,10 @@ public class DatabaseInspector : EditorWindow
             GUILayout.Width(EditorGUIUtility.currentViewWidth),
             GUILayout.ExpandHeight(true));
 
+        // Serialize inspected object so we can check whether it has actually changed
+        RegisterResolver.Register();
+        var previousBytes = MessagePackSerializer.Serialize(entry);
+        
         EditorGUI.BeginChangeCheck();
 
         var dataEntry = entry;
@@ -1164,7 +1307,8 @@ public class DatabaseInspector : EditorWindow
         
         if (EditorGUI.EndChangeCheck())
         {
-            DatabaseCache.Add(entry);
+            if(!previousBytes.ByteEquals(MessagePackSerializer.Serialize(entry)))
+                DatabaseCache.Add(entry);
         }
             
         EndScrollView();

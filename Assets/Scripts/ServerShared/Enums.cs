@@ -1,5 +1,13 @@
 using System;
 
+public enum ItemRotation
+{
+    None = 0,
+    Clockwise = 1,
+    Reversed = 2,
+    CounterClockwise = 3
+}
+
 public enum LauncherCaliber
 {
     Micro,

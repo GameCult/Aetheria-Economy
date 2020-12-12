@@ -576,7 +576,7 @@
      <Compile Include="Assets\Scripts\UI\PropertyLabel.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\ProjectionSolver\Parameters.cs" />
      <Compile Include="Assets\Scripts\UI\ConsoleController.cs" />
-     <Compile Include="Assets\Scripts\UI\DragHandler.cs" />
+     <Compile Include="Assets\Scripts\UI\MapViewDragHandler.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\Ranking\RankingLayout.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Incremental\MaxSeparationConstraint.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\IOverlapRemoval.cs" />
@@ -702,6 +702,7 @@
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
+     <None Include="Assets\Shaders\MaskedUIBlur.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
      <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoise2D.cginc" />

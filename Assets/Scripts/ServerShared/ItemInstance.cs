@@ -19,7 +19,7 @@ using static Unity.Mathematics.math;
 public abstract class ItemInstance
 {
     [JsonProperty("data"), Key(0)] public Guid Data;
-    [JsonProperty("rotation"), Key(1)] public int Rotation;
+    [JsonProperty("rotation"), Key(1)] public ItemRotation Rotation;
 }
 
 [Union(0, typeof(CompoundCommodity)), 

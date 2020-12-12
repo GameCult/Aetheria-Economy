@@ -1928,7 +1928,6 @@
             <e p="ContextMenu.cs" t="Include" />
             <e p="ContextMenuOption.cs" t="Include" />
             <e p="CorporationMenuItem.cs" t="Include" />
-            <e p="DragHandler.cs" t="Include" />
             <e p="DropdownMenu.cs" t="Include" />
             <e p="EnumField.cs" t="Include" />
             <e p="FlatButton.cs" t="Include" />
@@ -1938,6 +1937,7 @@
             <e p="IncrementField.cs" t="Include" />
             <e p="InputField.cs" t="Include" />
             <e p="LoginScreen.cs" t="Include" />
+            <e p="MapViewDragHandler.cs" t="Include" />
             <e p="MinimapCameraTrack.cs" t="Include" />
             <e p="MouseHover.cs" t="Include" />
             <e p="PropertiesList.cs" t="Include" />
@@ -1979,6 +1979,7 @@
           <e p="DitheredParticles.shader" t="Include" />
           <e p="GalaxyMap.shader" t="Include" />
           <e p="Isolines.shader" t="Include" />
+          <e p="MaskedUIBlur.shader" t="Include" />
           <e p="Raymarching" t="Include">
             <e p="VolumeJupiter.shader" t="Include" />
             <e p="VolumeRender.shader" t="Include" />

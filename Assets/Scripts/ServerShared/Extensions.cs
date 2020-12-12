@@ -35,6 +35,31 @@ public static class Extensions
     //         (temperature - itemData.MinimumTemperature) /
     //         (itemData.MaximumTemperature - itemData.MinimumTemperature))));
     // }
+    
+    // Thanks, https://stackoverflow.com/a/48599119
+    public static bool ByteArrayCompare(ReadOnlySpan<byte> a1, ReadOnlySpan<byte> a2)
+    {
+        return a1.SequenceEqual(a2);
+    }
+
+    public static bool ByteEquals(this byte[] a, byte[] b) => ByteArrayCompare(a, b);
+
+    public static char Arrow(this ItemRotation rot)
+    {
+        switch (rot)
+        {
+            case ItemRotation.None:
+                return '\u2191';
+            case ItemRotation.Clockwise:
+                return '\u2192';
+            case ItemRotation.Reversed:
+                return '\u2193';
+            case ItemRotation.CounterClockwise:
+                return '\u2190';
+            default:
+                throw new ArgumentOutOfRangeException(nameof(rot), rot, null);
+        }
+    }
 	
     public static string SplitCamelCase( this string str )
     {

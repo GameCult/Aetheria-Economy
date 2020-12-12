@@ -231,7 +231,8 @@ public abstract class Entity
                 if (!hardpoint.Shape[i]) return false;
             
                 // If there is any gear already occupying that space, it won't fit
-                var itemCoord = hardpoint.Position + i;
+                // Items placed in hardpoints are automatically aligned to hardpoint rotation
+                var itemCoord = hardpoint.Position + itemData.Shape.Rotate(i, hardpoint.Rotation);
                 if (_gearOccupancy[itemCoord.x, itemCoord.y] != null) return false;
             }
         }

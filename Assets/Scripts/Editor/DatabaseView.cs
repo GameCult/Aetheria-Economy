@@ -14,7 +14,7 @@ public class DatabaseListView : EditorWindow
 {
     // Singleton to avoid multiple instances of window. 
     private static DatabaseListView _instance;
-    public static DatabaseListView Instance => _instance ?? (DatabaseListView)GetWindow<DatabaseListView>();
+    public static DatabaseListView Instance => _instance ? _instance : GetWindow<DatabaseListView>();
     [MenuItem("Window/Aetheria Database Tools")]
     static void Init() => Instance.Show();
     private void Awake()

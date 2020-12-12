@@ -9,35 +9,67 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using int2 = Unity.Mathematics.int2;
 
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class Shape
 {
     [JsonProperty("name"), Key(0)] public bool[,] Cells;
     
     private bool _dirty = true;
 
+    public Shape()
+    {
+        Cells = new bool[1,1];
+        Cells[0, 0] = true;
+    }
+
     public Shape(int width, int height)
     {
         Cells = new bool[width, height];
     }
     
-    public int Width => Cells.GetLength(0);
+    [IgnoreMember]
+    public int Width
+    {
+        get { return Cells.GetLength(0); }
+        set { Resize(value, Height); }
+    }
 
-    public int Height => Cells.GetLength(1);
+    [IgnoreMember]
+    public int Height
+    {
+        get { return Cells.GetLength(1); }
+        set { Resize(Width, value); }
+    }
+
+    public void Resize(int width, int height)
+    {
+        var newCells = new bool[width, height];
+        
+        for (int x = 0; x < width && x < Width; x++)
+        {
+            for (int y = 0; y < height && y < Height; y++)
+            {
+                newCells[x, y] = Cells[x, y];
+            }
+        }
+
+        Cells = newCells;
+    }
 
     private static int mod(int x, int m) {
         int r = x%m;
         return r<0 ? r+m : r;
     }
     
-    public int2 Rotate(int2 position, int rotation)
+    public int2 Rotate(int2 position, ItemRotation rotation)
     {
-        switch (mod(rotation, 4))
+        switch (rotation)
         {
-            case 1:
+            case ItemRotation.Clockwise:
                 return int2(position.y, Width - 1 - position.x);
-            case 2:
+            case ItemRotation.Reversed:
                 return int2(Width - 1 - position.x, Height - 1 - position.y);
-            case 3:
+            case ItemRotation.CounterClockwise:
                 return int2(Height - 1 - position.y, position.x);
             default:
                 return int2(position.x, position.y);
@@ -58,9 +90,9 @@ public class Shape
 
     private IEnumerable<int2> EnumerateShapeCoordinates()
     {
-        for(int x = 0; x < Cells.GetLength(0); x++)
+        for(int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < Cells.GetLength(0); y++)
+            for (int y = 0; y < Height; y++)
             {
                 if(Cells[x,y]) yield return int2(x, y);
             }
@@ -141,7 +173,7 @@ public class SimpleCommodityData : ItemData
     // public float Floor = 5f;
 
     [InspectableField, JsonProperty("maxStackSize"), Key(6)]
-    public int MaxStack;
+    public int MaxStack = 10;
 
     [InspectableField, JsonProperty("category"), Key(7)]  
     public SimpleCommodityCategory Category;
@@ -174,19 +206,22 @@ public class CompoundCommodityData : CraftedItemData
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<EquippableItemData>))]
 public abstract class EquippableItemData : CraftedItemData
 {
-    [InspectableField, JsonProperty("behaviors"), Key(7)]  
+    [InspectableTexture, JsonProperty("schematic"), Key(7)]
+    public string Schematic;
+    
+    [InspectableField, JsonProperty("behaviors"), Key(8)]  
     public List<BehaviorData> Behaviors = new List<BehaviorData>();
 
-    [InspectableField, JsonProperty("durability"), Key(8)]
+    [InspectableField, JsonProperty("durability"), Key(9)]
     public float Durability;
     
-    [TemperatureInspectable, JsonProperty("minTemp"), Key(9)]
+    [TemperatureInspectable, JsonProperty("minTemp"), Key(10)]
     public float MinimumTemperature;
 
-    [TemperatureInspectable, JsonProperty("maxTemp"), Key(10)]
+    [TemperatureInspectable, JsonProperty("maxTemp"), Key(11)]
     public float MaximumTemperature;
 
-    [InspectableField, JsonProperty("durabilityExponent"), Key(11), SimplePerformanceStat]
+    [InspectableField, JsonProperty("durabilityExponent"), Key(12), SimplePerformanceStat]
     public PerformanceStat DurabilityExponent = new PerformanceStat();
     
     [IgnoreMember]
@@ -200,7 +235,7 @@ public abstract class EquippableItemData : CraftedItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GearData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpointType"), Key(12)]
+    [InspectableField, JsonProperty("hardpointType"), Key(13)]
     public HardpointType Hardpoint;
 
     [IgnoreMember] public override HardpointType HardpointType => Hardpoint;
@@ -209,7 +244,7 @@ public class GearData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class CargoBayData : EquippableItemData
 {
-    [InspectableField, JsonProperty("interiorShape"), Key(12)]
+    [InspectableField, JsonProperty("interiorShape"), Key(13)]
     public Shape InteriorShape;
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }
@@ -217,13 +252,13 @@ public class CargoBayData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HullData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpoints"), Key(12)]  
+    [InspectableField, JsonProperty("hardpoints"), Key(13)]  
     public List<HardpointData> Hardpoints = new List<HardpointData>();
 
-    [InspectablePrefab, JsonProperty("prefab"), Key(13)]  
+    [InspectablePrefab, JsonProperty("prefab"), Key(14)]  
     public string Prefab;
 
-    [InspectableField, JsonProperty("hullType"), Key(14)]
+    [InspectableField, JsonProperty("hullType"), Key(15)]
     public HullType HullType;
 
     [IgnoreMember]
@@ -246,12 +281,35 @@ public class HullData : EquippableItemData
 }
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class HardpointData
+public class HardpointData : ITintInspector
 {
     [InspectableField, JsonProperty("type"), Key(0)] public HardpointType Type;
     [InspectableField, JsonProperty("position"), Key(1)] public int2 Position;
-    [InspectableField, JsonProperty("shape"), Key(2)] public Shape Shape;
+    [InspectableField, JsonProperty("shape"), Key(2)] public Shape Shape = new Shape();
     [InspectableField, JsonProperty("transform"), Key(3)] public string Transform;
+    [InspectableField, JsonProperty("rotation"), Key(4)] public ItemRotation Rotation;
+
+    public override string ToString()
+    {
+        return $"{Enum.GetName(typeof(HardpointType), Type)} Hardpoint {Rotation.Arrow()}";
+    }
+
+    [IgnoreMember]
+    public float3 TintColor
+    {
+        get
+        {
+            if (_tintColors == null)
+            {
+                var hardpointTypes = ((HardpointType[]) Enum.GetValues(typeof(HardpointType)));
+                _tintColors = hardpointTypes.ToDictionary(x => x,
+                    x => ColorMath.HsvToRgb(float3((float)(int)x/hardpointTypes.Length, 1, 1)));
+            }
+
+            return _tintColors[Type];
+        }
+    }
+    private static Dictionary<HardpointType, float3> _tintColors;
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -319,4 +377,9 @@ public class PersonalityAttribute : DatabaseEntry, INamedEntry
         get => Name;
         set => Name = value;
     }
+}
+
+public interface ITintInspector
+{
+    float3 TintColor { get; }
 }

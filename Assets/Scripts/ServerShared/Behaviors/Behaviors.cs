@@ -112,4 +112,11 @@ public abstract class BehaviorData
     public int Group;
     
     public abstract IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item);
+
+    public override string ToString()
+    {
+        var className = base.ToString();
+        var dataIndex = className.IndexOf("data", StringComparison.InvariantCultureIgnoreCase);
+        return dataIndex>0 ? className.Substring(0,dataIndex).SplitCamelCase() : className;
+    }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Unity.Mathematics.math;
 
-public class DragHandler : MonoBehaviour
+public class MapViewDragHandler : MonoBehaviour
 {
     public Camera Camera;
     public float Scaling;

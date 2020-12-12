@@ -32,6 +32,17 @@ public class MathJsonConverter : JsonConverter
             writer.WriteEndArray();
         };
 
+        writers[typeof(int2)] = (writer, o) =>
+        {
+            if (!(o is int2 v))
+                throw new JsonReaderException();
+
+            writer.WriteStartArray();
+            writer.WriteValue(v.x);
+            writer.WriteValue(v.y);
+            writer.WriteEndArray();
+        };
+
         writers[typeof(float3)] = (writer, o) =>
         {
             if (!(o is float3 v))
@@ -75,6 +86,19 @@ public class MathJsonConverter : JsonConverter
             return float2(
                 array[0].ToObject<float>(),
                 array[1].ToObject<float>());
+        };
+        
+        readers[typeof(int2)] = array =>
+        {
+            if (array.Count < 2)
+            {
+                throw new JsonReaderException(
+                    $"Could not read {typeof(float2)} from json, expected a json array with 2 elements");
+            }
+
+            return int2(
+                array[0].ToObject<int>(),
+                array[1].ToObject<int>());
         };
 
         readers[typeof(float3)] = array =>
