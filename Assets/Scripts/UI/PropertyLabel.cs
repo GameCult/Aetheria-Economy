@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class PropertyLabel : PropertyButton
+public class PropertyLabel : Property
 {
     public TextMeshProUGUI Value;
 }

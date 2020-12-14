@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using Cinemachine;
 using MessagePack;
+using TMPro;
 using UniRx;
 using UnityEngine;
 using Unity.Mathematics;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 
@@ -16,11 +18,13 @@ public class ActionGameManager : MonoBehaviour
 {
     public GameSettings Settings;
     public SectorRenderer SectorRenderer;
-    public MapView MapView;
+    // public MapView MapView;
     public CinemachineVirtualCamera TopDownCamera;
     public CinemachineVirtualCamera FollowCamera;
     public GameObject GameplayUI;
-    public InventoryPanel InventoryPanel;
+    public MenuPanel Menu;
+    public InventoryMenu Inventory;
+    
     //public PlayerInput Input;
     
     private DirectoryInfo _filePath;
@@ -69,22 +73,22 @@ public class ActionGameManager : MonoBehaviour
             SectorRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
         };
 
-        _input.Global.MapToggle.performed += context =>
-        {
-            MapView.enabled = !MapView.enabled;
-            GameplayUI.SetActive(!MapView.enabled);
-            if (MapView.enabled)
-            {
-                MapView.BindInput(_input.UI);
-                _input.Player.Disable();
-            }
-            else
-            {
-                _input.Player.Enable();
-                SectorRenderer.ViewDistance = Settings.DefaultViewDistance;
-                SectorRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
-            }
-        };
+        // _input.Global.MapToggle.performed += context =>
+        // {
+        //     MapView.enabled = !MapView.enabled;
+        //     GameplayUI.SetActive(!MapView.enabled);
+        //     if (MapView.enabled)
+        //     {
+        //         MapView.BindInput(_input.UI);
+        //         _input.Player.Disable();
+        //     }
+        //     else
+        //     {
+        //         _input.Player.Enable();
+        //         SectorRenderer.ViewDistance = Settings.DefaultViewDistance;
+        //         SectorRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
+        //     }
+        // };
 
         ConsoleController.AddCommand("editmode", _ => ToggleEditMode());
         ConsoleController.AddCommand("savezone", args =>
@@ -93,11 +97,19 @@ public class ActionGameManager : MonoBehaviour
                 Zone.Data.Name = args[0];
             SaveZone();
         });
-
-        var hullType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Ship);
-        var hull = ItemManager.CreateInstance(hullType, 0, 1) as EquippableItem;
-        var entity = new Ship(ItemManager, Zone, hull);
-        InventoryPanel.Display(ItemManager, entity);
+        
+        // MapButton.onClick.AddListener(() =>
+        // {
+        //     if (_currentMenuTabButton == MapPanel) return;
+        //     
+        //     _currentMenuTabButton.GetComponent<TextMeshProUGUI>().color = Color.white;
+        //     _currentMenuTabButton = MapButton;
+        // });
+        //
+        // var hullType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Ship);
+        // var hull = ItemManager.CreateInstance(hullType, 0, 1) as EquippableItem;
+        // var entity = new Ship(ItemManager, Zone, hull);
+        //InventoryPanel.Display(ItemManager, entity);
     }
 
     public void SaveZone() => File.WriteAllBytes(

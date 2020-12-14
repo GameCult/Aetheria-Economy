@@ -45,11 +45,11 @@ public class Shape
     {
         var newCells = new bool[width, height];
         
-        for (int x = 0; x < width && x < Width; x++)
+        for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < height && y < Height; y++)
+            for (int y = 0; y < height; y++)
             {
-                newCells[x, y] = Cells[x, y];
+                newCells[x, y] = x >= Width || y >= Height || Cells[x, y];
             }
         }
 
@@ -315,16 +315,22 @@ public class HardpointData : ITintInspector
     {
         get
         {
-            if (_tintColors == null)
-            {
-                var hardpointTypes = ((HardpointType[]) Enum.GetValues(typeof(HardpointType)));
-                _tintColors = hardpointTypes.ToDictionary(x => x,
-                    x => ColorMath.HsvToRgb(float3((float)(int)x/hardpointTypes.Length, 1, 1)));
-            }
-
-            return _tintColors.ContainsKey(Type) ? _tintColors[Type] : _tintColors[HardpointType.Hull];
+            return GetColor(Type);
         }
     }
+
+    public static float3 GetColor(HardpointType type)
+    {
+        if (_tintColors == null)
+        {
+            var hardpointTypes = ((HardpointType[]) Enum.GetValues(typeof(HardpointType)));
+            _tintColors = hardpointTypes.ToDictionary(x => x,
+                x => ColorMath.HsvToRgb(float3((float)(int)x/hardpointTypes.Length, 1, 1)));
+        }
+
+        return _tintColors.ContainsKey(type) ? _tintColors[type] : _tintColors[HardpointType.Hull];
+    }
+    
     private static Dictionary<HardpointType, float3> _tintColors;
 }
 

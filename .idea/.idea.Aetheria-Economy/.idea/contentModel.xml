@@ -24,7 +24,13 @@
             </e>
           </e>
         </e>
+        <e p="FilterTest.cs" t="Include" />
         <e p="FitToCamera.cs" t="Include" />
+        <e p="GaussianBlurFilter.shader" t="Include" />
+        <e p="InventoryMenu.cs" t="Include" />
+        <e p="MapRenderer.cs" t="Include" />
+        <e p="MenuPanel.cs" t="Include" />
+        <e p="MenuTabButton.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">
@@ -1944,6 +1950,7 @@
             <e p="MouseHover.cs" t="Include" />
             <e p="PropertiesList.cs" t="Include" />
             <e p="PropertiesPanel.cs" t="Include" />
+            <e p="Property.cs" t="Include" />
             <e p="PropertyButton.cs" t="Include" />
             <e p="PropertyLabel.cs" t="Include" />
             <e p="RangedFloatField.cs" t="Include" />
@@ -1962,6 +1969,7 @@
         </e>
         <e p="Shaders" t="Include">
           <e p="AdditiveUI.shader" t="Include" />
+          <e p="AdditiveUIDetail.shader" t="Include" />
           <e p="Background.shader" t="Include" />
           <e p="Brushes" t="Include">
             <e p="CellBrush.shader" t="Include" />
@@ -1981,7 +1989,11 @@
           <e p="DitheredParticles.shader" t="Include" />
           <e p="GalaxyMap.shader" t="Include" />
           <e p="Isolines.shader" t="Include" />
+          <e p="IsolinesUI.shader" t="Include" />
           <e p="MaskedUIBlur.shader" t="Include" />
+          <e p="MaskedWorldSpaceAdditiveUI.shader" t="Include" />
+          <e p="MaskedWorldSpaceUI.shader" t="Include" />
+          <e p="Particle Standard Unlit.shader" t="Include" />
           <e p="Raymarching" t="Include">
             <e p="VolumeJupiter.shader" t="Include" />
             <e p="VolumeRender.shader" t="Include" />

@@ -10,7 +10,7 @@ public class PropertiesList : PropertiesPanel
 {
     public Image FoldoutIcon;
     public float FoldoutRotationDamping;
-    public FlatFlatButton Button;
+    public Button Button;
     public VerticalLayoutGroup LayoutGroup;
     public int FoldedPadding = -8;
     public int ExpandedPadding = 8;
@@ -24,7 +24,7 @@ public class PropertiesList : PropertiesPanel
 
     public new void Awake()
     {
-        Button.OnClick += _ => ToggleExpand();
+        Button.onClick.AddListener(ToggleExpand);
         OnPropertyAdded += go => go.SetActive(_expanded);
         //SetExpanded(true, true);
     }

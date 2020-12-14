@@ -16,11 +16,11 @@ public class PropertiesPanel : MonoBehaviour
 {
 	public DropdownMenu Dropdown;
     public TextMeshProUGUI Title;
-    public RectTransform SectionPrefab;
-    public PropertiesList ListPrefab;
-    public PropertyButton PropertyPrefab;
-    public PropertyLabel PropertyLabelPrefab;
-    public AttributeProperty AttributePrefab;
+    public RectTransform Section;
+    public PropertiesList List;
+    public Property Property;
+    public PropertyLabel PropertyLabel;
+    public AttributeProperty Attribute;
     public InputField InputField;
     public RangedFloatField RangedFloatField;
     public RangedFloatField ProgressField;
@@ -82,38 +82,21 @@ public class PropertiesPanel : MonoBehaviour
 
     public RectTransform AddSection(string name)
     {
-        var section = Instantiate(SectionPrefab, transform);
+        var section = Instantiate(Section, transform);
         section.GetComponentInChildren<TextMeshProUGUI>().text = name;
         Properties.Add(section.gameObject);
         OnPropertyAdded?.Invoke(section.gameObject);
         return section;
     }
 
-    public PropertyButton AddProperty(string name, Func<string> read = null, Action<PointerEventData> onClick = null, bool radio = false)
+    public Property AddProperty(string name, Func<string> read = null)
     {
-	    PropertyButton property;
+	    Property property;
 	    if(read != null)
-			property = Instantiate(PropertyLabelPrefab, transform);
+			property = Instantiate(PropertyLabel, transform);
 	    else
-		    property = Instantiate(PropertyPrefab, transform);
+		    property = Instantiate(Property, transform);
         property.Label.text = name;
-        if (radio)
-        {
-	        RadioSelection = true;
-            Buttons.Add(property.Button);
-            property.Button.OnClick += data =>
-            {
-	            if (data.button == PointerEventData.InputButton.Left)
-	            {
-		            if (SelectedChild != null)
-			            SelectedChild.CurrentState = FlatButtonState.Unselected;
-		            SelectedChild = property.Button;
-		            SelectedChild.CurrentState = FlatButtonState.Selected;
-	            }
-                onClick?.Invoke(data);
-            };
-        }
-        else if(onClick!=null) property.Button.OnClick += onClick;
 
         if (read != null)
 	        RefreshPropertyValues += () => ((PropertyLabel) property).Value.text = read.Invoke();
@@ -124,7 +107,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public PropertiesList AddList(string name) //, IEnumerable<(string, Func<string>)> elements)
     {
-        var list = Instantiate(ListPrefab, transform);
+        var list = Instantiate(List, transform);
         list.Context = Context;
         list.Dropdown = Dropdown;
         list.Title.text = name;
@@ -144,7 +127,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public AttributeProperty AddPersonalityProperty(PersonalityAttribute attribute, Func<float> read)
     {
-        var attributeInstance = Instantiate(AttributePrefab, transform);
+        var attributeInstance = Instantiate(Attribute, transform);
         attributeInstance.Title.text = attribute.Name;
         attributeInstance.HighLabel.text = attribute.HighName;
         attributeInstance.LowLabel.text = attribute.LowName;
@@ -154,22 +137,22 @@ public class PropertiesPanel : MonoBehaviour
         return attributeInstance;
     }
 
-    public virtual PropertyButton AddButton(string name, Action<PointerEventData> onClick)
+    public virtual PropertyButton AddButton(string name, Action onClick)
     {
 	    var button = Instantiate(PropertyButton, transform);
 	    button.Label.text = name;
-	    button.Button.OnClick += onClick;
+	    button.Button.onClick.AddListener(() => onClick());
 	    Properties.Add(button.gameObject);
 	    OnPropertyAdded?.Invoke(button.gameObject);
 	    return button;
     }
 
-    public void AddButton(string name, string label, Action<PointerEventData> onClick)
+    public void AddButton(string name, string label, Action onClick)
     {
 	    var button = Instantiate(ButtonField, transform);
 	    button.Label.text = name;
 	    button.ButtonLabel.text = label;
-	    button.Button.OnClick += onClick;
+	    button.Button.onClick.AddListener(() => onClick());
 	    Properties.Add(button.gameObject);
 	    OnPropertyAdded?.Invoke(button.gameObject);
     }
@@ -243,8 +226,8 @@ public class PropertiesPanel : MonoBehaviour
 	{
 		var field = Instantiate(IncrementField, transform);
 		field.Label.text = name;
-		field.Increment.OnClick += data => write(read() + 1);
-		field.Decrement.OnClick += data => write(read() - 1);
+		field.Increment.onClick.AddListener(() => write(read() + 1));
+		field.Decrement.onClick.AddListener(() => write(read() - 1));
 		RefreshPropertyValues += () =>
 		{
 			var val = read();
@@ -253,8 +236,8 @@ public class PropertiesPanel : MonoBehaviour
 			if (val < minval || val > maxval)
 				write(val = clamp(val, minval, maxval));
 			field.Value.text = val.ToString(CultureInfo.InvariantCulture);
-			field.Increment.CurrentState = val == maxval ? FlatButtonState.Disabled : FlatButtonState.Unselected;
-			field.Decrement.CurrentState = val == minval ? FlatButtonState.Disabled : FlatButtonState.Unselected;
+			field.Increment.interactable = val == maxval;
+			field.Decrement.interactable = val == minval;
 		};
 		Properties.Add(field.gameObject);
 		OnPropertyAdded?.Invoke(field.gameObject);

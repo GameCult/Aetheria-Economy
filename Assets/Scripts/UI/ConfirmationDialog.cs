@@ -2,28 +2,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ConfirmationDialog : PropertiesPanel
 {
     public ClickCatcher CancelClickCatcher;
-    public FlatButton Cancel;
-    public FlatButton Confirm;
+    public Button Cancel;
+    public Button Confirm;
 
     private Action _onCancel;
     private Action _onConfirm;
 
     private new void Start()
     {
-        Cancel.OnClick += () =>
+        Cancel.onClick.AddListener(() =>
         {
             _onCancel?.Invoke();
             End();
-        };
-        Confirm.OnClick += () =>
+        });
+        Confirm.onClick.AddListener(() =>
         {
             _onConfirm?.Invoke();
             End();
-        };
+        });
         if (CancelClickCatcher != null)
             CancelClickCatcher.OnClick += data =>
             {

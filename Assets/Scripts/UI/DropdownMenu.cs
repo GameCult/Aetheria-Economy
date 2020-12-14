@@ -46,12 +46,13 @@ public class DropdownMenu : MonoBehaviour
     {
         var optionButton = Instantiate(OptionPrefab, ContentRoot);
         optionButton.Label.text = text;
-        optionButton.Button.OnClick += data =>
+        optionButton.Button.onClick.AddListener(() =>
         {
             action();
             End();
-        };
-        optionButton.Button.CurrentState = !enabled ? FlatButtonState.Disabled : selected ? FlatButtonState.Selected : FlatButtonState.Unselected;
+        });
+        optionButton.Button.interactable = enabled;
+        //optionButton.Button..CurrentState = !enabled ? FlatButtonState.Disabled : selected ? FlatButtonState.Selected : FlatButtonState.Unselected;
         _options.Add(optionButton.gameObject);
     }
 

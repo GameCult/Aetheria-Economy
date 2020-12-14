@@ -530,20 +530,20 @@ public class EquippedCargoBay : EquippedItem
     public readonly ItemInstance[,] Occupancy;
 
     public readonly Dictionary<Guid, List<ItemInstance>> ItemsOfType = new Dictionary<Guid, List<ItemInstance>>();
-    
-    private readonly CargoBayData _cargoData;
+
+    public readonly CargoBayData Data;
     
     public float Mass { get; private set; }
     public float ThermalMass { get; private set; }
     
     public EquippedCargoBay(ItemManager itemManager, EquippableItem item, int2 position) : base(itemManager, item, position)
     {
-        _cargoData = _itemManager.GetData(EquippableItem) as CargoBayData;
+        Data = _itemManager.GetData(EquippableItem) as CargoBayData;
 
-        Mass = _cargoData.Mass;
-        ThermalMass = _cargoData.Mass * _cargoData.SpecificHeat;
+        Mass = Data.Mass;
+        ThermalMass = Data.Mass * Data.SpecificHeat;
         
-        Occupancy = new ItemInstance[_cargoData.InteriorShape.Width,_cargoData.InteriorShape.Height];
+        Occupancy = new ItemInstance[Data.InteriorShape.Width,Data.InteriorShape.Height];
     }
 
     // Check whether the given item will fit when its origin is placed at the given coordinate
@@ -587,7 +587,7 @@ public class EquippedCargoBay : EquippedItem
         }
         
         // Search all the space in the cargo bay for an empty space where the item fits
-        foreach (var cargoCoord in _cargoData.InteriorShape.Coordinates)
+        foreach (var cargoCoord in Data.InteriorShape.Coordinates)
         {
             if (ItemFits(item, cargoCoord))
             {
@@ -660,7 +660,7 @@ public class EquippedCargoBay : EquippedItem
     public bool TryFindSpace(CraftedItemInstance item, out int2 position)
     {
         // Search all the space in the cargo bay for an empty space where the item fits
-        foreach (var cargoCoord in _cargoData.InteriorShape.Coordinates)
+        foreach (var cargoCoord in Data.InteriorShape.Coordinates)
         {
             if (ItemFits(item, cargoCoord))
             {
