@@ -171,7 +171,7 @@ Shader "UI/Isolines"
 				// Loop over angle isolines
 				for (float ia = 0.5; ia < 13; ia++) {
 				    float isoline = abs(angle - ia / 6.0);
-					col += (1-smoothstep(_AngleWidth, _AngleWidth * _AngleFade, isoline)) * lerp(_AngleColor,_DangerColor,dangerblend) * blend * planmag;
+					col += (1-smoothstep(_AngleWidth, _AngleWidth * _AngleFade, isoline)) * lerp(_AngleColor,_DangerColor,dangerblend) * blend * (planmag / _Scale);
 					// col += (1-smoothstep(_Angle2Width, _Angle2Width * _Angle2Fade, isoline / angmag)) * lerp(_AngleColor,_DangerColor*4,dangerblend) * blend; // Isoline
 				}
 

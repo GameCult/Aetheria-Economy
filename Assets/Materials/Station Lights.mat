@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Thrusters
+  m_Name: Station Lights
   m_Shader: {fileID: 4800000, guid: d69ef48273708ef4680762f5cdcfc860, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -43,7 +43,7 @@ Material:
     - _MainTex:
         m_Texture: {fileID: -6057190860509678031, guid: 2b42584452fe0cc4fa4e8a115230b156,
           type: 3}
-        m_Scale: {x: 8, y: 8}
+        m_Scale: {x: 16, y: 16}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: -894214952450941493, guid: 2b42584452fe0cc4fa4e8a115230b156,

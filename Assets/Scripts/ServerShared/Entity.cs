@@ -41,8 +41,7 @@ public abstract class Entity
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     
     private List<IPopulationAssignment> PopulationAssignments = new List<IPopulationAssignment>();
-
-
+    
     private bool _active;
     public EquippedItem[,] GearOccupancy;
     public EquippedItem[,] ThermalOccupancy;

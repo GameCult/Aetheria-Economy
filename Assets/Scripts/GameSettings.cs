@@ -12,7 +12,7 @@ public class GameSettings : ScriptableObject
     public float MinimapZoneGravityRange;
     public float[] MinimapZoomLevels;
     public int DefaultMinimapZoom;
-    public float IconSize;
+    public ExponentialCurve IconSize;
     public int AsteroidMeshCount = 5;
     public float MinimapAsteroidSize = 3;
     public float PlanetRotationSpeed = 1;

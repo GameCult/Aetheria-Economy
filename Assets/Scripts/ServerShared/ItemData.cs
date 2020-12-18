@@ -142,6 +142,8 @@ public class Shape
  Union(1, typeof(CompoundCommodityData)),
  Union(2, typeof(GearData)), 
  Union(3, typeof(HullData)), 
+ Union(4, typeof(CargoBayData)), 
+ Union(5, typeof(DockingBayData)), 
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<ItemData>))]
 public abstract class ItemData : DatabaseEntry, INamedEntry
 {
@@ -266,6 +268,14 @@ public class CargoBayData : EquippableItemData
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class DockingBayData : CargoBayData
+{
+    [InspectableField, JsonProperty("maxSize"), Key(13)]
+    public int2 MaxSize;
+    [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
+}
+
+[RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HullData : EquippableItemData
 {
     [InspectableField, JsonProperty("hardpoints"), Key(13)]  
@@ -276,6 +286,9 @@ public class HullData : EquippableItemData
 
     [InspectableField, JsonProperty("hullType"), Key(15)]
     public HullType HullType;
+
+    [InspectableField, JsonProperty("gridOffset"), Key(16)]
+    public float GridOffset;
 
     [IgnoreMember]
     public Shape InteriorCells

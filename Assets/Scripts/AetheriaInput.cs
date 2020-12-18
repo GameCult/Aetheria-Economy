@@ -799,6 +799,14 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""dafe13a7-da46-408e-853e-6954e37da5c8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -810,6 +818,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Map Toggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2eb827dd-4707-4648-b7e5-cf1fd8fa00da"",
+                    ""path"": ""<Keyboard>/#(I)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -901,6 +920,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         // Global
         m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
         m_Global_MapToggle = m_Global.FindAction("Map Toggle", throwIfNotFound: true);
+        m_Global_Inventory = m_Global.FindAction("Inventory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1121,11 +1141,13 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Global;
     private IGlobalActions m_GlobalActionsCallbackInterface;
     private readonly InputAction m_Global_MapToggle;
+    private readonly InputAction m_Global_Inventory;
     public struct GlobalActions
     {
         private @AetheriaInput m_Wrapper;
         public GlobalActions(@AetheriaInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @MapToggle => m_Wrapper.m_Global_MapToggle;
+        public InputAction @Inventory => m_Wrapper.m_Global_Inventory;
         public InputActionMap Get() { return m_Wrapper.m_Global; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1138,6 +1160,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @MapToggle.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMapToggle;
                 @MapToggle.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMapToggle;
                 @MapToggle.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMapToggle;
+                @Inventory.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInventory;
+                @Inventory.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInventory;
+                @Inventory.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInventory;
             }
             m_Wrapper.m_GlobalActionsCallbackInterface = instance;
             if (instance != null)
@@ -1145,6 +1170,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @MapToggle.started += instance.OnMapToggle;
                 @MapToggle.performed += instance.OnMapToggle;
                 @MapToggle.canceled += instance.OnMapToggle;
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
             }
         }
     }
@@ -1218,5 +1246,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     public interface IGlobalActions
     {
         void OnMapToggle(InputAction.CallbackContext context);
+        void OnInventory(InputAction.CallbackContext context);
     }
 }

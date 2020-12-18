@@ -683,6 +683,7 @@
      <Compile Include="Assets\InventoryMenu.cs" />
      <Compile Include="Assets\FilterTest.cs" />
      <Compile Include="Assets\MapRenderer.cs" />
+     <Compile Include="Assets\MapMenuInput.cs" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Shaders\Clouds.shader" />

@@ -84,8 +84,6 @@ public class SectorRenderer : MonoBehaviour
             foreach(var camera in MinimapCameras)
                 camera.orthographicSize = value;
             // MinimapGravityQuad.transform.localScale = value * 2 * Vector3.one;
-            foreach (var planet in _planets.Values)
-                planet.Icon.transform.localScale = Settings.IconSize / 256 * value * Vector3.one;
         }
     }
 
@@ -214,13 +212,19 @@ public class SectorRenderer : MonoBehaviour
             }
 
             var planetInstance = _zone.PlanetInstances[planetData.ID];
-            planetInstance.BodyRadius.Subscribe(f => planet.Body.transform.localScale = f * Vector3.one);
+            planetInstance.BodyRadius.Subscribe(f =>
+            {
+                planet.Body.transform.localScale = f * Vector3.one;
+            });
             planetInstance.GravityWellRadius.Subscribe(f => planet.GravityWell.transform.localScale = f * Vector3.one);
             planetInstance.GravityWellDepth.Subscribe(f =>
             {
                 if (f > _maxDepth) _maxDepth = f;
                 planet.GravityWell.material.SetFloat("_Depth", f);
+                planet.Icon.transform.position = new Vector3(0, -f, 0);
             });
+            planetInstance.BodyData.Mass.Subscribe(f => planet.Icon.transform.localScale = Settings.IconSize.Evaluate(f) * Vector3.one);
+            
 
             _planets[planetData.ID] = planet;
             if (!_rootFound)
@@ -287,7 +291,8 @@ public class SectorRenderer : MonoBehaviour
         {
             var planetInstance = _zone.PlanetInstances[planet.Key];
             var p = _zone.GetOrbitPosition(planetInstance.BodyData.Orbit);
-            planet.Value.transform.position = new Vector3(p.x, _zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, p.y);
+            planet.Value.transform.position = new Vector3(p.x, 0, p.y);
+            planet.Value.Body.transform.position = new Vector3(0, _zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
             if(planet.Value is GasGiantObject gasGiantObject)
             {
                 gasGiantObject.GravityWaves.material.SetFloat("_Phase", Time * Settings.PlanetSettings.WaveSpeed.Evaluate(planetInstance.BodyData.Mass.Value));

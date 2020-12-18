@@ -70,6 +70,9 @@ public class InventoryPanel : MonoBehaviour
                                 spriteIndex += 1 << i;
                     }
 
+                    if (item != null)
+                        spriteIndex += 1 << 8;
+
                     if (spriteIndex == 0)
                     {
                         var empty = new GameObject("Empty Node", typeof(RectTransform));
@@ -110,6 +113,9 @@ public class InventoryPanel : MonoBehaviour
                     for(int i = 0; i < 8; i++)
                         if (ItemMatch(_offsets[i]))
                             spriteIndex += 1 << i;
+
+                    if (item != null)
+                        spriteIndex += 1 << 8;
 
                     if (spriteIndex == 0)
                     {

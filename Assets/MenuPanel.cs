@@ -13,6 +13,8 @@ public class MenuPanel : MonoBehaviour
 
     private Dictionary<MenuTab, MenuTabButton> _tabs = new Dictionary<MenuTab, MenuTabButton>();
     private MenuTabButton _current;
+    
+    public MenuTab CurrentTab { get; private set; }
 
     public void ShowTab(MenuTab tab)
     {
@@ -25,7 +27,8 @@ public class MenuPanel : MonoBehaviour
             _current.TabContents.SetActive(false);
             _current.Text.color = InactiveTabColor;
         }
-        
+
+        CurrentTab = tab;
         _current = _tabs[tab];
         
         _current.TabContents.SetActive(true);

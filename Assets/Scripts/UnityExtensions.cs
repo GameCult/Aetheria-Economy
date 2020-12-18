@@ -107,6 +107,6 @@ public static class UnityExtensions
 	
 	public static Color ToColor(this float3 v) => new Color(v.x,v.y,v.z);
 	
-	public static Vector3 Flatland(this Vector2 v) => new Vector3(v.x,0,v.y);
+	public static Vector3 Flatland(this Vector2 v, float y = 0) => new Vector3(v.x,y,v.y);
 	public static Vector2 Flatland(this Vector3 v) => new Vector2(v.x,v.z);
 }

@@ -84,7 +84,7 @@ public class MapRenderer : MonoBehaviour
             TintDisplay.material.SetTexture("_DetailTex", _tintTexture);
         }
 
-        var pos = ((Vector2) Position).Flatland();
+        var pos = ((Vector2) Position).Flatland(1);
         
         MapOverlayCamera.transform.position = pos;
         MapOverlayCamera.orthographicSize = _size.y * Scale * .5f;
