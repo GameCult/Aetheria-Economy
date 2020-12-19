@@ -62,7 +62,7 @@ public abstract class ControllerBase<T> : IBehavior, IController<T>, IInitializa
         Entity = entity;
         _controllerData = data;
         CheckSpaceworthiness();
-        entity.EquippedItems.ObserveAdd().Subscribe(added => CheckSpaceworthiness());
+        entity.Equipment.ObserveAdd().Subscribe(added => CheckSpaceworthiness());
     }
 
     private void CheckSpaceworthiness()

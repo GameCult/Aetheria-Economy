@@ -242,9 +242,16 @@ public class DatabaseListView : EditorWindow
                     else if(_itemTypes[i] == typeof(CompoundCommodityData))
                         itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(CompoundCommodityCategory), (item as CompoundCommodityData).Category));
                     else if(_itemTypes[i] == typeof(GearData))
-                        itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(HardpointType), (item as GearData).Hardpoint));
-                    else if(_itemTypes[i] == typeof(HullData))
+                        itemGroups = typedItems.GroupBy(item =>
+                        {
+                            var hp = Enum.GetName(typeof(HardpointType), (item as GearData).Hardpoint);
+                            if (hp == null)
+                                hp = "Invalid Hardpoint";
+                            return hp;
+                        });
+                    else if (_itemTypes[i] == typeof(HullData))
                         itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(HullType), (item as HullData).HullType));
+                    else itemGroups = typedItems.GroupBy(item => "All");
 
                     foreach (var itemGroup in itemGroups)
                     {

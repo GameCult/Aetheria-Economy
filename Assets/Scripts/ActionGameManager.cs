@@ -32,11 +32,13 @@ public class ActionGameManager : MonoBehaviour
     private float _time;
     private AetheriaInput _input;
     private int _zoomLevelIndex;
+    private Ship _currentShip;
     public List<Ship> PlayerShips { get; } = new List<Ship>();
     
     public DatabaseCache ItemData { get; private set; }
     public ItemManager ItemManager { get; private set; }
     public Zone Zone { get; private set; }
+
 
     void Start()
     {
@@ -113,11 +115,17 @@ public class ActionGameManager : MonoBehaviour
         var stationOrbit = Zone.CreateOrbit(parentOrbit, stationPos);
         var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID);
         Zone.Entities.Add(station);
+        var dockingBayData = ItemData.GetAll<DockingBayData>().First();
+        var dockingBay = ItemManager.CreateInstance(dockingBayData, 1, 1) as EquippableItem;
+        station.TryEquip(dockingBay);
         
         var hullType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Ship);
         var shipHull = ItemManager.CreateInstance(hullType, 0, 1) as EquippableItem;
         var ship = new Ship(ItemManager, Zone, shipHull);
-        
+        PlayerShips.Add(ship);
+        _currentShip = ship;
+        station.TryDock(ship);
+
         // MapButton.onClick.AddListener(() =>
         // {
         //     if (_currentMenuTabButton == MapPanel) return;
@@ -137,6 +145,30 @@ public class ActionGameManager : MonoBehaviour
         _editMode = !_editMode;
         FollowCamera.gameObject.SetActive(!_editMode);
         TopDownCamera.gameObject.SetActive(_editMode);
+    }
+    
+    public IEnumerable<EquippedCargoBay> AvailableCargoBays()
+    {
+        if (_currentShip.Parent != null)
+        {
+            foreach (var bay in _currentShip.Parent.DockingBays)
+            {
+                if (PlayerShips.Contains(bay.DockedShip)) yield return bay;
+            }
+        }
+    }
+
+    public IEnumerable<Ship> AvailableShips()
+    {
+        if (_currentShip.Parent != null)
+        {
+            foreach (var ship in PlayerShips)
+            {
+                if (_currentShip.Parent.Children.Contains(ship)) yield return ship;
+            }
+        }
+        else 
+            yield return _currentShip;
     }
 
     void Update()

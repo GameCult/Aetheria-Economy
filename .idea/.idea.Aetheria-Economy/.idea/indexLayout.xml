@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelUserStore">
-    <attachedFolders />
+    <attachedFolders>
+      <Path>../NodeGraphProcessor/Assets/com.alelievr.NodeGraphProcessor</Path>
+    </attachedFolders>
     <explicitIncludes>
       <Path>Library/PackageCache/com.unity.cinemachine@2.6.3</Path>
       <Path>Library/PackageCache/com.unity.ext.nunit@1.0.0</Path>
@@ -21,7 +23,6 @@
       <Path>Library/PackageCache/com.unity.xr.legacyinputhelpers@2.1.4</Path>
       <Path>Packages</Path>
       <Path>ProjectSettings</Path>
-      <Path>../NodeGraphProcessor/Assets/com.alelievr.NodeGraphProcessor</Path>
     </explicitIncludes>
     <explicitExcludes>
       <Path>.git</Path>
@@ -35,6 +36,7 @@
       <Path>Logs</Path>
       <Path>Recordings</Path>
       <Path>Server</Path>
+      <Path>Temp</Path>
       <Path>UserSettings</Path>
       <Path>obj</Path>
     </explicitExcludes>

@@ -26,8 +26,9 @@ public abstract class Entity
     public float[,] Temperature;
     public float Energy;
 
-    public readonly ReactiveCollection<EquippedItem> EquippedItems = new ReactiveCollection<EquippedItem>();
-    public readonly ReactiveCollection<EquippedCargoBay> EquippedCargoBays = new ReactiveCollection<EquippedCargoBay>();
+    public readonly ReactiveCollection<EquippedItem> Equipment = new ReactiveCollection<EquippedItem>();
+    public readonly ReactiveCollection<EquippedCargoBay> CargoBays = new ReactiveCollection<EquippedCargoBay>();
+    public readonly ReactiveCollection<EquippedDockingBay> DockingBays = new ReactiveCollection<EquippedDockingBay>();
 
     public Entity Parent;
     public List<Entity> Children = new List<Entity>();
@@ -60,7 +61,7 @@ public abstract class Entity
             _active = value;
             if (_active)
             {
-                foreach (var hardpoint in EquippedItems)
+                foreach (var hardpoint in Equipment)
                     if(hardpoint.EquippableItem!=null)
                         foreach (var behavior in hardpoint.Behaviors)
                         {
@@ -76,6 +77,7 @@ public abstract class Entity
         ItemManager = itemManager;
         Zone = zone;
         Hull = hull;
+        Name = hull.Name;
         MapShip();
     }
 
@@ -129,7 +131,7 @@ public abstract class Entity
 
     public EquippedCargoBay FindItemInCargo(Guid itemDataID)
     {
-        return EquippedCargoBays.FirstOrDefault(c => c.ItemsOfType.ContainsKey(itemDataID));
+        return CargoBays.FirstOrDefault(c => c.ItemsOfType.ContainsKey(itemDataID));
     }
 
     // Attempts to move a given number of items of the given type to the target Entity
@@ -139,7 +141,7 @@ public abstract class Entity
         int quantityTransferred = 0;
         while (quantityTransferred < quantity)
         {
-            EquippedCargoBay originInventory = EquippedCargoBays.FirstOrDefault(c => c.ItemsOfType.ContainsKey(itemDataID));
+            EquippedCargoBay originInventory = CargoBays.FirstOrDefault(c => c.ItemsOfType.ContainsKey(itemDataID));
 
             if (originInventory == null) break;
 
@@ -148,7 +150,7 @@ public abstract class Entity
             if (itemInstance is SimpleCommodity simpleCommodity)
             {
                 var targetQuantity = min(simpleCommodity.Quantity, quantity - quantityTransferred);
-                if (!target.EquippedCargoBays.Any(c => originInventory.TryTransferItem(c, simpleCommodity, targetQuantity)))
+                if (!target.CargoBays.Any(c => originInventory.TryTransferItem(c, simpleCommodity, targetQuantity)))
                 {
                     quantityTransferred += targetQuantity - simpleCommodity.Quantity;
                     break;
@@ -158,7 +160,7 @@ public abstract class Entity
             }
             else if (itemInstance is CraftedItemInstance craftedItemInstance)
             {
-                if (!target.EquippedCargoBays.Any(c => originInventory.TryTransferItem(c, craftedItemInstance)))
+                if (!target.CargoBays.Any(c => originInventory.TryTransferItem(c, craftedItemInstance)))
                     break;
                 
                 quantityTransferred++;
@@ -184,10 +186,10 @@ public abstract class Entity
                 return null;
             }
 
-            EquippedCargoBays.Remove(cargoBay);
+            CargoBays.Remove(cargoBay);
         }
         
-        EquippedItems.Remove(item);
+        Equipment.Remove(item);
         
         var itemData = ItemManager.GetData(item.EquippableItem);
         foreach (var i in itemData.Shape.Coordinates)
@@ -308,13 +310,21 @@ public abstract class Entity
             EquippedItem equippedItem;
             if(itemData is CargoBayData)
             {
-                equippedItem = new EquippedCargoBay(ItemManager, item, hullCoord);
-                EquippedCargoBays.Add((EquippedCargoBay) equippedItem);
+                if (itemData is DockingBayData)
+                {
+                    equippedItem = new EquippedDockingBay(ItemManager, item, hullCoord, $"{Name} Docking Bay {DockingBays.Count + 1}");
+                    DockingBays.Add((EquippedDockingBay) equippedItem);
+                }
+                else
+                {
+                    equippedItem = new EquippedCargoBay(ItemManager, item, hullCoord, $"{Name} Cargo Bay {CargoBays.Count + 1}");
+                    CargoBays.Add((EquippedCargoBay) equippedItem);
+                }
             }
             else
             {
                 equippedItem = new EquippedItem(ItemManager, item, hullCoord);
-                EquippedItems.Add(equippedItem);
+                Equipment.Add(equippedItem);
             }
 
             foreach (var i in itemData.Shape.Coordinates)
@@ -329,7 +339,7 @@ public abstract class Entity
         else
         {
             var equippedItem = new EquippedItem(ItemManager, item, hullCoord);
-            EquippedItems.Add(equippedItem);
+            Equipment.Add(equippedItem);
             
             foreach (var i in itemData.Shape.Coordinates)
             {
@@ -340,7 +350,38 @@ public abstract class Entity
             Hydrate(equippedItem);
             return true;
         }
+    }
 
+    public EquippedDockingBay TryDock(Ship ship)
+    {
+        var bay = DockingBays.FirstOrDefault(x => x.DockedShip == null);
+        if (bay != null)
+        {
+            bay.DockedShip = ship;
+            ship.SetParent(this);
+            Zone.Entities.Remove(ship);
+        }
+
+        return bay;
+    }
+
+    public bool TryUndock(Ship ship)
+    {
+        var bay = DockingBays.FirstOrDefault(x => x.DockedShip == ship);
+        if (bay == null)
+        {
+            ItemManager.Log($"Ship {ship.Name} attempted to undock from {Name}, but it was not docked!");
+            return false;
+        }
+
+        if (bay.Cargo.Any())
+            return false;
+
+        bay.DockedShip = null;
+        ship.RemoveParent();
+        Zone.Entities.Add(ship);
+
+        return true;
     }
 
     public void AddChild(Entity entity)
@@ -372,7 +413,7 @@ public abstract class Entity
 
     public T GetBehavior<T>() where T : class, IBehavior
     {
-        foreach (var equippedItem in EquippedItems)
+        foreach (var equippedItem in Equipment)
             foreach (var behavior in equippedItem.Behaviors)
                 if (behavior is T b)
                     return b;
@@ -381,7 +422,7 @@ public abstract class Entity
 
     public IEnumerable<T> GetBehaviors<T>() where T : class, IBehavior
     {
-        foreach (var equippedItem in EquippedItems)
+        foreach (var equippedItem in Equipment)
             foreach (var behavior in equippedItem.Behaviors)
                 if (behavior is T b)
                     yield return b;
@@ -389,7 +430,7 @@ public abstract class Entity
 
     public IEnumerable<T> GetBehaviorData<T>() where T : BehaviorData
     {
-        foreach (var equippedItem in EquippedItems)
+        foreach (var equippedItem in Equipment)
             foreach (var behavior in equippedItem.Behaviors)
                 if (behavior.Data is T b)
                     yield return b;
@@ -397,7 +438,7 @@ public abstract class Entity
 
     public Switch GetSwitch<T>() where T : class, IBehavior
     {
-        foreach (var equippedItem in EquippedItems)
+        foreach (var equippedItem in Equipment)
             foreach (var group in equippedItem.BehaviorGroups)
                 foreach(var behavior in group.Behaviors)
                     if (behavior is T)
@@ -407,7 +448,7 @@ public abstract class Entity
 
     public Trigger GetTrigger<T>() where T : class, IBehavior
     {
-        foreach (var equippedItem in EquippedItems)
+        foreach (var equippedItem in Equipment)
             foreach (var group in equippedItem.BehaviorGroups)
                 foreach(var behavior in group.Behaviors)
                     if (behavior is T)
@@ -419,7 +460,7 @@ public abstract class Entity
     {
         if (Active)
         {
-            foreach (var equippedItem in EquippedItems)
+            foreach (var equippedItem in Equipment)
             {
                 equippedItem.Update(delta);
             }
@@ -534,10 +575,12 @@ public class EquippedCargoBay : EquippedItem
     
     public float Mass { get; private set; }
     public float ThermalMass { get; private set; }
+    public string Name { get; }
     
-    public EquippedCargoBay(ItemManager itemManager, EquippableItem item, int2 position) : base(itemManager, item, position)
+    public EquippedCargoBay(ItemManager itemManager, EquippableItem item, int2 position, string name) : base(itemManager, item, position)
     {
         Data = _itemManager.GetData(EquippableItem) as CargoBayData;
+        Name = name;
 
         Mass = Data.Mass;
         ThermalMass = Data.Mass * Data.SpecificHeat;
@@ -777,6 +820,17 @@ public class EquippedCargoBay : EquippedItem
         if (!target.TryStore(item)) return false;
         Remove(item);
         return true;
+    }
+}
+
+public class EquippedDockingBay : EquippedCargoBay
+{
+    public Ship DockedShip;
+    public int2 MaxSize => _data.MaxSize;
+    private DockingBayData _data;
+    public EquippedDockingBay(ItemManager itemManager, EquippableItem item, int2 position, string name) : base(itemManager, item, position, name)
+    {
+        _data = _itemManager.GetData(EquippableItem) as DockingBayData;
     }
 }
 

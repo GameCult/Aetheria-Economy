@@ -59,14 +59,14 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
             if (statField != null)
             {
                 if (typeof(EquippableItemData).IsAssignableFrom(targetType))
-                    _stats = Entity.EquippedItems
+                    _stats = Entity.Equipment
                         .Select(hp => hp.EquippableItem)
                         .Where(gear => _data.RequireBehavior == null || Context.GetData(gear).Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
                         .Where(gear => Context.GetData(gear).GetType() == targetType)
                         .Select(gear => statField.GetValue(Context.GetData(gear)) as PerformanceStat)
                         .ToArray();
                 else
-                    _stats = Entity.EquippedItems
+                    _stats = Entity.Equipment
                         .Select(hp => hp.EquippableItem)
                         .Where(gear => _data.RequireBehavior == null || Context.GetData(gear).Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
                         .SelectMany(gear => Context.GetData(gear).Behaviors)

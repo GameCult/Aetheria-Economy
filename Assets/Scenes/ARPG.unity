@@ -1288,36 +1288,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 560317484512439620}
     m_Modifications:
-    - target: {fileID: 1613450655044732627, guid: 99bde06e2f0ca504bb95f2a4e3429462,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1613450655044732627, guid: 99bde06e2f0ca504bb95f2a4e3429462,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1613450655044732627, guid: 99bde06e2f0ca504bb95f2a4e3429462,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 192.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1613450655044732627, guid: 99bde06e2f0ca504bb95f2a4e3429462,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -24.16
-      objectReference: {fileID: 0}
-    - target: {fileID: 1613450655044732627, guid: 99bde06e2f0ca504bb95f2a4e3429462,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 361
-      objectReference: {fileID: 0}
-    - target: {fileID: 1613450655044732627, guid: 99bde06e2f0ca504bb95f2a4e3429462,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 36.32
-      objectReference: {fileID: 0}
     - target: {fileID: 1613450655389604793, guid: 99bde06e2f0ca504bb95f2a4e3429462,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1525,7 +1495,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &346000247
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2688,7 +2658,7 @@ PrefabInstance:
     - target: {fileID: 2279630453886260052, guid: aac073da6df367d499834c926930dd84,
         type: 3}
       propertyPath: m_Name
-      value: Cargo
+      value: Cargo 1
       objectReference: {fileID: 0}
     - target: {fileID: 2279630453886260053, guid: aac073da6df367d499834c926930dd84,
         type: 3}
@@ -2795,6 +2765,16 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2279630453886260054, guid: aac073da6df367d499834c926930dd84,
+        type: 3}
+      propertyPath: GameManager
+      value: 
+      objectReference: {fileID: 1009503729}
+    - target: {fileID: 2279630453886260054, guid: aac073da6df367d499834c926930dd84,
+        type: 3}
+      propertyPath: ContextMenu
+      value: 
+      objectReference: {fileID: 1157981993}
     - target: {fileID: 2279630454000268454, guid: aac073da6df367d499834c926930dd84,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -5280,7 +5260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Canvas: {fileID: 761574180}
-  Root: {fileID: 0}
+  Root: {fileID: 761574181}
   CancelClickCatcher: {fileID: 1420548305}
   OptionPrefab: {fileID: 3523328438153607920, guid: 8cabdd9c2f8e4be45b917debb4762707,
     type: 3}
@@ -10055,7 +10035,7 @@ PrefabInstance:
     - target: {fileID: 2279630453886260052, guid: aac073da6df367d499834c926930dd84,
         type: 3}
       propertyPath: m_Name
-      value: Hull
+      value: Cargo 2
       objectReference: {fileID: 0}
     - target: {fileID: 2279630453886260053, guid: aac073da6df367d499834c926930dd84,
         type: 3}
@@ -10162,6 +10142,16 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2279630453886260054, guid: aac073da6df367d499834c926930dd84,
+        type: 3}
+      propertyPath: GameManager
+      value: 
+      objectReference: {fileID: 1009503729}
+    - target: {fileID: 2279630453886260054, guid: aac073da6df367d499834c926930dd84,
+        type: 3}
+      propertyPath: ContextMenu
+      value: 
+      objectReference: {fileID: 1157981993}
     - target: {fileID: 2279630454000268454, guid: aac073da6df367d499834c926930dd84,
         type: 3}
       propertyPath: m_AnchorMin.y

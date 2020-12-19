@@ -270,7 +270,7 @@ public class CargoBayData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class DockingBayData : CargoBayData
 {
-    [InspectableField, JsonProperty("maxSize"), Key(13)]
+    [InspectableField, JsonProperty("maxSize"), Key(14)]
     public int2 MaxSize;
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }

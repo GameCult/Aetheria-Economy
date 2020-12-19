@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -10,12 +11,15 @@ using int2 = Unity.Mathematics.int2;
 
 public class InventoryPanel : MonoBehaviour
 {
+    public ActionGameManager GameManager;
+    public ContextMenu ContextMenu;
     public TextMeshProUGUI Title;
+    public Button Dropdown;
     public GridLayoutGroup Grid;
     public Sprite[] NodeTextures;
     public Prototype NodePrototype;
 
-    private Dictionary<int2, GameObject> _nodeInstances;
+    private Dictionary<int2, GameObject> _nodeInstances = new Dictionary<int2, GameObject>();
     private int2[] _offsets = new[]
     {
         int2(0, 1),
@@ -28,8 +32,40 @@ public class InventoryPanel : MonoBehaviour
         int2(-1, 1)
     };
 
+    private void Start()
+    {
+        Dropdown.onClick.AddListener(() =>
+        {
+            ContextMenu.Clear();
+            foreach (var ship in GameManager.AvailableShips())
+            {
+                if (ship.CargoBays.Any())
+                {
+                    ContextMenu.AddDropdown(ship.Name,
+                        ship.CargoBays
+                            .Select<EquippedCargoBay, (string text, Action action, bool enabled)>((bay, index) =>
+                                ($"Bay {index}", () => Display(GameManager.ItemManager, bay), true))
+                            .Prepend(("Equipment", () => Display(GameManager.ItemManager, ship), true)));
+                }
+                else ContextMenu.AddOption(ship.Name, () => Display(GameManager.ItemManager, ship));
+            }
+
+            foreach (var bay in GameManager.AvailableCargoBays())
+            {
+                ContextMenu.AddOption(bay.Name, () => Display(GameManager.ItemManager, bay));
+            }
+            ContextMenu.Show();
+        });
+    }
+
     public void Display(ItemManager manager, Entity entity)
     {
+        foreach(var node in _nodeInstances.Values)
+            Destroy(node);
+        _nodeInstances.Clear();
+
+        Title.text = entity.Name;
+        
         var hullData = manager.GetData(entity.Hull) as HullData;
         Grid.constraintCount = hullData.Shape.Width;
         _nodeInstances = hullData.Shape.AllCoordinates
@@ -90,12 +126,18 @@ public class InventoryPanel : MonoBehaviour
 
     public void Display(ItemManager manager, EquippedCargoBay cargo)
     {
-        Grid.constraintCount = cargo.Data.Shape.Width;
-        _nodeInstances = cargo.Data.Shape.AllCoordinates
+        foreach(var node in _nodeInstances.Values)
+            Destroy(node);
+        _nodeInstances.Clear();
+
+        Title.text = cargo.Name;
+        
+        Grid.constraintCount = cargo.Data.InteriorShape.Width;
+        _nodeInstances = cargo.Data.InteriorShape.AllCoordinates
             .ToDictionary(v => v,
                 v =>
                 {
-                    if (!cargo.Data.Shape[v])
+                    if (!cargo.Data.InteriorShape[v])
                     {
                         var empty = new GameObject("Empty Node", typeof(RectTransform));
                         empty.transform.SetParent(Grid.transform);
@@ -106,7 +148,7 @@ public class InventoryPanel : MonoBehaviour
                     var item = cargo.Occupancy[v.x, v.y];
 
                     bool ItemMatch(int2 offset) => 
-                        !cargo.Data.Shape[v + offset] || 
+                        !cargo.Data.InteriorShape[v + offset] || 
                         item == null || 
                         cargo.Occupancy[v.x + offset.x, v.y + offset.y] != item;
                     
@@ -127,10 +169,9 @@ public class InventoryPanel : MonoBehaviour
                     var node = NodePrototype.Instantiate<Prototype>().gameObject;
                     var image = node.GetComponentInChildren<Image>();
                     image.sprite = NodeTextures[spriteIndex];
-                    var itemData = manager.GetData(item);
                     if (item == null)
                         image.color = Color.white * .5f;
-                    else if (itemData is EquippableItemData equippable)
+                    else if (manager.GetData(item) is EquippableItemData equippable)
                         image.color = HardpointData.GetColor(equippable.HardpointType).ToColor();
                     else
                         image.color = Color.white;

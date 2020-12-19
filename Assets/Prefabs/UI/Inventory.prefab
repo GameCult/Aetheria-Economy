@@ -596,7 +596,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2279630452912159028}
   m_HandleRect: {fileID: 2279630452912159027}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -940,7 +940,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78aa0b8ec7594a7438f13757228e3500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameManager: {fileID: 0}
+  ContextMenu: {fileID: 0}
   Title: {fileID: 2279630453679143108}
+  Dropdown: {fileID: 8289855250608258092}
   Grid: {fileID: 2279630453710142156}
   NodeTextures:
   - {fileID: 447277437350272159, guid: ef4a863cd35ba454cb1d7e37e6388abe, type: 3}

@@ -130,79 +130,79 @@
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\Craters.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Shading\MoonShading.compute" />
  <Reference Include="Unity.Timeline.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Cinemachine">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
  </Reference>
  <Reference Include="Unity.VSCode.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.InputSystem">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Recorder.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Recorder">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Postprocessing.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Postprocessing.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.XR.LegacyInputHelpers">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Rider.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Recorder.Base">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.Base.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.Base.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Mathematics">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
  </Reference>
  <Reference Include="Unity.2D.Sprite.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Postprocessing.Runtime">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Postprocessing.Runtime.dll</HintPath>
  </Reference>
  <Reference Include="Unity.2D.Tilemap.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.SpatialTracking">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.SpatialTracking.dll</HintPath>
  </Reference>
  <Reference Include="com.unity.cinemachine.editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.SpatialTracking">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
  <Reference Include="Unity.VisualStudio.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Mathematics.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.XR.LegacyInputHelpers">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.XR.LegacyInputHelpers.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.UI">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -393,44 +393,44 @@
  <Reference Include="UnityEditor">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
  </Reference>
+ <Reference Include="Substance.Game">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
+ </Reference>
  <Reference Include="Microsoft.Extensions.Logging.Abstractions">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
  </Reference>
  <Reference Include="Microsoft.SqlServer.Types">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Microsoft.SqlServer.Types.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Microsoft.SqlServer.Types.dll</HintPath>
  </Reference>
  <Reference Include="Newtonsoft.Json">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
  </Reference>
  <Reference Include="QuickGraph">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
  </Reference>
  <Reference Include="Remotion.Linq">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
  </Reference>
  <Reference Include="System.Buffers">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
  </Reference>
  <Reference Include="System.Memory">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
  </Reference>
  <Reference Include="System.Runtime.CompilerServices.Unsafe">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
  </Reference>
  <Reference Include="System.Threading.Tasks.Extensions">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
  </Reference>
  <Reference Include="Google.Protobuf">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
  </Reference>
  <Reference Include="Grpc.Core">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core/lib/net45/Grpc.Core.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core/lib/net45/Grpc.Core.dll</HintPath>
  </Reference>
  <Reference Include="Grpc.Core.Api">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Game">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -783,21 +783,21 @@
       <Project>{c2362ba6-dee9-92b9-0779-f5fcf5968986}</Project>
       <Name>Economy.Shared.Unity</Name>
     </ProjectReference>
-    <ProjectReference Include="UniRx.csproj">
-      <Project>{4d885cb7-1f9e-abb3-b070-7265b432ecda}</Project>
-      <Name>UniRx</Name>
-    </ProjectReference>
-    <ProjectReference Include="MessagePack.csproj">
-      <Project>{c511ef21-dc27-883d-b027-9a4b6f36bae4}</Project>
-      <Name>MessagePack</Name>
-    </ProjectReference>
     <ProjectReference Include="Substance.EditorHelper.csproj">
       <Project>{dd909206-f54e-1c12-ed74-b4e22d464f6a}</Project>
       <Name>Substance.EditorHelper</Name>
     </ProjectReference>
+    <ProjectReference Include="UniRx.csproj">
+      <Project>{4d885cb7-1f9e-abb3-b070-7265b432ecda}</Project>
+      <Name>UniRx</Name>
+    </ProjectReference>
     <ProjectReference Include="Substance.Platform.csproj">
       <Project>{2ca9591a-f6e2-fafd-e598-0f0563c5ae57}</Project>
       <Name>Substance.Platform</Name>
+    </ProjectReference>
+    <ProjectReference Include="MessagePack.csproj">
+      <Project>{c511ef21-dc27-883d-b027-9a4b6f36bae4}</Project>
+      <Name>MessagePack</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -53,10 +53,10 @@
      <Compile Include="Assets\Allegorithmic\Plugins\Substance.Platform\NativeFunctions.cs" />
      <None Include="Assets\Allegorithmic\Plugins\Substance.Platform\Substance.Platform.asmdef" />
  <Reference Include="UnityEditor.UI">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -256,50 +256,50 @@
  <Reference Include="UnityEditor.WindowsStandalone.Extensions">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
- <Reference Include="Microsoft.Extensions.Logging.Abstractions">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
- </Reference>
- <Reference Include="Microsoft.SqlServer.Types">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Microsoft.SqlServer.Types.dll</HintPath>
- </Reference>
- <Reference Include="Newtonsoft.Json">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
- </Reference>
- <Reference Include="QuickGraph">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
- </Reference>
- <Reference Include="Remotion.Linq">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
- </Reference>
- <Reference Include="System.Buffers">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
- </Reference>
- <Reference Include="System.Memory">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.CompilerServices.Unsafe">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
- </Reference>
- <Reference Include="System.Threading.Tasks.Extensions">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="Google.Protobuf">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
- </Reference>
- <Reference Include="Grpc.Core">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core/lib/net45/Grpc.Core.dll</HintPath>
- </Reference>
- <Reference Include="Grpc.Core.Api">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
+ <Reference Include="Substance.Game">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
  </Reference>
  <Reference Include="Substance.Editor">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Game">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
  </Reference>
  <Reference Include="SourceUnityLib">
- <HintPath>D:/WIP4/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Source/Editor/SourceUnityLib.dll</HintPath>
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Source/Editor/SourceUnityLib.dll</HintPath>
+ </Reference>
+ <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+ </Reference>
+ <Reference Include="Microsoft.SqlServer.Types">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Microsoft.SqlServer.Types.dll</HintPath>
+ </Reference>
+ <Reference Include="Newtonsoft.Json">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+ </Reference>
+ <Reference Include="QuickGraph">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
+ </Reference>
+ <Reference Include="Remotion.Linq">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Buffers">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Memory">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Runtime.CompilerServices.Unsafe">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Threading.Tasks.Extensions">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="Google.Protobuf">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
+ </Reference>
+ <Reference Include="Grpc.Core">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core/lib/net45/Grpc.Core.dll</HintPath>
+ </Reference>
+ <Reference Include="Grpc.Core.Api">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
