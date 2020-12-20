@@ -684,6 +684,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\BasicReflectionEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\IntEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\PointPairOrder.cs" />
+     <Compile Include="Assets\InventoryCell.cs" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Shaders\Clouds.shader" />

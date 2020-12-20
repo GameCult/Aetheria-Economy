@@ -14,7 +14,7 @@ namespace UniRx.Triggers
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
-            if (onPointerClick != null) onPointerClick.OnNext(eventData);
+            onPointerClick?.OnNext(eventData);
         }
 
         public IObservable<PointerEventData> OnPointerClickAsObservable()

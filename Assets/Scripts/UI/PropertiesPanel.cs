@@ -29,6 +29,7 @@ public class PropertiesPanel : MonoBehaviour
     public PropertyButton PropertyButton;
     public ButtonField ButtonField;
     public IncrementField IncrementField;
+    public RectTransform Content;
     [HideInInspector] public FlatFlatButton SelectedChild;
     [HideInInspector] public ItemManager Context;
 
@@ -82,7 +83,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public RectTransform AddSection(string name)
     {
-        var section = Instantiate(Section, transform);
+        var section = Instantiate(Section, Content ?? transform);
         section.GetComponentInChildren<TextMeshProUGUI>().text = name;
         Properties.Add(section.gameObject);
         OnPropertyAdded?.Invoke(section.gameObject);
@@ -93,9 +94,9 @@ public class PropertiesPanel : MonoBehaviour
     {
 	    Property property;
 	    if(read != null)
-			property = Instantiate(PropertyLabel, transform);
+			property = Instantiate(PropertyLabel, Content ?? transform);
 	    else
-		    property = Instantiate(Property, transform);
+		    property = Instantiate(Property, Content ?? transform);
         property.Label.text = name;
 
         if (read != null)
@@ -107,7 +108,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public PropertiesList AddList(string name) //, IEnumerable<(string, Func<string>)> elements)
     {
-        var list = Instantiate(List, transform);
+        var list = Instantiate(List, Content ?? transform);
         list.Context = Context;
         list.Dropdown = Dropdown;
         list.Title.text = name;
@@ -127,7 +128,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public AttributeProperty AddPersonalityProperty(PersonalityAttribute attribute, Func<float> read)
     {
-        var attributeInstance = Instantiate(Attribute, transform);
+        var attributeInstance = Instantiate(Attribute, Content ?? transform);
         attributeInstance.Title.text = attribute.Name;
         attributeInstance.HighLabel.text = attribute.HighName;
         attributeInstance.LowLabel.text = attribute.LowName;
@@ -139,7 +140,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public virtual PropertyButton AddButton(string name, Action onClick)
     {
-	    var button = Instantiate(PropertyButton, transform);
+	    var button = Instantiate(PropertyButton, Content ?? transform);
 	    button.Label.text = name;
 	    button.Button.onClick.AddListener(() => onClick());
 	    Properties.Add(button.gameObject);
@@ -149,7 +150,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public void AddButton(string name, string label, Action onClick)
     {
-	    var button = Instantiate(ButtonField, transform);
+	    var button = Instantiate(ButtonField, Content ?? transform);
 	    button.Label.text = name;
 	    button.ButtonLabel.text = label;
 	    button.Button.onClick.AddListener(() => onClick());
@@ -159,7 +160,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<string> read, Action<string> write)
 	{
-		var field = Instantiate(InputField, transform);
+		var field = Instantiate(InputField, Content ?? transform);
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.Standard;
 		field.Field.onValueChanged.AddListener(val => write(val));
@@ -184,7 +185,7 @@ public class PropertiesPanel : MonoBehaviour
 
 	public void AddField(string name, Func<float> read, Action<float> write)
 	{
-		var field = Instantiate(InputField, transform);
+		var field = Instantiate(InputField, Content ?? transform);
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.DecimalNumber;
 		field.Field.onValueChanged.AddListener(val => write(float.Parse(val)));
@@ -204,7 +205,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<int> read, Action<int> write)
 	{
-		var field = Instantiate(InputField, transform);
+		var field = Instantiate(InputField, Content ?? transform);
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.IntegerNumber;
 		field.Field.onValueChanged.AddListener(val => write(int.Parse(val)));
@@ -224,7 +225,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddIncrementField(string name, Func<int> read, Action<int> write, Func<int> min, Func<int> max)
 	{
-		var field = Instantiate(IncrementField, transform);
+		var field = Instantiate(IncrementField, Content ?? transform);
 		field.Label.text = name;
 		field.Increment.onClick.AddListener(() => write(read() + 1));
 		field.Decrement.onClick.AddListener(() => write(read() - 1));
@@ -245,7 +246,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<float> read, Action<float> write, float min, float max)
 	{
-		var field = Instantiate(RangedFloatField, transform);
+		var field = Instantiate(RangedFloatField, Content ?? transform);
 		field.Label.text = name;
 		field.Slider.wholeNumbers = false;
 		field.Slider.minValue = min;
@@ -258,7 +259,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddProgressField(string name, Func<float> read)
 	{
-		var field = Instantiate(ProgressField, transform);
+		var field = Instantiate(ProgressField, Content ?? transform);
 		field.Label.text = name;
 		field.Slider.wholeNumbers = false;
 		field.Slider.minValue = 0;
@@ -271,7 +272,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<int> read, Action<int> write, int min, int max)
 	{
-		var field = Instantiate(RangedFloatField, transform);
+		var field = Instantiate(RangedFloatField, Content ?? transform);
 		field.Label.text = name;
 		field.Slider.wholeNumbers = true;
 		field.Slider.minValue = min;
@@ -284,7 +285,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<bool> read, Action<bool> write)
 	{
-		var field = Instantiate(BoolField, transform);
+		var field = Instantiate(BoolField, Content ?? transform);
 		field.Label.text = name;
 		field.Toggle.onValueChanged.AddListener(val => write(val));
 		RefreshPropertyValues += () => field.Toggle.isOn = read();
@@ -294,7 +295,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<int> read, Action<int> write, string[] enumOptions)
 	{
-		var field = Instantiate(EnumField, transform);
+		var field = Instantiate(EnumField, Content ?? transform);
 		field.Label.text = name;
 		field.Dropdown.OnClick += data =>
 		{
@@ -382,6 +383,56 @@ public class PropertiesPanel : MonoBehaviour
 						{
 							var stat = (PerformanceStat) field.GetValue(behavior);
 							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear, entity).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void AddItemProperties(ItemInstance item)
+	{
+		var data = Context.ItemData.Get<ItemData>(item.Data);
+		AddProperty("Type", () => data.Name);
+		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
+		// if (item is CraftedItemInstance craftedItemInstance)
+		// {
+		// 	var sourceEntity = Context.ItemData.Get<Entity>(craftedItemInstance.SourceEntity);
+		// 	if (sourceEntity != null)
+		// 	{
+		// 		var corporation = Context.ItemData.Get<Corporation>(sourceEntity.Corporation);
+		// 		AddProperty("Manufacturer", () => corporation.Name);
+		// 	}
+		// 	else
+		// 	{
+		// 		AddProperty("Manufacturer", () => "GameCult");
+		// 	}
+		// }
+		// if (item is SimpleCommodity simpleCommodity)
+		// 	AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
+		AddProperty("Mass", () => Context.GetMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+		if (item is EquippableItem gear)
+		{
+			var gearData = Context.GetData(gear);
+			AddProperty("Durability", () =>
+				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+			foreach (var behavior in gearData.Behaviors)
+			{
+				var type = behavior.GetType();
+				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
+				{
+					foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
+					{
+						var fieldType = field.FieldType;
+						if (fieldType == typeof(float))
+							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+						else if (fieldType == typeof(int))
+							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
+						else if (fieldType == typeof(PerformanceStat))
+						{
+							var stat = (PerformanceStat) field.GetValue(behavior);
+							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
 						}
 					}
 				}

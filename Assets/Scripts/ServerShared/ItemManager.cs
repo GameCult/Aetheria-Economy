@@ -26,6 +26,7 @@ public class ItemManager
     private double _time;
     private float _deltaTime;
     private Dictionary<Guid, Zone> _zones = new Dictionary<Guid, Zone>();
+
     // private Guid _forceLoadZone;
     
     // public GlobalData GlobalData => _globalData ?? (_globalData = ItemData.GetAll<GlobalData>().FirstOrDefault());
@@ -48,6 +49,7 @@ public class ItemManager
     public ItemManager(DatabaseCache itemData, GameplaySettings settings, Action<string> logger)
     {
         ItemData = itemData;
+        GameplaySettings = settings;
         _logger = logger;
     }
 

@@ -150,8 +150,11 @@ public class Stardust : MonoBehaviour
     {
 //        m_emitterProxies.Release();
 //        _temperature.Release();
-        _particlesBuffer.Release();
-        _quadPoints.Release();
+        if(_particlesBuffer!=null)
+        {
+            _particlesBuffer.Release();
+            _quadPoints.Release();
+        }
 //        m_livingProxyIndices.Release();
     }
     #endregion

@@ -191,12 +191,12 @@ public abstract class Entity
         
         Equipment.Remove(item);
         
+        var hullData = ItemManager.GetData(Hull) as HullData;
         var itemData = ItemManager.GetData(item.EquippableItem);
-        foreach (var i in itemData.Shape.Coordinates)
-        {
-            var itemCoord = item.Position + itemData.Shape.Rotate(i, item.EquippableItem.Rotation);
-            (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[itemCoord.x, itemCoord.y] = null;
-        }
+        var itemLayer = (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy);
+        foreach (var i in hullData.Shape.Coordinates)
+            if (itemLayer[i.x, i.y] == item)
+                itemLayer[i.x, i.y] = null;
 
         return item.EquippableItem;
     }
@@ -204,6 +204,9 @@ public abstract class Entity
     // Check whether the given item will fit when its origin is placed at the given coordinate
     private bool ItemFits(EquippableItemData itemData, HullData hullData, EquippableItem item, int2 hullCoord)
     {
+        // If the given coordinate isn't even in the ship it obviously won't fit
+        if (!hullData.Shape[hullCoord]) return false;
+        
         // Items without specific hardpoints on the ship can be freely rotated and placed anywhere
         if (itemData.HardpointType == HardpointType.Tool || itemData.HardpointType == HardpointType.Thermal)
         {
@@ -226,16 +229,21 @@ public abstract class Entity
             // If the hardpoint type doesn't match the item, it won't fit
             if (hardpoint.Type != itemData.HardpointType) return false;
             
+            // Items placed in hardpoints are automatically aligned to hardpoint rotation
+            item.Rotation = hardpoint.Rotation;
+
+            // Inset the shapes of both item and hardpoint
+            var itemShapeInset = hullData.Shape.Inset(itemData.Shape, hullCoord, item.Rotation);
+            var hardpointShapeInset = hullData.Shape.Inset(hardpoint.Shape, hardpoint.Position);
+            
             // Check every cell of the item's shape
-            foreach (var i in itemData.Shape.Coordinates)
+            foreach (var i in itemShapeInset.Coordinates)
             {
                 // If the hardpoint does not have a matching cell, it wont fit
-                if (!hardpoint.Shape[i]) return false;
+                if (!hardpointShapeInset[i]) return false;
             
                 // If there is any gear already occupying that space, it won't fit
-                // Items placed in hardpoints are automatically aligned to hardpoint rotation
-                var itemCoord = hardpoint.Position + itemData.Shape.Rotate(i, hardpoint.Rotation);
-                if (GearOccupancy[itemCoord.x, itemCoord.y] != null) return false;
+                if (GearOccupancy[i.x, i.y] != null) return false;
             }
         }
 
@@ -343,7 +351,7 @@ public abstract class Entity
             
             foreach (var i in itemData.Shape.Coordinates)
             {
-                var occupiedCoord = hullCoord + i;
+                var occupiedCoord = hullCoord + itemData.Shape.Rotate(i, item.Rotation);
                 (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
             }
                 
@@ -589,7 +597,7 @@ public class EquippedCargoBay : EquippedItem
     }
 
     // Check whether the given item will fit when its origin is placed at the given coordinate
-    private bool ItemFits(ItemInstance item, int2 cargoCoord)
+    public bool ItemFits(ItemInstance item, int2 cargoCoord)
     {
         var itemData = _itemManager.GetData(item);
         // Check every cell of the item's shape
@@ -597,7 +605,7 @@ public class EquippedCargoBay : EquippedItem
         {
             // If there is an item already occupying that space, it won't fit
             var itemCargoCoord = cargoCoord + itemData.Shape.Rotate(i, item.Rotation);
-            if (Occupancy[itemCargoCoord.x, itemCargoCoord.y] != null) return false;
+            if (!Data.InteriorShape[itemCargoCoord] || (Occupancy[itemCargoCoord.x, itemCargoCoord.y] != null && Occupancy[itemCargoCoord.x, itemCargoCoord.y] != item)) return false;
         }
 
         return true;
@@ -638,6 +646,15 @@ public class EquippedCargoBay : EquippedItem
             }
         }
 
+        return false;
+    }
+
+    public bool TryStore(ItemInstance item, int2 cargoCoord)
+    {
+        if (item is SimpleCommodity simpleCommodity)
+            return TryStore(simpleCommodity, cargoCoord);
+        if (item is CraftedItemInstance craftedItem)
+            return TryStore(craftedItem, cargoCoord);
         return false;
     }
 
@@ -751,8 +768,9 @@ public class EquippedCargoBay : EquippedItem
         var itemData = _itemManager.GetData(item);
         if(quantity >= item.Quantity)
         {
-            foreach (var pos in itemData.Shape.Coordinates.Select(p => Cargo[item] + itemData.Shape.Rotate(p, item.Rotation)))
-                Occupancy[pos.x, pos.y] = null;
+            foreach(var v in Data.InteriorShape.Coordinates)
+                if (Occupancy[v.x, v.y] == item)
+                    Occupancy[v.x, v.y] = null;
 
             Cargo.Remove(item);
             ItemsOfType[item.Data].Remove(item);
@@ -779,8 +797,9 @@ public class EquippedCargoBay : EquippedItem
             return;
         }
         var itemData = _itemManager.GetData(item);
-        foreach (var pos in itemData.Shape.Coordinates.Select(p => Cargo[item] + itemData.Shape.Rotate(p, item.Rotation)))
-            Occupancy[pos.x, pos.y] = null;
+        foreach(var v in Data.InteriorShape.Coordinates)
+            if (Occupancy[v.x, v.y] == item)
+                Occupancy[v.x, v.y] = null;
         
         Cargo.Remove(item);
         ItemsOfType[item.Data].Remove(item);
@@ -789,6 +808,14 @@ public class EquippedCargoBay : EquippedItem
         
         Mass -= _itemManager.GetMass(item);
         ThermalMass -= _itemManager.GetThermalMass(item);
+    }
+
+    public void Remove(ItemInstance item)
+    {
+        if (item is SimpleCommodity simpleCommodity)
+            Remove(simpleCommodity, simpleCommodity.Quantity);
+        if (item is CraftedItemInstance craftedItem)
+            Remove(craftedItem);
     }
     
     public bool TryTransferItem(EquippedCargoBay target, SimpleCommodity item, int quantity)

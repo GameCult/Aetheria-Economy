@@ -118,13 +118,24 @@ public class ActionGameManager : MonoBehaviour
         var dockingBayData = ItemData.GetAll<DockingBayData>().First();
         var dockingBay = ItemManager.CreateInstance(dockingBayData, 1, 1) as EquippableItem;
         station.TryEquip(dockingBay);
+
+        var dockingCargo = station.DockingBays.First();
+
+        var thrusterData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Thruster && x.Shape.Height == 1);
+        for (int i = 0; i < 8; i++)
+        {
+            dockingCargo.TryStore(ItemManager.CreateInstance(thrusterData, .5f, 1));
+        }
+        
+        var reactorData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Reactor && x.Shape.Height == 2);
+        dockingCargo.TryStore(ItemManager.CreateInstance(reactorData, .5f, 1));
         
         var hullType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Ship);
         var shipHull = ItemManager.CreateInstance(hullType, 0, 1) as EquippableItem;
         var ship = new Ship(ItemManager, Zone, shipHull);
         PlayerShips.Add(ship);
         _currentShip = ship;
-        station.TryDock(ship);
+        Dock();
 
         // MapButton.onClick.AddListener(() =>
         // {
@@ -135,6 +146,23 @@ public class ActionGameManager : MonoBehaviour
         // });
         //
         //InventoryPanel.Display(ItemManager, entity);
+    }
+
+    public void Dock()
+    {
+        foreach (var entity in Zone.Entities)
+        {
+            if (lengthsq(entity.Position - _currentShip.Position) <
+                Settings.GameplaySettings.DockingDistance * Settings.GameplaySettings.DockingDistance)
+            {
+                var bay = entity.TryDock(_currentShip);
+                if (bay != null)
+                {
+                    Inventory.GetPanel.Display(bay);
+                    Inventory.GetPanel.Display(_currentShip);
+                }
+            }
+        }
     }
 
     public void SaveZone() => File.WriteAllBytes(

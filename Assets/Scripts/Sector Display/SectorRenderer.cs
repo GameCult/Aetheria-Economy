@@ -292,7 +292,7 @@ public class SectorRenderer : MonoBehaviour
             var planetInstance = _zone.PlanetInstances[planet.Key];
             var p = _zone.GetOrbitPosition(planetInstance.BodyData.Orbit);
             planet.Value.transform.position = new Vector3(p.x, 0, p.y);
-            planet.Value.Body.transform.position = new Vector3(0, _zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
+            planet.Value.Body.transform.localPosition = new Vector3(0, _zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
             if(planet.Value is GasGiantObject gasGiantObject)
             {
                 gasGiantObject.GravityWaves.material.SetFloat("_Phase", Time * Settings.PlanetSettings.WaveSpeed.Evaluate(planetInstance.BodyData.Mass.Value));

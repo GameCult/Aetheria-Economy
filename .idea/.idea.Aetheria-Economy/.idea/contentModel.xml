@@ -27,6 +27,7 @@
         <e p="FilterTest.cs" t="Include" />
         <e p="FitToCamera.cs" t="Include" />
         <e p="GaussianBlurFilter.shader" t="Include" />
+        <e p="InventoryCell.cs" t="Include" />
         <e p="InventoryMenu.cs" t="Include" />
         <e p="MapMenuInput.cs" t="Include" />
         <e p="MapRenderer.cs" t="Include" />

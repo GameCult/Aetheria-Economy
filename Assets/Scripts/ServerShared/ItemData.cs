@@ -116,9 +116,10 @@ public class Shape
     }
 
     public bool this[int2 pos] {
-        get { return pos.x >= 0 && pos.y >= 0 && pos.x < Cells.GetLength(0) && pos.y < Cells.GetLength(1) && Cells[pos.x, pos.y]; }
+        get { return pos.x >= 0 && pos.y >= 0 && pos.x < Width && pos.y < Height && Cells[pos.x, pos.y]; }
         set
         {
+            if (pos.x < 0 || pos.y < 0 || pos.x >= Width || pos.y >= Height) return;
             _dirty = true;
             Cells[pos.x, pos.y] = value;
         }
@@ -132,6 +133,30 @@ public class Shape
                 this[shapeCoord + int2(-1,-1)] && this[shapeCoord + int2(0,-1)] && this[shapeCoord + int2(1,-1)] &&
                 this[shapeCoord + int2(-1,0)] && this[shapeCoord + int2(1,0)] && 
                 this[shapeCoord + int2(-1,1)] && this[shapeCoord + int2(0,1)] && this[shapeCoord + int2(1,1)]
+            );
+        return shape;
+    }
+
+    public Shape Inset(Shape inset, int2 insetPosition, ItemRotation rotation = ItemRotation.None)
+    {
+        var shape = new Shape(Width, Height);
+        foreach (var v in inset.Coordinates)
+        {
+            var insetCoord = inset.Rotate(v, rotation) + insetPosition;
+            shape[insetCoord] = true;
+        }
+
+        return shape;
+    }
+
+    public Shape Expand()
+    {
+        var shape = new Shape(Width, Height);
+        foreach (var shapeCoord in AllCoordinates)
+            shape[shapeCoord] = (
+                this[shapeCoord + int2(-1,-1)] || this[shapeCoord + int2(0,-1)] || this[shapeCoord + int2(1,-1)] ||
+                this[shapeCoord + int2(-1,0)] || this[shapeCoord] || this[shapeCoord + int2(1,0)] || 
+                this[shapeCoord + int2(-1,1)] || this[shapeCoord + int2(0,1)] || this[shapeCoord + int2(1,1)]
             );
         return shape;
     }
@@ -336,9 +361,9 @@ public class HardpointData : ITintInspector
     {
         if (_tintColors == null)
         {
-            var hardpointTypes = ((HardpointType[]) Enum.GetValues(typeof(HardpointType)));
+            var hardpointTypes = (HardpointType[]) Enum.GetValues(typeof(HardpointType));
             _tintColors = hardpointTypes.ToDictionary(x => x,
-                x => ColorMath.HsvToRgb(float3((float)(int)x/hardpointTypes.Length, 1, 1)));
+                x => ColorMath.HsvToRgb(float3(frac((float)(int)x/hardpointTypes.Length + .25f), 1, 1)));
         }
 
         return _tintColors.ContainsKey(type) ? _tintColors[type] : _tintColors[HardpointType.Hull];
