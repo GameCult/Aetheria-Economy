@@ -176,12 +176,12 @@ public class SectorRenderer : MonoBehaviour
         {
             var shipInstance = new ShipInstance();
             shipInstance.Ship = ship;
-            shipInstance.Transform = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab)).transform;
+            shipInstance.Transform = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab), ZoneRoot).transform;
             shipInstance.Thrusters = ship.GetBehaviors<Thruster>().ToArray();
             shipInstance.ThrusterParticles = shipInstance.Thrusters
                 .Select(x =>
                 {
-                    var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(((ThrusterData) x.Data).ParticlesPrefab));
+                    var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(((ThrusterData) x.Data).ParticlesPrefab), shipInstance.Transform, false);
                     var particlesShape = particles.shape;
                     particlesShape.meshRenderer = shipInstance.Transform.Find(x.Entity.Hardpoints[x.Item.Position.x, x.Item.Position.y].Transform)
                         .GetComponent<MeshRenderer>();
@@ -359,7 +359,7 @@ public class SectorRenderer : MonoBehaviour
             planet.Value.Body.transform.localPosition = new Vector3(0, _zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
             if(planet.Value is GasGiantObject gasGiantObject)
             {
-                gasGiantObject.GravityWaves.material.SetFloat("_Phase", Time * Settings.PlanetSettings.WaveSpeed.Evaluate(planetInstance.BodyData.Mass.Value));
+                gasGiantObject.GravityWaves.material.SetFloat("_Phase", Time * ((GasGiant) _zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
                 if(!(planet.Value is SunObject))
                 {
                     var toParent = normalize(_zone.GetOrbitPosition(_zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);
@@ -375,6 +375,8 @@ public class SectorRenderer : MonoBehaviour
             var h = _zone.GetHeight(ship.Key.Position);
             ship.Value.Transform.position = new Vector3(ship.Key.Position.x,h + hullData.GridOffset,ship.Key.Position.y);
             var normal = _zone.GetNormal(ship.Key.Position);
+            var f = new float2(normal.x, normal.z);
+            ship.Key.Velocity += f * Settings.PlanetSettings.GravityStrength;// * lengthsq(f);
             //Debug.Log($"Normal: {normal}");
             var shipRight = ship.Key.Direction.Rotate(ItemRotation.Clockwise);
             var forward = Vector3.Cross(new Vector3(shipRight.x,0,shipRight.y), normal);

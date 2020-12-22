@@ -29,6 +29,7 @@
       <Path>.idea</Path>
       <Path>Asset Sources</Path>
       <Path>Build</Path>
+      <Path>Builds</Path>
       <Path>Economy.Server</Path>
       <Path>Economy.Shared</Path>
       <Path>GameData</Path>

@@ -272,23 +272,23 @@ public class Zone
         foreach (var body in PlanetInstances.Values)
         {
             var p = (position - body.Orbit.Position); //GetOrbitPosition(body.BodyData.Orbit)
-            var dist = lengthsq(p);
+            var distSqr = lengthsq(p);
             var gravityRadius = body.GravityWellRadius.Value;
-            if (dist < gravityRadius*gravityRadius)
+            if (distSqr < gravityRadius*gravityRadius)
             {
                 var depth = body.GravityWellDepth.Value;
-                result -= PowerPulse(sqrt(dist) / gravityRadius, body.BodyData.GravityDepthExponent.Value) * depth;
+                result -= PowerPulse(sqrt(distSqr) / gravityRadius, body.BodyData.GravityDepthExponent.Value) * depth;
             }
 
             if (body is GasGiant gas)
             {
                 var waveRadius = gas.GravityWavesRadius.Value;
-                if(dist < waveRadius*waveRadius)
+                if(distSqr < waveRadius*waveRadius)
                 {
                     var depth = gas.GravityWavesDepth.Value;
                     var frequency = _settings.WaveFrequency.Evaluate(body.BodyData.Mass.Value);
-                    var speed = _settings.WaveSpeed.Evaluate(body.BodyData.Mass.Value);
-                    result -= RadialWaves(sqrt(dist) / waveRadius, 8, 1.5f, frequency, _time * speed) * depth;
+                    var speed = gas.GravityWavesSpeed.Value;
+                    result -= RadialWaves(sqrt(distSqr) / waveRadius, 8, 1.25f, frequency, _time * speed) * depth;
                 }
             }
         }
@@ -312,8 +312,8 @@ public class Zone
 
     public static float RadialWaves(float x, float maskExponent, float sineExponent, float frequency, float phase)
     {
-        x *= 2;
-        return PowerPulse(x, maskExponent) * cos(pow(x, sineExponent) * frequency + phase);
+        //x *= 2;
+        return PowerPulse(x, maskExponent) * cos(pow(x*2, sineExponent) * frequency + phase);
     }
 
     public float3 GetNormal(float2 pos, float step = .1f, float mul = 1)

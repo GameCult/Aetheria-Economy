@@ -23,6 +23,7 @@ public class InventoryMenu : MonoBehaviour
     
     private int2 _selectedPosition;
     private InventoryPanel _selectedPanel;
+    private ItemInstance _selectedItem;
     private ItemData _selectedItemData;
 
     private ItemInstance _dragItem;
@@ -222,7 +223,7 @@ public class InventoryMenu : MonoBehaviour
                         {
                             foreach (var v in _selectedItemData.Shape.Coordinates)
                             {
-                                var v2 = v + _selectedPosition;
+                                var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
                                 _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2);
                             }
                         }
@@ -232,10 +233,11 @@ public class InventoryMenu : MonoBehaviour
                         PropertiesPanel.AddItemProperties(item);
                         _selectedPanel = panel;
                         _selectedPosition = cargoEvent.CargoBay.Cargo[item];
+                        _selectedItem = item;
                         _selectedItemData = GameManager.ItemManager.GetData(item);
                         foreach (var v in _selectedItemData.Shape.Coordinates)
                         {
-                            var v2 = _selectedItemData.Shape.Rotate(v, item.Rotation) + _selectedPosition;
+                            var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
                             _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
                         }
                     }
@@ -249,17 +251,18 @@ public class InventoryMenu : MonoBehaviour
                         {
                             foreach (var v in _selectedItemData.Shape.Coordinates)
                             {
-                                var v2 = v + _selectedItemData.Shape.Rotate(_selectedPosition, item.EquippableItem.Rotation);
+                                var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
                                 _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2);
                             }
                         }
                         PropertiesPanel.Inspect(entityEvent.Entity, item);
                         _selectedPanel = panel;
                         _selectedPosition = item.Position;
+                        _selectedItem = item.EquippableItem;
                         _selectedItemData = GameManager.ItemManager.GetData(item.EquippableItem);
                         foreach (var v in _selectedItemData.Shape.Coordinates)
                         {
-                            var v2 = v + _selectedPosition;
+                            var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
                             _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
                         }
                     }
