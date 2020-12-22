@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +19,7 @@ public class InventoryMenu : MonoBehaviour
     public ActionGameManager GameManager;
     public RectTransform DragParent;
 
-    private int _currentPanel;
+    private int _currentPanel = -1;
     
     private int2 _selectedPosition;
     private InventoryPanel _selectedPanel;
@@ -105,9 +109,6 @@ public class InventoryMenu : MonoBehaviour
             panel.OnDragAsObservable().Subscribe(data =>
             {
                 if (_dragItem == null) return;
-                var scroll = data.PointerEventData.scrollDelta.y;
-                if(scroll != 0)
-                    Debug.Log($"Scrolling {scroll}!");
                 for (var i = 0; i < _dragCells.Length; i++)
                     _dragCells[i].position = new Vector3(
                         data.PointerEventData.position.x + _dragOffsets[i].x,
@@ -155,7 +156,7 @@ public class InventoryMenu : MonoBehaviour
             {
                 if (_dragItem == null) return;
                 
-                Debug.Log($"Pointer entered {data.Position}");
+                // Debug.Log($"Pointer entered {data.Position}");
                 // if(panel != _originalPanel)
                 //     _originalPanel.RefreshCells();
                 

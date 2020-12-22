@@ -5,12 +5,14 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Grpc.Core;
 using LiteNetLib;
 using MessagePack;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using Random = Unity.Mathematics.Random;
 using Unity.Tiny;
+using float2 = Unity.Mathematics.float2;
 
 public static class Extensions
 {
@@ -58,6 +60,40 @@ public static class Extensions
                 return '\u2190';
             default:
                 throw new ArgumentOutOfRangeException(nameof(rot), rot, null);
+        }
+    }
+
+    public static float2 Direction(this ItemRotation rotation)
+    {
+        switch (rotation)
+        {
+            case ItemRotation.None:
+                return float2(0, 1);
+            case ItemRotation.CounterClockwise:
+                return float2(-1, 0);
+            case ItemRotation.Reversed:
+                return float2(0, -1);
+            case ItemRotation.Clockwise:
+                return float2(1, 0);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
+        }
+    }
+
+    public static float2 Rotate(this float2 v, ItemRotation rotation)
+    {
+        switch (rotation)
+        {
+            case ItemRotation.None:
+                return v;
+            case ItemRotation.CounterClockwise:
+                return float2(-v.y, v.x);
+            case ItemRotation.Reversed:
+                return float2(-v.x, -v.y);
+            case ItemRotation.Clockwise:
+                return float2(v.y, -v.x);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
         }
     }
 	

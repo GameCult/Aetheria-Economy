@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +15,7 @@ using Random = Unity.Mathematics.Random;
 public class Zone
 {
     //public HashSet<Guid> Planets = new HashSet<Guid>();
-    public List<Entity> Entities = new List<Entity>();
+    public ReactiveCollection<Entity> Entities = new ReactiveCollection<Entity>();
     //public Dictionary<Guid, OrbitData> Orbits = new Dictionary<Guid, OrbitData>();
     public Dictionary<Guid, BodyData> Planets = new Dictionary<Guid, BodyData>();
     public Dictionary<Guid, Planet> PlanetInstances = new Dictionary<Guid, Planet>();
@@ -65,7 +69,7 @@ public class Zone
         return new ZonePack
         {
             Data = Data,
-            Entities = Entities,
+            Entities = Entities.ToList(),
             Orbits = Orbits.Values.Select(o=>o.Data).ToList(),
             Planets = Planets.Values.ToList()
         };
@@ -312,7 +316,7 @@ public class Zone
         return PowerPulse(x, maskExponent) * cos(pow(x, sineExponent) * frequency + phase);
     }
 
-    public float3 GetNormal(float2 pos, float step, float mul)
+    public float3 GetNormal(float2 pos, float step = .1f, float mul = 1)
     {
         float hL = GetHeight(new float2(pos.x - step, pos.y)) * mul;
         float hR = GetHeight(new float2(pos.x + step, pos.y)) * mul;
@@ -320,14 +324,8 @@ public class Zone
         float hU = GetHeight(new float2(pos.x, pos.y + step)) * mul;
 
         // Deduce terrain normal
-        float3 normal = new float3((hL - hR), (hD - hU), 2);
-        normalize(normal);
-        return new float3(normal.x, normal.z, normal.y);
-    }
-    
-    public float3 GetNormal(float2 pos)
-    {
-        return GetNormal(pos, .1f, 1);
+        float3 normal = new float3((hL - hR), (hD - hU), step*2);
+        return normalize(normal).xzy;
     }
 
     public override int GetHashCode()

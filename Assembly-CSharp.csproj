@@ -539,6 +539,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\OverlapRemoval\OverlapRemovalGlobalConfiguration.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Incremental\Multipole\MultipoleCoefficients.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\GenericBinaryHeapPriorityQueue.cs" />
+     <Compile Include="Assets\InventoryCell.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\Timer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\RectangleObstacle.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\DataBase.cs" />
@@ -684,7 +685,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\BasicReflectionEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\IntEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\PointPairOrder.cs" />
-     <Compile Include="Assets\InventoryCell.cs" />
+     <Compile Include="Assets\UnityHelpers.cs" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Shaders\Clouds.shader" />

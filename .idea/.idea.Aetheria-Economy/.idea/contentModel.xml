@@ -1417,7 +1417,6 @@
             </e>
             <e p="Attributes.cs" t="Include" />
             <e p="Behaviors" t="Include">
-              <e p="Afterburner.cs" t="Include" />
               <e p="Behaviors.cs" t="Include" />
               <e p="Controller.cs" t="Include" />
               <e p="Cooldown.cs" t="Include" />
@@ -2031,6 +2030,7 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="UnityHelpers.cs" t="Include" />
       </e>
       <e p="Economy.Shared.Unity.csproj" t="IncludeRecursive" />
       <e p="MessagePack.csproj" t="IncludeRecursive" />

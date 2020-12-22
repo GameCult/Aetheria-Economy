@@ -410,7 +410,6 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettingsManager.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\OffsetsOf.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Afterburner.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Timezone.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\ICursor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlAvailabilityError.cs" />

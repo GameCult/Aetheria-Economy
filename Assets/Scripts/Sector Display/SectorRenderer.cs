@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +12,7 @@ using UnityEngine;
 using static Unity.Mathematics.math;
 using Unity.Mathematics;
 using UnityEngine.Serialization;
+using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 public class SectorRenderer : MonoBehaviour
@@ -27,6 +32,8 @@ public class SectorRenderer : MonoBehaviour
     public int AsteroidSpritesheetWidth = 4;
     public int AsteroidSpritesheetHeight = 4;
     public LODHandler LODHandler;
+    
+    [Header("Tour")]
     public bool Tour;
     public float TourSwitchTime = 5f;
     public float TourFollowDistance = 30f;
@@ -46,8 +53,14 @@ public class SectorRenderer : MonoBehaviour
     public Texture2D PlanetoidIcon;
     public Texture2D PlanetIcon;
     
+    [HideInInspector]
+    public Dictionary<OrbitalEntity, Transform> Orbitals = new Dictionary<OrbitalEntity, Transform>();
+    [HideInInspector]
+    public Dictionary<Ship, ShipInstance> Ships = new Dictionary<Ship, ShipInstance>();
+    [HideInInspector]
+    public Dictionary<Guid, PlanetObject> Planets = new Dictionary<Guid, PlanetObject>();
+    
     private Dictionary<Guid, AsteroidBeltUI> _beltObjects = new Dictionary<Guid, AsteroidBeltUI>();
-    private Dictionary<Guid, PlanetObject> _planets = new Dictionary<Guid, PlanetObject>();
     private Dictionary<Guid, InstancedMesh[]> _beltMeshes = new Dictionary<Guid, InstancedMesh[]>();
     private Dictionary<Guid, Matrix4x4[][]> _beltMatrices = new Dictionary<Guid, Matrix4x4[][]>();
     private Dictionary<Guid, float3[]> _beltAsteroidPositions = new Dictionary<Guid, float3[]>();
@@ -61,6 +74,8 @@ public class SectorRenderer : MonoBehaviour
     private CinemachineTransposer _transposer;
     private PlanetObject _root;
     private bool _rootFound;
+    
+    public ItemManager ItemManager { get; set; }
 
     public float Time { get; set; }
 
@@ -105,7 +120,7 @@ public class SectorRenderer : MonoBehaviour
         foreach(var p in zone.Planets.Values)
             LoadPlanet(p);
         
-        foreach (var x in _planets)
+        foreach (var x in Planets)
         {
             if (!(zone.Planets[x.Key] is GasGiantData))
             {
@@ -124,7 +139,7 @@ public class SectorRenderer : MonoBehaviour
 
                     if (parentPlanetData == null)
                         parent = _root;
-                    else if (!_planets.TryGetValue(parentPlanetData.ID, out parent))
+                    else if (!Planets.TryGetValue(parentPlanetData.ID, out parent))
                     {
                         Debug.Log("WTF!");
                     }
@@ -132,20 +147,69 @@ public class SectorRenderer : MonoBehaviour
                 _tourPlanets.Add((x.Value.Body.transform, parent.Body.transform));
             }
         }
+        
+        foreach(var entity in zone.Entities)
+            LoadEntity(entity);
+        zone.Entities.ObserveAdd().Subscribe(e => LoadEntity(e.Value));
+        zone.Entities.ObserveRemove().Subscribe(e => UnloadEntity(e.Value));
     }
 
     public void ClearZone()
     {
-        if (_planets.Count > 0)
+        if (Planets.Count > 0)
         {
-            foreach (var planet in _planets.Values)
+            foreach (var planet in Planets.Values)
             {
                 DestroyImmediate(planet.gameObject);
             }
-            _planets.Clear();
+            Planets.Clear();
             _beltMeshes.Clear();
             _beltMatrices.Clear();
             _tourPlanets.Clear();
+        }
+    }
+
+    void LoadEntity(Entity entity)
+    {
+        var hullData = ItemManager.GetData(entity.Hull) as HullData;
+        if (entity is Ship ship)
+        {
+            var shipInstance = new ShipInstance();
+            shipInstance.Ship = ship;
+            shipInstance.Transform = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab)).transform;
+            shipInstance.Thrusters = ship.GetBehaviors<Thruster>().ToArray();
+            shipInstance.ThrusterParticles = shipInstance.Thrusters
+                .Select(x =>
+                {
+                    var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(((ThrusterData) x.Data).ParticlesPrefab));
+                    var particlesShape = particles.shape;
+                    particlesShape.meshRenderer = shipInstance.Transform.Find(x.Entity.Hardpoints[x.Item.Position.x, x.Item.Position.y].Transform)
+                        .GetComponent<MeshRenderer>();
+                    return particles;
+                })
+                .ToArray();
+            shipInstance.ThrusterBaseEmission = shipInstance.ThrusterParticles.Select(x => x.emission.rateOverTimeMultiplier).ToArray();
+            Ships.Add(ship, shipInstance);
+        }
+        else if (entity is OrbitalEntity orbital)
+        {
+            Orbitals.Add(orbital,Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab)).transform);
+        }
+    }
+
+    void UnloadEntity(Entity entity)
+    {
+        if (entity is Ship ship)
+        {
+            Destroy(Ships[ship].Transform.gameObject);
+            foreach(var p in Ships[ship].ThrusterParticles)
+                Destroy(p.gameObject);
+            Ships.Remove(ship);
+        }
+        else if (entity is OrbitalEntity orbital)
+        {
+            Destroy(Orbitals[orbital].gameObject);
+            Orbitals.Remove(orbital);
         }
     }
 
@@ -226,7 +290,7 @@ public class SectorRenderer : MonoBehaviour
             planetInstance.BodyData.Mass.Subscribe(f => planet.Icon.transform.localScale = Settings.IconSize.Evaluate(f) * Vector3.one);
             
 
-            _planets[planetData.ID] = planet;
+            Planets[planetData.ID] = planet;
             if (!_rootFound)
             {
                 _rootFound = true;
@@ -236,32 +300,32 @@ public class SectorRenderer : MonoBehaviour
         LODHandler.FindPlanets();
     }
 
-    private void Update()
-    {
-        if (Tour)
-        {
-            _tourTimer -= UnityEngine.Time.deltaTime;
-            if (_tourTimer < 0)
-            {
-                _tourTimer = TourSwitchTime;
-                _tourIndex = (_tourIndex + 1) % _tourPlanets.Count;
-                SceneCamera.Follow = _tourPlanets[_tourIndex].Item1;
-                SceneCamera.LookAt = _tourPlanets[_tourIndex].Item2;
-                if(_tourIndex==0) Debug.Log("Tour Complete!");
-            }
-            // if(_tourIndex>=0)
-            // {
-            //     var offset = (SceneCamera.Follow.position - SceneCamera.LookAt.position);
-            //     offset.y = 0;
-            //     offset = offset.normalized * TourFollowDistance;
-            //     offset.y = TourHeightOffset;
-            //     offset = Quaternion.AngleAxis(TourFollowOffsetDegrees, Vector3.up) * offset;
-            //     _transposer.m_FollowOffset = offset;
-            // }
-        }
-    }
+    // private void Update()
+    // {
+    //     if (Tour)
+    //     {
+    //         _tourTimer -= UnityEngine.Time.deltaTime;
+    //         if (_tourTimer < 0)
+    //         {
+    //             _tourTimer = TourSwitchTime;
+    //             _tourIndex = (_tourIndex + 1) % _tourPlanets.Count;
+    //             SceneCamera.Follow = _tourPlanets[_tourIndex].Item1;
+    //             SceneCamera.LookAt = _tourPlanets[_tourIndex].Item2;
+    //             if(_tourIndex==0) Debug.Log("Tour Complete!");
+    //         }
+    //         // if(_tourIndex>=0)
+    //         // {
+    //         //     var offset = (SceneCamera.Follow.position - SceneCamera.LookAt.position);
+    //         //     offset.y = 0;
+    //         //     offset = offset.normalized * TourFollowDistance;
+    //         //     offset.y = TourHeightOffset;
+    //         //     offset = Quaternion.AngleAxis(TourFollowOffsetDegrees, Vector3.up) * offset;
+    //         //     _transposer.m_FollowOffset = offset;
+    //         // }
+    //     }
+    // }
 
-    void LateUpdate()
+    void Update()
     {
         foreach(var belt in _zone.AsteroidBelts)
         {
@@ -287,7 +351,7 @@ public class SectorRenderer : MonoBehaviour
             _beltObjects[belt.Key].Update(_beltAsteroidPositions[belt.Key]);
         }
         
-        foreach (var planet in _planets)
+        foreach (var planet in Planets)
         {
             var planetInstance = _zone.PlanetInstances[planet.Key];
             var p = _zone.GetOrbitPosition(planetInstance.BodyData.Orbit);
@@ -305,6 +369,30 @@ public class SectorRenderer : MonoBehaviour
             else planet.Value.Body.transform.rotation *= Quaternion.AngleAxis(Settings.PlanetRotationSpeed, Vector3.up);
         }
 
+        foreach (var ship in Ships)
+        {
+            var hullData = ItemManager.GetData(ship.Key.Hull) as HullData;
+            var h = _zone.GetHeight(ship.Key.Position);
+            ship.Value.Transform.position = new Vector3(ship.Key.Position.x,h + hullData.GridOffset,ship.Key.Position.y);
+            var normal = _zone.GetNormal(ship.Key.Position);
+            //Debug.Log($"Normal: {normal}");
+            var shipRight = ship.Key.Direction.Rotate(ItemRotation.Clockwise);
+            var forward = Vector3.Cross(new Vector3(shipRight.x,0,shipRight.y), normal);
+            ship.Value.Transform.rotation = Quaternion.LookRotation(forward, normal);
+            for (int i = 0; i < ship.Value.Thrusters.Length; i++)
+            {
+                var emissionModule = ship.Value.ThrusterParticles[i].emission;
+                emissionModule.rateOverTimeMultiplier = ship.Value.ThrusterBaseEmission[i] * ship.Value.Thrusters[i].Axis;
+            }
+        }
+
+        foreach (var orbital in Orbitals)
+        {
+            var hullData = ItemManager.GetData(orbital.Key.Hull) as HullData;
+            var h = _zone.GetHeight(orbital.Key.Position);
+            orbital.Value.position = new Vector3(orbital.Key.Position.x,h + hullData.GridOffset,orbital.Key.Position.y);
+        }
+
         var fogPos = FogCameraParent.position;
         SectorBoundaryBrush.material.SetFloat("_Power", Settings.PlanetSettings.ZoneDepthExponent);
         SectorBoundaryBrush.material.SetFloat("_Depth", Settings.PlanetSettings.ZoneDepth + Settings.PlanetSettings.ZoneBoundaryFog);
@@ -319,6 +407,15 @@ public class SectorRenderer : MonoBehaviour
         // MinimapGravityQuad.transform.position = gravPos;
         // MinimapTintQuad.transform.position = gravPos - Vector3.up*10;
     }
+}
+
+public class ShipInstance
+{
+    public ParticleSystem[] ThrusterParticles;
+    public Thruster[] Thrusters;
+    public float[] ThrusterBaseEmission;
+    public Ship Ship;
+    public Transform Transform;
 }
 
 [Serializable]

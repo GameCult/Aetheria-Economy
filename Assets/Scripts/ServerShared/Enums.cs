@@ -1,11 +1,15 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 using System;
 
 public enum ItemRotation
 {
     None = 0,
-    Clockwise = 1,
+    CounterClockwise = 1,
     Reversed = 2,
-    CounterClockwise = 3
+    Clockwise = 3
 }
 
 public enum LauncherCaliber

@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +11,7 @@ using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using float2 = Unity.Mathematics.float2;
 using int2 = Unity.Mathematics.int2;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -83,7 +88,11 @@ public class Shape
     {
         get
         {
-            if (_dirty) _cachedShapeCoordinates = EnumerateShapeCoordinates().ToArray();
+            if (_dirty)
+            {
+                _cachedShapeCoordinates = EnumerateShapeCoordinates().ToArray();
+                _dirty = false;
+            }
             return _cachedShapeCoordinates;
         }
     }
@@ -114,6 +123,12 @@ public class Shape
             }
         }
     }
+
+    private float2? _centerOfMass;
+
+    [IgnoreMember]
+    public float2 CenterOfMass => _centerOfMass ?? (_centerOfMass = Coordinates
+        .Aggregate(float2.zero, (total, coord) => total + coord) / Coordinates.Length).Value;
 
     public bool this[int2 pos] {
         get { return pos.x >= 0 && pos.y >= 0 && pos.x < Width && pos.y < Height && Cells[pos.x, pos.y]; }

@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -165,10 +169,16 @@ public class DatabaseInspector : EditorWindow
         else if (type == typeof(bool)) field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (bool) value));
         else if (type == typeof(string))
         {
+            if (inspectable is InspectableUnityObjectAttribute unityObjectAttribute)
+            {
+                var inspectMethod = typeof(DatabaseInspector).GetMethod("InspectUnityObject");
+                var generic = inspectMethod.MakeGenericMethod(unityObjectAttribute.ObjectType);
+                field.SetValue(obj, generic.Invoke(this, new[] {value}));
+            }
             if(inspectable is InspectablePrefabAttribute)
-                field.SetValue(obj, InspectGameObject(field.Name.SplitCamelCase(), (string) value));
+                field.SetValue(obj, InspectUnityObject<GameObject>(field.Name.SplitCamelCase(), (string) value));
             else if(inspectable is InspectableTextureAttribute)
-                field.SetValue(obj, InspectTexture(field.Name.SplitCamelCase(), (string) value));
+                field.SetValue(obj, InspectUnityObject<Texture2D>(field.Name.SplitCamelCase(), (string) value));
             else
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (string) value, inspectable is InspectableTextAttribute));
         }
@@ -660,21 +670,12 @@ public class DatabaseInspector : EditorWindow
         return index == 0 ? null : types[index - 1];
     }
 
-    public string InspectGameObject(string label, string value)
+    public string InspectUnityObject<T>(string label, string value) where T : Object
     {
         using (var h = new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
-            return AssetDatabase.GetAssetPath(ObjectField(AssetDatabase.LoadAssetAtPath<GameObject>(value), typeof(GameObject), false));
-        }
-    }
-
-    public string InspectTexture(string label, string value)
-    {
-        using (var h = new HorizontalScope())
-        {
-            GUILayout.Label(label, GUILayout.Width(width));
-            return AssetDatabase.GetAssetPath(ObjectField(AssetDatabase.LoadAssetAtPath<Texture2D>(value), typeof(Texture2D), false));
+            return AssetDatabase.GetAssetPath(ObjectField(AssetDatabase.LoadAssetAtPath<T>(value), typeof(T), false));
         }
     }
 

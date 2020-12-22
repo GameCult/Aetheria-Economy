@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,13 +65,12 @@ public abstract class Entity
             _active = value;
             if (_active)
             {
-                foreach (var hardpoint in Equipment)
-                    if(hardpoint.EquippableItem!=null)
-                        foreach (var behavior in hardpoint.Behaviors)
-                        {
-                            if(behavior is IInitializableBehavior initializableBehavior)
-                                initializableBehavior.Initialize();
-                        }
+                foreach (var item in Equipment)
+                    foreach (var behavior in item.Behaviors)
+                    {
+                        if(behavior is IInitializableBehavior initializableBehavior)
+                            initializableBehavior.Initialize();
+                    }
             }
         }
     }
@@ -84,6 +87,10 @@ public abstract class Entity
     private void MapShip()
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
+        var hull = new EquippedItem(ItemManager, Hull, int2.zero);
+        Equipment.Add(hull);
+        Hydrate(hull);
+        Mass = hullData.Mass;
         GearOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
         ThermalOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
         Hardpoints = new HardpointData[hullData.Shape.Width, hullData.Shape.Height];
@@ -197,6 +204,7 @@ public abstract class Entity
         foreach (var i in hullData.Shape.Coordinates)
             if (itemLayer[i.x, i.y] == item)
                 itemLayer[i.x, i.y] = null;
+        Mass -= itemData.Mass;
 
         return item.EquippableItem;
     }
@@ -340,7 +348,8 @@ public abstract class Entity
                 var occupiedCoord = hullCoord + itemData.Shape.Rotate(i, item.Rotation);
                 (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
             }
-                
+
+            Mass += itemData.Mass;
             Hydrate(equippedItem);
             return true;
         }
@@ -355,6 +364,7 @@ public abstract class Entity
                 (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
             }
                 
+            Mass += itemData.Mass;
             Hydrate(equippedItem);
             return true;
         }
@@ -480,6 +490,8 @@ public abstract class Entity
                     Messages.Remove(message);
             }
         }
+        foreach(var child in Children)
+            child.Update(delta);
 
         if (Parent != null)
         {
@@ -551,11 +563,11 @@ public class EquippedItem
 
     public void Update(float delta)
     {
-        if(Temperature < _data.MinimumTemperature || Temperature > _data.MaximumTemperature)
-        {
-            EquippableItem.Durability -= delta;
-            return;
-        }
+        // if(Temperature < _data.MinimumTemperature || Temperature > _data.MaximumTemperature)
+        // {
+        //     EquippableItem.Durability -= delta;
+        //     return;
+        // }
         
         foreach (var group in BehaviorGroups)
         {

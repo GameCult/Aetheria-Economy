@@ -51,6 +51,7 @@ MonoBehaviour:
   Body: {fileID: 7852221720971737229}
   GravityWell: {fileID: 7852221720969441484}
   Icon: {fileID: 7852221720964551246}
+  Generator: {fileID: 0}
   SunMaterial: {fileID: 7852221720971737234}
   GravityWaves: {fileID: 7852221720741322894}
   FogTint: {fileID: 7852221720816817929}
@@ -507,7 +508,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.333
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

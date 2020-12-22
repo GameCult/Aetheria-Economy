@@ -47,6 +47,7 @@ public class Prototype : MonoBehaviour {
 			var instanceIdx = _instancePool.Count-1;
 			instance = _instancePool[instanceIdx];
 			_instancePool.RemoveAt(instanceIdx);
+			instance.transform.SetAsLastSibling();
 		} 
 
 		// Instantiate fresh instance
