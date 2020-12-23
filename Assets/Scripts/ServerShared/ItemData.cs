@@ -203,6 +203,9 @@ public abstract class ItemData : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("specificHeat"), Key(5)]
     public float SpecificHeat;
     
+    // [InspectableField, JsonProperty("conductivity"), Key(6)]
+    // public float Conductivity;
+    
     [IgnoreMember] public string EntryName
     {
         get => Name;

@@ -138,10 +138,10 @@ public class ActionGameManager : MonoBehaviour
         
         var stationType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
         var stationHull = ItemManager.CreateInstance(stationType, 0, 1) as EquippableItem;
-        var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(2);
+        var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(3);
         var parentOrbit = stationParent.Orbit.Data.ID;
-        var stationPos = Zone.GetOrbitPosition(parentOrbit) + 
-            normalize(ItemManager.Random.NextFloat2() - float2(.5f, .5f)) * ItemManager.Random.NextFloat() * stationParent.GravityWellRadius.Value * .75f;
+        var parentPos = Zone.GetOrbitPosition(parentOrbit);
+        var stationPos = parentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
         var stationOrbit = Zone.CreateOrbit(parentOrbit, stationPos);
         var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID);
         Zone.Entities.Add(station);

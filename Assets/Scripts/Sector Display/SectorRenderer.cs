@@ -376,7 +376,12 @@ public class SectorRenderer : MonoBehaviour
             ship.Value.Transform.position = new Vector3(ship.Key.Position.x,h + hullData.GridOffset,ship.Key.Position.y);
             var normal = _zone.GetNormal(ship.Key.Position);
             var f = new float2(normal.x, normal.z);
-            ship.Key.Velocity += f * Settings.PlanetSettings.GravityStrength;// * lengthsq(f);
+            var fl = lengthsq(f);
+            if(fl > .001)
+            {
+                var fa = 1 / (1 - fl) - 1;
+                ship.Key.Velocity += normalize(f) * Settings.PlanetSettings.GravityStrength * fa;
+            }
             //Debug.Log($"Normal: {normal}");
             var shipRight = ship.Key.Direction.Rotate(ItemRotation.Clockwise);
             var forward = Vector3.Cross(new Vector3(shipRight.x,0,shipRight.y), normal);

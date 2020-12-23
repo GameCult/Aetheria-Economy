@@ -31,6 +31,7 @@ Shader "UI/Isolines"
         _ColorMask ("Color Mask", Float) = 15
 
         [Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
+    	[Toggle(SCREEN_SPACE)] _UseScreenSpace ("Screen Space Detail Texture", Float) = 0
     }
 
     SubShader
@@ -63,7 +64,7 @@ Shader "UI/Isolines"
         Pass
         {
             Name "Default"
-        CGPROGRAM
+			CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma target 2.0
@@ -73,6 +74,7 @@ Shader "UI/Isolines"
 
             #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+			#pragma shader_feature SCREEN_SPACE
 
             struct appdata_t
             {
@@ -87,8 +89,9 @@ Shader "UI/Isolines"
                 float4 vertex   : SV_POSITION;
                 fixed4 color    : COLOR;
                 float2 texcoord  : TEXCOORD0;
-                float4 worldPosition : TEXCOORD1;
-				float4 screenPos : TEXCOORD2;
+            	#ifdef SCREEN_SPACE
+				float4 screenPos : TEXCOORD1;
+            	#endif
             	//float2 detailtexcoord : TEXCOORD2;
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -119,11 +122,13 @@ Shader "UI/Isolines"
                 v2f OUT;
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
-                OUT.worldPosition = v.vertex;
-                OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
+                OUT.vertex = UnityObjectToClipPos(v.vertex);
 
                 OUT.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
+            	#ifdef SCREEN_SPACE
 				OUT.screenPos = ComputeScreenPos( OUT.vertex );
+            	#endif
+
             	//OUT.detailtexcoord = TRANSFORM_TEX(OUT.worldPosition.xy, _MainTex);
 
                 OUT.color = v.color * _Color;
@@ -141,9 +146,14 @@ Shader "UI/Isolines"
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
             	
+            	#ifdef SCREEN_SPACE
                 float2 q = IN.screenPos.xy / IN.screenPos.w;
+            	#else
+                float2 q = IN.texcoord;
+            	#endif
             	
 				float h = -tex2D(_DetailTex, q).r;
+
 				float4 col = float4(0,0,0,0);
 				float blend = smoothstep(_StartDepth, _StartDepth + _DepthRange / 32, -h);
 				

@@ -563,6 +563,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\OrientedHubSegment.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\DeviceIndependedZoomCalculatorForNodes.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\ScanSegmentTree.cs" />
+     <Compile Include="Assets\UnityHelpers.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\OverlapRemovalMethod.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Incremental\MinSeparationConstraint.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\CurvePort.cs" />
@@ -685,7 +686,6 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\BasicReflectionEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\IntEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\PointPairOrder.cs" />
-     <Compile Include="Assets\UnityHelpers.cs" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\Shaders\Clouds.shader" />

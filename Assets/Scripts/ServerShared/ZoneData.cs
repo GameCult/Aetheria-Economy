@@ -130,7 +130,7 @@ public abstract class BodyData : DatabaseEntry, INamedEntry
     public ReactiveProperty<float> GravityDepthMultiplier = new ReactiveProperty<float>(1);
 
     [JsonProperty("depthExp")] [Key(8)]
-    public ReactiveProperty<float> GravityDepthExponent = new ReactiveProperty<float>(8);
+    public ReactiveProperty<float> GravityDepthExponent = new ReactiveProperty<float>(16);
     
     [IgnoreMember] public string EntryName
     {

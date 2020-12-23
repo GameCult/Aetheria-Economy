@@ -262,8 +262,8 @@ public class ZoneGenerator
 			root.ExpandSolar(
 				ref random,
 				count: random.NextInt(5, 15), 
-				massMulMin: 0.5f, 
-				massMulMax: 2.0f, 
+				massMulMin: 0.75f, 
+				massMulMax: 2.5f, 
 				distMulMin: 1.1f,
 				distMulMax: 1.25f,
 				jupiterJump: random.NextFloat() * random.NextFloat() * 10 + 1,

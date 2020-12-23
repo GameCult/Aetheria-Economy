@@ -43,7 +43,7 @@ Material:
     - _AlphaFloor: 0
     - _DepthBlend: 512
     - _DepthCeiling: 4096
-    - _Gamma: 0.3
+    - _Gamma: 0.45
     - _GridCeilingBlend: -300
     - _GridCeilingDensity: 0.01
     - _GridCeilingFollow: 0
@@ -61,5 +61,5 @@ Material:
     - _StepExponent: 2
     - _TintExponent: 4
     m_Colors:
-    - _Tint: {r: 0.319, g: 0.319, b: 0.319, a: 1}
+    - _Tint: {r: 0.75, g: 0.75, b: 0.75, a: 1}
   m_BuildTextureStacks: []

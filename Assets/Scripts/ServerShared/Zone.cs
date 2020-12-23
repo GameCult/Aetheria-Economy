@@ -69,7 +69,7 @@ public class Zone
         return new ZonePack
         {
             Data = Data,
-            Entities = Entities.ToList(),
+            //Entities = Entities.ToList(),
             Orbits = Orbits.Values.Select(o=>o.Data).ToList(),
             Planets = Planets.Values.ToList()
         };
@@ -126,8 +126,8 @@ public class Zone
                 }
             }
 
+            Orbits[orbitID].Position = GetOrbitPosition(orbit.Data.Parent) + pos;
             _updatedOrbits.Add(orbitID);
-            return GetOrbitPosition(orbit.Data.Parent) + pos;
         }
 
         return Orbits[orbitID].Position;
@@ -219,6 +219,7 @@ public class Zone
 
         var orbit = new OrbitData
         {
+            ID = Guid.NewGuid(),
             Distance = new ReactiveProperty<float>(distance),
             Parent = parent,
             Phase = storedPhase
