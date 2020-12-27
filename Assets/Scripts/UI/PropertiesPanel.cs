@@ -465,6 +465,7 @@ public class PropertiesPanel : MonoBehaviour
 			Clear();
 			if (item.EquippableItem != null)
 			{
+				AddProperty("Temperature", () => (item.Temperature - 273.15f).SignificantDigits(Context.GameplaySettings.SignificantDigits));
 				AddItemProperties(entity, item.EquippableItem);
 		        foreach (var behavior in item.Behaviors)
 		        {

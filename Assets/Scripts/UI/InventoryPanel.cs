@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.Mathematics;
 using UnityEngine.EventSystems;
+using UnityEngine.Experimental.Rendering;
 using static Unity.Mathematics.math;
 using int2 = Unity.Mathematics.int2;
 
@@ -23,8 +24,15 @@ public class InventoryPanel : MonoBehaviour
     public TextMeshProUGUI Title;
     public Button Dropdown;
     public GridLayoutGroup Grid;
+    public Sprite[] NodeBackgroundTextures;
     public Sprite[] NodeTextures;
     public Prototype NodePrototype;
+    public RawImage TemperatureDisplay;
+    public Texture2D TemperatureColor;
+    public ExponentialLerp TemperatureColorCurve;
+    public ExponentialLerp TemperatureAlphaCurve;
+    public float MaxTemperature;
+    public bool FitToContent;
     
     Subject<InventoryEventData> _onBeginDrag;
     Subject<InventoryEventData> _onDrag;
@@ -35,6 +43,8 @@ public class InventoryPanel : MonoBehaviour
 
     private Entity _displayedEntity;
     private EquippedCargoBay _displayedCargo;
+    private Texture2D _temperatureTexture;
+    private RectTransform _firstRect;
 
     public EquippedItem FakeEquipment;
     public ItemInstance FakeItem;
@@ -56,32 +66,64 @@ public class InventoryPanel : MonoBehaviour
 
     private void Start()
     {
-        Dropdown.onClick.AddListener(() =>
+        if(Dropdown)
         {
-            ContextMenu.Clear();
-            foreach (var ship in GameManager.AvailableShips())
+            Dropdown.onClick.AddListener(() =>
             {
-                if (ship.CargoBays.Any())
+                ContextMenu.Clear();
+                foreach (var ship in GameManager.AvailableShips())
                 {
-                    ContextMenu.AddDropdown(ship.Name,
-                        ship.CargoBays
-                            .Select<EquippedCargoBay, (string text, Action action, bool enabled)>((bay, index) =>
-                                ($"Bay {index}", () => Display(bay), true))
-                            .Prepend(("Equipment", () => Display(ship), true)));
+                    if (ship.CargoBays.Any())
+                    {
+                        ContextMenu.AddDropdown(ship.Name,
+                            ship.CargoBays
+                                .Select<EquippedCargoBay, (string text, Action action, bool enabled)>((bay, index) =>
+                                    ($"Bay {index}", () => Display(bay), true))
+                                .Prepend(("Equipment", () => Display(ship), true)));
+                    }
+                    else ContextMenu.AddOption(ship.Name, () => Display(ship));
                 }
-                else ContextMenu.AddOption(ship.Name, () => Display(ship));
-            }
 
-            foreach (var bay in GameManager.AvailableCargoBays())
-            {
-                ContextMenu.AddOption(bay.Name, () => Display(bay));
-            }
-            ContextMenu.Show();
-        });
+                foreach (var bay in GameManager.AvailableCargoBays())
+                {
+                    ContextMenu.AddOption(bay.Name, () => Display(bay));
+                }
+
+                ContextMenu.Show();
+            });
+        }
     }
 
-    public void Display(Entity entity)
+    private void Update()
     {
+        if (_displayedEntity != null)
+        {
+            var hullData = GameManager.ItemManager.GetData(_displayedEntity.Hull) as HullData;
+            for(var x = 0; x < _temperatureTexture.width; x++)
+            {
+                for (var y = 0; y < _temperatureTexture.height; y++)
+                {
+                    if (hullData.Shape[int2(x-1, y-1)])
+                    {
+                        var temp = _displayedEntity.Temperature[x - 1, y - 1] / MaxTemperature;
+                        var color = TemperatureColor.GetPixelBilinear(TemperatureColorCurve.Evaluate(temp), 0);
+                        color.a = TemperatureAlphaCurve.Evaluate(temp);
+                        _temperatureTexture.SetPixel(x,y,color);
+                    }
+                    else
+                        _temperatureTexture.SetPixel(x,y,new Color(0,0,0,0));
+                }
+            }
+            _temperatureTexture.Apply();
+            TemperatureDisplay.rectTransform.anchoredPosition = _firstRect.anchoredPosition - Vector2.one * Grid.cellSize * 1.5f;
+        }
+    }
+
+    public void Clear()
+    {
+        _displayedCargo = null;
+        _displayedEntity = null;
+        
         foreach(var empty in EmptyCells)
             Destroy(empty);
         EmptyCells.Clear();
@@ -89,13 +131,38 @@ public class InventoryPanel : MonoBehaviour
         foreach(var node in CellInstances.Values)
             node.GetComponent<Prototype>().ReturnToPool();
         CellInstances.Clear();
+        
+        if(Title)
+            Title.text = "None";
+    }
+
+    public void Display(Entity entity)
+    {
+        Clear();
 
         _displayedEntity = entity;
-        _displayedCargo = null;
+        _firstRect = null;
 
-        Title.text = entity.Name;
-        
+        if(Title)
+            Title.text = entity.Name;
+
         var hullData = GameManager.ItemManager.GetData(entity.Hull) as HullData;
+        if (FitToContent)
+        {
+            var gridRect = Grid.GetComponent<RectTransform>();
+            var rect = gridRect.rect;
+            Grid.cellSize = Vector2.one * (int) min(rect.width / (hullData.Shape.Width + 1), rect.height / (hullData.Shape.Height + 1));
+        }
+        _temperatureTexture = new Texture2D(
+            hullData.Shape.Width+2, 
+            hullData.Shape.Height+2, 
+            TextureFormat.RGBA32, 
+            false, false);
+        TemperatureDisplay.gameObject.SetActive(true);
+        TemperatureDisplay.texture = _temperatureTexture;
+        var tempRect = TemperatureDisplay.rectTransform;
+        tempRect.sizeDelta = Grid.cellSize * new Vector2(hullData.Shape.Width + 2, hullData.Shape.Height + 2);
+        //tempRect.anchoredPosition = 
         //FakeOccupancy = new Shape(hullData.Shape.Width, hullData.Shape.Height);
         //IgnoreOccupancy = new Shape(hullData.Shape.Width, hullData.Shape.Height);
         Grid.constraintCount = hullData.Shape.Width;
@@ -105,11 +172,15 @@ public class InventoryPanel : MonoBehaviour
             {
                 var empty = new GameObject("Empty Node", typeof(RectTransform));
                 empty.transform.SetParent(Grid.transform);
+                if (!_firstRect)
+                    _firstRect = empty.GetComponent<RectTransform>();
                 EmptyCells.Add(empty);
             }
             else
             {
                 var cell = NodePrototype.Instantiate<InventoryCell>();
+                if (!_firstRect)
+                    _firstRect = cell.GetComponent<RectTransform>();
                 cell.PointerClickTrigger.OnPointerClickAsObservable()
                     .Subscribe(data => _onClick?.OnNext(new InventoryEntityEventData(data, v, entity)));
                 cell.BeginDragTrigger.OnBeginDragAsObservable()
@@ -130,18 +201,13 @@ public class InventoryPanel : MonoBehaviour
 
     public void Display(EquippedCargoBay cargo)
     {
-        foreach(var empty in EmptyCells)
-            Destroy(empty);
-        EmptyCells.Clear();
+        Clear();
         
-        foreach(var node in CellInstances.Values)
-            node.GetComponent<Prototype>().ReturnToPool();
-        CellInstances.Clear();
-
-        _displayedEntity = null;
         _displayedCargo = cargo;
+        TemperatureDisplay.gameObject.SetActive(false);
 
-        Title.text = cargo.Name;
+        if(Title)
+            Title.text = cargo.Name;
         
         // FakeOccupancy = new Shape(cargo.Data.InteriorShape.Width, cargo.Data.InteriorShape.Height);
         // IgnoreOccupancy = new Shape(cargo.Data.InteriorShape.Width, cargo.Data.InteriorShape.Height);
@@ -230,12 +296,14 @@ public class InventoryPanel : MonoBehaviour
                             spriteIndex += 1 << i;
                 }
 
+                var bgSpriteIndex = spriteIndex;
+
                 if (item != null)
                     spriteIndex += 1 << 8;
             
-                var image = CellInstances[v].GetComponentInChildren<Image>();
-                image.sprite = NodeTextures[spriteIndex];
-                image.color = GetColor(v);
+                CellInstances[v].Background.sprite = NodeBackgroundTextures[bgSpriteIndex];
+                CellInstances[v].Icon.sprite = NodeTextures[spriteIndex];
+                CellInstances[v].Icon.color = GetColor(v);
             }
         }
         else if(_displayedCargo != null)
@@ -257,13 +325,15 @@ public class InventoryPanel : MonoBehaviour
                 for(int i = 0; i < 8; i++)
                     if (ItemMatch(_offsets[i]))
                         spriteIndex += 1 << i;
+                
+                var bgSpriteIndex = spriteIndex;
 
                 if (item != null)
                     spriteIndex += 1 << 8;
             
-                var image = CellInstances[v].GetComponentInChildren<Image>();
-                image.sprite = NodeTextures[spriteIndex];
-                image.color = GetColor(v);
+                CellInstances[v].Background.sprite = NodeBackgroundTextures[bgSpriteIndex];
+                CellInstances[v].Icon.sprite = NodeTextures[spriteIndex];
+                CellInstances[v].Icon.color = GetColor(v);
             }
         }
     }

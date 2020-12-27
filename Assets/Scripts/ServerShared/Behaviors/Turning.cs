@@ -61,7 +61,7 @@ public class Turning : IAnalogBehavior
     {
         Torque = Context.Evaluate(_data.Torque, Item.EquippableItem, Entity);
         Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque / Entity.Mass * delta));
-        Item.Temperature += (abs(_input) * Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta) / Context.GetThermalMass(Item.EquippableItem);
+        Item.AddHeat(abs(_input) * Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta);
         Entity.VisibilitySources[this] = abs(_input) * Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
         return true;
     }

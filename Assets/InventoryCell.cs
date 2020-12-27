@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 public class InventoryCell : MonoBehaviour
 {
+    public Image Background;
     public Image Icon;
 
     public ObservablePointerClickTrigger PointerClickTrigger;

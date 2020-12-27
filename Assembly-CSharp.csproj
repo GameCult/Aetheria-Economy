@@ -729,6 +729,7 @@
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
      <None Include="Assets\Shaders\Brushes\SimplexBrush.shader" />
      <None Include="Assets\GaussianBlurFilter.shader" />
+     <None Include="Assets\Shaders\AdditiveUIScreenSpaceDetail.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
      <None Include="Assets\Shaders\Isolines.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
@@ -1035,12 +1036,6 @@
  </Reference>
  <Reference Include="Google.Protobuf">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
- </Reference>
- <Reference Include="Grpc.Core">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core/lib/net45/Grpc.Core.dll</HintPath>
- </Reference>
- <Reference Include="Grpc.Core.Api">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

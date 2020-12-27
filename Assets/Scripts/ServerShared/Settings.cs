@@ -97,5 +97,6 @@ public class GameplaySettings
     public ExponentialLerp StartingGearQuality;
     public float HeatRadiationExponent = 1;
     public float HeatRadiationMultiplier = 1;
+    public float HeatConductionMultiplier = 1;
     
 }

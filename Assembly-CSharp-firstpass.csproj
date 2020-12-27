@@ -115,7 +115,6 @@
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Surface\MoonB.shader" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Textures\TextureGenerator.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Other\PerturbPoints.compute" />
-     <None Include="Assets\Plugins\Grpc.Core.Api\lib\net45\Grpc.Core.Api.xml" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\SimplexNoise.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\FractalNoise.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Surface\Earth.shader" />
@@ -124,7 +123,6 @@
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Other\PerturbPointsPlatelike.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Height\MoonHeight.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Other\OceanMask.shader" />
-     <None Include="Assets\Plugins\Grpc.Core\lib\net45\Grpc.Core.xml" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\Math.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\SimplexNoise3.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\Craters.cginc" />
@@ -425,12 +423,6 @@
  </Reference>
  <Reference Include="Google.Protobuf">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
- </Reference>
- <Reference Include="Grpc.Core">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core/lib/net45/Grpc.Core.dll</HintPath>
- </Reference>
- <Reference Include="Grpc.Core.Api">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.1.6f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

@@ -22,11 +22,10 @@ public class EnergyDrawData : BehaviorData
     }
 }
 
-public class EnergyDraw : IBehavior, IOrderedBehavior
+public class EnergyDraw : IBehavior
 {
     private EnergyDrawData _data;
 
-    public int Order => -100;
     private Entity Entity { get; }
     private EquippedItem Item { get; }
     private ItemManager Context { get; }

@@ -146,7 +146,7 @@ public class ZoneGenerator
 		            Enumerable.Range(0, (int) (settings.AsteroidCount.Evaluate(beltData.Mass.Value * orbitMap[planet].Distance.Value)))
 			            .Select(_ => new Asteroid
 			            {
-				            Distance = random.NextFloat(orbitMap[planet].Distance.Value, orbitMap[planet].Distance.Value + settings.AsteroidBeltWidth.Evaluate(orbitMap[planet].Distance.Value)),
+				            Distance = orbitMap[planet].Distance.Value + random.NextFloat()*(random.NextFloat()-.5f)*settings.AsteroidBeltWidth.Evaluate(orbitMap[planet].Distance.Value),
 				            Phase = random.NextFloat(),
 				            Size = random.NextFloat(),
 				            RotationSpeed = settings.AsteroidRotationSpeed.Evaluate(random.NextFloat())

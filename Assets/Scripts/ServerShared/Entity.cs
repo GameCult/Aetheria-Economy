@@ -28,6 +28,8 @@ public abstract class Entity
     public float2 Velocity;
     
     public float[,] Temperature;
+    public float4[,] Conductivity;
+    public float[,] ThermalMass;
     public float Energy;
 
     public readonly ReactiveCollection<EquippedItem> Equipment = new ReactiveCollection<EquippedItem>();
@@ -46,11 +48,13 @@ public abstract class Entity
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     
     private List<IPopulationAssignment> PopulationAssignments = new List<IPopulationAssignment>();
-    
-    private bool _active;
+
     public EquippedItem[,] GearOccupancy;
     public EquippedItem[,] ThermalOccupancy;
     public HardpointData[,] Hardpoints;
+    
+    private EquippedItem[] _orderedEquipment;
+    private bool _active;
     
     public ItemManager ItemManager { get; }
     public int AssignedPopulation => PopulationAssignments.Sum(pa => pa.AssignedPopulation);
@@ -87,10 +91,20 @@ public abstract class Entity
     private void MapShip()
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
-        var hull = new EquippedItem(ItemManager, Hull, int2.zero);
+        var hull = new EquippedItem(ItemManager, Hull, int2.zero, this);
         Equipment.Add(hull);
         Hydrate(hull);
         Mass = hullData.Mass;
+        Temperature = new float[hullData.Shape.Width, hullData.Shape.Height];
+        Conductivity = new float4[hullData.Shape.Width, hullData.Shape.Height];
+        ThermalMass = new float[hullData.Shape.Width, hullData.Shape.Height];
+        var cellCount = hullData.Shape.Coordinates.Length;
+        foreach (var v in hullData.Shape.Coordinates)
+        {
+            Temperature[v.x, v.y] = 280;
+            Conductivity[v.x, v.y] = hullData.Conductivity;
+            ThermalMass[v.x, v.y] = hullData.Mass * hullData.SpecificHeat / cellCount;
+        }
         GearOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
         ThermalOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
         Hardpoints = new HardpointData[hullData.Shape.Width, hullData.Shape.Height];
@@ -121,7 +135,7 @@ public abstract class Entity
         equippedItem.BehaviorGroups = equippedItem.Behaviors
             .GroupBy(b => b.Data.Group)
             .OrderBy(g=>g.Key)
-            .Select(g=>new BehaviorGroup { 
+            .Select(g=> new BehaviorGroup {
                     Behaviors = g.ToArray(),
                     //Axis = (IAnalogBehavior) g.FirstOrDefault(b=>b is IAnalogBehavior),
                     Switch = (Switch) g.FirstOrDefault(b=>b is Switch),
@@ -131,9 +145,16 @@ public abstract class Entity
 
         foreach (var behavior in equippedItem.Behaviors)
         {
+            if (behavior is IOrderedBehavior orderedBehavior)
+                equippedItem.SortPosition = orderedBehavior.Order;
             if(behavior is IPopulationAssignment populationAssignment)
                 PopulationAssignments.Add(populationAssignment);
         }
+    }
+
+    public void AddHeat(int2 position, float heat)
+    {
+        Temperature[position.x, position.y] += heat / ThermalMass[position.x, position.y];
     }
 
     public EquippedCargoBay FindItemInCargo(Guid itemDataID)
@@ -197,13 +218,18 @@ public abstract class Entity
         }
         
         Equipment.Remove(item);
+        _orderedEquipment = Equipment.OrderBy(x => x.SortPosition).ToArray();
         
         var hullData = ItemManager.GetData(Hull) as HullData;
         var itemData = ItemManager.GetData(item.EquippableItem);
         var itemLayer = (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy);
         foreach (var i in hullData.Shape.Coordinates)
             if (itemLayer[i.x, i.y] == item)
+            {
+                ThermalMass[i.x, i.y] -= ItemManager.GetThermalMass(item.EquippableItem) / itemData.Shape.Coordinates.Length;
+                Conductivity[i.x, i.y] /= itemData.Conductivity;
                 itemLayer[i.x, i.y] = null;
+            }
         Mass -= itemData.Mass;
 
         return item.EquippableItem;
@@ -328,18 +354,18 @@ public abstract class Entity
             {
                 if (itemData is DockingBayData)
                 {
-                    equippedItem = new EquippedDockingBay(ItemManager, item, hullCoord, $"{Name} Docking Bay {DockingBays.Count + 1}");
+                    equippedItem = new EquippedDockingBay(ItemManager, item, hullCoord, this, $"{Name} Docking Bay {DockingBays.Count + 1}");
                     DockingBays.Add((EquippedDockingBay) equippedItem);
                 }
                 else
                 {
-                    equippedItem = new EquippedCargoBay(ItemManager, item, hullCoord, $"{Name} Cargo Bay {CargoBays.Count + 1}");
+                    equippedItem = new EquippedCargoBay(ItemManager, item, hullCoord, this, $"{Name} Cargo Bay {CargoBays.Count + 1}");
                     CargoBays.Add((EquippedCargoBay) equippedItem);
                 }
             }
             else
             {
-                equippedItem = new EquippedItem(ItemManager, item, hullCoord);
+                equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
                 Equipment.Add(equippedItem);
             }
 
@@ -351,21 +377,25 @@ public abstract class Entity
 
             Mass += itemData.Mass;
             Hydrate(equippedItem);
+            _orderedEquipment = Equipment.OrderBy(x => x.SortPosition).ToArray();
             return true;
         }
         else
         {
-            var equippedItem = new EquippedItem(ItemManager, item, hullCoord);
+            var equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
             Equipment.Add(equippedItem);
             
             foreach (var i in itemData.Shape.Coordinates)
             {
                 var occupiedCoord = hullCoord + itemData.Shape.Rotate(i, item.Rotation);
+                ThermalMass[occupiedCoord.x, occupiedCoord.y] += ItemManager.GetThermalMass(item) / itemData.Shape.Coordinates.Length;
+                Conductivity[occupiedCoord.x, occupiedCoord.y] *= itemData.Conductivity;
                 (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
             }
                 
             Mass += itemData.Mass;
             Hydrate(equippedItem);
+            _orderedEquipment = Equipment.OrderBy(x => x.SortPosition).ToArray();
             return true;
         }
     }
@@ -432,18 +462,20 @@ public abstract class Entity
     public T GetBehavior<T>() where T : class, IBehavior
     {
         foreach (var equippedItem in Equipment)
-            foreach (var behavior in equippedItem.Behaviors)
-                if (behavior is T b)
-                    return b;
+            if(equippedItem.Behaviors != null)
+                foreach (var behavior in equippedItem.Behaviors)
+                    if (behavior is T b)
+                        return b;
         return null;
     }
 
     public IEnumerable<T> GetBehaviors<T>() where T : class, IBehavior
     {
         foreach (var equippedItem in Equipment)
-            foreach (var behavior in equippedItem.Behaviors)
-                if (behavior is T b)
-                    yield return b;
+            if(equippedItem.Behaviors != null)
+                foreach (var behavior in equippedItem.Behaviors)
+                    if (behavior is T b)
+                        yield return b;
     }
 
     public IEnumerable<T> GetBehaviorData<T>() where T : BehaviorData
@@ -476,9 +508,44 @@ public abstract class Entity
 
     public virtual void Update(float delta)
     {
+        var hullData = ItemManager.GetData(Hull) as HullData;
+        float[,] newTemp = new float[hullData.Shape.Width,hullData.Shape.Height];
+        var radiation = 0f;
+        foreach (var v in hullData.Shape.Coordinates)
+        {
+            var temp = Temperature[v.x, v.y];
+            var heatTransfer = 0f;
+            
+            if (v.x > 0) 
+                heatTransfer += (Temperature[v.x - 1, v.y] - temp) * Conductivity[v.x, v.y].y * Conductivity[v.x - 1, v.y].w;
+            
+            if (v.x < hullData.Shape.Width - 1)
+                heatTransfer += (Temperature[v.x + 1, v.y] - temp) * Conductivity[v.x, v.y].w * Conductivity[v.x + 1, v.y].y;
+            
+            if (v.y > 0)
+                heatTransfer += (Temperature[v.x, v.y - 1] - temp) * Conductivity[v.x, v.y].z * Conductivity[v.x, v.y - 1].x;
+            
+            if (v.y < hullData.Shape.Height - 1)
+                heatTransfer += (Temperature[v.x, v.y + 1] - temp) * Conductivity[v.x, v.y].x * Conductivity[v.x, v.y + 1].z;;
+
+            newTemp[v.x, v.y] = Temperature[v.x, v.y] + heatTransfer * min(ItemManager.GameplaySettings.HeatConductionMultiplier * delta,1) / ThermalMass[v.x,v.y];
+            
+            // For all cells on the border of the entity, radiate some heat into space, increasing the visibility of the ship
+            if (!hullData.InteriorCells[v])
+            {
+                var rad = pow(newTemp[v.x, v.y], ItemManager.GameplaySettings.HeatRadiationExponent) *
+                          ItemManager.GameplaySettings.HeatRadiationMultiplier;
+                newTemp[v.x, v.y] -= rad * delta;
+                radiation += rad;
+            }
+        }
+
+        VisibilitySources[this] = radiation;
+        Temperature = newTemp;
+        
         if (Active)
         {
-            foreach (var equippedItem in Equipment)
+            foreach (var equippedItem in _orderedEquipment)
             {
                 equippedItem.Update(delta);
             }
@@ -541,8 +608,6 @@ public class EquippedItem
     [JsonProperty("item"), Key(0)] public EquippableItem EquippableItem;
 
     [JsonProperty("position"), Key(1)] public int2 Position;
-
-    [JsonProperty("temperature"), Key(2)] public float Temperature;
     
     [IgnoreMember]
     public IBehavior[] Behaviors;
@@ -550,15 +615,39 @@ public class EquippedItem
     [IgnoreMember]
     public BehaviorGroup[] BehaviorGroups;
     
+    public Shape InsetShape { get; }
+
+    public int SortPosition;
+
+    public float Temperature
+    {
+        get
+        {
+            float sum = 0;
+            foreach (var x in InsetShape.Coordinates) sum += _entity.Temperature[x.x, x.y];
+            return sum/InsetShape.Coordinates.Length;
+        }
+    }
+
     protected readonly ItemManager _itemManager;
     private readonly EquippableItemData _data;
+    private Entity _entity;
 
-    public EquippedItem(ItemManager itemManager, EquippableItem item, int2 position)
+    public EquippedItem(ItemManager itemManager, EquippableItem item, int2 position, Entity entity)
     {
         _itemManager = itemManager;
         _data = _itemManager.GetData(item);
+        _entity = entity;
         EquippableItem = item;
         Position = position;
+        var hullData = itemManager.GetData(entity.Hull);
+        InsetShape = hullData.Shape.Inset(_data.Shape, position, item.Rotation);
+    }
+
+    public void AddHeat(float heat)
+    {
+        foreach(var hullCoord in InsetShape.Coordinates)
+            _entity.AddHeat(hullCoord, heat / InsetShape.Coordinates.Length);
     }
 
     public void Update(float delta)
@@ -597,7 +686,7 @@ public class EquippedCargoBay : EquippedItem
     public float ThermalMass { get; private set; }
     public string Name { get; }
     
-    public EquippedCargoBay(ItemManager itemManager, EquippableItem item, int2 position, string name) : base(itemManager, item, position)
+    public EquippedCargoBay(ItemManager itemManager, EquippableItem item, int2 position, Entity entity, string name) : base(itemManager, item, position, entity)
     {
         Data = _itemManager.GetData(EquippableItem) as CargoBayData;
         Name = name;
@@ -867,7 +956,7 @@ public class EquippedDockingBay : EquippedCargoBay
     public Ship DockedShip;
     public int2 MaxSize => _data.MaxSize;
     private DockingBayData _data;
-    public EquippedDockingBay(ItemManager itemManager, EquippableItem item, int2 position, string name) : base(itemManager, item, position, name)
+    public EquippedDockingBay(ItemManager itemManager, EquippableItem item, int2 position, Entity entity, string name) : base(itemManager, item, position, entity, name)
     {
         _data = _itemManager.GetData(EquippableItem) as DockingBayData;
     }

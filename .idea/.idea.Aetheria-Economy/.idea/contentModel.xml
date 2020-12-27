@@ -169,20 +169,6 @@
               <e p="_Sources.txt" t="Include" />
             </e>
           </e>
-          <e p="Grpc.Core" t="Include">
-            <e p="lib" t="Include">
-              <e p="net45" t="Include">
-                <e p="Grpc.Core.xml" t="Include" />
-              </e>
-            </e>
-          </e>
-          <e p="Grpc.Core.Api" t="Include">
-            <e p="lib" t="Include">
-              <e p="net45" t="Include">
-                <e p="Grpc.Core.Api.xml" t="Include" />
-              </e>
-            </e>
-          </e>
         </e>
         <e p="Resources" t="Include">
           <e p="Sprites" t="Include">
@@ -1418,6 +1404,8 @@
             <e p="Attributes.cs" t="Include" />
             <e p="Behaviors" t="Include">
               <e p="Behaviors.cs" t="Include" />
+              <e p="Capacitor.cs" t="Include" />
+              <e p="Cockpit.cs" t="Include" />
               <e p="Controller.cs" t="Include" />
               <e p="Cooldown.cs" t="Include" />
               <e p="EnergyDraw.cs" t="Include" />
@@ -1971,6 +1959,7 @@
         <e p="Shaders" t="Include">
           <e p="AdditiveUI.shader" t="Include" />
           <e p="AdditiveUIDetail.shader" t="Include" />
+          <e p="AdditiveUIScreenSpaceDetail.shader" t="Include" />
           <e p="Background.shader" t="Include" />
           <e p="Brushes" t="Include">
             <e p="CellBrush.shader" t="Include" />

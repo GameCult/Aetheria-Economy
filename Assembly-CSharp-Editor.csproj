@@ -434,12 +434,6 @@
  <Reference Include="Google.Protobuf">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
  </Reference>
- <Reference Include="Grpc.Core">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core/lib/net45/Grpc.Core.dll</HintPath>
- </Reference>
- <Reference Include="Grpc.Core.Api">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Grpc.Core.Api/lib/net45/Grpc.Core.Api.dll</HintPath>
- </Reference>
  <Reference Include="nunit.framework">
  <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.ext.nunit@1.0.0/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>

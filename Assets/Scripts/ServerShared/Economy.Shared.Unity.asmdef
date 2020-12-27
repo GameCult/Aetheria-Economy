@@ -3,8 +3,7 @@
     "references": [
         "MessagePack",
         "Unity.Mathematics",
-        "UniRx",
-        "com.alelievr.NodeGraphProcessor.Runtime"
+        "UniRx"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

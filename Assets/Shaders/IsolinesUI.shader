@@ -8,6 +8,9 @@ Shader "UI/Isolines"
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
     	_DetailTex ("Detail Texture", 2D) = "white" {}
+//    	_TintTex ("Tint Texture", 2D) = "black" {}
+//		_TintIntensity("Tint Intensity", Float) = 1
+//		_TintExponent("Tint Exponent", Float) = 1
 		[HDR] _Color ("Color", Color) = (.5,.5,.5,1)
 		[HDR] _AngleColor ("Angle Color", Color) = (.5,.5,.5,1)
 		[HDR] _DangerColor ("Danger Color", Color) = (.5,.5,.5,1)
@@ -98,6 +101,7 @@ Shader "UI/Isolines"
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            sampler2D _TintTex;
             sampler2D _DetailTex;
             float4 _DetailTex_ST;
             fixed4 _TextureSampleAdd;
@@ -106,6 +110,8 @@ Shader "UI/Isolines"
             fixed4 _Color;
 			fixed4 _AngleColor;
 			fixed4 _DangerColor;
+			float _TintIntensity;
+			float _TintExponent;
 			float _StartDepth;
 			float _DepthRange;
 			float _LineWidth;
@@ -153,6 +159,7 @@ Shader "UI/Isolines"
             	#endif
             	
 				float h = -tex2D(_DetailTex, q).r;
+            	//half4 c = tex2D(_TintTex, q);
 
 				float4 col = float4(0,0,0,0);
 				float blend = smoothstep(_StartDepth, _StartDepth + _DepthRange / 32, -h);
@@ -163,12 +170,13 @@ Shader "UI/Isolines"
 				float planmag = length(plan);
 				
 				float dangerblend = smoothstep(0,_DangerSteepness, pow(planmag / _Scale, 2));
-				
+
+            	half4 linecol = lerp(_Color,_DangerColor,dangerblend) * blend; 
 				// Loop over isolines, computing a pseudo distance field for a number of height values
 				float spacing = _DepthRange / 20;
 				for (int ih = 1; ih <= 21; ih++) {
 					float isoline = abs(h + _StartDepth + (ih*spacing));
-					col += (1-smoothstep(_LineWidth, _LineWidth * _LineFade, isoline / planmag)) * lerp(_Color,_DangerColor,dangerblend) * blend; // Isoline
+					col += (1-smoothstep(_LineWidth, _LineWidth * _LineFade, isoline / planmag)) * linecol; // Isoline
 				}
 				
 				float angle = atan2(plan.y,plan.x) / 3.1415926536 + 1;
@@ -179,12 +187,14 @@ Shader "UI/Isolines"
 				// float angle2 = atan2(plan2.y,plan2.x) / 3.1415926536 + 1;
 				// float angmag = abs(angle-angle2);
 				// angmag = min(angmag,0.025);
-				
+				half4 angcol = blend * (planmag / _Scale) * (lerp(_AngleColor, _DangerColor, dangerblend));
+            	// + pow(c,_TintExponent) * _TintIntensity
 				// Loop over angle isolines
 				for (float ia = 0.5; ia < 13; ia++) {
 				    float isoline = abs(angle - ia / 6.0);
-					col += (1-smoothstep(_AngleWidth, _AngleWidth * _AngleFade, isoline)) * lerp(_AngleColor,_DangerColor,dangerblend) * blend * (planmag / _Scale);
-					// col += (1-smoothstep(_Angle2Width, _Angle2Width * _Angle2Fade, isoline / angmag)) * lerp(_AngleColor,_DangerColor*4,dangerblend) * blend; // Isoline
+					float l = 1-smoothstep(_AngleWidth, _AngleWidth * _AngleFade, isoline);
+					col += l * angcol;
+					// col += (1-smoothstep(_Angle2Width, _Angle2Width * _Angle2Fade, isoline / angmag)) * _AngleColor * blend; // Isoline
 				}
 
                 #ifdef UNITY_UI_CLIP_RECT

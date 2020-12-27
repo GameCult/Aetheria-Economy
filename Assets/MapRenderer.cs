@@ -95,7 +95,7 @@ public class MapRenderer : MonoBehaviour
         
         GravityCamera.transform.position = pos;
         GravityCamera.orthographicSize = _size.y * Scale * .5f;
-        GravityDisplay.material.SetFloat("_Scale", Scale);
+        GravityDisplay.material.SetFloat("_Scale", Scale / 2);
         
         TintCamera.transform.position = pos;
         TintCamera.orthographicSize = _size.y * Scale * .5f;

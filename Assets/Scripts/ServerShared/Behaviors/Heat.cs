@@ -42,7 +42,8 @@ public class Heat : IBehavior
 
     public bool Update(float delta)
     {
-        Item.Temperature += Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * (_data.PerSecond ? delta : 1) / Context.GetThermalMass(Item.EquippableItem);
+        Item.AddHeat(Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * (_data.PerSecond ? delta : 1));
+
         return true;
     }
 }

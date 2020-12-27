@@ -68,7 +68,7 @@ public class Thruster : IAnalogBehavior
         Thrust = Context.Evaluate(_data.Thrust, Item.EquippableItem, Entity);
         Entity.Velocity -= Entity.Direction.Rotate(Item.EquippableItem.Rotation) * _input * Thrust / Entity.Mass * delta;
         Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque * Thrust / Entity.Mass / 100 * delta));
-        Item.Temperature += (_input * Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta) / Context.GetThermalMass(Item.EquippableItem);
+        Item.AddHeat(_input * Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta);
         Entity.VisibilitySources[this] = _input * Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
         return true;
     }

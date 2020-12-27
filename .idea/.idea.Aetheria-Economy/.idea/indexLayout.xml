@@ -5,6 +5,7 @@
       <Path>../NodeGraphProcessor/Assets/com.alelievr.NodeGraphProcessor</Path>
     </attachedFolders>
     <explicitIncludes>
+      <Path>Assets</Path>
       <Path>Library/PackageCache/com.unity.cinemachine@2.6.3</Path>
       <Path>Library/PackageCache/com.unity.ext.nunit@1.0.0</Path>
       <Path>Library/PackageCache/com.unity.ide.rider@1.2.1</Path>

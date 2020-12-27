@@ -27,7 +27,9 @@ public class ActionGameManager : MonoBehaviour
     public CinemachineVirtualCamera FollowCamera;
     public GameObject GameplayUI;
     public MenuPanel Menu;
+    public MapRenderer MenuMap;
     public InventoryMenu Inventory;
+    public InventoryPanel ShipPanel;
     public float2 Sensitivity;
     
     //public PlayerInput Input;
@@ -99,12 +101,15 @@ public class ActionGameManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 _input.Player.Enable();
                 Menu.gameObject.SetActive(false);
+                GameplayUI.SetActive(true);
                 return;
             }
             
             Cursor.lockState = CursorLockMode.None;
             _input.Player.Disable();
+            GameplayUI.SetActive(false);
             Menu.ShowTab(MenuTab.Map);
+            MenuMap.Position = _currentShip.Position;
         };
 
         _input.Global.Inventory.performed += context =>
@@ -114,12 +119,21 @@ public class ActionGameManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 _input.Player.Enable();
                 Menu.gameObject.SetActive(false);
+                GameplayUI.SetActive(true);
                 return;
             }
 
             Cursor.lockState = CursorLockMode.None;
             _input.Player.Disable();
             Menu.ShowTab(MenuTab.Inventory);
+            GameplayUI.SetActive(false);
+            var cargo = _currentShip.CargoBays.FirstOrDefault();
+            if (cargo != null)
+            {
+                Inventory.GetPanel.Display(cargo);
+            }
+            else Inventory.GetPanel.Clear();
+            Inventory.GetPanel.Display(_currentShip);
         };
 
         _input.Global.Dock.performed += context =>
@@ -155,8 +169,6 @@ public class ActionGameManager : MonoBehaviour
         var ship = new Ship(ItemManager, Zone, shipHull);
         PlayerShips.Add(ship);
         _currentShip = ship;
-
-        var dockingCargo = station.DockingBays.First();
 
         var thrusterData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Thruster && x.Shape.Height == 1);
         for (int i = 0; i < 8; i++)
@@ -207,6 +219,7 @@ public class ActionGameManager : MonoBehaviour
                     _shipInput = null;
                     Cursor.lockState = CursorLockMode.None;
                     _input.Player.Disable();
+                    GameplayUI.SetActive(false);
                 }
             }
         }
@@ -225,7 +238,9 @@ public class ActionGameManager : MonoBehaviour
             FollowCamera.LookAt = _lookAt;
             FollowCamera.Follow = SectorRenderer.Ships[_currentShip].Transform;
             Cursor.lockState = CursorLockMode.Locked;
+            GameplayUI.SetActive(true);
             _input.Player.Enable();
+            ShipPanel.Display(_currentShip);
         }
     }
 
