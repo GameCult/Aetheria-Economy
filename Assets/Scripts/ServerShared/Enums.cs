@@ -79,7 +79,9 @@ public enum SimpleCommodityCategory
     Metals,
     Alloys,
     Compounds,
-    Organics
+    Organics,
+    Ammo,
+    Consumer
 }
 
 public enum CompoundCommodityCategory

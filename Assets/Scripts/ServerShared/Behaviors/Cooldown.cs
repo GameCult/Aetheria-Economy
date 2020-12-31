@@ -6,6 +6,8 @@ using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-10), RuntimeInspectable]
 public class CooldownData : BehaviorData
@@ -19,7 +21,7 @@ public class CooldownData : BehaviorData
     }
 }
 
-public class Cooldown : IBehavior, IAlwaysUpdatedBehavior
+public class Cooldown : IBehavior, IAlwaysUpdatedBehavior, IProgressBehavior
 {
     private CooldownData _data;
     public BehaviorData Data => _data;
@@ -29,6 +31,8 @@ public class Cooldown : IBehavior, IAlwaysUpdatedBehavior
     private ItemManager Context { get; }
 
     private float _cooldown; // Normalized
+
+    public float Progress => saturate(_cooldown);
 
     public Cooldown(ItemManager context, CooldownData data, Entity entity, EquippedItem item)
     {

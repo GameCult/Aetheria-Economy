@@ -157,6 +157,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\ConeSideComparer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\LayeredLayoutEngine.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\WeightedEdge.cs" />
+     <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Primitives\UIPrimitiveBase.cs" />
      <Compile Include="Assets\Scripts\UI\TabGroup.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\Vote.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\OverlapRemovalFixedSegments\PixelPoint.cs" />
@@ -203,6 +204,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\Persistence\CurveStreamElement.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\Nudging\PointByDelegateComparer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\Arrowhead.cs" />
+     <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Utilities\BezierPath.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Incremental\FastIncrementalLayout.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\RBTree\RBTree.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\Triangulation\TriangulationCell.cs" />
@@ -247,6 +249,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\ConeSpanner.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgInteractor.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\PortObstacleEvent.cs" />
+     <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Utilities\SetPropertyUtility.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\Persistence\CharStreamElement.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\SimpleIntEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\SolvingMethod.cs" />
@@ -267,6 +270,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\BumperPusher.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\ConstrainedDelaunayTriangulation\EdgeInserter.cs" />
      <Compile Include="Assets\Scripts\AetheriaInput.cs" />
+     <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Utilities\CableCurve.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\Nudging\PathEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\MDS\SingleSourceDistances.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\MultipleSourceMultipleTargetsShortestPathOnVisibilityGraph.cs" />
@@ -325,6 +329,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\ApproximateComparer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\ConvexHull\HullPointComparer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\Ordering\OrderingMeasure.cs" />
+     <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Primitives\UILineRenderer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\CdtThreader.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\IZoomLevelCalculator.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\BundleBase.cs" />
@@ -403,6 +408,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\RightIntersectionEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\Triangulation\DelaunayTrianglationInternal.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Core\DrawerAttributes\ShowNonSerializedFieldAttribute.cs" />
+     <Compile Include="Assets\SchematicListElement.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\Cluster.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\ObstacleCalculator.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\ConjugateGradient\LinearSystemSolver.cs" />
@@ -492,6 +498,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\PolylineIterator.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\PointLocation.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\NetworkSimplexForGeneralGraph.cs" />
+     <Compile Include="Assets\SchematicDisplay.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\GraphmapsWithMesh\PointToSegmentDistance.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\NeighborSides.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\PointNodesList.cs" />
@@ -591,8 +598,10 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Incremental\MaxSeparationConstraint.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\IOverlapRemoval.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\VoteBlock.cs" />
+     <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Primitives\UILineRendererList.cs" />
      <Compile Include="Assets\Scripts\UI\BoolField.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\Routing.cs" />
+     <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Primitives\UILineTextureRenderer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\SparseVisibilityGraphGenerator.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\VertexEnumerators.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\TransientGraphUtility.cs" />
@@ -686,17 +695,28 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\BasicReflectionEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\IntEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\PointPairOrder.cs" />
+     <Compile Include="Assets\SchematicTriggerGroupElement.cs" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIAdditive.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle Add.shader" />
      <None Include="Assets\Shaders\Clouds.shader" />
      <None Include="Assets\Shaders\AdditiveUI.shader" />
      <None Include="Assets\Shaders\Brushes\LinearWaveBrush.shader" />
      <None Include="Assets\Resources\Sprites\Attribution.txt" />
      <None Include="Assets\Scripts\NIH\GPU Noise\ClassicNoise2D.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIScreen.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle Multiply.shader" />
      <None Include="Assets\Allegorithmic\Plugins\EULA.txt" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIMultiply.shader" />
      <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoiseGrad2D.cginc" />
      <None Include="Assets\Shaders\GalaxyMap.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UILinearDodge.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle Alpha Blend.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\SoftMaskShader.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle Premultiply Blend.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle VertexLit Blended.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoise3D.cginc" />
      <None Include="Assets\Shaders\IsolinesUI.shader" />
@@ -708,12 +728,15 @@
      <None Include="Assets\Shaders\Raymarching\VolumeJupiter.shader" />
      <None Include="Assets\Shaders\ViewNormalEmissive.shader" />
      <None Include="Assets\Shaders\Particle Standard Unlit.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle MultiplyDouble.shader" />
      <None Include="Assets\Shaders\Brushes\CubicPulseBrush.shader" />
      <None Include="Assets\Scripts\NIH\GPU Noise\SimplexNoiseGrad3D.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle AddMultiply.shader" />
      <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle Blend.shader" />
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
      <None Include="Assets\Shaders\MaskedUIBlur.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
@@ -726,7 +749,10 @@
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
      <None Include="Assets\Scripts\NIH\GPU Noise\ClassicNoise3D.cginc" />
      <None Include="Assets\Shaders\Dither Functions.cginc" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UISoftAdditive.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle AddSmooth.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIImageCrop.shader" />
      <None Include="Assets\Shaders\Brushes\SimplexBrush.shader" />
      <None Include="Assets\GaussianBlurFilter.shader" />
      <None Include="Assets\Shaders\AdditiveUIScreenSpaceDetail.shader" />
@@ -740,6 +766,7 @@
      <None Include="Assets\Shaders\AdditiveUIDetail.shader" />
      <None Include="Assets\Shaders\Raymarching\VolumeSun.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
+     <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIParticleHidden.shader" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>

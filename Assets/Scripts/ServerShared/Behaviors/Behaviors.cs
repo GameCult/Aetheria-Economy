@@ -45,6 +45,11 @@ public interface IAlwaysUpdatedBehavior
     void AlwaysUpdate(float delta);
 }
 
+public interface IProgressBehavior
+{
+    float Progress { get; }
+}
+
 public interface IOrderedBehavior
 {
     int Order { get; }
@@ -111,6 +116,7 @@ public abstract class PersistentBehaviorData
  Union(30, typeof(HaulingControllerData)),
  Union(31, typeof(CapacitorData)),
  Union(32, typeof(CockpitData)),
+ Union(33, typeof(HeatsinkData)),
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {

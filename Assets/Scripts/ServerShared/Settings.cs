@@ -88,6 +88,7 @@ public class ZoneGenerationSettings
 [Serializable, MessagePackObject(keyAsPropertyName: true), JsonObject]
 public class GameplaySettings
 {
+    public int TriggerGroupCount = 6;
     public float WarpDistance = 25;
     public float DockingDistance = 25;
     public int SignificantDigits = 3;
@@ -98,5 +99,9 @@ public class GameplaySettings
     public float HeatRadiationExponent = 1;
     public float HeatRadiationMultiplier = 1;
     public float HeatConductionMultiplier = 1;
-    
+    public float HeatstrokeTemperature = 330;
+    public float HeatstrokeMultiplier = .00001f;
+    public float HeatstrokeExponent = 2;
+    public float HeatstrokeRecoverySpeed = .2f;
+    public float HeatstrokeControlLimit = .75f;
 }

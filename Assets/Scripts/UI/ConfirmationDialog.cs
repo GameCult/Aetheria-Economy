@@ -49,10 +49,12 @@ public class ConfirmationDialog : PropertiesPanel
         gameObject.SetActive(false);
     }
 
-    public void Show(Action onConfirm, Action onCancel = null)
+    public void Show(Action onConfirm = null, Action onCancel = null)
     {
         _onConfirm = onConfirm;
+        Confirm.gameObject.SetActive(onConfirm!=null);
         _onCancel = onCancel;
+        Cancel.gameObject.SetActive(onCancel!=null);
         transform.position = Input.mousePosition;
         CancelClickCatcher.gameObject.SetActive(true);
     }

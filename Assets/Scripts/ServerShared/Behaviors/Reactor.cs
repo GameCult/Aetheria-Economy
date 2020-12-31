@@ -38,6 +38,8 @@ public class Reactor : IBehavior, IOrderedBehavior
     public Entity Entity { get; }
     public EquippedItem Item { get; }
     public ItemManager Context { get; }
+    
+    public float Surplus { get; private set; }
 
     public int Order => 100;
 
@@ -67,6 +69,8 @@ public class Reactor : IBehavior, IOrderedBehavior
 
         Item.AddHeat(charge / efficiency);
         Entity.Energy += charge;
+
+        Surplus = Entity.Energy;
         
         // We have an energy deficit, try to get some energy out of our capacitors first
         if (Entity.Energy < 0)

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Panel Blur
+  m_Name: Panel Blur Menu
   m_Shader: {fileID: 4800000, guid: 3951069d814b7174ca3bb4e8e302198b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

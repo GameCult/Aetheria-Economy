@@ -47,7 +47,9 @@ public abstract class Entity
     public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     
-    private List<IPopulationAssignment> PopulationAssignments = new List<IPopulationAssignment>();
+    public readonly List<EquippedItem>[] TriggerGroups;
+
+    public List<IPopulationAssignment> PopulationAssignments = new List<IPopulationAssignment>();
 
     public EquippedItem[,] GearOccupancy;
     public EquippedItem[,] ThermalOccupancy;
@@ -86,14 +88,15 @@ public abstract class Entity
         Hull = hull;
         Name = hull.Name;
         MapShip();
+        TriggerGroups = new List<EquippedItem>[itemManager.GameplaySettings.TriggerGroupCount];
+        for(int i=0; i<itemManager.GameplaySettings.TriggerGroupCount; i++)
+            TriggerGroups[i] = new List<EquippedItem>();
     }
 
     private void MapShip()
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
-        var hull = new EquippedItem(ItemManager, Hull, int2.zero, this);
-        Equipment.Add(hull);
-        Hydrate(hull);
+        Equipment.Add(new EquippedItem(ItemManager, Hull, int2.zero, this));
         Mass = hullData.Mass;
         Temperature = new float[hullData.Shape.Width, hullData.Shape.Height];
         Conductivity = new float4[hullData.Shape.Width, hullData.Shape.Height];
@@ -118,43 +121,23 @@ public abstract class Entity
         }
     }
 
-    public void Hydrate(EquippedItem equippedItem)
-    {
-        if (equippedItem.EquippableItem == null)
-        {
-            ItemManager.Log("Attempted to hydrate EquippedGear with no gear on it! This should be impossible!");
-            return;
-        }
-
-        var gearData = ItemManager.GetData(equippedItem.EquippableItem);
-
-        equippedItem.Behaviors = gearData.Behaviors
-            .Select(bd => bd.CreateInstance(ItemManager, this, equippedItem))
-            .ToArray();
-        
-        equippedItem.BehaviorGroups = equippedItem.Behaviors
-            .GroupBy(b => b.Data.Group)
-            .OrderBy(g=>g.Key)
-            .Select(g=> new BehaviorGroup {
-                    Behaviors = g.ToArray(),
-                    //Axis = (IAnalogBehavior) g.FirstOrDefault(b=>b is IAnalogBehavior),
-                    Switch = (Switch) g.FirstOrDefault(b=>b is Switch),
-                    Trigger = (Trigger) g.FirstOrDefault(b=>b is Trigger)
-                })
-            .ToArray();
-
-        foreach (var behavior in equippedItem.Behaviors)
-        {
-            if (behavior is IOrderedBehavior orderedBehavior)
-                equippedItem.SortPosition = orderedBehavior.Order;
-            if(behavior is IPopulationAssignment populationAssignment)
-                PopulationAssignments.Add(populationAssignment);
-        }
-    }
-
     public void AddHeat(int2 position, float heat)
     {
         Temperature[position.x, position.y] += heat / ThermalMass[position.x, position.y];
+    }
+
+    public int CountItemsInCargo(Guid itemDataID)
+    {
+        int sum = 0;
+        foreach (var x in CargoBays)
+        {
+            if (x.ItemsOfType.ContainsKey(itemDataID))
+            {
+                foreach (var i in x.ItemsOfType[itemDataID]) sum += i is SimpleCommodity simpleCommodity ? simpleCommodity.Quantity : 1;
+            }
+        }
+
+        return sum;
     }
 
     public EquippedCargoBay FindItemInCargo(Guid itemDataID)
@@ -376,7 +359,6 @@ public abstract class Entity
             }
 
             Mass += itemData.Mass;
-            Hydrate(equippedItem);
             _orderedEquipment = Equipment.OrderBy(x => x.SortPosition).ToArray();
             return true;
         }
@@ -394,7 +376,6 @@ public abstract class Entity
             }
                 
             Mass += itemData.Mass;
-            Hydrate(equippedItem);
             _orderedEquipment = Equipment.OrderBy(x => x.SortPosition).ToArray();
             return true;
         }
@@ -642,6 +623,29 @@ public class EquippedItem
         Position = position;
         var hullData = itemManager.GetData(entity.Hull);
         InsetShape = hullData.Shape.Inset(_data.Shape, position, item.Rotation);
+
+        Behaviors = _data.Behaviors
+            .Select(bd => bd.CreateInstance(itemManager, entity, this))
+            .ToArray();
+        
+        BehaviorGroups = Behaviors
+            .GroupBy(b => b.Data.Group)
+            .OrderBy(g=>g.Key)
+            .Select(g=> new BehaviorGroup {
+                Behaviors = g.ToArray(),
+                //Axis = (IAnalogBehavior) g.FirstOrDefault(b=>b is IAnalogBehavior),
+                Switch = (Switch) g.FirstOrDefault(b=>b is Switch),
+                Trigger = (Trigger) g.FirstOrDefault(b=>b is Trigger)
+            })
+            .ToArray();
+
+        foreach (var behavior in Behaviors)
+        {
+            if (behavior is IOrderedBehavior orderedBehavior)
+                SortPosition = orderedBehavior.Order;
+            if(behavior is IPopulationAssignment populationAssignment)
+                entity.PopulationAssignments.Add(populationAssignment);
+        }
     }
 
     public void AddHeat(float heat)

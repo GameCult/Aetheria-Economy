@@ -24,6 +24,7 @@ public class GameSettings : ScriptableObject
     public PlanetSettings PlanetSettings;
     public ZoneGenerationSettings ZoneSettings;
     public GameplaySettings GameplaySettings;
+    [HideInInspector] public Sprite[] ItemIcons;
 }
 
 [Serializable]

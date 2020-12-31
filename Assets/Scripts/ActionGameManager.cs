@@ -30,6 +30,7 @@ public class ActionGameManager : MonoBehaviour
     public MapRenderer MenuMap;
     public InventoryMenu Inventory;
     public InventoryPanel ShipPanel;
+    public ConfirmationDialog ConfirmationDialog;
     public float2 Sensitivity;
     
     //public PlayerInput Input;
@@ -179,6 +180,9 @@ public class ActionGameManager : MonoBehaviour
         
         var reactorData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Reactor && x.Shape.Height == 2);
         ship.TryEquip(ItemManager.CreateInstance(reactorData, .5f, 1) as EquippableItem);
+        
+        var cockpitData = ItemData.GetAll<GearData>().First(x => x.Behaviors.Any(b=>b is CockpitData));
+        ship.TryEquip(ItemManager.CreateInstance(cockpitData, .5f, 1) as EquippableItem);
         //dockingCargo.TryStore(ItemManager.CreateInstance(reactorData, .5f, 1));
         
         Dock();
@@ -228,7 +232,22 @@ public class ActionGameManager : MonoBehaviour
     public void Undock()
     {
         if (_currentShip.Parent == null) return;
-        if (_currentShip.Parent.TryUndock(_currentShip))
+        if (_currentShip.GetBehavior<Cockpit>() == null)
+        {
+            ConfirmationDialog.Title.text = "Can't undock. Missing cockpit component!";
+            ConfirmationDialog.Show();
+        }
+        else if (_currentShip.GetBehavior<Thruster>() == null)
+        {
+            ConfirmationDialog.Title.text = "Can't undock. Missing thruster component!";
+            ConfirmationDialog.Show();
+        }
+        else if (_currentShip.GetBehavior<Reactor>() == null)
+        {
+            ConfirmationDialog.Title.text = "Can't undock. Missing reactor component!";
+            ConfirmationDialog.Show();
+        }
+        else if (_currentShip.Parent.TryUndock(_currentShip))
         {
             Menu.gameObject.SetActive(false);
             _currentShip.Active = true;
@@ -241,6 +260,11 @@ public class ActionGameManager : MonoBehaviour
             GameplayUI.SetActive(true);
             _input.Player.Enable();
             ShipPanel.Display(_currentShip);
+        }
+        else
+        {
+            ConfirmationDialog.Title.text = "Can't undock. Must empty docking bay!";
+            ConfirmationDialog.Show();
         }
     }
 

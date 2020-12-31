@@ -26,6 +26,8 @@ public class Cockpit : IBehavior
     public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
+    
+    public float Heatstroke { get; private set; }
 
     public Cockpit(ItemManager context, CockpitData data, Entity entity, EquippedItem item)
     {
@@ -33,10 +35,22 @@ public class Cockpit : IBehavior
         _data = data;
         Entity = entity;
         Item = item;
+        Heatstroke = 0;
     }
 
     public bool Update(float delta)
     {
-        return true;
+        if (Item.Temperature > Context.GameplaySettings.HeatstrokeTemperature)
+        {
+            Heatstroke = saturate(
+                Heatstroke +
+                pow(Item.Temperature - Context.GameplaySettings.HeatstrokeTemperature, Context.GameplaySettings.HeatstrokeExponent) * 
+                Context.GameplaySettings.HeatstrokeMultiplier * delta);
+        }
+        else
+        {
+            Heatstroke = saturate(Heatstroke - Context.GameplaySettings.HeatstrokeRecoverySpeed * delta);
+        }
+        return Heatstroke < Context.GameplaySettings.HeatstrokeControlLimit;
     }
 }

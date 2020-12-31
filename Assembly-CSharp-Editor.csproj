@@ -67,6 +67,7 @@
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\PropertyMetas\InfoBoxPropertyMeta.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\FieldDrawers\ShowNonSerializedFieldFieldDrawer.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\Attributes\PropertyValidatorAttribute.cs" />
+     <Compile Include="Assets\com.unity.uiextensions\Editor\BezierLineRendererEditor.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\Attributes\PropertyDrawerAttribute.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\PropertyDrawConditions\ShowIfPropertyDrawCondition.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\PropertyGroupers\PropertyGrouper.cs" />
@@ -75,6 +76,7 @@
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\CodeGeneration\MethodDrawerDatabase.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\Editors\InspectorEditor.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\PropertyValidators\RequiredPropertyValidator.cs" />
+     <Compile Include="Assets\Scripts\Editor\GameplaySettingsEditor.cs" />
      <Compile Include="Assets\Scripts\Editor\EditorDispatch.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\Utility\EditorDrawUtility.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Editor\PropertyDrawers\SliderPropertyDrawer.cs" />
