@@ -24,6 +24,7 @@
             </e>
           </e>
         </e>
+        <e p="ArticulationPoint.cs" t="Include" />
         <e p="com.unity.uiextensions" t="Include">
           <e p="Editor" t="Include">
             <e p="BezierLineRendererEditor.cs" t="Include" />
@@ -65,9 +66,13 @@
             </e>
           </e>
         </e>
+        <e p="EntityPrefab.cs" t="Include" />
         <e p="FilterTest.cs" t="Include" />
         <e p="FitToCamera.cs" t="Include" />
         <e p="GaussianBlurFilter.shader" t="Include" />
+        <e p="GuidedProjectile.cs" t="Include" />
+        <e p="GuidedProjectileManager.cs" t="Include" />
+        <e p="HullCollider.cs" t="Include" />
         <e p="InventoryCell.cs" t="Include" />
         <e p="InventoryMenu.cs" t="Include" />
         <e p="MapMenuInput.cs" t="Include" />
@@ -211,6 +216,8 @@
             </e>
           </e>
         </e>
+        <e p="Projectile.cs" t="Include" />
+        <e p="ProjectileManager.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="Sprites" t="Include">
             <e p="Attribution.txt" t="Include" />
@@ -1451,6 +1458,7 @@
               <e p="Behaviors.cs" t="Include" />
               <e p="Capacitor.cs" t="Include" />
               <e p="Cockpit.cs" t="Include" />
+              <e p="ConstantWeapon.cs" t="Include" />
               <e p="Controller.cs" t="Include" />
               <e p="Cooldown.cs" t="Include" />
               <e p="EnergyDraw.cs" t="Include" />
@@ -2065,7 +2073,9 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="ThrusterHardpoint.cs" t="Include" />
         <e p="UnityHelpers.cs" t="Include" />
+        <e p="WeaponHardpoint.cs" t="Include" />
       </e>
       <e p="Economy.Shared.Unity.csproj" t="IncludeRecursive" />
       <e p="MessagePack.csproj" t="IncludeRecursive" />

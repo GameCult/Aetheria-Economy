@@ -691,7 +691,7 @@ public class DatabaseInspector : EditorWindow
     public float4[] InspectAnimationCurve(string label, float4[] value)
     {
         var val = value != null && value.Length > 0
-            ? new AnimationCurve(value.Select(v => new Keyframe(v.x, v.y, v.z, v.w)).ToArray())
+            ? value.ToCurve()
             : new AnimationCurve();
         using (var h = new HorizontalScope())
         {

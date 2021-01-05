@@ -104,6 +104,11 @@ public static class UnityExtensions
 		grad.colorKeys = keys.Select(k => new GradientColorKey(k.xyz.ToColor(), k.w)).ToArray();
 		return grad;
 	}
+
+	public static AnimationCurve ToCurve(this float4[] keys)
+	{
+		return new AnimationCurve(keys.Select(v => new Keyframe(v.x, v.y, v.z, v.w)).ToArray());
+	}
 	
 	public static Color ToColor(this float3 v) => new Color(v.x,v.y,v.z);
 	

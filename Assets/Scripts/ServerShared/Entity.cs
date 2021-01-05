@@ -38,6 +38,9 @@ public abstract class Entity
 
     public Entity Parent;
     public List<Entity> Children = new List<Entity>();
+    public Entity Target;
+
+    public float3 LookDirection;
     
     public string Name;
     
@@ -56,7 +59,7 @@ public abstract class Entity
     public HardpointData[,] Hardpoints;
     
     private EquippedItem[] _orderedEquipment;
-    private bool _active;
+    protected bool _active;
     
     public ItemManager ItemManager { get; }
     public int AssignedPopulation => PopulationAssignments.Sum(pa => pa.AssignedPopulation);
@@ -77,9 +80,12 @@ public abstract class Entity
                         if(behavior is IInitializableBehavior initializableBehavior)
                             initializableBehavior.Initialize();
                     }
+                OnActivate();
             }
         }
     }
+
+    protected virtual void OnActivate(){}
 
     public Entity(ItemManager itemManager, Zone zone, EquippableItem hull)
     {
@@ -231,9 +237,10 @@ public abstract class Entity
             foreach (var i in itemData.Shape.Coordinates)
             {
                 // If there is any gear already occupying that space, it won't fit
+                // If there's a hardpoint there, it won't fit
                 // Thermal items have their own layer and do not collide with gear
                 var itemCoord = hullCoord + itemData.Shape.Rotate(i, item.Rotation);
-                if (!hullData.InteriorCells[itemCoord] || (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[itemCoord.x, itemCoord.y] != null) return false;
+                if (!hullData.InteriorCells[itemCoord] || (itemData.HardpointType == HardpointType.Tool && Hardpoints[itemCoord.x, itemCoord.y] != null) || (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[itemCoord.x, itemCoord.y] != null) return false;
             }
         }
         else
@@ -661,6 +668,9 @@ public class EquippedItem
         //     EquippableItem.Durability -= delta;
         //     return;
         // }
+            
+        foreach (var behavior in Behaviors.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
+            behavior.AlwaysUpdate(delta);
         
         foreach (var group in BehaviorGroups)
         {
@@ -670,9 +680,6 @@ public class EquippedItem
                     break;
             }
         }
-            
-        foreach (var behavior in Behaviors.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
-            behavior.AlwaysUpdate(delta);
     }
 }
 

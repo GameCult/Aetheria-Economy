@@ -7,11 +7,8 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class LauncherData : WeaponData
+public class LauncherData : InstantWeaponData
 {
-    [InspectablePrefab, JsonProperty("missile"), Key(6)]  
-    public string MissilePrefab;
-
     [InspectableAnimationCurve, JsonProperty("guidance"), Key(7)]  
     public float4[] GuidanceCurve;
 
@@ -41,7 +38,7 @@ public class LauncherData : WeaponData
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
-        return new Launcher(context, this, entity, item);
+        return new InstantWeapon(context, this, entity, item);
     }
 }
 

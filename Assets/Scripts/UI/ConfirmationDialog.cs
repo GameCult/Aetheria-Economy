@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class ConfirmationDialog : PropertiesPanel
@@ -55,7 +56,7 @@ public class ConfirmationDialog : PropertiesPanel
         Confirm.gameObject.SetActive(onConfirm!=null);
         _onCancel = onCancel;
         Cancel.gameObject.SetActive(onCancel!=null);
-        transform.position = Input.mousePosition;
+        transform.position = Mouse.current.position.ReadValue();
         CancelClickCatcher.gameObject.SetActive(true);
     }
 }

@@ -58,7 +58,11 @@ ScriptedImporter:
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://metal_gold\" label=\"\" >\n </sbspreset>\n"
+    preset: " <sbspreset pkgurl=\"pkg://metal_gold\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"2862216590\" type=\"8\" value=\"9,9\" />\n 
+      <presetinput identifier=\"dirt\" uid=\"2947448088\" type=\"0\" value=\"0.766\"
+      />\n  <presetinput identifier=\"scratches\" uid=\"3615194042\" type=\"0\" value=\"1\"
+      />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
@@ -87,12 +91,12 @@ ScriptedImporter:
         offset: {x: 0, y: 0}
       - name: _EmissionMap
         texture: {instanceID: 0}
-        scale: {x: 1, y: 1}
+        scale: {x: 4, y: 4}
         offset: {x: 0, y: 0}
       - name: _MainTex
         texture: {fileID: 2039085267362074300, guid: a74970be876d3554ea0f279f39314c9c,
           type: 3}
-        scale: {x: 1, y: 1}
+        scale: {x: 4, y: 4}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
         texture: {fileID: -8783136193678078058, guid: a74970be876d3554ea0f279f39314c9c,
@@ -354,8 +358,8 @@ ScriptedImporter:
     - label: Default
       bOverride: 0
       bLockRatio: 1
-      textureWidth: 256
-      textureHeight: 256
+      textureWidth: 512
+      textureHeight: 512
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1

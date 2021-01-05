@@ -696,6 +696,15 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\IntEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\PointPairOrder.cs" />
      <Compile Include="Assets\SchematicTriggerGroupElement.cs" />
+     <Compile Include="Assets\ArticulationPoint.cs" />
+     <Compile Include="Assets\WeaponHardpoint.cs" />
+     <Compile Include="Assets\ThrusterHardpoint.cs" />
+     <Compile Include="Assets\EntityPrefab.cs" />
+     <Compile Include="Assets\HullCollider.cs" />
+     <Compile Include="Assets\GuidedProjectile.cs" />
+     <Compile Include="Assets\GuidedProjectileManager.cs" />
+     <Compile Include="Assets\ProjectileManager.cs" />
+     <Compile Include="Assets\Projectile.cs" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIAdditive.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />

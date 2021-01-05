@@ -35,9 +35,49 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Fire"",
+                    ""name"": ""Fire Group 1"",
                     ""type"": ""Button"",
                     ""id"": ""575943b0-4866-4be0-a289-3253973523b1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire Group 2"",
+                    ""type"": ""Button"",
+                    ""id"": ""b9bdfa1f-db61-4ec3-883a-fc3f9e88c5f5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire Group 3"",
+                    ""type"": ""Button"",
+                    ""id"": ""d79871a2-8565-4cf3-809f-9c979adfcd81"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire Group 4"",
+                    ""type"": ""Button"",
+                    ""id"": ""59902e9e-1dfb-4624-9599-72ff763ef327"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire Group 5"",
+                    ""type"": ""Button"",
+                    ""id"": ""80b549c1-7378-48c5-8da2-ce95b9c92913"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Fire Group 6"",
+                    ""type"": ""Button"",
+                    ""id"": ""4ba5091e-051a-41df-9985-6c0e082b20a5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -46,6 +86,46 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""name"": ""Minimap Zoom"",
                     ""type"": ""Button"",
                     ""id"": ""5708685d-78bd-4d2b-8796-712704f21bfb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Next Weapon Group"",
+                    ""type"": ""Button"",
+                    ""id"": ""8ed69fe0-d934-44ea-94c0-d5d69cc33b32"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Previous Weapon Group"",
+                    ""type"": ""Button"",
+                    ""id"": ""93f19768-6c19-4bab-8b53-4e3e5ba764fc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Next Weapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""09a5e315-6290-4ab5-9e7c-55b7523562b7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Previous Weapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""ed923265-545f-4475-ba7c-885371612325"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Toggle Weapon Group"",
+                    ""type"": ""Button"",
+                    ""id"": ""c61da4ef-e0bc-4d17-aab0-8e2979c3de3c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -213,7 +293,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
-                    ""action"": ""Fire"",
+                    ""action"": ""Fire Group 1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -224,18 +304,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Fire"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""886e731e-7071-4ae4-95c0-e61739dad6fd"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Fire"",
+                    ""action"": ""Fire Group 1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -246,7 +315,18 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Joystick"",
-                    ""action"": ""Fire"",
+                    ""action"": ""Fire Group 1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8c676533-8c53-4b6a-9368-d194b8a997f8"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Fire Group 1"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -258,6 +338,138 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Minimap Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""444b4049-a11e-4bef-8a57-345c3d1a7545"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Next Weapon Group"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fb6c0d4c-dae6-406b-b35a-c35b5d25022c"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Previous Weapon Group"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bac8c902-3cad-4a7f-8773-35800a2ee3b9"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Next Weapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""969aff21-097a-4c35-9c46-2239e5f321f5"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Previous Weapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a2bcbfda-f091-433f-8ac9-112396507408"",
+                    ""path"": ""<Keyboard>/rightCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Toggle Weapon Group"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""48b8b6ee-8435-439a-96a1-c968254ff605"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Fire Group 2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8ae75721-10ab-4d83-8322-82cbb3fdcc44"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Fire Group 2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f89c9af-795b-4b1e-ad43-dac3350cfbe3"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Fire Group 3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c249f018-c10a-4c2c-a4ba-9fba54ed33e9"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Fire Group 3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""421e49a0-897e-4ea3-af8d-af96989d2957"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Fire Group 4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1c8a43b7-4200-43b9-925c-c1634554083c"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Fire Group 5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0680216e-b462-45a3-8050-2b89dcb615aa"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Fire Group 6"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -828,8 +1040,18 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
-        m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
+        m_Player_FireGroup1 = m_Player.FindAction("Fire Group 1", throwIfNotFound: true);
+        m_Player_FireGroup2 = m_Player.FindAction("Fire Group 2", throwIfNotFound: true);
+        m_Player_FireGroup3 = m_Player.FindAction("Fire Group 3", throwIfNotFound: true);
+        m_Player_FireGroup4 = m_Player.FindAction("Fire Group 4", throwIfNotFound: true);
+        m_Player_FireGroup5 = m_Player.FindAction("Fire Group 5", throwIfNotFound: true);
+        m_Player_FireGroup6 = m_Player.FindAction("Fire Group 6", throwIfNotFound: true);
         m_Player_MinimapZoom = m_Player.FindAction("Minimap Zoom", throwIfNotFound: true);
+        m_Player_NextWeaponGroup = m_Player.FindAction("Next Weapon Group", throwIfNotFound: true);
+        m_Player_PreviousWeaponGroup = m_Player.FindAction("Previous Weapon Group", throwIfNotFound: true);
+        m_Player_NextWeapon = m_Player.FindAction("Next Weapon", throwIfNotFound: true);
+        m_Player_PreviousWeapon = m_Player.FindAction("Previous Weapon", throwIfNotFound: true);
+        m_Player_ToggleWeaponGroup = m_Player.FindAction("Toggle Weapon Group", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -897,16 +1119,36 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
-    private readonly InputAction m_Player_Fire;
+    private readonly InputAction m_Player_FireGroup1;
+    private readonly InputAction m_Player_FireGroup2;
+    private readonly InputAction m_Player_FireGroup3;
+    private readonly InputAction m_Player_FireGroup4;
+    private readonly InputAction m_Player_FireGroup5;
+    private readonly InputAction m_Player_FireGroup6;
     private readonly InputAction m_Player_MinimapZoom;
+    private readonly InputAction m_Player_NextWeaponGroup;
+    private readonly InputAction m_Player_PreviousWeaponGroup;
+    private readonly InputAction m_Player_NextWeapon;
+    private readonly InputAction m_Player_PreviousWeapon;
+    private readonly InputAction m_Player_ToggleWeaponGroup;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
         public PlayerActions(@AetheriaInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
-        public InputAction @Fire => m_Wrapper.m_Player_Fire;
+        public InputAction @FireGroup1 => m_Wrapper.m_Player_FireGroup1;
+        public InputAction @FireGroup2 => m_Wrapper.m_Player_FireGroup2;
+        public InputAction @FireGroup3 => m_Wrapper.m_Player_FireGroup3;
+        public InputAction @FireGroup4 => m_Wrapper.m_Player_FireGroup4;
+        public InputAction @FireGroup5 => m_Wrapper.m_Player_FireGroup5;
+        public InputAction @FireGroup6 => m_Wrapper.m_Player_FireGroup6;
         public InputAction @MinimapZoom => m_Wrapper.m_Player_MinimapZoom;
+        public InputAction @NextWeaponGroup => m_Wrapper.m_Player_NextWeaponGroup;
+        public InputAction @PreviousWeaponGroup => m_Wrapper.m_Player_PreviousWeaponGroup;
+        public InputAction @NextWeapon => m_Wrapper.m_Player_NextWeapon;
+        public InputAction @PreviousWeapon => m_Wrapper.m_Player_PreviousWeapon;
+        public InputAction @ToggleWeaponGroup => m_Wrapper.m_Player_ToggleWeaponGroup;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -922,12 +1164,42 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
-                @Fire.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
-                @Fire.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
-                @Fire.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFire;
+                @FireGroup1.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup1;
+                @FireGroup1.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup1;
+                @FireGroup1.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup1;
+                @FireGroup2.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup2;
+                @FireGroup2.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup2;
+                @FireGroup2.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup2;
+                @FireGroup3.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup3;
+                @FireGroup3.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup3;
+                @FireGroup3.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup3;
+                @FireGroup4.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup4;
+                @FireGroup4.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup4;
+                @FireGroup4.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup4;
+                @FireGroup5.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup5;
+                @FireGroup5.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup5;
+                @FireGroup5.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup5;
+                @FireGroup6.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup6;
+                @FireGroup6.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup6;
+                @FireGroup6.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnFireGroup6;
                 @MinimapZoom.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMinimapZoom;
                 @MinimapZoom.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMinimapZoom;
                 @MinimapZoom.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMinimapZoom;
+                @NextWeaponGroup.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextWeaponGroup;
+                @NextWeaponGroup.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextWeaponGroup;
+                @NextWeaponGroup.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextWeaponGroup;
+                @PreviousWeaponGroup.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPreviousWeaponGroup;
+                @PreviousWeaponGroup.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPreviousWeaponGroup;
+                @PreviousWeaponGroup.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPreviousWeaponGroup;
+                @NextWeapon.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextWeapon;
+                @NextWeapon.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextWeapon;
+                @NextWeapon.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNextWeapon;
+                @PreviousWeapon.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPreviousWeapon;
+                @PreviousWeapon.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPreviousWeapon;
+                @PreviousWeapon.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPreviousWeapon;
+                @ToggleWeaponGroup.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleWeaponGroup;
+                @ToggleWeaponGroup.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleWeaponGroup;
+                @ToggleWeaponGroup.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleWeaponGroup;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -938,12 +1210,42 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
-                @Fire.started += instance.OnFire;
-                @Fire.performed += instance.OnFire;
-                @Fire.canceled += instance.OnFire;
+                @FireGroup1.started += instance.OnFireGroup1;
+                @FireGroup1.performed += instance.OnFireGroup1;
+                @FireGroup1.canceled += instance.OnFireGroup1;
+                @FireGroup2.started += instance.OnFireGroup2;
+                @FireGroup2.performed += instance.OnFireGroup2;
+                @FireGroup2.canceled += instance.OnFireGroup2;
+                @FireGroup3.started += instance.OnFireGroup3;
+                @FireGroup3.performed += instance.OnFireGroup3;
+                @FireGroup3.canceled += instance.OnFireGroup3;
+                @FireGroup4.started += instance.OnFireGroup4;
+                @FireGroup4.performed += instance.OnFireGroup4;
+                @FireGroup4.canceled += instance.OnFireGroup4;
+                @FireGroup5.started += instance.OnFireGroup5;
+                @FireGroup5.performed += instance.OnFireGroup5;
+                @FireGroup5.canceled += instance.OnFireGroup5;
+                @FireGroup6.started += instance.OnFireGroup6;
+                @FireGroup6.performed += instance.OnFireGroup6;
+                @FireGroup6.canceled += instance.OnFireGroup6;
                 @MinimapZoom.started += instance.OnMinimapZoom;
                 @MinimapZoom.performed += instance.OnMinimapZoom;
                 @MinimapZoom.canceled += instance.OnMinimapZoom;
+                @NextWeaponGroup.started += instance.OnNextWeaponGroup;
+                @NextWeaponGroup.performed += instance.OnNextWeaponGroup;
+                @NextWeaponGroup.canceled += instance.OnNextWeaponGroup;
+                @PreviousWeaponGroup.started += instance.OnPreviousWeaponGroup;
+                @PreviousWeaponGroup.performed += instance.OnPreviousWeaponGroup;
+                @PreviousWeaponGroup.canceled += instance.OnPreviousWeaponGroup;
+                @NextWeapon.started += instance.OnNextWeapon;
+                @NextWeapon.performed += instance.OnNextWeapon;
+                @NextWeapon.canceled += instance.OnNextWeapon;
+                @PreviousWeapon.started += instance.OnPreviousWeapon;
+                @PreviousWeapon.performed += instance.OnPreviousWeapon;
+                @PreviousWeapon.canceled += instance.OnPreviousWeapon;
+                @ToggleWeaponGroup.started += instance.OnToggleWeaponGroup;
+                @ToggleWeaponGroup.performed += instance.OnToggleWeaponGroup;
+                @ToggleWeaponGroup.canceled += instance.OnToggleWeaponGroup;
             }
         }
     }
@@ -1125,8 +1427,18 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
-        void OnFire(InputAction.CallbackContext context);
+        void OnFireGroup1(InputAction.CallbackContext context);
+        void OnFireGroup2(InputAction.CallbackContext context);
+        void OnFireGroup3(InputAction.CallbackContext context);
+        void OnFireGroup4(InputAction.CallbackContext context);
+        void OnFireGroup5(InputAction.CallbackContext context);
+        void OnFireGroup6(InputAction.CallbackContext context);
         void OnMinimapZoom(InputAction.CallbackContext context);
+        void OnNextWeaponGroup(InputAction.CallbackContext context);
+        void OnPreviousWeaponGroup(InputAction.CallbackContext context);
+        void OnNextWeapon(InputAction.CallbackContext context);
+        void OnPreviousWeapon(InputAction.CallbackContext context);
+        void OnToggleWeaponGroup(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

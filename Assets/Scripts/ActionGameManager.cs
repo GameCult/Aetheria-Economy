@@ -28,6 +28,7 @@ public class ActionGameManager : MonoBehaviour
     public GameObject GameplayUI;
     public MenuPanel Menu;
     public MapRenderer MenuMap;
+    public SchematicDisplay SchematicDisplay;
     public InventoryMenu Inventory;
     public InventoryPanel ShipPanel;
     public ConfirmationDialog ConfirmationDialog;
@@ -43,10 +44,9 @@ public class ActionGameManager : MonoBehaviour
     private AetheriaInput _input;
     private int _zoomLevelIndex;
     private Ship _currentShip;
-    private ShipInput _shipInput;
+    // private ShipInput _shipInput;
     private float2 _shipYawPitch;
     private float3 _viewDirection;
-    private Transform _lookAt;
     public List<Ship> PlayerShips { get; } = new List<Ship>();
     
     public DatabaseCache ItemData { get; private set; }
@@ -58,7 +58,7 @@ public class ActionGameManager : MonoBehaviour
     {
         // _transposer = DockCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         // _composer = DockCamera.GetCinemachineComponent<CinemachineComposer>();
-        _lookAt = new GameObject().transform;
+        //_lookAt = new GameObject().transform;
         
         ConsoleController.MessageReceiver = this;
         _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
@@ -143,6 +143,206 @@ public class ActionGameManager : MonoBehaviour
             else Undock();
         };
 
+        #region Trigger Groups
+
+        _input.Player.PreviousWeaponGroup.performed += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            SchematicDisplay.SelectedGroupIndex--;
+        };
+
+        _input.Player.NextWeaponGroup.performed += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            SchematicDisplay.SelectedGroupIndex++;
+        };
+
+        _input.Player.PreviousWeapon.performed += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            SchematicDisplay.SelectedItemIndex--;
+        };
+
+        _input.Player.NextWeapon.performed += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            SchematicDisplay.SelectedItemIndex++;
+        };
+
+        _input.Player.ToggleWeaponGroup.performed += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            var item = SchematicDisplay.SchematicItems[SchematicDisplay.SelectedItemIndex];
+            if (_currentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].Contains(item.Item))
+                _currentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].Remove(item.Item);
+            else _currentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].Add(item.Item);
+            SchematicDisplay.UpdateTriggerGroups();
+        };
+        
+        _input.Player.FireGroup1.started += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[0])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = true;
+                    behaviors.Trigger?.Pull();
+                }
+            }
+        };
+
+        _input.Player.FireGroup1.canceled += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[0])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = false;
+                }
+            }
+        };
+
+        _input.Player.FireGroup2.started += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[1])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = true;
+                    behaviors.Trigger?.Pull();
+                }
+            }
+        };
+
+        _input.Player.FireGroup2.canceled += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[1])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = false;
+                }
+            }
+        };
+
+        _input.Player.FireGroup3.started += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[2])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = true;
+                    behaviors.Trigger?.Pull();
+                }
+            }
+        };
+
+        _input.Player.FireGroup3.canceled += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[2])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = false;
+                }
+            }
+        };
+
+        _input.Player.FireGroup4.started += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[3])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = true;
+                    behaviors.Trigger?.Pull();
+                }
+            }
+        };
+
+        _input.Player.FireGroup4.canceled += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[3])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = false;
+                }
+            }
+        };
+
+        _input.Player.FireGroup5.started += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[4])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = true;
+                    behaviors.Trigger?.Pull();
+                }
+            }
+        };
+
+        _input.Player.FireGroup5.canceled += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[4])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = false;
+                }
+            }
+        };
+
+        _input.Player.FireGroup6.started += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[5])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = true;
+                    behaviors.Trigger?.Pull();
+                }
+            }
+        };
+
+        _input.Player.FireGroup6.canceled += context =>
+        {
+            if (_currentShip.Parent != null) return;
+            foreach (var item in _currentShip.TriggerGroups[5])
+            {
+                foreach (var behaviors in item.BehaviorGroups)
+                {
+                    if (behaviors.Switch != null)
+                        behaviors.Switch.Activated = false;
+                }
+            }
+        };
+        
+        #endregion
+
         // ConsoleController.AddCommand("editmode", _ => ToggleEditMode());
         ConsoleController.AddCommand("savezone", args =>
         {
@@ -183,6 +383,16 @@ public class ActionGameManager : MonoBehaviour
         
         var cockpitData = ItemData.GetAll<GearData>().First(x => x.Behaviors.Any(b=>b is CockpitData));
         ship.TryEquip(ItemManager.CreateInstance(cockpitData, .5f, 1) as EquippableItem);
+
+        var autocannonData = ItemData.GetAll<GearData>().First(x => x.Name == "Autocannon");
+        ship.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
+        ship.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
+
+        var cargoData = ItemData.GetAll<CargoBayData>().First(x => x.Name == "Cargo Bay 4x4");
+        ship.TryEquip(ItemManager.CreateInstance(cargoData, .5f, 1) as EquippableItem);
+        
+        var ammoData = ItemData.GetAll<SimpleCommodityData>().First(x => x.Name == "AC2 Ammo");
+        ship.CargoBays.First().TryStore(ItemManager.CreateInstance(ammoData, 100));
         //dockingCargo.TryStore(ItemManager.CreateInstance(reactorData, .5f, 1));
         
         Dock();
@@ -213,14 +423,13 @@ public class ActionGameManager : MonoBehaviour
                     FollowCamera.enabled = false;
                     _currentShip.Active = false;
                     var orbital = (OrbitalEntity) entity;
-                    DockCamera.Follow = SectorRenderer.Orbitals[orbital];
+                    DockCamera.Follow = SectorRenderer.EntityInstances[orbital].Transform;
                     var parentOrbit = Zone.Orbits[orbital.OrbitData].Data.Parent;
                     var parentPlanet = SectorRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key];
                     DockCamera.LookAt = parentPlanet.Body.transform;
                     Menu.ShowTab(MenuTab.Inventory);
                     Inventory.GetPanel.Display(bay);
                     Inventory.GetPanel.Display(_currentShip);
-                    _shipInput = null;
                     Cursor.lockState = CursorLockMode.None;
                     _input.Player.Disable();
                     GameplayUI.SetActive(false);
@@ -251,15 +460,16 @@ public class ActionGameManager : MonoBehaviour
         {
             Menu.gameObject.SetActive(false);
             _currentShip.Active = true;
-            _shipInput = new ShipInput(_input.Player, _currentShip);
+            //_shipInput = new ShipInput(_input.Player, _currentShip);
             DockCamera.enabled = false;
             FollowCamera.enabled = true;
-            FollowCamera.LookAt = _lookAt;
-            FollowCamera.Follow = SectorRenderer.Ships[_currentShip].Transform;
+            FollowCamera.LookAt = SectorRenderer.EntityInstances[_currentShip].LookAtPoint;
+            FollowCamera.Follow = SectorRenderer.EntityInstances[_currentShip].Transform;
             Cursor.lockState = CursorLockMode.Locked;
             GameplayUI.SetActive(true);
             _input.Player.Enable();
             ShipPanel.Display(_currentShip);
+            SchematicDisplay.ShowShip(_currentShip);
         }
         else
         {
@@ -308,64 +518,16 @@ public class ActionGameManager : MonoBehaviour
         {
             _time += Time.deltaTime;
             ItemManager.Time = Time.time;
-            if(_shipInput!=null)
+            if(_currentShip.Parent==null)
             {
                 var look = _input.Player.Look.ReadValue<Vector2>();
                 _shipYawPitch = float2(_shipYawPitch.x + look.x * Sensitivity.x, clamp(_shipYawPitch.y + look.y * Sensitivity.y, -.45f * PI, .45f * PI));
                 _viewDirection = mul(float3(0, 0, 1), Unity.Mathematics.float3x3.Euler(float3(_shipYawPitch.yx, 0), RotationOrder.YXZ));
-                _lookAt.position = SectorRenderer.Ships[_currentShip].Transform.position + (Vector3) _viewDirection * 100;
-                _shipInput.DesiredOrientation = _viewDirection.xz;
-                _shipInput.Update();
+                _currentShip.LookDirection = _viewDirection;
+                _currentShip.MovementDirection = _input.Player.Move.ReadValue<Vector2>();
             }
         }
         Zone.Update(_time, Time.deltaTime);
         SectorRenderer.Time = _time;
-    }
-}
-
-public class ShipInput
-{
-    private AetheriaInput.PlayerActions _input;
-    private Ship _ship;
-    private Thruster[] _allThrusters;
-    private Thruster[] _forwardThrusters;
-    private Thruster[] _reverseThrusters;
-    private Thruster[] _rightThrusters;
-    private Thruster[] _leftThrusters;
-    private Thruster[] _clockwiseThrusters;
-    private Thruster[] _counterClockwiseThrusters;
-    
-    public float2 DesiredOrientation { get; set; }
-    public float DesiredPitch { get; set; }
-
-    public ShipInput(AetheriaInput.PlayerActions input, Ship ship)
-    {
-        _input = input;
-        _ship = ship;
-        _allThrusters = ship.GetBehaviors<Thruster>().ToArray();
-        _forwardThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Reversed).ToArray();
-        _reverseThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.None).ToArray();
-        _rightThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.CounterClockwise).ToArray();
-        _leftThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Clockwise).ToArray();
-        _counterClockwiseThrusters = _allThrusters.Where(x => x.Torque < -.05f).ToArray();
-        _clockwiseThrusters = _allThrusters.Where(x => x.Torque > .05f).ToArray();
-    }
-
-    public void Update()
-    {
-        var move = _input.Move.ReadValue<Vector2>();
-        
-        foreach (var thruster in _allThrusters) thruster.Axis = 0;
-        foreach (var thruster in _rightThrusters) thruster.Axis += move.x;
-        foreach (var thruster in _leftThrusters) thruster.Axis += -move.x;
-        foreach (var thruster in _forwardThrusters) thruster.Axis += move.y;
-        foreach (var thruster in _reverseThrusters) thruster.Axis += -move.y;
-        
-        var deltaRot = dot(normalize(DesiredOrientation), normalize(_ship.Direction).Rotate(ItemRotation.Clockwise));
-        if (abs(deltaRot) < .01) deltaRot = 0;
-        deltaRot = pow(abs(deltaRot), .5f) * sign(deltaRot);
-        
-        foreach (var thruster in _clockwiseThrusters) thruster.Axis += deltaRot;
-        foreach (var thruster in _counterClockwiseThrusters) thruster.Axis += -deltaRot;
     }
 }

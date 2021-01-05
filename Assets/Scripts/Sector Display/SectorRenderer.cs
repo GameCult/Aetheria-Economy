@@ -17,6 +17,7 @@ using Random = UnityEngine.Random;
 
 public class SectorRenderer : MonoBehaviour
 {
+    public Transform EffectManagerParent;
     public Transform FogCameraParent;
     public GameSettings Settings;
     public Transform ZoneRoot;
@@ -54,9 +55,7 @@ public class SectorRenderer : MonoBehaviour
     public Texture2D PlanetIcon;
     
     [HideInInspector]
-    public Dictionary<OrbitalEntity, Transform> Orbitals = new Dictionary<OrbitalEntity, Transform>();
-    [HideInInspector]
-    public Dictionary<Ship, ShipInstance> Ships = new Dictionary<Ship, ShipInstance>();
+    public Dictionary<Entity, EntityInstance> EntityInstances = new Dictionary<Entity, EntityInstance>();
     [HideInInspector]
     public Dictionary<Guid, PlanetObject> Planets = new Dictionary<Guid, PlanetObject>();
     
@@ -64,6 +63,8 @@ public class SectorRenderer : MonoBehaviour
     private Dictionary<Guid, InstancedMesh[]> _beltMeshes = new Dictionary<Guid, InstancedMesh[]>();
     private Dictionary<Guid, Matrix4x4[][]> _beltMatrices = new Dictionary<Guid, Matrix4x4[][]>();
     private Dictionary<Guid, float3[]> _beltAsteroidPositions = new Dictionary<Guid, float3[]>();
+    private Dictionary<ProjectileWeaponData, ProjectileManager> _projectileManagers = new Dictionary<ProjectileWeaponData, ProjectileManager>();
+    private Dictionary<LauncherData, GuidedProjectileManager> _guidedProjectileManagers = new Dictionary<LauncherData, GuidedProjectileManager>();
     private Zone _zone;
     private float _viewDistance;
     private float _maxDepth;
@@ -172,45 +173,99 @@ public class SectorRenderer : MonoBehaviour
     void LoadEntity(Entity entity)
     {
         var hullData = ItemManager.GetData(entity.Hull) as HullData;
+        EntityInstance instance;
         if (entity is Ship ship)
         {
-            var shipInstance = new ShipInstance();
-            shipInstance.Ship = ship;
-            shipInstance.Transform = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab), ZoneRoot).transform;
+            instance = new ShipInstance();
+            instance.Transform = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab), ZoneRoot).transform;
+            instance.Prefab = instance.Transform.GetComponent<EntityPrefab>();
+            var shipInstance = (ShipInstance) instance;
             shipInstance.Thrusters = ship.GetBehaviors<Thruster>().ToArray();
             shipInstance.ThrusterParticles = shipInstance.Thrusters
                 .Select(x =>
                 {
                     var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(((ThrusterData) x.Data).ParticlesPrefab), shipInstance.Transform, false);
                     var particlesShape = particles.shape;
-                    particlesShape.meshRenderer = shipInstance.Transform.Find(x.Entity.Hardpoints[x.Item.Position.x, x.Item.Position.y].Transform)
-                        .GetComponent<MeshRenderer>();
+                    particlesShape.meshRenderer = shipInstance.Prefab.ThrusterHardpoints
+                        .FirstOrDefault(t => t.name == x.Entity.Hardpoints[x.Item.Position.x, x.Item.Position.y].Transform)
+                        ?.Emitter;
                     return particles;
                 })
                 .ToArray();
             shipInstance.ThrusterBaseEmission = shipInstance.ThrusterParticles.Select(x => x.emission.rateOverTimeMultiplier).ToArray();
-            Ships.Add(ship, shipInstance);
         }
-        else if (entity is OrbitalEntity orbital)
+        else
         {
-            Orbitals.Add(orbital,Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab)).transform);
+            instance = new EntityInstance();
+            instance.Transform = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab), ZoneRoot).transform;
+            instance.Prefab = instance.Transform.GetComponent<EntityPrefab>();
         }
+
+        instance.Entity = entity;
+
+        foreach (var item in entity.Equipment)
+        {
+            foreach (var behavior in item.Behaviors)
+            {
+                if (behavior is InstantWeapon instantWeapon)
+                {
+                    if (behavior.Data is ProjectileWeaponData projectileWeaponData)
+                    {
+                        if (!_projectileManagers.ContainsKey(projectileWeaponData))
+                        {
+                            var managerPrefab = UnityHelpers.LoadAsset<ProjectileManager>(projectileWeaponData.EffectPrefab);
+                            if(managerPrefab)
+                            {
+                                _projectileManagers.Add(projectileWeaponData, Instantiate(managerPrefab, EffectManagerParent));
+                            }
+                            else Debug.LogError($"No ProjectileManager prefab found at path {projectileWeaponData.EffectPrefab}");
+                        }
+
+                        instantWeapon.OnFire += () => _projectileManagers[projectileWeaponData].Launch(projectileWeaponData, item, instance);
+                    }
+                    else if (behavior.Data is LauncherData launcherData)
+                    {
+                        if (!_guidedProjectileManagers.ContainsKey(launcherData))
+                        {
+                            var managerPrefab = UnityHelpers.LoadAsset<GuidedProjectileManager>(launcherData.EffectPrefab);
+                            if(managerPrefab)
+                            {
+                                _guidedProjectileManagers.Add(launcherData, Instantiate(managerPrefab, EffectManagerParent));
+                            }
+                            else Debug.LogError($"No ProjectileManager prefab found at path {launcherData.EffectPrefab}");
+                        }
+
+                        instantWeapon.OnFire += () =>
+                            _guidedProjectileManagers[launcherData].Launch(launcherData, item, instance, EntityInstances[entity.Target]);
+                    }
+                }
+            }
+        }
+        instance.Barrels = new Dictionary<HardpointData, Transform[]>();
+        instance.BarrelIndices = new Dictionary<HardpointData, int>();
+        foreach (var hp in hullData.Hardpoints)
+        {
+            var whp = instance.Prefab.WeaponHardpoints.FirstOrDefault(x => x.name == hp.Transform);
+            if(whp)
+            {
+                instance.Barrels.Add(hp, whp.FiringPoint);
+                instance.BarrelIndices.Add(hp, 0);
+            }
+        }
+
+        instance.LookAtPoint = new GameObject().transform;
+        
+        foreach (var articulationPoint in instance.Prefab.ArticulationPoints)
+        {
+            articulationPoint.Target = instance.LookAtPoint;
+        }
+        EntityInstances.Add(entity, instance);
     }
 
     void UnloadEntity(Entity entity)
     {
-        if (entity is Ship ship)
-        {
-            Destroy(Ships[ship].Transform.gameObject);
-            foreach(var p in Ships[ship].ThrusterParticles)
-                Destroy(p.gameObject);
-            Ships.Remove(ship);
-        }
-        else if (entity is OrbitalEntity orbital)
-        {
-            Destroy(Orbitals[orbital].gameObject);
-            Orbitals.Remove(orbital);
-        }
+        Destroy(EntityInstances[entity].Transform.gameObject);
+        EntityInstances.Remove(entity);
     }
 
     void LoadPlanet(BodyData planetData)
@@ -369,35 +424,36 @@ public class SectorRenderer : MonoBehaviour
             else planet.Value.Body.transform.rotation *= Quaternion.AngleAxis(Settings.PlanetRotationSpeed, Vector3.up);
         }
 
-        foreach (var ship in Ships)
+        foreach (var entity in EntityInstances)
         {
-            var hullData = ItemManager.GetData(ship.Key.Hull) as HullData;
-            var h = _zone.GetHeight(ship.Key.Position);
-            ship.Value.Transform.position = new Vector3(ship.Key.Position.x,h + hullData.GridOffset,ship.Key.Position.y);
-            var normal = _zone.GetNormal(ship.Key.Position);
-            var f = new float2(normal.x, normal.z);
-            var fl = lengthsq(f);
-            if(fl > .001)
+            var hullData = ItemManager.GetData(entity.Key.Hull) as HullData;
+            if(entity.Key is Ship ship)
             {
-                var fa = 1 / (1 - fl) - 1;
-                ship.Key.Velocity += normalize(f) * Settings.PlanetSettings.GravityStrength * fa;
-            }
-            //Debug.Log($"Normal: {normal}");
-            var shipRight = ship.Key.Direction.Rotate(ItemRotation.Clockwise);
-            var forward = Vector3.Cross(new Vector3(shipRight.x,0,shipRight.y), normal);
-            ship.Value.Transform.rotation = Quaternion.LookRotation(forward, normal);
-            for (int i = 0; i < ship.Value.Thrusters.Length; i++)
-            {
-                var emissionModule = ship.Value.ThrusterParticles[i].emission;
-                emissionModule.rateOverTimeMultiplier = ship.Value.ThrusterBaseEmission[i] * ship.Value.Thrusters[i].Axis;
-            }
-        }
+                var shipInstance = entity.Value as ShipInstance;
+                var normal = _zone.GetNormal(ship.Position);
+                var f = new float2(normal.x, normal.z);
+                var fl = lengthsq(f);
+                if (fl > .001)
+                {
+                    var fa = 1 / (1 - fl) - 1;
+                    entity.Key.Velocity += normalize(f) * Settings.PlanetSettings.GravityStrength * fa;
+                }
 
-        foreach (var orbital in Orbitals)
-        {
-            var hullData = ItemManager.GetData(orbital.Key.Hull) as HullData;
-            var h = _zone.GetHeight(orbital.Key.Position);
-            orbital.Value.position = new Vector3(orbital.Key.Position.x,h + hullData.GridOffset,orbital.Key.Position.y);
+                //Debug.Log($"Normal: {normal}");
+                var shipRight = ship.Direction.Rotate(ItemRotation.Clockwise);
+                var forward = Vector3.Cross(new Vector3(shipRight.x, 0, shipRight.y), normal);
+                entity.Value.Transform.rotation = Quaternion.LookRotation(forward, normal);
+                for (int i = 0; i < shipInstance.Thrusters.Length; i++)
+                {
+                    var emissionModule = shipInstance.ThrusterParticles[i].emission;
+                    emissionModule.rateOverTimeMultiplier = shipInstance.ThrusterBaseEmission[i] * shipInstance.Thrusters[i].Axis;
+                }
+            }
+
+            entity.Value.LookAtPoint.position = entity.Value.Transform.position + (Vector3) entity.Key.LookDirection * (entity.Key.Target != null
+                ? (EntityInstances[entity.Key.Target].Transform.position - entity.Value.Transform.position).magnitude : 100);
+            var h = _zone.GetHeight(entity.Key.Position);
+            entity.Value.Transform.position = new Vector3(entity.Key.Position.x, h + hullData.GridOffset, entity.Key.Position.y);
         }
 
         var fogPos = FogCameraParent.position;
@@ -416,13 +472,32 @@ public class SectorRenderer : MonoBehaviour
     }
 }
 
-public class ShipInstance
+public class EntityInstance
+{
+    public Entity Entity;
+    public Transform Transform;
+    public EntityPrefab Prefab;
+    public Dictionary<HardpointData, Transform[]> Barrels;
+    public Dictionary<HardpointData, int> BarrelIndices;
+    public Transform LookAtPoint;
+    public Transform GetBarrel(HardpointData hardpoint)
+    {
+        if (Barrels.ContainsKey(hardpoint))
+        {
+            var barrel = Barrels[hardpoint][BarrelIndices[hardpoint]];
+            BarrelIndices[hardpoint] = (BarrelIndices[hardpoint] + 1) % Barrels[hardpoint].Length;
+            return barrel;
+        }
+
+        return Transform;
+    }
+}
+
+public class ShipInstance : EntityInstance
 {
     public ParticleSystem[] ThrusterParticles;
     public Thruster[] Thrusters;
     public float[] ThrusterBaseEmission;
-    public Ship Ship;
-    public Transform Transform;
 }
 
 [Serializable]

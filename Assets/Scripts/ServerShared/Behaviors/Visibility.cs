@@ -51,8 +51,11 @@ public class Visibility : IBehavior, IAlwaysUpdatedBehavior
     public void AlwaysUpdate(float delta)
     {
         // TODO: Time independent decay?
-        Entity.VisibilitySources[this] *= Context.Evaluate(_data.VisibilityDecay, Item.EquippableItem, Entity);
-        
-        if (Entity.VisibilitySources[this] < 0.01f) Entity.VisibilitySources.Remove(this);
+        if(Entity.VisibilitySources.ContainsKey(this))
+        {
+            Entity.VisibilitySources[this] *= Context.Evaluate(_data.VisibilityDecay, Item.EquippableItem, Entity);
+
+            if (Entity.VisibilitySources[this] < 0.01f) Entity.VisibilitySources.Remove(this);
+        }
     }
 }

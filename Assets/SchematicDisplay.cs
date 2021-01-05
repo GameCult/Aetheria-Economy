@@ -9,7 +9,7 @@ using static Unity.Mathematics.math;
 
 public class SchematicDisplay : MonoBehaviour
 {
-    private GameSettings Settings;
+    public GameSettings Settings;
     public Prototype ListElementPrototype;
     public Prototype TriggerGroupPrototype;
 
@@ -129,6 +129,7 @@ public class SchematicDisplay : MonoBehaviour
             foreach (var group in x.TriggerGroupElement.GroupBackgrounds)
                 group.color = TriggerGroupColor;
         }
+        UpdateTriggerGroups();
     }
 
     public void UpdateTriggerGroups()
@@ -219,6 +220,7 @@ public class SchematicDisplay : MonoBehaviour
             HeatstrokeMeterFill.anchorMax = new Vector2(_cockpit.Heatstroke, 1);
             HeatstrokeLimitFill.anchorMax = new Vector2(_cockpit.Item.Temperature / Settings.GameplaySettings.HeatstrokeTemperature, 1);
 
+            _hull = _ship.Hull;
             var hullData = _ship.ItemManager.GetData(_hull);
             var dur = _hull.Durability / hullData.Durability;
             HullDurabilityFill.anchorMax = new Vector2(dur, 1);
@@ -243,7 +245,7 @@ public class SchematicDisplay : MonoBehaviour
                 x.ListElement.HeatFill.anchorMax = new Vector2(unlerp(itemData.MinimumTemperature,itemData.MaximumTemperature, x.Item.Temperature), 0);
                 if(x.Cooldown!=null)
                     x.ListElement.CooldownFill.anchorMax = new Vector2(x.Cooldown.Progress,1);
-                x.ListElement.DurabilityLabel.text = $"{(x.Item.EquippableItem.Durability / itemData.Durability * 100).SignificantDigits()}%";
+                x.ListElement.DurabilityLabel.text = $"{(int)(x.Item.EquippableItem.Durability / itemData.Durability * 100)}%";
                 if (x.ItemUsage != null)
                 {
                     x.ListElement.AmmoLabel.text = _ship.CountItemsInCargo(((ItemUsageData) x.ItemUsage.Data).Item).ToString();
