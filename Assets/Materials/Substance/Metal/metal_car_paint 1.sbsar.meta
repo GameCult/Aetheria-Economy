@@ -68,7 +68,7 @@ ScriptedImporter:
       type=\"0\" value=\"0.14\" />\n  <presetinput identifier=\"paint_color\" uid=\"105341618\"
       type=\"2\" value=\"1,0.891509,0.946396\" />\n  <presetinput identifier=\"paint_roughness\"
       uid=\"22504606\" type=\"0\" value=\"0.15\" />\n  <presetinput identifier=\"paint_metallic\"
-      uid=\"22503567\" type=\"0\" value=\"0.67\" />\n </sbspreset>\n"
+      uid=\"22503567\" type=\"0\" value=\"0\" />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}

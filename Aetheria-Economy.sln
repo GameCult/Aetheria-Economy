@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Economy.Shared.Unity", "Eco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniRx", "UniRx.csproj", "{4d885cb7-1f9e-abb3-b070-7265b432ecda}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{a442877d-fc0d-6756-0a98-3ca4312f9253}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessagePack", "MessagePack.csproj", "{c511ef21-dc27-883d-b027-9a4b6f36bae4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-firstpass", "Assembly-CSharp-firstpass.csproj", "{a442877d-fc0d-6756-0a98-3ca4312f9253}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substance.EditorHelper", "Substance.EditorHelper.csproj", "{dd909206-f54e-1c12-ed74-b4e22d464f6a}"
 EndProject
@@ -37,14 +37,14 @@ Global
 		{4d885cb7-1f9e-abb3-b070-7265b432ecda}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4d885cb7-1f9e-abb3-b070-7265b432ecda}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4d885cb7-1f9e-abb3-b070-7265b432ecda}.Release|Any CPU.Build.0 = Release|Any CPU
-		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Release|Any CPU.Build.0 = Release|Any CPU
 		{c511ef21-dc27-883d-b027-9a4b6f36bae4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{c511ef21-dc27-883d-b027-9a4b6f36bae4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{c511ef21-dc27-883d-b027-9a4b6f36bae4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{c511ef21-dc27-883d-b027-9a4b6f36bae4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{a442877d-fc0d-6756-0a98-3ca4312f9253}.Release|Any CPU.Build.0 = Release|Any CPU
 		{dd909206-f54e-1c12-ed74-b4e22d464f6a}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{dd909206-f54e-1c12-ed74-b4e22d464f6a}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{dd909206-f54e-1c12-ed74-b4e22d464f6a}.Release|Any CPU.ActiveCfg = Release|Any CPU

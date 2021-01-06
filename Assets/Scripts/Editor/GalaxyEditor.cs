@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MIConvexHull;
-using Microsoft.SqlServer.Types;
 using Newtonsoft.Json;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
@@ -314,19 +313,20 @@ public class GalaxyEditor : Editor
 
 	private IEnumerable<Vector2> EvaluateHilbert(int order, bool normalized = true)
 	{
-		var points = new List<Vector2>();
-		uint x = 0, y = 1;
-		ulong i = 1;
-		uint max = 0;
-		while (x != 0 || y != 0)
-		{
-			SpaceFillingCurve.ReverseHilbert(order, i, out x, out y);
-			points.Add(new Vector2(x, y));
-			if (x > max)
-				max = x;
-			i++;
-		}
-		return normalized ? points.Select(p => p / (max + 1)) : points;
+		throw new NotImplementedException("GOTTA GET A NEW CURVE EVALUATOR");
+		// var points = new List<Vector2>();
+		// uint x = 0, y = 1;
+		// ulong i = 1;
+		// uint max = 0;
+		// while (x != 0 || y != 0)
+		// {
+		// 	SpaceFillingCurve.ReverseHilbert(order, i, out x, out y);
+		// 	points.Add(new Vector2(x, y));
+		// 	if (x > max)
+		// 		max = x;
+		// 	i++;
+		// }
+		// return normalized ? points.Select(p => p / (max + 1)) : points;
 	}
 
 	void Inspect(GalaxyMapLayerData layer)
