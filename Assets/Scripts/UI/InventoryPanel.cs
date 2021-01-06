@@ -388,16 +388,19 @@ public class InventoryPanel : MonoBehaviour
         }
     }
 
-    public void DropItem(ItemInstance item, int2 position)
+    public bool DropItem(ItemInstance item, int2 position)
     {
         if (_displayedEntity != null && item is EquippableItem equippableItem)
         {
-            _displayedEntity.TryEquip(equippableItem, position);
+            return _displayedEntity.TryEquip(equippableItem, position);
         }
-        else
+
+        if(_displayedCargo != null)
         {
-            _displayedCargo?.TryStore(item, position);
+            return _displayedCargo.TryStore(item, position);
         }
+
+        return false;
     }
     
     public UniRx.IObservable<InventoryEventData> OnClickAsObservable() => _onClick ?? (_onClick = new Subject<InventoryEventData>());

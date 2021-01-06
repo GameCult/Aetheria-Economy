@@ -116,7 +116,7 @@ public class MiningController : ControllerBase<Mining>, IBehavior, IPersistentBe
 
     private void NextAsteroid()
     {
-        _asteroid = Zone.NearestAsteroid(Task.Asteroids, Entity.Position);
+        _asteroid = Zone.NearestAsteroid(Task.Asteroids, Entity.Position.xz);
         Entity.SetMessage("Selecting new asteroid.");
     }
 

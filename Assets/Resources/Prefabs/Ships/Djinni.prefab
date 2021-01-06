@@ -7196,5 +7196,6 @@ MonoBehaviour:
   Target: {fileID: 0}
   YawMin: 0
   YawMax: 0
-  PitchMin: 15
-  PitchMax: -45
+  PitchMin: -45
+  PitchMax: 15
+  Speed: 15

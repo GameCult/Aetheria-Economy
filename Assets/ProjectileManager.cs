@@ -12,7 +12,8 @@ public class ProjectileManager : MonoBehaviour
         p.SourceEntity = source.Entity;
         var hp = source.Entity.Hardpoints[item.Position.x, item.Position.y];
         var barrel = source.GetBarrel(hp);
-        p.transform.position = barrel.position;
+        p.Range = source.Entity.ItemManager.Evaluate(data.Range, item.EquippableItem, source.Entity);
+        p.StartPosition = p.transform.position = barrel.position;
         p.Velocity = barrel.forward * source.Entity.ItemManager.Evaluate(data.Velocity, item.EquippableItem, source.Entity);
         p.Damage = source.Entity.ItemManager.Evaluate(data.Damage, item.EquippableItem, source.Entity);
         p.DamageType = data.DamageType;

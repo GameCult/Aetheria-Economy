@@ -22,6 +22,11 @@ namespace UniRx.Triggers
             return onPointerClick ?? (onPointerClick = new Subject<PointerEventData>());
         }
 
+        private void OnDisable()
+        {
+            onPointerClick = null;
+        }
+
         protected override void RaiseOnCompletedOnDestroy()
         {
             if (onPointerClick != null)

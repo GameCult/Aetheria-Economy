@@ -109,8 +109,8 @@ public class SurveyController : ControllerBase<Survey>, IBehavior, IPersistentBe
     private void NextPlanet()
     {
         var planets = Task.Planets.Select(id => Zone.Planets[id]);
-        var nearestPlanet = planets.MinBy(p => lengthsq(Entity.Position - GetPosition(p)));
-        _asteroid = nearestPlanet is AsteroidBeltData ? Zone.NearestAsteroid(nearestPlanet.ID, Entity.Position) : -1;
+        var nearestPlanet = planets.MinBy(p => lengthsq(Entity.Position.xz - GetPosition(p)));
+        _asteroid = nearestPlanet is AsteroidBeltData ? Zone.NearestAsteroid(nearestPlanet.ID, Entity.Position.xz) : -1;
         _targetPlanet = nearestPlanet.ID;
     }
 
@@ -118,7 +118,7 @@ public class SurveyController : ControllerBase<Survey>, IBehavior, IPersistentBe
     {
         if (planet is AsteroidBeltData)
         {
-            if(asteroid == -1) asteroid = Zone.NearestAsteroid(planet.ID, Entity.Position);
+            if(asteroid == -1) asteroid = Zone.NearestAsteroid(planet.ID, Entity.Position.xz);
             return Zone.GetAsteroidTransform(planet.ID, asteroid).xy;
         }
         return Zone.GetOrbitPosition(planet.Orbit);
@@ -128,7 +128,7 @@ public class SurveyController : ControllerBase<Survey>, IBehavior, IPersistentBe
     {
         if (planet is AsteroidBeltData)
         {
-            if(asteroid == -1) asteroid = Zone.NearestAsteroid(planet.ID, Entity.Position);
+            if(asteroid == -1) asteroid = Zone.NearestAsteroid(planet.ID, Entity.Position.xz);
             return Zone.GetAsteroidVelocity(planet.ID, asteroid);
         }
         return Zone.GetOrbitVelocity(planet.Orbit);

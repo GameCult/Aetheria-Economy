@@ -22,6 +22,11 @@ namespace UniRx.Triggers
             return onPointerExit ?? (onPointerExit = new Subject<PointerEventData>());
         }
 
+        private void OnDisable()
+        {
+            onPointerExit = null;
+        }
+
         protected override void RaiseOnCompletedOnDestroy()
         {
             if (onPointerExit != null)

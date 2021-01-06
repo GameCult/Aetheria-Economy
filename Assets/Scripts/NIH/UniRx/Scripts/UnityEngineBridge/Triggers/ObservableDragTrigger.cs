@@ -22,6 +22,11 @@ namespace UniRx.Triggers
             return onDrag ?? (onDrag = new Subject<PointerEventData>());
         }
 
+        private void OnDisable()
+        {
+            onDrag = null;
+        }
+
         protected override void RaiseOnCompletedOnDestroy()
         {
             if (onDrag != null)

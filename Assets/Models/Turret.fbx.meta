@@ -1,11 +1,20 @@
 fileFormatVersion: 2
-guid: f143db2fec0aefa45b3255990a395382
+guid: 33ad68f41d4b2fe4c9801f449debd3b6
 ModelImporter:
   serializedVersion: 20101
   internalIDToNameTable:
   - first:
-      74: -623603649343465320
-    second: Scene
+      74: -5395469358196396232
+    second: LD12_Scanner|LD12_Scanner2Action
+  - first:
+      74: -339793421420189680
+    second: LD12_Scanner|LD12_ScannerAction
+  - first:
+      74: -1060864838660959178
+    second: LD12_Scanner2|LD12_Scanner2Action
+  - first:
+      74: 2014324191034718849
+    second: LD12_Scanner2|LD12_ScannerAction
   externalObjects: {}
   materials:
     materialImportMode: 1
@@ -69,7 +78,7 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 1
+    normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0

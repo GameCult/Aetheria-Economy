@@ -11,6 +11,7 @@ using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using quaternion = Unity.Mathematics.quaternion;
 
 [MessagePackObject]
 public class Ship : Entity
@@ -31,6 +32,8 @@ public class Ship : Entity
     private Thruster[] _leftThrusters;
     private Thruster[] _clockwiseThrusters;
     private Thruster[] _counterClockwiseThrusters;
+    
+    public quaternion Rotation { get; private set; }
 
     protected override void OnActivate()
     {
@@ -49,7 +52,7 @@ public class Ship : Entity
 
     public override void Update(float delta)
     {
-        Position += Velocity * delta;
+        Position.xz += Velocity * delta;
         if (_active)
         {
             foreach (var thruster in _allThrusters) thruster.Axis = 0;
@@ -65,6 +68,18 @@ public class Ship : Entity
             foreach (var thruster in _clockwiseThrusters) thruster.Axis += deltaRot;
             foreach (var thruster in _counterClockwiseThrusters) thruster.Axis += -deltaRot;
         }
+        var normal = Zone.GetNormal(Position.xz);
+        var f = new float2(normal.x, normal.z);
+        var fl = lengthsq(f);
+        if (fl > .001)
+        {
+            var fa = 1 / (1 - fl) - 1;
+            Velocity += normalize(f) * Zone.Settings.GravityStrength * fa;
+        }
+        var shipRight = Direction.Rotate(ItemRotation.Clockwise);
+        var forward = cross(float3(shipRight.x, 0, shipRight.y), normal);
+        Rotation = quaternion.LookRotation(forward, normal);
+        
         base.Update(delta);
     }
 }

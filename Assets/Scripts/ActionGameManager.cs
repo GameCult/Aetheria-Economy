@@ -110,7 +110,7 @@ public class ActionGameManager : MonoBehaviour
             _input.Player.Disable();
             GameplayUI.SetActive(false);
             Menu.ShowTab(MenuTab.Map);
-            MenuMap.Position = _currentShip.Position;
+            MenuMap.Position = _currentShip.Position.xz;
         };
 
         _input.Global.Inventory.performed += context =>
@@ -354,16 +354,44 @@ public class ActionGameManager : MonoBehaviour
         var stationType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
         var stationHull = ItemManager.CreateInstance(stationType, 0, 1) as EquippableItem;
         var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(3);
-        var parentOrbit = stationParent.Orbit.Data.ID;
-        var parentPos = Zone.GetOrbitPosition(parentOrbit);
-        var stationPos = parentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
-        var stationOrbit = Zone.CreateOrbit(parentOrbit, stationPos);
+        var stationParentOrbit = stationParent.Orbit.Data.ID;
+        var stationParentPos = Zone.GetOrbitPosition(stationParentOrbit);
+        var stationPos = stationParentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
+        var stationOrbit = Zone.CreateOrbit(stationParentOrbit, stationPos);
         var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID);
         Zone.Entities.Add(station);
         var dockingBayData = ItemData.GetAll<DockingBayData>().First();
         var dockingBay = ItemManager.CreateInstance(dockingBayData, 1, 1) as EquippableItem;
         station.TryEquip(dockingBay);
         station.Active = true;
+        
+        var reactorData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Reactor && x.Shape.Height == 2);
+        var autocannonData = ItemData.GetAll<GearData>().First(x => x.Name == "Autocannon");
+        var ammoData = ItemData.GetAll<SimpleCommodityData>().First(x => x.Name == "AC2 Ammo");
+        
+        var turretType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Turret);
+        var turretHull = ItemManager.CreateInstance(turretType, 0, 1) as EquippableItem;
+        var turretParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(5);
+        var turretParentOrbit = turretParent.Orbit.Data.ID;
+        var turretParentPos = Zone.GetOrbitPosition(turretParentOrbit);
+        var turretPos = turretParentPos + ItemManager.Random.NextFloat2Direction() * turretParent.GravityWellRadius.Value * .05f;
+        var turretOrbit = Zone.CreateOrbit(turretParentOrbit, turretPos);
+        var turret = new OrbitalEntity(ItemManager, Zone, turretHull, turretOrbit.ID);
+        turret.TryEquip(ItemManager.CreateInstance(reactorData, .5f, 1) as EquippableItem);
+        
+        var controlModuleData = ItemData.GetAll<GearData>().First(x => x.Name == "Murder Module");
+        turret.TryEquip(ItemManager.CreateInstance(controlModuleData, .5f, 1) as EquippableItem);
+
+        turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
+        turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
+
+        var cargo1Data = ItemData.GetAll<CargoBayData>().First(x => x.Name == "Cargo Bay 1x1");
+        var cargo1 = ItemManager.CreateInstance(cargo1Data, .5f, 1);
+        turret.TryEquip(cargo1 as EquippableItem);
+        
+        turret.CargoBays.First().TryStore(ItemManager.CreateInstance(ammoData, 400));
+        turret.Active = true;
+        Zone.Entities.Add(turret);
         
         var hullType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Ship);
         var shipHull = ItemManager.CreateInstance(hullType, 0, 1) as EquippableItem;
@@ -378,21 +406,18 @@ public class ActionGameManager : MonoBehaviour
             //dockingCargo.TryStore(ItemManager.CreateInstance(thrusterData, .5f, 1));
         }
         
-        var reactorData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Reactor && x.Shape.Height == 2);
         ship.TryEquip(ItemManager.CreateInstance(reactorData, .5f, 1) as EquippableItem);
         
         var cockpitData = ItemData.GetAll<GearData>().First(x => x.Behaviors.Any(b=>b is CockpitData));
         ship.TryEquip(ItemManager.CreateInstance(cockpitData, .5f, 1) as EquippableItem);
 
-        var autocannonData = ItemData.GetAll<GearData>().First(x => x.Name == "Autocannon");
         ship.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
         ship.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
 
         var cargoData = ItemData.GetAll<CargoBayData>().First(x => x.Name == "Cargo Bay 4x4");
         ship.TryEquip(ItemManager.CreateInstance(cargoData, .5f, 1) as EquippableItem);
         
-        var ammoData = ItemData.GetAll<SimpleCommodityData>().First(x => x.Name == "AC2 Ammo");
-        ship.CargoBays.First().TryStore(ItemManager.CreateInstance(ammoData, 100));
+        ship.CargoBays.First().TryStore(ItemManager.CreateInstance(ammoData, 200));
         //dockingCargo.TryStore(ItemManager.CreateInstance(reactorData, .5f, 1));
         
         Dock();
@@ -413,7 +438,7 @@ public class ActionGameManager : MonoBehaviour
         if (_currentShip.Parent != null) return;
         foreach (var entity in Zone.Entities.ToArray())
         {
-            if (lengthsq(entity.Position - _currentShip.Position) <
+            if (lengthsq(entity.Position.xz - _currentShip.Position.xz) <
                 Settings.GameplaySettings.DockingDistance * Settings.GameplaySettings.DockingDistance)
             {
                 var bay = entity.TryDock(_currentShip);

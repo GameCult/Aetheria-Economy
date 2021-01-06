@@ -426,34 +426,25 @@ public class SectorRenderer : MonoBehaviour
 
         foreach (var entity in EntityInstances)
         {
-            var hullData = ItemManager.GetData(entity.Key.Hull) as HullData;
-            if(entity.Key is Ship ship)
+            if(entity.Value is ShipInstance shipInstance)
             {
-                var shipInstance = entity.Value as ShipInstance;
-                var normal = _zone.GetNormal(ship.Position);
-                var f = new float2(normal.x, normal.z);
-                var fl = lengthsq(f);
-                if (fl > .001)
-                {
-                    var fa = 1 / (1 - fl) - 1;
-                    entity.Key.Velocity += normalize(f) * Settings.PlanetSettings.GravityStrength * fa;
-                }
-
-                //Debug.Log($"Normal: {normal}");
-                var shipRight = ship.Direction.Rotate(ItemRotation.Clockwise);
-                var forward = Vector3.Cross(new Vector3(shipRight.x, 0, shipRight.y), normal);
-                entity.Value.Transform.rotation = Quaternion.LookRotation(forward, normal);
                 for (int i = 0; i < shipInstance.Thrusters.Length; i++)
                 {
                     var emissionModule = shipInstance.ThrusterParticles[i].emission;
                     emissionModule.rateOverTimeMultiplier = shipInstance.ThrusterBaseEmission[i] * shipInstance.Thrusters[i].Axis;
                 }
+
+                entity.Value.Transform.rotation = ((Ship) entity.Key).Rotation;
+            }
+
+            foreach (var x in entity.Value.Barrels)
+            {
+                entity.Key.HardpointTransforms[x.Key] = (x.Value[0].position, x.Value[0].forward);
             }
 
             entity.Value.LookAtPoint.position = entity.Value.Transform.position + (Vector3) entity.Key.LookDirection * (entity.Key.Target != null
                 ? (EntityInstances[entity.Key.Target].Transform.position - entity.Value.Transform.position).magnitude : 100);
-            var h = _zone.GetHeight(entity.Key.Position);
-            entity.Value.Transform.position = new Vector3(entity.Key.Position.x, h + hullData.GridOffset, entity.Key.Position.y);
+            entity.Value.Transform.position = entity.Key.Position;
         }
 
         var fogPos = FogCameraParent.position;

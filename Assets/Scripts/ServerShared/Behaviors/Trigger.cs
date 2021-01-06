@@ -20,9 +20,9 @@ public class Trigger : IBehavior
 {
     private TriggerData _data;
 
-    private Entity Entity { get; }
-    private EquippedItem Item { get; }
-    private ItemManager Context { get; }
+    public Entity Entity { get; }
+    public EquippedItem Item { get; }
+    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 

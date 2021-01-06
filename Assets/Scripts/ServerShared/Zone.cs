@@ -25,7 +25,7 @@ public class Zone
     
     private HashSet<Guid> _updatedOrbits = new HashSet<Guid>();
 
-    private PlanetSettings _settings;
+    public PlanetSettings Settings;
     private float _time;
     private Random _random;
 
@@ -34,12 +34,12 @@ public class Zone
     public Zone(PlanetSettings settings, ZonePack pack)
     {
         Data = pack.Data;
-        _settings = settings;
+        Settings = settings;
         _random = new Random(Convert.ToUInt32(abs(Data.ID.GetHashCode())));
         
         foreach (var orbit in pack.Orbits)
         {
-            Orbits.Add(orbit.ID, new Orbit(_settings, orbit));
+            Orbits.Add(orbit.ID, new Orbit(Settings, orbit));
         }
         
         foreach (var planet in pack.Planets)
@@ -77,7 +77,7 @@ public class Zone
 
     public void AddOrbit(OrbitData orbit)
     {
-        Orbits.Add(orbit.ID, new Orbit(_settings, orbit));
+        Orbits.Add(orbit.ID, new Orbit(Settings, orbit));
     }
 
     public void Update(float time, float deltaTime)
@@ -194,14 +194,14 @@ public class Zone
             if(belt.RespawnTimers.ContainsKey(i)) size = 0;
             else if (belt.Damage.ContainsKey(i))
             {
-                var asteroidHitpoints = _settings.AsteroidHitpoints.Evaluate(beltData.Asteroids[i].Size);
+                var asteroidHitpoints = Settings.AsteroidHitpoints.Evaluate(beltData.Asteroids[i].Size);
                 var damage = (asteroidHitpoints - belt.Damage[i]) / asteroidHitpoints;
-                size = _settings.AsteroidSize.Evaluate(damage * beltData.Asteroids[i].Size);
+                size = Settings.AsteroidSize.Evaluate(damage * beltData.Asteroids[i].Size);
             }
-            else size = _settings.AsteroidSize.Evaluate(beltData.Asteroids[i].Size);
+            else size = Settings.AsteroidSize.Evaluate(beltData.Asteroids[i].Size);
         
             belt.Transforms[i] = float4(
-                OrbitData.Evaluate((float) frac(_time / _settings.OrbitPeriod.Evaluate(beltData.Asteroids[i].Distance) +
+                OrbitData.Evaluate((float) frac(_time / Settings.OrbitPeriod.Evaluate(beltData.Asteroids[i].Distance) +
                                                 beltData.Asteroids[i].Phase)) * beltData.Asteroids[i].Distance + orbitPosition,
                 (float) (_time * beltData.Asteroids[i].RotationSpeed % (PI * 2)), size);
         }
@@ -212,7 +212,7 @@ public class Zone
         var parentPosition = GetOrbitPosition(parent);
         var delta = position - parentPosition;
         var distance = length(delta);
-        var period = _settings.OrbitPeriod.Evaluate(distance);
+        var period = Settings.OrbitPeriod.Evaluate(distance);
         var phase = atan2(delta.y, delta.x) / (PI * 2);
         var currentPhase = frac(_time / period);
         var storedPhase = (float) frac(phase - currentPhase);
@@ -224,7 +224,7 @@ public class Zone
             Parent = parent,
             Phase = storedPhase
         };
-        Orbits.Add(orbit.ID, new Orbit(_settings, orbit));
+        Orbits.Add(orbit.ID, new Orbit(Settings, orbit));
         return orbit;
     }
 
@@ -235,7 +235,7 @@ public class Zone
         var asteroidTransform = belt.Transforms[asteroid];
 
         var size = beltData.Asteroids[asteroid].Size;
-        var asteroidHitpoints = _settings.AsteroidHitpoints.Evaluate(size);
+        var asteroidHitpoints = Settings.AsteroidHitpoints.Evaluate(size);
         
         if (!belt.Damage.ContainsKey(asteroid))
             belt.Damage[asteroid] = 0;
@@ -247,7 +247,7 @@ public class Zone
         
         if (belt.Damage[asteroid] > asteroidHitpoints)
         {
-            belt.RespawnTimers[asteroid] = _settings.AsteroidRespawnTime.Evaluate(size);
+            belt.RespawnTimers[asteroid] = Settings.AsteroidRespawnTime.Evaluate(size);
             belt.Damage.Remove(asteroid);
             belt.MiningAccumulator.Remove((miner, asteroid));
             return;
@@ -255,7 +255,7 @@ public class Zone
 
         var resourceCount = beltData.Resources.Sum(x => x.Value);
         var resource = beltData.Resources.MaxBy(x => pow(x.Value, 1f / penetration) * _random.NextFloat());
-        if (efficiency * _random.NextFloat() * belt.MiningAccumulator[(miner, asteroid)] * resourceCount / _settings.MiningDifficulty > 1)
+        if (efficiency * _random.NextFloat() * belt.MiningAccumulator[(miner, asteroid)] * resourceCount / Settings.MiningDifficulty > 1)
         {
             belt.MiningAccumulator.Remove((miner, asteroid));
             // var newSimpleCommodity = new SimpleCommodity
@@ -269,7 +269,7 @@ public class Zone
     }
     public float GetHeight(float2 position)
     {
-        float result = -PowerPulse(length(position)/(Data.Radius*2), _settings.ZoneDepthExponent) * _settings.ZoneDepth;
+        float result = -PowerPulse(length(position)/(Data.Radius*2), Settings.ZoneDepthExponent) * Settings.ZoneDepth;
         foreach (var body in PlanetInstances.Values)
         {
             var p = (position - body.Orbit.Position); //GetOrbitPosition(body.BodyData.Orbit)
@@ -287,7 +287,7 @@ public class Zone
                 if(distSqr < waveRadius*waveRadius)
                 {
                     var depth = gas.GravityWavesDepth.Value;
-                    var frequency = _settings.WaveFrequency.Evaluate(body.BodyData.Mass.Value);
+                    var frequency = Settings.WaveFrequency.Evaluate(body.BodyData.Mass.Value);
                     var speed = gas.GravityWavesSpeed.Value;
                     result -= RadialWaves(sqrt(distSqr) / waveRadius, 8, 1.25f, frequency, _time * speed) * depth;
                 }
@@ -301,7 +301,7 @@ public class Zone
     {
         var normal = GetNormal(position);
         var f = new float2(normal.x, normal.z);
-        return f * _settings.GravityStrength * lengthsq(f);// * Mathf.Abs(GetHeight(position));
+        return f * Settings.GravityStrength * lengthsq(f);// * Mathf.Abs(GetHeight(position));
     }
 
     public static float PowerPulse(float x, float exponent)

@@ -58,7 +58,7 @@ public class MiningTool : IBehavior
         var asteroidTransform = Entity.Zone.GetAsteroidTransform(AsteroidBelt, Asteroid);
         if (AsteroidBelt != Guid.Empty && 
             Entity.Zone.AsteroidExists(AsteroidBelt, Asteroid) && 
-            length(Entity.Position - asteroidTransform.xy) - asteroidTransform.w < Range)
+            length(Entity.Position.xz - asteroidTransform.xz) - asteroidTransform.w < Range)
         {
             Entity.Zone.MineAsteroid(
                 Entity,

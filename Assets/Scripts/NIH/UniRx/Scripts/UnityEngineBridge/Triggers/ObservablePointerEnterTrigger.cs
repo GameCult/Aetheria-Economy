@@ -22,6 +22,11 @@ namespace UniRx.Triggers
             return onPointerEnter ?? (onPointerEnter = new Subject<PointerEventData>());
         }
 
+        private void OnDisable()
+        {
+            onPointerEnter = null;
+        }
+
         protected override void RaiseOnCompletedOnDestroy()
         {
             if (onPointerEnter != null)

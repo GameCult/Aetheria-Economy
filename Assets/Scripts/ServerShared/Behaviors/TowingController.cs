@@ -65,7 +65,7 @@ public class TowingController : ControllerBase<StationTowing>, IBehavior, IPersi
         MoveTo(() =>
         {
             var orbitParent = Zone.GetOrbitPosition(Task.OrbitParent);
-            var parentToUs = Entity.Position - orbitParent;
+            var parentToUs = Entity.Position.xz - orbitParent;
             return orbitParent + normalize(parentToUs) * Task.OrbitDistance;
         }, () => Zone.GetOrbitVelocity(Task.OrbitParent), OnDelivery);
     }
@@ -76,7 +76,7 @@ public class TowingController : ControllerBase<StationTowing>, IBehavior, IPersi
         
         Entity.SetMessage("Target delivered. Returning Home.");
 
-        var orbit = Zone.CreateOrbit(Task.OrbitParent, Entity.Position);
+        var orbit = Zone.CreateOrbit(Task.OrbitParent, Entity.Position.xz);
         Task.Station.OrbitData = orbit.ID;
 
         FinishTask();

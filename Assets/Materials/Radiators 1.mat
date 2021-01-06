@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Map Gravity Lines
-  m_Shader: {fileID: 4800000, guid: f5505d3747493e24c91b7cb141fd7b8c, type: 3}
-  m_ShaderKeywords: SCREEN_SPACE
+  m_Name: Radiators 1
+  m_Shader: {fileID: 4800000, guid: d69ef48273708ef4680762f5cdcfc860, type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -20,8 +20,9 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: -812895718602229137, guid: b7e648471e9dfc44490bd41973711541,
+          type: 3}
+        m_Scale: {x: 8, y: 8}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
@@ -35,20 +36,18 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _DetailTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 8400000, guid: ed3d896ce7cb4a84aa4de8515a60f59c, type: 2}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: -6057190860509678031, guid: 2b42584452fe0cc4fa4e8a115230b156,
+          type: 3}
+        m_Scale: {x: 8, y: 8}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: -894214952450941493, guid: 2b42584452fe0cc4fa4e8a115230b156,
+          type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -59,53 +58,30 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _TintTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Angle2Fade: 1.1
-    - _Angle2Width: 0.5
-    - _AngleFade: 1.15
-    - _AngleWidth: 0.05
+    - _BumpPower: 2
     - _BumpScale: 1
-    - _ClipDistance: 1000
-    - _ColorMask: 15
     - _Cutoff: 0.5
-    - _DangerSteepness: 1.5
-    - _DepthRange: 500
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _Emission: 15
+    - _EmissionFresnel: 4
+    - _EmissionRoughnessFresnelPower: 0.5
     - _GlossMapScale: 1
-    - _Glossiness: 0.5
+    - _Glossiness: 1
     - _GlossyReflections: 1
-    - _HeightRange: 50
-    - _LineFade: 5
-    - _LineWidth: 0.3
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Scale: 1.6680267
+    - _ReverseRim: 0
+    - _Rotation: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StartDepth: 420
-    - _StartHeight: 0
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _TintExponent: 3
-    - _TintIntensity: 4.54
     - _UVSec: 0
-    - _UseScreenSpace: 1
-    - _UseUIAlphaClip: 0
     - _ZWrite: 1
     m_Colors:
-    - _AngleColor: {r: 0.248, g: 0, b: 0.21104322, a: 1}
-    - _Color: {r: 0, g: 0.4, b: 0.6, a: 1}
-    - _DangerColor: {r: 2.9960785, g: 0.26666668, b: 0, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 1, g: 0.40135294, b: 0, a: 1}
   m_BuildTextureStacks: []

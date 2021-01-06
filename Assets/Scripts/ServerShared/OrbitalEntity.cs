@@ -22,7 +22,7 @@ public class OrbitalEntity : Entity
     {
         if (OrbitData != Guid.Empty)
         {
-            Position = Zone.GetOrbitPosition(OrbitData);
+            Position.xz = Zone.GetOrbitPosition(OrbitData);
             Velocity = Zone.GetOrbitVelocity(OrbitData);
         }
         

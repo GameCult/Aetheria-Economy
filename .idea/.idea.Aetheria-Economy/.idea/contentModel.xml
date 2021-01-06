@@ -223,6 +223,7 @@
             <e p="Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="Rotate.cs" t="Include" />
         <e p="SchematicDisplay.cs" t="Include" />
         <e p="SchematicListElement.cs" t="Include" />
         <e p="SchematicTriggerGroupElement.cs" t="Include" />
@@ -1444,7 +1445,6 @@
             <e p="Agents" t="Include">
               <e p="AgentBehavior.cs" t="Include" />
               <e p="AgentTask.cs" t="Include" />
-              <e p="Aim.cs" t="Include" />
               <e p="HaulingTask.cs" t="Include" />
               <e p="Locomotion.cs" t="Include" />
               <e p="Mining.cs" t="Include" />
@@ -1488,6 +1488,7 @@
               <e p="TowingController.cs" t="Include" />
               <e p="Trigger.cs" t="Include" />
               <e p="Turning.cs" t="Include" />
+              <e p="TurretController.cs" t="Include" />
               <e p="VelocityConversion.cs" t="Include" />
               <e p="VelocityLimit.cs" t="Include" />
               <e p="Visibility.cs" t="Include" />

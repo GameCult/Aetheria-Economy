@@ -23,7 +23,7 @@ public abstract class Entity
     public Zone Zone;
     public EquippableItem Hull;
     
-    public float2 Position;
+    public float3 Position;
     public float2 Direction = float2(0,1);
     public float2 Velocity;
     
@@ -49,6 +49,7 @@ public abstract class Entity
     
     public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
+    public readonly Dictionary<HardpointData, (float3 position, float3 direction)> HardpointTransforms = new Dictionary<HardpointData, (float3 position, float3 direction)>(); 
     
     public readonly List<EquippedItem>[] TriggerGroups;
 
@@ -337,9 +338,9 @@ public abstract class Entity
 
         if (!ItemFits(itemData, hullData, item, hullCoord)) return false;
         
+        EquippedItem equippedItem;
         if (itemData.HardpointType == HardpointType.Tool || itemData.HardpointType == HardpointType.Thermal)
         {
-            EquippedItem equippedItem;
             if(itemData is CargoBayData)
             {
                 if (itemData is DockingBayData)
@@ -358,34 +359,25 @@ public abstract class Entity
                 equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
                 Equipment.Add(equippedItem);
             }
-
-            foreach (var i in itemData.Shape.Coordinates)
-            {
-                var occupiedCoord = hullCoord + itemData.Shape.Rotate(i, item.Rotation);
-                (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
-            }
-
-            Mass += itemData.Mass;
-            _orderedEquipment = Equipment.OrderBy(x => x.SortPosition).ToArray();
-            return true;
         }
         else
         {
-            var equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
+            equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
             Equipment.Add(equippedItem);
-            
-            foreach (var i in itemData.Shape.Coordinates)
-            {
-                var occupiedCoord = hullCoord + itemData.Shape.Rotate(i, item.Rotation);
-                ThermalMass[occupiedCoord.x, occupiedCoord.y] += ItemManager.GetThermalMass(item) / itemData.Shape.Coordinates.Length;
-                Conductivity[occupiedCoord.x, occupiedCoord.y] *= itemData.Conductivity;
-                (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
-            }
-                
-            Mass += itemData.Mass;
-            _orderedEquipment = Equipment.OrderBy(x => x.SortPosition).ToArray();
-            return true;
         }
+            
+        foreach (var i in itemData.Shape.Coordinates)
+        {
+            var occupiedCoord = hullCoord + itemData.Shape.Rotate(i, item.Rotation);
+            // TODO: Track thermal mass of cargo bay contents as reactive property
+            ThermalMass[occupiedCoord.x, occupiedCoord.y] += ItemManager.GetThermalMass(item) / itemData.Shape.Coordinates.Length;
+            Conductivity[occupiedCoord.x, occupiedCoord.y] *= itemData.Conductivity;
+            (itemData.HardpointType == HardpointType.Thermal ? ThermalOccupancy : GearOccupancy)[occupiedCoord.x, occupiedCoord.y] = equippedItem;
+        }
+                
+        Mass += itemData.Mass;
+        _orderedEquipment = Equipment.OrderBy(x => x.SortPosition).ToArray();
+        return true;
     }
 
     public EquippedDockingBay TryDock(Ship ship)
@@ -553,6 +545,7 @@ public abstract class Entity
             Position = Parent.Position;
             Velocity = Parent.Velocity;
         }
+        else Position.y = Zone.GetHeight(Position.xz) + hullData.GridOffset;
     }
 
     public void SetMessage(string message)

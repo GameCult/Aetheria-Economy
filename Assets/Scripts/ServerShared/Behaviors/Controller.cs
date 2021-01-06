@@ -44,7 +44,6 @@ public abstract class ControllerBase<T> : IBehavior, IController<T>, IInitializa
     
     protected Locomotion Locomotion;
     protected VelocityMatch VelocityMatch;
-    protected Aim Aim;
     protected Func<float2> TargetPosition;
     protected Func<float2> TargetVelocity;
     protected bool MatchVelocity;
@@ -80,7 +79,6 @@ public abstract class ControllerBase<T> : IBehavior, IController<T>, IInitializa
     {
         Locomotion = new Locomotion(ItemManager, Entity, _controllerData);
         VelocityMatch = new VelocityMatch(ItemManager, Entity, _controllerData);
-        Aim = new Aim(ItemManager, Entity, _controllerData);
     }
     
     public void Initialize()
@@ -128,7 +126,7 @@ public abstract class ControllerBase<T> : IBehavior, IController<T>, IInitializa
                 Entity.RemoveParent();
 
             var targetPosition = TargetPosition();
-            var distance = length(targetPosition - Entity.Position);
+            var distance = length(targetPosition - Entity.Position.xz);
             if (MatchVelocity)
             {
                 var targetVelocity = TargetVelocity();
@@ -203,7 +201,7 @@ public abstract class ControllerBase<T> : IBehavior, IController<T>, IInitializa
 
     public void MoveTo(Entity entity, bool matchVelocity = true, Action onFinish = null)
     {
-        TargetPosition = () => entity.Position;
+        TargetPosition = () => entity.Position.xz;
         TargetVelocity = () => entity.Velocity;
         MatchVelocity = matchVelocity;
         _movementPhase = MovementPhase.Locomotion;

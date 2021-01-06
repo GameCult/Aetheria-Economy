@@ -50,7 +50,7 @@ public class PatrolController : IBehavior, IInitializableBehavior
         _locomotion.Objective = Entity.Zone.GetOrbitPosition(_targetOrbit);
         _locomotion.Update(delta);
         
-        if(length(Entity.Position - _locomotion.Objective) < _data.TargetDistance)
+        if(length(Entity.Position.xz - _locomotion.Objective) < _data.TargetDistance)
             RandomTarget();
         
         return true;

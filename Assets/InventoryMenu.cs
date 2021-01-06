@@ -18,6 +18,7 @@ public class InventoryMenu : MonoBehaviour
     public PropertiesPanel PropertiesPanel;
     public ActionGameManager GameManager;
     public RectTransform DragParent;
+    public ConfirmationDialog Dialog;
 
     private int _currentPanel = -1;
     
@@ -126,12 +127,23 @@ public class InventoryMenu : MonoBehaviour
                     if (data is InventoryCargoEventData cargoEvent)
                     {
                         cargoEvent.CargoBay.Remove(_dragItem);
+                        _dragTargetPanel.DropItem(_dragItem, _dragTargetPosition);
                     }
                     else if (data is InventoryEntityEventData entityEvent)
                     {
-                        entityEvent.Entity.Unequip(_originalEquippedItem);
+                        if (entityEvent.Entity.Unequip(_originalEquippedItem) != null)
+                        {
+                            _dragTargetPanel.DropItem(_dragItem, _dragTargetPosition);
+                        }
+                        else
+                        {
+                            Dialog.Clear();
+                            Dialog.Title.text = "Unable to move item!";
+                            Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
+                            Dialog.Show();
+                        }
                     }
-                    _dragTargetPanel.DropItem(_dragItem, _dragTargetPosition);
+
                     _dragTargetPanel.FakeOccupancy = null;
                 }
                 else

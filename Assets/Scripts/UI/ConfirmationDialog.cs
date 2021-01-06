@@ -12,6 +12,7 @@ using UnityEngine.UI;
 public class ConfirmationDialog : PropertiesPanel
 {
     public ClickCatcher CancelClickCatcher;
+    public GameObject ButtonGroup;
     public Button Cancel;
     public Button Confirm;
 
@@ -42,6 +43,7 @@ public class ConfirmationDialog : PropertiesPanel
             go.SetActive(true);
             go.transform.SetSiblingIndex(Title.transform.GetSiblingIndex() + 1);
         };
+        gameObject.SetActive(false);
     }
     
     private void End()
@@ -52,10 +54,16 @@ public class ConfirmationDialog : PropertiesPanel
 
     public void Show(Action onConfirm = null, Action onCancel = null)
     {
+        gameObject.SetActive(true);
+        
         _onConfirm = onConfirm;
         Confirm.gameObject.SetActive(onConfirm!=null);
+        
         _onCancel = onCancel;
         Cancel.gameObject.SetActive(onCancel!=null);
+        
+        ButtonGroup.SetActive(onConfirm!=null && onCancel!=null);
+        
         transform.position = Mouse.current.position.ReadValue();
         CancelClickCatcher.gameObject.SetActive(true);
     }

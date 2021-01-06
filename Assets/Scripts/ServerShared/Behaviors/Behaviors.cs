@@ -117,6 +117,7 @@ public abstract class PersistentBehaviorData
  Union(31, typeof(CapacitorData)),
  Union(32, typeof(CockpitData)),
  Union(33, typeof(HeatsinkData)),
+ Union(34, typeof(TurretControllerData)),
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {
