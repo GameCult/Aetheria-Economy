@@ -20,6 +20,7 @@ using float2 = Unity.Mathematics.float2;
 
 public class ActionGameManager : MonoBehaviour
 {
+    public EventLog EventLog;
     public GameSettings Settings;
     public SectorRenderer SectorRenderer;
     // public MapView MapView;
@@ -53,6 +54,12 @@ public class ActionGameManager : MonoBehaviour
     public ItemManager ItemManager { get; private set; }
     public Zone Zone { get; private set; }
 
+    private readonly (float2 direction, string name)[] _directions = {
+        (float2(0, 1), "Front"),
+        (float2(1, 0), "Right"),
+        (float2(-1, 0), "Left"),
+        (float2(0, -1), "Rear")
+    };
 
     void Start()
     {
@@ -102,7 +109,14 @@ public class ActionGameManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 _input.Player.Enable();
                 Menu.gameObject.SetActive(false);
-                GameplayUI.SetActive(true);
+                if (_currentShip != null && _currentShip.Parent == null)
+                {
+                    GameplayUI.SetActive(true);
+                    
+                    SchematicDisplay.ShowShip(_currentShip);
+                    ShipPanel.Display(_currentShip);
+                }
+                
                 return;
             }
             
@@ -120,7 +134,13 @@ public class ActionGameManager : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 _input.Player.Enable();
                 Menu.gameObject.SetActive(false);
-                GameplayUI.SetActive(true);
+                if (_currentShip != null && _currentShip.Parent == null)
+                {
+                    GameplayUI.SetActive(true);
+                    
+                    SchematicDisplay.ShowShip(_currentShip);
+                    ShipPanel.Display(_currentShip);
+                }
                 return;
             }
 
@@ -398,6 +418,24 @@ public class ActionGameManager : MonoBehaviour
         var ship = new Ship(ItemManager, Zone, shipHull);
         PlayerShips.Add(ship);
         _currentShip = ship;
+        ship.ArmorDamage.Subscribe(hit =>
+        {
+            var direction = _directions.MaxBy(d => dot(d.direction, normalize(hit.pos - hullType.Shape.CenterOfMass)));
+            EventLog.LogMessage(
+                $"{direction.name} armor hit for {hit.damage} damage, currently {((int) (ship.Armor[hit.pos.x, hit.pos.y] / hullType.Armor * 100)).ToString()}%",
+                Settings.ArmorHitColor);
+        });
+        ship.HullDamage.Subscribe(hit => EventLog.LogMessage($"Hull Structure hit for {hit} damage"));
+        ship.ItemDamage.Subscribe(hit =>
+        {
+            var data = ItemManager.GetData(hit.item.EquippableItem);
+            EventLog.LogMessage(
+                $"{hit.item.EquippableItem.Name} hit for {hit.damage} damage, currently {((int) (hit.item.EquippableItem.Durability / data.Durability * 100)).ToString()}%",
+                data.HardpointType == HardpointType.Thermal ? Settings.ThermalHitColor : Settings.GearHitColor);
+        });
+        ship.HardpointDamage.Subscribe(hit => EventLog.LogMessage(
+                $"{Enum.GetName(typeof(HardpointType), hit.hardpoint.Type)} hardpoint hit for {hit.damage} damage, currently {((int) (ship.HardpointArmor[hit.hardpoint] / hit.hardpoint.Armor * 100)).ToString()}%",
+                Settings.HardpointHitColor));
 
         var thrusterData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Thruster && x.Shape.Height == 1);
         for (int i = 0; i < 8; i++)

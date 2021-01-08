@@ -333,6 +333,9 @@ public class HullData : EquippableItemData
     [InspectableField, JsonProperty("gridOffset"), Key(17)]
     public float GridOffset;
 
+    [InspectableField, JsonProperty("armor"), Key(18)]
+    public float Armor;
+
     [IgnoreMember]
     public Shape InteriorCells
     {
@@ -360,6 +363,7 @@ public class HardpointData : ITintInspector
     [InspectableField, JsonProperty("shape"), Key(2)] public Shape Shape = new Shape();
     [InspectableField, JsonProperty("transform"), Key(3)] public string Transform;
     [InspectableField, JsonProperty("rotation"), Key(4)] public ItemRotation Rotation;
+    [InspectableField, JsonProperty("armor"), Key(5)] public float Armor;
 
     public override string ToString()
     {

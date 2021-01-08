@@ -27,6 +27,8 @@ public class GuidedProjectile : MonoBehaviour
 
     public Vector3 Velocity { get; set; }
     public float Damage { get; set; }
+    public float Penetration { get; set; }
+    public float Spread { get; set; }
     public DamageType DamageType { get; set; }
     public Entity SourceEntity { get; set; }
 
@@ -83,12 +85,12 @@ public class GuidedProjectile : MonoBehaviour
             var hull = hit.collider.GetComponent<HullCollider>();
             if (hull)
             {
-                hull.SendHit(Damage, DamageType, SourceEntity, hit);
+                hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, Velocity.normalized);
             }
             StartCoroutine(Kill());
         }
         if(_alive)
-            t.position += Velocity;
+            t.position += Velocity * Time.deltaTime;
     }
 
     IEnumerator FadeOut()

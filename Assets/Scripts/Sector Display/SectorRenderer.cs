@@ -253,7 +253,204 @@ public class SectorRenderer : MonoBehaviour
             }
         }
 
-        instance.LookAtPoint = new GameObject().transform;
+        void DamageSchematic(float damage, float spread, Shape hitShape)
+        {
+            // Spread indicates proportion of penetrating damage which is divided among neighboring schematic cells
+            var directDamage = damage * (1 - spread);
+
+            // Search all cells occupied by target cells for equipped gear
+            EquippedItem equippedGear = null;
+            foreach (var hullCoord in hitShape.Coordinates)
+            {
+                if (entity.GearOccupancy[hullCoord.x, hullCoord.y] != null)
+                {
+                    equippedGear = entity.GearOccupancy[hullCoord.x, hullCoord.y];
+                    break;
+                }
+            }
+
+            // Search all cells occupied by target cells for any thermal equipment
+            var equippedThermals = new List<EquippedItem>();
+            foreach (var hullCoord in hitShape.Coordinates)
+            {
+                if (entity.ThermalOccupancy[hullCoord.x, hullCoord.y] != null)
+                {
+                    equippedThermals.Add(entity.ThermalOccupancy[hullCoord.x, hullCoord.y]);
+                }
+            }
+
+            float remainder = 0;
+
+            // Direct damage is divided between gear and thermal equipment (if present)
+            if (equippedGear != null && equippedThermals.Count > 0)
+            {
+                remainder = max(directDamage / 2 - equippedGear.EquippableItem.Durability, 0);
+                equippedGear.EquippableItem.Durability = max(equippedGear.EquippableItem.Durability - directDamage / 2, 0);
+                entity.ItemDamage.OnNext((equippedGear, directDamage / 2));
+                foreach (var t in equippedThermals)
+                {
+                    remainder += max(directDamage / (2 * equippedThermals.Count) - t.EquippableItem.Durability, 0);
+                    t.EquippableItem.Durability = max(equippedGear.EquippableItem.Durability - directDamage / (2 * equippedThermals.Count), 0);
+                    entity.ItemDamage.OnNext((t, directDamage / (2 * equippedThermals.Count)));
+                }
+            }
+            else if (equippedGear != null)
+            {
+                remainder = max(directDamage - equippedGear.EquippableItem.Durability, 0);
+                equippedGear.EquippableItem.Durability = max(equippedGear.EquippableItem.Durability - directDamage, 0);
+                entity.ItemDamage.OnNext((equippedGear, directDamage));
+            }
+            else if (equippedThermals.Count > 0)
+            {
+                foreach (var t in equippedThermals)
+                {
+                    remainder += max(directDamage / (equippedThermals.Count) - t.EquippableItem.Durability, 0);
+                    t.EquippableItem.Durability = max(equippedGear.EquippableItem.Durability - directDamage / equippedThermals.Count, 0);
+                    entity.ItemDamage.OnNext((t, directDamage / equippedThermals.Count));
+                }
+            }
+            else remainder = directDamage;
+
+            // Direct damage remaining after all items are destroyed damages the hull
+            var hullDamage = remainder;
+
+            // Spread damage is divided among components surrounding the hardpoint which has been hit
+            var spreadDamage = damage * spread;
+
+            // Find the cells surrounding the target cells
+            var surroundingCells = hitShape.Expand();
+
+            // Exclude cells contained by the original shape or not within the ship interior
+            foreach (var cell in surroundingCells.Coordinates.ToArray())
+                if (hitShape[cell] || !hullData.InteriorCells[cell])
+                    surroundingCells[cell] = false;
+
+            // Find all equipment occupying surrounding cells
+            var surroundingEquipment = new List<EquippedItem>();
+            foreach (var hullCoord in surroundingCells.Coordinates)
+            {
+                if (entity.GearOccupancy[hullCoord.x, hullCoord.y] != null)
+                    surroundingEquipment.Add(entity.GearOccupancy[hullCoord.x, hullCoord.y]);
+                if (entity.ThermalOccupancy[hullCoord.x, hullCoord.y] != null)
+                    surroundingEquipment.Add(entity.ThermalOccupancy[hullCoord.x, hullCoord.y]);
+            }
+
+            // Divide spread damage among all surrounding cells
+            remainder = 0;
+            foreach (var e in surroundingEquipment)
+            {
+                remainder += max(spreadDamage / surroundingCells.Coordinates.Length - e.EquippableItem.Durability, 0);
+                e.EquippableItem.Durability = max(e.EquippableItem.Durability - spreadDamage / surroundingCells.Coordinates.Length, 0);
+                entity.ItemDamage.OnNext((e, spreadDamage / surroundingCells.Coordinates.Length));
+            }
+
+            // Remaining damage plus spread damage for empty cells is dealt to the hull
+            hullDamage += remainder + spreadDamage / surroundingCells.Coordinates.Length *
+                (surroundingCells.Coordinates.Length - surroundingEquipment.Count);
+            
+            entity.Hull.Durability -= hullDamage;
+            entity.HullDamage.OnNext(hullDamage);
+        }
+
+        foreach (var collider in instance.Prefab.HullColliders)
+        {
+            collider.Hit.Subscribe(hit =>
+            {
+                var hardpointIndex = (int) hit.Hit.textureCoord.x;
+                
+                // U coordinate between 0-1 indicates a hit that didn't land directly on a hardpoint
+                if (hardpointIndex <= 0)
+                {
+                    // Penetration indicates proportion of damage which passes through the hull armor
+                    var surfaceDamage = hit.Damage * (1 - hit.Penetration);
+
+                    // Find the 2D position of the hit relative to the entity's pivot point
+                    var hitPos3 = instance.Transform.InverseTransformPoint(hit.Hit.point);
+                    var hitDirection = normalize(float2(hitPos3.x, hitPos3.z));
+
+                    // Search all schematic border cells for the cell which is closest to the hit position
+                    var hitCell = int2(-1);
+                    var maxDot = -1f;
+                    foreach (var v in hullData.Shape.Coordinates)
+                    {
+                        if (!hullData.InteriorCells[v])
+                        {
+                            // Take the dot product of the vector from the center to each border cell,
+                            // and the vector from the center to the impact point
+                            var cellDot = dot(normalize(v - hullData.Shape.CenterOfMass), hitDirection);
+                            if (cellDot > maxDot)
+                            {
+                                maxDot = cellDot;
+                                hitCell = v;
+                            }
+                        }
+                    }
+
+                    // Extra damage remaining after depleting hull armor is added to penetrating damage
+                    var remainder = max(surfaceDamage - entity.Armor[hitCell.x,hitCell.y], 0);
+                    var penetratingDamage = remainder + hit.Damage * hit.Penetration;
+
+                    // Subtract surface damage from hull armor
+                    entity.Armor[hitCell.x,hitCell.y] = max(entity.Armor[hitCell.x,hitCell.y] - surfaceDamage, 0);
+                    entity.ArmorDamage.OnNext((hitCell, surfaceDamage));
+
+                    // Find the local 2D vector corresponding to the direction of the incoming hit
+                    var localHitDirection = instance.Prefab.transform.InverseTransformDirection(hit.Direction);
+                    var penetrationVector = normalize(float2(localHitDirection.x, localHitDirection.z));
+
+                    // March a ray through the ship from the hit position until we reach an item or pass all the way through
+                    var penetrationPoint = float2(hitCell);
+                    var penetrationCell = hitCell;
+                    while (hullData.Shape[penetrationCell] &&
+                           entity.GearOccupancy[penetrationCell.x, penetrationCell.y] == null &&
+                           entity.ThermalOccupancy[penetrationCell.x, penetrationCell.y] == null)
+                    {
+                        penetrationPoint += penetrationVector * .5f;
+                        penetrationCell = int2(penetrationPoint);
+                    }
+
+                    // If we have passed all the way through the ship without touching an item, just damage the hull
+                    if (!hullData.Shape[penetrationCell])
+                    {
+                        entity.Hull.Durability -= penetratingDamage;
+                        entity.HullDamage.OnNext(penetratingDamage);
+                    }
+                    else
+                    {
+                        // Create a shape containing only the cell which the hit penetrated to
+                        var hitShape = new Shape(hullData.Shape.Width, hullData.Shape.Height);
+                        hitShape[penetrationCell] = true;
+
+                        // Continue with the damage calculation, damaging the item and spreading some damage to the cells around it
+                        DamageSchematic(penetratingDamage, hit.Spread, hitShape);
+                    }
+                }
+                else
+                {
+                    // Collider UV coordinates starting with 1 correspond to hardpoint index
+                    var hardpoint = hullData.Hardpoints[hardpointIndex - 1];
+
+                    // Penetration indicates proportion of damage which passes directly to the item
+                    var surfaceDamage = hit.Damage * (1 - hit.Penetration);
+
+                    // Extra damage remaining after depleting hardpoint armor is added to penetrating damage
+                    var remainder = max(surfaceDamage - entity.HardpointArmor[hardpoint], 0);
+
+                    // Subtract surface damage from hardpoint armor
+                    entity.HardpointArmor[hardpoint] = max(entity.HardpointArmor[hardpoint] - surfaceDamage, 0);
+
+                    var penetratingDamage = remainder + hit.Damage * hit.Penetration;
+
+                    // Obtain the hull coordinates of all cells occupied by the hardpoint
+                    var hardpointCells = hullData.Shape.Inset(hardpoint.Shape, hardpoint.Position);
+
+                    // Continue with the damage calculation, damaging the hardpoint and spreading some damage to the cells around it
+                    DamageSchematic(penetratingDamage, hit.Spread, hardpointCells);
+                }
+            });
+        }
+
+        instance.LookAtPoint = new GameObject($"{entity.Name} Look Point").transform;
         
         foreach (var articulationPoint in instance.Prefab.ArticulationPoints)
         {
@@ -442,6 +639,8 @@ public class SectorRenderer : MonoBehaviour
                 entity.Key.HardpointTransforms[x.Key] = (x.Value[0].position, x.Value[0].forward);
             }
 
+            if (entity.Key.Target != null && !EntityInstances.ContainsKey(entity.Key.Target))
+                entity.Key.Target = null;
             entity.Value.LookAtPoint.position = entity.Value.Transform.position + (Vector3) entity.Key.LookDirection * (entity.Key.Target != null
                 ? (EntityInstances[entity.Key.Target].Transform.position - entity.Value.Transform.position).magnitude : 100);
             entity.Value.Transform.position = entity.Key.Position;

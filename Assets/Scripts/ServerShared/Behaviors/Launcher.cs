@@ -9,31 +9,31 @@ using Unity.Mathematics;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class LauncherData : InstantWeaponData
 {
-    [InspectableAnimationCurve, JsonProperty("guidance"), Key(7)]  
+    [InspectableAnimationCurve, JsonProperty("guidance"), Key(9)]  
     public float4[] GuidanceCurve;
 
-    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(8)]  
+    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(10)]  
     public float4[] ThrustCurve;
 
-    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(9)]  
+    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(11)]  
     public float4[] LiftCurve;
 
-    [InspectableField, JsonProperty("thrust"), Key(10)]  
+    [InspectableField, JsonProperty("thrust"), Key(12)]  
     public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField, JsonProperty("lockAngle"), Key(11)]  
+    [InspectableField, JsonProperty("lockAngle"), Key(13)]  
     public float LockAngle;
 
-    [InspectableField, JsonProperty("frequency"), Key(12)]  
+    [InspectableField, JsonProperty("frequency"), Key(14)]  
     public float DodgeFrequency;
 
-    [InspectableField, JsonProperty("launchSpeed"), Key(13)]  
+    [InspectableField, JsonProperty("launchSpeed"), Key(15)]  
     public PerformanceStat LaunchSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("missileSpeed"), Key(14)]  
+    [InspectableField, JsonProperty("missileSpeed"), Key(16)]  
     public PerformanceStat MissileSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("lockOnTime"), Key(15)]
+    [InspectableField, JsonProperty("lockOnTime"), Key(17)]
     public PerformanceStat LockOnTime = new PerformanceStat();
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

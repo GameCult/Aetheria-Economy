@@ -19,6 +19,8 @@ public class GuidedProjectileManager : MonoBehaviour
         p.transform.position = barrel.position;
         p.Velocity = barrel.forward * source.Entity.ItemManager.Evaluate(data.LaunchSpeed, item.EquippableItem, source.Entity);
         p.Damage = source.Entity.ItemManager.Evaluate(data.Damage, item.EquippableItem, source.Entity);
+        p.Penetration = source.Entity.ItemManager.Evaluate(data.Penetration, item.EquippableItem, source.Entity);
+        p.Spread = source.Entity.ItemManager.Evaluate(data.DamageSpread, item.EquippableItem, source.Entity);
         p.DamageType = data.DamageType;
         p.GuidanceCurve = data.GuidanceCurve.ToCurve();
         p.LiftCurve = data.LiftCurve.ToCurve();

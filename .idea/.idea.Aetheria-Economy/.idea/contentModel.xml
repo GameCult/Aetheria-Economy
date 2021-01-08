@@ -24,7 +24,6 @@
             </e>
           </e>
         </e>
-        <e p="ArticulationPoint.cs" t="Include" />
         <e p="com.unity.uiextensions" t="Include">
           <e p="Editor" t="Include">
             <e p="BezierLineRendererEditor.cs" t="Include" />
@@ -66,19 +65,7 @@
             </e>
           </e>
         </e>
-        <e p="EntityPrefab.cs" t="Include" />
-        <e p="FilterTest.cs" t="Include" />
-        <e p="FitToCamera.cs" t="Include" />
-        <e p="GaussianBlurFilter.shader" t="Include" />
-        <e p="GuidedProjectile.cs" t="Include" />
-        <e p="GuidedProjectileManager.cs" t="Include" />
-        <e p="HullCollider.cs" t="Include" />
-        <e p="InventoryCell.cs" t="Include" />
-        <e p="InventoryMenu.cs" t="Include" />
-        <e p="MapMenuInput.cs" t="Include" />
-        <e p="MapRenderer.cs" t="Include" />
-        <e p="MenuPanel.cs" t="Include" />
-        <e p="MenuTabButton.cs" t="Include" />
+        <e p="EventLog.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">
@@ -216,20 +203,16 @@
             </e>
           </e>
         </e>
-        <e p="Projectile.cs" t="Include" />
-        <e p="ProjectileManager.cs" t="Include" />
+        <e p="PrototypeParticleReturn.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="Sprites" t="Include">
             <e p="Attribution.txt" t="Include" />
           </e>
         </e>
-        <e p="Rotate.cs" t="Include" />
-        <e p="SchematicDisplay.cs" t="Include" />
-        <e p="SchematicListElement.cs" t="Include" />
-        <e p="SchematicTriggerGroupElement.cs" t="Include" />
         <e p="Scripts" t="Include">
           <e p="ActionGameManager.cs" t="Include" />
           <e p="AetheriaInput.cs" t="Include" />
+          <e p="ArticulationPoint.cs" t="Include" />
           <e p="CameraPerlinOrbit.cs" t="Include" />
           <e p="CultClient.cs" t="Include" />
           <e p="Editor" t="Include">
@@ -241,11 +224,23 @@
             <e p="SerializerTestWindow.cs" t="Include" />
             <e p="SpriteProcessor.cs" t="Include" />
           </e>
+          <e p="EntityPrefab.cs" t="Include" />
+          <e p="FilterTest.cs" t="Include" />
+          <e p="FitToCamera.cs" t="Include" />
           <e p="Galaxy.cs" t="Include" />
           <e p="GameSettings.cs" t="Include" />
           <e p="Gravity.cs" t="Include" />
+          <e p="GuidedProjectile.cs" t="Include" />
+          <e p="GuidedProjectileManager.cs" t="Include" />
+          <e p="HullCollider.cs" t="Include" />
           <e p="InitialSettings.cs" t="Include" />
+          <e p="InventoryCell.cs" t="Include" />
+          <e p="InventoryMenu.cs" t="Include" />
+          <e p="MapMenuInput.cs" t="Include" />
+          <e p="MapRenderer.cs" t="Include" />
           <e p="MarkovNameGenerator.cs" t="Include" />
+          <e p="MenuPanel.cs" t="Include" />
+          <e p="MenuTabButton.cs" t="Include" />
           <e p="NIH" t="Include">
             <e p="GPU Noise" t="Include">
               <e p="ClassicNoise2D.cginc" t="Include" />
@@ -1144,6 +1139,7 @@
                 </e>
               </e>
             </e>
+            <e p="SizedQueue.cs" t="Include" />
             <e p="UniRx" t="Include">
               <e p="Examples" t="Include">
                 <e p="Sample02_ObservableTriggers.cs" t="Include" />
@@ -1423,8 +1419,14 @@
             </e>
             <e p="XKCDColors.cs" t="Include" />
           </e>
+          <e p="Projectile.cs" t="Include" />
+          <e p="ProjectileManager.cs" t="Include" />
           <e p="Prototype.cs" t="Include" />
           <e p="RethinkConnection.cs" t="Include" />
+          <e p="Rotate.cs" t="Include" />
+          <e p="SchematicDisplay.cs" t="Include" />
+          <e p="SchematicListElement.cs" t="Include" />
+          <e p="SchematicTriggerGroupElement.cs" t="Include" />
           <e p="Sector Display" t="Include">
             <e p="BlueNoiseProvider.cs" t="Include" />
             <e p="CopyTransform.cs" t="Include" />
@@ -1965,6 +1967,7 @@
             <e p="ZoneGenerator.cs" t="Include" />
           </e>
           <e p="TechTreeMsagl.cs" t="Include" />
+          <e p="ThrusterHardpoint.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="AttributeProperty.cs" t="Include" />
             <e p="BackgroundRenderer.cs" t="Include" />
@@ -2010,6 +2013,8 @@
           </e>
           <e p="UnityExtensions.cs" t="Include" />
           <e p="UnityFormatters.cs" t="Include" />
+          <e p="UnityHelpers.cs" t="Include" />
+          <e p="WeaponHardpoint.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
           <e p="AdditiveUI.shader" t="Include" />
@@ -2033,6 +2038,7 @@
           <e p="Dither Functions.cginc" t="Include" />
           <e p="DitheredParticles.shader" t="Include" />
           <e p="GalaxyMap.shader" t="Include" />
+          <e p="GaussianBlurFilter.shader" t="Include" />
           <e p="Isolines.shader" t="Include" />
           <e p="IsolinesUI.shader" t="Include" />
           <e p="MaskedUIBlur.shader" t="Include" />
@@ -2074,9 +2080,6 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
-        <e p="ThrusterHardpoint.cs" t="Include" />
-        <e p="UnityHelpers.cs" t="Include" />
-        <e p="WeaponHardpoint.cs" t="Include" />
       </e>
       <e p="Economy.Shared.Unity.csproj" t="IncludeRecursive" />
       <e p="MessagePack.csproj" t="IncludeRecursive" />

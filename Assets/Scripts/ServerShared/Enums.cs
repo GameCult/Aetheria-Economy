@@ -12,6 +12,14 @@ public enum ItemRotation
     Clockwise = 3
 }
 
+public enum HitType
+{
+    Armor,
+    Hardpoint,
+    Gear,
+    Thermal
+}
+
 public enum LauncherCaliber
 {
     Micro,

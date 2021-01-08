@@ -16,6 +16,8 @@ public class ProjectileManager : MonoBehaviour
         p.StartPosition = p.transform.position = barrel.position;
         p.Velocity = barrel.forward * source.Entity.ItemManager.Evaluate(data.Velocity, item.EquippableItem, source.Entity);
         p.Damage = source.Entity.ItemManager.Evaluate(data.Damage, item.EquippableItem, source.Entity);
+        p.Penetration = source.Entity.ItemManager.Evaluate(data.Penetration, item.EquippableItem, source.Entity);
+        p.Spread = source.Entity.ItemManager.Evaluate(data.DamageSpread, item.EquippableItem, source.Entity);
         p.DamageType = data.DamageType;
         p.Zone = source.Entity.Zone;
         p.Trail.Clear();

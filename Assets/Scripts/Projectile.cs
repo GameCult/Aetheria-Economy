@@ -9,6 +9,7 @@ public class Projectile : MonoBehaviour
 {
     public TrailRenderer Trail;
     public float Gravity;
+    public Prototype HitEffect;
     
     private bool _alive;
     
@@ -17,6 +18,8 @@ public class Projectile : MonoBehaviour
     public Vector3 StartPosition { get; set; }
     public Vector3 Velocity { get; set; }
     public float Damage { get; set; }
+    public float Penetration { get; set; }
+    public float Spread { get; set; }
     public DamageType DamageType { get; set; }
     public Entity SourceEntity { get; set; }
     public float Range { get; set; }
@@ -40,19 +43,30 @@ public class Projectile : MonoBehaviour
         if(_alive)
         {
             var position = transform.position;
-            Velocity += Vector3.up * (sign(Zone.GetHeight(float2(position.x,position.z)) - position.y) * Gravity * Time.deltaTime);
+            Velocity += Vector3.up * (Gravity * Time.deltaTime);
             var ray = new Ray(position, Velocity);
-            if (Physics.Raycast(ray, out var hit, Velocity.magnitude, LayerMask.NameToLayer("Combat")))
+            if (Physics.Raycast(ray, out var hit, Velocity.magnitude * Time.deltaTime))
             {
                 var hull = hit.collider.GetComponent<HullCollider>();
                 if (hull)
                 {
-                    hull.SendHit(Damage, DamageType, SourceEntity, hit);
+                    if(hull.Entity != SourceEntity)
+                    {
+                        hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, Velocity.normalized);
+                        transform.position = hit.point;
+                        StartCoroutine(Kill());
+                        if(HitEffect!=null)
+                        {
+                            var t = HitEffect.Instantiate<Transform>();
+                            t.SetParent(hit.collider.transform);
+                            t.position = hit.point;
+                        }
+                    }
                 }
-                StartCoroutine(Kill());
+                else StartCoroutine(Kill());
             }
             
-            transform.position += Velocity;
+            transform.position += Velocity * Time.deltaTime;
             if((transform.position - StartPosition).magnitude > Range)
                 StartCoroutine(Kill());
         }

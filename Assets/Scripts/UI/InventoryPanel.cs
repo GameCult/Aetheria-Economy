@@ -19,6 +19,7 @@ using int2 = Unity.Mathematics.int2;
 
 public class InventoryPanel : MonoBehaviour
 {
+    public GameSettings Settings;
     public ActionGameManager GameManager;
     public ContextMenu ContextMenu;
     public TextMeshProUGUI Title;
@@ -33,6 +34,8 @@ public class InventoryPanel : MonoBehaviour
     public ExponentialLerp TemperatureAlphaCurve;
     public float MaxTemperature;
     public bool FitToContent;
+    public float CellHealthPersistDuration;
+    public float CellHealthFadeTime;
     
     Subject<InventoryEventData> _onBeginDrag;
     Subject<InventoryEventData> _onDrag;
@@ -52,6 +55,10 @@ public class InventoryPanel : MonoBehaviour
     public Shape IgnoreOccupancy;
     public List<GameObject> EmptyCells = new List<GameObject>();
     public Dictionary<int2, InventoryCell> CellInstances = new Dictionary<int2, InventoryCell>();
+    
+    private List<IDisposable> _subscriptions = new List<IDisposable>();
+    private Dictionary<int2, float> _cellHealthFadeoutTime = new Dictionary<int2, float>();
+    private Dictionary<int2, Dictionary<HitType, string>> _cellQueuedLabels = new Dictionary<int2, Dictionary<HitType, string>>();
     
     private int2[] _offsets = {
         int2(0, 1),
@@ -116,7 +123,39 @@ public class InventoryPanel : MonoBehaviour
             }
             _temperatureTexture.Apply();
             TemperatureDisplay.rectTransform.anchoredPosition = _firstRect.anchoredPosition - Vector2.one * Grid.cellSize * 1.5f;
+
+            foreach (var damagedCell in _cellHealthFadeoutTime.Keys.ToArray())
+            {
+                var fadeoutTime = _cellHealthFadeoutTime[damagedCell];
+                if (fadeoutTime < Time.time)
+                {
+                    StartCoroutine(FadeOutLabel(CellInstances[damagedCell]));
+                    _cellHealthFadeoutTime.Remove(damagedCell);
+                    _cellQueuedLabels[damagedCell].Clear();
+                    continue;
+                }
+                var queuedLabels = _cellQueuedLabels[damagedCell];
+                var currentLabel = queuedLabels.ElementAt((int) ((fadeoutTime - Time.time) / CellHealthPersistDuration * queuedLabels.Count));
+                if (CellInstances[damagedCell].Label.text != currentLabel.Value)
+                {
+                    CellInstances[damagedCell].Label.text = currentLabel.Value;
+                    CellInstances[damagedCell].Label.color = currentLabel.Key switch
+                    {
+                        HitType.Armor => Settings.ArmorHitColor,
+                        HitType.Hardpoint => Settings.HardpointHitColor,
+                        HitType.Gear => Settings.GearHitColor,
+                        HitType.Thermal => Settings.ThermalHitColor,
+                        _ => Color.white
+                    };
+                }
+
+            }
         }
+    }
+
+    private void OnDisable()
+    {
+        Clear();
     }
 
     public void Clear()
@@ -128,9 +167,16 @@ public class InventoryPanel : MonoBehaviour
             Destroy(empty);
         EmptyCells.Clear();
         
+        _cellQueuedLabels.Clear();
+        
         foreach(var node in CellInstances.Values)
             node.GetComponent<Prototype>().ReturnToPool();
         CellInstances.Clear();
+        
+        foreach(var s in _subscriptions)
+            s.Dispose();
+        
+        _subscriptions.Clear();
         
         if(Title)
             Title.text = "None";
@@ -178,6 +224,7 @@ public class InventoryPanel : MonoBehaviour
             }
             else
             {
+                _cellQueuedLabels.Add(v, new Dictionary<HitType, string>(4));
                 var cell = NodePrototype.Instantiate<InventoryCell>();
                 if (!_firstRect)
                     _firstRect = cell.GetComponent<RectTransform>();
@@ -197,6 +244,61 @@ public class InventoryPanel : MonoBehaviour
             }
         }
         RefreshCells(CellInstances.Keys);
+        
+        _subscriptions.Add(entity.ArmorDamage.Subscribe(hit =>
+        {
+            var labelText = $"{((int) (entity.Armor[hit.pos.x, hit.pos.y] / hullData.Armor * 100)).ToString()}%";
+            // If there is no set fadeout time, that means this is the first hit and the cell label isn't visible yet
+            if (!_cellHealthFadeoutTime.ContainsKey(hit.pos)) StartCoroutine(FadeInLabel(CellInstances[hit.pos]));
+            // Color and label text will be set according to remaining time until fadeout
+            _cellQueuedLabels[hit.pos][HitType.Armor] = labelText;
+            // Set the fadeout time to some time in the future
+            _cellHealthFadeoutTime[hit.pos] = Time.time + CellHealthPersistDuration;
+            //RefreshCells(new []{int2(hit.pos)});
+        }));
+        
+        _subscriptions.Add(entity.ItemDamage.Subscribe(hit =>
+        {
+            var data = entity.ItemManager.GetData(hit.item.EquippableItem);
+            var labelText = $"{((int) (hit.item.EquippableItem.Durability / data.Durability * 100)).ToString()}%";
+            if (!_cellHealthFadeoutTime.ContainsKey(hit.item.Position)) StartCoroutine(FadeInLabel(CellInstances[hit.item.Position]));
+            _cellQueuedLabels[hit.item.Position][data.HardpointType == HardpointType.Thermal ? HitType.Thermal : HitType.Gear] = labelText;
+            _cellHealthFadeoutTime[hit.item.Position] = Time.time + CellHealthPersistDuration;
+        }));
+        
+        _subscriptions.Add(entity.HardpointDamage.Subscribe(hit =>
+        {
+            var labelText = $"{((int) (entity.HardpointArmor[hit.hardpoint] / hit.hardpoint.Armor * 100)).ToString()}%";
+            if (!_cellHealthFadeoutTime.ContainsKey(hit.hardpoint.Position)) StartCoroutine(FadeInLabel(CellInstances[hit.hardpoint.Position]));
+            _cellQueuedLabels[hit.hardpoint.Position][HitType.Hardpoint] = labelText;
+            _cellHealthFadeoutTime[hit.hardpoint.Position] = Time.time + CellHealthPersistDuration;
+        }));
+    }
+
+    private IEnumerator FadeInLabel(InventoryCell cell)
+    {
+        cell.Label.gameObject.SetActive(true);
+        float startTime = Time.time;
+        while (Time.time - startTime < CellHealthFadeTime)
+        {
+            var lerp = (Time.time - startTime) / CellHealthFadeTime;
+            cell.Label.alpha = lerp;
+            yield return null;
+        }
+        cell.Label.alpha = 1;
+    }
+
+    private IEnumerator FadeOutLabel(InventoryCell cell)
+    {
+        float startTime = Time.time;
+        while (Time.time - startTime < CellHealthFadeTime)
+        {
+            var lerp = (Time.time - startTime) / CellHealthFadeTime;
+            cell.Label.alpha = 1 - lerp;
+            yield return null;
+        }
+        cell.Label.alpha = 0;
+        cell.Label.gameObject.SetActive(false);
     }
 
     public void Display(EquippedCargoBay cargo)

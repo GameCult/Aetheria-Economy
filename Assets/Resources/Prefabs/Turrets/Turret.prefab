@@ -665,7 +665,7 @@ GameObject:
   - component: {fileID: 2664341253667465548}
   - component: {fileID: 2664341253667465539}
   m_Layer: 0
-  m_Name: Cylinder.001
+  m_Name: Radiator Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -723,7 +723,7 @@ GameObject:
   - component: {fileID: 3028840165937219682}
   - component: {fileID: 3028840165937219683}
   m_Layer: 0
-  m_Name: Cube.001
+  m_Name: Gun Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

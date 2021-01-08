@@ -175,11 +175,13 @@ public class DatabaseListView : EditorWindow
             if (GUILayout.Button("Save"))
             {
                 _databaseCache.Save(_filePath.FullName);
+                Debug.Log("Local DB Cache Saved!");
             }
 
             if (GUILayout.Button("Load"))
             {
                 _databaseCache.Load(_filePath.FullName);
+                Debug.Log("Loaded DB From Local Cache!");
             }
         }
 

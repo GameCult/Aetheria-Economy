@@ -18,9 +18,6 @@ public class ConstantWeaponData : WeaponData
 public class ConstantWeapon : IBehavior, IAlwaysUpdatedBehavior
 {
     private ConstantWeaponData _data;
-
-    public int _burstCount;
-    public float _burstTimer;
     
     private Entity Entity { get; }
     private EquippedItem Item { get; }

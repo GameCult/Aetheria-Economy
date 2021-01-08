@@ -50,6 +50,7 @@ MonoBehaviour:
   Body: {fileID: 3973935122748960683}
   GravityWell: {fileID: 3973935121058605871}
   Icon: {fileID: 3973935121358855037}
+  Generator: {fileID: 0}
   SunMaterial: {fileID: 3973935122748960685}
   GravityWaves: {fileID: 3973935122114073485}
 --- !u!1 &3973935121058605867
@@ -389,7 +390,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3973935122748960685
 MonoBehaviour:

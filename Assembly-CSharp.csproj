@@ -64,10 +64,10 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\IntEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\Layering\LongestPathLayering.cs" />
      <Compile Include="Assets\Scripts\UI\FlatButton.cs" />
-     <Compile Include="Assets\EntityPrefab.cs" />
+     <Compile Include="Assets\Scripts\EntityPrefab.cs" />
      <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Primitives\UILineRendererList.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\ActiveDiagonalComparerWithRay.cs" />
-     <Compile Include="Assets\SchematicDisplay.cs" />
+     <Compile Include="Assets\Scripts\SchematicDisplay.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\MultiEdgeRouter.cs" />
      <Compile Include="Assets\Scripts\RethinkConnection.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\VisibilityEdge.cs" />
@@ -77,7 +77,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\CurvatureDerivative.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\OverlapRemoval\OverlapRemovalClusterScanLine.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\MaxIterationMethod.cs" />
-     <Compile Include="Assets\GuidedProjectile.cs" />
+     <Compile Include="Assets\Scripts\GuidedProjectile.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\NodePositionsAdjuster.cs" />
      <Compile Include="Assets\Scripts\Galaxy.cs" />
      <Compile Include="Assets\Scripts\UI\PropertyLabel.cs" />
@@ -88,13 +88,13 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgLayoutSettings.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\Diagonal.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\RTree\IntervalRTree.cs" />
-     <Compile Include="Assets\InventoryCell.cs" />
+     <Compile Include="Assets\Scripts\InventoryCell.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\IMetroMapOrderingAlgorithm.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\LabelPlacementResult.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\GeometryObject.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\GraphmapsWithMesh\DijkstraAlgo.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\Ellipse.cs" />
-     <Compile Include="Assets\Rotate.cs" />
+     <Compile Include="Assets\Scripts\Rotate.cs" />
      <Compile Include="Assets\Scripts\UI\ZoneGravityObject.cs" />
      <Compile Include="Assets\Scripts\UI\TechArrow.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\EdgeNudger.cs" />
@@ -116,7 +116,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Incremental\IConstraint.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\Constants.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\Persistence\ClusterWithChildLists.cs" />
-     <Compile Include="Assets\Projectile.cs" />
+     <Compile Include="Assets\Scripts\Projectile.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\ConeSpannerForPortLocations.cs" />
      <Compile Include="Assets\Scripts\Sector Display\GradientMapper.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\SingleSourceSingleTargetShortestPathOnVisibilityGraph.cs" />
@@ -145,7 +145,7 @@
      <Compile Include="Assets\Scripts\UI\IncrementField.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\PathFixer.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\Triangulation\VoronoiEdge.cs" />
-     <Compile Include="Assets\MenuPanel.cs" />
+     <Compile Include="Assets\Scripts\MenuPanel.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\Nudging\PathEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\ProjectionSolver\SolverShell.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\RectanglePacking\Packing.cs" />
@@ -195,10 +195,10 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\LabelFixture.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\RectanglePacking\OptimalRectanglePacking.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\EdgeRestoreData.cs" />
-     <Compile Include="Assets\ArticulationPoint.cs" />
+     <Compile Include="Assets\Scripts\ArticulationPoint.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\CloseVertexEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\ConstrainedDelaunayTriangulation\PerimeterEdge.cs" />
-     <Compile Include="Assets\SchematicListElement.cs" />
+     <Compile Include="Assets\Scripts\SchematicListElement.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\IncrementalDragger.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\BinaryHeapPriorityQueue.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgNodeCollection.cs" />
@@ -267,7 +267,7 @@
      <Compile Include="Assets\Scripts\Sector Display\CopyTransform.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Site.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\StationEdgeInfo.cs" />
-     <Compile Include="Assets\InventoryMenu.cs" />
+     <Compile Include="Assets\Scripts\InventoryMenu.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\RightVertexEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\SegmentBase.cs" />
      <Compile Include="Assets\Scripts\UI\ClickRaycaster.cs" />
@@ -280,7 +280,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\DebugCurve.cs" />
      <Compile Include="Assets\Scripts\UI\RangedFloatField.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\ConstrainedDelaunayTriangulation\CdtTriangle.cs" />
-     <Compile Include="Assets\FitToCamera.cs" />
+     <Compile Include="Assets\Scripts\FitToCamera.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\MDS\PivotDistances.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\SimpleNodeCollection.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\ConvexHull.cs" />
@@ -308,7 +308,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\RouterBetweenTwoNodes.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\Curve.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\ProximityOverlapRemoval.cs" />
-     <Compile Include="Assets\MapRenderer.cs" />
+     <Compile Include="Assets\Scripts\MapRenderer.cs" />
      <Compile Include="Assets\Scripts\UI\MapViewDragHandler.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\Polyline.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\HighBendVertexEvent.cs" />
@@ -334,7 +334,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\Label.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\ConstrainedDelaunayTriangulation\CdtFront.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\WeightedEdge.cs" />
-     <Compile Include="Assets\WeaponHardpoint.cs" />
+     <Compile Include="Assets\Scripts\WeaponHardpoint.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\Phylo\PhyloTree.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\PointAndCrossingsList.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\RootFinder.cs" />
@@ -349,7 +349,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\LayerCalculator.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\ProjectionSolver\ConstraintVector.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\Routing\ShortestPathTree.cs" />
-     <Compile Include="Assets\MapMenuInput.cs" />
+     <Compile Include="Assets\Scripts\MapMenuInput.cs" />
      <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Utilities\CableCurve.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\Station.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\GroupBoundaryCrossing.cs" />
@@ -419,7 +419,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\ScanSegment.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\TwoLayerFlatEdgeRouter.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\ClosestPointOnCurve.cs" />
-     <Compile Include="Assets\FilterTest.cs" />
+     <Compile Include="Assets\Scripts\FilterTest.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\StemStartPointComparer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Shape.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\ProjectionSolver\UniformOneDimensionalSolver.cs" />
@@ -507,7 +507,7 @@
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\ConvexHull\MathHelper.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\PointAndCrossings.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\GraphConnectedComponents.cs" />
-     <Compile Include="Assets\SchematicTriggerGroupElement.cs" />
+     <Compile Include="Assets\Scripts\SchematicTriggerGroupElement.cs" />
      <Compile Include="Assets\Scripts\UI\ConsoleView.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgSkeletonLevel.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgInteractor.cs" />
@@ -543,7 +543,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\IOverlapRemoval.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\Vertex2.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\MST\MstLineSweeper.cs" />
-     <Compile Include="Assets\GuidedProjectileManager.cs" />
+     <Compile Include="Assets\Scripts\GuidedProjectileManager.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\HorizontalConstraintsForSugiyama.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\LayerInserter.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\ObstacleSideComparer.cs" />
@@ -608,7 +608,7 @@
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Core\DrawerAttributes\DropdownAttribute.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\GenericHeapElementWithTimestamp.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\ProjectionSolver\UniformSolverVar.cs" />
-     <Compile Include="Assets\UnityHelpers.cs" />
+     <Compile Include="Assets\Scripts\UnityHelpers.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\GraphAlgorithms\MinimumSpanningTreeByPrim.cs" />
      <Compile Include="Assets\Scripts\UI\PropertiesPanel.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\ConeSideComparer.cs" />
@@ -638,13 +638,13 @@
      <Compile Include="Assets\Scripts\UI\ConfirmationDialog.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\GenericBinaryHeapPriorityQueueWithTimestamp.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\RelaxedPolylinePoint.cs" />
-     <Compile Include="Assets\ThrusterHardpoint.cs" />
+     <Compile Include="Assets\Scripts\ThrusterHardpoint.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\Ordering\AdjacentSwaps.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\ExampleStressMajorization.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\RoundedRect.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\LowestVertexEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\ShowDebugCurvesEnumeration.cs" />
-     <Compile Include="Assets\ProjectileManager.cs" />
+     <Compile Include="Assets\Scripts\ProjectileManager.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\ShowDebugCurves.cs" />
      <Compile Include="Assets\Scripts\UI\TabButton.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\EdgeCollection.cs" />
@@ -683,7 +683,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\ConstrainedDelaunayTriangulation\EdgeInserter.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\PortEntryOnCurve.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\CdtIntersections.cs" />
-     <Compile Include="Assets\MenuTabButton.cs" />
+     <Compile Include="Assets\Scripts\MenuTabButton.cs" />
      <Compile Include="Assets\Scripts\UI\ContextMenuOption.cs" />
      <Compile Include="Assets\Scripts\UI\BackgroundRenderer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\LineSweeper.cs" />
@@ -698,7 +698,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\XCoordsWithAlignment.cs" />
      <Compile Include="Assets\Scripts\CameraPerlinOrbit.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\GraphmapsWithMesh\LocalModifications.cs" />
-     <Compile Include="Assets\HullCollider.cs" />
+     <Compile Include="Assets\Scripts\HullCollider.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Core\DrawerAttributes\DrawerAttribute.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\Nudging\AxisEdgeLowPointEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\NetworkSimplexForGeneralGraph.cs" />
@@ -708,6 +708,9 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\MinEnclosingDisc\MinimumEnclosingDisc.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\BinaryHeapWithComparer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Direction.cs" />
+     <Compile Include="Assets\PrototypeParticleReturn.cs" />
+     <Compile Include="Assets\Scripts\NIH\SizedQueue.cs" />
+     <Compile Include="Assets\EventLog.cs" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIAdditive.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
@@ -766,7 +769,7 @@
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIImageCrop.shader" />
      <None Include="Assets\Shaders\Brushes\SimplexBrush.shader" />
-     <None Include="Assets\GaussianBlurFilter.shader" />
+     <None Include="Assets\Shaders\GaussianBlurFilter.shader" />
      <None Include="Assets\Shaders\AdditiveUIScreenSpaceDetail.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
      <None Include="Assets\Shaders\Isolines.shader" />
@@ -1001,9 +1004,6 @@
  <Reference Include="UnityEditor.UnityConnectModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll</HintPath>
  </Reference>
- <Reference Include="System.Threading.Tasks.Extensions">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
- </Reference>
  <Reference Include="Remotion.Linq">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
  </Reference>
@@ -1030,6 +1030,9 @@
  </Reference>
  <Reference Include="Substance.Game">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Threading.Tasks.Extensions">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
  </Reference>
  <Reference Include="System.Runtime.CompilerServices.Unsafe">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>

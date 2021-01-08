@@ -49,7 +49,9 @@ public abstract class Entity
     
     public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
-    public readonly Dictionary<HardpointData, (float3 position, float3 direction)> HardpointTransforms = new Dictionary<HardpointData, (float3 position, float3 direction)>(); 
+    public readonly Dictionary<HardpointData, (float3 position, float3 direction)> HardpointTransforms = 
+        new Dictionary<HardpointData, (float3 position, float3 direction)>(); 
+    public Dictionary<HardpointData, float> HardpointArmor;
     
     public readonly List<EquippedItem>[] TriggerGroups;
 
@@ -58,6 +60,7 @@ public abstract class Entity
     public EquippedItem[,] GearOccupancy;
     public EquippedItem[,] ThermalOccupancy;
     public HardpointData[,] Hardpoints;
+    public float[,] Armor;
     
     private EquippedItem[] _orderedEquipment;
     protected bool _active;
@@ -67,6 +70,11 @@ public abstract class Entity
     public float Mass { get; private set; }
     public float Visibility => VisibilitySources.Values.Sum();
     
+    public Subject<(HardpointData hardpoint, float damage)> HardpointDamage = new Subject<(HardpointData, float)>();
+    public Subject<(int2 pos, float damage)> ArmorDamage = new Subject<(int2, float)>();
+    public Subject<(EquippedItem item, float damage)> ItemDamage = new Subject<(EquippedItem, float)>();
+    public Subject<float> HullDamage = new Subject<float>();
+
     public bool Active
     {
         get => _active;
@@ -94,23 +102,27 @@ public abstract class Entity
         Zone = zone;
         Hull = hull;
         Name = hull.Name;
-        MapShip();
+        MapEntity();
         TriggerGroups = new List<EquippedItem>[itemManager.GameplaySettings.TriggerGroupCount];
         for(int i=0; i<itemManager.GameplaySettings.TriggerGroupCount; i++)
             TriggerGroups[i] = new List<EquippedItem>();
     }
 
-    private void MapShip()
+    private void MapEntity()
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
+        HardpointArmor = hullData.Hardpoints.ToDictionary(hp => hp, hp => hp.Armor);
         Equipment.Add(new EquippedItem(ItemManager, Hull, int2.zero, this));
         Mass = hullData.Mass;
         Temperature = new float[hullData.Shape.Width, hullData.Shape.Height];
         Conductivity = new float4[hullData.Shape.Width, hullData.Shape.Height];
         ThermalMass = new float[hullData.Shape.Width, hullData.Shape.Height];
+        Armor = new float[hullData.Shape.Width, hullData.Shape.Height];
         var cellCount = hullData.Shape.Coordinates.Length;
         foreach (var v in hullData.Shape.Coordinates)
         {
+            if (!hullData.InteriorCells[v])
+                Armor[v.x, v.y] = hullData.Armor;
             Temperature[v.x, v.y] = 280;
             Conductivity[v.x, v.y] = hullData.Conductivity;
             ThermalMass[v.x, v.y] = hullData.Mass * hullData.SpecificHeat / cellCount;
@@ -260,6 +272,11 @@ public abstract class Entity
             // Inset the shapes of both item and hardpoint
             var itemShapeInset = hullData.Shape.Inset(itemData.Shape, hullCoord, item.Rotation);
             var hardpointShapeInset = hullData.Shape.Inset(hardpoint.Shape, hardpoint.Position);
+            
+            // Check every cell of the hardpoint shape
+            foreach(var v in hardpointShapeInset.Coordinates)
+                if (GearOccupancy[v.x, v.y] != null)
+                    return false;
             
             // Check every cell of the item's shape
             foreach (var i in itemShapeInset.Coordinates)

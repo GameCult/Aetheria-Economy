@@ -17,20 +17,26 @@ public abstract class WeaponData : BehaviorData
     [InspectableField, JsonProperty("damage"), Key(2)]
     public PerformanceStat Damage = new PerformanceStat();
 
-    [InspectableField, JsonProperty("range"), Key(3)]
+    [RangedFloatInspectable(0,1), JsonProperty("penetration"), Key(3)]
+    public PerformanceStat Penetration = new PerformanceStat();
+
+    [RangedFloatInspectable(0,1), JsonProperty("damageSpread"), Key(4)]
+    public PerformanceStat DamageSpread = new PerformanceStat();
+
+    [InspectableField, JsonProperty("range"), Key(5)]
     public PerformanceStat Range = new PerformanceStat();
     
-    [InspectablePrefab, JsonProperty("effect"), Key(4)]  
+    [InspectablePrefab, JsonProperty("effect"), Key(6)]  
     public string EffectPrefab;
 }
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public abstract class InstantWeaponData : WeaponData
 {
-    [InspectableField, JsonProperty("burstCount"), Key(5)]
+    [InspectableField, JsonProperty("burstCount"), Key(7)]
     public int BurstCount;
 
-    [InspectableField, JsonProperty("burstTime"), Key(6)]
+    [InspectableField, JsonProperty("burstTime"), Key(8)]
     public PerformanceStat BurstTime = new PerformanceStat();
 }
 

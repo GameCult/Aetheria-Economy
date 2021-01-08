@@ -84,7 +84,8 @@ public class Prototype : MonoBehaviour {
 			Destroy(gameObject);
 			return;
 		}
-			
+
+		transform.SetParent(_originalPrototype.transform.parent);
 		_originalPrototype.AddToPool(this);
 		OnReturnToPool = null;
 	}

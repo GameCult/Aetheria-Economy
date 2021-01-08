@@ -24,6 +24,11 @@ public class GameSettings : ScriptableObject
     public PlanetSettings PlanetSettings;
     public ZoneGenerationSettings ZoneSettings;
     public GameplaySettings GameplaySettings;
+    public Color HullHitColor;
+    public Color ArmorHitColor;
+    public Color HardpointHitColor;
+    public Color GearHitColor;
+    public Color ThermalHitColor;
     [HideInInspector] public Sprite[] ItemIcons;
 }
 
