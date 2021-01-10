@@ -39,7 +39,7 @@ public class ConstantWeapon : IBehavior, IAlwaysUpdatedBehavior
         Item = item;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         if (!_firing)
         {
@@ -51,7 +51,7 @@ public class ConstantWeapon : IBehavior, IAlwaysUpdatedBehavior
         return true;
     }
 
-    public void AlwaysUpdate(float delta)
+    public void Update(float delta)
     {
         // Update executes after AlwaysUpdate,
         // so if the stop flag didn't get disabled previous frame,

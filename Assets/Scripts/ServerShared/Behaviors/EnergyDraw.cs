@@ -40,7 +40,7 @@ public class EnergyDraw : IBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         Entity.Energy -= Context.Evaluate(_data.Draw, Item.EquippableItem, Entity) * (_data.PerSecond ? delta : 1);
         return true;

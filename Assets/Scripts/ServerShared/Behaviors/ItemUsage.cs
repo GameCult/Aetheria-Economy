@@ -37,7 +37,7 @@ public class ItemUsage : IBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         var cargo = Entity.FindItemInCargo(_data.Item);
         if (cargo == null) return false;

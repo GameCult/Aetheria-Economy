@@ -93,7 +93,7 @@ public abstract class ControllerBase<T> : IBehavior, IController<T>, IInitializa
         Moving = false;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         if (Available)
         {

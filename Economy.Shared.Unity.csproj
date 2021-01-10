@@ -2,10 +2,6 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <_TargetFrameworkDirectories>non_empty_path_generated_by_unity.rider.package</_TargetFrameworkDirectories>
-    <_FullFrameworkReferenceAssemblyPaths>non_empty_path_generated_by_unity.rider.package</_FullFrameworkReferenceAssemblyPaths>
-    <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
-  <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,8 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{c2362ba6-dee9-92b9-0779-f5fcf5968986}</ProjectGuid>
-    <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectGuid>{A62B36C2-E9DE-B992-0779-F5FCF5968986}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Economy.Shared.Unity</AssemblyName>
@@ -30,9 +25,8 @@
     <DefineConstants>DEBUG;TRACE;UNITY_2020_2_1;UNITY_2020_2;UNITY_2020;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2017_4_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_2_OR_NEWER;UNITY_2018_3_OR_NEWER;UNITY_2018_4_OR_NEWER;UNITY_2019_1_OR_NEWER;UNITY_2019_2_OR_NEWER;UNITY_2019_3_OR_NEWER;UNITY_2019_4_OR_NEWER;UNITY_2020_1_OR_NEWER;UNITY_2020_2_OR_NEWER;PLATFORM_ARCH_64;UNITY_64;UNITY_INCLUDE_TESTS;USE_SEARCH_ENGINE_API;SCENE_TEMPLATE_MODULE;ENABLE_AR;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EVENT_QUEUE;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_TEXTURE_STREAMING;ENABLE_VIRTUALTEXTURING;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_UNITYWEBREQUEST;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;ENABLE_MANAGED_ANIMATION_JOBS;ENABLE_MANAGED_AUDIO_JOBS;INCLUDE_DYNAMIC_GI;ENABLE_MONO_BDWGC;ENABLE_SCRIPTING_GC_WBARRIERS;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;ENABLE_VIDEO;PLATFORM_STANDALONE;PLATFORM_STANDALONE_WIN;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_OUT_OF_PROCESS_CRASH_HANDLER;ENABLE_CLUSTER_SYNC;ENABLE_CLUSTERINPUT;PLATFORM_UPDATES_TIME_OUTSIDE_OF_PLAYER_LOOP;GFXDEVICE_WAITFOREVENT_MESSAGEPUMP;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;ENABLE_BURST_AOT;UNITY_TEAM_LICENSE;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_DIRECTOR;ENABLE_LOCALIZATION;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_TILEMAP;ENABLE_TIMELINE;ENABLE_INPUT_SYSTEM;UNITY_POST_PROCESSING_STACK_V2;TEST_MSAGL;REPORTING;PERSISTENCE;SUBSTANCE_PLUGIN_ENABLED;CSHARP_7_OR_LATER;CSHARP_7_3_OR_NEWER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <NoWarn></NoWarn>
+    <NoWarn>0169</NoWarn>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,9 +34,8 @@
     <OutputPath>Temp\bin\Release\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <NoWarn></NoWarn>
+    <NoWarn>0169</NoWarn>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <NoConfig>true</NoConfig>
@@ -51,872 +44,888 @@
     <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
+  <PropertyGroup>
+    <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <UnityProjectGenerator>Package</UnityProjectGenerator>
+    <UnityProjectGeneratorVersion>2.0.5</UnityProjectGeneratorVersion>
+    <UnityProjectType>Game:1</UnityProjectType>
+    <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
+    <UnityVersion>2020.2.1f1</UnityVersion>
+  </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Max.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\GroupItemsParser.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ProjectileWeapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Shield.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettings.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Arguments.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetInsert.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\IConnectionBuilder.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Config.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ZoneData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\HaulingController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\SelectionProjector.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Reverse.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Count.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Cooldown.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NtpPacket.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DayOfWeek.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TypeOf.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\GeoSystem.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sub.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Status.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\EmergencyRepair.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\OrbitalEntity.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Conflict.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\BlueprintData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Round.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ActionCollection.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\FastBitConverter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Http.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereAggregate.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\DatumType.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Rect.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\CountSubQueryVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Thursday.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexStatus.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Cursor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Crypto.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ExponentialCurve.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonDiscriminatorSettings.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Upcase.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\JsonConverters.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\Version.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Db.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\ReqlAst.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\TopLevel.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IsEmpty.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\ExtensionsForType.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Zip.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\IConnection.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\OffsetsOf.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Intersects.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\SslContext.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Insert.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\April.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetDataWriter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Single.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\June.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\GetAll.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\InnerJoin.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\MemberNameResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Merge.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Get.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\ResponseNote.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\OrderBy.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\PatrolController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Tuesday.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlUserError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSelect.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ToJsonString.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Locomotion.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\InsertAt.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonDiscriminatorAttribute.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thruster.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Grant.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSum.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\TowingController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Includes.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\During.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\ExprHelper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\GetNearest.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Geojson.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Literal.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Cockpit.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TimeOfDay.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Converter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reflector.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Sum.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ToIso8601.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\FactoryBehavior.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Backtrace.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\ExceptionIs.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SelectWhere.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\OuterJoin.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\CancellableTask.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\BaseIndexParser.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\EpsilonValueCalculator.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\StringHelper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlGroupingConverter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\January.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\MathResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Monday.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Corporations.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Hitscan.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ItemInstance.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Desc.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\TurretController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Capacitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\ReqlExpr.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\WithFields.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\GlobalData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\IWhereClauseParser.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlDriverError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Error.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\Attributes\SecondaryIndexAttribute.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPacket.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlPermissionError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\Query.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Zone.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Connection.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sunday.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetUtils.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Datum.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DbList.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\BaseChannel.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Ship.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Skip.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\ExtensionsForTcpClient.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\ConnectionRequest.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\ReqlRaw.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ChangeAt.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypeAttribute.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ToEpochTime.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DayOfYear.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Seconds.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Extras\Dao\IDao.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\PlayerData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Survey.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\ICursor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\October.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\StationTowing.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Map.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\HostEntry.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\ReliableChannel.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\CustomPartition.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlInternalError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Eq.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NtpRequest.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlOpFailedError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ConstantWeapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\GetIntersecting.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\FrameType.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Radiance.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\BaseSubQueryVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexWait.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ForEach.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Downcase.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction2.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\March.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Range.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\TypeFormatterResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\INetSerializable.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Ungroup.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Timezone.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Between.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\LinqExtensions.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\ExtensionsForResult.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TableCreate.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\ErrorType.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\InTimezone.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\HttpMethod.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkQueryExecutor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Saturday.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetStatistics.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkDbQueryModelVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\SurveyController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\MakeObj.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Month.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlRuntimeError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlServerCompileError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetSerializer.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\AnyAll.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction3.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Status.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Not.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Count.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\ComparerMagic.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\VelocityLimit.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Funcall.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Heat.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\ScramAttributes.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ConcatMap.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Line.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Visibility.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\TermType.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexRename.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Wait.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\WanderController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\SecureRandom.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Fold.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Floor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Repeat.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Server.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlAvailabilityError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\RethinkDB.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\IdentifierFormat.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\ReqlLambda.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetIntersection.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\OptArgs.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\MapObject.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Mod.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Switch.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Zip.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\RethinkDBConstants.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Asc.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\SocketWrapper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Func.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Contains.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DbDrop.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\CoerceTo.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesConverter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\ExtensionsForEvent.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\CRC32C.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\ExtensionHelper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Div.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\Attributes\PrimaryIndexAttribute.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\EpochTime.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPacketPool.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Turning.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetSocket.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\FirstSubQueryVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Ceil.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SelectMany.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TableDrop.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\GenericOperators.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Trigger.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlResourceLimitError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\ConnectionPool.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Prepend.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\AttributesManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\VelocityConversion.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Or.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\AnySubQueryVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetDataReader.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlBinaryConverter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DbCreate.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Controller.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\HaulingTask.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Update.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Polygon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Hours.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sync.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Settings.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\ErrorBuilder.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Maxval.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Branch.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\StatModifier.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Friday.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Nth.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\IPoolingStrategy.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlClientError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\EnergyDraw.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Distance.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Point.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Bound.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\September.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reactor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ZoneGenerator.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Last.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPeer.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Aggregate.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Format.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Result.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NatPunchModule.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\DatabaseCache.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\GroupedResult.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Args.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\ISubQueryVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetDifference.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Reconfigure.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentTask.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ColorMath.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\July.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Slice.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Radiator.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Info.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\DefaultParser.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\BaseFilterableSubQueryVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ExtensionsForJsonConverters.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Handshake.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Var.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Lt.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\WanderTask.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Unit.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Profile.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexCreate.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\Poco.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Delete.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Distinct.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Min.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlDriverCompileError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlQueryLogicError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\TopLevel.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetConstants.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\Protocol.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Filter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Response.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlExprConverter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\RegisterResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Split.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\EqJoin.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Minval.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\ResponseType.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Launcher.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Le.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Sensor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Now.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlNonExistenceError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\Utils\Mapper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\HostPool.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\HasFields.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\November.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction0.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Minutes.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownThisTypeAttribute.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thermotoggle.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Where.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Min.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Limit.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\And.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Bracket.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\ExpressionVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DeleteAt.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Extras\Dao\Document.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\PrimaryIndexParser.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Wednesday.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\AllSubQueryVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Log.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Values.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Mining.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Keys.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Reduce.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\IncrementalSHA256.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ToGeojson.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Group.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Date.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Mul.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\First.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction1.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Messages.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Table.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Day.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\OrderBy.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\MakeArray.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Circle.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkDbGroup.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Entity.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ReqlObject.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlAuthError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetExceptions.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\December.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Union.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexDrop.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlCompileError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\Util.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Durability.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Match.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\QueryHelper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\FormatOptions.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\Exceptions\JsonKnownTypesException.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Binary.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\Error.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Ne.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Difference.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SpliceAt.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Random.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\PacketLayerBase.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\August.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Year.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexList.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\Server.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Json.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ResultFormat.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Awaiter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\VelocityMatch.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction4.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\XorEncryptLayer.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReadMode.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\DatabaseEntry.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlDateTimeConverter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\PropertyHelper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettingsManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Max.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\INetEventListener.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\PathSpec.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\Seed.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Extras\Dao\RethinkDao.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\ExtensionsForString.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\GetField.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Default.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\MiningTool.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sum.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Iso8601.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Replace.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlOpIndeterminateError.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Rebalance.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\EpsilonGreedy.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sample.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\MathFormatters.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Extensions.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Take.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Changes.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\TaskHelper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Range.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Average.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Pluck.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Avg.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Uuid.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Add.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Select.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetUnion.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Heatsink.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\ReqlAssertFailure.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Weapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkQueryable.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Ge.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetDebug.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Change[T].cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\QueryType.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\Crc32cLayer.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesContractResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\MiningController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\February.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SecondaryIndexParser.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Fill.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ResourceScanner.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\AuthType.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\May.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesDictionaryManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ItemData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Gt.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Append.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Enums.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\ContainsSubQueryVisitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ItemUsage.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Contains.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetPacketProcessor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\PolygonSub.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\RoundRobinHostPool.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ReqlExpr.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TableList.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentBehavior.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Javascript.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\SequencedChannel.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Without.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Distinct.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Time.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\LoadoutData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
+    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Max.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\GroupItemsParser.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\ProjectileWeapon.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Shield.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettings.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Arguments.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetInsert.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\IConnectionBuilder.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Config.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ZoneData.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\HaulingController.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\SelectionProjector.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Reverse.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Count.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Cooldown.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NtpPacket.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DayOfWeek.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TypeOf.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\GeoSystem.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sub.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Status.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\EmergencyRepair.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\OrbitalEntity.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Conflict.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\BlueprintData.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Round.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ActionCollection.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\FastBitConverter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Http.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereAggregate.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\DatumType.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Rect.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\CountSubQueryVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Thursday.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexStatus.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Cursor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Crypto.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ExponentialCurve.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonDiscriminatorSettings.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Upcase.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\JsonConverters.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\Version.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Db.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\ReqlAst.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\TopLevel.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IsEmpty.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\ExtensionsForType.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Zip.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\IConnection.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\OffsetsOf.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Intersects.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\SslContext.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Insert.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\April.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetManager.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetDataWriter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Single.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\June.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\GetAll.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\InnerJoin.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\MemberNameResolver.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Merge.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Get.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\ResponseNote.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\OrderBy.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\PatrolController.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Tuesday.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlUserError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSelect.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ToJsonString.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\Locomotion.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\InsertAt.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonDiscriminatorAttribute.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thruster.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Grant.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSum.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\TowingController.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Includes.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\During.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\ExprHelper.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\GetNearest.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Geojson.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Literal.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Cockpit.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TimeOfDay.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Converter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reflector.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Sum.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ToIso8601.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\FactoryBehavior.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Backtrace.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\ExceptionIs.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SelectWhere.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\OuterJoin.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\CancellableTask.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\BaseIndexParser.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\EpsilonValueCalculator.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\StringHelper.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlGroupingConverter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\January.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\MathResolver.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Monday.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Corporations.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Hitscan.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ItemInstance.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Desc.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\TurretController.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Capacitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\ReqlExpr.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\WithFields.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\GlobalData.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\IWhereClauseParser.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlDriverError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Error.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\Attributes\SecondaryIndexAttribute.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPacket.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlPermissionError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\Query.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Zone.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Connection.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sunday.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetUtils.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Datum.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DbList.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\BaseChannel.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Ship.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Skip.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\ExtensionsForTcpClient.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\ConnectionRequest.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\ReqlRaw.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ChangeAt.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypeAttribute.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ToEpochTime.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DayOfYear.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Seconds.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Extras\Dao\IDao.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\PlayerData.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\Survey.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\ICursor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\October.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\StationTowing.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Map.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\HostEntry.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\ReliableChannel.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\CustomPartition.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlInternalError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Eq.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NtpRequest.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlOpFailedError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\ConstantWeapon.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\GetIntersecting.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\FrameType.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Radiance.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\BaseSubQueryVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexWait.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ForEach.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Downcase.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction2.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\March.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Range.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\TypeFormatterResolver.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\INetSerializable.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Ungroup.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Timezone.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Between.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\LinqExtensions.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\ExtensionsForResult.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TableCreate.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\ErrorType.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\InTimezone.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\HttpMethod.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkQueryExecutor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Saturday.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetStatistics.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkDbQueryModelVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\SurveyController.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\MakeObj.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Month.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlRuntimeError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlServerCompileError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetSerializer.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\AnyAll.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction3.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Status.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Not.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Count.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\ComparerMagic.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\VelocityLimit.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Funcall.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Heat.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\ScramAttributes.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ConcatMap.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Line.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Visibility.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\TermType.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexRename.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Wait.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\WanderController.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\SecureRandom.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Fold.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Floor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Repeat.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Server.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlAvailabilityError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\RethinkDB.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\IdentifierFormat.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\ReqlLambda.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetIntersection.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\OptArgs.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\MapObject.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Mod.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Switch.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Zip.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\RethinkDBConstants.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Asc.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\SocketWrapper.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Func.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Contains.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DbDrop.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\CoerceTo.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesConverter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\ExtensionsForEvent.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\CRC32C.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\ExtensionHelper.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Div.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\Attributes\PrimaryIndexAttribute.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\EpochTime.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPacketPool.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Turning.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetSocket.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\FirstSubQueryVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Ceil.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SelectMany.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TableDrop.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\GenericOperators.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Trigger.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlResourceLimitError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\ConnectionPool.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Prepend.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\AttributesManager.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\VelocityConversion.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Or.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\AnySubQueryVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetDataReader.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlBinaryConverter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DbCreate.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Controller.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\HaulingTask.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Update.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Polygon.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Hours.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sync.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Settings.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\ErrorBuilder.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Maxval.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Branch.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\StatModifier.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Friday.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Nth.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\IPoolingStrategy.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlClientError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\EnergyDraw.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Distance.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Point.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Bound.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\September.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reactor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ZoneGenerator.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Last.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPeer.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Aggregate.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Format.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Result.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NatPunchModule.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\DatabaseCache.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\GroupedResult.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Args.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\ISubQueryVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetDifference.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Reconfigure.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\AgentTask.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ColorMath.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\July.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Slice.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Radiator.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Info.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\DefaultParser.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\BaseFilterableSubQueryVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ExtensionsForJsonConverters.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Handshake.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Var.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Lt.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\WanderTask.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Unit.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Profile.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexCreate.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\Poco.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Delete.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Distinct.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Min.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlDriverCompileError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlQueryLogicError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\TopLevel.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetConstants.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\Protocol.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Filter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Response.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlExprConverter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\RegisterResolver.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Split.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\EqJoin.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Minval.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\ResponseType.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Launcher.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Le.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Sensor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Now.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlNonExistenceError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\Utils\Mapper.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\HostPool.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\HasFields.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\November.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction0.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Minutes.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownThisTypeAttribute.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thermotoggle.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Where.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Min.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Limit.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\And.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Bracket.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\ExpressionVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DeleteAt.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Extras\Dao\Document.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\PrimaryIndexParser.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Wednesday.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\AllSubQueryVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Log.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Values.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\Mining.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Keys.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Reduce.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\IncrementalSHA256.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ToGeojson.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Group.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Date.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Mul.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\First.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction1.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Messages.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Table.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Day.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\OrderBy.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\MakeArray.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Circle.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkDbGroup.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Entity.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ReqlObject.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlAuthError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetExceptions.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\December.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Union.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexDrop.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlCompileError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\Util.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Durability.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Match.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\QueryHelper.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\FormatOptions.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\Exceptions\JsonKnownTypesException.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Binary.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\Error.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Ne.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Difference.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SpliceAt.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Random.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\PacketLayerBase.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\August.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Year.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexList.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\Server.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Json.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ResultFormat.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Awaiter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\VelocityMatch.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction4.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\XorEncryptLayer.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReadMode.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\DatabaseEntry.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlDateTimeConverter.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\PropertyHelper.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettingsManager.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Max.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\INetEventListener.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\PathSpec.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\Seed.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Extras\Dao\RethinkDao.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\ExtensionsForString.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\GetField.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Default.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\MiningTool.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sum.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Iso8601.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Replace.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlOpIndeterminateError.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Rebalance.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\EpsilonGreedy.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sample.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\MathFormatters.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Extensions.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Take.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Changes.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Utils\TaskHelper.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Range.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Average.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Pluck.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Avg.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Uuid.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Add.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Select.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetUnion.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Heatsink.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\ReqlAssertFailure.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\Weapon.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkQueryable.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Ge.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetDebug.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Change[T].cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\QueryType.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\Crc32cLayer.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesContractResolver.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\MiningController.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\February.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SecondaryIndexParser.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Fill.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\ResourceScanner.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\AuthType.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\May.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesDictionaryManager.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ItemData.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Gt.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Append.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Enums.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\ContainsSubQueryVisitor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\ItemUsage.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Contains.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetPacketProcessor.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\PolygonSub.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\RoundRobinHostPool.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ReqlExpr.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TableList.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Agents\AgentBehavior.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Javascript.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\SequencedChannel.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Without.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Distinct.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Time.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\LoadoutData.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Noise1D.cs" />
+    <Compile Include="Assets\Scripts\ServerShared\Behaviors\TargetLock.cs" />
+  </ItemGroup>
+  <ItemGroup>
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Economy.Shared.Unity.asmdef" />
- <Reference Include="Remotion.Linq">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
- </Reference>
- <Reference Include="Newtonsoft.Json">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
- </Reference>
- <Reference Include="System.Memory">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
- </Reference>
- <Reference Include="Microsoft.Extensions.Logging.Abstractions">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
- </Reference>
- <Reference Include="nunit.framework">
- <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.ext.nunit@1.0.5/net35/unity-custom/nunit.framework.dll</HintPath>
- </Reference>
- <Reference Include="Google.Protobuf">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
- </Reference>
- <Reference Include="System.Buffers">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
- </Reference>
- <Reference Include="QuickGraph">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Game">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
- </Reference>
- <Reference Include="System.Threading.Tasks.Extensions">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="SourceUnityLib">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Source/Editor/SourceUnityLib.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.CompilerServices.Unsafe">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Editor">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
- </Reference>
- <Reference Include="mscorlib">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
- </Reference>
- <Reference Include="System">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.dll</HintPath>
- </Reference>
- <Reference Include="System.Core">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Core.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.Serialization">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Runtime.Serialization.dll</HintPath>
- </Reference>
- <Reference Include="System.Xml">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Xml.dll</HintPath>
- </Reference>
- <Reference Include="System.Xml.Linq">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Xml.Linq.dll</HintPath>
- </Reference>
- <Reference Include="System.Numerics">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Numerics.dll</HintPath>
- </Reference>
- <Reference Include="System.Numerics.Vectors">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Numerics.Vectors.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.Http">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Net.Http.dll</HintPath>
- </Reference>
- <Reference Include="Microsoft.CSharp">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Microsoft.CSharp.dll</HintPath>
- </Reference>
- <Reference Include="System.Data">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/System.Data.dll</HintPath>
- </Reference>
- <Reference Include="Microsoft.Win32.Primitives">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/Microsoft.Win32.Primitives.dll</HintPath>
- </Reference>
- <Reference Include="netstandard">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/netstandard.dll</HintPath>
- </Reference>
- <Reference Include="System.AppContext">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.AppContext.dll</HintPath>
- </Reference>
- <Reference Include="System.Collections.Concurrent">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Collections.Concurrent.dll</HintPath>
- </Reference>
- <Reference Include="System.Collections">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Collections.dll</HintPath>
- </Reference>
- <Reference Include="System.Collections.NonGeneric">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Collections.NonGeneric.dll</HintPath>
- </Reference>
- <Reference Include="System.Collections.Specialized">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Collections.Specialized.dll</HintPath>
- </Reference>
- <Reference Include="System.ComponentModel.Annotations">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.Annotations.dll</HintPath>
- </Reference>
- <Reference Include="System.ComponentModel">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.dll</HintPath>
- </Reference>
- <Reference Include="System.ComponentModel.EventBasedAsync">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.EventBasedAsync.dll</HintPath>
- </Reference>
- <Reference Include="System.ComponentModel.Primitives">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.Primitives.dll</HintPath>
- </Reference>
- <Reference Include="System.ComponentModel.TypeConverter">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ComponentModel.TypeConverter.dll</HintPath>
- </Reference>
- <Reference Include="System.Console">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Console.dll</HintPath>
- </Reference>
- <Reference Include="System.Data.Common">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Data.Common.dll</HintPath>
- </Reference>
- <Reference Include="System.Diagnostics.Contracts">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.Contracts.dll</HintPath>
- </Reference>
- <Reference Include="System.Diagnostics.Debug">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.Debug.dll</HintPath>
- </Reference>
- <Reference Include="System.Diagnostics.FileVersionInfo">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.FileVersionInfo.dll</HintPath>
- </Reference>
- <Reference Include="System.Diagnostics.Process">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.Process.dll</HintPath>
- </Reference>
- <Reference Include="System.Diagnostics.StackTrace">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.StackTrace.dll</HintPath>
- </Reference>
- <Reference Include="System.Diagnostics.TextWriterTraceListener">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.TextWriterTraceListener.dll</HintPath>
- </Reference>
- <Reference Include="System.Diagnostics.Tools">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.Tools.dll</HintPath>
- </Reference>
- <Reference Include="System.Diagnostics.TraceSource">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Diagnostics.TraceSource.dll</HintPath>
- </Reference>
- <Reference Include="System.Drawing.Primitives">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Drawing.Primitives.dll</HintPath>
- </Reference>
- <Reference Include="System.Dynamic.Runtime">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Dynamic.Runtime.dll</HintPath>
- </Reference>
- <Reference Include="System.Globalization.Calendars">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Globalization.Calendars.dll</HintPath>
- </Reference>
- <Reference Include="System.Globalization">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Globalization.dll</HintPath>
- </Reference>
- <Reference Include="System.Globalization.Extensions">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Globalization.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="System.IO.Compression.ZipFile">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.Compression.ZipFile.dll</HintPath>
- </Reference>
- <Reference Include="System.IO">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.dll</HintPath>
- </Reference>
- <Reference Include="System.IO.FileSystem">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.FileSystem.dll</HintPath>
- </Reference>
- <Reference Include="System.IO.FileSystem.DriveInfo">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.FileSystem.DriveInfo.dll</HintPath>
- </Reference>
- <Reference Include="System.IO.FileSystem.Primitives">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.FileSystem.Primitives.dll</HintPath>
- </Reference>
- <Reference Include="System.IO.FileSystem.Watcher">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.FileSystem.Watcher.dll</HintPath>
- </Reference>
- <Reference Include="System.IO.IsolatedStorage">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.IsolatedStorage.dll</HintPath>
- </Reference>
- <Reference Include="System.IO.MemoryMappedFiles">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.MemoryMappedFiles.dll</HintPath>
- </Reference>
- <Reference Include="System.IO.Pipes">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.Pipes.dll</HintPath>
- </Reference>
- <Reference Include="System.IO.UnmanagedMemoryStream">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.IO.UnmanagedMemoryStream.dll</HintPath>
- </Reference>
- <Reference Include="System.Linq">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Linq.dll</HintPath>
- </Reference>
- <Reference Include="System.Linq.Expressions">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Linq.Expressions.dll</HintPath>
- </Reference>
- <Reference Include="System.Linq.Parallel">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Linq.Parallel.dll</HintPath>
- </Reference>
- <Reference Include="System.Linq.Queryable">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Linq.Queryable.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.Http.Rtc">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Http.Rtc.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.NameResolution">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.NameResolution.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.NetworkInformation">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.NetworkInformation.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.Ping">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Ping.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.Primitives">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Primitives.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.Requests">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Requests.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.Security">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Security.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.Sockets">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.Sockets.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.WebHeaderCollection">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.WebHeaderCollection.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.WebSockets.Client">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.WebSockets.Client.dll</HintPath>
- </Reference>
- <Reference Include="System.Net.WebSockets">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Net.WebSockets.dll</HintPath>
- </Reference>
- <Reference Include="System.ObjectModel">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ObjectModel.dll</HintPath>
- </Reference>
- <Reference Include="System.Reflection">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.dll</HintPath>
- </Reference>
- <Reference Include="System.Reflection.Emit">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Emit.dll</HintPath>
- </Reference>
- <Reference Include="System.Reflection.Emit.ILGeneration">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Emit.ILGeneration.dll</HintPath>
- </Reference>
- <Reference Include="System.Reflection.Emit.Lightweight">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Emit.Lightweight.dll</HintPath>
- </Reference>
- <Reference Include="System.Reflection.Extensions">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="System.Reflection.Primitives">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Reflection.Primitives.dll</HintPath>
- </Reference>
- <Reference Include="System.Resources.Reader">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Resources.Reader.dll</HintPath>
- </Reference>
- <Reference Include="System.Resources.ResourceManager">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Resources.ResourceManager.dll</HintPath>
- </Reference>
- <Reference Include="System.Resources.Writer">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Resources.Writer.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.CompilerServices.VisualC">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.CompilerServices.VisualC.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.Extensions">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.Handles">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Handles.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.InteropServices">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.InteropServices.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.InteropServices.WindowsRuntime">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.InteropServices.WindowsRuntime.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.Numerics">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Numerics.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.Serialization.Formatters">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Serialization.Formatters.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.Serialization.Json">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Serialization.Json.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.Serialization.Primitives">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Serialization.Primitives.dll</HintPath>
- </Reference>
- <Reference Include="System.Runtime.Serialization.Xml">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Runtime.Serialization.Xml.dll</HintPath>
- </Reference>
- <Reference Include="System.Security.Claims">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Claims.dll</HintPath>
- </Reference>
- <Reference Include="System.Security.Cryptography.Algorithms">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.Algorithms.dll</HintPath>
- </Reference>
- <Reference Include="System.Security.Cryptography.Csp">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.Csp.dll</HintPath>
- </Reference>
- <Reference Include="System.Security.Cryptography.Encoding">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.Encoding.dll</HintPath>
- </Reference>
- <Reference Include="System.Security.Cryptography.Primitives">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.Primitives.dll</HintPath>
- </Reference>
- <Reference Include="System.Security.Cryptography.X509Certificates">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Cryptography.X509Certificates.dll</HintPath>
- </Reference>
- <Reference Include="System.Security.Principal">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.Principal.dll</HintPath>
- </Reference>
- <Reference Include="System.Security.SecureString">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Security.SecureString.dll</HintPath>
- </Reference>
- <Reference Include="System.ServiceModel.Duplex">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.Duplex.dll</HintPath>
- </Reference>
- <Reference Include="System.ServiceModel.Http">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.Http.dll</HintPath>
- </Reference>
- <Reference Include="System.ServiceModel.NetTcp">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.NetTcp.dll</HintPath>
- </Reference>
- <Reference Include="System.ServiceModel.Primitives">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.Primitives.dll</HintPath>
- </Reference>
- <Reference Include="System.ServiceModel.Security">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ServiceModel.Security.dll</HintPath>
- </Reference>
- <Reference Include="System.Text.Encoding">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Text.Encoding.dll</HintPath>
- </Reference>
- <Reference Include="System.Text.Encoding.Extensions">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Text.Encoding.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="System.Text.RegularExpressions">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Text.RegularExpressions.dll</HintPath>
- </Reference>
- <Reference Include="System.Threading">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.dll</HintPath>
- </Reference>
- <Reference Include="System.Threading.Overlapped">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Overlapped.dll</HintPath>
- </Reference>
- <Reference Include="System.Threading.Tasks">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Tasks.dll</HintPath>
- </Reference>
- <Reference Include="System.Threading.Tasks.Parallel">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Tasks.Parallel.dll</HintPath>
- </Reference>
- <Reference Include="System.Threading.Thread">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Thread.dll</HintPath>
- </Reference>
- <Reference Include="System.Threading.ThreadPool">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.ThreadPool.dll</HintPath>
- </Reference>
- <Reference Include="System.Threading.Timer">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Threading.Timer.dll</HintPath>
- </Reference>
- <Reference Include="System.ValueTuple">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.ValueTuple.dll</HintPath>
- </Reference>
- <Reference Include="System.Xml.ReaderWriter">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.ReaderWriter.dll</HintPath>
- </Reference>
- <Reference Include="System.Xml.XDocument">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XDocument.dll</HintPath>
- </Reference>
- <Reference Include="System.Xml.XmlDocument">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XmlDocument.dll</HintPath>
- </Reference>
- <Reference Include="System.Xml.XmlSerializer">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XmlSerializer.dll</HintPath>
- </Reference>
- <Reference Include="System.Xml.XPath">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XPath.dll</HintPath>
- </Reference>
- <Reference Include="System.Xml.XPath.XDocument">
- <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XPath.XDocument.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Mathematics">
- <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
- </Reference>
+    <Reference Include="Remotion.Linq">
+      <HintPath>Assets\Plugins\Remotion.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets\Plugins\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory">
+      <HintPath>Assets\Plugins\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>Assets\Plugins\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>Library\PackageCache\com.unity.ext.nunit@1.0.5\net35\unity-custom\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.Protobuf">
+      <HintPath>Assets\Plugins\Google.Protobuf\lib\net45\Google.Protobuf.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers">
+      <HintPath>Assets\Plugins\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>Assets\Plugins\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="Substance.Game">
+      <HintPath>Assets\Allegorithmic\Plugins\Substance.Game.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions">
+      <HintPath>Assets\Plugins\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="SourceUnityLib">
+      <HintPath>Assets\Allegorithmic\Plugins\Substance\Substance Source\Editor\SourceUnityLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>Assets\Plugins\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="Substance.Editor">
+      <HintPath>Assets\Allegorithmic\Plugins\Substance\Substance Engine\Editor\Substance.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Core">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\System.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\System.Xml.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\System.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics.Vectors">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Microsoft.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\System.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\netstandard.dll</HintPath>
+    </Reference>
+    <Reference Include="System.AppContext">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.AppContext.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Concurrent">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Collections.Concurrent.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.NonGeneric">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Collections.NonGeneric.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Collections.Specialized">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Collections.Specialized.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Annotations">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ComponentModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.EventBasedAsync">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ComponentModel.EventBasedAsync.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ComponentModel.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.TypeConverter">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ComponentModel.TypeConverter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Console">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Console.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.Common">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Data.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Contracts">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Diagnostics.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Debug">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Diagnostics.Debug.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.FileVersionInfo">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Diagnostics.FileVersionInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Process">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Diagnostics.Process.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Diagnostics.StackTrace.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.TextWriterTraceListener">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Diagnostics.TextWriterTraceListener.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Tools">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Diagnostics.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.TraceSource">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Diagnostics.TraceSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Drawing.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Dynamic.Runtime">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Dynamic.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization.Calendars">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Globalization.Calendars.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Globalization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Globalization.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Globalization.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.ZipFile">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.Compression.ZipFile.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.DriveInfo">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.FileSystem.DriveInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Watcher">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.FileSystem.Watcher.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.IsolatedStorage">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.IsolatedStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.MemoryMappedFiles">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.MemoryMappedFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Pipes">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.Pipes.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.UnmanagedMemoryStream">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.IO.UnmanagedMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Expressions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Linq.Expressions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Parallel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Linq.Parallel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Linq.Queryable">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Linq.Queryable.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Rtc">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.Http.Rtc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.NameResolution">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.NameResolution.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.NetworkInformation">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.NetworkInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Ping">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.Ping.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Requests">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.Requests.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Security">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Sockets">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.Sockets.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.WebHeaderCollection">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.WebHeaderCollection.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.WebSockets.Client">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.WebSockets.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.WebSockets">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Net.WebSockets.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ObjectModel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Reflection.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Emit">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Reflection.Emit.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Emit.ILGeneration">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Reflection.Emit.ILGeneration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Emit.Lightweight">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Reflection.Emit.Lightweight.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Reflection.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reflection.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Reflection.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Resources.Reader">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Resources.Reader.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Resources.ResourceManager">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Resources.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Resources.Writer">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Resources.Writer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.VisualC">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.CompilerServices.VisualC.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Handles">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.Handles.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.InteropServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.WindowsRuntime">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.InteropServices.WindowsRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Numerics">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Formatters">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.Serialization.Formatters.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Json">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.Serialization.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.Serialization.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization.Xml">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Runtime.Serialization.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Claims">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Security.Claims.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Csp">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Security.Cryptography.Csp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Security.Principal.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.SecureString">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Security.SecureString.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Duplex">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ServiceModel.Duplex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Http">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ServiceModel.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.NetTcp">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ServiceModel.NetTcp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Primitives">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ServiceModel.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel.Security">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ServiceModel.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Text.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.Encoding.Extensions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Text.Encoding.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Text.RegularExpressions">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Text.RegularExpressions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Overlapped">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Threading.Overlapped.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Parallel">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Threading.Tasks.Parallel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Thread">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Threading.Thread.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.ThreadPool">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Threading.ThreadPool.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Timer">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Threading.Timer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.ReaderWriter">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Xml.ReaderWriter.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XDocument">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Xml.XDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XmlDocument">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Xml.XmlDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XmlSerializer">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Xml.XmlSerializer.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XPath">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Xml.XPath.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XDocument">
+      <HintPath>C:\Program Files\Unity\Hub\Editor\2020.2.1f1\Editor\Data\MonoBleedingEdge\lib\mono\4.7.1-api\Facades\System.Xml.XPath.XDocument.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="MessagePack.csproj">
-      <Project>{c511ef21-dc27-883d-b027-9a4b6f36bae4}</Project>
+      <Project>{21EF11C5-27DC-3D88-B027-9A4B6F36BAE4}</Project>
       <Name>MessagePack</Name>
     </ProjectReference>
     <ProjectReference Include="UniRx.csproj">
-      <Project>{4d885cb7-1f9e-abb3-b070-7265b432ecda}</Project>
+      <Project>{B75C884D-9E1F-B3AB-B070-7265B432ECDA}</Project>
       <Name>UniRx</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

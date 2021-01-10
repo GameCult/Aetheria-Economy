@@ -236,7 +236,7 @@ public class SectorRenderer : MonoBehaviour
                         }
 
                         instantWeapon.OnFire += () =>
-                            _guidedProjectileManagers[launcherData].Launch(launcherData, item, instance, EntityInstances[entity.Target]);
+                            _guidedProjectileManagers[launcherData].Launch(launcherData, item, instance, EntityInstances[entity.Target.Value]);
                     }
                 }
             }
@@ -438,6 +438,7 @@ public class SectorRenderer : MonoBehaviour
 
                     // Subtract surface damage from hardpoint armor
                     entity.HardpointArmor[hardpoint] = max(entity.HardpointArmor[hardpoint] - surfaceDamage, 0);
+                    entity.HardpointDamage.OnNext((hardpoint, surfaceDamage));
 
                     var penetratingDamage = remainder + hit.Damage * hit.Penetration;
 
@@ -639,10 +640,10 @@ public class SectorRenderer : MonoBehaviour
                 entity.Key.HardpointTransforms[x.Key] = (x.Value[0].position, x.Value[0].forward);
             }
 
-            if (entity.Key.Target != null && !EntityInstances.ContainsKey(entity.Key.Target))
-                entity.Key.Target = null;
-            entity.Value.LookAtPoint.position = entity.Value.Transform.position + (Vector3) entity.Key.LookDirection * (entity.Key.Target != null
-                ? (EntityInstances[entity.Key.Target].Transform.position - entity.Value.Transform.position).magnitude : 100);
+            if (entity.Key.Target.Value != null && !EntityInstances.ContainsKey(entity.Key.Target.Value))
+                entity.Key.Target.Value = null;
+            entity.Value.LookAtPoint.position = entity.Value.Transform.position + (Vector3) entity.Key.LookDirection * (entity.Key.Target.Value != null
+                ? (EntityInstances[entity.Key.Target.Value].Transform.position - entity.Value.Transform.position).magnitude : 10000);
             entity.Value.Transform.position = entity.Key.Position;
         }
 

@@ -57,7 +57,7 @@ public class Turning : IAnalogBehavior
     {
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         Torque = Context.Evaluate(_data.Torque, Item.EquippableItem, Entity);
         Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque / Entity.Mass * delta));

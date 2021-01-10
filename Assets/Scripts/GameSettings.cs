@@ -29,6 +29,8 @@ public class GameSettings : ScriptableObject
     public Color HardpointHitColor;
     public Color GearHitColor;
     public Color ThermalHitColor;
+    public Gradient ArmorGradient;
+    public Gradient DurabilityGradient;
     [HideInInspector] public Sprite[] ItemIcons;
 }
 

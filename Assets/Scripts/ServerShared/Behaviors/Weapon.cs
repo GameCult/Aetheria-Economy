@@ -65,53 +65,29 @@ public class InstantWeapon : IBehavior, IAlwaysUpdatedBehavior
         Item = item;
     }
 
-    // private void Fire()
-    // {
-        // Hardpoint.Temperature += _projectileWeapon.Heat.Evaluate(Hardpoint) / Hardpoint.HeatCapacity;
-        // var inst = GameObject.Instantiate(_projectileWeapon.BulletPrefab).transform;
-        // Physics.IgnoreCollision(Hardpoint.Ship.Ship.GetComponent<Collider>(), inst.GetComponent<Collider>());
-        // var bullet = inst.GetComponent<Bullet>();
-        // bullet.Target = Hardpoint.Ship.Ship.Target;
-        // bullet.Source = Hardpoint.Ship.Ship.Hitpoints;
-        // bullet.Lifetime = _projectileWeapon.Range.Evaluate(Hardpoint) / _projectileWeapon.Velocity.Evaluate(Hardpoint);
-        // bullet.Damage = _projectileWeapon.Damage.Evaluate(Hardpoint);
-        // inst.position = Hardpoint.Proxy.position;
-        // inst.rotation = Hardpoint.Proxy.rotation;
-        // inst.GetComponent<Rigidbody>().velocity = _projectileWeapon.Velocity.Evaluate(Hardpoint) * Vector3.RotateTowards(-inst.forward, Hardpoint.Ship.Ship.Direction, _projectileWeapon.Deflection * Mathf.Deg2Rad, 1);
-        // Hardpoint.Ship.Ship.AudioSource.PlayOneShot(_projectileWeapon.Sounds.RandomElement());
-//        Debug.Log($"Firing bullet {b}");
-    // }
-
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
+        _burstCount = _data.BurstCount;
         _burstTime = Context.Evaluate(_data.BurstTime, Item.EquippableItem, Entity) / _burstCount;
-        if (_burstTime < .01f)
-        {
-            for(int i=0; i<_data.BurstCount; i++)
-                OnFire?.Invoke();
-        }
-        else
-        {
-            _burstCount = _data.BurstCount;
-            Fire();
-        }
+        _burstTimer = 0;
+        Fire(delta);
         return true;
     }
 
-    private void Fire()
+    private void Fire(float delta)
     {
-        _burstCount--;
-        _burstTimer = _burstTime;
-        OnFire?.Invoke();
+        _burstTimer -= delta;
+        while (_burstTimer < 0 && _burstCount > 0)
+        {
+            _burstCount--;
+            _burstTimer += _burstTime;
+            OnFire?.Invoke();
+        }
     }
 
-    public void AlwaysUpdate(float delta)
+    public void Update(float delta)
     {
         if(_burstCount > 0)
-        {
-            _burstTimer -= delta;
-            if(_burstTimer < 0)
-                Fire();
-        }
+            Fire(delta);
     }
 }

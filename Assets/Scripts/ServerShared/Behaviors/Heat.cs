@@ -40,7 +40,7 @@ public class Heat : IBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         Item.AddHeat(Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * (_data.PerSecond ? delta : 1));
 

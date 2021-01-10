@@ -35,7 +35,7 @@ public class Heatsink : IBehavior
         Item = item;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         return true;
     }

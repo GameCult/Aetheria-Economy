@@ -82,7 +82,7 @@ public class Factory : IBehavior//, IPersistentBehavior, IPopulationAssignment
         Item = item;
     }
     
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
     //     ToolingTime = Context.Evaluate(_data.ToolingTime, Item, Entity);
     //     var blueprint = Context.ItemData.Get<BlueprintData>(_blueprint);

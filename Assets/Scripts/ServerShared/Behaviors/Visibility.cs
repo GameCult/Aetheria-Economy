@@ -42,13 +42,13 @@ public class Visibility : IBehavior, IAlwaysUpdatedBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
         return true;
     }
 
-    public void AlwaysUpdate(float delta)
+    public void Update(float delta)
     {
         // TODO: Time independent decay?
         if(Entity.VisibilitySources.ContainsKey(this))

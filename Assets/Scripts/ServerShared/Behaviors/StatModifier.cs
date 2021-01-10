@@ -81,7 +81,7 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
         }
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         foreach (var stat in _stats)
             (_data.Type == StatModifierType.Constant

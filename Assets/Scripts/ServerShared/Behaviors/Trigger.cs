@@ -45,7 +45,7 @@ public class Trigger : IBehavior
     {
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         if (_pulled)
         {

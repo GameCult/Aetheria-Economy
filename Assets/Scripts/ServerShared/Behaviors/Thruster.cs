@@ -63,7 +63,7 @@ public class Thruster : IAnalogBehavior
         Torque = -dot(toCenter, float2(1, 0).Rotate(item.EquippableItem.Rotation));
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         Thrust = Context.Evaluate(_data.Thrust, Item.EquippableItem, Entity);
         Entity.Velocity -= Entity.Direction.Rotate(Item.EquippableItem.Rotation) * _input * Thrust / Entity.Mass * delta;

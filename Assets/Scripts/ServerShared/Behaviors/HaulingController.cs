@@ -24,11 +24,7 @@ public class HaulingControllerData : ControllerData
 
 public class HaulingController : ControllerBase<HaulingTask>, IBehavior, IPersistentBehavior
 {
-    public BehaviorData Data => _data;
     private HaulingControllerData _data;
-    
-    private ItemManager ItemManager { get; }
-    private Entity Entity { get; }
     private EquippedItem Item { get; }
     
     private bool _taskStarted;
@@ -39,13 +35,11 @@ public class HaulingController : ControllerBase<HaulingTask>, IBehavior, IPersis
     
     public HaulingController(ItemManager itemManager, HaulingControllerData data, Entity entity, EquippedItem item) : base(itemManager, data, entity)
     {
-        ItemManager = itemManager;
         _data = data;
-        Entity = entity;
         Item = item;
     }
 
-    public new bool Update(float delta)
+    public new bool Execute(float delta)
     {
         if (Task != null)
         {
@@ -56,7 +50,7 @@ public class HaulingController : ControllerBase<HaulingTask>, IBehavior, IPersis
                 _taskStarted = true;
             }
         }
-        return base.Update(delta);
+        return base.Execute(delta);
     }
     
     // void OnOriginZoneArrival()

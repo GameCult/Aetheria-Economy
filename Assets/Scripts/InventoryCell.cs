@@ -13,7 +13,6 @@ public class InventoryCell : MonoBehaviour
 {
     public Image Background;
     public Image Icon;
-    public TextMeshProUGUI Label;
 
     public ObservablePointerClickTrigger PointerClickTrigger;
     public ObservableBeginDragTrigger BeginDragTrigger;

@@ -129,6 +129,38 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Target Reticle"",
+                    ""type"": ""Button"",
+                    ""id"": ""86f2e6cc-b895-4c55-aa19-70220df477d2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Target Previous"",
+                    ""type"": ""Button"",
+                    ""id"": ""2cf8e2b2-1463-463b-8f55-e79884f3767d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Target Next"",
+                    ""type"": ""Button"",
+                    ""id"": ""1e2bd5af-e174-4533-8c57-b04b7e9df92c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Target Nearest"",
+                    ""type"": ""Button"",
+                    ""id"": ""b2a42777-c22b-48f3-9e74-8dc715449845"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -470,6 +502,50 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""Fire Group 6"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5211a58c-428b-4ee6-820d-2f67789806d6"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Target Reticle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6e13d87d-e5bb-4363-b153-1e0c1e21e4eb"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Target Previous"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6e3164c-1b59-4eab-99d9-5a3bc294af0b"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Target Next"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b55dd143-367d-4842-82c8-593c301bcd69"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Target Nearest"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1052,6 +1128,10 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player_NextWeapon = m_Player.FindAction("Next Weapon", throwIfNotFound: true);
         m_Player_PreviousWeapon = m_Player.FindAction("Previous Weapon", throwIfNotFound: true);
         m_Player_ToggleWeaponGroup = m_Player.FindAction("Toggle Weapon Group", throwIfNotFound: true);
+        m_Player_TargetReticle = m_Player.FindAction("Target Reticle", throwIfNotFound: true);
+        m_Player_TargetPrevious = m_Player.FindAction("Target Previous", throwIfNotFound: true);
+        m_Player_TargetNext = m_Player.FindAction("Target Next", throwIfNotFound: true);
+        m_Player_TargetNearest = m_Player.FindAction("Target Nearest", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1131,6 +1211,10 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_NextWeapon;
     private readonly InputAction m_Player_PreviousWeapon;
     private readonly InputAction m_Player_ToggleWeaponGroup;
+    private readonly InputAction m_Player_TargetReticle;
+    private readonly InputAction m_Player_TargetPrevious;
+    private readonly InputAction m_Player_TargetNext;
+    private readonly InputAction m_Player_TargetNearest;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1149,6 +1233,10 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @NextWeapon => m_Wrapper.m_Player_NextWeapon;
         public InputAction @PreviousWeapon => m_Wrapper.m_Player_PreviousWeapon;
         public InputAction @ToggleWeaponGroup => m_Wrapper.m_Player_ToggleWeaponGroup;
+        public InputAction @TargetReticle => m_Wrapper.m_Player_TargetReticle;
+        public InputAction @TargetPrevious => m_Wrapper.m_Player_TargetPrevious;
+        public InputAction @TargetNext => m_Wrapper.m_Player_TargetNext;
+        public InputAction @TargetNearest => m_Wrapper.m_Player_TargetNearest;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1200,6 +1288,18 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @ToggleWeaponGroup.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleWeaponGroup;
                 @ToggleWeaponGroup.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleWeaponGroup;
                 @ToggleWeaponGroup.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleWeaponGroup;
+                @TargetReticle.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetReticle;
+                @TargetReticle.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetReticle;
+                @TargetReticle.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetReticle;
+                @TargetPrevious.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetPrevious;
+                @TargetPrevious.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetPrevious;
+                @TargetPrevious.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetPrevious;
+                @TargetNext.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetNext;
+                @TargetNext.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetNext;
+                @TargetNext.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetNext;
+                @TargetNearest.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetNearest;
+                @TargetNearest.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetNearest;
+                @TargetNearest.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetNearest;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1246,6 +1346,18 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @ToggleWeaponGroup.started += instance.OnToggleWeaponGroup;
                 @ToggleWeaponGroup.performed += instance.OnToggleWeaponGroup;
                 @ToggleWeaponGroup.canceled += instance.OnToggleWeaponGroup;
+                @TargetReticle.started += instance.OnTargetReticle;
+                @TargetReticle.performed += instance.OnTargetReticle;
+                @TargetReticle.canceled += instance.OnTargetReticle;
+                @TargetPrevious.started += instance.OnTargetPrevious;
+                @TargetPrevious.performed += instance.OnTargetPrevious;
+                @TargetPrevious.canceled += instance.OnTargetPrevious;
+                @TargetNext.started += instance.OnTargetNext;
+                @TargetNext.performed += instance.OnTargetNext;
+                @TargetNext.canceled += instance.OnTargetNext;
+                @TargetNearest.started += instance.OnTargetNearest;
+                @TargetNearest.performed += instance.OnTargetNearest;
+                @TargetNearest.canceled += instance.OnTargetNearest;
             }
         }
     }
@@ -1439,6 +1551,10 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnNextWeapon(InputAction.CallbackContext context);
         void OnPreviousWeapon(InputAction.CallbackContext context);
         void OnToggleWeaponGroup(InputAction.CallbackContext context);
+        void OnTargetReticle(InputAction.CallbackContext context);
+        void OnTargetPrevious(InputAction.CallbackContext context);
+        void OnTargetNext(InputAction.CallbackContext context);
+        void OnTargetNearest(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

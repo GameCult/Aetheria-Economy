@@ -7,6 +7,8 @@ using static Unity.Mathematics.math;
 public class ArticulationPoint : MonoBehaviour
 {
     public Transform Target;
+
+    public int Group;
     
     public float YawMin;
     public float YawMax;

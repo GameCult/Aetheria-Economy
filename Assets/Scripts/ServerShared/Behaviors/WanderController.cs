@@ -27,7 +27,6 @@ public class WanderControllerData : ControllerData
 public class WanderController : ControllerBase<WanderTask>, IBehavior
 {
     public WanderTarget WanderTarget;
-    public BehaviorData Data => _data;
     
     private WanderControllerData _data;
     private EquippedItem Item { get; }
@@ -40,7 +39,7 @@ public class WanderController : ControllerBase<WanderTask>, IBehavior
         Item = item;
     }
 
-    public new bool Update(float delta)
+    public new bool Execute(float delta)
     {
         if (!Moving && _dockTime < 0)
         {
@@ -48,7 +47,7 @@ public class WanderController : ControllerBase<WanderTask>, IBehavior
         }
 
         _dockTime -= delta;
-        return base.Update(delta);
+        return base.Execute(delta);
     }
 
     private void NextTarget()

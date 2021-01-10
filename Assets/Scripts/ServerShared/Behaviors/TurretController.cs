@@ -66,11 +66,11 @@ public class TurretController : IBehavior
         }
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
-        if (EquippedEntity.Target != null)
+        if (EquippedEntity.Target.Value != null)
         {
-            var diff = EquippedEntity.Target.Position - EquippedEntity.Position;
+            var diff = EquippedEntity.Target.Value.Position - EquippedEntity.Position;
             EquippedEntity.LookDirection = normalize(diff);
             var dist = length(diff);
 
@@ -86,7 +86,7 @@ public class TurretController : IBehavior
         }
         else
         {
-            EquippedEntity.Target = EquippedEntity.Zone.Entities.FirstOrDefault(e => e is Ship);
+            EquippedEntity.Target.Value = EquippedEntity.Zone.Entities.FirstOrDefault(e => e is Ship);
         }
         return true;
     }

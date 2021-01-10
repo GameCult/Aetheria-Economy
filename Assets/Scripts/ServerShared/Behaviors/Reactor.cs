@@ -62,7 +62,7 @@ public class Reactor : IBehavior, IOrderedBehavior
         });
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         var charge = Context.Evaluate(_data.Charge, Item.EquippableItem, Entity) * delta;
         var efficiency = Context.Evaluate(_data.Efficiency, Item.EquippableItem, Entity);

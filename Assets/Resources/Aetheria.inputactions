@@ -116,6 +116,38 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Target Reticle",
+                    "type": "Button",
+                    "id": "86f2e6cc-b895-4c55-aa19-70220df477d2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Target Previous",
+                    "type": "Button",
+                    "id": "2cf8e2b2-1463-463b-8f55-e79884f3767d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Target Next",
+                    "type": "Button",
+                    "id": "1e2bd5af-e174-4533-8c57-b04b7e9df92c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Target Nearest",
+                    "type": "Button",
+                    "id": "b2a42777-c22b-48f3-9e74-8dc715449845",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -457,6 +489,50 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Fire Group 6",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5211a58c-428b-4ee6-820d-2f67789806d6",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Target Reticle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6e13d87d-e5bb-4363-b153-1e0c1e21e4eb",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Target Previous",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e6e3164c-1b59-4eab-99d9-5a3bc294af0b",
+                    "path": "<Keyboard>/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Target Next",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b55dd143-367d-4842-82c8-593c301bcd69",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Target Nearest",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

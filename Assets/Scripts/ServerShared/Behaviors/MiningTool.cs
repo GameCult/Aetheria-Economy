@@ -52,7 +52,7 @@ public class MiningTool : IBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         Range = Context.Evaluate(_data.Range, Item.EquippableItem, Entity);
         var asteroidTransform = Entity.Zone.GetAsteroidTransform(AsteroidBelt, Asteroid);

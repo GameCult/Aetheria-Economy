@@ -38,7 +38,7 @@ public class Cockpit : IBehavior
         Heatstroke = 0;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         if (Item.Temperature > Context.GameplaySettings.HeatstrokeTemperature)
         {

@@ -24,7 +24,6 @@ public class SurveyControllerData : ControllerData
 public class SurveyController : ControllerBase<Survey>, IBehavior, IPersistentBehavior, IInitializableBehavior
 {
     private EquippedItem Item { get; }
-    public BehaviorData Data => _data;
     
     private SurveyControllerData _data;
     private bool _taskStarted;
@@ -46,7 +45,7 @@ public class SurveyController : ControllerBase<Survey>, IBehavior, IPersistentBe
         base.Initialize();
     }
 
-    public new bool Update(float delta)
+    public new bool Execute(float delta)
     {
         // var corporation = _context.ItemData.Get<Corporation>(_entity.Corporation);
         // if (surveyTask != null)
@@ -103,7 +102,7 @@ public class SurveyController : ControllerBase<Survey>, IBehavior, IPersistentBe
         //         }
         //     }
         // }
-        return base.Update(delta);
+        return base.Execute(delta);
     }
 
     private void NextPlanet()

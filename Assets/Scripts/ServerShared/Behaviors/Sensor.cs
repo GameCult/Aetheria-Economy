@@ -35,7 +35,7 @@ public class Sensor : IBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         // TODO: Handle Active Detection / Visibility From Reflected Radiance
         return true;

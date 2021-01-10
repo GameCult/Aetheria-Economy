@@ -104,4 +104,7 @@ public class GameplaySettings
     public float HeatstrokeExponent = 2;
     public float HeatstrokeRecoverySpeed = .2f;
     public float HeatstrokeControlLimit = .75f;
+    public float LockIndicatorNoiseAmplitude = 50f;
+    public ExponentialLerp LockIndicatorFrequency;
+    public ExponentialLerp LockSpinSpeed;
 }

@@ -40,7 +40,7 @@ public class Reflector : IBehavior
         Item = item;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         // TODO: Light system!
         return true;

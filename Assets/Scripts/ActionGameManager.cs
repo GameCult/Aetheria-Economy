@@ -20,6 +20,10 @@ using float2 = Unity.Mathematics.float2;
 
 public class ActionGameManager : MonoBehaviour
 {
+    public PlaceUIElementWorldspace ViewDot;
+    public PlaceUIElementWorldspace TargetIndicator;
+    public Prototype LockIndicator;
+    public PlaceUIElementWorldspace[] Crosshairs;
     public EventLog EventLog;
     public GameSettings Settings;
     public SectorRenderer SectorRenderer;
@@ -48,6 +52,8 @@ public class ActionGameManager : MonoBehaviour
     // private ShipInput _shipInput;
     private float2 _shipYawPitch;
     private float3 _viewDirection;
+    private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] ArticulationGroups;
+    private (TargetLock targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] LockingIndicators;
     public List<Ship> PlayerShips { get; } = new List<Ship>();
     
     public DatabaseCache ItemData { get; private set; }
@@ -161,6 +167,38 @@ public class ActionGameManager : MonoBehaviour
         {
             if (_currentShip.Parent == null) Dock();
             else Undock();
+        };
+
+        _input.Player.TargetReticle.performed += context =>
+        {
+            var underReticle = Zone.Entities.MaxBy(x => dot(normalize(x.Position - _currentShip.Position), _currentShip.LookDirection));
+            _currentShip.Target.Value = _currentShip.Target.Value == underReticle ? null : underReticle;
+            TargetIndicator.gameObject.SetActive(_currentShip.Target.Value != null);
+        };
+
+        _input.Player.TargetNearest.performed += context =>
+        {
+            _currentShip.Target.Value = Zone.Entities.MaxBy(x => length(x.Position - _currentShip.Position));
+        };
+
+        _input.Player.TargetNext.performed += context =>
+        {
+            var targets = Zone.Entities.OrderBy(x => length(x.Position - _currentShip.Position)).ToArray();
+            if(_currentShip.Target.Value != null)
+            {
+                var currentTargetIndex = Array.IndexOf(targets, _currentShip.Target.Value);
+                _currentShip.Target.Value = targets[(currentTargetIndex + 1) % targets.Length];
+            }
+        };
+
+        _input.Player.TargetPrevious.performed += context =>
+        {
+            var targets = Zone.Entities.OrderBy(x => length(x.Position - _currentShip.Position)).ToArray();
+            if (_currentShip.Target.Value != null)
+            {
+                var currentTargetIndex = Array.IndexOf(targets, _currentShip.Target.Value);
+                _currentShip.Target.Value = targets[(currentTargetIndex + targets.Length - 1) % targets.Length];
+            }
         };
 
         #region Trigger Groups
@@ -452,6 +490,10 @@ public class ActionGameManager : MonoBehaviour
         ship.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
         ship.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
 
+        var lrmmData = ItemData.GetAll<GearData>().First(x => x.Name == "LRMM72");
+        ship.TryEquip(ItemManager.CreateInstance(lrmmData, .5f, 1) as EquippableItem);
+        ship.TryEquip(ItemManager.CreateInstance(lrmmData, .5f, 1) as EquippableItem);
+
         var cargoData = ItemData.GetAll<CargoBayData>().First(x => x.Name == "Cargo Bay 4x4");
         ship.TryEquip(ItemManager.CreateInstance(cargoData, .5f, 1) as EquippableItem);
         
@@ -496,6 +538,8 @@ public class ActionGameManager : MonoBehaviour
                     Cursor.lockState = CursorLockMode.None;
                     _input.Player.Disable();
                     GameplayUI.SetActive(false);
+                    if(LockingIndicators!=null) foreach(var (_, indicator, _) in LockingIndicators)
+                        indicator.GetComponent<Prototype>().ReturnToPool();
                 }
             }
         }
@@ -506,16 +550,19 @@ public class ActionGameManager : MonoBehaviour
         if (_currentShip.Parent == null) return;
         if (_currentShip.GetBehavior<Cockpit>() == null)
         {
+            ConfirmationDialog.Clear();
             ConfirmationDialog.Title.text = "Can't undock. Missing cockpit component!";
             ConfirmationDialog.Show();
         }
         else if (_currentShip.GetBehavior<Thruster>() == null)
         {
+            ConfirmationDialog.Clear();
             ConfirmationDialog.Title.text = "Can't undock. Missing thruster component!";
             ConfirmationDialog.Show();
         }
         else if (_currentShip.GetBehavior<Reactor>() == null)
         {
+            ConfirmationDialog.Clear();
             ConfirmationDialog.Title.text = "Can't undock. Missing reactor component!";
             ConfirmationDialog.Show();
         }
@@ -528,10 +575,35 @@ public class ActionGameManager : MonoBehaviour
             FollowCamera.enabled = true;
             FollowCamera.LookAt = SectorRenderer.EntityInstances[_currentShip].LookAtPoint;
             FollowCamera.Follow = SectorRenderer.EntityInstances[_currentShip].Transform;
+            ArticulationGroups = _currentShip.Equipment
+                .Where(item => item.Behaviors.Any(x => x.Data is WeaponData && !(x.Data is LauncherData)))
+                .GroupBy(item => SectorRenderer.EntityInstances[_currentShip]
+                    .GetBarrel(_currentShip.Hardpoints[item.Position.x, item.Position.y])
+                    .GetComponentInParent<ArticulationPoint>()?.Group ?? -1)
+                .Select((group, index) => {
+                    return (
+                        group.Select(item => _currentShip.Hardpoints[item.Position.x, item.Position.y]).ToArray(),
+                        group.Select(item => SectorRenderer.EntityInstances[_currentShip].GetBarrel(_currentShip.Hardpoints[item.Position.x, item.Position.y])).ToArray(),
+                        Crosshairs[index]
+                    );
+                }).ToArray();
+
+            foreach (var crosshair in Crosshairs)
+                crosshair.gameObject.SetActive(false);
+            foreach (var group in ArticulationGroups)
+                group.crosshair.gameObject.SetActive(true);
+
+            LockingIndicators = _currentShip.GetBehaviors<TargetLock>().Select(x =>
+            {
+                var i = LockIndicator.Instantiate<PlaceUIElementWorldspace>();
+                return (x, i, i.GetComponent<Rotate>());
+            }).ToArray();
+
+
             Cursor.lockState = CursorLockMode.Locked;
             GameplayUI.SetActive(true);
             _input.Player.Enable();
-            ShipPanel.Display(_currentShip);
+            ShipPanel.Display(_currentShip, true);
             SchematicDisplay.ShowShip(_currentShip);
         }
         else
@@ -592,5 +664,38 @@ public class ActionGameManager : MonoBehaviour
         }
         Zone.Update(_time, Time.deltaTime);
         SectorRenderer.Time = _time;
+    }
+
+    private void LateUpdate()
+    {
+        UpdateTargetIndicators();
+    }
+
+    private void UpdateTargetIndicators()
+    {
+        if (_currentShip == null || _currentShip.Parent != null) return;
+
+        ViewDot.Target = SectorRenderer.EntityInstances[_currentShip].LookAtPoint.position;
+        if (_currentShip.Target.Value != null)
+            TargetIndicator.Target = _currentShip.Target.Value.Position;
+        var distance = length((float3)ViewDot.Target - _currentShip.Position);
+        foreach (var (_, barrels, crosshair) in ArticulationGroups)
+        {
+            var averagePosition = Vector3.zero;
+            foreach (var barrel in barrels)
+                averagePosition += barrel.position + barrel.forward * distance;
+            averagePosition /= barrels.Length;
+            crosshair.Target = averagePosition;
+        }
+        foreach (var (targetLock, indicator, spin) in LockingIndicators)
+        {
+            var showLockingIndicator = targetLock.Lock > .01f && _currentShip.Target.Value != null;
+            indicator.gameObject.SetActive(showLockingIndicator);
+            if(showLockingIndicator)
+            indicator.Target = _currentShip.Target.Value.Position;
+            indicator.NoiseAmplitude = Settings.GameplaySettings.LockIndicatorNoiseAmplitude * (1 - targetLock.Lock);
+            indicator.NoiseFrequency = Settings.GameplaySettings.LockIndicatorFrequency.Evaluate(targetLock.Lock);
+            spin.Speed = Settings.GameplaySettings.LockSpinSpeed.Evaluate(targetLock.Lock);
+        }
     }
 }

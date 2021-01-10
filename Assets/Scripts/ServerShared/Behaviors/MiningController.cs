@@ -22,7 +22,6 @@ public class MiningControllerData : ControllerData
 
 public class MiningController : ControllerBase<Mining>, IBehavior, IPersistentBehavior, IInitializableBehavior
 {
-    public BehaviorData Data => _data;
     
     private MiningControllerData _data;
     private EquippedItem Item { get; }
@@ -44,7 +43,7 @@ public class MiningController : ControllerBase<Mining>, IBehavior, IPersistentBe
         base.Initialize();
     }
 
-    public new bool Update(float delta)
+    public new bool Execute(float delta)
     {
         // if (Task != null)
         // {
@@ -88,7 +87,7 @@ public class MiningController : ControllerBase<Mining>, IBehavior, IPersistentBe
         //         }
         //     }
         // }
-        return base.Update(delta);
+        return base.Execute(delta);
     }
 
     // private void OnArriveHome()

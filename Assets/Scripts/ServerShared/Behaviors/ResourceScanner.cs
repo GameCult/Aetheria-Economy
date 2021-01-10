@@ -65,7 +65,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         var planetData = Context.ItemData.Get<BodyData>(ScanTarget);
         if (planetData != null)
@@ -103,7 +103,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
         return false;
     }
 
-    public void AlwaysUpdate(float delta)
+    public void Update(float delta)
     {
         Range = Context.Evaluate(_data.Range, Item.EquippableItem, Entity);
         MinimumDensity = Context.Evaluate(_data.MinimumDensity, Item.EquippableItem, Entity);

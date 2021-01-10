@@ -22,7 +22,6 @@ public class TowingControllerData : ControllerData
 
 public class TowingController : ControllerBase<StationTowing>, IBehavior, IPersistentBehavior
 {
-    public BehaviorData Data => _data;
     
     private TowingControllerData _data;
     private EquippedItem Item { get; }
@@ -34,7 +33,7 @@ public class TowingController : ControllerBase<StationTowing>, IBehavior, IPersi
         Item = item;
     }
 
-    public new bool Update(float delta)
+    public new bool Execute(float delta)
     {
         if (Task != null)
         {
@@ -44,7 +43,7 @@ public class TowingController : ControllerBase<StationTowing>, IBehavior, IPersi
                 _taskStarted = true;
             }
         }
-        return base.Update(delta);
+        return base.Execute(delta);
     }
     
     // void OnZoneArrival()

@@ -6,6 +6,7 @@ using UnityEngine;
 using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;
 using Random = UnityEngine.Random;
+using static Noise1D;
 
 public class GuidedProjectile : MonoBehaviour
 {
@@ -41,8 +42,9 @@ public class GuidedProjectile : MonoBehaviour
         _active = _alive = true;
         _phase = Random.value * 100;
         _prevDist = Single.MaxValue;
-        var main = Particles.main;
-        main.startColor = Color.white;
+        Particles.startColor = Color.white;
+        //var main = Particles.main;
+        //main.startColor = new ParticleSystem.MinMaxGradient { mode = ParticleSystemGradientMode.Color, color = Color.white };
         Particles.Clear(true);
         Particles.Play(true);
     }
@@ -71,8 +73,7 @@ public class GuidedProjectile : MonoBehaviour
             var right = cross(dir, float3(0, 1, 0));
             var up = cross(dir, right);
             var dodge = normalize(lerp(
-                normalize(right * snoise(position * Frequency + float3(1) * _phase) +
-                                up * snoise(position * Frequency + float3(1) * (100 + _phase))),
+                normalize(right * noise(Time.time * Frequency + _phase) + up * noise(Time.time * Frequency + (100 + _phase))),
                 Vector3.up, LiftCurve.Evaluate(curveLerp)));
             var desired = Vector3.Slerp(dodge, dir, GuidanceCurve.Evaluate(curveLerp)).normalized * TopSpeed;
             var thrust = Thrust * ThrustCurve.Evaluate(curveLerp);
@@ -80,14 +81,15 @@ public class GuidedProjectile : MonoBehaviour
         }
 
         var ray = new Ray(t.position, Velocity);
-        if (Physics.Raycast(ray, out var hit, Velocity.magnitude, LayerMask.NameToLayer("Combat")))
+        if (Physics.Raycast(ray, out var hit, Velocity.magnitude * Time.deltaTime))
         {
             var hull = hit.collider.GetComponent<HullCollider>();
             if (hull)
             {
                 hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, Velocity.normalized);
             }
-            StartCoroutine(Kill());
+            if (hit.transform.gameObject.layer == 1)
+                StartCoroutine(Kill());
         }
         if(_alive)
             t.position += Velocity * Time.deltaTime;
@@ -100,8 +102,9 @@ public class GuidedProjectile : MonoBehaviour
         while (Time.time - startTime < FadeOutTime)
         {
             var lerp = 1 - (Time.time - startTime) / FadeOutTime;
-            var main = Particles.main;
-            main.startColor = Color.white * lerp;
+            Particles.startColor = Color.white * lerp;
+            //var main = Particles.main;
+            //main.startColor = new ParticleSystem.MinMaxGradient { mode = ParticleSystemGradientMode.Color, color = Color.white * lerp };
             yield return null;
         }
 

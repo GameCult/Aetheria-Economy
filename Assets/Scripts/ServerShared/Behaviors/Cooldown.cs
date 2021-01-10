@@ -42,7 +42,7 @@ public class Cooldown : IBehavior, IAlwaysUpdatedBehavior, IProgressBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         if (_cooldown < 0)
         {
@@ -54,7 +54,7 @@ public class Cooldown : IBehavior, IAlwaysUpdatedBehavior, IProgressBehavior
 
     }
 
-    public void AlwaysUpdate(float delta)
+    public void Update(float delta)
     {
         _cooldown -= delta / Context.Evaluate(_data.Cooldown, Item.EquippableItem, Entity);
     }

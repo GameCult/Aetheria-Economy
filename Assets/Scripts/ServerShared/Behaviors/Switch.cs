@@ -36,7 +36,7 @@ public class Switch : IBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         return Activated;
     }

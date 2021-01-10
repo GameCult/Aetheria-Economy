@@ -38,7 +38,7 @@ public abstract class Entity
 
     public Entity Parent;
     public List<Entity> Children = new List<Entity>();
-    public Entity Target;
+    public ReactiveProperty<Entity> Target = new ReactiveProperty<Entity>((Entity)null);
 
     public float3 LookDirection;
     
@@ -74,6 +74,11 @@ public abstract class Entity
     public Subject<(int2 pos, float damage)> ArmorDamage = new Subject<(int2, float)>();
     public Subject<(EquippedItem item, float damage)> ItemDamage = new Subject<(EquippedItem, float)>();
     public Subject<float> HullDamage = new Subject<float>();
+    
+    public UniRx.IObservable<EquippedItem> ItemDestroyed;
+    public UniRx.IObservable<int2> HullArmorDepleted;
+    public UniRx.IObservable<HardpointData> HardpointArmorDepleted;
+    
 
     public bool Active
     {
@@ -106,6 +111,10 @@ public abstract class Entity
         TriggerGroups = new List<EquippedItem>[itemManager.GameplaySettings.TriggerGroupCount];
         for(int i=0; i<itemManager.GameplaySettings.TriggerGroupCount; i++)
             TriggerGroups[i] = new List<EquippedItem>();
+
+        ItemDestroyed = ItemDamage.Where(x => x.item.EquippableItem.Durability < .01f).Select(x=>x.item);
+        HullArmorDepleted = ArmorDamage.Where(x => Armor[x.pos.x, x.pos.y] < .01f).Select(x => x.pos);
+        HardpointArmorDepleted = HardpointDamage.Where(x => HardpointArmor[x.hardpoint] < .01f).Select(x => x.hardpoint);
     }
 
     private void MapEntity()
@@ -523,7 +532,7 @@ public abstract class Entity
                 heatTransfer += (Temperature[v.x, v.y - 1] - temp) * Conductivity[v.x, v.y].z * Conductivity[v.x, v.y - 1].x;
             
             if (v.y < hullData.Shape.Height - 1)
-                heatTransfer += (Temperature[v.x, v.y + 1] - temp) * Conductivity[v.x, v.y].x * Conductivity[v.x, v.y + 1].z;;
+                heatTransfer += (Temperature[v.x, v.y + 1] - temp) * Conductivity[v.x, v.y].x * Conductivity[v.x, v.y + 1].z;
 
             newTemp[v.x, v.y] = Temperature[v.x, v.y] + heatTransfer * min(ItemManager.GameplaySettings.HeatConductionMultiplier * delta,1) / ThermalMass[v.x,v.y];
             
@@ -617,6 +626,8 @@ public class EquippedItem
 
     public int SortPosition;
 
+    public bool Online => EquippableItem.Durability > .01f && Temperature > _data.MinimumTemperature && Temperature < _data.MaximumTemperature;
+
     public float Temperature
     {
         get
@@ -673,23 +684,27 @@ public class EquippedItem
 
     public void Update(float delta)
     {
-        // if(Temperature < _data.MinimumTemperature || Temperature > _data.MaximumTemperature)
-        // {
-        //     EquippableItem.Durability -= delta;
-        //     return;
-        // }
-            
-        foreach (var behavior in Behaviors.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
-            behavior.AlwaysUpdate(delta);
-        
-        foreach (var group in BehaviorGroups)
+
+        if (Temperature < _data.MinimumTemperature || Temperature > _data.MaximumTemperature)
         {
-            foreach (var behavior in group.Behaviors)
+            EquippableItem.Durability -= delta;
+        }
+
+        foreach (var behavior in Behaviors.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
+            behavior.Update(delta);
+
+        if (Online)
+        {
+            foreach (var group in BehaviorGroups)
             {
-                if (!behavior.Update(delta))
-                    break;
+                foreach (var behavior in group.Behaviors)
+                {
+                    if (!behavior.Execute(delta))
+                        break;
+                }
             }
         }
+        
     }
 }
 

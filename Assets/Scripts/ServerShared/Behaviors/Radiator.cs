@@ -39,7 +39,7 @@ public class Radiator : IBehavior
         Item = item;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         Emissivity = Context.Evaluate(_data.Emissivity, Item.EquippableItem, Entity);
         var rad = pow(Item.Temperature, Context.GameplaySettings.HeatRadiationExponent) * Context.GameplaySettings.HeatRadiationMultiplier * Emissivity;

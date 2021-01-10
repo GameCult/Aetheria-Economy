@@ -45,7 +45,7 @@ public class PatrolController : IBehavior, IInitializableBehavior
         RandomTarget();
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         _locomotion.Objective = Entity.Zone.GetOrbitPosition(_targetOrbit);
         _locomotion.Update(delta);

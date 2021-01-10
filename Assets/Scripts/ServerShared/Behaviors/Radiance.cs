@@ -37,7 +37,7 @@ public class Radiance : IBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         // TODO: Light system!
         return true;

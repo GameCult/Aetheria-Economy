@@ -62,7 +62,7 @@ public class Ship : Entity
             foreach (var thruster in _reverseThrusters) thruster.Axis += -MovementDirection.y;
         
             var deltaRot = dot(normalize(LookDirection.xz), normalize(Direction).Rotate(ItemRotation.Clockwise));
-            if (abs(deltaRot) < .01) deltaRot = 0;
+            if (abs(deltaRot) < .0001) deltaRot = 0;
             deltaRot = pow(abs(deltaRot), .5f) * sign(deltaRot);
         
             foreach (var thruster in _clockwiseThrusters) thruster.Axis += deltaRot;

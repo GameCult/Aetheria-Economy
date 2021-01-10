@@ -15,7 +15,7 @@ using static Unity.Mathematics.noise;
 
 public interface IBehavior
 {
-    bool Update(float delta);
+    bool Execute(float delta);
     BehaviorData Data { get; }
 }
 
@@ -42,7 +42,7 @@ public interface IInitializableBehavior
 
 public interface IAlwaysUpdatedBehavior
 {
-    void AlwaysUpdate(float delta);
+    void Update(float delta);
 }
 
 public interface IProgressBehavior
@@ -118,6 +118,7 @@ public abstract class PersistentBehaviorData
  Union(32, typeof(CockpitData)),
  Union(33, typeof(HeatsinkData)),
  Union(34, typeof(TurretControllerData)),
+ Union(35, typeof(TargetLockData)),
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {
