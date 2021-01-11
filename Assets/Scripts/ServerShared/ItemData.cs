@@ -154,7 +154,7 @@ public class Shape
 
     public Shape Inset(Shape inset, int2 insetPosition, ItemRotation rotation = ItemRotation.None)
     {
-        var shape = new Shape(Width, Height);
+        var shape = new Shape(max(Width,insetPosition.x + inset.Width - 1), max(Height, insetPosition.y + inset.Height - 1));
         foreach (var v in inset.Coordinates)
         {
             var insetCoord = inset.Rotate(v, rotation) + insetPosition;
