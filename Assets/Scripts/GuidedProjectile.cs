@@ -81,15 +81,17 @@ public class GuidedProjectile : MonoBehaviour
         }
 
         var ray = new Ray(t.position, Velocity);
-        if (Physics.Raycast(ray, out var hit, Velocity.magnitude * Time.deltaTime))
+        if (Physics.Raycast(ray, out var hit, Velocity.magnitude * Time.deltaTime, 1))
         {
             var hull = hit.collider.GetComponent<HullCollider>();
             if (hull)
             {
                 hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, Velocity.normalized);
             }
-            if (hit.transform.gameObject.layer == 1)
+            //if (hit.transform.gameObject.layer == 1)
+            //{
                 StartCoroutine(Kill());
+            //}
         }
         if(_alive)
             t.position += Velocity * Time.deltaTime;

@@ -58,7 +58,13 @@ ScriptedImporter:
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://metal_steel\" label=\"\" >\n </sbspreset>\n"
+    preset: " <sbspreset pkgurl=\"pkg://metal_steel\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"1318093408\" type=\"8\" value=\"9,9\" />\n 
+      <presetinput identifier=\"dirt\" uid=\"854373931\" type=\"0\" value=\"0.903\"
+      />\n  <presetinput identifier=\"rust\" uid=\"854346221\" type=\"0\" value=\"0\"
+      />\n  <presetinput identifier=\"surface_imperfections\" uid=\"863227179\" type=\"0\"
+      value=\"0.413\" />\n  <presetinput identifier=\"steel_roughness\" uid=\"863268384\"
+      type=\"0\" value=\"0.292\" />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
@@ -354,8 +360,8 @@ ScriptedImporter:
     - label: Default
       bOverride: 0
       bLockRatio: 1
-      textureWidth: 256
-      textureHeight: 256
+      textureWidth: 512
+      textureHeight: 512
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1

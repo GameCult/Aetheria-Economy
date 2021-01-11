@@ -629,7 +629,9 @@ public class SectorRenderer : MonoBehaviour
                 for (int i = 0; i < shipInstance.Thrusters.Length; i++)
                 {
                     var emissionModule = shipInstance.ThrusterParticles[i].emission;
-                    emissionModule.rateOverTimeMultiplier = shipInstance.ThrusterBaseEmission[i] * shipInstance.Thrusters[i].Axis;
+                    var item = shipInstance.Thrusters[i].Item.EquippableItem;
+                    var data = shipInstance.Entity.ItemManager.GetData(item);
+                    emissionModule.rateOverTimeMultiplier = shipInstance.ThrusterBaseEmission[i] * shipInstance.Thrusters[i].Axis * (item.Durability / data.Durability);
                 }
 
                 entity.Value.Transform.rotation = ((Ship) entity.Key).Rotation;

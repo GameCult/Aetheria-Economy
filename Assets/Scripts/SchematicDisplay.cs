@@ -20,6 +20,7 @@ public class SchematicDisplay : MonoBehaviour
     public TextMeshProUGUI CargoTemperatureLabel;
     public TextMeshProUGUI VisibilityLabel;
     public TextMeshProUGUI HullDurabilityLabel;
+    public TextMeshProUGUI DistanceLabel;
 
     public RectTransform EnergyFill;
     public RectTransform HullDurabilityFill;
@@ -32,7 +33,7 @@ public class SchematicDisplay : MonoBehaviour
 
     public Color TriggerGroupColor;
 
-    private Ship _ship;
+    private Entity _entity;
     private EquippableItem _hull;
     private Radiator[] _radiators;
     private Cockpit _cockpit;
@@ -47,6 +48,9 @@ public class SchematicDisplay : MonoBehaviour
     private int _selectedItemIndex;
     private bool _triggerGroupsVisible;
     private float _triggerGroupsFadeOutTime;
+
+    private bool _enemy;
+    private Entity _player;
 
     public SchematicDisplayItem[] SchematicItems
     {
@@ -83,52 +87,62 @@ public class SchematicDisplay : MonoBehaviour
         public WeaponData WeaponData;
     }
 
-    public void ShowShip(Ship ship)
+    public void ShowShip(Entity entity, Entity player = null)
     {
+        _enemy = player != null;
+        _player = player;
         if (_schematicItems != null)
             foreach (var item in _schematicItems)
             {
                 item.ListElement.GetComponent<Prototype>().ReturnToPool();
                 item.TriggerGroupElement?.GetComponent<Prototype>().ReturnToPool();
             }
-        _ship = ship;
-        _cockpit = ship.GetBehavior<Cockpit>();
-        _reactor = ship.GetBehavior<Reactor>();
-        _capacitors = ship.GetBehaviors<Capacitor>().ToArray();
+
+        _entity = entity;
+        if (!_enemy)
+        {
+            _cockpit = entity.GetBehavior<Cockpit>();
+            _reactor = entity.GetBehavior<Reactor>();
+            _capacitors = entity.GetBehaviors<Capacitor>().ToArray();
+
+            _radiators = entity.GetBehaviors<Radiator>().ToArray();
+            if (_radiators.Length == 0)
+                RadiatorTemperatureLabel.text = "N/A";
+
+            _heatsinks = entity.GetBehaviors<Heatsink>().ToArray();
+            if (_heatsinks.Length == 0)
+                HeatsinkTemperatureLabel.text = "N/A";
+
+            _cargoBays = entity.CargoBays.ToArray();
+            if (_cargoBays.Length == 0)
+                CargoTemperatureLabel.text = "N/A";
+        }
         
-        _radiators = ship.GetBehaviors<Radiator>().ToArray();
-        if (_radiators.Length == 0)
-            RadiatorTemperatureLabel.text = "N/A";
-        
-        _heatsinks = ship.GetBehaviors<Heatsink>().ToArray();
-        if (_heatsinks.Length == 0)
-            HeatsinkTemperatureLabel.text = "N/A";
-        
-        _cargoBays = ship.CargoBays.ToArray();
-        if (_cargoBays.Length == 0)
-            CargoTemperatureLabel.text = "N/A";
-        
-        _schematicItems = ship.Equipment
+        _schematicItems = entity.Equipment
             .Where(x => x.Behaviors.Any(b => b.Data is WeaponData))
             .Select(x => new SchematicDisplayItem
             {
                 Item = x, 
                 ListElement = ListElementPrototype.Instantiate<SchematicListElement>(),
-                TriggerGroupElement = TriggerGroupPrototype.Instantiate<SchematicTriggerGroupElement>(),
-                Cooldown = (IProgressBehavior) x.Behaviors.FirstOrDefault(b=> b is IProgressBehavior),
-                ItemUsage = (ItemUsage) x.Behaviors.FirstOrDefault(b=> b is ItemUsage),
+                TriggerGroupElement = _enemy ? null : TriggerGroupPrototype.Instantiate<SchematicTriggerGroupElement>(),
+                Cooldown = _enemy ? null : (IProgressBehavior) x.Behaviors.FirstOrDefault(b=> b is IProgressBehavior),
+                ItemUsage = _enemy ? null : (ItemUsage) x.Behaviors.FirstOrDefault(b=> b is ItemUsage),
                 WeaponData = (WeaponData) x.Behaviors.FirstOrDefault(b=>b.Data is WeaponData)?.Data
             })
             .ToArray();
         foreach (var x in _schematicItems)
         {
-            x.ListElement.Icon.sprite = Settings.ItemIcons[(int) ship.Hardpoints[x.Item.Position.x, x.Item.Position.y].Type];
+            x.ListElement.Icon.sprite = Settings.ItemIcons[(int) (entity.Hardpoints[x.Item.Position.x, x.Item.Position.y]?.Type ?? HardpointType.Tool)];
             x.ListElement.Label.text = x.Item.EquippableItem.Name;
-            x.ListElement.InfiniteAmmoIcon.gameObject.SetActive(x.ItemUsage == null);
-            x.ListElement.AmmoLabel.gameObject.SetActive(x.ItemUsage != null);
-            foreach (var group in x.TriggerGroupElement.GroupBackgrounds)
-                group.color = TriggerGroupColor;
+            if (!_enemy)
+            {
+                x.ListElement.InfiniteAmmoIcon.gameObject.SetActive(x.ItemUsage == null);
+                x.ListElement.AmmoLabel.gameObject.SetActive(x.ItemUsage != null);
+                foreach (var group in x.TriggerGroupElement.GroupBackgrounds)
+                    group.color = TriggerGroupColor;
+            }
         }
+            if (!_enemy)
         UpdateTriggerGroups();
     }
 
@@ -152,7 +166,7 @@ public class SchematicDisplay : MonoBehaviour
                     backgroundColor.a *= 2;
                 item.TriggerGroupElement.GroupBackgrounds[groupIndex].color = backgroundColor;
                 item.TriggerGroupElement.GroupLabel[groupIndex].color =
-                    _ship.TriggerGroups[groupIndex].Contains(item.Item) ? Color.white : Color.gray;
+                    _entity.TriggerGroups[groupIndex].Contains(item.Item) ? Color.white : Color.gray;
             }
         }
     }
@@ -190,70 +204,81 @@ public class SchematicDisplay : MonoBehaviour
             _triggerGroupsVisible = false;
             StartCoroutine(FadeOutTriggerGroups());
         }
-        if (_ship != null)
+        if (_entity != null)
         {
-            VisibilityLabel.text = ((int) _ship.Visibility).ToString();
-            
-            if(_radiators.Length == 1)
-                RadiatorTemperatureLabel.text = $"{(_radiators[0].Item.Temperature - 273.15f).SignificantDigits(3)}°C";
-            else if(_radiators.Length > 1)
-                RadiatorTemperatureLabel.text = 
-                    $"{(_radiators.Min(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}-" +
-                    $"{(_radiators.Max(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}°C";
-            
-            if(_heatsinks.Length == 1)
-                HeatsinkTemperatureLabel.text = $"{(_heatsinks[0].Item.Temperature - 273.15f).SignificantDigits(3)}°C";
-            else if(_heatsinks.Length > 1)
-                HeatsinkTemperatureLabel.text = 
-                    $"{(_heatsinks.Min(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}-" +
-                    $"{(_heatsinks.Max(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}°C";
-            
-            if(_cargoBays.Length == 1)
-                CargoTemperatureLabel.text = $"{(_cargoBays[0].Temperature - 273.15f).SignificantDigits(3)}°C";
-            else if(_cargoBays.Length > 1)
-                CargoTemperatureLabel.text = 
-                    $"{(_cargoBays.Min(r => r.Temperature) - 273.15f).SignificantDigits(3)}-" +
-                    $"{(_cargoBays.Max(r => r.Temperature) - 273.15f).SignificantDigits(3)}°C";
-            
-            CockpitTemperatureLabel.text = $"{(_cockpit.Item.Temperature - 273.15f).SignificantDigits(3)}°C";
-            
-            HeatstrokeMeterFill.anchorMax = new Vector2(_cockpit.Heatstroke, 1);
-            HeatstrokeLimitFill.anchorMax = new Vector2(_cockpit.Item.Temperature / Settings.GameplaySettings.HeatstrokeTemperature, 1);
-
-            _hull = _ship.Hull;
-            var hullData = _ship.ItemManager.GetData(_hull);
-            var dur = _hull.Durability / hullData.Durability;
-            HullDurabilityFill.anchorMax = new Vector2(dur, 1);
-            HullDurabilityLabel.text = $"{(dur*100).SignificantDigits(3)}%";
-            
-            if (_capacitors.Length == 0)
+            if (!_enemy)
             {
-                EnergyFill.anchorMax = Vector2.up;
-                EnergyLabel.text = _reactor.Surplus.SignificantDigits(3);
+
+                if (_radiators.Length == 1)
+                    RadiatorTemperatureLabel.text = $"{(_radiators[0].Item.Temperature - 273.15f).SignificantDigits(3)}°C";
+                else if (_radiators.Length > 1)
+                    RadiatorTemperatureLabel.text =
+                        $"{(_radiators.Min(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}-" +
+                        $"{(_radiators.Max(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}°C";
+
+                if (_heatsinks.Length == 1)
+                    HeatsinkTemperatureLabel.text = $"{(_heatsinks[0].Item.Temperature - 273.15f).SignificantDigits(3)}°C";
+                else if (_heatsinks.Length > 1)
+                    HeatsinkTemperatureLabel.text =
+                        $"{(_heatsinks.Min(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}-" +
+                        $"{(_heatsinks.Max(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}°C";
+
+                if (_cargoBays.Length == 1)
+                    CargoTemperatureLabel.text = $"{(_cargoBays[0].Temperature - 273.15f).SignificantDigits(3)}°C";
+                else if (_cargoBays.Length > 1)
+                    CargoTemperatureLabel.text =
+                        $"{(_cargoBays.Min(r => r.Temperature) - 273.15f).SignificantDigits(3)}-" +
+                        $"{(_cargoBays.Max(r => r.Temperature) - 273.15f).SignificantDigits(3)}°C";
+
+                CockpitTemperatureLabel.text = $"{(_cockpit.Item.Temperature - 273.15f).SignificantDigits(3)}°C";
+
+                HeatstrokeMeterFill.anchorMax = new Vector2(_cockpit.Heatstroke, 1);
+                HeatstrokeLimitFill.anchorMax = new Vector2(_cockpit.Item.Temperature / Settings.GameplaySettings.HeatstrokeTemperature, 1);
+
+                if (_capacitors.Length == 0)
+                {
+                    EnergyFill.anchorMax = Vector2.up;
+                    EnergyLabel.text = _reactor.Surplus.SignificantDigits(3);
+                }
+                else
+                {
+                    var charge = _capacitors.Sum(x => x.Charge);
+                    var maxCharge = _capacitors.Sum(x => x.Capacity);
+                    EnergyFill.anchorMax = new Vector2(charge / maxCharge, 1);
+                    EnergyLabel.text = $"{charge.SignificantDigits(3)}/{maxCharge.SignificantDigits(3)} ({_reactor.Surplus.SignificantDigits(3)})";
+                }
             }
             else
             {
-                var charge = _capacitors.Sum(x => x.Charge);
-                var maxCharge = _capacitors.Sum(x => x.Capacity);
-                EnergyFill.anchorMax = new Vector2(charge / maxCharge, 1);
-                EnergyLabel.text = $"{charge.SignificantDigits(3)}/{maxCharge.SignificantDigits(3)} ({_reactor.Surplus.SignificantDigits(3)})";
+                DistanceLabel.text = $"{(int)length(_entity.Position - _player.Position)}";
             }
+
+            VisibilityLabel.text = ((int)_entity.Visibility).ToString();
+
+            _hull = _entity.Hull;
+            var hullData = _entity.ItemManager.GetData(_hull);
+            var dur = _hull.Durability / hullData.Durability;
+            HullDurabilityFill.anchorMax = new Vector2(dur, 1);
+            HullDurabilityLabel.text = $"{(dur*100).SignificantDigits(3)}%";
 
             foreach (var x in _schematicItems)
             {
-                var itemData = _ship.ItemManager.GetData(x.Item.EquippableItem);
-                x.ListElement.HeatFill.anchorMax = new Vector2(unlerp(itemData.MinimumTemperature,itemData.MaximumTemperature, x.Item.Temperature), 0);
-                if(x.Cooldown!=null)
-                    x.ListElement.CooldownFill.anchorMax = new Vector2(x.Cooldown.Progress,1);
-                x.ListElement.DurabilityLabel.text = $"{(int)(x.Item.EquippableItem.Durability / itemData.Durability * 100)}%";
-                if (x.ItemUsage != null)
+                if (!_enemy)
                 {
-                    x.ListElement.AmmoLabel.text = _ship.CountItemsInCargo(((ItemUsageData) x.ItemUsage.Data).Item).ToString();
+                    var itemData = _entity.ItemManager.GetData(x.Item.EquippableItem);
+                    x.ListElement.HeatFill.anchorMax = new Vector2(unlerp(itemData.MinimumTemperature, itemData.MaximumTemperature, x.Item.Temperature), 0);
+                    if (x.Cooldown != null)
+                        x.ListElement.CooldownFill.anchorMax = new Vector2(x.Cooldown.Progress, 1);
+                    x.ListElement.DurabilityLabel.text = $"{(int)(x.Item.EquippableItem.Durability / itemData.Durability * 100)}%";
+                    if (x.ItemUsage != null)
+                    {
+                        x.ListElement.AmmoLabel.text = _entity.CountItemsInCargo(((ItemUsageData)x.ItemUsage.Data).Item).ToString();
+                    }
                 }
 
                 if (x.WeaponData != null)
                 {
-                    x.ListElement.RangeLabel.text = ((int) _ship.ItemManager.Evaluate(x.WeaponData.Range, x.Item.EquippableItem, _ship)).ToString();
+                    x.ListElement.RangeLabel.text = ((int) _entity.ItemManager.Evaluate(x.WeaponData.Range, x.Item.EquippableItem, _entity)).ToString();
                 }
             }
         }

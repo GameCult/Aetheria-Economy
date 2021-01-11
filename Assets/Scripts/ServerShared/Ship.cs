@@ -42,8 +42,8 @@ public class Ship : Entity
         _reverseThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.None).ToArray();
         _rightThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.CounterClockwise).ToArray();
         _leftThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Clockwise).ToArray();
-        _counterClockwiseThrusters = _allThrusters.Where(x => x.Torque < -.05f).ToArray();
-        _clockwiseThrusters = _allThrusters.Where(x => x.Torque > .05f).ToArray();
+        _counterClockwiseThrusters = _allThrusters.Where(x => x.Torque < -ItemManager.GameplaySettings.TorqueFloor).ToArray();
+        _clockwiseThrusters = _allThrusters.Where(x => x.Torque > ItemManager.GameplaySettings.TorqueFloor).ToArray();
     }
 
     public Ship(ItemManager itemManager, Zone zone, EquippableItem hull) : base(itemManager, zone, hull)

@@ -60,14 +60,14 @@ public class Thruster : IAnalogBehavior
         var itemData = context.GetData(item.EquippableItem);
         var itemCenter = hullData.Shape.Inset(itemData.Shape, item.Position, item.EquippableItem.Rotation).CenterOfMass;
         var toCenter = hullCenter - itemCenter;
-        Torque = -dot(toCenter, float2(1, 0).Rotate(item.EquippableItem.Rotation));
+        Torque = -dot(normalize(toCenter), float2(1, 0).Rotate(item.EquippableItem.Rotation));
     }
 
     public bool Execute(float delta)
     {
         Thrust = Context.Evaluate(_data.Thrust, Item.EquippableItem, Entity);
         Entity.Velocity -= Entity.Direction.Rotate(Item.EquippableItem.Rotation) * _input * Thrust / Entity.Mass * delta;
-        Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque * Thrust / Entity.Mass / 100 * delta));
+        Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque * Thrust * Context.GameplaySettings.TorqueMultiplier / Entity.Mass * delta));
         Item.AddHeat(_input * Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta);
         Entity.VisibilitySources[this] = _input * Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
         return true;

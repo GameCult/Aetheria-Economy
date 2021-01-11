@@ -45,25 +45,30 @@ public class Projectile : MonoBehaviour
             var position = transform.position;
             Velocity += Vector3.up * (Gravity * Time.deltaTime);
             var ray = new Ray(position, Velocity);
-            if (Physics.Raycast(ray, out var hit, Velocity.magnitude * Time.deltaTime))
+            if (Physics.Raycast(ray, out var hit, Velocity.magnitude * Time.deltaTime, 1))
             {
                 var hull = hit.collider.GetComponent<HullCollider>();
                 if (hull)
                 {
-                    if(hull.Entity != SourceEntity)
+                    if (hull.Entity != SourceEntity)
                     {
                         hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, Velocity.normalized);
                         transform.position = hit.point;
                         StartCoroutine(Kill());
-                        if(HitEffect!=null)
+                        if (HitEffect != null)
                         {
                             var t = HitEffect.Instantiate<Transform>();
                             t.SetParent(hit.collider.transform);
                             t.position = hit.point;
+                            return;
                         }
                     }
                 }
-                else StartCoroutine(Kill());
+                else// if (hit.transform.gameObject.layer == 1)
+                {
+                    StartCoroutine(Kill());
+                    return;
+                }
             }
             
             transform.position += Velocity * Time.deltaTime;

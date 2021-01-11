@@ -19,6 +19,7 @@ using int2 = Unity.Mathematics.int2;
 
 public class InventoryPanel : MonoBehaviour
 {
+    public bool Flip;
     public GameSettings Settings;
     public ActionGameManager GameManager;
     public ContextMenu ContextMenu;
@@ -335,7 +336,7 @@ public class InventoryPanel : MonoBehaviour
 
                 bool HardpointMatch(int2 offset)
                 {
-                    var v2 = v + offset;
+                    var v2 = v + offset * (Flip ? -1 : 1);
                     return !(
                         hullData.Shape[v2] &&
                         _displayedEntity.Hardpoints[v2.x, v2.y] == hardpoint &&
@@ -345,7 +346,7 @@ public class InventoryPanel : MonoBehaviour
 
                 bool NoHardpointMatch(int2 offset)
                 {
-                    var v2 = v + offset;
+                    var v2 = v + offset * (Flip ? -1 : 1);
                     return !(
                         hullData.Shape[v2] && (
                             !interior && !hullData.InteriorCells[v2] && _displayedEntity.Hardpoints[v2.x, v2.y] == null ||

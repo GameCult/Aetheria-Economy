@@ -34,8 +34,10 @@ public class ActionGameManager : MonoBehaviour
     public MenuPanel Menu;
     public MapRenderer MenuMap;
     public SchematicDisplay SchematicDisplay;
+    public SchematicDisplay TargetSchematicDisplay;
     public InventoryMenu Inventory;
     public InventoryPanel ShipPanel;
+    public InventoryPanel TargetShipPanel;
     public ConfirmationDialog ConfirmationDialog;
     public float2 Sensitivity;
     
@@ -120,7 +122,7 @@ public class ActionGameManager : MonoBehaviour
                     GameplayUI.SetActive(true);
                     
                     SchematicDisplay.ShowShip(_currentShip);
-                    ShipPanel.Display(_currentShip);
+                    ShipPanel.Display(_currentShip, true);
                 }
                 
                 return;
@@ -145,7 +147,7 @@ public class ActionGameManager : MonoBehaviour
                     GameplayUI.SetActive(true);
                     
                     SchematicDisplay.ShowShip(_currentShip);
-                    ShipPanel.Display(_currentShip);
+                    ShipPanel.Display(_currentShip, true);
                 }
                 return;
             }
@@ -173,7 +175,6 @@ public class ActionGameManager : MonoBehaviour
         {
             var underReticle = Zone.Entities.MaxBy(x => dot(normalize(x.Position - _currentShip.Position), _currentShip.LookDirection));
             _currentShip.Target.Value = _currentShip.Target.Value == underReticle ? null : underReticle;
-            TargetIndicator.gameObject.SetActive(_currentShip.Target.Value != null);
         };
 
         _input.Player.TargetNearest.performed += context =>
@@ -184,21 +185,15 @@ public class ActionGameManager : MonoBehaviour
         _input.Player.TargetNext.performed += context =>
         {
             var targets = Zone.Entities.OrderBy(x => length(x.Position - _currentShip.Position)).ToArray();
-            if(_currentShip.Target.Value != null)
-            {
-                var currentTargetIndex = Array.IndexOf(targets, _currentShip.Target.Value);
-                _currentShip.Target.Value = targets[(currentTargetIndex + 1) % targets.Length];
-            }
+            var currentTargetIndex = Array.IndexOf(targets, _currentShip.Target.Value);
+            _currentShip.Target.Value = targets[(currentTargetIndex + 1) % targets.Length];
         };
 
         _input.Player.TargetPrevious.performed += context =>
         {
             var targets = Zone.Entities.OrderBy(x => length(x.Position - _currentShip.Position)).ToArray();
-            if (_currentShip.Target.Value != null)
-            {
-                var currentTargetIndex = Array.IndexOf(targets, _currentShip.Target.Value);
-                _currentShip.Target.Value = targets[(currentTargetIndex + targets.Length - 1) % targets.Length];
-            }
+            var currentTargetIndex = Array.IndexOf(targets, _currentShip.Target.Value);
+            _currentShip.Target.Value = targets[(currentTargetIndex + targets.Length - 1) % targets.Length];
         };
 
         #region Trigger Groups
@@ -456,6 +451,16 @@ public class ActionGameManager : MonoBehaviour
         var ship = new Ship(ItemManager, Zone, shipHull);
         PlayerShips.Add(ship);
         _currentShip = ship;
+        _currentShip.Target.Subscribe(target =>
+        {
+            TargetIndicator.gameObject.SetActive(_currentShip.Target.Value != null);
+            TargetShipPanel.gameObject.SetActive(target != null);
+            if (target != null)
+            {
+                TargetShipPanel.Display(target, true);
+                TargetSchematicDisplay.ShowShip(target, _currentShip);
+            }
+        });
         ship.ArmorDamage.Subscribe(hit =>
         {
             var direction = _directions.MaxBy(d => dot(d.direction, normalize(hit.pos - hullType.Shape.CenterOfMass)));
