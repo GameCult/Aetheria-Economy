@@ -446,7 +446,7 @@ public class ActionGameManager : MonoBehaviour
         turret.Active = true;
         Zone.Entities.Add(turret);
         
-        var hullType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Ship);
+        var hullType = ItemData.GetAll<HullData>().First(x=>x.Name == "Djinni");
         var shipHull = ItemManager.CreateInstance(hullType, 0, 1) as EquippableItem;
         var ship = new Ship(ItemManager, Zone, shipHull);
         PlayerShips.Add(ship);
