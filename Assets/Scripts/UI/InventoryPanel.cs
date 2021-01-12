@@ -200,6 +200,7 @@ public class InventoryPanel : MonoBehaviour
             else
             {
                 var cell = NodePrototype.Instantiate<InventoryCell>();
+                cell.Background.color = CellBackgroundColor;
                 if (!_firstRect)
                     _firstRect = cell.GetComponent<RectTransform>();
                 cell.PointerClickTrigger.OnPointerClickAsObservable()

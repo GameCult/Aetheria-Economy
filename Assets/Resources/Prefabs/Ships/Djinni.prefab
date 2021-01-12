@@ -6916,6 +6916,8 @@ MonoBehaviour:
   - {fileID: 431753752050277399}
   ArticulationPoints:
   - {fileID: 555770309889367125}
+  DestroyEffect: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664,
+    type: 3}
 --- !u!1 &8620289461215737213
 GameObject:
   m_ObjectHideFlags: 0
@@ -7194,6 +7196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
+  Group: 0
   YawMin: 0
   YawMax: 0
   PitchMin: -45

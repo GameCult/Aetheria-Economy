@@ -462,6 +462,11 @@ public class SectorRenderer : MonoBehaviour
 
     void UnloadEntity(Entity entity)
     {
+        if (EntityInstances[entity].Prefab.DestroyEffect != null)
+        {
+            var t = Instantiate(EntityInstances[entity].Prefab.DestroyEffect).transform;
+            t.position = EntityInstances[entity].Prefab.transform.position;
+        }
         Destroy(EntityInstances[entity].Transform.gameObject);
         EntityInstances.Remove(entity);
     }
@@ -622,8 +627,14 @@ public class SectorRenderer : MonoBehaviour
             else planet.Value.Body.transform.rotation *= Quaternion.AngleAxis(Settings.PlanetRotationSpeed, Vector3.up);
         }
 
+        var hitList = new List<Entity>();
         foreach (var entity in EntityInstances)
         {
+            if(entity.Key.Hull.Durability <= 0)
+            {
+                hitList.Add(entity.Key);
+                continue;
+            }
             if(entity.Value is ShipInstance shipInstance)
             {
                 for (int i = 0; i < shipInstance.Thrusters.Length; i++)
@@ -647,6 +658,11 @@ public class SectorRenderer : MonoBehaviour
             entity.Value.LookAtPoint.position = entity.Value.Transform.position + (Vector3) entity.Key.LookDirection * (entity.Key.Target.Value != null
                 ? (EntityInstances[entity.Key.Target.Value].Transform.position - entity.Value.Transform.position).magnitude : 10000);
             entity.Value.Transform.position = entity.Key.Position;
+        }
+        foreach(var e in hitList)
+        {
+            _zone.Entities.Remove(e);
+
         }
 
         var fogPos = FogCameraParent.position;

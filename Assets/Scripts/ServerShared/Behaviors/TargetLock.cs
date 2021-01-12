@@ -50,6 +50,8 @@ public class TargetLock : IBehavior, IAlwaysUpdatedBehavior
     public float DirectionImpact { get; private set; }
     public float Decay { get; private set; }
 
+    private Entity _target;
+
     public TargetLock(ItemManager context, TargetLockData data, Entity entity, EquippedItem item)
     {
         Context = context;
@@ -66,6 +68,11 @@ public class TargetLock : IBehavior, IAlwaysUpdatedBehavior
 
     public void Update(float delta)
     {
+        if (_target != Entity.Target.Value)
+        {
+            Lock = 0;
+            _target = Entity.Target.Value;
+        }
         if (Entity.Target.Value != null)
         {
             Speed = Context.Evaluate(_data.Speed, Item.EquippableItem, Entity);

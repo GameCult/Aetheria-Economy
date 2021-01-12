@@ -241,6 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
+  Group: 0
   YawMin: 0
   YawMax: 0
   PitchMin: -45
@@ -506,6 +507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
+  Group: 0
   YawMin: -720
   YawMax: 720
   PitchMin: 0
@@ -1081,6 +1083,8 @@ MonoBehaviour:
   ArticulationPoints:
   - {fileID: 1042551328614064086}
   - {fileID: 1727314640455870930}
+  DestroyEffect: {fileID: 1329845292236604, guid: 9bba9cf244c53c5439505dfc96fdd11c,
+    type: 3}
 --- !u!1 &6946734302097032817
 GameObject:
   m_ObjectHideFlags: 0

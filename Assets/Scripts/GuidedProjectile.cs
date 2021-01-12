@@ -52,20 +52,27 @@ public class GuidedProjectile : MonoBehaviour
     void Update ()
     {
         if (SourceEntity == null) return;
-        
-        var diff = Target.position - transform.position;
-        var targetDist = diff.magnitude;
-        
-        if (_prevDist < targetDist)
-        {
-            StartCoroutine(FadeOut());
-        }
-        _prevDist = targetDist;
+
         
         var t = transform;
         
         if (_active)
         {
+            if (!Target)
+            {
+                StartCoroutine(FadeOut());
+                return;
+            }
+
+            var diff = Target.position - transform.position;
+            var targetDist = diff.magnitude;
+
+            if (_prevDist < targetDist)
+            {
+                StartCoroutine(FadeOut());
+            }
+            _prevDist = targetDist;
+
             var position = (float3) t.position;
             var sourceDist = length((float3) Source.position - position);
             var curveLerp = 1 - targetDist / (sourceDist + targetDist);
@@ -88,13 +95,9 @@ public class GuidedProjectile : MonoBehaviour
             {
                 hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, Velocity.normalized);
             }
-            //if (hit.transform.gameObject.layer == 1)
-            //{
-                StartCoroutine(Kill());
-            //}
+            StartCoroutine(Kill());
         }
-        if(_alive)
-            t.position += Velocity * Time.deltaTime;
+        t.position += Velocity * Time.deltaTime;
     }
 
     IEnumerator FadeOut()

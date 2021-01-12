@@ -10,4 +10,6 @@ public class EntityPrefab : MonoBehaviour
     public ThrusterHardpoint[] ThrusterHardpoints;
     public WeaponHardpoint[] WeaponHardpoints;
     public ArticulationPoint[] ArticulationPoints;
+
+    public GameObject DestroyEffect;
 }

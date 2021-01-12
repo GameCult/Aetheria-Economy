@@ -173,25 +173,25 @@ public class ActionGameManager : MonoBehaviour
 
         _input.Player.TargetReticle.performed += context =>
         {
-            var underReticle = Zone.Entities.MaxBy(x => dot(normalize(x.Position - _currentShip.Position), _currentShip.LookDirection));
+            var underReticle = Zone.Entities.Where(x => x != _currentShip).MaxBy(x => dot(normalize(x.Position - _currentShip.Position), _currentShip.LookDirection));
             _currentShip.Target.Value = _currentShip.Target.Value == underReticle ? null : underReticle;
         };
 
         _input.Player.TargetNearest.performed += context =>
         {
-            _currentShip.Target.Value = Zone.Entities.MaxBy(x => length(x.Position - _currentShip.Position));
+            _currentShip.Target.Value = Zone.Entities.Where(x=>x!=_currentShip).MaxBy(x => length(x.Position - _currentShip.Position));
         };
 
         _input.Player.TargetNext.performed += context =>
         {
-            var targets = Zone.Entities.OrderBy(x => length(x.Position - _currentShip.Position)).ToArray();
+            var targets = Zone.Entities.Where(x => x != _currentShip).OrderBy(x => length(x.Position - _currentShip.Position)).ToArray();
             var currentTargetIndex = Array.IndexOf(targets, _currentShip.Target.Value);
             _currentShip.Target.Value = targets[(currentTargetIndex + 1) % targets.Length];
         };
 
         _input.Player.TargetPrevious.performed += context =>
         {
-            var targets = Zone.Entities.OrderBy(x => length(x.Position - _currentShip.Position)).ToArray();
+            var targets = Zone.Entities.Where(x => x != _currentShip).OrderBy(x => length(x.Position - _currentShip.Position)).ToArray();
             var currentTargetIndex = Array.IndexOf(targets, _currentShip.Target.Value);
             _currentShip.Target.Value = targets[(currentTargetIndex + targets.Length - 1) % targets.Length];
         };
@@ -421,30 +421,28 @@ public class ActionGameManager : MonoBehaviour
         var reactorData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Reactor && x.Shape.Height == 2);
         var autocannonData = ItemData.GetAll<GearData>().First(x => x.Name == "Autocannon");
         var ammoData = ItemData.GetAll<SimpleCommodityData>().First(x => x.Name == "AC2 Ammo");
-        
+
         var turretType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Turret);
-        var turretHull = ItemManager.CreateInstance(turretType, 0, 1) as EquippableItem;
-        var turretParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(5);
-        var turretParentOrbit = turretParent.Orbit.Data.ID;
-        var turretParentPos = Zone.GetOrbitPosition(turretParentOrbit);
-        var turretPos = turretParentPos + ItemManager.Random.NextFloat2Direction() * turretParent.GravityWellRadius.Value * .05f;
-        var turretOrbit = Zone.CreateOrbit(turretParentOrbit, turretPos);
-        var turret = new OrbitalEntity(ItemManager, Zone, turretHull, turretOrbit.ID);
-        turret.TryEquip(ItemManager.CreateInstance(reactorData, .5f, 1) as EquippableItem);
-        
         var controlModuleData = ItemData.GetAll<GearData>().First(x => x.Name == "Murder Module");
-        turret.TryEquip(ItemManager.CreateInstance(controlModuleData, .5f, 1) as EquippableItem);
-
-        turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
-        turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
-
         var cargo1Data = ItemData.GetAll<CargoBayData>().First(x => x.Name == "Cargo Bay 1x1");
-        var cargo1 = ItemManager.CreateInstance(cargo1Data, .5f, 1);
-        turret.TryEquip(cargo1 as EquippableItem);
-        
-        turret.CargoBays.First().TryStore(ItemManager.CreateInstance(ammoData, 400));
-        turret.Active = true;
-        Zone.Entities.Add(turret);
+
+        for(int i=0; i<5; i++)
+        {
+            var turretParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(5+i);
+            var turretParentOrbit = turretParent.Orbit.Data.ID;
+            var turretParentPos = Zone.GetOrbitPosition(turretParentOrbit);
+            var turretPos = turretParentPos + ItemManager.Random.NextFloat2Direction() * turretParent.GravityWellRadius.Value * .25f;
+            var turretOrbit = Zone.CreateOrbit(turretParentOrbit, turretPos);
+            var turret = new OrbitalEntity(ItemManager, Zone, ItemManager.CreateInstance(turretType, 0, 1) as EquippableItem, turretOrbit.ID);
+            turret.TryEquip(ItemManager.CreateInstance(reactorData, .5f, 1) as EquippableItem);
+            turret.TryEquip(ItemManager.CreateInstance(controlModuleData, .5f, 1) as EquippableItem);
+            turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
+            turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
+            turret.TryEquip(ItemManager.CreateInstance(cargo1Data, .5f, 1) as EquippableItem);
+            turret.CargoBays.First().TryStore(ItemManager.CreateInstance(ammoData, 400));
+            turret.Active = true;
+            Zone.Entities.Add(turret);
+        }
         
         var hullType = ItemData.GetAll<HullData>().First(x=>x.Name == "Djinni");
         var shipHull = ItemManager.CreateInstance(hullType, 0, 1) as EquippableItem;
