@@ -5,22 +5,20 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SizeFilter : MonoBehaviour
+public class ItemFilter : MonoBehaviour
 {
-    public TMP_InputField Width;
-    public TMP_InputField Height;
+    public TextMeshProUGUI Label;
     public Button DisableButton;
 
     public event Action OnDisable;
-    
+    // Start is called before the first frame update
     void Start()
     {
         DisableButton.onClick.AddListener(() =>
         {
-            gameObject.SetActive(false);
+            GetComponent<Prototype>().ReturnToPool();
             OnDisable?.Invoke();
             OnDisable = null;
         });
-        //gameObject.SetActive(false);
     }
 }

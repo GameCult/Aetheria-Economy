@@ -9,13 +9,13 @@ using Newtonsoft.Json;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ProjectileWeaponData : InstantWeaponData
 {
-    [InspectableField, JsonProperty("spread"), Key(9)]  
+    [InspectableField, JsonProperty("spread"), Key(9), RuntimeInspectable]  
     public PerformanceStat Spread = new PerformanceStat();
 
     [InspectableField, JsonProperty("bulletInherit"), Key(10)]  
     public float Inherit;
 
-    [InspectableField, JsonProperty("bulletVelocity"), Key(11)]  
+    [InspectableField, JsonProperty("bulletVelocity"), Key(11), RuntimeInspectable]  
     public PerformanceStat Velocity = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

@@ -12,18 +12,18 @@ using static Unity.Mathematics.math;
 public class TargetLockData : BehaviorData
 {
     [InspectableField, JsonProperty("speed"), Key(1), RuntimeInspectable]
-    public PerformanceStat Speed = new PerformanceStat();
+    public PerformanceStat LockSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("sensorImpact"), Key(2), RuntimeInspectable]
+    [InspectableField, JsonProperty("sensorImpact"), Key(2)]
     public PerformanceStat SensorImpact = new PerformanceStat();
 
     [InspectableField, JsonProperty("threshold"), Key(3), RuntimeInspectable]
-    public PerformanceStat Threshold = new PerformanceStat();
+    public PerformanceStat LockAngle = new PerformanceStat();
 
-    [InspectableField, JsonProperty("directionImpact"), Key(4), RuntimeInspectable]
+    [InspectableField, JsonProperty("directionImpact"), Key(4)]
     public PerformanceStat DirectionImpact = new PerformanceStat();
 
-    [InspectableField, JsonProperty("decay"), Key(5), RuntimeInspectable]
+    [InspectableField, JsonProperty("decay"), Key(5)]
     public PerformanceStat Decay = new PerformanceStat();
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
@@ -75,9 +75,9 @@ public class TargetLock : IBehavior, IAlwaysUpdatedBehavior
         }
         if (Entity.Target.Value != null)
         {
-            Speed = Context.Evaluate(_data.Speed, Item.EquippableItem, Entity);
+            Speed = Context.Evaluate(_data.LockSpeed, Item.EquippableItem, Entity);
             SensorImpact = Context.Evaluate(_data.SensorImpact, Item.EquippableItem, Entity);
-            Threshold = Context.Evaluate(_data.Threshold, Item.EquippableItem, Entity);
+            Threshold = Context.Evaluate(_data.LockAngle, Item.EquippableItem, Entity);
             DirectionImpact = Context.Evaluate(_data.DirectionImpact, Item.EquippableItem, Entity);
             Decay = Context.Evaluate(_data.Decay, Item.EquippableItem, Entity);
 

@@ -109,14 +109,22 @@ public static class Extensions
         );
     }
     
+    public static string FormatTypeName(this string typeName)
+    {
+        return (typeName.EndsWith("Data")
+            ? typeName.Substring(0, typeName.Length - 4)
+            : typeName).SplitCamelCase();
+    }
+    
     public static string SignificantDigits(this float d, int digits=10)
     {
-        int magnitude = (d == 0.0f) ? 0 : (int)Math.Floor(Math.Log10(Math.Abs(d))) + 1;
+        int magnitude = d == 0.0f ? 0 : (int)Math.Floor(Math.Log10(Math.Abs(d))) + 1;
         digits -= magnitude;
         if (digits < 0)
             digits = 0;
-        string fmt = "f" + digits.ToString();
-        return d.ToString(fmt);
+        string fmt = "f" + digits;
+        string strdec = d.ToString(fmt);
+        return strdec.Contains(".") ? strdec.TrimEnd('0').TrimEnd('.') : strdec;
     }
 
     private static Random? _random;

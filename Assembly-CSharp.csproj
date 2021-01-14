@@ -718,6 +718,7 @@
      <Compile Include="Assets\Scripts\SpreadsheetColumnHeader.cs" />
      <Compile Include="Assets\Scripts\SpreadsheetRow.cs" />
      <Compile Include="Assets\HoverCursorChange.cs" />
+     <Compile Include="Assets\ItemFilter.cs" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIAdditive.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />

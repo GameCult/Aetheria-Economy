@@ -94,10 +94,8 @@ public class InventoryPanel : MonoBehaviour
                     else ContextMenu.AddOption(ship.Name, () => Display(ship));
                 }
 
-                foreach (var bay in GameManager.AvailableCargoBays())
-                {
-                    ContextMenu.AddOption(bay.Name, () => Display(bay));
-                }
+                if(GameManager.DockingBay!=null)
+                    ContextMenu.AddOption(GameManager.DockingBay.Name, () => Display(GameManager.DockingBay));
 
                 ContextMenu.Show();
             });

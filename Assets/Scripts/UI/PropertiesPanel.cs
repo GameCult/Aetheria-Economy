@@ -403,6 +403,13 @@ public class PropertiesPanel : MonoBehaviour
 			AddProperty("Durability", () => gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits));
 			foreach (var behavior in gearData.Behaviors)
 			{
+				if (behavior is StatModifierData statMod)
+				{
+					if(Math.Abs(statMod.Modifier.Min - statMod.Modifier.Max) < .001f)
+						AddProperty("Stat Mod", () => $"{statMod.Stat.Target}:{statMod.Stat.Stat}{(statMod.Type == StatModifierType.Constant ? "+" : "x")}{statMod.Modifier.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+					else
+						AddProperty("Stat Mod", () => $"{statMod.Stat.Target}:{statMod.Stat.Stat}{(statMod.Type == StatModifierType.Constant ? "+" : "x")}{statMod.Modifier.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}-{statMod.Modifier.Max.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+				}
 				var type = behavior.GetType();
 				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
 				{

@@ -120,10 +120,12 @@ public class ContextMenu : MonoBehaviour
             pivot.x = mousePosition.x > Screen.width - rect.sizeDelta.x * canvas.scaleFactor ? 1 : 0;
         var scaleFactor = canvas.scaleFactor;
         _dropdownRight = mousePosition.x < Screen.width - rect.sizeDelta.x * scaleFactor * 2;
-        var pivotTop = (Parent==null ? mousePosition.y : ForcePosition.y) > (PaddingHeight + _options.Count * OptionHeight) * scaleFactor;
-        pivot.y = pivotTop ? 1 : 0;
+        var pos = Parent==null ? mousePosition.y : ForcePosition.y;
+        var space = (PaddingHeight + _options.Count * OptionHeight) * scaleFactor;
+        var deltaY = pos < space ? space - pos : PaddingHeight / 2 * scaleFactor;
+        pivot.y = 1;//pivotTop ? 1 : 0;
         rect.pivot = pivot;
-        rect.position = Parent!=null ? ForcePosition - (pivotTop ? Vector3.zero : Vector3.up * (OptionHeight * scaleFactor)) : (Vector3)mousePosition;
+        rect.position = (Parent != null ? ForcePosition : (Vector3) mousePosition) + Vector3.up * deltaY;
         if (Parent==null)
             CancelClickCatcher.gameObject.SetActive(true);
     }

@@ -66,6 +66,7 @@
           </e>
         </e>
         <e p="HoverCursorChange.cs" t="Include" />
+        <e p="ItemFilter.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">

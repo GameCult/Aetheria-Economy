@@ -8,32 +8,32 @@ using Newtonsoft.Json;
 
 [Union(0, typeof(ProjectileWeaponData)),
  Union(1, typeof(LauncherData)),
- Union(2, typeof(ConstantWeaponData))]
+ Union(2, typeof(ConstantWeaponData)), RuntimeInspectable]
 public abstract class WeaponData : BehaviorData
 {
-    [InspectableField, JsonProperty("damageType"), Key(1)]
+    [InspectableField, JsonProperty("damageType"), Key(1), RuntimeInspectable]
     public DamageType DamageType;
 
-    [InspectableField, JsonProperty("damage"), Key(2)]
+    [InspectableField, JsonProperty("damage"), Key(2), RuntimeInspectable]
     public PerformanceStat Damage = new PerformanceStat();
 
-    [RangedFloatInspectable(0,1), JsonProperty("penetration"), Key(3)]
+    [RangedFloatInspectable(0,1), JsonProperty("penetration"), Key(3), RuntimeInspectable]
     public PerformanceStat Penetration = new PerformanceStat();
 
     [RangedFloatInspectable(0,1), JsonProperty("damageSpread"), Key(4)]
     public PerformanceStat DamageSpread = new PerformanceStat();
 
-    [InspectableField, JsonProperty("range"), Key(5)]
+    [InspectableField, JsonProperty("range"), Key(5), RuntimeInspectable]
     public PerformanceStat Range = new PerformanceStat();
     
     [InspectablePrefab, JsonProperty("effect"), Key(6)]  
     public string EffectPrefab;
 }
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public abstract class InstantWeaponData : WeaponData
 {
-    [InspectableField, JsonProperty("burstCount"), Key(7)]
+    [InspectableField, JsonProperty("burstCount"), Key(7), RuntimeInspectable]
     public int BurstCount;
 
     [InspectableField, JsonProperty("burstTime"), Key(8)]

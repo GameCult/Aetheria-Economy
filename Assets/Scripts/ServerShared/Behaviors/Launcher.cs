@@ -27,8 +27,8 @@ public class LauncherData : InstantWeaponData
     [InspectableField, JsonProperty("launchSpeed"), Key(14)]  
     public PerformanceStat LaunchSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("missileSpeed"), Key(15)]  
-    public PerformanceStat MissileSpeed = new PerformanceStat();
+    [InspectableField, JsonProperty("missileSpeed"), Key(15), RuntimeInspectable]  
+    public PerformanceStat Velocity = new PerformanceStat();
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {

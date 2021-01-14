@@ -102,8 +102,8 @@ MonoBehaviour:
   ForceDirectionRight: 0
   ForcePosition: {x: 0, y: 0, z: 0}
   ContentRoot: {fileID: 3452408986885472817}
-  OptionHeight: 34
-  PaddingHeight: 16
+  OptionHeight: 17
+  PaddingHeight: 10
 --- !u!1 &3452408986885472816
 GameObject:
   m_ObjectHideFlags: 0

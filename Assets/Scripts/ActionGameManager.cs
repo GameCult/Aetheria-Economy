@@ -51,12 +51,14 @@ public class ActionGameManager : MonoBehaviour
     private AetheriaInput _input;
     private int _zoomLevelIndex;
     private Ship _currentShip;
+
     // private ShipInput _shipInput;
     private float2 _shipYawPitch;
     private float3 _viewDirection;
     private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] ArticulationGroups;
     private (TargetLock targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] LockingIndicators;
     public List<Ship> PlayerShips { get; } = new List<Ship>();
+    public EquippedDockingBay DockingBay { get; private set; }
     
     public Ship CurrentShip
     {
@@ -531,6 +533,7 @@ public class ActionGameManager : MonoBehaviour
                 var bay = entity.TryDock(_currentShip);
                 if (bay != null)
                 {
+                    DockingBay = bay;
                     DockCamera.enabled = true;
                     FollowCamera.enabled = false;
                     _currentShip.Active = false;
@@ -576,6 +579,7 @@ public class ActionGameManager : MonoBehaviour
         else if (_currentShip.Parent.TryUndock(_currentShip))
         {
             Menu.gameObject.SetActive(false);
+            DockingBay = null;
             _currentShip.Active = true;
             //_shipInput = new ShipInput(_input.Player, _currentShip);
             DockCamera.enabled = false;

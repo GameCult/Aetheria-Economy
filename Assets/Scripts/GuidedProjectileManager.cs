@@ -26,6 +26,6 @@ public class GuidedProjectileManager : MonoBehaviour
         p.LiftCurve = data.LiftCurve.ToCurve();
         p.ThrustCurve = data.ThrustCurve.ToCurve();
         p.Thrust = source.Entity.ItemManager.Evaluate(data.Thrust, item.EquippableItem, source.Entity);
-        p.TopSpeed = source.Entity.ItemManager.Evaluate(data.MissileSpeed, item.EquippableItem, source.Entity);
+        p.TopSpeed = source.Entity.ItemManager.Evaluate(data.Velocity, item.EquippableItem, source.Entity);
     }
 }

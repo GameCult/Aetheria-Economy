@@ -13,10 +13,10 @@ public class ThrusterData : BehaviorData
     [InspectableField, JsonProperty("thrust"), Key(1), RuntimeInspectable]  
     public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField, JsonProperty("visibility"), Key(2)]  
+    [InspectableField, JsonProperty("visibility"), Key(2), RuntimeInspectable]  
     public PerformanceStat Visibility = new PerformanceStat();
 
-    [InspectableField, JsonProperty("heat"), Key(3)]  
+    [InspectableField, JsonProperty("heat"), Key(3), RuntimeInspectable]  
     public PerformanceStat Heat = new PerformanceStat();
 
     [InspectablePrefab, JsonProperty("Particles"), Key(4)]
