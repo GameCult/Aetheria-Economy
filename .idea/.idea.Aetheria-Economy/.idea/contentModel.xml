@@ -65,7 +65,7 @@
             </e>
           </e>
         </e>
-        <e p="EventLog.cs" t="Include" />
+        <e p="HoverCursorChange.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">
@@ -203,7 +203,6 @@
             </e>
           </e>
         </e>
-        <e p="PrototypeParticleReturn.cs" t="Include" />
         <e p="Resources" t="Include">
           <e p="Sprites" t="Include">
             <e p="Attribution.txt" t="Include" />
@@ -225,6 +224,7 @@
             <e p="SpriteProcessor.cs" t="Include" />
           </e>
           <e p="EntityPrefab.cs" t="Include" />
+          <e p="EventLog.cs" t="Include" />
           <e p="FilterTest.cs" t="Include" />
           <e p="FitToCamera.cs" t="Include" />
           <e p="Galaxy.cs" t="Include" />
@@ -1422,6 +1422,7 @@
           <e p="Projectile.cs" t="Include" />
           <e p="ProjectileManager.cs" t="Include" />
           <e p="Prototype.cs" t="Include" />
+          <e p="PrototypeParticleReturn.cs" t="Include" />
           <e p="RethinkConnection.cs" t="Include" />
           <e p="Rotate.cs" t="Include" />
           <e p="SchematicDisplay.cs" t="Include" />
@@ -1485,6 +1486,7 @@
               <e p="StatModifier.cs" t="Include" />
               <e p="SurveyController.cs" t="Include" />
               <e p="Switch.cs" t="Include" />
+              <e p="TargetLock.cs" t="Include" />
               <e p="Thermotoggle.cs" t="Include" />
               <e p="Thruster.cs" t="Include" />
               <e p="TowingController.cs" t="Include" />
@@ -1955,6 +1957,7 @@
                 </e>
               </e>
             </e>
+            <e p="Noise1D.cs" t="Include" />
             <e p="OrbitalEntity.cs" t="Include" />
             <e p="PlayerData.cs" t="Include" />
             <e p="Rect.cs" t="Include" />
@@ -1966,8 +1969,13 @@
             <e p="ZoneData.cs" t="Include" />
             <e p="ZoneGenerator.cs" t="Include" />
           </e>
+          <e p="SizeFilter.cs" t="Include" />
+          <e p="Spreadsheet.cs" t="Include" />
+          <e p="SpreadsheetColumnHeader.cs" t="Include" />
+          <e p="SpreadsheetRow.cs" t="Include" />
           <e p="TechTreeMsagl.cs" t="Include" />
           <e p="ThrusterHardpoint.cs" t="Include" />
+          <e p="TradeMenu.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="AttributeProperty.cs" t="Include" />
             <e p="BackgroundRenderer.cs" t="Include" />
@@ -1995,6 +2003,7 @@
             <e p="MapViewDragHandler.cs" t="Include" />
             <e p="MinimapCameraTrack.cs" t="Include" />
             <e p="MouseHover.cs" t="Include" />
+            <e p="PlaceUIElementWorldspace.cs" t="Include" />
             <e p="PropertiesList.cs" t="Include" />
             <e p="PropertiesPanel.cs" t="Include" />
             <e p="Property.cs" t="Include" />

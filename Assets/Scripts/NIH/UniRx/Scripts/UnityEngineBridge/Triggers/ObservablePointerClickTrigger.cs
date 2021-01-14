@@ -24,6 +24,11 @@ namespace UniRx.Triggers
 
         private void OnDisable()
         {
+            Reset();
+        }
+
+        public void Reset()
+        {
             onPointerClick = null;
         }
 

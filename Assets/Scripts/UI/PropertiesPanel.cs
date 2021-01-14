@@ -394,11 +394,43 @@ public class PropertiesPanel : MonoBehaviour
 		}
 	}
 
+	public void AddItemDataProperties(ItemData data)
+	{
+		AddProperty("Type", () => data.Name);
+		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
+		if (data is EquippableItemData gearData)
+		{
+			AddProperty("Durability", () => gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits));
+			foreach (var behavior in gearData.Behaviors)
+			{
+				var type = behavior.GetType();
+				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
+				{
+					foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
+					{
+						var fieldType = field.FieldType;
+						if (fieldType == typeof(float))
+							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+						else if (fieldType == typeof(int))
+							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
+						else if (fieldType == typeof(PerformanceStat))
+						{
+							var stat = (PerformanceStat) field.GetValue(behavior);
+							if(Math.Abs(stat.Min - stat.Max) < .001f)
+								AddProperty(field.Name, () => $"{stat.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+							else
+								AddProperty(field.Name, () => $"{stat.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}-{stat.Max.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public void AddItemProperties(ItemInstance item)
 	{
 		var data = Context.ItemData.Get<ItemData>(item.Data);
-		AddProperty("Type", () => data.Name);
-		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
+		AddItemDataProperties(data);
 		// if (item is CraftedItemInstance craftedItemInstance)
 		// {
 		// 	var sourceEntity = Context.ItemData.Get<Entity>(craftedItemInstance.SourceEntity);
@@ -421,26 +453,7 @@ public class PropertiesPanel : MonoBehaviour
 			var gearData = Context.GetData(gear);
 			AddProperty("Durability", () =>
 				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-			foreach (var behavior in gearData.Behaviors)
-			{
-				var type = behavior.GetType();
-				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
-				{
-					foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
-					{
-						var fieldType = field.FieldType;
-						if (fieldType == typeof(float))
-							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-						else if (fieldType == typeof(int))
-							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
-						else if (fieldType == typeof(PerformanceStat))
-						{
-							var stat = (PerformanceStat) field.GetValue(behavior);
-							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-						}
-					}
-				}
-			}
+
 		}
 	}
 

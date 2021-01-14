@@ -58,6 +58,10 @@ public class ActionGameManager : MonoBehaviour
     private (TargetLock targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] LockingIndicators;
     public List<Ship> PlayerShips { get; } = new List<Ship>();
     
+    public Ship CurrentShip
+    {
+        get => _currentShip;
+    }
     public DatabaseCache ItemData { get; private set; }
     public ItemManager ItemManager { get; private set; }
     public Zone Zone { get; private set; }

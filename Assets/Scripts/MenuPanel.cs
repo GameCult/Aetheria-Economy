@@ -9,6 +9,7 @@ using UnityEngine;
 
 public class MenuPanel : MonoBehaviour
 {
+    public ActionGameManager GameManager;
     public RectTransform TabButtons;
     public Color ActiveTabColor;
     public Color InactiveTabColor;
@@ -40,7 +41,15 @@ public class MenuPanel : MonoBehaviour
         
         TabChanged?.Invoke(tab);
     }
-    
+
+    private void OnEnable()
+    {
+        foreach (var tabButton in _tabs.Values)
+        {
+            tabButton.gameObject.SetActive(!tabButton.RequireParent || GameManager.CurrentShip.Parent != null);
+        }
+    }
+
     void Awake()
     {
         foreach (var tabButton in TabButtons.GetComponentsInChildren<MenuTabButton>())
@@ -57,5 +66,6 @@ public class MenuPanel : MonoBehaviour
 public enum MenuTab
 {
     Map,
-    Inventory
+    Inventory,
+    Trade
 }
