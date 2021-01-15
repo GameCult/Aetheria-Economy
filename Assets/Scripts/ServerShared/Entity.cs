@@ -50,7 +50,7 @@ public abstract class Entity
     public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     public readonly Dictionary<HardpointData, (float3 position, float3 direction)> HardpointTransforms = 
-        new Dictionary<HardpointData, (float3 position, float3 direction)>(); 
+        new Dictionary<HardpointData, (float3 position, float3 direction)>();
     public Dictionary<HardpointData, float> HardpointArmor;
     
     public readonly List<EquippedItem>[] TriggerGroups;
@@ -78,7 +78,6 @@ public abstract class Entity
     public UniRx.IObservable<EquippedItem> ItemDestroyed;
     public UniRx.IObservable<int2> HullArmorDepleted;
     public UniRx.IObservable<HardpointData> HardpointArmorDepleted;
-    
 
     public bool Active
     {

@@ -1507,6 +1507,7 @@
             <e p="DatabaseEntry.cs" t="Include" />
             <e p="Economy.Shared.Unity.asmdef" t="Include" />
             <e p="Entity.cs" t="Include" />
+            <e p="EntitySerializer.cs" t="Include" />
             <e p="Enums.cs" t="Include" />
             <e p="ExponentialCurve.cs" t="Include" />
             <e p="Extensions.cs" t="Include" />

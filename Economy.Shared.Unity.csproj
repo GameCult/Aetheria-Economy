@@ -518,6 +518,7 @@
      <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Noise1D.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\TargetLock.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\EntitySerializer.cs" />
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Economy.Shared.Unity.asmdef" />
  <Reference Include="Remotion.Linq">
