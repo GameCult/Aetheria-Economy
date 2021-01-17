@@ -269,45 +269,20 @@ public class SectorRenderer : MonoBehaviour
                 }
             }
 
-            // Search all cells occupied by target cells for any thermal equipment
-            var equippedThermals = new List<EquippedItem>();
-            foreach (var hullCoord in hitShape.Coordinates)
-            {
-                if (entity.ThermalOccupancy[hullCoord.x, hullCoord.y] != null)
-                {
-                    equippedThermals.Add(entity.ThermalOccupancy[hullCoord.x, hullCoord.y]);
-                }
-            }
-
             float remainder = 0;
 
             // Direct damage is divided between gear and thermal equipment (if present)
-            if (equippedGear != null && equippedThermals.Count > 0)
+            if (equippedGear != null)
             {
                 remainder = max(directDamage / 2 - equippedGear.EquippableItem.Durability, 0);
                 equippedGear.EquippableItem.Durability = max(equippedGear.EquippableItem.Durability - directDamage / 2, 0);
                 entity.ItemDamage.OnNext((equippedGear, directDamage / 2));
-                foreach (var t in equippedThermals)
-                {
-                    remainder += max(directDamage / (2 * equippedThermals.Count) - t.EquippableItem.Durability, 0);
-                    t.EquippableItem.Durability = max(equippedGear.EquippableItem.Durability - directDamage / (2 * equippedThermals.Count), 0);
-                    entity.ItemDamage.OnNext((t, directDamage / (2 * equippedThermals.Count)));
-                }
             }
             else if (equippedGear != null)
             {
                 remainder = max(directDamage - equippedGear.EquippableItem.Durability, 0);
                 equippedGear.EquippableItem.Durability = max(equippedGear.EquippableItem.Durability - directDamage, 0);
                 entity.ItemDamage.OnNext((equippedGear, directDamage));
-            }
-            else if (equippedThermals.Count > 0)
-            {
-                foreach (var t in equippedThermals)
-                {
-                    remainder += max(directDamage / (equippedThermals.Count) - t.EquippableItem.Durability, 0);
-                    t.EquippableItem.Durability = max(equippedGear.EquippableItem.Durability - directDamage / equippedThermals.Count, 0);
-                    entity.ItemDamage.OnNext((t, directDamage / equippedThermals.Count));
-                }
             }
             else remainder = directDamage;
 
@@ -331,8 +306,6 @@ public class SectorRenderer : MonoBehaviour
             {
                 if (entity.GearOccupancy[hullCoord.x, hullCoord.y] != null)
                     surroundingEquipment.Add(entity.GearOccupancy[hullCoord.x, hullCoord.y]);
-                if (entity.ThermalOccupancy[hullCoord.x, hullCoord.y] != null)
-                    surroundingEquipment.Add(entity.ThermalOccupancy[hullCoord.x, hullCoord.y]);
             }
 
             // Divide spread damage among all surrounding cells
@@ -402,8 +375,7 @@ public class SectorRenderer : MonoBehaviour
                     var penetrationPoint = float2(hitCell);
                     var penetrationCell = hitCell;
                     while (hullData.Shape[penetrationCell] &&
-                           entity.GearOccupancy[penetrationCell.x, penetrationCell.y] == null &&
-                           entity.ThermalOccupancy[penetrationCell.x, penetrationCell.y] == null)
+                           entity.GearOccupancy[penetrationCell.x, penetrationCell.y] == null)
                     {
                         penetrationPoint += penetrationVector * .5f;
                         penetrationCell = int2(penetrationPoint);

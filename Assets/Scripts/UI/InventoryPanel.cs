@@ -25,9 +25,13 @@ public class InventoryPanel : MonoBehaviour
     public ContextMenu ContextMenu;
     public TextMeshProUGUI Title;
     public Button Dropdown;
+    public Button Current;
+    public Button Thermal;
     public GridLayoutGroup Grid;
     public Sprite[] NodeBackgroundTextures;
     public Sprite[] NodeTextures;
+    public Sprite[] ThermalTextures;
+    public float ThermalToggleRegionSize = .2f;
     public Prototype NodePrototype;
     public RawImage TemperatureDisplay;
     public Texture2D TemperatureColor;
@@ -36,6 +40,8 @@ public class InventoryPanel : MonoBehaviour
     public float MaxTemperature;
     public bool FitToContent;
     public float CellHitPulseTime;
+    public Color ToggleEnabledColor;
+    public Color ToggleDisabledColor;
     public Color CellBackgroundColor = new Color(0, 0, 0, .75f);
     
     Subject<InventoryEventData> _onBeginDrag;
@@ -60,6 +66,7 @@ public class InventoryPanel : MonoBehaviour
     private List<IDisposable> _subscriptions = new List<IDisposable>();
     private Dictionary<int2, int> _cellAnimationSequence = new Dictionary<int2, int>();
     private int _hitSequence = 0;
+    private bool _thermal = false;
 
     private bool _hud;
     
@@ -76,6 +83,26 @@ public class InventoryPanel : MonoBehaviour
 
     private void Start()
     {
+        if (Thermal)
+        {
+            Thermal.onClick.AddListener(() =>
+            {
+                Display(_displayedEntity, false, !_thermal);
+            });
+        }
+
+        if (Current)
+        {
+            Current.onClick.AddListener(() =>
+            {
+                if (_displayedEntity != GameManager.CurrentShip)
+                {
+                    GameManager.CurrentShip = (Ship) _displayedEntity;
+                    GameManager.DockingBay.DockedShip = (Ship) _displayedEntity;
+                    Current.targetGraphic.color = ToggleEnabledColor;
+                }
+            });
+        }
         if(Dropdown)
         {
             Dropdown.onClick.AddListener(() =>
@@ -85,16 +112,17 @@ public class InventoryPanel : MonoBehaviour
                 {
                     if (ship.CargoBays.Any())
                     {
-                        ContextMenu.AddDropdown(ship.Name,
-                            ship.CargoBays
-                                .Select<EquippedCargoBay, (string text, Action action, bool enabled)>((bay, index) =>
-                                    ($"Bay {index}", () => Display(bay), true))
-                                .Prepend(("Equipment", () => Display(ship), true)));
+                        var options = ship.CargoBays
+                            .Where(bay => bay != _displayedCargo)
+                            .Select<EquippedCargoBay, (string text, Action action, bool enabled)>((bay, index) =>
+                                ($"Bay {index}", () => Display(bay), true));
+                        if(ship != _displayedEntity) options = options.Prepend(("Equipment", () => Display(ship), true));
+                        ContextMenu.AddDropdown(ship.Name, options);
                     }
-                    else ContextMenu.AddOption(ship.Name, () => Display(ship));
+                    else if(ship != _displayedEntity) ContextMenu.AddOption(ship.Name, () => Display(ship));
                 }
 
-                if(GameManager.DockingBay!=null)
+                if(GameManager.DockingBay!=null && _displayedCargo!=GameManager.DockingBay)
                     ContextMenu.AddOption(GameManager.DockingBay.Name, () => Display(GameManager.DockingBay));
 
                 ContextMenu.Show();
@@ -131,6 +159,7 @@ public class InventoryPanel : MonoBehaviour
     {
         Clear();
     }
+    
 
     public void Clear()
     {
@@ -150,28 +179,34 @@ public class InventoryPanel : MonoBehaviour
         
         _subscriptions.Clear();
         
+        TemperatureDisplay.gameObject.SetActive(false);
+        
         if(Title)
             Title.text = "None";
     }
 
-    public void Display(Entity entity, bool hud = false)
+    public void Display(Entity entity, bool hud = false, bool thermal = false)
     {
         Clear();
+        _thermal = thermal;
         _hud = hud;
 
         _displayedEntity = entity;
+        _displayedCargo = null;
         _firstRect = null;
 
         if(Title)
             Title.text = entity.Name;
 
         var hullData = GameManager.ItemManager.GetData(entity.Hull) as HullData;
+        
         if (FitToContent)
         {
             var gridRect = Grid.GetComponent<RectTransform>();
             var rect = gridRect.rect;
             Grid.cellSize = Vector2.one * (int) min(rect.width / (hullData.Shape.Width + 1), rect.height / (hullData.Shape.Height + 1));
         }
+        
         _temperatureTexture = new Texture2D(
             hullData.Shape.Width+2, 
             hullData.Shape.Height+2, 
@@ -181,9 +216,18 @@ public class InventoryPanel : MonoBehaviour
         TemperatureDisplay.texture = _temperatureTexture;
         var tempRect = TemperatureDisplay.rectTransform;
         tempRect.sizeDelta = Grid.cellSize * new Vector2(hullData.Shape.Width + 2, hullData.Shape.Height + 2);
-        //tempRect.anchoredPosition = 
-        //FakeOccupancy = new Shape(hullData.Shape.Width, hullData.Shape.Height);
-        //IgnoreOccupancy = new Shape(hullData.Shape.Width, hullData.Shape.Height);
+        
+        if (Current)
+        {
+            Current.gameObject.SetActive(true);
+            Current.targetGraphic.color = entity == GameManager.CurrentShip ? ToggleEnabledColor : ToggleDisabledColor;
+        }
+        if (Thermal)
+        {
+            Thermal.gameObject.SetActive(true);
+            Thermal.targetGraphic.color = thermal ? ToggleEnabledColor : ToggleDisabledColor;
+        }
+        
         Grid.constraintCount = hullData.Shape.Width;
         foreach (var v in hullData.Shape.AllCoordinates)
         {
@@ -201,18 +245,50 @@ public class InventoryPanel : MonoBehaviour
                 cell.Background.color = CellBackgroundColor;
                 if (!_firstRect)
                     _firstRect = cell.GetComponent<RectTransform>();
-                cell.PointerClickTrigger.OnPointerClickAsObservable()
-                    .Subscribe(data => _onClick?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                cell.BeginDragTrigger.OnBeginDragAsObservable()
-                    .Subscribe(data => _onBeginDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                cell.DragTrigger.OnDragAsObservable()
-                    .Subscribe(data => _onDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                cell.EndDragTrigger.OnEndDragAsObservable()
-                    .Subscribe(data => _onEndDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                cell.PointerEnterTrigger.OnPointerEnterAsObservable()
-                    .Subscribe(data => _onPointerEnter?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                cell.PointerExitTrigger.OnPointerExitAsObservable()
-                    .Subscribe(data => _onPointerExit?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                if (!thermal)
+                {
+                    cell.PointerClickTrigger.OnPointerClickAsObservable()
+                        .Subscribe(data => _onClick?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                    cell.BeginDragTrigger.OnBeginDragAsObservable()
+                        .Subscribe(data => _onBeginDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                    cell.DragTrigger.OnDragAsObservable()
+                        .Subscribe(data => _onDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                    cell.EndDragTrigger.OnEndDragAsObservable()
+                        .Subscribe(data => _onEndDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                    cell.PointerEnterTrigger.OnPointerEnterAsObservable()
+                        .Subscribe(data => _onPointerEnter?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                    cell.PointerExitTrigger.OnPointerExitAsObservable()
+                        .Subscribe(data => _onPointerExit?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                }
+                else
+                {
+                    cell.PointerClickTrigger.OnPointerClickAsObservable().Subscribe(data =>
+                    {
+                        var rect = cell.GetComponent<RectTransform>();
+                        var point = Rect.PointToNormalized(rect.rect, rect.InverseTransformPoint(data.position));
+                        Debug.Log($"Clicked at pos {data.position}, normalized {point}");
+                        if (hullData.Shape[int2(v.x - 1, v.y)] && point.x < ThermalToggleRegionSize)
+                        {
+                            entity.HullConductivity[v.x - 1, v.y].x = !entity.HullConductivity[v.x - 1, v.y].x;
+                            RefreshCells(new []{v,int2(v.x - 1, v.y)});
+                        }
+                        if (hullData.Shape[int2(v.x + 1, v.y)] && point.x > 1 - ThermalToggleRegionSize)
+                        {
+                            entity.HullConductivity[v.x, v.y].x = !entity.HullConductivity[v.x, v.y].x;
+                            RefreshCells(new []{v,int2(v.x + 1, v.y)});
+                        }
+                        if (hullData.Shape[int2(v.x, v.y - 1)] && point.y < ThermalToggleRegionSize)
+                        {
+                            entity.HullConductivity[v.x, v.y - 1].y = !entity.HullConductivity[v.x, v.y - 1].y;
+                            RefreshCells(new []{v,int2(v.x, v.y - 1)});
+                        }
+                        if (hullData.Shape[int2(v.x, v.y + 1)] && point.y > 1 - ThermalToggleRegionSize)
+                        {
+                            entity.HullConductivity[v.x, v.y].y = !entity.HullConductivity[v.x, v.y].y;
+                            RefreshCells(new []{v,int2(v.x, v.y + 1)});
+                        }
+                    });
+                }
                 CellInstances.Add(v, cell);
             }
         }
@@ -255,7 +331,6 @@ public class InventoryPanel : MonoBehaviour
             HitType.Armor => Settings.ArmorHitColor,
             HitType.Hardpoint => Settings.HardpointHitColor,
             HitType.Gear => Settings.GearHitColor,
-            HitType.Thermal => Settings.ThermalHitColor,
             _ => Color.white
         };
         float startTime = Time.time;
@@ -276,7 +351,13 @@ public class InventoryPanel : MonoBehaviour
         Clear();
         
         _displayedCargo = cargo;
+        _displayedEntity = null;
         TemperatureDisplay.gameObject.SetActive(false);
+        
+        if (Current)
+            Current.gameObject.SetActive(false);
+        if (Thermal)
+            Thermal.gameObject.SetActive(false);
 
         if(Title)
             Title.text = cargo.Name;
@@ -372,9 +453,30 @@ public class InventoryPanel : MonoBehaviour
 
                 if (item != null)
                     spriteIndex += 1 << 8;
+
+                if (_thermal)
+                {
+                    bool ThermalMatch(int2 offset)
+                    {
+                        if (!hullData.Shape[v + offset]) return false;
+                        var i = (offset.x, offset.y);
+                        return i switch
+                        {
+                            (1, 0) => _displayedEntity.HullConductivity[v.x, v.y].x,
+                            (-1, 0) => _displayedEntity.HullConductivity[v.x-1, v.y].x,
+                            (0, 1) => _displayedEntity.HullConductivity[v.x, v.y].y,
+                            (0, -1) => _displayedEntity.HullConductivity[v.x, v.y-1].y,
+                            _ => false
+                        };
+                    }
+                    spriteIndex = 0;
+                    for(int i = 0; i < 4; i++)
+                        if (ThermalMatch(_offsets[i]))
+                            spriteIndex += 1 << i;
+                }
             
                 CellInstances[v].Background.sprite = NodeBackgroundTextures[bgSpriteIndex];
-                CellInstances[v].Icon.sprite = NodeTextures[spriteIndex];
+                CellInstances[v].Icon.sprite = _thermal ? ThermalTextures[spriteIndex] : NodeTextures[spriteIndex];
                 CellInstances[v].Icon.color = GetColor(v);
             }
         }

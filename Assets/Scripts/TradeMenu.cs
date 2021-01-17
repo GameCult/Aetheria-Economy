@@ -23,6 +23,8 @@ public class TradeMenu : MonoBehaviour
 
     private EquippedCargoBay _targetCargo;
     private (ItemFilter filter, HardpointType type) _hardpointFilter;
+    private (ItemFilter filter, SimpleCommodityCategory type) _commodityFilter;
+    private (ItemFilter filter, CompoundCommodityCategory type) _compoundCommodityFilter;
     private List<(ItemFilter filter, Type type)> _behaviorFilters = new List<(ItemFilter filter, Type type)>();
     
     private void OnEnable()
@@ -40,7 +42,16 @@ public class TradeMenu : MonoBehaviour
             IEnumerable<HardpointType> hardpointTypes = (HardpointType[]) Enum.GetValues(typeof(HardpointType));
             if (_hardpointFilter.filter != null)
                 hardpointTypes = hardpointTypes.Where(x => x != _hardpointFilter.type);
-            ContextMenu.AddDropdown("Item Type", hardpointTypes
+            
+            IEnumerable<SimpleCommodityCategory> commodityTypes = (SimpleCommodityCategory[]) Enum.GetValues(typeof(SimpleCommodityCategory));
+            if (_commodityFilter.filter != null)
+                commodityTypes = commodityTypes.Where(x => x != _commodityFilter.type);
+            
+            IEnumerable<CompoundCommodityCategory> compoundCommodityTypes = (CompoundCommodityCategory[]) Enum.GetValues(typeof(CompoundCommodityCategory));
+            if (_compoundCommodityFilter.filter != null)
+                compoundCommodityTypes = compoundCommodityTypes.Where(x => x != _compoundCommodityFilter.type);
+            
+            ContextMenu.AddDropdown("Gear Type", hardpointTypes
                 .Select<HardpointType, (string, Action, bool)>(x => (Enum.GetName(typeof(HardpointType), x), () =>
                 {
                     if (_hardpointFilter.filter == null)
@@ -52,9 +63,73 @@ public class TradeMenu : MonoBehaviour
                             Populate();
                         };
                     }
+                    if(_commodityFilter.filter != null)
+                    {
+                        _commodityFilter.filter.GetComponent<Prototype>().ReturnToPool();
+                        _commodityFilter.filter = null;
+                    }
+                    if(_compoundCommodityFilter.filter != null)
+                    {
+                        _compoundCommodityFilter.filter.GetComponent<Prototype>().ReturnToPool();
+                        _compoundCommodityFilter.filter = null;
+                    }
 
                     _hardpointFilter.filter.Label.text = $"Hardpoint: {Enum.GetName(typeof(HardpointType), x)}";
                     _hardpointFilter.type = x;
+                    Populate();
+                }, true)));
+            ContextMenu.AddDropdown("Simple Commodity", commodityTypes
+                .Select<SimpleCommodityCategory, (string, Action, bool)>(x => (Enum.GetName(typeof(SimpleCommodityCategory), x), () =>
+                {
+                    if (_commodityFilter.filter == null)
+                    {
+                        _commodityFilter.filter = FilterPrototype.Instantiate<ItemFilter>();
+                        _commodityFilter.filter.OnDisable += () =>
+                        {
+                            _commodityFilter.filter = null;
+                            Populate();
+                        };
+                    }
+                    if(_hardpointFilter.filter != null)
+                    {
+                        _hardpointFilter.filter.GetComponent<Prototype>().ReturnToPool();
+                        _hardpointFilter.filter = null;
+                    }
+                    if(_compoundCommodityFilter.filter != null)
+                    {
+                        _compoundCommodityFilter.filter.GetComponent<Prototype>().ReturnToPool();
+                        _compoundCommodityFilter.filter = null;
+                    }
+
+                    _commodityFilter.filter.Label.text = $"Hardpoint: {Enum.GetName(typeof(SimpleCommodityCategory), x)}";
+                    _commodityFilter.type = x;
+                    Populate();
+                }, true)));
+            ContextMenu.AddDropdown("Compound Commodity", compoundCommodityTypes
+                .Select<CompoundCommodityCategory, (string, Action, bool)>(x => (Enum.GetName(typeof(CompoundCommodityCategory), x), () =>
+                {
+                    if (_compoundCommodityFilter.filter == null)
+                    {
+                        _compoundCommodityFilter.filter = FilterPrototype.Instantiate<ItemFilter>();
+                        _compoundCommodityFilter.filter.OnDisable += () =>
+                        {
+                            _compoundCommodityFilter.filter = null;
+                            Populate();
+                        };
+                    }
+                    if(_hardpointFilter.filter != null)
+                    {
+                        _hardpointFilter.filter.GetComponent<Prototype>().ReturnToPool();
+                        _hardpointFilter.filter = null;
+                    }
+                    if(_commodityFilter.filter != null)
+                    {
+                        _commodityFilter.filter.GetComponent<Prototype>().ReturnToPool();
+                        _commodityFilter.filter = null;
+                    }
+
+                    _compoundCommodityFilter.filter.Label.text = $"Hardpoint: {Enum.GetName(typeof(CompoundCommodityCategory), x)}";
+                    _compoundCommodityFilter.type = x;
                     Populate();
                 }, true)));
             ContextMenu.AddDropdown("Item Behavior", typeof(BehaviorData).GetAllChildClasses()
@@ -94,23 +169,46 @@ public class TradeMenu : MonoBehaviour
 
     void Populate()
     {
-        var columns = new List<(string name, int size, Func<EquippableItemData, Func<string>> output, Func<EquippableItemData, IComparable> sortKey)>();
+        var columns = new List<(string name, int size, Func<ItemData, Func<string>> output, Func<ItemData, IComparable> sortKey)>();
         
         columns.Add(("Name", 3,
             data => () => data.Name, 
             data => data.Name));
         if(_hardpointFilter.filter==null)
             columns.Add(("Type", 2,
-                data => () => Enum.GetName(typeof(HardpointType), data.HardpointType), 
-                data => data.HardpointType));
+                data => () =>
+                {
+                    if (data is SimpleCommodityData s)
+                        return Enum.GetName(typeof(SimpleCommodityCategory), s.Category);
+                    if(data is CompoundCommodityData c)
+                        return Enum.GetName(typeof(CompoundCommodityCategory), c.Category);
+                    if(data is EquippableItemData e)
+                        return Enum.GetName(typeof(HardpointType), e.HardpointType);
+                    return "None";
+                }, 
+                data => 
+                {
+                    if (data is SimpleCommodityData s)
+                        return (int) s.Category;
+                    var offset = Enum.GetValues(typeof(SimpleCommodityCategory)).Length;
+                    if(data is CompoundCommodityData c)
+                        return (int) c.Category + offset;
+                    offset += Enum.GetValues(typeof(CompoundCommodityCategory)).Length;
+                    if(data is EquippableItemData e)
+                        return (int) e.HardpointType + offset;
+                    return 0;
+                }));
         columns.Add(("Mass", 1,
             data => () => data.Mass.SignificantDigits(3), 
             data => data.Mass));
+        columns.Add(("Price", 1,
+            data => () => data.Price.ToString(), 
+            data => data.Price));
         columns.Add(("Size", 1,
             data => () => $"{data.Shape.Width}x{data.Shape.Height}", 
             data => data.Shape.Width*data.Shape.Height));
         
-        var items = GameManager.ItemManager.ItemData.GetAll<EquippableItemData>();
+        var items = GameManager.ItemManager.ItemData.GetAll<ItemData>().Where(i=>i.Price!=0);
         
         if (MinimumSizeFilter.gameObject.activeSelf)
             items = items.Where(i =>
@@ -122,12 +220,18 @@ public class TradeMenu : MonoBehaviour
                 !(MaximumSizeFilter.Width.text.Length > 0 && i.Shape.Width > int.Parse(MaximumSizeFilter.Width.text) ||
                  MaximumSizeFilter.Height.text.Length > 0 && i.Shape.Height > int.Parse(MaximumSizeFilter.Height.text)));
         
+        if(_commodityFilter.filter != null)
+            items = items.Where(i => i is SimpleCommodityData s && s.Category == _commodityFilter.type);
+        
+        if(_compoundCommodityFilter.filter != null)
+            items = items.Where(i => i is CompoundCommodityData c && c.Category == _compoundCommodityFilter.type);
+        
         if (_hardpointFilter.filter != null)
-            items = items.Where(i => i.HardpointType == _hardpointFilter.type);
+            items = items.Where(i => i is EquippableItemData e && e.HardpointType == _hardpointFilter.type);
         
         foreach (var (_, type) in _behaviorFilters)
         {
-            items = items.Where(i => i.Behaviors.Any(b => type.IsInstanceOfType(b)));
+            items = items.Where(i => i is EquippableItemData e && e.Behaviors.Any(b => type.IsInstanceOfType(b)));
             
 			foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
 			{
@@ -135,32 +239,32 @@ public class TradeMenu : MonoBehaviour
 				if (fieldType == typeof(float))
                     columns.Add((field.Name, 1, data =>
                     {
-                        var behavior = data.Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
+                        var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
                         return () => ((float) field.GetValue(behavior)).SignificantDigits(3);
                     }, data =>
                     {
-                        var behavior = data.Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
+                        var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
                         return (float) field.GetValue(behavior);
                     }));
 				else if (fieldType == typeof(int))
                     columns.Add((field.Name, 1, data =>
                     {
-                        var behavior = data.Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
+                        var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
                         return () => ((int) field.GetValue(behavior)).ToString();
                     }, data =>
                     {
-                        var behavior = data.Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
+                        var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
                         return (int) field.GetValue(behavior);
                     }));
 				else if (fieldType == typeof(PerformanceStat))
 				{
                     columns.Add((field.Name, 1, data =>
                     {
-                        var behavior = data.Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
+                        var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
                         return () => ((PerformanceStat) field.GetValue(behavior)).Max.SignificantDigits(3);
                     }, data =>
                     {
-                        var behavior = data.Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
+                        var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
                         return ((PerformanceStat) field.GetValue(behavior)).Max;
                     }));
 				}
@@ -168,8 +272,22 @@ public class TradeMenu : MonoBehaviour
         }
         
         columns.Add(("Owned", 1,
-            data => () => (_targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Count : 0).ToString(), 
-            data => _targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Count : 0));
+            data => () =>
+            {
+                if (data is HullData)
+                    return GameManager.PlayerShips.Count(s => s.Hull.Data == data.ID && s.Parent == GameManager.CurrentShip.Parent).ToString();
+                if(data is SimpleCommodityData)
+                    return (_targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Cast<SimpleCommodity>().Sum(s=>s.Quantity) : 0).ToString();
+                return (_targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Count : 0).ToString();
+            }, 
+            data =>
+            {
+                if (data is HullData)
+                    return GameManager.PlayerShips.Count(s => s.Hull.Data == data.ID && s.Parent == GameManager.CurrentShip.Parent);
+                if(data is SimpleCommodityData)
+                    return _targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Cast<SimpleCommodity>().Sum(s=>s.Quantity) : 0;
+                return _targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Count : 0;
+            }));
         
         Spreadsheet.ShowData(
             columns.Select(x => x.name).ToArray(),
@@ -188,7 +306,16 @@ public class TradeMenu : MonoBehaviour
                 },
                 OnDoubleClick = () =>
                 {
-                    _targetCargo.TryStore(GameManager.ItemManager.CreateInstance(i, .1f, 1));
+                    if (i is HullData h)
+                    {
+                        var ship = new Ship(GameManager.ItemManager, GameManager.Zone, GameManager.ItemManager.CreateInstance(h, .1f, 1) as EquippableItem);
+                        ship.SetParent(GameManager.CurrentShip.Parent);
+                        GameManager.PlayerShips.Add(ship);
+                    }
+                    else if(i is CraftedItemData c)
+                        _targetCargo.TryStore(GameManager.ItemManager.CreateInstance(c, .1f, 1));
+                    else if(i is SimpleCommodityData s)
+                        _targetCargo.TryStore(GameManager.ItemManager.CreateInstance(s, 1));
                     Populate();
                 }
             }));

@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx.Triggers;
 using UnityEngine;
 
 public class MenuPanel : MonoBehaviour
@@ -50,7 +51,7 @@ public class MenuPanel : MonoBehaviour
         }
     }
 
-    void Awake()
+    private void Awake()
     {
         foreach (var tabButton in TabButtons.GetComponentsInChildren<MenuTabButton>())
         {
@@ -59,8 +60,12 @@ public class MenuPanel : MonoBehaviour
             _tabs.Add(tabButton.Tab, tabButton);
             tabButton.Button.onClick.AddListener(() => ShowTab(tabButton.Tab));
         }
-        ShowTab(MenuTab.Inventory);
     }
+
+    // void Start()
+    // {
+    //     ShowTab(MenuTab.Inventory);
+    // }
 }
 
 public enum MenuTab

@@ -130,6 +130,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\GraphmapsWithMesh\PlanarGraphUtilities.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\LinearSystem2.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgEdgeInfo.cs" />
+     <Compile Include="Assets\ItemFilter.cs" />
      <Compile Include="Assets\Scripts\UI\GalaxyZone.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\Arrowheads.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\BundlingStatus.cs" />
@@ -218,6 +219,7 @@
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Core\DrawerAttributes\ButtonAttribute.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\SweepEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\ConjugateGradient\LinearSystemSolver.cs" />
+     <Compile Include="Assets\Scripts\TradeMenu.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\ProjectionSolver\ViolationCache.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\EventQueue.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\RTree\RectangleNodeUtils.cs" />
@@ -313,6 +315,7 @@
      <Compile Include="Assets\Scripts\UI\MapViewDragHandler.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\Polyline.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\HighBendVertexEvent.cs" />
+     <Compile Include="Assets\Scripts\SizeFilter.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\SolvingMethod.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Core\DrawerAttributes\ResizableTextAreaAttribute.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\CubicBezierSegment.cs" />
@@ -424,6 +427,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\StemStartPointComparer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Shape.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\ProjectionSolver\UniformOneDimensionalSolver.cs" />
+     <Compile Include="Assets\Scripts\UI\PlaceUIElementWorldspace.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\RBTree\RBColor.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\MetroLine.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\Ordering\EdgeComparerBySource.cs" />
@@ -458,6 +462,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Initial\InitialLayoutHelpers.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\MinEnclosingDisc\Disc.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\ConvexHull\ConvexFace.cs" />
+     <Compile Include="Assets\Scripts\SpreadsheetRow.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\Persistence\CurveStream.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\ConstrainedDelaunayTriangulation\CdtSite.cs" />
      <Compile Include="Assets\Scripts\UI\DropdownMenu.cs" />
@@ -567,6 +572,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\GeneralMetroMapOrdering.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\ObstacleTree.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\ProjectionSolver\ISolverShell.cs" />
+     <Compile Include="Assets\Scripts\SpreadsheetColumnHeader.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\PointVisibilityCalculator.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\OverlapRemoval\OverlapRemovalParameters.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\RBTree\RBNode.cs" />
@@ -659,6 +665,7 @@
      <Compile Include="Assets\Scripts\UI\EnumField.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\VisibilityGraph.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\MultidimensionalScaling.cs" />
+     <Compile Include="Assets\HoverCursorChange.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\LineSegment.cs" />
      <Compile Include="Assets\Scripts\Sector Display\WaveScroll.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\GraphAlgorithms\CycleRemoval\NodeInfo.cs" />
@@ -699,6 +706,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\NodeKind.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\SsstRectilinearPath.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\XCoordsWithAlignment.cs" />
+     <Compile Include="Assets\Scripts\Spreadsheet.cs" />
      <Compile Include="Assets\Scripts\CameraPerlinOrbit.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\GraphmapsWithMesh\LocalModifications.cs" />
      <Compile Include="Assets\Scripts\HullCollider.cs" />
@@ -711,14 +719,6 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\MinEnclosingDisc\MinimumEnclosingDisc.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\BinaryHeapWithComparer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Direction.cs" />
-     <Compile Include="Assets\Scripts\UI\PlaceUIElementWorldspace.cs" />
-     <Compile Include="Assets\Scripts\TradeMenu.cs" />
-     <Compile Include="Assets\Scripts\SizeFilter.cs" />
-     <Compile Include="Assets\Scripts\Spreadsheet.cs" />
-     <Compile Include="Assets\Scripts\SpreadsheetColumnHeader.cs" />
-     <Compile Include="Assets\Scripts\SpreadsheetRow.cs" />
-     <Compile Include="Assets\HoverCursorChange.cs" />
-     <Compile Include="Assets\ItemFilter.cs" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIAdditive.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />

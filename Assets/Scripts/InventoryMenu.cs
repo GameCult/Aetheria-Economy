@@ -19,6 +19,8 @@ public class InventoryMenu : MonoBehaviour
     public ActionGameManager GameManager;
     public RectTransform DragParent;
     public ConfirmationDialog Dialog;
+    public ObservablePointerEnterTrigger BackgroundEntered;
+    public ObservablePointerExitTrigger BackgroundExited;
 
     private int _currentPanel = -1;
     
@@ -41,9 +43,31 @@ public class InventoryMenu : MonoBehaviour
     private int2 _dragTargetPosition;
     private int2 _lastDragPosition;
     private bool _dragTargetValid;
+    private bool _destroyItem;
 
-    public InventoryPanel GetPanel => InventoryPanels[_currentPanel = (_currentPanel + 1) % InventoryPanels.Length];
-    
+    private void OnEnable()
+    {
+        BackgroundEntered.gameObject.SetActive(true);
+
+        BackgroundEntered.OnPointerEnterAsObservable().Subscribe(enter =>
+        {
+            _destroyItem = true;
+        });
+        BackgroundExited.OnPointerExitAsObservable().Subscribe(enter =>
+        {
+            _destroyItem = false;
+        });
+        var cargo = GameManager.DockingBay ?? GameManager.CurrentShip.CargoBays.FirstOrDefault();
+        if (cargo!=null)
+            InventoryPanels[0].Display(cargo);
+        InventoryPanels[1].Display(GameManager.CurrentShip);
+    }
+
+    private void OnDisable()
+    {
+        BackgroundEntered.gameObject.SetActive(false);
+    }
+
     void Start()
     {
         PropertiesPanel.Context = GameManager.ItemManager;
@@ -150,6 +174,25 @@ public class InventoryMenu : MonoBehaviour
                 {
                     _dragItem.Rotation = _originalRotation;
                 }
+
+                if (_destroyItem)
+                {
+                    if (data is InventoryCargoEventData cargoEvent)
+                    {
+                        cargoEvent.CargoBay.Remove(_dragItem);
+                    }
+                    else if (data is InventoryEntityEventData entityEvent)
+                    {
+                        if (entityEvent.Entity.Unequip(_originalEquippedItem) == null)
+                        {
+                            Dialog.Clear();
+                            Dialog.Title.text = "Unable to destroy item!";
+                            Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
+                            Dialog.Show();
+                        }
+                    }
+                }
+                
                 panel.IgnoreOccupancy = null;
                 panel.RefreshCells();
                 if(_dragTargetPanel!=panel)

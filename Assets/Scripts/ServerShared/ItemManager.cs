@@ -213,10 +213,15 @@ public class ItemManager
 
         return ItemQuality[item];
     }
+    
+    private readonly Dictionary<(PerformanceStat stat, EquippableItem item), float> StatQuality = new Dictionary<(PerformanceStat stat, EquippableItem item), float>();
 
     // Determine quality of either the item itself or the specific ingredient this stat depends on
     public float Quality(PerformanceStat stat, EquippableItem item)
     {
+        if (StatQuality.ContainsKey((stat, item)))
+            return StatQuality[(stat, item)];
+        
         var itemData = GetData(item);
         var blueprint = ItemData.Get<BlueprintData>(item.Blueprint);
         var activeEffects = blueprint.StatEffects.Where(x => GetAffectedStat(blueprint, x) == stat).ToArray();
@@ -244,6 +249,7 @@ public class ItemManager
             quality = sum / ingredients.Length;
         }
 
+        StatQuality[(stat, item)] = quality;
         return quality;
     }
 
@@ -268,11 +274,13 @@ public class ItemManager
         //var heat = !stat.HeatDependent ? 1 : pow(itemData.Performance(entity.Temperature), Evaluate(itemData.HeatExponent,item));
         var durability = !stat.DurabilityDependent ? 1 : pow(item.Durability / itemData.Durability, Evaluate(itemData.DurabilityExponent,item));
         var quality = pow(Quality(stat, item), stat.QualityExponent);
-    
-        var scaleModifier = stat.GetScaleModifiers(entity).Values.Aggregate(1.0f, (current, mod) => current * mod);
-    
-        var constantModifier = stat.GetConstantModifiers(entity).Values.Sum();
-    
+
+        var scaleModifier = 1.0f;
+        foreach (var value in stat.GetScaleModifiers(entity).Values) scaleModifier = scaleModifier * value;
+
+        float constantModifier = 0;
+        foreach (var value in stat.GetConstantModifiers(entity).Values) constantModifier += value;
+
         var result = lerp(stat.Min, stat.Max, durability * quality) * scaleModifier + constantModifier;
         if (float.IsNaN(result))
             return stat.Min;
