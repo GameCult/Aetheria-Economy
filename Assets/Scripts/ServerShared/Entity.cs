@@ -28,6 +28,7 @@ public abstract class Entity
     public float2 Velocity;
     
     public float[,] Temperature;
+    public float[,] NewTemperature;
     public bool2[,] HullConductivity;
     public float[,] ThermalMass;
     public float Energy;
@@ -122,6 +123,7 @@ public abstract class Entity
         Equipment.Add(new EquippedItem(ItemManager, Hull, int2.zero, this));
         Mass = hullData.Mass;
         Temperature = new float[hullData.Shape.Width, hullData.Shape.Height];
+        NewTemperature = new float[hullData.Shape.Width, hullData.Shape.Height];
         HullConductivity = new bool2[hullData.Shape.Width,hullData.Shape.Height];
         ThermalMass = new float[hullData.Shape.Width, hullData.Shape.Height];
         Armor = new float[hullData.Shape.Width, hullData.Shape.Height];
@@ -511,7 +513,7 @@ public abstract class Entity
     public virtual void Update(float delta)
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
-        float[,] newTemp = new float[hullData.Shape.Width,hullData.Shape.Height];
+        //float[,] newTemp = new float[hullData.Shape.Width,hullData.Shape.Height];
         var radiation = 0f;
         foreach (var v in hullData.Shape.Coordinates)
         {
@@ -542,23 +544,25 @@ public abstract class Entity
                                 (GearOccupancy[v.x, v.y + 1]?.Conductivity ?? 1) * 
                                 (HullConductivity[v.x, v.y].y ? hullData.Conductivity : 1 / hullData.Conductivity);
 
-            newTemp[v.x, v.y] = Temperature[v.x, v.y] + heatTransfer * min(ItemManager.GameplaySettings.HeatConductionMultiplier * delta,1) / ThermalMass[v.x,v.y];
+            NewTemperature[v.x, v.y] = Temperature[v.x, v.y] + heatTransfer * min(ItemManager.GameplaySettings.HeatConductionMultiplier * delta,1) / ThermalMass[v.x,v.y];
             
             // For all cells on the border of the entity, radiate some heat into space, increasing the visibility of the ship
             if (Parent==null && !hullData.InteriorCells[v])
             {
-                var rad = pow(newTemp[v.x, v.y], ItemManager.GameplaySettings.HeatRadiationExponent) *
+                var rad = pow(NewTemperature[v.x, v.y], ItemManager.GameplaySettings.HeatRadiationExponent) *
                           ItemManager.GameplaySettings.HeatRadiationMultiplier;
-                newTemp[v.x, v.y] -= rad * delta;
+                NewTemperature[v.x, v.y] -= rad * delta;
                 radiation += rad;
             }
             
-            if(float.IsNaN(newTemp[v.x, v.y]) || newTemp[v.x, v.y] < 0)
+            if(float.IsNaN(NewTemperature[v.x, v.y]) || NewTemperature[v.x, v.y] < 0)
                 ItemManager.Log("HOUSTON, WE HAVE A PROBLEM!");
         }
 
         VisibilitySources[this] = radiation;
-        Temperature = newTemp;
+        var swap = Temperature;
+        Temperature = NewTemperature;
+        NewTemperature = swap;
         
         if (Active)
         {

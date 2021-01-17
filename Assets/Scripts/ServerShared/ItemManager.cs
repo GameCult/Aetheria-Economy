@@ -221,7 +221,14 @@ public class ItemManager
     {
         if (StatQuality.ContainsKey((stat, item)))
             return StatQuality[(stat, item)];
-        
+
+        var quality = CalcQuality(stat, item);
+        StatQuality[(stat, item)] = quality;
+        return quality;
+    }
+
+    private float CalcQuality(PerformanceStat stat, EquippableItem item)
+    {
         var itemData = GetData(item);
         var blueprint = ItemData.Get<BlueprintData>(item.Blueprint);
         var activeEffects = blueprint.StatEffects.Where(x => GetAffectedStat(blueprint, x) == stat).ToArray();
@@ -249,7 +256,6 @@ public class ItemManager
             quality = sum / ingredients.Length;
         }
 
-        StatQuality[(stat, item)] = quality;
         return quality;
     }
 

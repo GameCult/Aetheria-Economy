@@ -55,10 +55,10 @@ public class MiningTool : IBehavior
     public bool Execute(float delta)
     {
         Range = Context.Evaluate(_data.Range, Item.EquippableItem, Entity);
-        var asteroidTransform = Entity.Zone.GetAsteroidTransform(AsteroidBelt, Asteroid);
+        var belt = Entity.Zone.AsteroidBelts[AsteroidBelt];
         if (AsteroidBelt != Guid.Empty && 
             Entity.Zone.AsteroidExists(AsteroidBelt, Asteroid) && 
-            length(Entity.Position.xz - asteroidTransform.xz) - asteroidTransform.w < Range)
+            length(Entity.Position.xz - belt.Positions[Asteroid].xz) - belt.Scales[Asteroid] < Range)
         {
             Entity.Zone.MineAsteroid(
                 Entity,

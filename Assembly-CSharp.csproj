@@ -1045,6 +1045,9 @@
  <Reference Include="System.Runtime.CompilerServices.Unsafe">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.Burst.Unsafe">
+ <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.burst@1.4.3/Unity.Burst.Unsafe.dll</HintPath>
+ </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
  </Reference>
@@ -1464,6 +1467,12 @@
  </Reference>
  <Reference Include="Unity.Recorder">
  <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Recorder.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Burst.Editor">
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Burst">
+ <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Burst.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

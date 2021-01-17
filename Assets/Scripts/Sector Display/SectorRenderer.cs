@@ -62,7 +62,6 @@ public class SectorRenderer : MonoBehaviour
     private Dictionary<Guid, AsteroidBeltUI> _beltObjects = new Dictionary<Guid, AsteroidBeltUI>();
     private Dictionary<Guid, InstancedMesh[]> _beltMeshes = new Dictionary<Guid, InstancedMesh[]>();
     private Dictionary<Guid, Matrix4x4[][]> _beltMatrices = new Dictionary<Guid, Matrix4x4[][]>();
-    private Dictionary<Guid, float3[]> _beltAsteroidPositions = new Dictionary<Guid, float3[]>();
     private Dictionary<ProjectileWeaponData, ProjectileManager> _projectileManagers = new Dictionary<ProjectileWeaponData, ProjectileManager>();
     private Dictionary<LauncherData, GuidedProjectileManager> _guidedProjectileManagers = new Dictionary<LauncherData, GuidedProjectileManager>();
     private Zone _zone;
@@ -452,7 +451,6 @@ public class SectorRenderer : MonoBehaviour
                 meshes.RemoveAt(Random.Range(0,meshes.Count));
             _beltMeshes[planetData.ID] = meshes.ToArray();
             _beltMatrices[planetData.ID] = new Matrix4x4[meshes.Count][];
-            _beltAsteroidPositions[planetData.ID] = new float3[beltData.Asteroids.Length];
             var count = beltData.Asteroids.Length / meshes.Count;
             var remainder = beltData.Asteroids.Length - count * meshes.Count;
             for (int i = 0; i < meshes.Count; i++)
@@ -560,25 +558,23 @@ public class SectorRenderer : MonoBehaviour
         foreach(var belt in _zone.AsteroidBelts)
         {
             var meshes = _beltMeshes[belt.Key];
-            for (int i = 0; i < _beltAsteroidPositions[belt.Key].Length; i++)
-                _beltAsteroidPositions[belt.Key][i] = float3(belt.Value.Transforms[i].x, _zone.GetHeight(belt.Value.Transforms[i].xy), belt.Value.Transforms[i].y);
-            var count = belt.Value.Transforms.Length / meshes.Length;
+            var count = belt.Value.Positions.Length / meshes.Length;
             for (int i = 0; i < meshes.Length; i++)
             {
                 for (int t = 0; t < _beltMatrices[belt.Key][i].Length; t++)
                 {
                     var tx = t + i * count;
-                    _beltMatrices[belt.Key][i][t] = Matrix4x4.TRS(_beltAsteroidPositions[belt.Key][tx],
+                    _beltMatrices[belt.Key][i][t] = Matrix4x4.TRS(belt.Value.Positions[tx],
                         Quaternion.Euler(
-                            cos(belt.Value.Transforms[tx].z + (float) i / meshes.Length) * 100,
-                            sin(belt.Value.Transforms[tx].z + (float) i / meshes.Length) * 100,
-                            (float) tx / belt.Value.Transforms.Length * 360),
-                        Vector3.one * belt.Value.Transforms[tx].w);
+                            cos(belt.Value.Rotations[tx] + (float) i / meshes.Length) * 100,
+                            sin(belt.Value.Rotations[tx] + (float) i / meshes.Length) * 100,
+                            (float) tx / belt.Value.Positions.Length * 360),
+                        Vector3.one * belt.Value.Scales[tx]);
                 }
 
                 Graphics.DrawMeshInstanced(meshes[i].Mesh, 0, meshes[i].Material, _beltMatrices[belt.Key][i]);
             }
-            _beltObjects[belt.Key].Update(_beltAsteroidPositions[belt.Key]);
+            _beltObjects[belt.Key].Update(belt.Value.Positions);
         }
         
         foreach (var planet in Planets)
@@ -762,12 +758,12 @@ public class AsteroidBeltUI
         var parentPosition = _zone.GetOrbitPosition(_orbitParent);
         for (var i = 0; i < _belt.Data.Asteroids.Length; i++)
         {
-            var rotation = Quaternion.Euler(90, _belt.Transforms[i].z, 0);
+            var rotation = Quaternion.Euler(90, _belt.Rotations[i], 0);
             //var position = new Vector3(_belt.Transforms[i].x, _zone.GetHeight(parentPosition), _belt.Transforms[i].y);
-            _vertices[i * 4] = rotation * new Vector3(-_belt.Transforms[i].w * _scale,-_belt.Transforms[i].w * _scale,0) + (Vector3) positions[i];
-            _vertices[i * 4 + 1] = rotation * new Vector3(-_belt.Transforms[i].w * _scale,_belt.Transforms[i].w * _scale,0) + (Vector3) positions[i];
-            _vertices[i * 4 + 2] = rotation * new Vector3(_belt.Transforms[i].w * _scale,_belt.Transforms[i].w * _scale,0) + (Vector3) positions[i];
-            _vertices[i * 4 + 3] = rotation * new Vector3(_belt.Transforms[i].w * _scale,-_belt.Transforms[i].w * _scale,0) + (Vector3) positions[i];
+            _vertices[i * 4] = rotation * new Vector3(-_belt.Scales[i] * _scale,-_belt.Scales[i] * _scale,0) + (Vector3) positions[i];
+            _vertices[i * 4 + 1] = rotation * new Vector3(-_belt.Scales[i] * _scale,_belt.Scales[i] * _scale,0) + (Vector3) positions[i];
+            _vertices[i * 4 + 2] = rotation * new Vector3(_belt.Scales[i] * _scale,_belt.Scales[i] * _scale,0) + (Vector3) positions[i];
+            _vertices[i * 4 + 3] = rotation * new Vector3(_belt.Scales[i] * _scale,-_belt.Scales[i] * _scale,0) + (Vector3) positions[i];
         }
 
         _mesh.bounds = new Bounds(new Vector3(parentPosition.x, 0, parentPosition.y), Vector3.one * (_size * 2));

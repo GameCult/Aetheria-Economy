@@ -75,18 +75,21 @@ public class Reactor : IBehavior, IOrderedBehavior
         // We have an energy deficit, try to get some energy out of our capacitors first
         if (Entity.Energy < 0)
         {
-            Capacitor[] chargedCapacitors;
+            int chargedCapacitors = 0;
             do
             {
                 var chargeToRemove = -Entity.Energy;
-                chargedCapacitors = _capacitors.Where(x => x.Charge > 0.01f).ToArray();
-                foreach (var cap in chargedCapacitors)
+                foreach (var cap in _capacitors)
                 {
-                    var chargeRemoved = min(chargeToRemove / chargedCapacitors.Length, cap.Charge);
-                    cap.AddCharge(-chargeRemoved);
-                    Entity.Energy += chargeRemoved;
+                    if(cap.Charge > 0.01f)
+                    {
+                        chargedCapacitors++;
+                        var chargeRemoved = min(chargeToRemove / chargedCapacitors, cap.Charge);
+                        cap.AddCharge(-chargeRemoved);
+                        Entity.Energy += chargeRemoved;
+                    }
                 }
-            } while (chargedCapacitors.Length > 0 && Entity.Energy < -.01f);
+            } while (chargedCapacitors > 0 && Entity.Energy < -.01f);
         }
         
         // We still have an energy deficit, have to overload the reactor, run at reduced efficiency

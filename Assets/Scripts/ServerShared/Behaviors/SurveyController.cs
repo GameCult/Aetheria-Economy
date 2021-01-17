@@ -118,7 +118,7 @@ public class SurveyController : ControllerBase<Survey>, IBehavior, IPersistentBe
         if (planet is AsteroidBeltData)
         {
             if(asteroid == -1) asteroid = Zone.NearestAsteroid(planet.ID, Entity.Position.xz);
-            return Zone.GetAsteroidTransform(planet.ID, asteroid).xy;
+            return Zone.AsteroidBelts[planet.ID].Positions[asteroid].xz;
         }
         return Zone.GetOrbitPosition(planet.Orbit);
     }
@@ -128,7 +128,7 @@ public class SurveyController : ControllerBase<Survey>, IBehavior, IPersistentBe
         if (planet is AsteroidBeltData)
         {
             if(asteroid == -1) asteroid = Zone.NearestAsteroid(planet.ID, Entity.Position.xz);
-            return Zone.GetAsteroidVelocity(planet.ID, asteroid);
+            return Zone.AsteroidBelts[planet.ID].Velocities[asteroid];
         }
         return Zone.GetOrbitVelocity(planet.Orbit);
     }
