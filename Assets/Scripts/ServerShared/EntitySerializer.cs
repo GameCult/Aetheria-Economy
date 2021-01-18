@@ -10,25 +10,48 @@ using Unity.Mathematics;
 public class EntityPack
 {
     [Key(0)]
-    public EquippableItem Hull;
+    public string Name;
     
     [Key(1)]
+    public EquippableItem Hull;
+    
+    [Key(2)]
     public (int2 position, EquippableItem item)[] Equipment;
+    
+    [Key(3)]
     public (int2 position, EquippableItem item)[] CargoBays;
+    
+    [Key(4)]
     public (int2 position, EquippableItem item)[] DockingBays;
 
+    [Key(5)]
     public Dictionary<int2, PersistentBehaviorData[]> PersistedBehaviors;
 
+    [Key(6)]
     public float[,] Temperature;
+    
+    [Key(7)]
     public float[,] Armor;
+    
+    [Key(8)]
+    public bool2[,] Conductivity;
+    
+    [Key(9)]
     public Dictionary<int, float> HardpointArmor;
+    
+    [Key(10)]
     public int[] DockingBayAssignments;
+    
+    [Key(11)]
     public (int2 position, ItemInstance item)[][] CargoContents;
+    
+    [Key(12)]
     public (int2 position, ItemInstance item)[][] DockingBayContents;
 
+    [Key(13)]
     public EntityPack[] Children;
 
-    public static EntityPack Serialize(Entity entity)
+    public static EntityPack Pack(Entity entity)
     {
         var pack = new EntityPack();
         
@@ -41,7 +64,9 @@ public class EntityPack
                 .Where(b=>b is IPersistentBehavior)
                 .Cast<IPersistentBehavior>()})
             .ToDictionary(x=> x.equippable.Position, x=>x.behaviors.Select(b => b.Store()).ToArray());
-        
+
+        pack.Hull = entity.Hull;
+        pack.Name = entity.Name;
         pack.Equipment = entity.Equipment.Select(e => (e.Position, e.EquippableItem)).ToArray();
         pack.CargoBays = entity.CargoBays.Select(e => (e.Position, e.EquippableItem)).ToArray();
         pack.DockingBays = entity.DockingBays.Select(e => (e.Position, e.EquippableItem)).ToArray();
@@ -50,20 +75,21 @@ public class EntityPack
         pack.DockingBayContents = entity.DockingBays.Select(b => b.Cargo.Select(i => (i.Value, i.Key)).ToArray()).ToArray();
         pack.Armor = entity.Armor;
         pack.Temperature = entity.Temperature;
+        pack.Conductivity = entity.HullConductivity;
         var hullData = entity.ItemManager.GetData(entity.Hull) as HullData;
         pack.HardpointArmor = entity.HardpointArmor.ToDictionary(x => hullData.Hardpoints.IndexOf(x.Key), x => x.Value);
-        pack.Children = entity.Children.Select(Serialize).ToArray();
+        pack.Children = entity.Children.Select(Pack).ToArray();
         return pack;
     }
 
-    public static Ship Deserialize(ItemManager itemManager, Zone zone, EntityPack pack)
+    public static Ship Unpack(ItemManager itemManager, Zone zone, EntityPack pack)
     {
         var entity = new Ship(itemManager, zone, pack.Hull);
         Restore(itemManager, zone, pack, entity);
         return entity;
     }
 
-    public static OrbitalEntity Deserialize(ItemManager itemManager, Zone zone, EntityPack pack, Guid orbit)
+    public static OrbitalEntity Unpack(ItemManager itemManager, Zone zone, EntityPack pack, Guid orbit)
     {
         var entity = new OrbitalEntity(itemManager, zone, pack.Hull, orbit);
         Restore(itemManager, zone, pack, entity);
@@ -72,9 +98,10 @@ public class EntityPack
 
     public static void Restore(ItemManager itemManager, Zone zone, EntityPack pack, Entity entity)
     {
+        entity.Name = pack.Name;
         entity.Children = pack.Children.Select(c =>
         {
-            var child = Deserialize(itemManager, zone, c);
+            var child = Unpack(itemManager, zone, c);
             child.Parent = entity;
             return (Entity) child;
         }).ToList();
@@ -109,6 +136,7 @@ public class EntityPack
         entity.Temperature = pack.Temperature;
         entity.Armor = pack.Armor;
         var hullData = entity.ItemManager.GetData(entity.Hull) as HullData;
+        entity.HullConductivity = pack.Conductivity;
         entity.HardpointArmor = pack.HardpointArmor.ToDictionary(x => hullData.Hardpoints[x.Key], x => x.Value);
     }
 }

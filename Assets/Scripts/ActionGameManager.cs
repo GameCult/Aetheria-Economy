@@ -45,17 +45,20 @@ public class ActionGameManager : MonoBehaviour
     
     // private CinemachineFramingTransposer _transposer;
     // private CinemachineComposer _composer;
+    
     private DirectoryInfo _filePath;
+    private DirectoryInfo _presetPath;
     private bool _editMode;
     private float _time;
     private AetheriaInput _input;
     private int _zoomLevelIndex;
+    public List<EntityPack> Presets { get; set; } = new List<EntityPack>();
 
     // private ShipInput _shipInput;
     private float2 _shipYawPitch;
     private float3 _viewDirection;
-    private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] ArticulationGroups;
-    private (TargetLock targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] LockingIndicators;
+    private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] _articulationGroups;
+    private (TargetLock targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] _lockingIndicators;
     public List<Ship> PlayerShips { get; } = new List<Ship>();
     public EquippedDockingBay DockingBay { get; private set; }
     
@@ -71,6 +74,11 @@ public class ActionGameManager : MonoBehaviour
         (float2(0, -1), "Rear")
     };
 
+    public void SavePreset(EntityPack pack)
+    {
+        File.WriteAllBytes(Path.Combine(_presetPath.FullName, $"{pack.Name}.preset"), MessagePackSerializer.Serialize(pack));
+    }
+
     void Start()
     {
         // _transposer = DockCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
@@ -79,9 +87,13 @@ public class ActionGameManager : MonoBehaviour
         
         ConsoleController.MessageReceiver = this;
         _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
+        _presetPath = _filePath.CreateSubdirectory("Presets");
         ItemData = new DatabaseCache();
         ItemData.Load(_filePath.FullName);
         ItemManager = new ItemManager(ItemData, Settings.GameplaySettings, Debug.Log);
+
+        Presets.AddRange(_presetPath.EnumerateFiles("*.preset")
+            .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
 
         var zoneFile = Path.Combine(_filePath.FullName, "Home.zone");
         
@@ -535,7 +547,7 @@ public class ActionGameManager : MonoBehaviour
                     Cursor.lockState = CursorLockMode.None;
                     _input.Player.Disable();
                     GameplayUI.SetActive(false);
-                    if(LockingIndicators!=null) foreach(var (_, indicator, _) in LockingIndicators)
+                    if(_lockingIndicators!=null) foreach(var (_, indicator, _) in _lockingIndicators)
                         indicator.GetComponent<Prototype>().ReturnToPool();
                 }
             }
@@ -573,7 +585,7 @@ public class ActionGameManager : MonoBehaviour
             FollowCamera.enabled = true;
             FollowCamera.LookAt = SectorRenderer.EntityInstances[CurrentShip].LookAtPoint;
             FollowCamera.Follow = SectorRenderer.EntityInstances[CurrentShip].Transform;
-            ArticulationGroups = CurrentShip.Equipment
+            _articulationGroups = CurrentShip.Equipment
                 .Where(item => item.Behaviors.Any(x => x.Data is WeaponData && !(x.Data is LauncherData)))
                 .GroupBy(item => SectorRenderer.EntityInstances[CurrentShip]
                     .GetBarrel(CurrentShip.Hardpoints[item.Position.x, item.Position.y])
@@ -588,10 +600,10 @@ public class ActionGameManager : MonoBehaviour
 
             foreach (var crosshair in Crosshairs)
                 crosshair.gameObject.SetActive(false);
-            foreach (var group in ArticulationGroups)
+            foreach (var group in _articulationGroups)
                 group.crosshair.gameObject.SetActive(true);
 
-            LockingIndicators = CurrentShip.GetBehaviors<TargetLock>().Select(x =>
+            _lockingIndicators = CurrentShip.GetBehaviors<TargetLock>().Select(x =>
             {
                 var i = LockIndicator.Instantiate<PlaceUIElementWorldspace>();
                 return (x, i, i.GetComponent<Rotate>());
@@ -677,7 +689,7 @@ public class ActionGameManager : MonoBehaviour
         if (CurrentShip.Target.Value != null)
             TargetIndicator.Target = CurrentShip.Target.Value.Position;
         var distance = length((float3)ViewDot.Target - CurrentShip.Position);
-        foreach (var (_, barrels, crosshair) in ArticulationGroups)
+        foreach (var (_, barrels, crosshair) in _articulationGroups)
         {
             var averagePosition = Vector3.zero;
             foreach (var barrel in barrels)
@@ -685,7 +697,7 @@ public class ActionGameManager : MonoBehaviour
             averagePosition /= barrels.Length;
             crosshair.Target = averagePosition;
         }
-        foreach (var (targetLock, indicator, spin) in LockingIndicators)
+        foreach (var (targetLock, indicator, spin) in _lockingIndicators)
         {
             var showLockingIndicator = targetLock.Lock > .01f && CurrentShip.Target.Value != null;
             indicator.gameObject.SetActive(showLockingIndicator);

@@ -38,6 +38,7 @@ internal static class MathResolverResolverGetFormatterHelper
         // standard
         { typeof(float2), new Float2Formatter() },
         { typeof(int2), new Int2Formatter() },
+        { typeof(bool2), new Bool2Formatter() },
         { typeof(float3), new Float3Formatter() },
         { typeof(float4), new Float4Formatter() },
         { typeof(float2?), new StaticNullableFormatter<float2>(new Float2Formatter()) },

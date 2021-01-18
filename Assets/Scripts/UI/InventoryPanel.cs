@@ -124,6 +124,12 @@ public class InventoryPanel : MonoBehaviour
 
                 if(GameManager.DockingBay!=null && _displayedCargo!=GameManager.DockingBay)
                     ContextMenu.AddOption(GameManager.DockingBay.Name, () => Display(GameManager.DockingBay));
+                
+                ContextMenu.AddOption("Create Preset",
+                    () =>
+                    {
+                        GameManager.SavePreset(EntityPack.Pack(_displayedEntity));
+                    });
 
                 ContextMenu.Show();
             });
