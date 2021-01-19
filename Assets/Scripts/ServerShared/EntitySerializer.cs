@@ -51,6 +51,8 @@ public class EntityPack
     [Key(13)]
     public EntityPack[] Children;
 
+    private int _price;
+
     public static EntityPack Pack(Entity entity)
     {
         var pack = new EntityPack();
@@ -82,32 +84,32 @@ public class EntityPack
         return pack;
     }
 
-    public static Ship Unpack(ItemManager itemManager, Zone zone, EntityPack pack)
+    public static Ship Unpack(ItemManager itemManager, Zone zone, EntityPack pack, bool instantiate = false)
     {
-        var entity = new Ship(itemManager, zone, pack.Hull);
-        Restore(itemManager, zone, pack, entity);
+        var entity = new Ship(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull);
+        Restore(itemManager, zone, pack, entity, instantiate);
         return entity;
     }
 
-    public static OrbitalEntity Unpack(ItemManager itemManager, Zone zone, EntityPack pack, Guid orbit)
+    public static OrbitalEntity Unpack(ItemManager itemManager, Zone zone, EntityPack pack, Guid orbit, bool instantiate = false)
     {
-        var entity = new OrbitalEntity(itemManager, zone, pack.Hull, orbit);
-        Restore(itemManager, zone, pack, entity);
+        var entity = new OrbitalEntity(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull, orbit);
+        Restore(itemManager, zone, pack, entity, instantiate);
         return entity;
     }
 
-    public static void Restore(ItemManager itemManager, Zone zone, EntityPack pack, Entity entity)
+    public static void Restore(ItemManager itemManager, Zone zone, EntityPack pack, Entity entity, bool instantiate = false)
     {
         entity.Name = pack.Name;
         entity.Children = pack.Children.Select(c =>
         {
-            var child = Unpack(itemManager, zone, c);
+            var child = Unpack(itemManager, zone, c, instantiate);
             child.Parent = entity;
             return (Entity) child;
         }).ToList();
-        foreach (var (position, item) in pack.Equipment) entity.TryEquip(item, position);
-        foreach (var (position, item) in pack.CargoBays) entity.TryEquip(item, position);
-        foreach (var (position, item) in pack.DockingBays) entity.TryEquip(item, position);
+        foreach (var (position, item) in pack.Equipment) entity.TryEquip(instantiate ? (EquippableItem) itemManager.Instantiate(item) : item, position);
+        foreach (var (position, item) in pack.CargoBays) entity.TryEquip(instantiate ? (EquippableItem) itemManager.Instantiate(item) : item, position);
+        foreach (var (position, item) in pack.DockingBays) entity.TryEquip(instantiate ? (EquippableItem) itemManager.Instantiate(item) : item, position);
 
         for (var i = 0; i < pack.DockingBayAssignments.Length; i++)
         {
@@ -117,11 +119,11 @@ public class EntityPack
 
         for (var bayIndex = 0; bayIndex < pack.CargoContents.Length; bayIndex++)
             foreach (var (position, item) in pack.CargoContents[bayIndex])
-                entity.CargoBays[bayIndex].TryStore(item, position);
+                entity.CargoBays[bayIndex].TryStore(instantiate ? itemManager.Instantiate(item) : item, position);
 
         for (var bayIndex = 0; bayIndex < pack.DockingBayContents.Length; bayIndex++)
             foreach (var (position, item) in pack.DockingBayContents[bayIndex])
-                entity.DockingBays[bayIndex].TryStore(item, position);
+                entity.DockingBays[bayIndex].TryStore(instantiate ? itemManager.Instantiate(item) : item, position);
 
         // Iterate only over the behaviors of items which contain persistent data
         // Filter the behaviors for each item to get the persistent ones, then cast them and combine with the persisted data array for that item
@@ -138,5 +140,53 @@ public class EntityPack
         var hullData = entity.ItemManager.GetData(entity.Hull) as HullData;
         entity.HullConductivity = pack.Conductivity;
         entity.HardpointArmor = pack.HardpointArmor.ToDictionary(x => hullData.Hardpoints[x.Key], x => x.Value);
+    }
+
+    public int Price(ItemManager itemManager)
+    {
+        if (_price == 0)
+        {
+            var hullData = itemManager.GetData(Hull);
+            _price = hullData.Price;
+
+            foreach (var (_, item) in Equipment)
+            {
+                var itemData = itemManager.GetData(item);
+                _price += itemData.Price;
+            }
+            foreach (var (_, item) in CargoBays)
+            {
+                var itemData = itemManager.GetData(item);
+                _price += itemData.Price;
+            }
+            foreach (var (_, item) in DockingBays)
+            {
+                var itemData = itemManager.GetData(item);
+                _price += itemData.Price;
+            }
+
+            for (var bayIndex = 0; bayIndex < CargoContents.Length; bayIndex++)
+                foreach (var (_, item) in CargoContents[bayIndex])
+                {
+                    var itemData = itemManager.GetData(item);
+                    if (item is SimpleCommodity s)
+                        _price += itemData.Price * s.Quantity;
+                    else
+                        _price += itemData.Price;
+                }
+
+            for (var bayIndex = 0; bayIndex < DockingBayContents.Length; bayIndex++)
+                foreach (var (_, item) in DockingBayContents[bayIndex])
+                {
+                    var itemData = itemManager.GetData(item);
+                    if (item is SimpleCommodity s)
+                        _price += itemData.Price * s.Quantity;
+                    else
+                        _price += itemData.Price;
+                }
+            
+        }
+
+        return _price;
     }
 }

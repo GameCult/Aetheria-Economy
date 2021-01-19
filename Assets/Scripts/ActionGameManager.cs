@@ -40,6 +40,7 @@ public class ActionGameManager : MonoBehaviour
     public InventoryPanel TargetShipPanel;
     public ConfirmationDialog ConfirmationDialog;
     public float2 Sensitivity;
+    public int Credits = 15000000;
     
     //public PlayerInput Input;
     
@@ -52,7 +53,7 @@ public class ActionGameManager : MonoBehaviour
     private float _time;
     private AetheriaInput _input;
     private int _zoomLevelIndex;
-    public List<EntityPack> Presets { get; set; } = new List<EntityPack>();
+    public List<EntityPack> Loadouts { get; set; } = new List<EntityPack>();
 
     // private ShipInput _shipInput;
     private float2 _shipYawPitch;
@@ -74,7 +75,7 @@ public class ActionGameManager : MonoBehaviour
         (float2(0, -1), "Rear")
     };
 
-    public void SavePreset(EntityPack pack)
+    public void SaveLoadout(EntityPack pack)
     {
         File.WriteAllBytes(Path.Combine(_presetPath.FullName, $"{pack.Name}.preset"), MessagePackSerializer.Serialize(pack));
     }
@@ -92,7 +93,7 @@ public class ActionGameManager : MonoBehaviour
         ItemData.Load(_filePath.FullName);
         ItemManager = new ItemManager(ItemData, Settings.GameplaySettings, Debug.Log);
 
-        Presets.AddRange(_presetPath.EnumerateFiles("*.preset")
+        Loadouts.AddRange(_presetPath.EnumerateFiles("*.preset")
             .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
 
         var zoneFile = Path.Combine(_filePath.FullName, "Home.zone");

@@ -11,9 +11,9 @@ using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.UI;
-using Unity.Mathematics;
 using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering;
+using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using int2 = Unity.Mathematics.int2;
 
@@ -125,11 +125,26 @@ public class InventoryPanel : MonoBehaviour
                 if(GameManager.DockingBay!=null && _displayedCargo!=GameManager.DockingBay)
                     ContextMenu.AddOption(GameManager.DockingBay.Name, () => Display(GameManager.DockingBay));
                 
-                ContextMenu.AddOption("Create Preset",
+                ContextMenu.AddOption("Save Loadout",
                     () =>
                     {
-                        GameManager.SavePreset(EntityPack.Pack(_displayedEntity));
+                        GameManager.SaveLoadout(EntityPack.Pack(_displayedEntity));
                     });
+
+                if (GameManager.Loadouts.Any())
+                {
+                    ContextMenu.AddDropdown("Restore Loadout", 
+                        GameManager.Loadouts.Select<EntityPack, (string text, Action action, bool enabled)>(pack => 
+                            (
+                                $"{pack.Name} - {pack.Price(GameManager.ItemManager):n0}", () =>
+                                {
+                                    var ship = EntityPack.Unpack(GameManager.ItemManager, GameManager.CurrentShip.Zone, pack, true);
+                                    ship.SetParent(GameManager.CurrentShip.Parent);
+                                    GameManager.PlayerShips.Add(ship);
+                                    GameManager.Credits -= pack.Price(GameManager.ItemManager);
+                                }, pack.Price(GameManager.ItemManager) < GameManager.Credits
+                                )));
+                }
 
                 ContextMenu.Show();
             });

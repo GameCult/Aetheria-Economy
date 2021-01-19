@@ -19,7 +19,7 @@ public class ConfirmationDialog : PropertiesPanel
     private Action _onCancel;
     private Action _onConfirm;
 
-    private new void Start()
+    private void Start()
     {
         Cancel.onClick.AddListener(() =>
         {
@@ -62,7 +62,7 @@ public class ConfirmationDialog : PropertiesPanel
         _onCancel = onCancel;
         Cancel.gameObject.SetActive(onCancel!=null);
         
-        ButtonGroup.SetActive(onConfirm!=null && onCancel!=null);
+        ButtonGroup.SetActive(onConfirm!=null || onCancel!=null);
         
         transform.position = Mouse.current.position.ReadValue();
         CancelClickCatcher.gameObject.SetActive(true);

@@ -7,11 +7,14 @@ using System.Runtime.Remoting.Contexts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 public class TradeMenu : MonoBehaviour
 {
     public ActionGameManager GameManager;
     public ContextMenu ContextMenu;
+    public ConfirmationDialog Dialog;
     public Button NewFilterButton;
     public Prototype FilterPrototype;
     public SizeFilter MinimumSizeFilter;
@@ -178,24 +181,18 @@ public class TradeMenu : MonoBehaviour
             columns.Add(("Type", 2,
                 data => () =>
                 {
-                    if (data is SimpleCommodityData s)
-                        return Enum.GetName(typeof(SimpleCommodityCategory), s.Category);
-                    if(data is CompoundCommodityData c)
-                        return Enum.GetName(typeof(CompoundCommodityCategory), c.Category);
-                    if(data is EquippableItemData e)
-                        return Enum.GetName(typeof(HardpointType), e.HardpointType);
+                    if (data is SimpleCommodityData s) return Enum.GetName(typeof(SimpleCommodityCategory), s.Category);
+                    if(data is CompoundCommodityData c) return Enum.GetName(typeof(CompoundCommodityCategory), c.Category);
+                    if(data is EquippableItemData e) return Enum.GetName(typeof(HardpointType), e.HardpointType);
                     return "None";
                 }, 
                 data => 
                 {
-                    if (data is SimpleCommodityData s)
-                        return (int) s.Category;
+                    if (data is SimpleCommodityData s) return (int) s.Category;
                     var offset = Enum.GetValues(typeof(SimpleCommodityCategory)).Length;
-                    if(data is CompoundCommodityData c)
-                        return (int) c.Category + offset;
+                    if(data is CompoundCommodityData c) return (int) c.Category + offset;
                     offset += Enum.GetValues(typeof(CompoundCommodityCategory)).Length;
-                    if(data is EquippableItemData e)
-                        return (int) e.HardpointType + offset;
+                    if(data is EquippableItemData e) return (int) e.HardpointType + offset;
                     return 0;
                 }));
         columns.Add(("Mass", 1,
@@ -306,19 +303,132 @@ public class TradeMenu : MonoBehaviour
                 },
                 OnDoubleClick = () =>
                 {
-                    if (i is HullData h)
+                    switch (i)
                     {
-                        var ship = new Ship(GameManager.ItemManager, GameManager.Zone, GameManager.ItemManager.CreateInstance(h, .1f, 1) as EquippableItem);
-                        ship.SetParent(GameManager.CurrentShip.Parent);
-                        GameManager.PlayerShips.Add(ship);
+                        case HullData h:
+                            Buy(h);
+                            break;
+                        case CraftedItemData c:
+                            Buy(c,1);
+                            break;
+                        case SimpleCommodityData s:
+                            Buy(s, 1);
+                            break;
                     }
-                    else if(i is CraftedItemData c)
-                        _targetCargo.TryStore(GameManager.ItemManager.CreateInstance(c, .1f, 1));
-                    else if(i is SimpleCommodityData s)
-                        _targetCargo.TryStore(GameManager.ItemManager.CreateInstance(s, 1));
+
                     Populate();
+                },
+                OnRightClick = () =>
+                {
+                    if (!(i is HullData))
+                    {
+                        ContextMenu.Clear();
+                        ContextMenu.AddOption("Buy Quantity",
+                            () =>
+                            {
+                                int quantity = 1;
+                                Dialog.Clear();
+                                Dialog.Title.text = $"Buying {i.Name}";
+                                Dialog.AddField("Quantity", () => quantity, q => quantity = min(q, GameManager.Credits/i.Price));
+                                Dialog.Show(() =>
+                                {
+                                    switch (i)
+                                    {
+                                        case CraftedItemData c:
+                                            Buy(c,quantity);
+                                            break;
+                                        case SimpleCommodityData s:
+                                            Buy(s, quantity);
+                                            break;
+                                    }
+
+                                    Populate();
+                                });
+                            });
+                        ContextMenu.Show();
+                    }
                 }
             }));
+    }
+
+    private void Buy(HullData data)
+    {
+        if (data.Price < GameManager.Credits)
+        {
+            var ship = new Ship(GameManager.ItemManager, GameManager.Zone, GameManager.ItemManager.CreateInstance(data, .1f, 1) as EquippableItem);
+            ship.SetParent(GameManager.CurrentShip.Parent);
+            GameManager.PlayerShips.Add(ship);
+            
+            GameManager.Credits -= data.Price;
+        }
+        else
+        {
+            Dialog.Clear();
+            Dialog.Title.text = "Unable to buy: Insufficient Credits!";
+            Dialog.Show();
+        }
+    }
+
+    private void Buy(CraftedItemData data, int quantity)
+    {
+        for (int i = 0; i < quantity; i++)
+        {
+            if (data.Price < GameManager.Credits)
+            {
+                if (_targetCargo.TryStore(GameManager.ItemManager.CreateInstance(data, .1f, 1)))
+                {
+                    GameManager.Credits -= data.Price;
+                }
+                else
+                {
+                    Dialog.Clear();
+                    Dialog.Title.text = "Unable to buy: Insufficient Cargo Space!";
+                    Dialog.Show();
+                    return;
+                }
+            }
+            else
+            {
+                Dialog.Clear();
+                Dialog.Title.text = "Unable to buy: Insufficient Credits!";
+                Dialog.Show();
+                return;
+            }
+        }
+    }
+
+    private void Buy(SimpleCommodityData data, int quantity)
+    {
+        int lots = quantity / data.MaxStack;
+        int remaining = quantity;
+        for (int i = 0; i < lots; i++)
+        {
+            int q = min(remaining, data.MaxStack);
+            if (q * data.Price < GameManager.Credits)
+            {
+                if (_targetCargo.TryStore(GameManager.ItemManager.CreateInstance(data, q)))
+                {
+                    GameManager.Credits -= q * data.Price;
+                    remaining -= q;
+                }
+                else
+                {
+                    Dialog.Clear();
+                    Dialog.Title.text = "Unable to buy: Insufficient Cargo Space!";
+                    Dialog.Show();
+                    return;
+                }
+            }
+            else
+            {
+                Dialog.Clear();
+                Dialog.Title.text = "Unable to buy: Insufficient Credits!";
+                Dialog.Show();
+                return;
+            }
+
+            
+        }
     }
 
     void Start()

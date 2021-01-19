@@ -65,11 +65,11 @@ public class ContextMenu : MonoBehaviour
         optionButton.Label.text = text;
         optionButton.Button.onClick.AddListener(() =>
         {
-            action();
             if(Parent!=null)
                 Parent.End();
             else
                 End();
+            action();
         });
         optionButton.Hover.OnEnter += data =>
         {

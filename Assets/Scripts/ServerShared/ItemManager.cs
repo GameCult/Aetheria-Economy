@@ -447,6 +447,16 @@ public class ItemManager
         _logger("Attempted to create Simple Commodity instance using missing or incorrect item id");
         return null;
     }
+
+    public ItemInstance Instantiate(ItemInstance item)
+    {
+        var data = GetData(item);
+        if(data is CraftedItemData c)
+            return CreateInstance(c, 0, 1);
+        if (item is SimpleCommodity s)
+            return CreateInstance(data as SimpleCommodityData, s.Quantity);
+        return null;
+    }
     
     public CraftedItemInstance CreateInstance(CraftedItemData item, float qualityMin, float qualityMax)
     {
