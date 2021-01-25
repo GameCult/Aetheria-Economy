@@ -59,7 +59,7 @@ public class ActionGameManager : MonoBehaviour
     private float2 _shipYawPitch;
     private float3 _viewDirection;
     private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] _articulationGroups;
-    private (TargetLock targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] _lockingIndicators;
+    private (LockWeapon targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] _lockingIndicators;
     public List<Ship> PlayerShips { get; } = new List<Ship>();
     public EquippedDockingBay DockingBay { get; private set; }
     
@@ -234,172 +234,92 @@ public class ActionGameManager : MonoBehaviour
         {
             if (CurrentShip.Parent != null) return;
             var item = SchematicDisplay.SchematicItems[SchematicDisplay.SelectedItemIndex];
-            if (CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].Contains(item.Item))
-                CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].Remove(item.Item);
-            else CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].Add(item.Item);
+            if (CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].items.Contains(item.Item))
+                CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].items.Remove(item.Item);
+            else CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].items.Add(item.Item);
+            foreach (var group in item.Item.BehaviorGroups.Values)
+            {
+                var behavior = group.GetBehavior<IActivatedBehavior>();
+                if(behavior != null)
+                {
+                    if (CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].behaviors.Contains(behavior))
+                        CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].behaviors.Remove(behavior);
+                    else CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].behaviors.Add(behavior);
+                }
+            }
             SchematicDisplay.UpdateTriggerGroups();
         };
         
         _input.Player.FireGroup1.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[0])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = true;
-                    behaviors.Trigger?.Pull();
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[0].behaviors) s.Activate();
         };
 
         _input.Player.FireGroup1.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[0])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = false;
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[0].behaviors) s.Deactivate();
         };
 
         _input.Player.FireGroup2.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[1])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = true;
-                    behaviors.Trigger?.Pull();
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[1].behaviors) s.Activate();
         };
 
         _input.Player.FireGroup2.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[1])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = false;
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[1].behaviors) s.Deactivate();
         };
 
         _input.Player.FireGroup3.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[2])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = true;
-                    behaviors.Trigger?.Pull();
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[2].behaviors) s.Activate();
         };
 
         _input.Player.FireGroup3.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[2])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = false;
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[2].behaviors) s.Deactivate();
         };
 
         _input.Player.FireGroup4.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[3])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = true;
-                    behaviors.Trigger?.Pull();
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[3].behaviors) s.Activate();
         };
 
         _input.Player.FireGroup4.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[3])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = false;
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[3].behaviors) s.Deactivate();
         };
 
         _input.Player.FireGroup5.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[4])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = true;
-                    behaviors.Trigger?.Pull();
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[4].behaviors) s.Activate();
         };
 
         _input.Player.FireGroup5.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[4])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = false;
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[4].behaviors) s.Deactivate();
         };
 
         _input.Player.FireGroup6.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[5])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = true;
-                    behaviors.Trigger?.Pull();
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[5].behaviors) s.Activate();
         };
 
         _input.Player.FireGroup6.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var item in CurrentShip.TriggerGroups[5])
-            {
-                foreach (var behaviors in item.BehaviorGroups)
-                {
-                    if (behaviors.Switch != null)
-                        behaviors.Switch.Activated = false;
-                }
-            }
+            foreach (var s in CurrentShip.TriggerGroups[5].behaviors) s.Deactivate();
         };
         
         #endregion
@@ -604,7 +524,7 @@ public class ActionGameManager : MonoBehaviour
             foreach (var group in _articulationGroups)
                 group.crosshair.gameObject.SetActive(true);
 
-            _lockingIndicators = CurrentShip.GetBehaviors<TargetLock>().Select(x =>
+            _lockingIndicators = CurrentShip.GetBehaviors<LockWeapon>().Select(x =>
             {
                 var i = LockIndicator.Instantiate<PlaceUIElementWorldspace>();
                 return (x, i, i.GetComponent<Rotate>());

@@ -54,7 +54,7 @@ public abstract class Entity
         new Dictionary<HardpointData, (float3 position, float3 direction)>();
     public Dictionary<HardpointData, float> HardpointArmor;
     
-    public readonly List<EquippedItem>[] TriggerGroups;
+    public readonly (List<IActivatedBehavior> behaviors, List<EquippedItem> items)[] TriggerGroups;
 
     public List<IPopulationAssignment> PopulationAssignments = new List<IPopulationAssignment>();
 
@@ -107,9 +107,9 @@ public abstract class Entity
         Hull = hull;
         Name = hull.Name;
         MapEntity();
-        TriggerGroups = new List<EquippedItem>[itemManager.GameplaySettings.TriggerGroupCount];
+        TriggerGroups = new (List<IActivatedBehavior> triggers, List<EquippedItem> items)[itemManager.GameplaySettings.TriggerGroupCount];
         for(int i=0; i<itemManager.GameplaySettings.TriggerGroupCount; i++)
-            TriggerGroups[i] = new List<EquippedItem>();
+            TriggerGroups[i] = (new List<IActivatedBehavior>(), new List<EquippedItem>());
 
         ItemDestroyed = ItemDamage.Where(x => x.item.EquippableItem.Durability < .01f).Select(x=>x.item);
         HullArmorDepleted = ArmorDamage.Where(x => Armor[x.pos.x, x.pos.y] < .01f).Select(x => x.pos);
@@ -490,29 +490,53 @@ public abstract class Entity
                     yield return b;
     }
 
-    public Switch GetSwitch<T>() where T : class, IBehavior
-    {
-        foreach (var equippedItem in Equipment)
-            foreach (var group in equippedItem.BehaviorGroups)
-                foreach(var behavior in group.Behaviors)
-                    if (behavior is T)
-                        return group.Switch;
-        return null;
-    }
-
-    public Trigger GetTrigger<T>() where T : class, IBehavior
-    {
-        foreach (var equippedItem in Equipment)
-            foreach (var group in equippedItem.BehaviorGroups)
-                foreach(var behavior in group.Behaviors)
-                    if (behavior is T)
-                        return group.Trigger;
-        return null;
-    }
+    // public IEnumerable<(T t, Switch s)> GetSwitch<T>() where T : class, IBehavior
+    // {
+    //     foreach (var equippedItem in Equipment)
+    //         foreach (var group in equippedItem.BehaviorGroups.Values)
+    //             foreach(var behavior in group.Behaviors)
+    //                 if (behavior is T t)
+    //                 {
+    //                     var s = group.GetExposed<Switch>();
+    //                     if (s != null) yield return (t, s);
+    //                 }
+    // }
+    //
+    // public IEnumerable<(T behavior, Trigger trigger)> GetTrigger<T>() where T : class, IBehavior
+    // {
+    //     foreach (var equippedItem in Equipment)
+    //         foreach (var group in equippedItem.BehaviorGroups.Values)
+    //             foreach(var behavior in group.Behaviors)
+    //                 if (behavior is T t)
+    //                 {
+    //                     var s = group.GetExposed<Trigger>();
+    //                     if (s != null) yield return (t, s);
+    //                 }
+    // }
+    //
+    // public IEnumerable<(T behavior, Axis axis)> GetAxis<T>() where T : class, IBehavior
+    // {
+    //     foreach (var equippedItem in Equipment)
+    //         foreach (var group in equippedItem.BehaviorGroups.Values)
+    //             foreach(var behavior in group.Behaviors)
+    //                 if (behavior is T t)
+    //                 {
+    //                     var s = group.GetExposed<Axis>();
+    //                     if (s != null) yield return (t, s);
+    //                 }
+    // }
 
     public virtual void Update(float delta)
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
+
+        foreach (var v in VisibilitySources.Keys.ToArray())
+        {
+            VisibilitySources[v] *= max(1 - ItemManager.GameplaySettings.VisibilityDecay * delta, 0);
+
+            if (VisibilitySources[v] < 0.01f) VisibilitySources.Remove(v);
+        }
+        
         //float[,] newTemp = new float[hullData.Shape.Width,hullData.Shape.Height];
         var radiation = 0f;
         foreach (var v in hullData.Shape.Coordinates)
@@ -632,7 +656,7 @@ public class EquippedItem
     
     public IBehavior[] Behaviors;
     
-    public BehaviorGroup[] BehaviorGroups;
+    public Dictionary<int, BehaviorGroup> BehaviorGroups;
     
     public float Conductivity { get; }
     
@@ -670,17 +694,16 @@ public class EquippedItem
         Behaviors = _data.Behaviors
             .Select(bd => bd.CreateInstance(itemManager, entity, this))
             .ToArray();
-        
+
         BehaviorGroups = Behaviors
             .GroupBy(b => b.Data.Group)
-            .OrderBy(g=>g.Key)
-            .Select(g=> new BehaviorGroup {
+            .OrderBy(g => g.Key)
+            .ToDictionary(g => g.Key, g => new BehaviorGroup
+            {
                 Behaviors = g.ToArray(),
-                //Axis = (IAnalogBehavior) g.FirstOrDefault(b=>b is IAnalogBehavior),
-                Switch = (Switch) g.FirstOrDefault(b=>b is Switch),
-                Trigger = (Trigger) g.FirstOrDefault(b=>b is Trigger)
-            })
-            .ToArray();
+                // Switch = (Switch) g.FirstOrDefault(b => b is Switch),
+                // Trigger = (Trigger) g.FirstOrDefault(b => b is Trigger)
+            });
 
         foreach (var behavior in Behaviors)
         {
@@ -710,7 +733,7 @@ public class EquippedItem
 
         if (Online)
         {
-            foreach (var group in BehaviorGroups)
+            foreach (var group in BehaviorGroups.Values)
             {
                 foreach (var behavior in group.Behaviors)
                 {
@@ -1016,7 +1039,28 @@ public class EquippedDockingBay : EquippedCargoBay
 public class BehaviorGroup
 {
     public IBehavior[] Behaviors;
-    public Trigger Trigger;
-    public Switch Switch;
+
+    public T GetBehavior<T>() where T : class, IBehavior
+    {
+        foreach (var b in Behaviors)
+        {
+            if (!(b is T s)) continue;
+            return s;
+        }
+
+        return null;
+    }
+    
+    public T GetExposed<T>() where T : class, IBehavior, IInteractiveBehavior
+    {
+        foreach (var b in Behaviors)
+        {
+            if (!(b is T s) || !((IInteractiveBehavior)b).Exposed) continue;
+            return s;
+        }
+
+        return null;
+    }
+    
     //public IAnalogBehavior Axis;
 }

@@ -157,7 +157,6 @@
      <Compile Include="Assets\Scripts\ServerShared\MathResolver.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Monday.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Corporations.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Hitscan.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ItemInstance.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Desc.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\TurretController.cs" />
@@ -284,7 +283,6 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\Attributes\PrimaryIndexAttribute.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\EpochTime.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPacketPool.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Turning.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetSocket.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\FirstSubQueryVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Ceil.cs" />
@@ -315,7 +313,6 @@
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\StatModifier.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Friday.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Nth.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\TargetLock.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\IPoolingStrategy.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlClientError.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\EnergyDraw.cs" />
@@ -519,6 +516,11 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ParticleEffect.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\InstantWeapon.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ChargedWeapon.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\AutoWeapon.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\LockWeapon.cs" />
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Economy.Shared.Unity.asmdef" />
  <Reference Include="System.Threading.Tasks.Extensions">

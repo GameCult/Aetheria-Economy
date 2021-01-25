@@ -12,7 +12,7 @@ public class PlaceUIElementWorldspace : MonoBehaviour
 {
     public float NoiseAmplitude;
     public float NoiseFrequency;
-    public RectTransform CanvasRectTransform;
+    public Canvas Canvas;
     public float BorderPixels = 10;
 
     public Vector3 Target;
@@ -20,12 +20,14 @@ public class PlaceUIElementWorldspace : MonoBehaviour
     private RectTransform _rectTransform;
     private Transform _cameraTransform;
     private float _noiseOffset;
+    private RectTransform _canvasRectTransform;
 
     void Start()
     {
         // Get the rect transform
         _rectTransform = GetComponent<RectTransform>();
         _cameraTransform = Camera.main.transform;
+        _canvasRectTransform = Canvas.GetComponent<RectTransform>();
     }
 
     private void OnEnable()
@@ -38,15 +40,12 @@ public class PlaceUIElementWorldspace : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        if (Target == null)
-            return;
-
         _noiseOffset += Time.deltaTime * NoiseFrequency;
 
         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, Target);
         screenPoint *= Mathf.Sign(Vector3.Dot(_cameraTransform.forward, Target - _cameraTransform.position));
         screenPoint += new Vector2(noise(_noiseOffset), noise(10 + _noiseOffset)) * NoiseAmplitude;
         screenPoint = new Vector2(Mathf.Clamp(screenPoint.x, BorderPixels, Screen.width - BorderPixels),Mathf.Clamp(screenPoint.y, BorderPixels, Screen.height - BorderPixels));
-        _rectTransform.anchoredPosition = screenPoint - CanvasRectTransform.sizeDelta / 2f;
+        _rectTransform.anchoredPosition = screenPoint / Canvas.scaleFactor - _canvasRectTransform.sizeDelta / 2f;
     }
 }

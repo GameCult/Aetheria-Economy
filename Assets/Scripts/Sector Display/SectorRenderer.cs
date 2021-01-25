@@ -62,8 +62,8 @@ public class SectorRenderer : MonoBehaviour
     private Dictionary<Guid, AsteroidBeltUI> _beltObjects = new Dictionary<Guid, AsteroidBeltUI>();
     private Dictionary<Guid, InstancedMesh[]> _beltMeshes = new Dictionary<Guid, InstancedMesh[]>();
     private Dictionary<Guid, Matrix4x4[][]> _beltMatrices = new Dictionary<Guid, Matrix4x4[][]>();
-    private Dictionary<ProjectileWeaponData, ProjectileManager> _projectileManagers = new Dictionary<ProjectileWeaponData, ProjectileManager>();
-    private Dictionary<LauncherData, GuidedProjectileManager> _guidedProjectileManagers = new Dictionary<LauncherData, GuidedProjectileManager>();
+    private Dictionary<InstantWeaponData, InstantWeaponEffectManager> _instantWeaponManagers = new Dictionary<InstantWeaponData, InstantWeaponEffectManager>();
+    private Dictionary<ConstantWeaponData, ConstantWeaponEffectManager> _constantWeaponManagers = new Dictionary<ConstantWeaponData, ConstantWeaponEffectManager>();
     private Zone _zone;
     private float _viewDistance;
     private float _maxDepth;
@@ -179,19 +179,18 @@ public class SectorRenderer : MonoBehaviour
             instance.Transform = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab), ZoneRoot).transform;
             instance.Prefab = instance.Transform.GetComponent<EntityPrefab>();
             var shipInstance = (ShipInstance) instance;
-            shipInstance.Thrusters = ship.GetBehaviors<Thruster>().ToArray();
-            shipInstance.ThrusterParticles = shipInstance.Thrusters
-                .Select(x =>
+            shipInstance.Particles = ship.GetBehaviors<Thruster>()
+                .Select<Thruster, (Thruster effect, ParticleSystem system, float baseEmission)>(x =>
                 {
-                    var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(((ThrusterData) x.Data).ParticlesPrefab), shipInstance.Transform, false);
+                    var effectData = (ThrusterData) x.Data;
+                    var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(effectData.ParticlesPrefab), shipInstance.Transform, false);
                     var particlesShape = particles.shape;
                     particlesShape.meshRenderer = shipInstance.Prefab.ThrusterHardpoints
                         .FirstOrDefault(t => t.name == x.Entity.Hardpoints[x.Item.Position.x, x.Item.Position.y].Transform)
                         ?.Emitter;
-                    return particles;
+                    return (x, particles, particles.emission.rateOverTimeMultiplier);
                 })
                 .ToArray();
-            shipInstance.ThrusterBaseEmission = shipInstance.ThrusterParticles.Select(x => x.emission.rateOverTimeMultiplier).ToArray();
         }
         else
         {
@@ -208,35 +207,19 @@ public class SectorRenderer : MonoBehaviour
             {
                 if (behavior is InstantWeapon instantWeapon)
                 {
-                    if (behavior.Data is ProjectileWeaponData projectileWeaponData)
+                    var data = (InstantWeaponData) instantWeapon.Data;
+                    if (!_instantWeaponManagers.ContainsKey(data))
                     {
-                        if (!_projectileManagers.ContainsKey(projectileWeaponData))
+                        var managerPrefab = UnityHelpers.LoadAsset<InstantWeaponEffectManager>(data.EffectPrefab);
+                        if(managerPrefab)
                         {
-                            var managerPrefab = UnityHelpers.LoadAsset<ProjectileManager>(projectileWeaponData.EffectPrefab);
-                            if(managerPrefab)
-                            {
-                                _projectileManagers.Add(projectileWeaponData, Instantiate(managerPrefab, EffectManagerParent));
-                            }
-                            else Debug.LogError($"No ProjectileManager prefab found at path {projectileWeaponData.EffectPrefab}");
+                            _instantWeaponManagers.Add(data, Instantiate(managerPrefab, EffectManagerParent));
                         }
-
-                        instantWeapon.OnFire += () => _projectileManagers[projectileWeaponData].Launch(projectileWeaponData, item, instance);
+                        else Debug.LogError($"No InstantWeaponEffectManager prefab found at path {data.EffectPrefab}");
                     }
-                    else if (behavior.Data is LauncherData launcherData)
-                    {
-                        if (!_guidedProjectileManagers.ContainsKey(launcherData))
-                        {
-                            var managerPrefab = UnityHelpers.LoadAsset<GuidedProjectileManager>(launcherData.EffectPrefab);
-                            if(managerPrefab)
-                            {
-                                _guidedProjectileManagers.Add(launcherData, Instantiate(managerPrefab, EffectManagerParent));
-                            }
-                            else Debug.LogError($"No ProjectileManager prefab found at path {launcherData.EffectPrefab}");
-                        }
 
-                        instantWeapon.OnFire += () =>
-                            _guidedProjectileManagers[launcherData].Launch(launcherData, item, instance, EntityInstances[entity.Target.Value]);
-                    }
+                    instantWeapon.OnFire += () => 
+                        _instantWeaponManagers[data].Fire(data, item, instance, entity.Target.Value != null ? EntityInstances[entity.Target.Value] : null);
                 }
             }
         }
@@ -605,12 +588,12 @@ public class SectorRenderer : MonoBehaviour
             }
             if(entity.Value is ShipInstance shipInstance)
             {
-                for (int i = 0; i < shipInstance.Thrusters.Length; i++)
+                foreach (var (effect, system, baseEmission) in shipInstance.Particles)
                 {
-                    var emissionModule = shipInstance.ThrusterParticles[i].emission;
-                    var item = shipInstance.Thrusters[i].Item.EquippableItem;
+                    var emissionModule = system.emission;
+                    var item = effect.Item.EquippableItem;
                     var data = shipInstance.Entity.ItemManager.GetData(item);
-                    emissionModule.rateOverTimeMultiplier = shipInstance.ThrusterBaseEmission[i] * shipInstance.Thrusters[i].Axis * (item.Durability / data.Durability);
+                    emissionModule.rateOverTimeMultiplier = baseEmission * effect.Axis * (item.Durability / data.Durability);
                 }
 
                 entity.Value.Transform.rotation = ((Ship) entity.Key).Rotation;
@@ -672,9 +655,7 @@ public class EntityInstance
 
 public class ShipInstance : EntityInstance
 {
-    public ParticleSystem[] ThrusterParticles;
-    public Thruster[] Thrusters;
-    public float[] ThrusterBaseEmission;
+    public (Thruster effect, ParticleSystem system, float baseEmission)[] Particles;
 }
 
 [Serializable]

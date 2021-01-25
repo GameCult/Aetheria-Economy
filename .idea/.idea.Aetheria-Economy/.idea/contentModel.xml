@@ -210,9 +210,7 @@
           </e>
         </e>
         <e p="Scripts" t="Include">
-          <e p="ActionGameManager.cs" t="Include" />
           <e p="AetheriaInput.cs" t="Include" />
-          <e p="ArticulationPoint.cs" t="Include" />
           <e p="CameraPerlinOrbit.cs" t="Include" />
           <e p="CultClient.cs" t="Include" />
           <e p="Editor" t="Include">
@@ -224,19 +222,31 @@
             <e p="SerializerTestWindow.cs" t="Include" />
             <e p="SpriteProcessor.cs" t="Include" />
           </e>
-          <e p="EntityPrefab.cs" t="Include" />
           <e p="EventLog.cs" t="Include" />
           <e p="FilterTest.cs" t="Include" />
           <e p="FitToCamera.cs" t="Include" />
           <e p="Galaxy.cs" t="Include" />
+          <e p="Gameplay" t="Include">
+            <e p="ActionGameManager.cs" t="Include" />
+            <e p="ArticulationPoint.cs" t="Include" />
+            <e p="EntityPrefab.cs" t="Include" />
+            <e p="HullCollider.cs" t="Include" />
+            <e p="ThrusterHardpoint.cs" t="Include" />
+            <e p="WeaponHardpoint.cs" t="Include" />
+            <e p="Weapons" t="Include">
+              <e p="ConstantWeaponEffectManager.cs" t="Include" />
+              <e p="GuidedProjectile.cs" t="Include" />
+              <e p="GuidedProjectileManager.cs" t="Include" />
+              <e p="InstantWeaponEffectManager.cs" t="Include" />
+              <e p="Laser.cs" t="Include" />
+              <e p="LaserManager.cs" t="Include" />
+              <e p="Projectile.cs" t="Include" />
+              <e p="ProjectileManager.cs" t="Include" />
+            </e>
+          </e>
           <e p="GameSettings.cs" t="Include" />
           <e p="Gravity.cs" t="Include" />
-          <e p="GuidedProjectile.cs" t="Include" />
-          <e p="GuidedProjectileManager.cs" t="Include" />
-          <e p="HullCollider.cs" t="Include" />
           <e p="InitialSettings.cs" t="Include" />
-          <e p="InventoryCell.cs" t="Include" />
-          <e p="InventoryMenu.cs" t="Include" />
           <e p="MapMenuInput.cs" t="Include" />
           <e p="MapRenderer.cs" t="Include" />
           <e p="MarkovNameGenerator.cs" t="Include" />
@@ -1420,15 +1430,10 @@
             </e>
             <e p="XKCDColors.cs" t="Include" />
           </e>
-          <e p="Projectile.cs" t="Include" />
-          <e p="ProjectileManager.cs" t="Include" />
           <e p="Prototype.cs" t="Include" />
           <e p="PrototypeParticleReturn.cs" t="Include" />
           <e p="RethinkConnection.cs" t="Include" />
           <e p="Rotate.cs" t="Include" />
-          <e p="SchematicDisplay.cs" t="Include" />
-          <e p="SchematicListElement.cs" t="Include" />
-          <e p="SchematicTriggerGroupElement.cs" t="Include" />
           <e p="Sector Display" t="Include">
             <e p="BlueNoiseProvider.cs" t="Include" />
             <e p="CopyTransform.cs" t="Include" />
@@ -1459,8 +1464,10 @@
             </e>
             <e p="Attributes.cs" t="Include" />
             <e p="Behaviors" t="Include">
+              <e p="AutoWeapon.cs" t="Include" />
               <e p="Behaviors.cs" t="Include" />
               <e p="Capacitor.cs" t="Include" />
+              <e p="ChargedWeapon.cs" t="Include" />
               <e p="Cockpit.cs" t="Include" />
               <e p="ConstantWeapon.cs" t="Include" />
               <e p="Controller.cs" t="Include" />
@@ -1470,11 +1477,13 @@
               <e p="HaulingController.cs" t="Include" />
               <e p="Heat.cs" t="Include" />
               <e p="Heatsink.cs" t="Include" />
-              <e p="Hitscan.cs" t="Include" />
+              <e p="InstantWeapon.cs" t="Include" />
               <e p="ItemUsage.cs" t="Include" />
               <e p="Launcher.cs" t="Include" />
+              <e p="LockWeapon.cs" t="Include" />
               <e p="MiningController.cs" t="Include" />
               <e p="MiningTool.cs" t="Include" />
+              <e p="ParticleEffect.cs" t="Include" />
               <e p="PatrolController.cs" t="Include" />
               <e p="ProjectileWeapon.cs" t="Include" />
               <e p="Radiance.cs" t="Include" />
@@ -1487,12 +1496,10 @@
               <e p="StatModifier.cs" t="Include" />
               <e p="SurveyController.cs" t="Include" />
               <e p="Switch.cs" t="Include" />
-              <e p="TargetLock.cs" t="Include" />
               <e p="Thermotoggle.cs" t="Include" />
               <e p="Thruster.cs" t="Include" />
               <e p="TowingController.cs" t="Include" />
               <e p="Trigger.cs" t="Include" />
-              <e p="Turning.cs" t="Include" />
               <e p="TurretController.cs" t="Include" />
               <e p="VelocityConversion.cs" t="Include" />
               <e p="VelocityLimit.cs" t="Include" />
@@ -1971,12 +1978,7 @@
             <e p="ZoneData.cs" t="Include" />
             <e p="ZoneGenerator.cs" t="Include" />
           </e>
-          <e p="SizeFilter.cs" t="Include" />
-          <e p="Spreadsheet.cs" t="Include" />
-          <e p="SpreadsheetColumnHeader.cs" t="Include" />
-          <e p="SpreadsheetRow.cs" t="Include" />
           <e p="TechTreeMsagl.cs" t="Include" />
-          <e p="ThrusterHardpoint.cs" t="Include" />
           <e p="TradeMenu.cs" t="Include" />
           <e p="UI" t="Include">
             <e p="AttributeProperty.cs" t="Include" />
@@ -2000,6 +2002,8 @@
             <e p="Icons.cs" t="Include" />
             <e p="IncrementField.cs" t="Include" />
             <e p="InputField.cs" t="Include" />
+            <e p="InventoryCell.cs" t="Include" />
+            <e p="InventoryMenu.cs" t="Include" />
             <e p="InventoryPanel.cs" t="Include" />
             <e p="LoginScreen.cs" t="Include" />
             <e p="MapViewDragHandler.cs" t="Include" />
@@ -2012,6 +2016,13 @@
             <e p="PropertyButton.cs" t="Include" />
             <e p="PropertyLabel.cs" t="Include" />
             <e p="RangedFloatField.cs" t="Include" />
+            <e p="SchematicDisplay.cs" t="Include" />
+            <e p="SchematicListElement.cs" t="Include" />
+            <e p="SchematicTriggerGroupElement.cs" t="Include" />
+            <e p="SizeFilter.cs" t="Include" />
+            <e p="Spreadsheet.cs" t="Include" />
+            <e p="SpreadsheetColumnHeader.cs" t="Include" />
+            <e p="SpreadsheetRow.cs" t="Include" />
             <e p="TabActivator.cs" t="Include" />
             <e p="TabButton.cs" t="Include" />
             <e p="TabGroup.cs" t="Include" />
@@ -2025,7 +2036,6 @@
           <e p="UnityExtensions.cs" t="Include" />
           <e p="UnityFormatters.cs" t="Include" />
           <e p="UnityHelpers.cs" t="Include" />
-          <e p="WeaponHardpoint.cs" t="Include" />
         </e>
         <e p="Shaders" t="Include">
           <e p="AdditiveUI.shader" t="Include" />

@@ -64,10 +64,10 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\IntEdge.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\Layering\LongestPathLayering.cs" />
      <Compile Include="Assets\Scripts\UI\FlatButton.cs" />
-     <Compile Include="Assets\Scripts\EntityPrefab.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\EntityPrefab.cs" />
      <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Primitives\UILineRendererList.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\ActiveDiagonalComparerWithRay.cs" />
-     <Compile Include="Assets\Scripts\SchematicDisplay.cs" />
+     <Compile Include="Assets\Scripts\UI\SchematicDisplay.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\MultiEdgeRouter.cs" />
      <Compile Include="Assets\Scripts\RethinkConnection.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\VisibilityEdge.cs" />
@@ -77,7 +77,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\CurvatureDerivative.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\OverlapRemoval\OverlapRemovalClusterScanLine.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\MaxIterationMethod.cs" />
-     <Compile Include="Assets\Scripts\GuidedProjectile.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\GuidedProjectile.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\NodePositionsAdjuster.cs" />
      <Compile Include="Assets\Scripts\Galaxy.cs" />
      <Compile Include="Assets\Scripts\UI\PropertyLabel.cs" />
@@ -88,7 +88,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgLayoutSettings.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\Diagonal.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\RTree\IntervalRTree.cs" />
-     <Compile Include="Assets\Scripts\InventoryCell.cs" />
+     <Compile Include="Assets\Scripts\UI\InventoryCell.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\IMetroMapOrderingAlgorithm.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\LabelPlacementResult.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\GeometryObject.cs" />
@@ -116,7 +116,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Incremental\IConstraint.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\Constants.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\Persistence\ClusterWithChildLists.cs" />
-     <Compile Include="Assets\Scripts\Projectile.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\Projectile.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\ConeSpannerForPortLocations.cs" />
      <Compile Include="Assets\Scripts\Sector Display\GradientMapper.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\SingleSourceSingleTargetShortestPathOnVisibilityGraph.cs" />
@@ -197,10 +197,10 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\LabelFixture.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\RectanglePacking\OptimalRectanglePacking.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\EdgeRestoreData.cs" />
-     <Compile Include="Assets\Scripts\ArticulationPoint.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\ArticulationPoint.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\CloseVertexEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\ConstrainedDelaunayTriangulation\PerimeterEdge.cs" />
-     <Compile Include="Assets\Scripts\SchematicListElement.cs" />
+     <Compile Include="Assets\Scripts\UI\SchematicListElement.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\IncrementalDragger.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\BinaryHeapPriorityQueue.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgNodeCollection.cs" />
@@ -270,7 +270,7 @@
      <Compile Include="Assets\Scripts\Sector Display\CopyTransform.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Site.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\StationEdgeInfo.cs" />
-     <Compile Include="Assets\Scripts\InventoryMenu.cs" />
+     <Compile Include="Assets\Scripts\UI\InventoryMenu.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\RightVertexEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\SegmentBase.cs" />
      <Compile Include="Assets\Scripts\UI\ClickRaycaster.cs" />
@@ -315,7 +315,7 @@
      <Compile Include="Assets\Scripts\UI\MapViewDragHandler.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\Polyline.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\HighBendVertexEvent.cs" />
-     <Compile Include="Assets\Scripts\SizeFilter.cs" />
+     <Compile Include="Assets\Scripts\UI\SizeFilter.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\SolvingMethod.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Core\DrawerAttributes\ResizableTextAreaAttribute.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\CubicBezierSegment.cs" />
@@ -338,7 +338,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\Label.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\ConstrainedDelaunayTriangulation\CdtFront.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\LayoutEditing\WeightedEdge.cs" />
-     <Compile Include="Assets\Scripts\WeaponHardpoint.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\WeaponHardpoint.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Miscellaneous\Phylo\PhyloTree.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\PointAndCrossingsList.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\RootFinder.cs" />
@@ -407,7 +407,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\VertexEnumerators.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Core\DrawerAttributes\ShowNativePropertyAttribute.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\NetworkEdge.cs" />
-     <Compile Include="Assets\Scripts\ActionGameManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\ActionGameManager.cs" />
      <Compile Include="Assets\Scripts\UI\TabActivator.cs" />
      <Compile Include="Assets\Scripts\UI\AttributeProperty.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\VertexEvent.cs" />
@@ -462,7 +462,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Initial\InitialLayoutHelpers.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\MinEnclosingDisc\Disc.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\ConvexHull\ConvexFace.cs" />
-     <Compile Include="Assets\Scripts\SpreadsheetRow.cs" />
+     <Compile Include="Assets\Scripts\UI\SpreadsheetRow.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\Persistence\CurveStream.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\ConstrainedDelaunayTriangulation\CdtSite.cs" />
      <Compile Include="Assets\Scripts\UI\DropdownMenu.cs" />
@@ -513,7 +513,7 @@
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\ConvexHull\MathHelper.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\PointAndCrossings.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\GraphConnectedComponents.cs" />
-     <Compile Include="Assets\Scripts\SchematicTriggerGroupElement.cs" />
+     <Compile Include="Assets\Scripts\UI\SchematicTriggerGroupElement.cs" />
      <Compile Include="Assets\Scripts\UI\ConsoleView.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgSkeletonLevel.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\LargeGraphLayout\LgInteractor.cs" />
@@ -549,7 +549,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\IOverlapRemoval.cs" />
      <Compile Include="Assets\Scripts\NIH\MIConvexHull\Vertex2.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\MST\MstLineSweeper.cs" />
-     <Compile Include="Assets\Scripts\GuidedProjectileManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\GuidedProjectileManager.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\HorizontalConstraintsForSugiyama.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\LayerInserter.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\ObstacleSideComparer.cs" />
@@ -572,7 +572,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\GeneralMetroMapOrdering.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\ObstacleTree.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\ProjectionSolver\ISolverShell.cs" />
-     <Compile Include="Assets\Scripts\SpreadsheetColumnHeader.cs" />
+     <Compile Include="Assets\Scripts\UI\SpreadsheetColumnHeader.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Visibility\PointVisibilityCalculator.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\OverlapRemoval\OverlapRemovalParameters.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\RBTree\RBNode.cs" />
@@ -647,13 +647,13 @@
      <Compile Include="Assets\Scripts\UI\ConfirmationDialog.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\GenericBinaryHeapPriorityQueueWithTimestamp.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\RelaxedPolylinePoint.cs" />
-     <Compile Include="Assets\Scripts\ThrusterHardpoint.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\ThrusterHardpoint.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\Ordering\AdjacentSwaps.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\ExampleStressMajorization.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\RoundedRect.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\ConeSpanner\LowestVertexEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\ShowDebugCurvesEnumeration.cs" />
-     <Compile Include="Assets\Scripts\ProjectileManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ProjectileManager.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\DebugHelpers\ShowDebugCurves.cs" />
      <Compile Include="Assets\Scripts\UI\TabButton.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Layout\EdgeCollection.cs" />
@@ -706,10 +706,10 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\NodeKind.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\SsstRectilinearPath.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\XCoordsWithAlignment.cs" />
-     <Compile Include="Assets\Scripts\Spreadsheet.cs" />
+     <Compile Include="Assets\Scripts\UI\Spreadsheet.cs" />
      <Compile Include="Assets\Scripts\CameraPerlinOrbit.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\GraphmapsWithMesh\LocalModifications.cs" />
-     <Compile Include="Assets\Scripts\HullCollider.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\HullCollider.cs" />
      <Compile Include="Assets\Scripts\NIH\NaughtyAttributes\Scripts\Core\DrawerAttributes\DrawerAttribute.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\Nudging\AxisEdgeLowPointEvent.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Layered\NetworkSimplexForGeneralGraph.cs" />
@@ -719,6 +719,10 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\MinEnclosingDisc\MinimumEnclosingDisc.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\DataStructures\BinaryHeapWithComparer.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Direction.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\LaserManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\Laser.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\InstantWeaponEffectManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantWeaponEffectManager.cs" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIAdditive.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />

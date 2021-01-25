@@ -69,7 +69,9 @@ public class Thruster : IAnalogBehavior
         Entity.Velocity -= Entity.Direction.Rotate(Item.EquippableItem.Rotation) * _input * Thrust / Entity.Mass * delta;
         Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque * Thrust * Context.GameplaySettings.TorqueMultiplier / Entity.Mass * delta));
         Item.AddHeat(_input * Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta);
-        Entity.VisibilitySources[this] = _input * Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
+        var vis = _input * Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
+        if(!Entity.VisibilitySources.ContainsKey(this) || vis > Entity.VisibilitySources[this])
+            Entity.VisibilitySources[this] = vis;
         return true;
     }
 }

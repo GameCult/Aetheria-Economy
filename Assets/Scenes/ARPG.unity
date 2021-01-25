@@ -1586,7 +1586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseAmplitude: 0
   NoiseFrequency: 0
-  CanvasRectTransform: {fileID: 761574181}
+  Canvas: {fileID: 0}
   BorderPixels: 10
   Target: {x: 0, y: 0, z: 0}
 --- !u!1 &166261016
@@ -9668,7 +9668,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseAmplitude: 0
   NoiseFrequency: 0
-  CanvasRectTransform: {fileID: 761574181}
+  Canvas: {fileID: 761574180}
   BorderPixels: 10
   Target: {x: 0, y: 0, z: 0}
 --- !u!114 &776416426
@@ -14877,7 +14877,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseAmplitude: 0
   NoiseFrequency: 0
-  CanvasRectTransform: {fileID: 761574181}
+  Canvas: {fileID: 761574180}
   BorderPixels: 10
   Target: {x: 0, y: 0, z: 0}
 --- !u!114 &1284802340
@@ -17253,12 +17253,12 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -17273,12 +17273,12 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 55.675
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1713457305180270767, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -17608,7 +17608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseAmplitude: 0
   NoiseFrequency: 0
-  CanvasRectTransform: {fileID: 761574181}
+  Canvas: {fileID: 761574180}
   BorderPixels: 10
   Target: {x: 0, y: 0, z: 0}
 --- !u!1 &1558520821
@@ -18109,12 +18109,12 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -18129,12 +18129,12 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 60.98
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1713457305180270767, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -18501,7 +18501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseAmplitude: 0
   NoiseFrequency: 0
-  CanvasRectTransform: {fileID: 761574181}
+  Canvas: {fileID: 761574180}
   BorderPixels: 10
   Target: {x: 0, y: 0, z: 0}
 --- !u!114 &1631662980
@@ -19785,7 +19785,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseAmplitude: 0
   NoiseFrequency: 0
-  CanvasRectTransform: {fileID: 761574181}
+  Canvas: {fileID: 761574180}
   BorderPixels: 10
   Target: {x: 0, y: 0, z: 0}
 --- !u!114 &1771741751
@@ -20663,7 +20663,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseAmplitude: 0
   NoiseFrequency: 0
-  CanvasRectTransform: {fileID: 761574181}
+  Canvas: {fileID: 761574180}
   BorderPixels: 10
   Target: {x: 0, y: 0, z: 0}
 --- !u!114 &1876420642
@@ -20888,7 +20888,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NoiseAmplitude: 0
   NoiseFrequency: 0
-  CanvasRectTransform: {fileID: 761574181}
+  Canvas: {fileID: 761574180}
   BorderPixels: 10
   Target: {x: 0, y: 0, z: 0}
 --- !u!114 &1914685584

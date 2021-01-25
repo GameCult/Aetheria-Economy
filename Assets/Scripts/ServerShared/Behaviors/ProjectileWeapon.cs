@@ -9,17 +9,20 @@ using Newtonsoft.Json;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ProjectileWeaponData : InstantWeaponData
 {
-    [InspectableField, JsonProperty("spread"), Key(9), RuntimeInspectable]  
+    [InspectableField, JsonProperty("spread"), Key(16), RuntimeInspectable]  
     public PerformanceStat Spread = new PerformanceStat();
 
-    [InspectableField, JsonProperty("bulletInherit"), Key(10)]  
+    [InspectableField, JsonProperty("bulletInherit"), Key(17)]  
     public float Inherit;
 
-    [InspectableField, JsonProperty("bulletVelocity"), Key(11), RuntimeInspectable]  
+    [InspectableField, JsonProperty("bulletVelocity"), Key(18), RuntimeInspectable]  
     public PerformanceStat Velocity = new PerformanceStat();
+
+    [InspectableField, JsonProperty("auto"), Key(19)]  
+    public bool Auto;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
-        return new InstantWeapon(context, this, entity, item);
+        return Auto ? new AutoWeapon(context, this, entity, item) : new InstantWeapon(context, this, entity, item);
     }
 }

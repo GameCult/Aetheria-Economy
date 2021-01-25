@@ -1,4 +1,6 @@
 using Unity.Mathematics;
+using static Unity.Mathematics.math;
+using float2 = Unity.Mathematics.float2;
 
 namespace Unity.Tiny
 {
@@ -12,23 +14,25 @@ namespace Unity.Tiny
         /// </summary>
         public static Rect Default { get; } = new Rect()
         {
-            x = 0f,
-            y = 0f,
-            width = 1f,
-            height = 1f
+            position = float2.zero,
+            size = float2(1,1)
         };
 
         public Rect(float x, float y, float width, float height)
         {
-            this.x = x;
-            this.y = y;
-            this.width = width;
-            this.height = height;
+            position = float2(x, y);
+            size = float2(width, height);
+        }
+
+        public Rect(float2 position, float2 size)
+        {
+            this.position = position;
+            this.size = size;
         }
 
         public bool IsEmpty()
         {
-            return !(width > 0.0f && height > 0.0f);
+            return !(size.x > 0.0f && size.y > 0.0f);
         }
 
         /// <summary>
@@ -41,7 +45,7 @@ namespace Unity.Tiny
         /// </remarks>
         public bool Contains(float2 pos)
         {
-            return pos.x >= x && pos.y >= y && pos.x < x + width && pos.y < y + height;
+            return pos.x >= position.x && pos.y >= position.y && pos.x < position.x + size.x && pos.y < position.y + size.y;
         }
 
         /// <summary>
@@ -51,57 +55,46 @@ namespace Unity.Tiny
         {
             return new Rect
             {
-                x = x + relative.x * width,
-                y = y + relative.y * height,
-                width = width * relative.width,
-                height = height * relative.height
+                position = float2(position.x + relative.position.x * size.x,position.y + relative.position.y * size.y) ,
+                size = float2(size.x * relative.size.x, size.y * relative.size.y)
             };
+        }
+        
+        public bool IntersectsWith(Rect r2)
+        {
+            return r2.position.x + r2.size.x >= position.x && r2.position.x <= position.x + size.x && 
+                   r2.position.y + r2.size.y >= position.y && r2.position.y <= position.y + size.y;
         }
 
         public void Clamp(Rect r)
         {
-            float x2 = x + width;
-            float y2 = y + height;
-            float rx2 = r.x + r.width;
-            float ry2 = r.y + r.height;
-            if (x < r.x) x = r.x;
+            float x2 = position.x + size.x;
+            float y2 = position.y + size.y;
+            float rx2 = r.position.x + r.size.x;
+            float ry2 = r.position.y + r.size.y;
+            if (position.x < r.position.x) position.x = r.position.x;
             if (x2 > rx2) x2 = rx2;
-            if (y < r.y) y = r.y;
+            if (position.y < r.position.y) position.y = r.position.y;
             if (y2 > ry2) y2 = ry2;
-            width = x2 - x;
-            if (width < 0.0f) width = 0.0f;
-            height = y2 - y;
-            if (height < 0.0f) height = 0.0f;
+            size.x = x2 - position.x;
+            if (size.x < 0.0f) size.x = 0.0f;
+            size.y = y2 - position.y;
+            if (size.y < 0.0f) size.y = 0.0f;
         }
 
-        public float x;
-        public float y;
-        public float width;
-        public float height;
-
-        /// <summary>
-        /// The width and height of the rectangle.
-        /// </summary>
-        public float2 Size
-        {
-            get => new float2(width, this.height);
-            set
-            {
-                width = value.x;
-                height = value.y;
-            }
-        }
+        public float2 position;
+        public float2 size;
 
         /// <summary>
         /// The position of the center of the rectangle.
         /// </summary>
         public float2 Center
         {
-            get => new float2(x + width / 2f, y + height/ 2f);
+            get => new float2(position.x + size.x / 2f, position.y + size.y/ 2f);
             set
             {
-                x = value.x - width / 2f;
-                y = value.y - height / 2f;
+                position.x = value.x - size.x / 2f;
+                position.y = value.y - size.y / 2f;
             }
         }
 

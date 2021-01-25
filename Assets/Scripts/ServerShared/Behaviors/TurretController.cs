@@ -22,7 +22,7 @@ public class TurretControllerData : BehaviorData
 public class TurretController : IBehavior
 {
     private TurretControllerData _data;
-    private Dictionary<Trigger, WeaponData> _triggers = new Dictionary<Trigger, WeaponData>();
+    private List<Weapon> _weapons = new List<Weapon>();
 
     public Entity EquippedEntity { get; }
     public EquippedItem Item { get; }
@@ -39,31 +39,23 @@ public class TurretController : IBehavior
         var weapons = equippedEntity.Equipment.Where(e => e.Behaviors.Any(b => b.Data is WeaponData));
         foreach (var weapon in weapons)
         {
-            CheckWeapon(item);
+            CheckWeapon(weapon);
         }
 
         equippedEntity.Equipment.ObserveAdd().Subscribe(add => CheckWeapon(add.Value));
         equippedEntity.Equipment.ObserveRemove().Subscribe(remove =>
         {
-            foreach (var bg in remove.Value.BehaviorGroups)
-                if (_triggers.ContainsKey(bg.Trigger))
-                    _triggers.Remove(bg.Trigger);
+            foreach (var b in remove.Value.Behaviors)
+                if (b is Weapon weapon)
+                    _weapons.Remove(weapon);
         });
     }
 
     private void CheckWeapon(EquippedItem item)
     {
-        foreach (var bg in item.BehaviorGroups)
-        {
-            if (bg.Trigger != null)
-            {
-                foreach (var b in bg.Behaviors)
-                {
-                    if(b.Data is WeaponData weaponData)
-                        _triggers.Add(bg.Trigger, weaponData);
-                }
-            }
-        }
+        foreach (var b in item.Behaviors)
+            if (b is Weapon weapon)
+                _weapons.Add(weapon);
     }
 
     public bool Execute(float delta)
@@ -74,14 +66,18 @@ public class TurretController : IBehavior
             EquippedEntity.LookDirection = normalize(diff);
             var dist = length(diff);
 
-            foreach (var x in _triggers)
+            foreach (var x in _weapons)
             {
-                if (Context.Evaluate(x.Value.Range, x.Key.Item.EquippableItem, EquippedEntity) > dist &&
-                    dot(EquippedEntity.HardpointTransforms[EquippedEntity.Hardpoints[x.Key.Item.Position.x, x.Key.Item.Position.y]].direction,
-                        EquippedEntity.LookDirection) > .9f)
+                var data = x.Data as WeaponData;
+                var fire = dot(
+                    EquippedEntity.HardpointTransforms[EquippedEntity.Hardpoints[x.Item.Position.x, x.Item.Position.y]].direction,
+                    EquippedEntity.LookDirection) > .99f;
+                if (Context.Evaluate(data.Range, x.Item.EquippableItem, EquippedEntity) > dist && fire)
                 {
-                    x.Key.Pull();
+                    x.Activate();
                 }
+                else if (x.Firing)
+                    x.Deactivate();
             }
         }
         else

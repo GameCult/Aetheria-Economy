@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -83,8 +84,8 @@ public class SchematicDisplay : MonoBehaviour
         public SchematicListElement ListElement;
         public SchematicTriggerGroupElement TriggerGroupElement;
         public IProgressBehavior Cooldown;
-        public ItemUsage ItemUsage;
-        public WeaponData WeaponData;
+        // public ItemUsage ItemUsage;
+        public Weapon Weapon;
     }
 
     public void ShowShip(Entity entity, Entity player = null)
@@ -126,8 +127,8 @@ public class SchematicDisplay : MonoBehaviour
                 ListElement = ListElementPrototype.Instantiate<SchematicListElement>(),
                 TriggerGroupElement = _enemy ? null : TriggerGroupPrototype.Instantiate<SchematicTriggerGroupElement>(),
                 Cooldown = _enemy ? null : (IProgressBehavior) x.Behaviors.FirstOrDefault(b=> b is IProgressBehavior),
-                ItemUsage = _enemy ? null : (ItemUsage) x.Behaviors.FirstOrDefault(b=> b is ItemUsage),
-                WeaponData = (WeaponData) x.Behaviors.FirstOrDefault(b=>b.Data is WeaponData)?.Data
+                // ItemUsage = _enemy ? null : (ItemUsage) x.Behaviors.FirstOrDefault(b=> b is ItemUsage),
+                Weapon = (Weapon) x.Behaviors.FirstOrDefault(b=>b is Weapon)
             })
             .ToArray();
         foreach (var x in _schematicItems)
@@ -136,14 +137,14 @@ public class SchematicDisplay : MonoBehaviour
             x.ListElement.Label.text = x.Item.EquippableItem.Name;
             if (!_enemy)
             {
-                x.ListElement.InfiniteAmmoIcon.gameObject.SetActive(x.ItemUsage == null);
-                x.ListElement.AmmoLabel.gameObject.SetActive(x.ItemUsage != null);
+                x.ListElement.InfiniteAmmoIcon.gameObject.SetActive(x.Weapon.WeaponData.AmmoType == Guid.Empty);
+                x.ListElement.AmmoLabel.gameObject.SetActive(x.Weapon.WeaponData.AmmoType != Guid.Empty);
                 foreach (var group in x.TriggerGroupElement.GroupBackgrounds)
                     group.color = TriggerGroupColor;
             }
         }
-            if (!_enemy)
-        UpdateTriggerGroups();
+        if (!_enemy)
+            UpdateTriggerGroups();
     }
 
     public void UpdateTriggerGroups()
@@ -166,7 +167,7 @@ public class SchematicDisplay : MonoBehaviour
                     backgroundColor.a *= 2;
                 item.TriggerGroupElement.GroupBackgrounds[groupIndex].color = backgroundColor;
                 item.TriggerGroupElement.GroupLabel[groupIndex].color =
-                    _entity.TriggerGroups[groupIndex].Contains(item.Item) ? Color.white : Color.gray;
+                    _entity.TriggerGroups[groupIndex].items.Contains(item.Item) ? Color.white : Color.gray;
             }
         }
     }
@@ -270,15 +271,18 @@ public class SchematicDisplay : MonoBehaviour
                     if (x.Cooldown != null)
                         x.ListElement.CooldownFill.anchorMax = new Vector2(x.Cooldown.Progress, 1);
                     x.ListElement.DurabilityLabel.text = $"{(int)(x.Item.EquippableItem.Durability / itemData.Durability * 100)}%";
-                    if (x.ItemUsage != null)
+                    if (x.Weapon.WeaponData.AmmoType != Guid.Empty)
                     {
-                        x.ListElement.AmmoLabel.text = _entity.CountItemsInCargo(((ItemUsageData)x.ItemUsage.Data).Item).ToString();
+                        if(x.Weapon.WeaponData.MagazineSize > 1)
+                            x.ListElement.AmmoLabel.text = x.Weapon.Ammo.ToString();
+                        else
+                            x.ListElement.AmmoLabel.text = _entity.CountItemsInCargo(x.Weapon.WeaponData.AmmoType).ToString();
                     }
                 }
 
-                if (x.WeaponData != null)
+                if (x.Weapon.WeaponData != null)
                 {
-                    x.ListElement.RangeLabel.text = ((int) _entity.ItemManager.Evaluate(x.WeaponData.Range, x.Item.EquippableItem, _entity)).ToString();
+                    x.ListElement.RangeLabel.text = ((int) _entity.ItemManager.Evaluate(x.Weapon.WeaponData.Range, x.Item.EquippableItem, _entity)).ToString();
                 }
             }
         }

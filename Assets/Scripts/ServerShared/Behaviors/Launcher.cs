@@ -7,31 +7,31 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class LauncherData : InstantWeaponData
+public class LauncherData : LockWeaponData
 {
-    [InspectableAnimationCurve, JsonProperty("guidance"), Key(9)]  
+    [InspectableAnimationCurve, JsonProperty("guidance"), Key(21)]  
     public float4[] GuidanceCurve;
 
-    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(10)]  
+    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(22)]  
     public float4[] ThrustCurve;
 
-    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(11)]  
+    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(23)]  
     public float4[] LiftCurve;
 
-    [InspectableField, JsonProperty("thrust"), Key(12)]  
+    [InspectableField, JsonProperty("thrust"), Key(24)]  
     public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField, JsonProperty("frequency"), Key(13)]  
+    [InspectableField, JsonProperty("frequency"), Key(25)]  
     public float DodgeFrequency;
 
-    [InspectableField, JsonProperty("launchSpeed"), Key(14)]  
+    [InspectableField, JsonProperty("launchSpeed"), Key(26)]  
     public PerformanceStat LaunchSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("missileSpeed"), Key(15), RuntimeInspectable]  
+    [InspectableField, JsonProperty("missileSpeed"), Key(27), RuntimeInspectable]  
     public PerformanceStat Velocity = new PerformanceStat();
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
-        return new InstantWeapon(context, this, entity, item);
+        return new LockWeapon(context, this, entity, item);
     }
 }

@@ -19,11 +19,11 @@ public interface IBehavior
     BehaviorData Data { get; }
 }
 
-// public interface IActivatedBehavior : IBehavior
-// {
-//     bool Activate();
-//     void Deactivate();
-// }
+public interface IActivatedBehavior : IBehavior
+{
+    void Activate();
+    void Deactivate();
+}
 
 public interface IAnalogBehavior : IBehavior
 {
@@ -38,6 +38,11 @@ public interface IDisposableBehavior
 public interface IInitializableBehavior
 {
     void Initialize();
+}
+
+public interface IInteractiveBehavior
+{
+    bool Exposed { get; }
 }
 
 public interface IAlwaysUpdatedBehavior
@@ -92,7 +97,7 @@ public abstract class PersistentBehaviorData
  Union(6, typeof(ReflectorData)),
  Union(7, typeof(ShieldData)),
  Union(8, typeof(ThrusterData)),
- Union(9, typeof(TurningData)),
+ // Union(9, typeof(TurningData)),
  Union(10, typeof(VelocityConversionData)),
  Union(11, typeof(VelocityLimitData)),
  Union(12, typeof(FactoryData)),
@@ -100,7 +105,7 @@ public abstract class PersistentBehaviorData
  Union(14, typeof(TowingControllerData)),
  Union(15, typeof(CooldownData)),
  Union(16, typeof(HeatData)),
- Union(17, typeof(HitscanData)),
+ // Union(17, typeof(HitscanData)),
  Union(18, typeof(ItemUsageData)),
  Union(19, typeof(RadianceData)),
  Union(20, typeof(SwitchData)),
@@ -118,7 +123,10 @@ public abstract class PersistentBehaviorData
  Union(32, typeof(CockpitData)),
  Union(33, typeof(HeatsinkData)),
  Union(34, typeof(TurretControllerData)),
- Union(35, typeof(TargetLockData)),
+ Union(35, typeof(InstantWeaponData)),
+ Union(36, typeof(ConstantWeaponData)),
+ Union(37, typeof(ChargedWeaponData)),
+ Union(38, typeof(AutoWeaponData)),
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {

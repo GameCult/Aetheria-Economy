@@ -38,8 +38,8 @@ public class MiningController : ControllerBase<Mining>, IBehavior, IPersistentBe
 
     public new void Initialize()
     {
-        _miningTool = Entity.GetBehavior<MiningTool>();
-        _toolSwitch = Entity.GetSwitch<MiningTool>();
+        // _miningTool = Entity.GetBehavior<MiningTool>();
+        // _toolSwitch = Entity.GetSwitch<MiningTool>();
         base.Initialize();
     }
 

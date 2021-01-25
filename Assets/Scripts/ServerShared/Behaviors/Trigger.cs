@@ -16,7 +16,7 @@ public class TriggerData : BehaviorData
     }
 }
 
-public class Trigger : IBehavior
+public class Trigger : IBehavior, IActivatedBehavior
 {
     private TriggerData _data;
 
@@ -27,11 +27,6 @@ public class Trigger : IBehavior
     public BehaviorData Data => _data;
 
     public bool _pulled;
-
-    public void Pull()
-    {
-        _pulled = true;
-    }
 
     public Trigger(ItemManager context, TriggerData data, Entity entity, EquippedItem item)
     {
@@ -54,5 +49,14 @@ public class Trigger : IBehavior
         }
 
         return false;
+    }
+
+    public void Activate()
+    {
+        _pulled = true;
+    }
+
+    public void Deactivate()
+    {
     }
 }

@@ -234,10 +234,10 @@ namespace Microsoft.Msagl.Layout.Layered {
              MessageId = "System.String.Format(System.String,System.Object)")]
         override protected void RunInternal() {
 #if REPORTING
-            Timer t = null;
+            DebugHelpers.Timer t = null;
             if (sugiyamaSettings.Reporting) {
                 Report("removing cycles ... ");
-                t = new Timer();
+                t = new DebugHelpers.Timer();
                 t.Start();
             }
 #endif
@@ -262,10 +262,10 @@ namespace Microsoft.Msagl.Layout.Layered {
 
         void RunPostLayering() {
 #if REPORTING
-            Timer t = null;
+            DebugHelpers.Timer t = null;
             if (sugiyamaSettings.Reporting) {
                 Report("Calculating edge splines... ");
-                t = new Timer();
+                t = new DebugHelpers.Timer();
                 t.Start();
             }
 #endif
@@ -448,10 +448,10 @@ namespace Microsoft.Msagl.Layout.Layered {
             #region reporting
 
 #if REPORTING
-            Timer t = null;
+            DebugHelpers.Timer t = null;
             if (sugiyamaSettings.Reporting) {
                 Report("calculating layers ... ");
-                t = new Timer();
+                t = new DebugHelpers.Timer();
                 t.Start();
             }
 #endif
@@ -1050,9 +1050,9 @@ namespace Microsoft.Msagl.Layout.Layered {
             #region reporting
 
 #if REPORTING
-            Timer t = null;
+            DebugHelpers.Timer t = null;
             if (sugiyamaSettings.Reporting) {
-                t = new Timer();
+                t = new DebugHelpers.Timer();
                 Report("ylayering ... ");
                 t.Start();
             }
@@ -1250,9 +1250,9 @@ namespace Microsoft.Msagl.Layout.Layered {
             var routing = new Routing(sugiyamaSettings, originalGraph, database, engineLayerArrays, properLayeredGraph,
                                       IntGraph);
 #if REPORTING
-            Timer t = null;
+            DebugHelpers.Timer t = null;
             if (sugiyamaSettings.Reporting) {
-                t = new Timer();
+                t = new DebugHelpers.Timer();
                 t.Start();
             }
 #endif

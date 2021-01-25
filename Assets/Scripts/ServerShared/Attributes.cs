@@ -127,6 +127,23 @@ public class InspectableTypeAttribute : InspectableFieldAttribute
 [AttributeUsage(AttributeTargets.Field)]
 public class SimplePerformanceStatAttribute : Attribute { }
 
+/// <summary>
+///   <para>Specify a tooltip for a field in the Inspector window.</para>
+/// </summary>
+[AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+public class TooltipAttribute : Attribute
+{
+    /// <summary>
+    ///   <para>The tooltip text.</para>
+    /// </summary>
+    public readonly string tooltip;
+
+    /// <summary>
+    ///   <para>Specify a tooltip for a field.</para>
+    /// </summary>
+    /// <param name="tooltip">The tooltip text.</param>
+    public TooltipAttribute(string tooltip) => this.tooltip = tooltip;
+}
 // public class CategoryAttribute : Attribute
 // {
 //     public readonly Type Type;

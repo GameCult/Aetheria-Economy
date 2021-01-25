@@ -109,4 +109,5 @@ public class GameplaySettings
     public ExponentialLerp LockSpinSpeed;
     public float TorqueFloor;
     public float TorqueMultiplier;
+    public float VisibilityDecay;
 }

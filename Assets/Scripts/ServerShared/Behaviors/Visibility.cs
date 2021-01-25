@@ -54,8 +54,6 @@ public class Visibility : IBehavior, IAlwaysUpdatedBehavior
         if(Entity.VisibilitySources.ContainsKey(this))
         {
             Entity.VisibilitySources[this] *= Context.Evaluate(_data.VisibilityDecay, Item.EquippableItem, Entity);
-
-            if (Entity.VisibilitySources[this] < 0.01f) Entity.VisibilitySources.Remove(this);
         }
     }
 }

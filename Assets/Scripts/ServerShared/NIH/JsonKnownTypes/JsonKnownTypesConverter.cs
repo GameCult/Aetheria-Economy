@@ -34,7 +34,8 @@ namespace JsonKnownTypes
             if(_typesSettings.DiscriminatorToType.TryGetValue(discriminator, out var typeForObject))
                 return JsonConvert.DeserializeObject(jo.ToString(), typeForObject, SpecifiedSubclassConversion);
 
-            throw new NotImplementedException();
+            return null;
+            //throw new NotImplementedException();
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

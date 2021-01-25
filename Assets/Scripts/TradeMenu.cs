@@ -199,7 +199,7 @@ public class TradeMenu : MonoBehaviour
             data => () => data.Mass.SignificantDigits(3), 
             data => data.Mass));
         columns.Add(("Price", 1,
-            data => () => data.Price.ToString(), 
+            data => () => data.Price.ToString("N0"),
             data => data.Price));
         columns.Add(("Size", 1,
             data => () => $"{data.Shape.Width}x{data.Shape.Height}", 

@@ -3,6 +3,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
@@ -28,66 +30,63 @@ public abstract class WeaponData : BehaviorData
     
     [InspectablePrefab, JsonProperty("effect"), Key(6)]  
     public string EffectPrefab;
+    
+    [InspectablePrefab, JsonProperty("energy"), Key(7), RuntimeInspectable]  
+    public PerformanceStat Energy = new PerformanceStat();
+    
+    [InspectablePrefab, JsonProperty("heat"), Key(8), RuntimeInspectable]  
+    public PerformanceStat Heat = new PerformanceStat();
+    
+    [InspectablePrefab, JsonProperty("visibility"), Key(9), RuntimeInspectable]  
+    public PerformanceStat Visibility = new PerformanceStat();
+    
+    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("ammo"), Key(10), RuntimeInspectable]  
+    public Guid AmmoType;
+
+    [InspectablePrefab, JsonProperty("magSize"), Key(11)]
+    public int MagazineSize;
+    
+    [InspectablePrefab, JsonProperty("reloadTime"), Key(12)]  
+    public float ReloadTime = 1;
 }
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
-public abstract class InstantWeaponData : WeaponData
+public abstract class Weapon : IActivatedBehavior
 {
-    [InspectableField, JsonProperty("burstCount"), Key(7), RuntimeInspectable]
-    public int BurstCount;
-
-    [InspectableField, JsonProperty("burstTime"), Key(8)]
-    public PerformanceStat BurstTime = new PerformanceStat();
-}
-
-public class InstantWeapon : IBehavior, IAlwaysUpdatedBehavior
-{
-    private InstantWeaponData _data;
-
-    public int _burstCount;
-    public float _burstTimer;
+    private WeaponData _data;
     
-    private Entity Entity { get; }
-    private EquippedItem Item { get; }
-    private ItemManager Context { get; }
-    
+    public Entity Entity { get; }
+    public EquippedItem Item { get; }
+    public ItemManager Context { get; }
+
+    public abstract int Ammo { get; }
+    public WeaponData WeaponData => _data;
     public BehaviorData Data => _data;
 
-    public event Action OnFire;
+    protected bool _firing;
 
-    private float _burstTime;
+    public bool Firing
+    {
+        get => _firing;
+    }
 
-    public InstantWeapon(ItemManager context, InstantWeaponData c, Entity entity, EquippedItem item)
+
+    public Weapon(ItemManager context, WeaponData data, Entity entity, EquippedItem item)
     {
         Context = context;
-        _data = c;
         Entity = entity;
         Item = item;
+        _data = data;
     }
 
-    public bool Execute(float delta)
+    public abstract bool Execute(float delta);
+
+    public virtual void Activate()
     {
-        _burstCount = _data.BurstCount;
-        _burstTime = Context.Evaluate(_data.BurstTime, Item.EquippableItem, Entity) / _burstCount;
-        _burstTimer = 0;
-        Fire(delta);
-        return true;
+        _firing = true;
     }
 
-    private void Fire(float delta)
+    public virtual void Deactivate()
     {
-        _burstTimer -= delta;
-        while (_burstTimer < 0 && _burstCount > 0)
-        {
-            _burstCount--;
-            _burstTimer += _burstTime;
-            OnFire?.Invoke();
-        }
-    }
-
-    public void Update(float delta)
-    {
-        if(_burstCount > 0)
-            Fire(delta);
+        _firing = false;
     }
 }
