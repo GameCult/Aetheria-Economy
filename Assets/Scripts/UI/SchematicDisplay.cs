@@ -211,27 +211,27 @@ public class SchematicDisplay : MonoBehaviour
             {
 
                 if (_radiators.Length == 1)
-                    RadiatorTemperatureLabel.text = $"{(_radiators[0].Item.Temperature - 273.15f).SignificantDigits(3)}°C";
+                    RadiatorTemperatureLabel.text = $"{((int)(_radiators[0].Item.Temperature - 273.15f)).ToString()}°C";
                 else if (_radiators.Length > 1)
                     RadiatorTemperatureLabel.text =
-                        $"{(_radiators.Min(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}-" +
-                        $"{(_radiators.Max(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}°C";
+                        $"{((int)(_radiators.Min(r => r.Item.Temperature) - 273.15f)).ToString()}-" +
+                        $"{((int)(_radiators.Max(r => r.Item.Temperature) - 273.15f)).ToString()}°C";
 
                 if (_heatsinks.Length == 1)
-                    HeatsinkTemperatureLabel.text = $"{(_heatsinks[0].Item.Temperature - 273.15f).SignificantDigits(3)}°C";
+                    HeatsinkTemperatureLabel.text = $"{((int)(_heatsinks[0].Item.Temperature - 273.15f)).ToString()}°C";
                 else if (_heatsinks.Length > 1)
                     HeatsinkTemperatureLabel.text =
-                        $"{(_heatsinks.Min(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}-" +
-                        $"{(_heatsinks.Max(r => r.Item.Temperature) - 273.15f).SignificantDigits(3)}°C";
+                        $"{((int)(_heatsinks.Min(r => r.Item.Temperature) - 273.15f)).ToString()}-" +
+                        $"{((int)(_heatsinks.Max(r => r.Item.Temperature) - 273.15f)).ToString()}°C";
 
                 if (_cargoBays.Length == 1)
-                    CargoTemperatureLabel.text = $"{(_cargoBays[0].Temperature - 273.15f).SignificantDigits(3)}°C";
+                    CargoTemperatureLabel.text = $"{((int)(_cargoBays[0].Temperature - 273.15f)).ToString()}°C";
                 else if (_cargoBays.Length > 1)
                     CargoTemperatureLabel.text =
-                        $"{(_cargoBays.Min(r => r.Temperature) - 273.15f).SignificantDigits(3)}-" +
-                        $"{(_cargoBays.Max(r => r.Temperature) - 273.15f).SignificantDigits(3)}°C";
+                        $"{((int)(_cargoBays.Min(r => r.Temperature) - 273.15f)).ToString()}-" +
+                        $"{((int)(_cargoBays.Max(r => r.Temperature) - 273.15f)).ToString()}°C";
 
-                CockpitTemperatureLabel.text = $"{(_cockpit.Item.Temperature - 273.15f).SignificantDigits(3)}°C";
+                CockpitTemperatureLabel.text = $"{((int)(_cockpit.Item.Temperature - 273.15f)).ToString()}°C";
 
                 HeatstrokeMeterFill.anchorMax = new Vector2(_cockpit.Heatstroke, 1);
                 HeatstrokeLimitFill.anchorMax = new Vector2(_cockpit.Item.Temperature / Settings.GameplaySettings.HeatstrokeTemperature, 1);
@@ -246,7 +246,7 @@ public class SchematicDisplay : MonoBehaviour
                     var charge = _capacitors.Sum(x => x.Charge);
                     var maxCharge = _capacitors.Sum(x => x.Capacity);
                     EnergyFill.anchorMax = new Vector2(charge / maxCharge, 1);
-                    EnergyLabel.text = $"{charge.SignificantDigits(3)}/{maxCharge.SignificantDigits(3)} ({_reactor.Surplus.SignificantDigits(3)})";
+                    EnergyLabel.text = $"{((int)charge).ToString()}/{((int)maxCharge).ToString()} + ({((int)_reactor.Surplus).ToString()})";
                 }
             }
             else

@@ -65,6 +65,8 @@ public abstract class Entity
     private EquippedItem[] _orderedEquipment;
     protected bool _active;
     
+    public float MaxTemp { get; private set; }
+    public float MinTemp { get; private set; }
     public ItemManager ItemManager { get; }
     public int AssignedPopulation => PopulationAssignments.Sum(pa => pa.AssignedPopulation);
     public float Mass { get; private set; }
@@ -537,50 +539,84 @@ public abstract class Entity
             if (VisibilitySources[v] < 0.01f) VisibilitySources.Remove(v);
         }
         
+        MaxTemp = Single.MinValue;
+        MinTemp = Single.MaxValue;
+        
         //float[,] newTemp = new float[hullData.Shape.Width,hullData.Shape.Height];
         var radiation = 0f;
         foreach (var v in hullData.Shape.Coordinates)
         {
             var temp = Temperature[v.x, v.y];
-            var heatTransfer = 0f;
+            var totalTemp = temp / ItemManager.GameplaySettings.HeatConductionMultiplier;
+            var totalConductivity = 1f / ItemManager.GameplaySettings.HeatConductionMultiplier;
             
             if (hullData.Shape[int2(v.x - 1, v.y)])
-                heatTransfer += (Temperature[v.x - 1, v.y] - temp) * 
-                                (GearOccupancy[v.x, v.y]?.Conductivity ?? 1) *
-                                (GearOccupancy[v.x - 1, v.y]?.Conductivity ?? 1) *
-                                (HullConductivity[v.x - 1, v.y].x ? hullData.Conductivity : 1 / hullData.Conductivity);
+            {
+                var conductivity = (GearOccupancy[v.x, v.y]?.Conductivity ?? 1) *
+                                   (GearOccupancy[v.x - 1, v.y]?.Conductivity ?? 1) *
+                                   (HullConductivity[v.x - 1, v.y].x ? hullData.Conductivity : 1 / hullData.Conductivity) *
+                                   (ThermalMass[v.x - 1, v.y] / ThermalMass[v.x, v.y]);
+                totalConductivity += conductivity;
+                totalTemp += Temperature[v.x - 1, v.y] * conductivity;
+            }
 
             if (hullData.Shape[int2(v.x + 1, v.y)])
-                heatTransfer += (Temperature[v.x + 1, v.y] - temp) *
-                                (GearOccupancy[v.x, v.y]?.Conductivity ?? 1) *
-                                (GearOccupancy[v.x + 1, v.y]?.Conductivity ?? 1) *
-                                (HullConductivity[v.x, v.y].x ? hullData.Conductivity : 1 / hullData.Conductivity);
-            
-            if (hullData.Shape[int2(v.x, v.y - 1)])
-                heatTransfer += (Temperature[v.x, v.y - 1] - temp) * 
-                                (GearOccupancy[v.x, v.y]?.Conductivity ?? 1) *
-                                (GearOccupancy[v.x, v.y - 1]?.Conductivity ?? 1) * 
-                                (HullConductivity[v.x, v.y - 1].y ? hullData.Conductivity : 1 / hullData.Conductivity);
-            
-            if (hullData.Shape[int2(v.x, v.y + 1)])
-                heatTransfer += (Temperature[v.x, v.y + 1] - temp) * 
-                                (GearOccupancy[v.x, v.y]?.Conductivity ?? 1) *
-                                (GearOccupancy[v.x, v.y + 1]?.Conductivity ?? 1) * 
-                                (HullConductivity[v.x, v.y].y ? hullData.Conductivity : 1 / hullData.Conductivity);
+            {
+                var conductivity = (GearOccupancy[v.x, v.y]?.Conductivity ?? 1) *
+                                   (GearOccupancy[v.x + 1, v.y]?.Conductivity ?? 1) *
+                                   (HullConductivity[v.x, v.y].x ? hullData.Conductivity : 1 / hullData.Conductivity) *
+                                   (ThermalMass[v.x + 1, v.y] / ThermalMass[v.x, v.y]);
+                totalConductivity += conductivity;
+                totalTemp += Temperature[v.x + 1, v.y] * conductivity;
+            }
 
-            NewTemperature[v.x, v.y] = Temperature[v.x, v.y] + heatTransfer * min(ItemManager.GameplaySettings.HeatConductionMultiplier * delta,1) / ThermalMass[v.x,v.y];
+
+            if (hullData.Shape[int2(v.x, v.y - 1)])
+            {
+                var conductivity = (GearOccupancy[v.x, v.y]?.Conductivity ?? 1) *
+                                   (GearOccupancy[v.x, v.y - 1]?.Conductivity ?? 1) * 
+                                   (HullConductivity[v.x, v.y - 1].y ? hullData.Conductivity : 1 / hullData.Conductivity) *
+                                   (ThermalMass[v.x, v.y - 1] / ThermalMass[v.x, v.y]);
+                totalConductivity += conductivity;
+                totalTemp += Temperature[v.x, v.y - 1] * conductivity;
+            }
+
+
+            if (hullData.Shape[int2(v.x, v.y + 1)])
+            {
+                var conductivity = (GearOccupancy[v.x, v.y]?.Conductivity ?? 1) *
+                                   (GearOccupancy[v.x, v.y + 1]?.Conductivity ?? 1) * 
+                                   (HullConductivity[v.x, v.y].y ? hullData.Conductivity : 1 / hullData.Conductivity) *
+                                   (ThermalMass[v.x, v.y + 1] / ThermalMass[v.x, v.y]);
+                totalConductivity += conductivity;
+                totalTemp += Temperature[v.x, v.y + 1] * conductivity;
+            }
             
+            NewTemperature[v.x, v.y] = totalTemp / totalConductivity;
+
+            var r = 0f;
             // For all cells on the border of the entity, radiate some heat into space, increasing the visibility of the ship
             if (Parent==null && !hullData.InteriorCells[v])
             {
-                var rad = pow(NewTemperature[v.x, v.y], ItemManager.GameplaySettings.HeatRadiationExponent) *
-                          ItemManager.GameplaySettings.HeatRadiationMultiplier;
-                NewTemperature[v.x, v.y] -= rad * delta;
-                radiation += rad;
+                // for(int i = 0; i<4; i++)
+                // {
+                    var rad = pow(NewTemperature[v.x, v.y], ItemManager.GameplaySettings.HeatRadiationExponent) *
+                              ItemManager.GameplaySettings.HeatRadiationMultiplier;
+                    NewTemperature[v.x, v.y] -= rad * delta / 4;
+                    r += rad;
+                // }
             }
+
+            radiation += r;
             
-            if(float.IsNaN(NewTemperature[v.x, v.y]) || NewTemperature[v.x, v.y] < 0)
+            if(float.IsNaN(NewTemperature[v.x, v.y]) || NewTemperature[v.x, v.y] < 0 || NewTemperature[v.x, v.y] > 600)
                 ItemManager.Log("HOUSTON, WE HAVE A PROBLEM!");
+
+            if (NewTemperature[v.x, v.y] < MinTemp)
+                MinTemp = NewTemperature[v.x, v.y];
+            
+            if (NewTemperature[v.x, v.y] > MaxTemp)
+                MaxTemp = NewTemperature[v.x, v.y];
         }
 
         VisibilitySources[this] = radiation;

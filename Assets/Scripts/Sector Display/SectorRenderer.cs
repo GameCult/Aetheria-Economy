@@ -223,15 +223,27 @@ public class SectorRenderer : MonoBehaviour
                 }
             }
         }
+        instance.RadiatorMeshes = new Dictionary<HardpointData, MeshRenderer>();
         instance.Barrels = new Dictionary<HardpointData, Transform[]>();
         instance.BarrelIndices = new Dictionary<HardpointData, int>();
         foreach (var hp in hullData.Hardpoints)
         {
-            var whp = instance.Prefab.WeaponHardpoints.FirstOrDefault(x => x.name == hp.Transform);
-            if(whp)
+            if (hp.Type == HardpointType.Radiator)
             {
-                instance.Barrels.Add(hp, whp.FiringPoint);
-                instance.BarrelIndices.Add(hp, 0);
+                var mesh = instance.Prefab.RadiatorHardpoints.FirstOrDefault(x => x.name == hp.Transform);
+                if (mesh)
+                {
+                    instance.RadiatorMeshes.Add(hp, mesh.Mesh);
+                }
+            }
+            if(hp.Type == HardpointType.Ballistic || hp.Type == HardpointType.Energy || hp.Type == HardpointType.Launcher)
+            {
+                var whp = instance.Prefab.WeaponHardpoints.FirstOrDefault(x => x.name == hp.Transform);
+                if (whp)
+                {
+                    instance.Barrels.Add(hp, whp.FiringPoint);
+                    instance.BarrelIndices.Add(hp, 0);
+                }
             }
         }
 
@@ -274,37 +286,47 @@ public class SectorRenderer : MonoBehaviour
             // Spread damage is divided among components surrounding the hardpoint which has been hit
             var spreadDamage = damage * spread;
 
-            // Find the cells surrounding the target cells
-            var surroundingCells = hitShape.Expand();
-
-            // Exclude cells contained by the original shape or not within the ship interior
-            foreach (var cell in surroundingCells.Coordinates.ToArray())
-                if (hitShape[cell] || !hullData.InteriorCells[cell])
-                    surroundingCells[cell] = false;
-
-            // Find all equipment occupying surrounding cells
-            var surroundingEquipment = new List<EquippedItem>();
-            foreach (var hullCoord in surroundingCells.Coordinates)
+            if (spreadDamage > .01f)
             {
-                if (entity.GearOccupancy[hullCoord.x, hullCoord.y] != null)
-                    surroundingEquipment.Add(entity.GearOccupancy[hullCoord.x, hullCoord.y]);
+                // Find the cells surrounding the target cells
+                var surroundingCells = hitShape.Expand();
+
+                // Exclude cells contained by the original shape or not within the ship interior
+                foreach (var cell in surroundingCells.Coordinates.ToArray())
+                    if (hitShape[cell] || !hullData.InteriorCells[cell])
+                        surroundingCells[cell] = false;
+
+                if (surroundingCells.Coordinates.Length > 0)
+                {
+                    // Find all equipment occupying surrounding cells
+                    var surroundingEquipment = new List<EquippedItem>();
+                    foreach (var hullCoord in surroundingCells.Coordinates)
+                    {
+                        if (entity.GearOccupancy[hullCoord.x, hullCoord.y] != null)
+                            surroundingEquipment.Add(entity.GearOccupancy[hullCoord.x, hullCoord.y]);
+                    }
+
+                    // Divide spread damage among all surrounding cells
+                    remainder = 0;
+                    foreach (var e in surroundingEquipment)
+                    {
+                        remainder += max(spreadDamage / surroundingCells.Coordinates.Length - e.EquippableItem.Durability, 0);
+                        e.EquippableItem.Durability = max(e.EquippableItem.Durability - spreadDamage / surroundingCells.Coordinates.Length, 0);
+                        entity.ItemDamage.OnNext((e, spreadDamage / surroundingCells.Coordinates.Length));
+                    }
+
+                    // Remaining damage plus spread damage for empty cells is dealt to the hull
+                    hullDamage += remainder + spreadDamage / surroundingCells.Coordinates.Length *
+                        (surroundingCells.Coordinates.Length - surroundingEquipment.Count);
+                }
+                else hullDamage += spreadDamage;
             }
 
-            // Divide spread damage among all surrounding cells
-            remainder = 0;
-            foreach (var e in surroundingEquipment)
+            if(hullDamage > .01f)
             {
-                remainder += max(spreadDamage / surroundingCells.Coordinates.Length - e.EquippableItem.Durability, 0);
-                e.EquippableItem.Durability = max(e.EquippableItem.Durability - spreadDamage / surroundingCells.Coordinates.Length, 0);
-                entity.ItemDamage.OnNext((e, spreadDamage / surroundingCells.Coordinates.Length));
+                entity.Hull.Durability -= hullDamage;
+                entity.HullDamage.OnNext(hullDamage);
             }
-
-            // Remaining damage plus spread damage for empty cells is dealt to the hull
-            hullDamage += remainder + spreadDamage / surroundingCells.Coordinates.Length *
-                (surroundingCells.Coordinates.Length - surroundingEquipment.Count);
-            
-            entity.Hull.Durability -= hullDamage;
-            entity.HullDamage.OnNext(hullDamage);
         }
 
         foreach (var collider in instance.Prefab.HullColliders)
@@ -599,6 +621,18 @@ public class SectorRenderer : MonoBehaviour
                 entity.Value.Transform.rotation = ((Ship) entity.Key).Rotation;
             }
 
+            foreach (var x in entity.Value.RadiatorMeshes)
+            {
+                var temp = 0f;
+                foreach (var v in x.Key.Shape.Coordinates)
+                {
+                    var v2 = v + x.Key.Position;
+                    temp += entity.Key.Temperature[v2.x, v2.y];
+                }
+                temp /= x.Key.Shape.Coordinates.Length;
+                x.Value.material.SetFloat("_Emission", Settings.GameplaySettings.TemperatureEmissionCurve.Evaluate(temp));
+            }
+
             foreach (var x in entity.Value.Barrels)
             {
                 entity.Key.HardpointTransforms[x.Key] = (x.Value[0].position, x.Value[0].forward);
@@ -613,7 +647,6 @@ public class SectorRenderer : MonoBehaviour
         foreach(var e in hitList)
         {
             _zone.Entities.Remove(e);
-
         }
 
         var fogPos = FogCameraParent.position;
@@ -639,6 +672,7 @@ public class EntityInstance
     public EntityPrefab Prefab;
     public Dictionary<HardpointData, Transform[]> Barrels;
     public Dictionary<HardpointData, int> BarrelIndices;
+    public Dictionary<HardpointData, MeshRenderer> RadiatorMeshes;
     public Transform LookAtPoint;
     public Transform GetBarrel(HardpointData hardpoint)
     {

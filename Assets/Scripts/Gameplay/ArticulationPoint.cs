@@ -25,17 +25,22 @@ public class ArticulationPoint : MonoBehaviour
     {
         if (Target)
         {
-            var targetLocal = transform.parent.InverseTransformPoint(Target.position);
+            var targetLocal = transform.InverseTransformPoint(Target.position);
             
             var yaw = Vector2.SignedAngle(new Vector2(0, 1), new Vector2(targetLocal.x, targetLocal.z));
             var pitch = Vector2.SignedAngle(new Vector2(1, 0), new Vector2(targetLocal.z, targetLocal.y));
-            
-            var targetYaw = clamp(-yaw, YawMin, YawMax);
-            var targetPitch = clamp(-pitch, PitchMin, PitchMax);
+
+            var targetYaw = clamp(_yaw - yaw, YawMin, YawMax);
+            var targetPitch = clamp(_pitch - pitch, PitchMin, PitchMax);
 
             if (abs(targetYaw - _yaw) < Speed * Time.deltaTime)
                 _yaw = targetYaw;
             else _yaw = _yaw + sign(targetYaw - _yaw) * Speed * Time.deltaTime;
+
+            if(_yaw < -360)
+                _yaw += 360;
+            if(_yaw > 360)
+                _yaw -= 360;
 
             if (abs(targetPitch - _pitch) < Speed * Time.deltaTime)
                 _pitch = targetPitch;

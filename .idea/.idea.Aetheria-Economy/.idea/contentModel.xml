@@ -231,6 +231,7 @@
             <e p="ArticulationPoint.cs" t="Include" />
             <e p="EntityPrefab.cs" t="Include" />
             <e p="HullCollider.cs" t="Include" />
+            <e p="RadiatorHardpoint.cs" t="Include" />
             <e p="ThrusterHardpoint.cs" t="Include" />
             <e p="WeaponHardpoint.cs" t="Include" />
             <e p="Weapons" t="Include">

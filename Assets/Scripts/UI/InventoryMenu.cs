@@ -10,6 +10,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Unity.Mathematics;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class InventoryMenu : MonoBehaviour
@@ -304,10 +305,13 @@ public class InventoryMenu : MonoBehaviour
                     {
                         if (_selectedPanel != null)
                         {
-                            foreach (var v in _selectedItemData.Shape.Coordinates)
+                            if(_selectedPanel.CellInstances.ContainsKey(_selectedItemData.Shape.Coordinates.First()))
                             {
-                                var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
-                                _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2);
+                                foreach (var v in _selectedItemData.Shape.Coordinates)
+                                {
+                                    var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
+                                    _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2);
+                                }
                             }
                         }
                         PropertiesPanel.Inspect(entityEvent.Entity, item);
@@ -328,6 +332,13 @@ public class InventoryMenu : MonoBehaviour
 
     void Update()
     {
-        
+        if (Keyboard.current.qKey.wasPressedThisFrame && _dragItem != null)
+        {
+            _dragItem.Rotation = (ItemRotation) (((int) _dragItem.Rotation + 1) % 4);
+        }
+        if (Keyboard.current.eKey.wasPressedThisFrame && _dragItem != null)
+        {
+            _dragItem.Rotation = (ItemRotation) (((int) _dragItem.Rotation + 3) % 4);
+        }
     }
 }

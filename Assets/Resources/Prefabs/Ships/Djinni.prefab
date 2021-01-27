@@ -7197,8 +7197,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Target: {fileID: 0}
   Group: 0
-  YawMin: 0
-  YawMax: 0
+  YawMin: -1
+  YawMax: 1
   PitchMin: -45
   PitchMax: 15
   Speed: 15

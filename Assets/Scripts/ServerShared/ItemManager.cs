@@ -452,9 +452,17 @@ public class ItemManager
     {
         var data = GetData(item);
         if(data is CraftedItemData c)
-            return CreateInstance(c, 0, 1);
+        {
+            var i = CreateInstance(c, 0, 1);
+            i.Rotation = item.Rotation;
+            return i;
+        }
         if (item is SimpleCommodity s)
-            return CreateInstance(data as SimpleCommodityData, s.Quantity);
+        {
+            var i = CreateInstance(data as SimpleCommodityData, s.Quantity);
+            i.Rotation = item.Rotation;
+            return i;
+        }
         return null;
     }
     

@@ -56,6 +56,7 @@ public class ActionGameManager : MonoBehaviour
     public List<EntityPack> Loadouts { get; set; } = new List<EntityPack>();
 
     // private ShipInput _shipInput;
+    private IDisposable _shipTargetSubscription;
     private float2 _shipYawPitch;
     private float3 _viewDirection;
     private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] _articulationGroups;
@@ -377,16 +378,6 @@ public class ActionGameManager : MonoBehaviour
         var ship = new Ship(ItemManager, Zone, shipHull);
         PlayerShips.Add(ship);
         CurrentShip = ship;
-        CurrentShip.Target.Subscribe(target =>
-        {
-            TargetIndicator.gameObject.SetActive(CurrentShip.Target.Value != null);
-            TargetShipPanel.gameObject.SetActive(target != null);
-            if (target != null)
-            {
-                TargetShipPanel.Display(target, true);
-                TargetSchematicDisplay.ShowShip(target, CurrentShip);
-            }
-        });
         ship.ArmorDamage.Subscribe(hit =>
         {
             var direction = _directions.MaxBy(d => dot(d.direction, normalize(hit.pos - hullType.Shape.CenterOfMass)));
@@ -530,6 +521,22 @@ public class ActionGameManager : MonoBehaviour
                 return (x, i, i.GetComponent<Rotate>());
             }).ToArray();
 
+            CurrentShip.HullDamage.Subscribe(f =>
+            {
+                if (float.IsNaN(CurrentShip.Hull.Durability))
+                    Debug.Log("WTF!");
+            });
+            _shipTargetSubscription?.Dispose();
+            _shipTargetSubscription = CurrentShip.Target.Subscribe(target =>
+            {
+                TargetIndicator.gameObject.SetActive(CurrentShip.Target.Value != null);
+                TargetShipPanel.gameObject.SetActive(target != null);
+                if (target != null)
+                {
+                    TargetShipPanel.Display(target, true);
+                    TargetSchematicDisplay.ShowShip(target, CurrentShip);
+                }
+            });
 
             Cursor.lockState = CursorLockMode.Locked;
             GameplayUI.SetActive(true);
@@ -623,10 +630,12 @@ public class ActionGameManager : MonoBehaviour
             var showLockingIndicator = targetLock.Lock > .01f && CurrentShip.Target.Value != null;
             indicator.gameObject.SetActive(showLockingIndicator);
             if(showLockingIndicator)
-            indicator.Target = CurrentShip.Target.Value.Position;
-            indicator.NoiseAmplitude = Settings.GameplaySettings.LockIndicatorNoiseAmplitude * (1 - targetLock.Lock);
-            indicator.NoiseFrequency = Settings.GameplaySettings.LockIndicatorFrequency.Evaluate(targetLock.Lock);
-            spin.Speed = Settings.GameplaySettings.LockSpinSpeed.Evaluate(targetLock.Lock);
+            {
+                indicator.Target = CurrentShip.Target.Value.Position;
+                indicator.NoiseAmplitude = Settings.GameplaySettings.LockIndicatorNoiseAmplitude * (1 - targetLock.Lock);
+                indicator.NoiseFrequency = Settings.GameplaySettings.LockIndicatorFrequency.Evaluate(targetLock.Lock);
+                spin.Speed = Settings.GameplaySettings.LockSpinSpeed.Evaluate(targetLock.Lock);
+            }
         }
     }
 }

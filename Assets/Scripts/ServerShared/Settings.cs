@@ -99,6 +99,7 @@ public class GameplaySettings
     public float HeatRadiationExponent = 1;
     public float HeatRadiationMultiplier = 1;
     public float HeatConductionMultiplier = 1;
+    public ExponentialCurve TemperatureEmissionCurve;
     public float HeatstrokeTemperature = 330;
     public float HeatstrokeMultiplier = .00001f;
     public float HeatstrokeExponent = 2;

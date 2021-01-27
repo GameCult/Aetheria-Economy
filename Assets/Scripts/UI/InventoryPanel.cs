@@ -24,6 +24,8 @@ public class InventoryPanel : MonoBehaviour
     public ActionGameManager GameManager;
     public ContextMenu ContextMenu;
     public TextMeshProUGUI Title;
+    public TextMeshProUGUI MinTempLabel;
+    public TextMeshProUGUI MaxTempLabel;
     public Button Dropdown;
     public Button Current;
     public Button Thermal;
@@ -153,8 +155,13 @@ public class InventoryPanel : MonoBehaviour
 
     private void Update()
     {
-        if (_displayedEntity != null)
+        if (_displayedEntity != null && TemperatureDisplay)
         {
+            if(MinTempLabel)
+            {
+                MinTempLabel.text = $"Min: {((int) (_displayedEntity.MinTemp - 273.15f)).ToString()}°C";
+                MaxTempLabel.text = $"Max: {((int) (_displayedEntity.MaxTemp - 273.15f)).ToString()}°C";
+            }
             var hullData = GameManager.ItemManager.GetData(_displayedEntity.Hull) as HullData;
             for(var x = 0; x < _temperatureTexture.width; x++)
             {
@@ -162,7 +169,7 @@ public class InventoryPanel : MonoBehaviour
                 {
                     if (hullData.Shape[int2(x-1, y-1)])
                     {
-                        var temp = _displayedEntity.Temperature[x - 1, y - 1] / MaxTemperature;
+                        var temp = (_displayedEntity.Temperature[x - 1, y - 1] - _displayedEntity.MinTemp) / (_displayedEntity.MaxTemp-_displayedEntity.MinTemp);
                         var color = TemperatureColor.GetPixelBilinear(TemperatureColorCurve.Evaluate(temp), 0);
                         color.a = TemperatureAlphaCurve.Evaluate(temp);
                         _temperatureTexture.SetPixel(x,y,color);
@@ -200,7 +207,8 @@ public class InventoryPanel : MonoBehaviour
         
         _subscriptions.Clear();
         
-        TemperatureDisplay.gameObject.SetActive(false);
+        if(TemperatureDisplay)
+            TemperatureDisplay.gameObject.SetActive(false);
         
         if(Title)
             Title.text = "None";
@@ -215,6 +223,12 @@ public class InventoryPanel : MonoBehaviour
         _displayedEntity = entity;
         _displayedCargo = null;
         _firstRect = null;
+        
+        if(MinTempLabel)
+        {
+            MinTempLabel.gameObject.SetActive(true);
+            MaxTempLabel.gameObject.SetActive(true);
+        }
 
         if(Title)
             Title.text = entity.Name;
@@ -228,15 +242,19 @@ public class InventoryPanel : MonoBehaviour
             Grid.cellSize = Vector2.one * (int) min(rect.width / (hullData.Shape.Width + 1), rect.height / (hullData.Shape.Height + 1));
         }
         
-        _temperatureTexture = new Texture2D(
-            hullData.Shape.Width+2, 
-            hullData.Shape.Height+2, 
-            TextureFormat.RGBA32, 
-            false, false);
-        TemperatureDisplay.gameObject.SetActive(true);
-        TemperatureDisplay.texture = _temperatureTexture;
-        var tempRect = TemperatureDisplay.rectTransform;
-        tempRect.sizeDelta = Grid.cellSize * new Vector2(hullData.Shape.Width + 2, hullData.Shape.Height + 2);
+        if(TemperatureDisplay)
+        {
+            _temperatureTexture = new Texture2D(
+                hullData.Shape.Width + 2,
+                hullData.Shape.Height + 2,
+                TextureFormat.RGBA32,
+                false,
+                false);
+            TemperatureDisplay.gameObject.SetActive(true);
+            TemperatureDisplay.texture = _temperatureTexture;
+            var tempRect = TemperatureDisplay.rectTransform;
+            tempRect.sizeDelta = Grid.cellSize * new Vector2(hullData.Shape.Width + 2, hullData.Shape.Height + 2);
+        }
         
         if (Current)
         {
@@ -373,7 +391,11 @@ public class InventoryPanel : MonoBehaviour
         
         _displayedCargo = cargo;
         _displayedEntity = null;
-        TemperatureDisplay.gameObject.SetActive(false);
+        if(TemperatureDisplay)
+            TemperatureDisplay.gameObject.SetActive(false);
+        
+        MinTempLabel.gameObject.SetActive(false);
+        MaxTempLabel.gameObject.SetActive(false);
         
         if (Current)
             Current.gameObject.SetActive(false);

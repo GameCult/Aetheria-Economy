@@ -43,7 +43,7 @@ public class Radiator : IBehavior
     {
         Emissivity = Context.Evaluate(_data.Emissivity, Item.EquippableItem, Entity);
         var rad = pow(Item.Temperature, Context.GameplaySettings.HeatRadiationExponent) * Context.GameplaySettings.HeatRadiationMultiplier * Emissivity;
-        Item.AddHeat(-rad * delta);
+        Item.AddHeat(-rad * delta * Context.GetThermalMass(Item.EquippableItem));
         Entity.VisibilitySources[this] = rad;
         return true;
     }

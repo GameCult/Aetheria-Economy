@@ -7,6 +7,7 @@ public class EntityPrefab : MonoBehaviour
 {
     public HullCollider[] HullColliders;
 
+    public RadiatorHardpoint[] RadiatorHardpoints;
     public ThrusterHardpoint[] ThrusterHardpoints;
     public WeaponHardpoint[] WeaponHardpoints;
     public ArticulationPoint[] ArticulationPoints;
