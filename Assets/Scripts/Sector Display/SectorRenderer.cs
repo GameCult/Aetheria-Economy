@@ -221,6 +221,25 @@ public class SectorRenderer : MonoBehaviour
                     instantWeapon.OnFire += () => 
                         _instantWeaponManagers[data].Fire(data, item, instance, entity.Target.Value != null ? EntityInstances[entity.Target.Value] : null);
                 }
+
+                if (behavior is ConstantWeapon constantWeapon)
+                {
+                    var data = (ConstantWeaponData) constantWeapon.Data;
+                    if (!_constantWeaponManagers.ContainsKey(data))
+                    {
+                        var managerPrefab = UnityHelpers.LoadAsset<ConstantWeaponEffectManager>(data.EffectPrefab);
+                        if(managerPrefab)
+                        {
+                            _constantWeaponManagers.Add(data, Instantiate(managerPrefab, EffectManagerParent));
+                        }
+                        else Debug.LogError($"No ConstantWeaponEffectManager prefab found at path {data.EffectPrefab}");
+                    }
+
+                    constantWeapon.OnStartFiring += () => 
+                        _constantWeaponManagers[data].StartFiring(data, item, instance, entity.Target.Value != null ? EntityInstances[entity.Target.Value] : null);
+                    constantWeapon.OnStopFiring += () => 
+                        _constantWeaponManagers[data].StopFiring(item);
+                }
             }
         }
         instance.RadiatorMeshes = new Dictionary<HardpointData, MeshRenderer>();

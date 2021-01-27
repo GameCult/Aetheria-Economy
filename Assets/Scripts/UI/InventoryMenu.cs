@@ -196,7 +196,7 @@ public class InventoryMenu : MonoBehaviour
                 
                 panel.IgnoreOccupancy = null;
                 panel.RefreshCells();
-                if(_dragTargetPanel!=panel)
+                if(_dragTargetPanel!=panel && _dragTargetPanel != null)
                     _dragTargetPanel.RefreshCells();
                 
                 _dragItem = null;

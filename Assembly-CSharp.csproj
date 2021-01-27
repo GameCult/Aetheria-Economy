@@ -724,6 +724,8 @@
      <Compile Include="Assets\Scripts\Gameplay\Weapons\InstantWeaponEffectManager.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantWeaponEffectManager.cs" />
      <Compile Include="Assets\Scripts\Gameplay\RadiatorHardpoint.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantLaserManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantLaser.cs" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIAdditive.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />

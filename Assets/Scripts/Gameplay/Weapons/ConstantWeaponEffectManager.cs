@@ -4,6 +4,6 @@ using UnityEngine;
 
 public abstract class ConstantWeaponEffectManager : MonoBehaviour
 {
-    public abstract void Start(WeaponData data, EquippedItem item, EntityInstance source, EntityInstance target);
-    public abstract void Stop(WeaponData data, EquippedItem item, EntityInstance source, EntityInstance target);
+    public abstract void StartFiring(WeaponData data, EquippedItem item, EntityInstance source, EntityInstance target);
+    public abstract void StopFiring(EquippedItem item);
 }
