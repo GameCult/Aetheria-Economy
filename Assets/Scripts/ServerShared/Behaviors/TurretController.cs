@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using float3 = Unity.Mathematics.float3;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class TurretControllerData : BehaviorData
@@ -23,6 +24,8 @@ public class TurretController : IBehavior
 {
     private TurretControllerData _data;
     private List<Weapon> _weapons = new List<Weapon>();
+    private float _shotSpeed;
+    private bool _predictShots;
 
     public Entity EquippedEntity { get; }
     public EquippedItem Item { get; }
@@ -55,7 +58,14 @@ public class TurretController : IBehavior
     {
         foreach (var b in item.Behaviors)
             if (b is Weapon weapon)
+            {
                 _weapons.Add(weapon);
+                if (weapon.Data is ProjectileWeaponData projectileWeaponData)
+                {
+                    _predictShots = true;
+                    _shotSpeed = EquippedEntity.ItemManager.Evaluate(projectileWeaponData.Velocity, weapon.Item.EquippableItem, EquippedEntity);
+                }
+            }
     }
 
     public bool Execute(float delta)
@@ -63,7 +73,19 @@ public class TurretController : IBehavior
         if (EquippedEntity.Target.Value != null)
         {
             var diff = EquippedEntity.Target.Value.Position - EquippedEntity.Position;
-            EquippedEntity.LookDirection = normalize(diff);
+            if (_predictShots)
+            {
+                var targetHullData = EquippedEntity.ItemManager.GetData(EquippedEntity.Target.Value.Hull) as HullData;
+                var targetVelocity = float3(EquippedEntity.Target.Value.Velocity.x, 0, EquippedEntity.Target.Value.Velocity.y);
+                var predictedPosition = AetheriaMath.FirstOrderIntercept(
+                    EquippedEntity.Position, float3.zero, _shotSpeed,
+                    EquippedEntity.Target.Value.Position, targetVelocity
+                );
+                predictedPosition.y = EquippedEntity.Zone.GetHeight(predictedPosition.xz) + targetHullData.GridOffset;
+                EquippedEntity.LookDirection = normalize(predictedPosition - EquippedEntity.Position);
+            }
+            else
+                EquippedEntity.LookDirection = normalize(diff);
             var dist = length(diff);
 
             foreach (var x in _weapons)

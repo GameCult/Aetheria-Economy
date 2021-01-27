@@ -396,7 +396,7 @@
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Spline\Bundling\Intersections.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Incremental\Relayout.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\Curves\PointLocation.cs" />
-     <Compile Include="Assets\Scripts\GameSettings.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\GameSettings.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Core\Geometry\RTree\IntervalNode.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Routing\Rectilinear\Nudging\PointProjection.cs" />
      <Compile Include="Assets\Scripts\NIH\MSAGL\Layout\Incremental\MinSeparationConstraint.cs" />

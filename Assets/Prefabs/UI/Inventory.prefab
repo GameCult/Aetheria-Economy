@@ -1068,7 +1068,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2279630452912159028}
   m_HandleRect: {fileID: 2279630452912159027}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1085,12 +1085,12 @@ GameObject:
   - component: {fileID: 2279630453345861720}
   - component: {fileID: 2279630453345861722}
   - component: {fileID: 2279630453345861721}
-  - component: {fileID: 5461050610218844277}
   - component: {fileID: 5747035144148683486}
   - component: {fileID: 3584371112157775779}
   - component: {fileID: 3507449623040604819}
   - component: {fileID: 1876119682947177707}
   - component: {fileID: 3026868749259999386}
+  - component: {fileID: 7846311452637886606}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -1155,18 +1155,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5461050610218844277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2279630453345861799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa69c313aba23f945b760e79c45083ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &5747035144148683486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1225,6 +1213,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9643e74593988274bbed9adf40384e48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7846311452637886606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2279630453345861799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa69c313aba23f945b760e79c45083ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2279630453679143106
@@ -2413,7 +2413,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 2279630453345861721}
   Icon: {fileID: 7107228986248497935}
-  PointerClickTrigger: {fileID: 5461050610218844277}
+  PointerClickTrigger: {fileID: 7846311452637886606}
   BeginDragTrigger: {fileID: 3584371112157775779}
   DragTrigger: {fileID: 3507449623040604819}
   EndDragTrigger: {fileID: 5747035144148683486}

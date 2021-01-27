@@ -660,7 +660,7 @@ public class SectorRenderer : MonoBehaviour
             if (entity.Key.Target.Value != null && !EntityInstances.ContainsKey(entity.Key.Target.Value))
                 entity.Key.Target.Value = null;
             entity.Value.LookAtPoint.position = entity.Value.Transform.position + (Vector3) entity.Key.LookDirection * (entity.Key.Target.Value != null
-                ? (EntityInstances[entity.Key.Target.Value].Transform.position - entity.Value.Transform.position).magnitude : 10000);
+                ? max((EntityInstances[entity.Key.Target.Value].Transform.position - entity.Value.Transform.position).magnitude,Settings.GameplaySettings.ConvergenceMinimumDistance) : 10000);
             entity.Value.Transform.position = entity.Key.Position;
         }
         foreach(var e in hitList)

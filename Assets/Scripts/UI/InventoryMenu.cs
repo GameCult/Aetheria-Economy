@@ -275,26 +275,42 @@ public class InventoryMenu : MonoBehaviour
                     var item = cargoEvent.CargoBay.Occupancy[cargoEvent.Position.x, cargoEvent.Position.y];
                     if(item!=null)
                     {
-                        if (_selectedPanel != null)
+                        if (Mouse.current.clickCount.ReadValue() == 2)
                         {
+                            var otherPanel = panel == InventoryPanels[0] ? InventoryPanels[1] : InventoryPanels[0];
+                            if (otherPanel.DropItem(item))
+                            {
+                                cargoEvent.CargoBay.Remove(item);
+                                panel.RefreshCells();
+                                otherPanel.RefreshCells();
+                            }
+                        }
+                        else
+                        {
+                            if (_selectedPanel != null)
+                            {
+                                if (_selectedPanel.CellInstances.ContainsKey(_selectedPosition))
+                                {
+                                    foreach (var v in _selectedItemData.Shape.Coordinates)
+                                    {
+                                        var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
+                                        _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2);
+                                    }
+                                }
+                            }
+                            _selectedPanel = panel;
+                            _selectedPosition = cargoEvent.Position;
+                            PropertiesPanel.Clear();
+                            PropertiesPanel.AddItemProperties(item);
+                            _selectedPanel = panel;
+                            _selectedPosition = cargoEvent.CargoBay.Cargo[item];
+                            _selectedItem = item;
+                            _selectedItemData = GameManager.ItemManager.GetData(item);
                             foreach (var v in _selectedItemData.Shape.Coordinates)
                             {
                                 var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
-                                _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2);
+                                _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
                             }
-                        }
-                        _selectedPanel = panel;
-                        _selectedPosition = cargoEvent.Position;
-                        PropertiesPanel.Clear();
-                        PropertiesPanel.AddItemProperties(item);
-                        _selectedPanel = panel;
-                        _selectedPosition = cargoEvent.CargoBay.Cargo[item];
-                        _selectedItem = item;
-                        _selectedItemData = GameManager.ItemManager.GetData(item);
-                        foreach (var v in _selectedItemData.Shape.Coordinates)
-                        {
-                            var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
-                            _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
                         }
                     }
                 }
@@ -303,26 +319,40 @@ public class InventoryMenu : MonoBehaviour
                     var item = entityEvent.Entity.GearOccupancy[entityEvent.Position.x, entityEvent.Position.y];
                     if (item != null)
                     {
-                        if (_selectedPanel != null)
+                        if (Mouse.current.clickCount.ReadValue() == 2)
                         {
-                            if(_selectedPanel.CellInstances.ContainsKey(_selectedItemData.Shape.Coordinates.First()))
+                            var otherPanel = panel == InventoryPanels[0] ? InventoryPanels[1] : InventoryPanels[0];
+                            if (otherPanel.DropItem(item.EquippableItem))
                             {
-                                foreach (var v in _selectedItemData.Shape.Coordinates)
-                                {
-                                    var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
-                                    _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2);
-                                }
+                                entityEvent.Entity.Unequip(item);
+                                panel.RefreshCells();
+                                otherPanel.RefreshCells();
                             }
                         }
-                        PropertiesPanel.Inspect(entityEvent.Entity, item);
-                        _selectedPanel = panel;
-                        _selectedPosition = item.Position;
-                        _selectedItem = item.EquippableItem;
-                        _selectedItemData = GameManager.ItemManager.GetData(item.EquippableItem);
-                        foreach (var v in _selectedItemData.Shape.Coordinates)
+                        else
                         {
-                            var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
-                            _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
+                            if (_selectedPanel != null)
+                            {
+                                if (_selectedPanel.CellInstances.ContainsKey(_selectedPosition))
+                                {
+                                    foreach (var v in _selectedItemData.Shape.Coordinates)
+                                    {
+                                        var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
+                                        _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2);
+                                    }
+                                }
+                            }
+
+                            PropertiesPanel.Inspect(entityEvent.Entity, item);
+                            _selectedPanel = panel;
+                            _selectedPosition = item.Position;
+                            _selectedItem = item.EquippableItem;
+                            _selectedItemData = GameManager.ItemManager.GetData(item.EquippableItem);
+                            foreach (var v in _selectedItemData.Shape.Coordinates)
+                            {
+                                var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
+                                _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
+                            }
                         }
                     }
                 }

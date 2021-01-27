@@ -230,11 +230,14 @@
             <e p="ActionGameManager.cs" t="Include" />
             <e p="ArticulationPoint.cs" t="Include" />
             <e p="EntityPrefab.cs" t="Include" />
+            <e p="GameSettings.cs" t="Include" />
             <e p="HullCollider.cs" t="Include" />
             <e p="RadiatorHardpoint.cs" t="Include" />
             <e p="ThrusterHardpoint.cs" t="Include" />
             <e p="WeaponHardpoint.cs" t="Include" />
             <e p="Weapons" t="Include">
+              <e p="ConstantLaser.cs" t="Include" />
+              <e p="ConstantLaserManager.cs" t="Include" />
               <e p="ConstantWeaponEffectManager.cs" t="Include" />
               <e p="GuidedProjectile.cs" t="Include" />
               <e p="GuidedProjectileManager.cs" t="Include" />
@@ -245,7 +248,6 @@
               <e p="ProjectileManager.cs" t="Include" />
             </e>
           </e>
-          <e p="GameSettings.cs" t="Include" />
           <e p="Gravity.cs" t="Include" />
           <e p="InitialSettings.cs" t="Include" />
           <e p="MapMenuInput.cs" t="Include" />
@@ -1452,6 +1454,7 @@
           </e>
           <e p="ServerShared" t="Include">
             <e p="ActionCollection.cs" t="Include" />
+            <e p="AetheriaMath.cs" t="Include" />
             <e p="Agents" t="Include">
               <e p="AgentBehavior.cs" t="Include" />
               <e p="AgentTask.cs" t="Include" />

@@ -65,7 +65,7 @@ public class GuidedProjectile : MonoBehaviour
             }
 
             var diff = Target.position - transform.position;
-            var targetDist = diff.magnitude;
+            var targetDist = diff.Flatland().magnitude;
 
             if (_prevDist < targetDist)
             {
@@ -74,7 +74,7 @@ public class GuidedProjectile : MonoBehaviour
             _prevDist = targetDist;
 
             var position = (float3) t.position;
-            var sourceDist = length((float3) Source.position - position);
+            var sourceDist = length(((float3) Source.position).xz - position.xz);
             var curveLerp = 1 - targetDist / (sourceDist + targetDist);
             var dir = diff.normalized;
             var right = cross(dir, float3(0, 1, 0));

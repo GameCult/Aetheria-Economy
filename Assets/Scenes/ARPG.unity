@@ -21011,7 +21011,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 817565128}
   Icon: {fileID: 109242182}
-  PointerClickTrigger: {fileID: 817565127}
+  PointerClickTrigger: {fileID: 0}
   BeginDragTrigger: {fileID: 817565125}
   DragTrigger: {fileID: 817565124}
   EndDragTrigger: {fileID: 817565126}
@@ -23392,7 +23392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Background: {fileID: 7628189704657849089}
   Icon: {fileID: 1504178997104738391}
-  PointerClickTrigger: {fileID: 4447187362195032877}
+  PointerClickTrigger: {fileID: 0}
   BeginDragTrigger: {fileID: 5170175554978942203}
   DragTrigger: {fileID: 5103404206460645835}
   EndDragTrigger: {fileID: 4161198292510736774}

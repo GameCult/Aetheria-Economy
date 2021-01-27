@@ -111,4 +111,5 @@ public class GameplaySettings
     public float TorqueFloor;
     public float TorqueMultiplier;
     public float VisibilityDecay;
+    public float ConvergenceMinimumDistance;
 }

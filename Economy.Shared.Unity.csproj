@@ -521,6 +521,7 @@
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\ChargedWeapon.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\AutoWeapon.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\LockWeapon.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\AetheriaMath.cs" />
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Economy.Shared.Unity.asmdef" />
  <Reference Include="System.Threading.Tasks.Extensions">

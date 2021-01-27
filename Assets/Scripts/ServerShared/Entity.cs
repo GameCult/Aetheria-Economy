@@ -859,6 +859,15 @@ public class EquippedCargoBay : EquippedItem
 
         return false;
     }
+    
+    public bool TryStore(ItemInstance item)
+    {
+        if (item is SimpleCommodity simpleCommodity)
+            return TryStore(simpleCommodity);
+        if (item is CraftedItemInstance craftedItem)
+            return TryStore(craftedItem);
+        return false;
+    }
 
     public bool TryStore(ItemInstance item, int2 cargoCoord)
     {

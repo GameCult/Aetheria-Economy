@@ -144,6 +144,9 @@ public class InventoryPanel : MonoBehaviour
                                     ship.SetParent(GameManager.CurrentShip.Parent);
                                     GameManager.PlayerShips.Add(ship);
                                     GameManager.Credits -= pack.Price(GameManager.ItemManager);
+                                    GameManager.CurrentShip = ship;
+                                    GameManager.DockingBay.DockedShip = ship;
+                                    Display(ship);
                                 }, pack.Price(GameManager.ItemManager) < GameManager.Credits
                                 )));
                 }
@@ -626,6 +629,21 @@ public class InventoryPanel : MonoBehaviour
         if(_displayedCargo != null)
         {
             return _displayedCargo.TryStore(item, position);
+        }
+
+        return false;
+    }
+
+    public bool DropItem(ItemInstance item)
+    {
+        if (_displayedEntity != null && item is EquippableItem equippableItem)
+        {
+            return _displayedEntity.TryEquip(equippableItem);
+        }
+
+        if(_displayedCargo != null)
+        {
+            return _displayedCargo.TryStore(item);
         }
 
         return false;
