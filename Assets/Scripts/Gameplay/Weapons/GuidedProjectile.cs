@@ -97,7 +97,8 @@ public class GuidedProjectile : MonoBehaviour
                 for (int i = 0; i < Children; i++)
                 {
                     var child = ChildProjectile.Instantiate<GuidedProjectile>();
-                    child.StartPosition = child.transform.position = t.position;
+                    child.transform.position = t.position;
+                    child.StartPosition = StartPosition;
                     _children.Add(child);
                     var randomDirection = normalize(Random.insideUnitCircle);
                     var perpendicularRandom = randomDirection.x * right + randomDirection.y * up;
