@@ -57,29 +57,123 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56c973b8f3781c848b6530c2e7efce05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ChildProjectile: {fileID: 0}
+  Children: 0
+  SplitTime: 0
+  SplitSeparationForwardness: 0
   Particles: {fileID: 2200213684891960502}
   FadeOutTime: 1
   ThrustCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   GuidanceCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.9608628
+      value: 0.9977624
+      inSlope: 0.112816334
+      outSlope: 0.112816334
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   LiftCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0023040771
+      value: 0.73749924
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.17710531
+      value: 0.81192774
+      inSlope: -0.8198446
+      outSlope: -0.8198446
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.38233894
+      value: 0.09487492
+      inSlope: -0.08619904
+      outSlope: -0.08619904
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7232835
+      value: 0.09761685
+      inSlope: 0.13605312
+      outSlope: 0.13605312
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.5938519
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  Frequency: 0
-  Thrust: 0
-  TopSpeed: 0
+  Frequency: 0.25
+  Thrust: 500
+  TopSpeed: 250
   Source: {fileID: 0}
   Target: {fileID: 0}
 --- !u!1 &2200213684891960497
@@ -4946,7 +5040,7 @@ GameObject:
   - component: {fileID: 5148235482537864796}
   - component: {fileID: 8540408454168213454}
   m_Layer: 0
-  m_Name: Micromissile Manager
+  m_Name: Micromissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

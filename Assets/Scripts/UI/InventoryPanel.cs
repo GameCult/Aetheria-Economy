@@ -289,18 +289,21 @@ public class InventoryPanel : MonoBehaviour
                     _firstRect = cell.GetComponent<RectTransform>();
                 if (!thermal)
                 {
-                    cell.PointerClickTrigger.OnPointerClickAsObservable()
-                        .Subscribe(data => _onClick?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                    cell.BeginDragTrigger.OnBeginDragAsObservable()
-                        .Subscribe(data => _onBeginDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                    cell.DragTrigger.OnDragAsObservable()
-                        .Subscribe(data => _onDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                    cell.EndDragTrigger.OnEndDragAsObservable()
-                        .Subscribe(data => _onEndDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                    cell.PointerEnterTrigger.OnPointerEnterAsObservable()
-                        .Subscribe(data => _onPointerEnter?.OnNext(new InventoryEntityEventData(data, v, entity)));
-                    cell.PointerExitTrigger.OnPointerExitAsObservable()
-                        .Subscribe(data => _onPointerExit?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                    if(cell.PointerClickTrigger)
+                    {
+                        cell.PointerClickTrigger.OnPointerClickAsObservable()
+                            .Subscribe(data => _onClick?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                        cell.BeginDragTrigger.OnBeginDragAsObservable()
+                            .Subscribe(data => _onBeginDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                        cell.DragTrigger.OnDragAsObservable()
+                            .Subscribe(data => _onDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                        cell.EndDragTrigger.OnEndDragAsObservable()
+                            .Subscribe(data => _onEndDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                        cell.PointerEnterTrigger.OnPointerEnterAsObservable()
+                            .Subscribe(data => _onPointerEnter?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                        cell.PointerExitTrigger.OnPointerExitAsObservable()
+                            .Subscribe(data => _onPointerExit?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                    }
                 }
                 else
                 {

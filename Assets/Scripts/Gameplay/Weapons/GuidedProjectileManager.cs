@@ -18,7 +18,8 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
             p.Thrust = source.Entity.ItemManager.Evaluate(launcher.Thrust, item.EquippableItem, source.Entity);
             var hp = source.Entity.Hardpoints[item.Position.x, item.Position.y];
             var barrel = source.GetBarrel(hp);
-            p.transform.position = barrel.position;
+            p.StartPosition = p.transform.position = barrel.position;
+            p.Range = source.Entity.ItemManager.Evaluate(data.Range, item.EquippableItem, source.Entity);
             p.Velocity = barrel.forward * source.Entity.ItemManager.Evaluate(launcher.LaunchSpeed, item.EquippableItem, source.Entity);
             p.Damage = source.Entity.ItemManager.Evaluate(data.Damage, item.EquippableItem, source.Entity);
             p.Penetration = source.Entity.ItemManager.Evaluate(data.Penetration, item.EquippableItem, source.Entity);
