@@ -9,19 +9,19 @@ using static Unity.Mathematics.math;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ChargedWeaponData : InstantWeaponData
 {
-    [InspectableField, JsonProperty("chargeTime"), Key(13), RuntimeInspectable]
+    [InspectableField, JsonProperty("chargeTime"), Key(16), RuntimeInspectable]
     public PerformanceStat ChargeTime = new PerformanceStat();
     
-    [InspectableField, JsonProperty("chargeEnergy"), Key(14), RuntimeInspectable]
+    [InspectableField, JsonProperty("chargeEnergy"), Key(17), RuntimeInspectable]
     public PerformanceStat ChargeEnergy = new PerformanceStat();
 
-    [InspectableField, JsonProperty("canFireEarly"), Key(15)]
+    [InspectableField, JsonProperty("canFireEarly"), Key(18)]
     public bool CanFireEarly;
 
-    [InspectableField, JsonProperty("failureCharge"), Key(16)]
+    [InspectableField, JsonProperty("failureCharge"), Key(19)]
     public float FailureCharge;
 
-    [InspectableField, JsonProperty("failureDamage"), Key(17)]
+    [InspectableField, JsonProperty("failureDamage"), Key(20)]
     public float FailureDamage;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
@@ -38,6 +38,8 @@ public class ChargedWeapon : InstantWeapon
     private float _charge;
     private float _progress;
 
+    public event Action OnStartCharging;
+    public event Action OnStopCharging;
     public event Action OnCharged;
     public event Action OnFailed;
 
@@ -63,10 +65,12 @@ public class ChargedWeapon : InstantWeapon
                 _charged = true;
                 OnCharged?.Invoke();
             }
-            if (_charge > _data.FailureCharge)
+            if (_data.FailureCharge > 1 && _charge > _data.FailureCharge)
             {
                 _charging = false;
                 _cooldown = 1;
+                _coolingDown = true;
+                _charge = 0;
                 OnFailed?.Invoke();
                 Item.EquippableItem.Durability -= _data.FailureDamage;
             }
@@ -76,8 +80,9 @@ public class ChargedWeapon : InstantWeapon
 
     public override void Activate()
     {
-        if(_cooldown < 0)
+        if(!_coolingDown)
         {
+            OnStartCharging?.Invoke();
             _charging = true;
             _charged = false;
         }
@@ -85,10 +90,15 @@ public class ChargedWeapon : InstantWeapon
 
     public override void Deactivate()
     {
-        if (_charging && (_data.CanFireEarly || _charge > 1))
+        if (_charging)
         {
-            Trigger();
-            _charge = 0;
+            if (_data.CanFireEarly || _charge > 1)
+            {
+                Trigger();
+                _charge = 0;
+            }
+            OnStopCharging?.Invoke();
+            _charging = false;
         }
     }
 }

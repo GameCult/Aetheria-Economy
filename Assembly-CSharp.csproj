@@ -726,6 +726,11 @@
      <Compile Include="Assets\Scripts\Gameplay\RadiatorHardpoint.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantLaserManager.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantLaser.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ChargeEffectManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ParticleChargeEffect.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\WeaponChargeEffect.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\HitscanManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\HitscanEffect.cs" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIAdditive.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />

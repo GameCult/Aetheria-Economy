@@ -236,16 +236,21 @@
             <e p="ThrusterHardpoint.cs" t="Include" />
             <e p="WeaponHardpoint.cs" t="Include" />
             <e p="Weapons" t="Include">
+              <e p="ChargeEffectManager.cs" t="Include" />
               <e p="ConstantLaser.cs" t="Include" />
               <e p="ConstantLaserManager.cs" t="Include" />
               <e p="ConstantWeaponEffectManager.cs" t="Include" />
               <e p="GuidedProjectile.cs" t="Include" />
               <e p="GuidedProjectileManager.cs" t="Include" />
+              <e p="HitscanEffect.cs" t="Include" />
+              <e p="HitscanManager.cs" t="Include" />
               <e p="InstantWeaponEffectManager.cs" t="Include" />
               <e p="Laser.cs" t="Include" />
               <e p="LaserManager.cs" t="Include" />
+              <e p="ParticleChargeEffect.cs" t="Include" />
               <e p="Projectile.cs" t="Include" />
               <e p="ProjectileManager.cs" t="Include" />
+              <e p="WeaponChargeEffect.cs" t="Include" />
             </e>
           </e>
           <e p="Gravity.cs" t="Include" />

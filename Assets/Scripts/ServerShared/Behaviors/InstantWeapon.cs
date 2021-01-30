@@ -33,7 +33,7 @@ public class InstantWeapon : Weapon, IProgressBehavior
     private float _burstInterval;
     protected float _cooldown; // Normalized
     private int _ammo = 1;
-    private bool _coolingDown;
+    protected bool _coolingDown;
 
     public override int Ammo
     {

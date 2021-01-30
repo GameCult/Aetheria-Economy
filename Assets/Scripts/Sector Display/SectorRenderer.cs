@@ -220,6 +220,18 @@ public class SectorRenderer : MonoBehaviour
 
                     instantWeapon.OnFire += () => 
                         _instantWeaponManagers[data].Fire(data, item, instance, entity.Target.Value != null ? EntityInstances[entity.Target.Value] : null);
+
+                    if (behavior is ChargedWeapon chargedWeapon)
+                    {
+                        var chargeManager = _instantWeaponManagers[data].GetComponent<ChargeEffectManager>();
+                        if (chargeManager)
+                        {
+                            chargedWeapon.OnStartCharging += () => chargeManager.StartCharging(chargedWeapon, item, instance);
+                            chargedWeapon.OnStopCharging += () => chargeManager.StopCharging(chargedWeapon);
+                            chargedWeapon.OnCharged += () => chargeManager.Charged(chargedWeapon);
+                            chargedWeapon.OnFailed += () => chargeManager.Failed(chargedWeapon);
+                        }
+                    }
                 }
 
                 if (behavior is ConstantWeapon constantWeapon)

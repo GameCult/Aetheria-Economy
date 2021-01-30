@@ -55,13 +55,6 @@ public class Projectile : MonoBehaviour
                         hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, Velocity.normalized);
                         transform.position = hit.point;
                         StartCoroutine(Kill());
-                        if (HitEffect != null)
-                        {
-                            var t = HitEffect.Instantiate<Transform>();
-                            t.SetParent(hit.collider.transform);
-                            t.position = hit.point;
-                            return;
-                        }
                     }
                 }
                 else// if (hit.transform.gameObject.layer == 1)
