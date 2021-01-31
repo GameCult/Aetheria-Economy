@@ -57,7 +57,7 @@ namespace Microsoft.Msagl.Layout.Layered {
         /// <summary>
         /// minLayer, maxLayer, same layer, up-down, up-down vertical and left-right constraints are supported by this class
         /// </summary>
-        internal VerticalConstraintsForSugiyama VerticalConstraints {
+        public VerticalConstraintsForSugiyama VerticalConstraints {
             get { return verticalConstraints; }
         }
 

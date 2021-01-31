@@ -88,7 +88,7 @@ public abstract class PersistentBehaviorData
 }
 
 [InspectableField, 
- Union(0, typeof(ProjectileWeaponData)), 
+ // Union(0, typeof(ProjectileWeaponData)), 
  Union(1, typeof(LauncherData)),
  Union(2, typeof(ReactorData)), 
  Union(3, typeof(RadiatorData)), 

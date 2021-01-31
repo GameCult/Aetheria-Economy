@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class InstantWeaponEffectManager : MonoBehaviour
 {
-    public abstract void Fire(WeaponData data, EquippedItem item, EntityInstance source, EntityInstance target);
+    public abstract void Fire(InstantWeapon weapon, EquippedItem item, EntityInstance source, EntityInstance target);
 }

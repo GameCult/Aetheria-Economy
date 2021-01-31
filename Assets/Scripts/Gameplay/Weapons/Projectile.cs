@@ -42,8 +42,11 @@ public class Projectile : MonoBehaviour
         
         if(_alive)
         {
-            var position = transform.position;
+            var t = transform;
+            var position = t.position;
             Velocity += Vector3.up * (Gravity * Time.deltaTime);
+            var forward = Velocity.normalized;
+            t.forward = forward;
             var ray = new Ray(position, Velocity);
             if (Physics.Raycast(ray, out var hit, Velocity.magnitude * Time.deltaTime, 1))
             {
@@ -52,7 +55,7 @@ public class Projectile : MonoBehaviour
                 {
                     if (hull.Entity != SourceEntity)
                     {
-                        hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, Velocity.normalized);
+                        hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, forward);
                         transform.position = hit.point;
                         StartCoroutine(Kill());
                     }
@@ -60,6 +63,14 @@ public class Projectile : MonoBehaviour
                 else// if (hit.transform.gameObject.layer == 1)
                 {
                     StartCoroutine(Kill());
+                    return;
+                }
+                
+                if (HitEffect != null)
+                {
+                    var ht = HitEffect.Instantiate<Transform>();
+                    ht.SetParent(hit.collider.transform);
+                    ht.position = hit.point;
                     return;
                 }
             }

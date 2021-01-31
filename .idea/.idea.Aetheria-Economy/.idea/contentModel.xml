@@ -67,6 +67,7 @@
         </e>
         <e p="HoverCursorChange.cs" t="Include" />
         <e p="ItemFilter.cs" t="Include" />
+        <e p="LineMaterialOffset.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">
@@ -1494,7 +1495,6 @@
               <e p="MiningTool.cs" t="Include" />
               <e p="ParticleEffect.cs" t="Include" />
               <e p="PatrolController.cs" t="Include" />
-              <e p="ProjectileWeapon.cs" t="Include" />
               <e p="Radiance.cs" t="Include" />
               <e p="Radiator.cs" t="Include" />
               <e p="Reactor.cs" t="Include" />

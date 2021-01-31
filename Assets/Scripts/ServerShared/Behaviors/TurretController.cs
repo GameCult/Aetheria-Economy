@@ -60,10 +60,11 @@ public class TurretController : IBehavior
             if (b is Weapon weapon)
             {
                 _weapons.Add(weapon);
-                if (weapon.Data is ProjectileWeaponData projectileWeaponData)
+                var vel = Context.Evaluate(weapon.WeaponData.Velocity, item.EquippableItem, EquippedEntity);
+                if (vel > .1f)
                 {
                     _predictShots = true;
-                    _shotSpeed = EquippedEntity.ItemManager.Evaluate(projectileWeaponData.Velocity, weapon.Item.EquippableItem, EquippedEntity);
+                    _shotSpeed = vel;
                 }
             }
     }

@@ -219,7 +219,7 @@ public class SectorRenderer : MonoBehaviour
                     }
 
                     instantWeapon.OnFire += () => 
-                        _instantWeaponManagers[data].Fire(data, item, instance, entity.Target.Value != null ? EntityInstances[entity.Target.Value] : null);
+                        _instantWeaponManagers[data].Fire(instantWeapon, item, instance, entity.Target.Value != null && EntityInstances.ContainsKey(entity.Target.Value) ? EntityInstances[entity.Target.Value] : null);
 
                     if (behavior is ChargedWeapon chargedWeapon)
                     {
@@ -474,6 +474,16 @@ public class SectorRenderer : MonoBehaviour
             var t = Instantiate(EntityInstances[entity].Prefab.DestroyEffect).transform;
             t.position = EntityInstances[entity].Prefab.transform.position;
         }
+
+        foreach (var item in entity.Equipment)
+        {
+            foreach (var behavior in item.Behaviors)
+            {
+                if(behavior is Weapon weapon)
+                    weapon.ResetEvents();
+            }
+        }
+        
         Destroy(EntityInstances[entity].Transform.gameObject);
         EntityInstances.Remove(entity);
     }

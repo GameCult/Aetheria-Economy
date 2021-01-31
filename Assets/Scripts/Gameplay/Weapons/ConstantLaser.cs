@@ -7,6 +7,7 @@ public class ConstantLaser : MonoBehaviour
     public AnimationCurve StartCurve;
     public AnimationCurve EndCurve;
     public AnimationCurve IntensityCurve;
+    public float WidthMultiplier = 1;
     public float StartDuration;
     public float FadeDuration;
     public float CycleDuration;
@@ -40,7 +41,7 @@ public class ConstantLaser : MonoBehaviour
         if (_stopping)
         {
             var lerp = (Time.time - _startTime) / FadeDuration;
-            LineRenderer.widthMultiplier = EndCurve.Evaluate(lerp) * _stopIntensity;
+            LineRenderer.widthMultiplier = EndCurve.Evaluate(lerp) * _stopIntensity * WidthMultiplier;
             
             if (lerp > 1)
             {
@@ -59,11 +60,11 @@ public class ConstantLaser : MonoBehaviour
                     _cycleStartTime = Time.time;
                 }
                 _intensity = IntensityCurve.Evaluate((Time.time - _cycleStartTime) / CycleDuration % CycleDuration);
-                LineRenderer.widthMultiplier = _intensity;
+                LineRenderer.widthMultiplier = _intensity * WidthMultiplier;
             }
             else
             {
-                LineRenderer.widthMultiplier = StartCurve.Evaluate(lerp);
+                LineRenderer.widthMultiplier = StartCurve.Evaluate(lerp) * WidthMultiplier;
             }
         }
         

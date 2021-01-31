@@ -9,7 +9,7 @@ namespace Microsoft.Msagl.Layout.Layered {
     /// <summary>
     /// vertical constraints for Suquiyama scheme
     /// </summary>
-    internal class VerticalConstraintsForSugiyama {
+    public class VerticalConstraintsForSugiyama {
         readonly Set<Node> _maxLayerOfGeomGraph = new Set<Node>();
         /// <summary>
         /// nodes that are pinned to the max layer
@@ -32,7 +32,7 @@ namespace Microsoft.Msagl.Layout.Layered {
         /// set of couple of nodes belonging to the same layer
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        internal Set<Tuple<Node, Node>> SameLayerConstraints
+        public Set<Tuple<Node, Node>> SameLayerConstraints
         {
             get { return sameLayerConstraints; }
         }

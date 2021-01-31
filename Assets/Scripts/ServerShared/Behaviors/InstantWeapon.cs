@@ -9,13 +9,13 @@ using static Unity.Mathematics.math;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class InstantWeaponData : WeaponData
 {
-    [InspectableField, JsonProperty("burstCount"), Key(13)]
-    public int BurstCount;
+    [InspectableField, JsonProperty("count"), Key(15)]
+    public PerformanceStat Count = new PerformanceStat();
 
-    [InspectableField, JsonProperty("burstTime"), Key(14)]
+    [InspectableField, JsonProperty("burstTime"), Key(16)]
     public PerformanceStat BurstTime = new PerformanceStat();
     
-    [InspectableField, JsonProperty("cooldown"), Key(15), RuntimeInspectable]
+    [InspectableField, JsonProperty("cooldown"), Key(17), RuntimeInspectable]
     public PerformanceStat Cooldown = new PerformanceStat();
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
@@ -34,6 +34,10 @@ public class InstantWeapon : Weapon, IProgressBehavior
     protected float _cooldown; // Normalized
     private int _ammo = 1;
     protected bool _coolingDown;
+    
+    public float BurstCount { get; protected set; }
+    public float BurstTime { get; protected set; }
+    public float Cooldown { get; protected set; }
 
     public override int Ammo
     {
@@ -46,6 +50,14 @@ public class InstantWeapon : Weapon, IProgressBehavior
     public event Action OnCooldownComplete;
     public event Action OnFire;
 
+    public override void ResetEvents()
+    {
+        OnReloadBegin = null;
+        OnReloadComplete = null;
+        OnCooldownComplete = null;
+        OnFire = null;
+    }
+
     public InstantWeapon(ItemManager context, InstantWeaponData data, Entity entity, EquippedItem item) : base(context,data,entity,item)
     {
         _data = data;
@@ -53,18 +65,27 @@ public class InstantWeapon : Weapon, IProgressBehavior
 
     protected void Trigger()
     {
-        _burstRemaining = _data.BurstCount;
-        _burstInterval = Context.Evaluate(_data.BurstTime, Item.EquippableItem, Entity) / _burstRemaining;
+        _burstRemaining = (int) BurstCount;
+        _burstInterval = BurstTime / _burstRemaining;
         _burstTimer = 0;
         _cooldown = 1;
         _coolingDown = true;
     }
 
+    protected override void UpdateStats()
+    {
+        base.UpdateStats();
+        BurstCount = Context.Evaluate(_data.Count, Item.EquippableItem, Entity);
+        BurstTime = Context.Evaluate(_data.BurstTime, Item.EquippableItem, Entity);
+        Cooldown = Context.Evaluate(_data.Cooldown, Item.EquippableItem, Entity);
+    }
+
     public override bool Execute(float delta)
     {
+        base.Execute(delta);
         if (_coolingDown)
         {
-            _cooldown -= delta / (_ammo == 0 ? _data.ReloadTime : Context.Evaluate(_data.Cooldown, Item.EquippableItem, Entity));
+            _cooldown -= delta / (_ammo == 0 ? _data.ReloadTime : Cooldown);
             if (_cooldown < 0)
             {
                 _coolingDown = false;
@@ -109,9 +130,9 @@ public class InstantWeapon : Weapon, IProgressBehavior
             _burstRemaining--;
             _burstTimer -= _burstInterval;
             OnFire?.Invoke();
-            Item.AddHeat(Context.Evaluate(_data.Heat, Item.EquippableItem, Entity));
-            Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
-            Entity.Energy -= Context.Evaluate(_data.Energy, Item.EquippableItem, Entity);
+            Item.AddHeat(Heat);
+            Entity.VisibilitySources[this] = Visibility;
+            Entity.Energy -= Energy;
         }
         return true;
     }

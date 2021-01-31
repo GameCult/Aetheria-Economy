@@ -609,7 +609,7 @@ public abstract class Entity
 
             radiation += r;
             
-            if(float.IsNaN(NewTemperature[v.x, v.y]) || NewTemperature[v.x, v.y] < 0 || NewTemperature[v.x, v.y] > 600)
+            if(float.IsNaN(NewTemperature[v.x, v.y]) || NewTemperature[v.x, v.y] < 0)
                 ItemManager.Log("HOUSTON, WE HAVE A PROBLEM!");
 
             if (NewTemperature[v.x, v.y] < MinTemp)

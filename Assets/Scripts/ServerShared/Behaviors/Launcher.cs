@@ -9,26 +9,23 @@ using Unity.Mathematics;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class LauncherData : LockWeaponData
 {
-    [InspectableAnimationCurve, JsonProperty("guidance"), Key(21)]  
+    [InspectableAnimationCurve, JsonProperty("guidance"), Key(23)]  
     public float4[] GuidanceCurve;
 
-    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(22)]  
+    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(24)]  
     public float4[] ThrustCurve;
 
-    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(23)]  
+    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(25)]  
     public float4[] LiftCurve;
 
-    [InspectableField, JsonProperty("thrust"), Key(24)]  
+    [InspectableField, JsonProperty("thrust"), Key(26)]  
     public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField, JsonProperty("frequency"), Key(25)]  
+    [InspectableField, JsonProperty("frequency"), Key(27)]
     public float DodgeFrequency;
 
-    [InspectableField, JsonProperty("launchSpeed"), Key(26)]  
-    public PerformanceStat LaunchSpeed = new PerformanceStat();
-
-    [InspectableField, JsonProperty("missileSpeed"), Key(27), RuntimeInspectable]  
-    public PerformanceStat Velocity = new PerformanceStat();
+    [InspectableField, JsonProperty("missileSpeed"), Key(28), RuntimeInspectable]
+    public PerformanceStat MissileVelocity = new PerformanceStat();
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {

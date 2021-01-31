@@ -9,19 +9,19 @@ using static Unity.Mathematics.math;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class LockWeaponData : InstantWeaponData
 {
-    [InspectableField, JsonProperty("speed"), Key(16), RuntimeInspectable]
+    [InspectableField, JsonProperty("speed"), Key(18), RuntimeInspectable]
     public PerformanceStat LockSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("sensorImpact"), Key(17)]
+    [InspectableField, JsonProperty("sensorImpact"), Key(19)]
     public PerformanceStat SensorImpact = new PerformanceStat();
 
-    [InspectableField, JsonProperty("threshold"), Key(18), RuntimeInspectable]
+    [InspectableField, JsonProperty("threshold"), Key(20), RuntimeInspectable]
     public PerformanceStat LockAngle = new PerformanceStat();
 
-    [InspectableField, JsonProperty("directionImpact"), Key(19)]
+    [InspectableField, JsonProperty("directionImpact"), Key(21)]
     public PerformanceStat DirectionImpact = new PerformanceStat();
 
-    [InspectableField, JsonProperty("decay"), Key(20)]
+    [InspectableField, JsonProperty("decay"), Key(22)]
     public PerformanceStat Decay = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
@@ -81,6 +81,7 @@ public class LockWeapon : InstantWeapon
                 var lerp = 1 - unlerp(0, 90, degrees);
                 _lock = saturate(_lock + pow(lerp, DirectionImpact) * delta * LockSpeed);
             }
+            else _lock = saturate(_lock - delta * Decay);
         }
 
         return base.Execute(delta);

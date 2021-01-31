@@ -8,9 +8,11 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[Union(0, typeof(ProjectileWeaponData)),
+[Union(0, typeof(InstantWeaponData)),
  Union(1, typeof(LauncherData)),
- Union(2, typeof(ConstantWeaponData)), RuntimeInspectable]
+ Union(2, typeof(ConstantWeaponData)), 
+ Union(3, typeof(ChargedWeaponData)), 
+ RuntimeInspectable]
 public abstract class WeaponData : BehaviorData
 {
     [InspectableField, JsonProperty("damageType"), Key(1), RuntimeInspectable]
@@ -48,6 +50,12 @@ public abstract class WeaponData : BehaviorData
     
     [InspectablePrefab, JsonProperty("reloadTime"), Key(12)]  
     public float ReloadTime = 1;
+    
+    [InspectablePrefab, JsonProperty("spread"), Key(13)]  
+    public PerformanceStat Spread = new PerformanceStat();
+
+    [InspectableField, JsonProperty("velocity"), Key(14)]
+    public PerformanceStat Velocity = new PerformanceStat();
 }
 
 public abstract class Weapon : IActivatedBehavior
@@ -61,6 +69,16 @@ public abstract class Weapon : IActivatedBehavior
     public abstract int Ammo { get; }
     public WeaponData WeaponData => _data;
     public BehaviorData Data => _data;
+    
+    public float Damage { get; protected set; }
+    public float Penetration { get; protected set; }
+    public float DamageSpread { get; protected set; }
+    public float Range { get; protected set; }
+    public float Energy { get; protected set; }
+    public float Heat { get; protected set; }
+    public float Visibility { get; protected set; }
+    public float Spread { get; protected set; }
+    public float Velocity { get; protected set; }
 
     protected bool _firing;
 
@@ -78,7 +96,26 @@ public abstract class Weapon : IActivatedBehavior
         _data = data;
     }
 
-    public abstract bool Execute(float delta);
+    public virtual void ResetEvents(){}
+
+    protected virtual void UpdateStats()
+    {
+        Damage = Context.Evaluate(_data.Damage, Item.EquippableItem, Entity);
+        Penetration = Context.Evaluate(_data.Penetration, Item.EquippableItem, Entity);
+        DamageSpread = Context.Evaluate(_data.DamageSpread, Item.EquippableItem, Entity);
+        Range = Context.Evaluate(_data.Range, Item.EquippableItem, Entity);
+        Energy = Context.Evaluate(_data.Energy, Item.EquippableItem, Entity);
+        Heat = Context.Evaluate(_data.Heat, Item.EquippableItem, Entity);
+        Visibility = Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
+        Spread = Context.Evaluate(_data.Spread, Item.EquippableItem, Entity);
+        Velocity = Context.Evaluate(_data.Velocity, Item.EquippableItem, Entity);
+    }
+
+    public virtual bool Execute(float delta)
+    {
+        UpdateStats();
+        return true;
+    }
 
     public virtual void Activate()
     {

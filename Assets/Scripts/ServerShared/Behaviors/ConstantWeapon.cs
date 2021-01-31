@@ -11,7 +11,7 @@ using static Unity.Mathematics.math;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ConstantWeaponData : WeaponData
 {
-    [InspectablePrefab, JsonProperty("ammoInterval"), Key(13)]  
+    [InspectablePrefab, JsonProperty("ammoInterval"), Key(15)]  
     public float AmmoInterval = 1;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
@@ -42,6 +42,14 @@ public class ConstantWeapon : Weapon, IProgressBehavior
     public event Action OnReloadComplete;
     public event Action OnStartFiring;
     public event Action OnStopFiring;
+    
+    public override void ResetEvents()
+    {
+        OnReloadBegin = null;
+        OnReloadComplete = null;
+        OnStartFiring = null;
+        OnStopFiring = null;
+    }
 
     public ConstantWeapon(ItemManager context, ConstantWeaponData data, Entity entity, EquippedItem item) : base(context, data, entity, item)
     {
@@ -50,6 +58,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior
 
     public override bool Execute(float delta)
     {
+        base.Execute(delta);
         if (_firing)
         {
             if (_data.AmmoType != Guid.Empty)

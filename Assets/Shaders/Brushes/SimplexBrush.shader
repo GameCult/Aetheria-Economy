@@ -25,7 +25,7 @@ Category {
 			#pragma target 2.0
 
 			#include "UnityCG.cginc"
-			#include "Assets/Scripts/NIH/GPU Noise/SimplexNoise3D.cginc"
+			#include "Assets/Plugins/GPU Noise/SimplexNoise3D.cginc"
 
 			float _Depth;
 			float _Power;

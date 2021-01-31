@@ -54,7 +54,6 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Max.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\GroupItemsParser.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ProjectileWeapon.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Shield.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonKnownTypesSettings.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Arguments.cs" />

@@ -1,7 +1,7 @@
 public class HitscanManager : InstantWeaponEffectManager
 {
     public Prototype Prototype;
-    public override void Fire(WeaponData data, EquippedItem item, EntityInstance source, EntityInstance target)
+    public override void Fire(InstantWeapon weapon, EquippedItem item, EntityInstance source, EntityInstance target)
     {
         var p = Prototype.Instantiate<HitscanEffect>();
         p.SourceEntity = source.Entity;
@@ -10,11 +10,10 @@ public class HitscanManager : InstantWeaponEffectManager
         var t = p.transform;
         t.position = barrel.position;
         t.forward = barrel.forward;
-        p.Range = source.Entity.ItemManager.Evaluate(data.Range, item.EquippableItem, source.Entity);
-        p.Damage = source.Entity.ItemManager.Evaluate(data.Damage, item.EquippableItem, source.Entity);
-        p.Penetration = source.Entity.ItemManager.Evaluate(data.Penetration, item.EquippableItem, source.Entity);
-        p.Spread = source.Entity.ItemManager.Evaluate(data.DamageSpread, item.EquippableItem, source.Entity);
-        p.DamageType = data.DamageType;
+        p.Damage = weapon.Damage;
+        p.Penetration = weapon.Penetration;
+        p.Spread = weapon.DamageSpread;
+        p.DamageType = weapon.WeaponData.DamageType;
         p.Zone = source.Entity.Zone;
         p.Fire();
     }
