@@ -399,7 +399,8 @@ public class TradeMenu : MonoBehaviour
 
     private void Buy(SimpleCommodityData data, int quantity)
     {
-        int lots = quantity / data.MaxStack;
+        // Up-rounded integer division from https://stackoverflow.com/a/503201
+        int lots = (quantity - 1) / data.MaxStack + 1;
         int remaining = quantity;
         for (int i = 0; i < lots; i++)
         {

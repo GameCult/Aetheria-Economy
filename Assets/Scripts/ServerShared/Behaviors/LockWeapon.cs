@@ -9,19 +9,19 @@ using static Unity.Mathematics.math;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class LockWeaponData : InstantWeaponData
 {
-    [InspectableField, JsonProperty("speed"), Key(18), RuntimeInspectable]
+    [InspectableField, JsonProperty("speed"), Key(19), RuntimeInspectable]
     public PerformanceStat LockSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("sensorImpact"), Key(19)]
+    [InspectableField, JsonProperty("sensorImpact"), Key(20)]
     public PerformanceStat SensorImpact = new PerformanceStat();
 
-    [InspectableField, JsonProperty("threshold"), Key(20), RuntimeInspectable]
+    [InspectableField, JsonProperty("threshold"), Key(21), RuntimeInspectable]
     public PerformanceStat LockAngle = new PerformanceStat();
 
-    [InspectableField, JsonProperty("directionImpact"), Key(21)]
+    [InspectableField, JsonProperty("directionImpact"), Key(22)]
     public PerformanceStat DirectionImpact = new PerformanceStat();
 
-    [InspectableField, JsonProperty("decay"), Key(22)]
+    [InspectableField, JsonProperty("decay"), Key(23)]
     public PerformanceStat Decay = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

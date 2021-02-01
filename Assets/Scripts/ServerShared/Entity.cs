@@ -52,7 +52,6 @@ public abstract class Entity
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
     public readonly Dictionary<HardpointData, (float3 position, float3 direction)> HardpointTransforms = 
         new Dictionary<HardpointData, (float3 position, float3 direction)>();
-    public Dictionary<HardpointData, float> HardpointArmor;
     
     public readonly (List<IActivatedBehavior> behaviors, List<EquippedItem> items)[] TriggerGroups;
 
@@ -61,6 +60,7 @@ public abstract class Entity
     public EquippedItem[,] GearOccupancy;
     public HardpointData[,] Hardpoints;
     public float[,] Armor;
+    public float[,] MaxArmor;
     
     private EquippedItem[] _orderedEquipment;
     protected bool _active;
@@ -72,7 +72,6 @@ public abstract class Entity
     public float Mass { get; private set; }
     public float Visibility => VisibilitySources.Values.Sum();
     
-    public Subject<(HardpointData hardpoint, float damage)> HardpointDamage = new Subject<(HardpointData, float)>();
     public Subject<(int2 pos, float damage)> ArmorDamage = new Subject<(int2, float)>();
     public Subject<(EquippedItem item, float damage)> ItemDamage = new Subject<(EquippedItem, float)>();
     public Subject<float> HullDamage = new Subject<float>();
@@ -115,13 +114,11 @@ public abstract class Entity
 
         ItemDestroyed = ItemDamage.Where(x => x.item.EquippableItem.Durability < .01f).Select(x=>x.item);
         HullArmorDepleted = ArmorDamage.Where(x => Armor[x.pos.x, x.pos.y] < .01f).Select(x => x.pos);
-        HardpointArmorDepleted = HardpointDamage.Where(x => HardpointArmor[x.hardpoint] < .01f).Select(x => x.hardpoint);
     }
 
     private void MapEntity()
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
-        HardpointArmor = hullData.Hardpoints.ToDictionary(hp => hp, hp => hp.Armor);
         Equipment.Add(new EquippedItem(ItemManager, Hull, int2.zero, this));
         Mass = hullData.Mass;
         Temperature = new float[hullData.Shape.Width, hullData.Shape.Height];
@@ -129,15 +126,7 @@ public abstract class Entity
         HullConductivity = new bool2[hullData.Shape.Width,hullData.Shape.Height];
         ThermalMass = new float[hullData.Shape.Width, hullData.Shape.Height];
         Armor = new float[hullData.Shape.Width, hullData.Shape.Height];
-        var cellCount = hullData.Shape.Coordinates.Length;
-        foreach (var v in hullData.Shape.Coordinates)
-        {
-            if (!hullData.InteriorCells[v])
-                Armor[v.x, v.y] = hullData.Armor;
-            Temperature[v.x, v.y] = 280;
-            ThermalMass[v.x, v.y] = hullData.Mass * hullData.SpecificHeat / cellCount;
-        }
-        GearOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
+        MaxArmor = new float[hullData.Shape.Width, hullData.Shape.Height];
         Hardpoints = new HardpointData[hullData.Shape.Width, hullData.Shape.Height];
         foreach (var hardpoint in hullData.Hardpoints)
         {
@@ -147,11 +136,28 @@ public abstract class Entity
                 Hardpoints[hullCoord.x, hullCoord.y] = hardpoint;
             }
         }
+        var cellCount = hullData.Shape.Coordinates.Length;
+        foreach (var v in hullData.Shape.Coordinates)
+        {
+            Armor[v.x, v.y] = hullData.Armor;
+            MaxArmor[v.x, v.y] = hullData.Armor;
+            if (Hardpoints[v.x, v.y] != null)
+            {
+                Armor[v.x, v.y] += Hardpoints[v.x, v.y].Armor;
+                MaxArmor[v.x, v.y] += Hardpoints[v.x, v.y].Armor;
+            }
+            Temperature[v.x, v.y] = 280;
+            ThermalMass[v.x, v.y] = hullData.Mass * hullData.SpecificHeat / cellCount;
+        }
+        GearOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
     }
 
-    public void AddHeat(int2 position, float heat)
+    public void AddHeat(int2 position, float heat, bool ignoreThermalMass = false)
     {
-        Temperature[position.x, position.y] += heat / ThermalMass[position.x, position.y];
+        if (ignoreThermalMass)
+            Temperature[position.x, position.y] += heat;
+        else
+            Temperature[position.x, position.y] += heat / ThermalMass[position.x, position.y];
     }
 
     public int CountItemsInCargo(Guid itemDataID)
@@ -750,10 +756,10 @@ public class EquippedItem
         }
     }
 
-    public void AddHeat(float heat)
+    public void AddHeat(float heat, bool ignoreThermalMass = false)
     {
         foreach(var hullCoord in InsetShape.Coordinates)
-            _entity.AddHeat(hullCoord, heat / InsetShape.Coordinates.Length);
+            _entity.AddHeat(hullCoord, heat / InsetShape.Coordinates.Length, ignoreThermalMass);
     }
 
     public void Update(float delta)

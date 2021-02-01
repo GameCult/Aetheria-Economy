@@ -60,21 +60,26 @@ public class Ship : Entity
             foreach (var thruster in _leftThrusters) thruster.Axis += -MovementDirection.x;
             foreach (var thruster in _forwardThrusters) thruster.Axis += MovementDirection.y;
             foreach (var thruster in _reverseThrusters) thruster.Axis += -MovementDirection.y;
-        
-            var deltaRot = dot(normalize(LookDirection.xz), normalize(Direction).Rotate(ItemRotation.Clockwise));
-            if (abs(deltaRot) < .0001) deltaRot = 0;
-            deltaRot = pow(abs(deltaRot), .5f) * sign(deltaRot);
+
+            var look = normalize(LookDirection.xz);
+            var deltaRot = dot(look, normalize(Direction).Rotate(ItemRotation.Clockwise));
+            if (abs(deltaRot) < .01f)
+            {
+                deltaRot = 0;
+                Direction = lerp(Direction, look, min(delta, 1));
+            }
+            deltaRot = pow(abs(deltaRot), .75f) * sign(deltaRot);
         
             foreach (var thruster in _clockwiseThrusters) thruster.Axis += deltaRot;
             foreach (var thruster in _counterClockwiseThrusters) thruster.Axis += -deltaRot;
         }
         var normal = Zone.GetNormal(Position.xz);
-        var f = new float2(normal.x, normal.z);
-        var fl = lengthsq(f);
-        if (fl > .001)
+        var force = new float2(normal.x, normal.z);
+        var forceMagnitude = lengthsq(force);
+        if (forceMagnitude > .001f)
         {
-            var fa = 1 / (1 - fl) - 1;
-            Velocity += normalize(f) * Zone.Settings.GravityStrength * fa;
+            var fa = 1 / (1 - forceMagnitude) - 1;
+            Velocity += normalize(force) * Zone.Settings.GravityStrength * fa;
         }
         var shipRight = Direction.Rotate(ItemRotation.Clockwise);
         var forward = cross(float3(shipRight.x, 0, shipRight.y), normal);

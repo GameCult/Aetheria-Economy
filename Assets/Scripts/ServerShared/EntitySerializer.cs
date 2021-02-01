@@ -36,9 +36,6 @@ public class EntityPack
     [Key(8)]
     public bool2[,] Conductivity;
     
-    [Key(9)]
-    public Dictionary<int, float> HardpointArmor;
-    
     [Key(10)]
     public int[] DockingBayAssignments;
     
@@ -79,7 +76,6 @@ public class EntityPack
         pack.Temperature = entity.Temperature;
         pack.Conductivity = entity.HullConductivity;
         var hullData = entity.ItemManager.GetData(entity.Hull) as HullData;
-        pack.HardpointArmor = entity.HardpointArmor.ToDictionary(x => hullData.Hardpoints.IndexOf(x.Key), x => x.Value);
         pack.Children = entity.Children.Select(Pack).ToArray();
         return pack;
     }
@@ -135,11 +131,16 @@ public class EntityPack
                 .Zip(pack.PersistedBehaviors[item.Position], (behavior, data) => new{behavior, data})))
             persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
 
-        entity.Temperature = pack.Temperature;
-        entity.Armor = pack.Armor;
-        var hullData = entity.ItemManager.GetData(entity.Hull) as HullData;
-        entity.HullConductivity = pack.Conductivity;
-        entity.HardpointArmor = pack.HardpointArmor.ToDictionary(x => hullData.Hardpoints[x.Key], x => x.Value);
+        if(!instantiate)
+            entity.Temperature = pack.Temperature;
+        
+        if(!instantiate)
+            entity.Armor = pack.Armor;
+        
+        var hullData = itemManager.GetData(entity.Hull);
+        
+        foreach(var v in hullData.Shape.Coordinates)
+            entity.HullConductivity[v.x,v.y] = pack.Conductivity[v.x,v.y];
     }
 
     public int Price(ItemManager itemManager)

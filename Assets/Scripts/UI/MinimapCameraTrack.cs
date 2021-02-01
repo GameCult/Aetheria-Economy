@@ -10,6 +10,7 @@ public class MinimapCameraTrack : MonoBehaviour
 {
 	public Transform Camera;
 	public bool Modulo;
+	public bool Flip;
 	public float Offset;
 	private RectTransform _rect;
 
@@ -22,6 +23,8 @@ public class MinimapCameraTrack : MonoBehaviour
 	{
 		var dir = Camera.forward.Flatland().normalized;
 		var deg = -Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+		if (Flip)
+			deg *= -1;
 		if (Modulo)
 			deg = Mathf.Repeat(deg + 15, 30) - 15;
 		_rect.rotation = Quaternion.Euler(0,0,deg+Offset);

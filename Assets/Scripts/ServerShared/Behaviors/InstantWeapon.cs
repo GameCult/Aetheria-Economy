@@ -17,6 +17,9 @@ public class InstantWeaponData : WeaponData
     
     [InspectableField, JsonProperty("cooldown"), Key(17), RuntimeInspectable]
     public PerformanceStat Cooldown = new PerformanceStat();
+    
+    [InspectablePrefab, JsonProperty("ammoInterval"), Key(18)]  
+    public bool SingleAmmoBurst;
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
@@ -32,7 +35,7 @@ public class InstantWeapon : Weapon, IProgressBehavior
     private float _burstTimer;
     private float _burstInterval;
     protected float _cooldown; // Normalized
-    private int _ammo = 1;
+    private int _ammo = 0;
     protected bool _coolingDown;
     
     public float BurstCount { get; protected set; }
@@ -65,6 +68,10 @@ public class InstantWeapon : Weapon, IProgressBehavior
 
     protected void Trigger()
     {
+        // If 1 ammo is consumed per burst, perform ammo consumption here
+        // UseAmmo returns false when triggering reload; cancel firing if that is the case
+        if(_data.SingleAmmoBurst && !UseAmmo()) return;
+        
         _burstRemaining = (int) BurstCount;
         _burstInterval = BurstTime / _burstRemaining;
         _burstTimer = 0;
@@ -78,6 +85,40 @@ public class InstantWeapon : Weapon, IProgressBehavior
         BurstCount = Context.Evaluate(_data.Count, Item.EquippableItem, Entity);
         BurstTime = Context.Evaluate(_data.BurstTime, Item.EquippableItem, Entity);
         Cooldown = Context.Evaluate(_data.Cooldown, Item.EquippableItem, Entity);
+
+        Damage /= (int) BurstCount;
+        Heat /= (int) BurstCount;
+        Energy /= (int) BurstCount;
+    }
+
+    private bool UseAmmo()
+    {
+        if (_data.AmmoType != Guid.Empty)
+        {
+            if (_data.MagazineSize > 1 && _ammo > 0) _ammo--;
+            else
+            {
+                var cargo = Entity.FindItemInCargo(_data.AmmoType);
+                if (cargo != null)
+                {
+                    var item = cargo.ItemsOfType[_data.AmmoType][0];
+                    if (item is SimpleCommodity simpleCommodity)
+                        cargo.Remove(simpleCommodity, 1);
+                        
+                    if(_data.MagazineSize > 1)
+                    {
+                        OnReloadBegin?.Invoke();
+                        _cooldown = 1;
+                        _coolingDown = true;
+                        _firing = false;
+                    }
+                }
+                _burstRemaining = 0;
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public override bool Execute(float delta)
@@ -102,30 +143,9 @@ public class InstantWeapon : Weapon, IProgressBehavior
         _burstTimer += delta;
         while (_burstRemaining > 0 && _burstTimer > 0)
         {
-            if (_data.AmmoType != Guid.Empty)
-            {
-                if (_data.MagazineSize > 1 && _ammo > 0) _ammo--;
-                else
-                {
-                    var cargo = Entity.FindItemInCargo(_data.AmmoType);
-                    if (cargo != null)
-                    {
-                        var item = cargo.ItemsOfType[_data.AmmoType][0];
-                        if (item is SimpleCommodity simpleCommodity)
-                            cargo.Remove(simpleCommodity, 1);
-                        
-                        if(_data.MagazineSize > 1)
-                        {
-                            OnReloadBegin?.Invoke();
-                            _cooldown = 1;
-                            _coolingDown = true;
-                            _firing = false;
-                        }
-                    }
-                    _burstRemaining = 0;
-                    return false;
-                }
-            }
+            // If 1 ammo is consumed per shot in the burst, perform ammo consumption here
+            // UseAmmo returns false when triggering reload; cancel firing if that is the case
+            if (!_data.SingleAmmoBurst && !UseAmmo()) return false;
             
             _burstRemaining--;
             _burstTimer -= _burstInterval;

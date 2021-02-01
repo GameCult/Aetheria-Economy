@@ -9,26 +9,53 @@ using Unity.Mathematics;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class LauncherData : LockWeaponData
 {
-    [InspectableAnimationCurve, JsonProperty("guidance"), Key(23)]  
+    [InspectableAnimationCurve, JsonProperty("guidance"), Key(24)]  
     public float4[] GuidanceCurve;
 
-    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(24)]  
+    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(25)]  
     public float4[] ThrustCurve;
 
-    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(25)]  
+    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(26)]  
     public float4[] LiftCurve;
 
-    [InspectableField, JsonProperty("thrust"), Key(26)]  
+    [InspectableField, JsonProperty("thrust"), Key(27)]  
     public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField, JsonProperty("frequency"), Key(27)]
+    [InspectableField, JsonProperty("frequency"), Key(28)]
     public float DodgeFrequency;
 
-    [InspectableField, JsonProperty("missileSpeed"), Key(28), RuntimeInspectable]
+    [InspectableField, JsonProperty("missileSpeed"), Key(29), RuntimeInspectable]
     public PerformanceStat MissileVelocity = new PerformanceStat();
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new LockWeapon(context, this, entity, item);
+    }
+}
+
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class GuidedWeaponData : InstantWeaponData
+{
+    [InspectableAnimationCurve, JsonProperty("guidance"), Key(24)]  
+    public float4[] GuidanceCurve;
+
+    [InspectableAnimationCurve, JsonProperty("thrustCurve"), Key(25)]  
+    public float4[] ThrustCurve;
+
+    [InspectableAnimationCurve, JsonProperty("liftCurve"), Key(26)]  
+    public float4[] LiftCurve;
+
+    [InspectableField, JsonProperty("thrust"), Key(27)]  
+    public PerformanceStat Thrust = new PerformanceStat();
+
+    [InspectableField, JsonProperty("frequency"), Key(28)]
+    public float DodgeFrequency;
+
+    [InspectableField, JsonProperty("missileSpeed"), Key(29), RuntimeInspectable]
+    public PerformanceStat MissileVelocity = new PerformanceStat();
+
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    {
+        return new InstantWeapon(context, this, entity, item);
     }
 }

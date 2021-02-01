@@ -780,6 +780,10 @@
       <Project>{dd909206-f54e-1c12-ed74-b4e22d464f6a}</Project>
       <Name>Substance.EditorHelper</Name>
     </ProjectReference>
+    <ProjectReference Include="MessagePack.csproj">
+      <Project>{c511ef21-dc27-883d-b027-9a4b6f36bae4}</Project>
+      <Name>MessagePack</Name>
+    </ProjectReference>
     <ProjectReference Include="Substance.Platform.csproj">
       <Project>{2ca9591a-f6e2-fafd-e598-0f0563c5ae57}</Project>
       <Name>Substance.Platform</Name>
@@ -791,10 +795,6 @@
     <ProjectReference Include="UniRx.csproj">
       <Project>{4d885cb7-1f9e-abb3-b070-7265b432ecda}</Project>
       <Name>UniRx</Name>
-    </ProjectReference>
-    <ProjectReference Include="MessagePack.csproj">
-      <Project>{c511ef21-dc27-883d-b027-9a4b6f36bae4}</Project>
-      <Name>MessagePack</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

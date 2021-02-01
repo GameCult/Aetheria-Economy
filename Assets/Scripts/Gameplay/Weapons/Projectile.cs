@@ -4,12 +4,19 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Projectile : MonoBehaviour
 {
     public TrailRenderer Trail;
     public float Gravity;
+    public float Drag = .1f;
     public Prototype HitEffect;
+    
+    public float AirburstDistance;
+    public float AirburstRange;
+    public float AirburstVelocity;
+    public float DirectHitDamageMultiplier = 1;
     
     private bool _alive;
     
@@ -45,6 +52,7 @@ public class Projectile : MonoBehaviour
             var t = transform;
             var position = t.position;
             Velocity += Vector3.up * (Gravity * Time.deltaTime);
+            Velocity *= max(0, 1 - Drag * Time.deltaTime);
             var forward = Velocity.normalized;
             t.forward = forward;
             var ray = new Ray(position, Velocity);
@@ -55,7 +63,7 @@ public class Projectile : MonoBehaviour
                 {
                     if (hull.Entity != SourceEntity)
                     {
-                        hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, forward);
+                        hull.SendHit(Damage*DirectHitDamageMultiplier, Penetration, Spread, DamageType, SourceEntity, hit, forward);
                         transform.position = hit.point;
                         StartCoroutine(Kill());
                     }
@@ -76,8 +84,23 @@ public class Projectile : MonoBehaviour
             }
             
             transform.position += Velocity * Time.deltaTime;
-            if((transform.position - StartPosition).magnitude > Range)
+            var distanceTraveled = (transform.position - StartPosition).magnitude;
+            if(distanceTraveled > Range)
                 StartCoroutine(Kill());
+            if (AirburstDistance > 1 && distanceTraveled > AirburstDistance)
+            {
+                StartCoroutine(Kill());
+                var ht = HitEffect.Instantiate<Transform>();
+                ht.position = t.position;
+                foreach (var collider in Physics.OverlapSphere(t.position, AirburstRange, 1))
+                {
+                    var hull = collider.GetComponent<HullCollider>();
+                    if (hull)
+                    {
+                        hull.SendSplash(Damage, DamageType, SourceEntity, (collider.transform.position - t.position).normalized);
+                    }
+                }
+            }
         }
     }
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
+using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;
 using Random = UnityEngine.Random;
@@ -12,6 +12,12 @@ public class GuidedProjectile : MonoBehaviour
 {
     public Prototype HitEffect;
     public Prototype ChildProjectile;
+    public Prototype AirburstProjectile;
+    public int AirburstCount;
+    public float AirburstDirectionality;
+    public float AirburstDistance;
+    public float AirburstRange;
+    public float AirburstVelocity;
     public int Children;
     public float SplitTime;
     public float SplitSeparationForwardness;
@@ -26,13 +32,13 @@ public class GuidedProjectile : MonoBehaviour
     public float TopSpeed;
     public Transform Source;
     public Transform Target;
+    public Func<Vector3> TargetPosition;
     
     private float _phase;
     private float _prevDist;
     private bool _active;
     private bool _alive;
-    private List<GuidedProjectile> _children = new List<GuidedProjectile>();
-
+    
     public float3 StartPosition { get; set; }
     public float Range { get; set; }
     public Vector3 Velocity { get; set; }
@@ -63,24 +69,47 @@ public class GuidedProjectile : MonoBehaviour
         
         if (_active)
         {
-            if (!Target)
+            if (TargetPosition == null && !Target)
             {
                 StartCoroutine(FadeOut());
                 return;
             }
 
-            var diff = Target.position - transform.position;
+            var targetPosition = TargetPosition?.Invoke() ?? Target.position;
+
+            var diff = targetPosition - transform.position;
             var targetDist = diff.magnitude;
             var position = (float3) t.position;
             var sourceDist = length(StartPosition.xz - position.xz);
             
-            if (sourceDist > Range || _prevDist < targetDist)
+            if (sourceDist > Range || dot(diff,Velocity) < 0 || AirburstCount > 0 && targetDist < AirburstDistance)
             {
                 StartCoroutine(FadeOut());
                 if (HitEffect != null)
                 {
                     var ht = HitEffect.Instantiate<Transform>();
                     ht.position = t.position;
+                }
+
+                if (AirburstCount > 0 && AirburstProjectile)
+                {
+                    var targetDiff = Target.position - transform.position;
+                    if (targetDiff.magnitude < AirburstRange)
+                    {
+                        for (int i = 0; i < AirburstCount; i++)
+                        {
+                            var child = AirburstProjectile.Instantiate<Projectile>();
+                            child.StartPosition = child.transform.position = t.position;
+                            var randomDirection = Random.onUnitSphere;
+                            child.Velocity = Vector3.Lerp(randomDirection, targetDiff.normalized, AirburstDirectionality).normalized * AirburstVelocity;
+                            child.Range = AirburstRange;
+                            child.Damage = Damage / AirburstCount;
+                            child.Penetration = Penetration;
+                            child.Spread = Spread;
+                            child.DamageType = DamageType;
+                            child.SourceEntity = SourceEntity;
+                        }
+                    }
                 }
                 return;
             }
@@ -99,7 +128,6 @@ public class GuidedProjectile : MonoBehaviour
                     var child = ChildProjectile.Instantiate<GuidedProjectile>();
                     child.transform.position = t.position;
                     child.StartPosition = StartPosition;
-                    _children.Add(child);
                     var randomDirection = normalize(Random.insideUnitCircle);
                     var perpendicularRandom = randomDirection.x * right + randomDirection.y * up;
                     child.Velocity = normalize(lerp(perpendicularRandom, dir, SplitSeparationForwardness)) * length(Velocity) * SplitSeparationVelocity;
@@ -108,14 +136,14 @@ public class GuidedProjectile : MonoBehaviour
                     child.Penetration = Penetration;
                     child.Spread = Spread;
                     child.DamageType = DamageType;
+                    child.Source = Source;
+                    child.Target = Target;
+                    child.SourceEntity = SourceEntity;
                     child.GuidanceCurve = GuidanceCurve;
                     child.LiftCurve = LiftCurve;
                     child.ThrustCurve = ThrustCurve;
                     child.Thrust = Thrust;
                     child.TopSpeed = TopSpeed;
-                    child.Source = Source;
-                    child.Target = Target;
-                    child.SourceEntity = SourceEntity;
                     child.Frequency = Frequency;
                     child.Thrust = Thrust;
                 }
@@ -189,14 +217,8 @@ public class GuidedProjectile : MonoBehaviour
         Particles.Stop(true, ParticleSystemStopBehavior.StopEmitting);
         var startTime = Time.time;
         var lifetime = Particles.main.startLifetime.constant;
-        while (Time.time - startTime < lifetime || _children.Count > 0)
+        while (Time.time - startTime < lifetime)
         {
-            for (var index = 0; index < _children.Count; index++)
-            {
-                if (!_children[index].gameObject.activeSelf)
-                    _children.RemoveAt(index--);
-            }
-
             yield return null;
         }
         GetComponent<Prototype>().ReturnToPool();

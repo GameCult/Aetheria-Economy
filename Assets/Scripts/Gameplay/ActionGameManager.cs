@@ -63,6 +63,7 @@ public class ActionGameManager : MonoBehaviour
     private (LockWeapon targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] _lockingIndicators;
     public List<Ship> PlayerShips { get; } = new List<Ship>();
     public EquippedDockingBay DockingBay { get; private set; }
+    public Entity DockedEntity { get; private set; }
     
     public Ship CurrentShip { get; set; }
     public DatabaseCache ItemData { get; private set; }
@@ -348,8 +349,9 @@ public class ActionGameManager : MonoBehaviour
         station.Active = true;
         
         var reactorData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Reactor && x.Shape.Height == 2);
+        var radiatorData = ItemData.GetAll<GearData>().First(x => x.Name == "Long Radiator");
         var autocannonData = ItemData.GetAll<GearData>().First(x => x.Name == "Autocannon");
-        var ammoData = ItemData.GetAll<SimpleCommodityData>().First(x => x.Name == "AC2 Ammo");
+        var ammoData = ItemData.GetAll<SimpleCommodityData>().First(x => x.Name == "Autocannon Ammo");
 
         var turretType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Turret);
         var controlModuleData = ItemData.GetAll<GearData>().First(x => x.Name == "Murder Module");
@@ -364,65 +366,31 @@ public class ActionGameManager : MonoBehaviour
             var turretOrbit = Zone.CreateOrbit(turretParentOrbit, turretPos);
             var turret = new OrbitalEntity(ItemManager, Zone, ItemManager.CreateInstance(turretType, 0, 1) as EquippableItem, turretOrbit.ID);
             turret.TryEquip(ItemManager.CreateInstance(reactorData, .5f, 1) as EquippableItem);
+            turret.TryEquip(ItemManager.CreateInstance(radiatorData, .5f, 1) as EquippableItem);
+            turret.TryEquip(ItemManager.CreateInstance(radiatorData, .5f, 1) as EquippableItem);
             turret.TryEquip(ItemManager.CreateInstance(controlModuleData, .5f, 1) as EquippableItem);
             turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
             turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
             turret.TryEquip(ItemManager.CreateInstance(cargo1Data, .5f, 1) as EquippableItem);
             turret.CargoBays.First().TryStore(ItemManager.CreateInstance(ammoData, 400));
+            foreach (var v in turretType.Shape.Coordinates)
+                turret.HullConductivity[v.x, v.y] = bool2(true);
             turret.Active = true;
             Zone.Entities.Add(turret);
         }
-        
-        var hullType = ItemData.GetAll<HullData>().First(x=>x.Name == "Djinni");
-        var shipHull = ItemManager.CreateInstance(hullType, 0, 1) as EquippableItem;
-        var ship = new Ship(ItemManager, Zone, shipHull);
-        PlayerShips.Add(ship);
-        CurrentShip = ship;
-        ship.ArmorDamage.Subscribe(hit =>
-        {
-            var direction = _directions.MaxBy(d => dot(d.direction, normalize(hit.pos - hullType.Shape.CenterOfMass)));
-            EventLog.LogMessage(
-                $"{direction.name} armor hit for {hit.damage} damage, currently {((int) (ship.Armor[hit.pos.x, hit.pos.y] / hullType.Armor * 100)).ToString()}%",
-                Settings.ArmorHitColor);
-        });
-        ship.HullDamage.Subscribe(hit => EventLog.LogMessage($"Hull Structure hit for {hit} damage"));
-        ship.ItemDamage.Subscribe(hit =>
-        {
-            var data = ItemManager.GetData(hit.item.EquippableItem);
-            EventLog.LogMessage(
-                $"{hit.item.EquippableItem.Name} hit for {hit.damage} damage, currently {((int) (hit.item.EquippableItem.Durability / data.Durability * 100)).ToString()}%",
-                Settings.GearHitColor);
-        });
-        ship.HardpointDamage.Subscribe(hit => EventLog.LogMessage(
-                $"{Enum.GetName(typeof(HardpointType), hit.hardpoint.Type)} hardpoint hit for {hit.damage} damage, currently {((int) (ship.HardpointArmor[hit.hardpoint] / hit.hardpoint.Armor * 100)).ToString()}%",
-                Settings.HardpointHitColor));
 
-        var thrusterData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Thruster && x.Shape.Height == 1);
-        for (int i = 0; i < 8; i++)
-        {
-            ship.TryEquip(ItemManager.CreateInstance(thrusterData, .5f, 1) as EquippableItem);
-            //dockingCargo.TryStore(ItemManager.CreateInstance(thrusterData, .5f, 1));
-        }
-        
-        ship.TryEquip(ItemManager.CreateInstance(reactorData, .5f, 1) as EquippableItem);
-        
-        var cockpitData = ItemData.GetAll<GearData>().First(x => x.Behaviors.Any(b=>b is CockpitData));
-        ship.TryEquip(ItemManager.CreateInstance(cockpitData, .5f, 1) as EquippableItem);
-
-        ship.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
-        ship.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
-
-        var lrmmData = ItemData.GetAll<GearData>().First(x => x.Name == "LRMM72");
-        ship.TryEquip(ItemManager.CreateInstance(lrmmData, .5f, 1) as EquippableItem);
-        ship.TryEquip(ItemManager.CreateInstance(lrmmData, .5f, 1) as EquippableItem);
-
-        var cargoData = ItemData.GetAll<CargoBayData>().First(x => x.Name == "Cargo Bay 4x4");
-        ship.TryEquip(ItemManager.CreateInstance(cargoData, .5f, 1) as EquippableItem);
-        
-        ship.CargoBays.First().TryStore(ItemManager.CreateInstance(ammoData, 200));
-        //dockingCargo.TryStore(ItemManager.CreateInstance(reactorData, .5f, 1));
-        
-        Dock();
+        DockedEntity = station;
+        DockingBay = station.DockingBays.First();
+        DockCamera.enabled = true;
+        FollowCamera.enabled = false;
+        DockCamera.Follow = SectorRenderer.EntityInstances[station].Transform;
+        var parentOrbit = Zone.Orbits[station.OrbitData].Data.Parent;
+        var parentPlanet = SectorRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key];
+        DockCamera.LookAt = parentPlanet.Body.transform;
+        Menu.ShowTab(MenuTab.Inventory);
+        Cursor.lockState = CursorLockMode.None;
+        _input.Player.Disable();
+        GameplayUI.SetActive(false);
 
         // MapButton.onClick.AddListener(() =>
         // {
@@ -446,6 +414,7 @@ public class ActionGameManager : MonoBehaviour
                 var bay = entity.TryDock(CurrentShip);
                 if (bay != null)
                 {
+                    DockedEntity = entity;
                     DockingBay = bay;
                     DockCamera.enabled = true;
                     FollowCamera.enabled = false;
@@ -490,6 +459,7 @@ public class ActionGameManager : MonoBehaviour
         else if (CurrentShip.Parent.TryUndock(CurrentShip))
         {
             Menu.gameObject.SetActive(false);
+            DockedEntity = null;
             DockingBay = null;
             CurrentShip.Active = true;
             //_shipInput = new ShipInput(_input.Player, _currentShip);
@@ -515,7 +485,8 @@ public class ActionGameManager : MonoBehaviour
             foreach (var group in _articulationGroups)
                 group.crosshair.gameObject.SetActive(true);
 
-            _lockingIndicators = CurrentShip.GetBehaviors<LockWeapon>().Select(x =>
+            _lockingIndicators = CurrentShip.GetBehaviors<LockWeapon>()
+                .Select(x =>
             {
                 var i = LockIndicator.Instantiate<PlaceUIElementWorldspace>();
                 return (x, i, i.GetComponent<Rotate>());
@@ -574,15 +545,18 @@ public class ActionGameManager : MonoBehaviour
 
     public IEnumerable<Ship> AvailableShips()
     {
-        if (CurrentShip.Parent != null)
+        if (CurrentShip != null)
         {
-            foreach (var ship in PlayerShips)
+            if (CurrentShip.Parent != null)
             {
-                if (CurrentShip.Parent.Children.Contains(ship)) yield return ship;
+                foreach (var ship in PlayerShips)
+                {
+                    if (CurrentShip.Parent.Children.Contains(ship)) yield return ship;
+                }
             }
+            else
+                yield return CurrentShip;
         }
-        else 
-            yield return CurrentShip;
     }
 
     void Update()
@@ -591,7 +565,7 @@ public class ActionGameManager : MonoBehaviour
         {
             _time += Time.deltaTime;
             ItemManager.Time = Time.time;
-            if(CurrentShip.Parent==null)
+            if(CurrentShip !=null && CurrentShip.Parent==null)
             {
                 var look = _input.Player.Look.ReadValue<Vector2>();
                 _shipYawPitch = float2(_shipYawPitch.x + look.x * Sensitivity.x, clamp(_shipYawPitch.y + look.y * Sensitivity.y, -.45f * PI, .45f * PI));

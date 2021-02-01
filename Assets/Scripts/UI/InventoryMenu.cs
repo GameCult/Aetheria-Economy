@@ -61,7 +61,9 @@ public class InventoryMenu : MonoBehaviour
         var cargo = GameManager.DockingBay ?? GameManager.CurrentShip.CargoBays.FirstOrDefault();
         if (cargo!=null)
             InventoryPanels[0].Display(cargo);
-        InventoryPanels[1].Display(GameManager.CurrentShip);
+        if(GameManager.CurrentShip != null)
+            InventoryPanels[1].Display(GameManager.CurrentShip);
+        else InventoryPanels[1].Clear();
     }
 
     private void OnDisable()

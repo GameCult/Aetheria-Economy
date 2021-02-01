@@ -330,31 +330,31 @@ public class DatabaseInspector : EditorWindow
                         field.SetValue(obj, list);
                         GUI.changed = true;
                     }
-                    // else
-                    // {
-                    //     var sorted = true;
-                    //     var order = int.MinValue;
-                    //     foreach(var element in list)
-                    //     {
-                    //         var elementType = element.GetType();
-                    //         var elementOrder = elementType.GetCustomAttribute<OrderAttribute>()?.Order ?? 0;
-                    //         if (elementOrder < order)
-                    //             sorted = false;
-                    //         order = elementOrder;
-                    //     }
-                    //
-                    //     if (!sorted)
-                    //     {
-                    //         var sortedList = list
-                    //             .Cast<object>()
-                    //             .OrderBy(o => o.GetType().GetCustomAttribute<OrderAttribute>()?.Order ?? 0);
-                    //         list = (IList) Activator.CreateInstance(type);
-                    //         foreach (var o in sortedList)
-                    //             list.Add(o);
-                    //         field.SetValue(obj, list);
-                    //         GUI.changed = true;
-                    //     }
-                    // }
+                    else
+                    {
+                        var sorted = true;
+                        var order = int.MinValue;
+                        foreach(var element in list)
+                        {
+                            var elementType = element.GetType();
+                            var elementOrder = elementType.GetCustomAttribute<OrderAttribute>()?.Order ?? 0;
+                            if (elementOrder < order)
+                                sorted = false;
+                            order = elementOrder;
+                        }
+                    
+                        if (!sorted)
+                        {
+                            var sortedList = list
+                                .Cast<object>()
+                                .OrderBy(o => o.GetType().GetCustomAttribute<OrderAttribute>()?.Order ?? 0);
+                            list = (IList) Activator.CreateInstance(type);
+                            foreach (var o in sortedList)
+                                list.Add(o);
+                            field.SetValue(obj, list);
+                            GUI.changed = true;
+                        }
+                    }
                     foreach (var o in list)
                     {
                         if (o == null)

@@ -5,16 +5,16 @@ Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: ExplosionDistortion
-  m_Shader: {fileID: 211, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 46776b9fa35a437448f683f31b04d68d, type: 3}
   m_ShaderKeywords: EFFECT_BUMP _ALPHABLEND_ON _COLOROVERLAY_ON _FADING_ON _NORMALMAP
   m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
-  stringTagMap:
-    RenderType: Transparent
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -90,7 +90,8 @@ Material:
     - _ZWrite: 0
     m_Colors:
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
-    - _Color: {r: 1.1887974, g: 0.7667743, b: 0.43391103, a: 1}
+    - _Color: {r: 1.1887974, g: 0.7667743, b: 0.43391103, a: 0.015686275}
     - _ColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0.5, g: 0.33138573, b: 0.2287736, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []

@@ -26,6 +26,7 @@ public class InventoryPanel : MonoBehaviour
     public TextMeshProUGUI Title;
     public TextMeshProUGUI MinTempLabel;
     public TextMeshProUGUI MaxTempLabel;
+    public GameObject TemperatureRange;
     public Button Dropdown;
     public Button Current;
     public Button Thermal;
@@ -140,8 +141,8 @@ public class InventoryPanel : MonoBehaviour
                             (
                                 $"{pack.Name} - {pack.Price(GameManager.ItemManager):n0}", () =>
                                 {
-                                    var ship = EntityPack.Unpack(GameManager.ItemManager, GameManager.CurrentShip.Zone, pack, true);
-                                    ship.SetParent(GameManager.CurrentShip.Parent);
+                                    var ship = EntityPack.Unpack(GameManager.ItemManager, GameManager.Zone, pack, true);
+                                    ship.SetParent(GameManager.DockedEntity);
                                     GameManager.PlayerShips.Add(ship);
                                     GameManager.Credits -= pack.Price(GameManager.ItemManager);
                                     GameManager.CurrentShip = ship;
@@ -162,8 +163,8 @@ public class InventoryPanel : MonoBehaviour
         {
             if(MinTempLabel)
             {
-                MinTempLabel.text = $"Min: {((int) (_displayedEntity.MinTemp - 273.15f)).ToString()}°C";
-                MaxTempLabel.text = $"Max: {((int) (_displayedEntity.MaxTemp - 273.15f)).ToString()}°C";
+                MinTempLabel.text = $"{((int) (_displayedEntity.MinTemp - 273.15f)).ToString()}°C";
+                MaxTempLabel.text = $"{((int) (_displayedEntity.MaxTemp - 273.15f)).ToString()}°C";
             }
             var hullData = GameManager.ItemManager.GetData(_displayedEntity.Hull) as HullData;
             for(var x = 0; x < _temperatureTexture.width; x++)
@@ -210,6 +211,14 @@ public class InventoryPanel : MonoBehaviour
         
         _subscriptions.Clear();
         
+        if (Current)
+            Current.gameObject.SetActive(false);
+        if (Thermal)
+            Thermal.gameObject.SetActive(false);
+
+        if (TemperatureRange)
+            TemperatureRange.SetActive(false);
+        
         if(TemperatureDisplay)
             TemperatureDisplay.gameObject.SetActive(false);
         
@@ -227,11 +236,8 @@ public class InventoryPanel : MonoBehaviour
         _displayedCargo = null;
         _firstRect = null;
         
-        if(MinTempLabel)
-        {
-            MinTempLabel.gameObject.SetActive(true);
-            MaxTempLabel.gameObject.SetActive(true);
-        }
+        if (TemperatureRange)
+            TemperatureRange.SetActive(true);
 
         if(Title)
             Title.text = entity.Name;
@@ -353,13 +359,6 @@ public class InventoryPanel : MonoBehaviour
             StartCoroutine(Pulse(hitCells, HitType.Armor, _hitSequence++));
             RefreshCells(hitCells);
         }));
-        
-        _subscriptions.Add(entity.HardpointDamage.Subscribe(hit =>
-        {
-            var hitCells = hit.hardpoint.Shape.Coordinates.Select(v => v + hit.hardpoint.Position).ToArray();
-            StartCoroutine(Pulse(hitCells, HitType.Armor, _hitSequence++));
-            RefreshCells(hitCells);
-        }));
     }
 
     private IEnumerator Pulse(int2[] cells, HitType hitType, int sequence)
@@ -384,11 +383,13 @@ public class InventoryPanel : MonoBehaviour
             var lerp = (Time.time - startTime) / CellHitPulseTime;
             foreach(var cell in cells)
                 if(_cellAnimationSequence[cell] == sequence)
-                    CellInstances[cell].Background.color = Color.Lerp(hitColor, CellBackgroundColor, lerp);
+                    if(CellInstances.ContainsKey(cell))
+                        CellInstances[cell].Background.color = Color.Lerp(hitColor, CellBackgroundColor, lerp);
             yield return null;
         }
         foreach (var cell in cells)
-            CellInstances[cell].Background.color = CellBackgroundColor;
+            if(CellInstances.ContainsKey(cell))
+                CellInstances[cell].Background.color = CellBackgroundColor;
     }
 
     public void Display(EquippedCargoBay cargo)
@@ -397,16 +398,6 @@ public class InventoryPanel : MonoBehaviour
         
         _displayedCargo = cargo;
         _displayedEntity = null;
-        if(TemperatureDisplay)
-            TemperatureDisplay.gameObject.SetActive(false);
-        
-        MinTempLabel.gameObject.SetActive(false);
-        MaxTempLabel.gameObject.SetActive(false);
-        
-        if (Current)
-            Current.gameObject.SetActive(false);
-        if (Thermal)
-            Thermal.gameObject.SetActive(false);
 
         if(Title)
             Title.text = cargo.Name;
@@ -572,13 +563,11 @@ public class InventoryPanel : MonoBehaviour
 
             if (_hud)
             {
-                if (!interior && _displayedEntity.Armor[position.x, position.y] > .01f)
-                    return Settings.ArmorGradient.Evaluate(_displayedEntity.Armor[position.x, position.y] / hullData.Armor);
-                else if (hardpoint != null && _displayedEntity.HardpointArmor[hardpoint] > .01f)
-                    return Settings.ArmorGradient.Evaluate(_displayedEntity.HardpointArmor[hardpoint] / hardpoint.Armor);
+                if (_displayedEntity.Armor[position.x, position.y] > .01f)
+                    return Settings.ArmorGradient.Evaluate(_displayedEntity.Armor[position.x, position.y] / _displayedEntity.MaxArmor[position.x, position.y]);
 
                 if (item != null) return Settings.DurabilityGradient.Evaluate(item.EquippableItem.Durability / _displayedEntity.ItemManager.GetData(item.EquippableItem).Durability);
-                return Color.white * .25f;
+                return float3(.25f).ToColor();
             }
 
             if (hardpoint == null)
@@ -588,13 +577,13 @@ public class InventoryPanel : MonoBehaviour
                 
                 if (item == null)
                 {
-                    return Color.white * .25f;
+                    return float3(.25f).ToColor();
                 }
                 
                 if(highlight)
                     return Color.white;
                 
-                return Color.white * .5f;
+                return float3(.5f).ToColor();
             }
 
             var tint = hardpoint.TintColor;
