@@ -81,6 +81,14 @@ public class GalaxyMapLayerData : DatabaseEntry, INamedEntry
 
 public static class NoiseFbm
 {
+    public static float3 fBm3(float2 p, int octaves, float frequency, float offset, float amplitude, float lacunarity, float gain)
+    {
+        return float3(
+            fBm(p, octaves, frequency, offset, amplitude, lacunarity, gain),
+            fBm(p+10, octaves, frequency, offset, amplitude, lacunarity, gain),
+            fBm(p+20, octaves, frequency, offset, amplitude, lacunarity, gain));
+    }
+    
     public static float fBm(float2 p, int octaves, float frequency, float offset, float amplitude, float lacunarity, float gain)
     {
         float freq = frequency, amp = .5f;
@@ -88,6 +96,27 @@ public static class NoiseFbm
         for(int i = 0; i < octaves; i++) 
         {
             sum += snoise(p * freq) * amp;
+            freq *= lacunarity;
+            amp *= gain;
+        }
+        return (sum + offset)*amplitude;
+    }
+
+    public static float3 fBm3(float p, int octaves, float frequency, float offset, float amplitude, float lacunarity, float gain)
+    {
+        return float3(
+            fBm(p, octaves, frequency, offset, amplitude, lacunarity, gain),
+            fBm(p+10, octaves, frequency, offset, amplitude, lacunarity, gain),
+            fBm(p+20, octaves, frequency, offset, amplitude, lacunarity, gain));
+    }
+    
+    public static float fBm(float p, int octaves, float frequency, float offset, float amplitude, float lacunarity, float gain)
+    {
+        float freq = frequency, amp = .5f;
+        float sum = 0;	
+        for(int i = 0; i < octaves; i++) 
+        {
+            sum += Noise1D.noise(p * freq) * amp;
             freq *= lacunarity;
             amp *= gain;
         }

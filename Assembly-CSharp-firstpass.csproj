@@ -65,6 +65,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Routing\Visibility\VisibilityEdge.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\SplineRouter.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\GraphAlgorithms\IEdge.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\GPUTrailIndirect.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\Layered\Ordering\ConstrainedOrderMeasure.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\Curves\CurvatureDerivative.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\OverlapRemoval\OverlapRemovalClusterScanLine.cs" />
@@ -88,6 +89,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Routing\Spline\Bundling\EdgeNudger.cs" />
      <Compile Include="Assets\Plugins\AsyncAwaitUtil\Tests\Util\TestButtonHandler.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\DataStructures\GenericHeapElement.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\GPUTrail.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\DataStructures\Size.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\LargeGraphLayout\DeviceIndependedZoomCalculatorForNodes.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Miscellaneous\ConstrainedSkeleton\SteinerCdt.cs" />
@@ -125,6 +127,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Routing\Spline\ConeSpanner\LeftObstacleSide.cs" />
      <Compile Include="Assets\Plugins\MIConvexHull\Triangulation\DelaunayTrianglationInternal.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Spline\Bundling\FlipSwitcher.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\GPUTrailIndirectCulling.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\OverlapRemoval\OverlapRemovalClusterEvent.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\MDS\MDSLayoutSettings.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\Layered\Ordering\ConstrainedOrdering.cs" />
@@ -209,6 +212,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\CurvePort.cs" />
      <Compile Include="Assets\Plugins\MSAGL\DebugHelpers\DebugShape.cs" />
      <Compile Include="Assets\Plugins\MSAGL\GraphmapsWithMesh\ComponentCollection.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\Scripts\GPUTrailBase.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\Incremental\Multipole\MultipoleCoefficients.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Routing\BundlingSettings.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Rectilinear\SparseVisibilityGraphGenerator.cs" />
@@ -237,6 +241,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Routing\Spline\Bundling\PointPairOrder.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\DataStructures\RBTree\RBTree.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Miscellaneous\Ranking\Centrality.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\Sample\GPUTrailSample\AutoRotate.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Routing\EdgeRoutingMode.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\LargeGraphLayout\Interval.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Rectilinear\Nudging\Path.cs" />
@@ -287,6 +292,7 @@
      <Compile Include="Assets\Plugins\NaughtyAttributes\Scripts\Core\DrawerAttributes\ResizableTextAreaAttribute.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\Curves\CubicBezierSegment.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Visibility\InteractiveTangentVisibilityGraphCalculator.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\Sample\GPUTrailSpline\GPUTrailSplineSample.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\ProximityOverlapRemoval\StressEnergy\VoteBlock.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\LayoutChangeEventArgs.cs" />
      <Compile Include="Assets\Plugins\Celestial Body\Scripts\SphereMesh.cs" />
@@ -294,6 +300,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\LayoutAlgorithmSettings.cs" />
      <Compile Include="Assets\Plugins\MIConvexHull\ConvexHull\Collections.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\LgNodeInfoKind.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\Sample\GPUTrailSample\GenerateSphere.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\LargeGraphLayout\LgPathRouter.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\Incremental\AxisSolver.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\ProximityOverlapRemoval\MST\MstOnDelaunayTriangulation.cs" />
@@ -318,6 +325,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Layout\Layered\LayerCalculator.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\ProjectionSolver\ConstraintVector.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Miscellaneous\Routing\ShortestPathTree.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\Scripts\GPUTrailSpline.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Spline\Bundling\Station.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Rectilinear\GroupBoundaryCrossing.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Visibility\VisibilityVertex.cs" />
@@ -370,6 +378,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Layout\Layered\VertexEnumerators.cs" />
      <Compile Include="Assets\Plugins\NaughtyAttributes\Scripts\Core\DrawerAttributes\ShowNativePropertyAttribute.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\Layered\NetworkEdge.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\Sample\GPUTrailIndirectSample\GPUTrailIndirectSampleParticle.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Spline\ConeSpanner\VertexEvent.cs" />
      <Compile Include="Assets\Plugins\Celestial Body\Scripts\LODHandler.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\RectanglePacking\RectangleToPack.cs" />
@@ -551,6 +560,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\RectanglePacking\OptimalColumnPacking.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\ConstrainedDelaunayTriangulation\CdtFrontElement.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\Curves\ParallelogramNodeOverICurve.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\Sample\GPUTrailIndirectSample\GPUTrailIndirectSample.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\ProjectionSolver\Variable.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Rectilinear\Nudging\AxisEdgeHighPointEvent.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Miscellaneous\NonOverlappingBoundaries\AllPairsNonOverlappingBoundaries.cs" />
@@ -570,6 +580,7 @@
      <Compile Include="Assets\Plugins\MSAGL\Core\ProjectionSolver\UniformSolverVar.cs" />
      <Compile Include="Assets\Plugins\Celestial Body\Scripts\Shading\ColourHelper.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\GraphAlgorithms\MinimumSpanningTreeByPrim.cs" />
+     <Compile Include="Assets\Plugins\GPUTrail\Sample\GPUTrailIndirectSample\GPUTrailIndirectCullingSample.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Spline\ConeSpanner\ConeSideComparer.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\GraphAlgorithms\BasicGraph.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\ProjectionSolver\SolverAlgorithm.cs" />
@@ -661,6 +672,7 @@
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\PostProcessing\OceanEffect.shader" />
      <None Include="Assets\Plugins\Celestial Body\Textures\_Sources.txt" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\Triplanar.cginc" />
+     <None Include="Assets\Plugins\GPUTrail\Shaders\GPUTrailInput.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\PostProcessing\Test.shader" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\SimplexNoise2.cginc" />
      <None Include="Assets\Plugins\GPU Noise\ClassicNoise2D.cginc" />
@@ -673,16 +685,21 @@
      <None Include="Assets\Plugins\Celestial Body\Scripts\Test\Phase.shader" />
      <None Include="Assets\Plugins\GPU Noise\SimplexNoise3D.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\PostProcessing\Atmosphere.shader" />
+     <None Include="Assets\Plugins\GPUTrail\Sample\GPUTrailIndirectSample\GPUTrailIndirectSampleParticleCS.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Atmosphere\AtmosphereTexture.compute" />
+     <None Include="Assets\Plugins\GPUTrail\Shaders\GPUTrailVariables.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Other\SteepnessCompute.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Height\EarthHeight.compute" />
      <None Include="Assets\Plugins\GPU Noise\SimplexNoiseGrad3D.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Surface\MoonB.shader" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Textures\TextureGenerator.compute" />
+     <None Include="Assets\Plugins\GPUTrail\Shaders\GPUTrailVariablesCS.compute" />
+     <None Include="Assets\Plugins\GPUTrail\Shaders\GPUTrail.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Other\PerturbPoints.compute" />
      <None Include="Assets\Plugins\GPU Noise\SimplexNoise2D.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\SimplexNoise.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\FractalNoise.cginc" />
+     <None Include="Assets\Plugins\GPUTrail\Shaders\GPUTrail.shader" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Surface\Earth.shader" />
      <None Include="Assets\Plugins\GPU Noise\ClassicNoise3D.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Textures\Blur.compute" />
@@ -690,8 +707,11 @@
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Other\PerturbPointsPlatelike.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Height\MoonHeight.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Other\OceanMask.shader" />
+     <None Include="Assets\Plugins\GPUTrail\Shaders\GPUTrailIndirectCulling.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\Math.cginc" />
+     <None Include="Assets\Plugins\GPUTrail\Shaders\GPUTrailVertex.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\SimplexNoise3.cginc" />
+     <None Include="Assets\Plugins\GPUTrail\Shaders\GPUTrailIndirect.compute" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Includes\Craters.cginc" />
      <None Include="Assets\Plugins\Celestial Body\Scripts\Shaders\Compute\Shading\MoonShading.compute" />
  <Reference Include="UnityEngine">

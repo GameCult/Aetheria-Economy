@@ -31,7 +31,6 @@ public class GuidedProjectile : MonoBehaviour
     public float Thrust;
     public float TopSpeed;
     public Transform Source;
-    public Transform Target;
     public Func<Vector3> TargetPosition;
     
     private float _phase;
@@ -39,6 +38,7 @@ public class GuidedProjectile : MonoBehaviour
     private bool _active;
     private bool _alive;
     
+    public Transform Target { get; set; }
     public float3 StartPosition { get; set; }
     public float Range { get; set; }
     public Vector3 Velocity { get; set; }

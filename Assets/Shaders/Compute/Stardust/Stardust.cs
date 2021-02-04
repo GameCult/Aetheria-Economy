@@ -121,7 +121,7 @@ public class Stardust : MonoBehaviour
         
         ParticleMaterial.SetBuffer("particles", _particlesBuffer);
         ParticleMaterial.SetBuffer("quadPoints", _quadPoints);
-        Graphics.DrawProcedural(ParticleMaterial, new Bounds(pos, Spacing * Span * Vector3.one), MeshTopology.Triangles, 6, Span * Span, TargetCamera, null, ShadowCastingMode.On, false, 0);
+        Graphics.DrawProcedural(ParticleMaterial, new Bounds(pos, Spacing * Span * Vector3.one), MeshTopology.Triangles, 6, Span * Span, TargetCamera, null, ShadowCastingMode.Off, false, 0);
     }
     #endregion
 

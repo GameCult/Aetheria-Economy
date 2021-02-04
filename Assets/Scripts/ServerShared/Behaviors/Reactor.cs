@@ -78,6 +78,7 @@ public class Reactor : IBehavior, IOrderedBehavior
             int chargedCapacitors = 0;
             do
             {
+                chargedCapacitors = 0;
                 var chargeToRemove = -Entity.Energy;
                 foreach (var cap in _capacitors)
                 {

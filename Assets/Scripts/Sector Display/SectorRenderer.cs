@@ -201,6 +201,7 @@ public class SectorRenderer : MonoBehaviour
         }
 
         instance.Entity = entity;
+        foreach (var hullCollider in instance.Prefab.HullColliders) hullCollider.Entity = entity;
 
         foreach (var item in entity.Equipment)
         {

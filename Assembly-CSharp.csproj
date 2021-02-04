@@ -78,6 +78,7 @@
      <Compile Include="Assets\Scripts\UI\InputField.cs" />
      <Compile Include="Assets\Scripts\UI\IncrementField.cs" />
      <Compile Include="Assets\Scripts\UI\MenuPanel.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\LightningGunManager.cs" />
      <Compile Include="Assets\Scripts\UI\ZoneObject.cs" />
      <Compile Include="Assets\Scripts\Sector Display\SunMaterial.cs" />
      <Compile Include="Assets\Scripts\UI\ZoneRenderer.cs" />
@@ -141,6 +142,7 @@
      <Compile Include="Assets\Scripts\UI\SchematicTriggerGroupElement.cs" />
      <Compile Include="Assets\Scripts\UI\ConsoleView.cs" />
      <Compile Include="Assets\Scripts\UI\MinimapCameraTrack.cs" />
+     <Compile Include="Assets\Shaders\Compute\Lightning\LightningCompute.cs" />
      <Compile Include="Assets\Scripts\Sector Display\MapView.cs" />
      <Compile Include="Assets\Scripts\MarkovNameGenerator.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Weapons\Laser.cs" />
@@ -160,12 +162,13 @@
      <Compile Include="Assets\Scripts\Gameplay\ThrusterHardpoint.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Weapons\ProjectileManager.cs" />
      <Compile Include="Assets\Scripts\UI\TabButton.cs" />
-     <Compile Include="Assets\Shaders\Compute\Stardust.cs" />
+     <Compile Include="Assets\Shaders\Compute\Stardust\Stardust.cs" />
      <Compile Include="Assets\Scripts\UI\EnumField.cs" />
      <Compile Include="Assets\HoverCursorChange.cs" />
      <Compile Include="Assets\Scripts\Sector Display\WaveScroll.cs" />
      <Compile Include="Assets\Scripts\UI\MouseHover.cs" />
      <Compile Include="Assets\Scripts\UI\PropertiesList.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\Lightning.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Weapons\WeaponChargeEffect.cs" />
      <Compile Include="Assets\Scripts\UI\MenuTabButton.cs" />
      <Compile Include="Assets\Scripts\UI\ContextMenuOption.cs" />
@@ -179,6 +182,7 @@
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle Add.shader" />
      <None Include="Assets\Shaders\Clouds.shader" />
      <None Include="Assets\Shaders\AdditiveUI.shader" />
+     <None Include="Assets\Shaders\Compute\Lightning\Lightning.shader" />
      <None Include="Assets\Shaders\Brushes\LinearWaveBrush.shader" />
      <None Include="Assets\Resources\Sprites\Attribution.txt" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
@@ -187,6 +191,7 @@
      <None Include="Assets\Allegorithmic\Plugins\EULA.txt" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIMultiply.shader" />
      <None Include="Assets\Shaders\GalaxyMap.shader" />
+     <None Include="Assets\Shaders\Compute\Lightning\LightningVertex.cginc" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UILinearDodge.shader" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle Alpha Blend.shader" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\SoftMaskShader.shader" />
@@ -194,8 +199,8 @@
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle VertexLit Blended.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\Shaders\IsolinesUI.shader" />
-     <None Include="Assets\Shaders\Compute\Stardust.compute" />
-     <None Include="Assets\Shaders\Compute\Stardust.shader" />
+     <None Include="Assets\Shaders\Compute\Stardust\Stardust.compute" />
+     <None Include="Assets\Shaders\Compute\Stardust\Stardust.shader" />
      <None Include="Assets\Shaders\MaskedWorldSpaceUI.shader" />
      <None Include="Assets\Shaders\Brushes\PowerBrush.shader" />
      <None Include="Assets\Shaders\DitheredParticles.shader" />
@@ -213,6 +218,7 @@
      <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
      <None Include="Assets\Shaders\MaskedUIBlur.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
+     <None Include="Assets\Shaders\Compute\Lightning\Lightning.compute" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
      <None Include="Assets\Shaders\Raymarching\VolumeRender.shader" />
      <None Include="Assets\Shaders\Background.shader" />
