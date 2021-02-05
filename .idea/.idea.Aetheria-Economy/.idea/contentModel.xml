@@ -68,42 +68,6 @@
         <e p="HoverCursorChange.cs" t="Include" />
         <e p="ItemFilter.cs" t="Include" />
         <e p="LineMaterialOffset.cs" t="Include" />
-        <e p="Packages" t="Include">
-          <e p="GPUTrail" t="Include">
-            <e p="GPUTrail.cs" t="Include" />
-            <e p="GPUTrailIndirect.cs" t="Include" />
-            <e p="GPUTrailIndirectCulling.cs" t="Include" />
-            <e p="Sample" t="Include">
-              <e p="GPUTrailIndirectSample" t="Include">
-                <e p="GPUTrailIndirectCullingSample.cs" t="Include" />
-                <e p="GPUTrailIndirectSample.cs" t="Include" />
-                <e p="GPUTrailIndirectSampleParticle.cs" t="Include" />
-                <e p="GPUTrailIndirectSampleParticleCS.compute" t="Include" />
-              </e>
-              <e p="GPUTrailSample" t="Include">
-                <e p="AutoRotate.cs" t="Include" />
-                <e p="GenerateSphere.cs" t="Include" />
-              </e>
-              <e p="GPUTrailSpline" t="Include">
-                <e p="GPUTrailSplineSample.cs" t="Include" />
-              </e>
-            </e>
-            <e p="Scripts" t="Include">
-              <e p="GPUTrailBase.cs" t="Include" />
-              <e p="GPUTrailSpline.cs" t="Include" />
-            </e>
-            <e p="Shaders" t="Include">
-              <e p="GPUTrail.compute" t="Include" />
-              <e p="GPUTrail.shader" t="Include" />
-              <e p="GPUTrailIndirect.compute" t="Include" />
-              <e p="GPUTrailIndirectCulling.compute" t="Include" />
-              <e p="GPUTrailInput.cginc" t="Include" />
-              <e p="GPUTrailVariables.cginc" t="Include" />
-              <e p="GPUTrailVariablesCS.compute" t="Include" />
-              <e p="GPUTrailVertex.cginc" t="Include" />
-            </e>
-          </e>
-        </e>
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">
@@ -247,6 +211,40 @@
             <e p="SimplexNoise3D.cginc" t="Include" />
             <e p="SimplexNoiseGrad2D.cginc" t="Include" />
             <e p="SimplexNoiseGrad3D.cginc" t="Include" />
+          </e>
+          <e p="GPUTrail" t="Include">
+            <e p="GPUTrail.cs" t="Include" />
+            <e p="GPUTrailIndirect.cs" t="Include" />
+            <e p="GPUTrailIndirectCulling.cs" t="Include" />
+            <e p="Sample" t="Include">
+              <e p="GPUTrailIndirectSample" t="Include">
+                <e p="GPUTrailIndirectCullingSample.cs" t="Include" />
+                <e p="GPUTrailIndirectSample.cs" t="Include" />
+                <e p="GPUTrailIndirectSampleParticle.cs" t="Include" />
+                <e p="GPUTrailIndirectSampleParticleCS.compute" t="Include" />
+              </e>
+              <e p="GPUTrailSample" t="Include">
+                <e p="AutoRotate.cs" t="Include" />
+                <e p="GenerateSphere.cs" t="Include" />
+              </e>
+              <e p="GPUTrailSpline" t="Include">
+                <e p="GPUTrailSplineSample.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Scripts" t="Include">
+              <e p="GPUTrailBase.cs" t="Include" />
+              <e p="GPUTrailSpline.cs" t="Include" />
+            </e>
+            <e p="Shaders" t="Include">
+              <e p="GPUTrail.compute" t="Include" />
+              <e p="GPUTrail.shader" t="Include" />
+              <e p="GPUTrailIndirect.compute" t="Include" />
+              <e p="GPUTrailIndirectCulling.compute" t="Include" />
+              <e p="GPUTrailInput.cginc" t="Include" />
+              <e p="GPUTrailVariables.cginc" t="Include" />
+              <e p="GPUTrailVariablesCS.compute" t="Include" />
+              <e p="GPUTrailVertex.cginc" t="Include" />
+            </e>
           </e>
           <e p="MessagePack" t="Include">
             <e p="Annotations" t="Include">

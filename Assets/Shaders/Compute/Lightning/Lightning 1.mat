@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Lightning
+  m_Name: Lightning 1
   m_Shader: {fileID: 4800000, guid: 21dd485e846b4d3a8213cf5551832776, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -64,9 +64,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Intensity: 10
+    - _Intensity: 100
     - _LeaderIntensity: 100
-    - _LeaderProgress: 0.81259537
+    - _LeaderProgress: 2
     - _LeaderSize: 0.025
     - _Metallic: 0
     - _Mode: 0
@@ -80,6 +80,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EndColor: {r: 0.062478006, g: 0.11552096, b: 0.801, a: 0}
-    - _StartColor: {r: 0.83699995, g: 0.043821972, b: 0.57845026, a: 1}
+    - _EndColor: {r: 1, g: 0.049999997, b: 0.049999997, a: 1}
+    - _StartColor: {r: 1, g: 0.20970267, b: 0.051643193, a: 1}
   m_BuildTextureStacks: []

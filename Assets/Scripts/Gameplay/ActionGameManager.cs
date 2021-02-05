@@ -177,7 +177,13 @@ public class ActionGameManager : MonoBehaviour
 
         _input.Global.Dock.performed += context =>
         {
-            if (CurrentShip.Parent == null) Dock();
+            if (CurrentShip == null)
+            {
+                ConfirmationDialog.Clear();
+                ConfirmationDialog.Title.text = "Can't undock. You dont have a ship!";
+                ConfirmationDialog.Show();
+            }
+            else if (CurrentShip.Parent == null) Dock();
             else Undock();
         };
 

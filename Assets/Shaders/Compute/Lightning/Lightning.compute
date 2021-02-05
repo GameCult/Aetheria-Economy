@@ -78,10 +78,9 @@ void UpdateNodes (uint3 id : SV_DispatchThreadID)
 
     float distance = length(bolt.startPos - samplePos);
 
-    node.pos = samplePos +
-        fbm3(float2(distance, _Time + node.bolt * 10)) +
-        bolt.startOffset * max(.5 - node.time, 0) * 2 + 
-        bolt.endOffset * max(node.time - .5, 0) * 2;
+    node.pos = samplePos + fbm3(float2(distance, _Time + node.bolt * 10));
+    if(node.bolt == 0) node.pos += bolt.startOffset * max(.5 - node.time, 0) * 2 + bolt.endOffset * max(node.time - .5, 0) * 2;
+    else node.pos += bolt.startOffset;
 
     _NodeBuffer[idx] = node;
 }
@@ -129,10 +128,10 @@ void CreateWidth (uint3 id : SV_DispatchThreadID)
 
     float uvx = bolt.startTime + node.time * (1-bolt.startTime);
     v0.pos = pos - right;
-    v0.uv = float2(uvx, 0);
+    v0.uv = float2(uvx, 0 + node.bolt);
 
     v1.pos = pos + right;
-    v1.uv = float2(uvx, 1);
+    v1.uv = float2(uvx, 1 + node.bolt);
 
     uint vId = idx * 2;
     _VertexBuffer[vId] = v0;

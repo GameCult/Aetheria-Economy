@@ -373,9 +373,9 @@ public class SectorRenderer : MonoBehaviour
                         hitShape[v] = true;
                 }
                 
-                for (int i = 0; i < hit.Spread - 1; i++)
+                for (int i = 0; i < Mathf.RoundToInt(hit.Spread); i++)
                 {
-                    hitShape.Expand();
+                    hitShape = hitShape.Expand();
                 }
 
                 if (hit.Penetration > .5f)
