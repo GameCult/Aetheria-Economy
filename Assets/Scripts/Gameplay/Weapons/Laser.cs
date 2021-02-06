@@ -43,7 +43,7 @@ public class Laser : MonoBehaviour
             {
                 if (hull.Entity != SourceEntity)
                 {
-                    hull.SendHit(Damage * (Time.deltaTime / Duration), Penetration, Spread, DamageType, SourceEntity, hit, transform.forward);
+                    hull.SendHit(Damage * (Time.deltaTime / Duration), Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, transform.forward);
                 }
             }
             LineRenderer.SetPosition(1, hit.point);

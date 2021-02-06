@@ -175,7 +175,7 @@ public class GuidedProjectile : MonoBehaviour
                 var hull = hit.collider.GetComponent<HullCollider>();
                 if (hull)
                 {
-                    hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, Velocity.normalized);
+                    hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, Velocity.normalized);
                 }
 
                 StartCoroutine(Kill());

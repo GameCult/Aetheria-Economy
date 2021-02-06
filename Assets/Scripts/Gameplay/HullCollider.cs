@@ -13,7 +13,7 @@ public class HullCollider : MonoBehaviour
     
     public Entity Entity { get; set; }
     
-    public void SendHit(float damage, float penetration, float spread, DamageType damageType, Entity source, RaycastHit hit, Vector3 direction)
+    public void SendHit(float damage, float penetration, float spread, DamageType damageType, Entity source, Vector2 texCoord, Vector3 direction)
     {
         Hit.OnNext(new HullHitEventArgs
         {
@@ -22,7 +22,7 @@ public class HullCollider : MonoBehaviour
             Spread = spread,
             DamageType = damageType,
             Source = source,
-            Hit = hit,
+            TexCoord = texCoord,
             Direction = direction
         });
     }
@@ -45,7 +45,7 @@ public class HullCollider : MonoBehaviour
         public float Spread;
         public DamageType DamageType;
         public Entity Source;
-        public RaycastHit Hit;
+        public float2 TexCoord;
         public float3 Direction;
     }
     

@@ -57,7 +57,7 @@ public class ConstantLightning : MonoBehaviour
             if (hull)
             {
                 if (hull.Entity == Source.Entity) continue;
-                hull.SendHit(Damage * Time.deltaTime, Penetration, Spread, DamageType, Source.Entity, hit, Barrel.forward);
+                hull.SendHit(Damage * Time.deltaTime, Penetration, Spread, DamageType, Source.Entity, hit.textureCoord, Barrel.forward);
             }
 
             Lightning.FixedEndpoint = true;

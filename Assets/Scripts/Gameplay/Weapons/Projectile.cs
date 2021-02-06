@@ -51,7 +51,7 @@ public class Projectile : MonoBehaviour
         {
             var t = transform;
             var position = t.position;
-            Velocity += Vector3.up * (Gravity * Time.deltaTime);
+            Velocity -= Vector3.up * (Gravity * Time.deltaTime);
             Velocity *= max(0, 1 - Drag * Time.deltaTime);
             var forward = Velocity.normalized;
             t.forward = forward;
@@ -63,7 +63,7 @@ public class Projectile : MonoBehaviour
                 {
                     if (hull.Entity != SourceEntity)
                     {
-                        hull.SendHit(Damage*DirectHitDamageMultiplier, Penetration, Spread, DamageType, SourceEntity, hit, forward);
+                        hull.SendHit(Damage*DirectHitDamageMultiplier, Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, forward);
                         transform.position = hit.point;
                         StartCoroutine(Kill());
                     }

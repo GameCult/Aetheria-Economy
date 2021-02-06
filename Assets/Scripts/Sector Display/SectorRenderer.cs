@@ -336,7 +336,7 @@ public class SectorRenderer : MonoBehaviour
             
             collider.Hit.Subscribe(hit =>
             {
-                var hardpointIndex = (int) hit.Hit.textureCoord.x - 1;
+                var hardpointIndex = (int) hit.TexCoord.x - 1;
                 
                 var hitShape = new Shape(hullData.Shape.Width, hullData.Shape.Height);
 
@@ -345,7 +345,7 @@ public class SectorRenderer : MonoBehaviour
                 float2 hitPos = float2.zero;
                 if (hardpointIndex < 0)
                 {
-                    hitPos = float2(hit.Hit.textureCoord.x * hullData.Shape.Width, hit.Hit.textureCoord.y * hullData.Shape.Height);
+                    hitPos = float2(hit.TexCoord.x * hullData.Shape.Width, hit.TexCoord.y * hullData.Shape.Height);
                     // Search all schematic border cells for the cell which is closest to the hit position
                     var hitCell = int2(-1);
                     var distance = float.MaxValue;

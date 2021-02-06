@@ -33,7 +33,7 @@ public class HitscanEffect : MonoBehaviour
             {
                 if (hull.Entity != SourceEntity)
                 {
-                    hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit, transform.forward);
+                    hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, transform.forward);
                 }
             }
             var length = (hit.point - transform.position).magnitude;

@@ -39,7 +39,7 @@ public class Lightning : MonoBehaviour
             {
                 if (hull.Entity == Source.Entity) continue;
                 LightningCompute.OnLeaderComplete = () => 
-                    hull.SendHit(Damage, Penetration, Spread, DamageType, Source.Entity, hit, Barrel.forward);
+                    hull.SendHit(Damage, Penetration, Spread, DamageType, Source.Entity, hit.textureCoord, Barrel.forward);
             }
 
             _colliderHit = true;
