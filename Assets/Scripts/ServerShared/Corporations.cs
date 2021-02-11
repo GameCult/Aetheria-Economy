@@ -48,18 +48,9 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
     
     [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(4)]  
     public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
-    
-    [InspectableDatabaseLink(typeof(LoadoutData)), JsonProperty("initialFleet"), Key(5)]  
-    public Dictionary<Guid, int> InitialFleet = new Dictionary<Guid, int>();
-    
-    [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("initialTechs"), Key(6)]  
-    public List<Guid> InitialTechnologies = new List<Guid>();
 
-    [JsonProperty("parent"), Key(7)]
-    public Guid HomeZone;
-    
-    [InspectableField, JsonProperty("placement"), Key(8)]
-    public MegaPlacementType PlacementType;
+    [InspectableField, JsonProperty("hostile"), Key(5)]
+    public bool PlayerHostile;
     
     [IgnoreMember] public string EntryName
     {

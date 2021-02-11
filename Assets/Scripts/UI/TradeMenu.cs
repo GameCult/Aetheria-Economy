@@ -272,7 +272,7 @@ public class TradeMenu : MonoBehaviour
             data => () =>
             {
                 if (data is HullData)
-                    return GameManager.PlayerShips.Count(s => s.Hull.Data == data.ID && s.Parent == GameManager.CurrentShip.Parent).ToString();
+                    return GameManager.PlayerEntities.Count(s => s.Hull.Data == data.ID && s.Parent == GameManager.DockedEntity).ToString();
                 if(data is SimpleCommodityData)
                     return (_targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Cast<SimpleCommodity>().Sum(s=>s.Quantity) : 0).ToString();
                 return (_targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Count : 0).ToString();
@@ -280,7 +280,7 @@ public class TradeMenu : MonoBehaviour
             data =>
             {
                 if (data is HullData)
-                    return GameManager.PlayerShips.Count(s => s.Hull.Data == data.ID && s.Parent == GameManager.CurrentShip.Parent);
+                    return GameManager.PlayerEntities.Count(s => s.Hull.Data == data.ID && s.Parent == GameManager.DockedEntity);
                 if(data is SimpleCommodityData)
                     return _targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Cast<SimpleCommodity>().Sum(s=>s.Quantity) : 0;
                 return _targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Count : 0;
@@ -355,9 +355,13 @@ public class TradeMenu : MonoBehaviour
     {
         if (data.Price < GameManager.Credits)
         {
-            var ship = new Ship(GameManager.ItemManager, GameManager.Zone, GameManager.ItemManager.CreateInstance(data, .1f, 1) as EquippableItem);
-            ship.SetParent(GameManager.CurrentShip.Parent);
-            GameManager.PlayerShips.Add(ship);
+            var hull = GameManager.ItemManager.CreateInstance(data, .1f, 1) as EquippableItem;
+            Entity entity;
+            if(data.HullType==HullType.Ship)
+                entity = new Ship(GameManager.ItemManager, GameManager.Zone, hull);
+            else entity = new OrbitalEntity(GameManager.ItemManager, GameManager.Zone, hull, Guid.Empty);
+            entity.SetParent(GameManager.DockedEntity);
+            GameManager.PlayerEntities.Add(entity);
             
             GameManager.Credits -= data.Price;
         }
@@ -444,7 +448,7 @@ public class TradeMenu : MonoBehaviour
                         _targetCargo = GameManager.DockingBay;
                         TargetCargoLabel.text = "Docking Bay";
                     });
-            foreach (var ship in GameManager.CurrentShip.Parent.Children.Where(GameManager.PlayerShips.Contains))
+            foreach (var ship in GameManager.CurrentShip.Parent.Children.Where(GameManager.PlayerEntities.Contains))
             {
                 foreach (var bay in ship.CargoBays.Select((bay, index) => (bay, index)))
                     ContextMenu.AddOption($"{ship.Name} Bay {bay.index}",

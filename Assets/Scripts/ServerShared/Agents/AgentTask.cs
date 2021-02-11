@@ -39,3 +39,9 @@ public enum TaskType
     Attack,
     Explore
 }
+
+public class PatrolOrbitsTask : AgentTask
+{
+    public override TaskType Type => TaskType.Defend;
+    public Guid[] Circuit;
+}

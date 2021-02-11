@@ -1450,6 +1450,10 @@
               <e p="ChargeEffectManager.cs" t="Include" />
               <e p="ConstantLaser.cs" t="Include" />
               <e p="ConstantLaserManager.cs" t="Include" />
+              <e p="ConstantLightning.cs" t="Include" />
+              <e p="ConstantLightningManager.cs" t="Include" />
+              <e p="ConstantParticleWeapon.cs" t="Include" />
+              <e p="ConstantParticleWeaponManager.cs" t="Include" />
               <e p="ConstantWeaponEffectManager.cs" t="Include" />
               <e p="GuidedProjectile.cs" t="Include" />
               <e p="GuidedProjectileManager.cs" t="Include" />
@@ -1460,6 +1464,8 @@
               <e p="LaserManager.cs" t="Include" />
               <e p="Lightning.cs" t="Include" />
               <e p="LightningGunManager.cs" t="Include" />
+              <e p="Mine.cs" t="Include" />
+              <e p="MineManager.cs" t="Include" />
               <e p="ParticleChargeEffect.cs" t="Include" />
               <e p="Projectile.cs" t="Include" />
               <e p="ProjectileManager.cs" t="Include" />

@@ -4567,6 +4567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78aa0b8ec7594a7438f13757228e3500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConfirmationDialog: {fileID: 0}
   Flip: 1
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   GameManager: {fileID: 1009503729}
@@ -28397,6 +28398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78aa0b8ec7594a7438f13757228e3500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConfirmationDialog: {fileID: 0}
   Flip: 0
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   GameManager: {fileID: 1009503729}

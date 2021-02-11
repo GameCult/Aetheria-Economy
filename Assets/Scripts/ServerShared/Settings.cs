@@ -111,5 +111,9 @@ public class GameplaySettings
     public float TorqueFloor;
     public float TorqueMultiplier;
     public float VisibilityDecay;
+    public float TargetInfoDecay;
+    public float TargetDetectionInfoThreshold;
+    public float TargetArmorInfoThreshold;
+    public float TargetGearInfoThreshold;
     public float ConvergenceMinimumDistance;
 }

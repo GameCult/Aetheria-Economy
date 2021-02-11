@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
+using Unity.Mathematics;
 
 [Union(0, typeof(InstantWeaponData)),
  Union(1, typeof(LauncherData)),
@@ -27,34 +28,40 @@ public abstract class WeaponData : BehaviorData
     [RangedFloatInspectable(0,1), JsonProperty("damageSpread"), Key(4)]
     public PerformanceStat DamageSpread = new PerformanceStat();
 
-    [InspectableField, JsonProperty("range"), Key(5), RuntimeInspectable]
+    [InspectableField, JsonProperty("minRange"), Key(5), RuntimeInspectable]
+    public PerformanceStat MinRange = new PerformanceStat();
+
+    [InspectableField, JsonProperty("range"), Key(6), RuntimeInspectable]
     public PerformanceStat Range = new PerformanceStat();
+
+    [InspectableAnimationCurve, JsonProperty("damageRange"), Key(7), RuntimeInspectable]
+    public float4[] DamageCurve;
     
-    [InspectablePrefab, JsonProperty("effect"), Key(6)]  
+    [InspectablePrefab, JsonProperty("effect"), Key(8)]  
     public string EffectPrefab;
     
-    [InspectablePrefab, JsonProperty("energy"), Key(7), RuntimeInspectable]  
+    [InspectablePrefab, JsonProperty("energy"), Key(9), RuntimeInspectable]  
     public PerformanceStat Energy = new PerformanceStat();
     
-    [InspectablePrefab, JsonProperty("heat"), Key(8), RuntimeInspectable]  
+    [InspectablePrefab, JsonProperty("heat"), Key(10), RuntimeInspectable]  
     public PerformanceStat Heat = new PerformanceStat();
     
-    [InspectablePrefab, JsonProperty("visibility"), Key(9), RuntimeInspectable]  
+    [InspectablePrefab, JsonProperty("visibility"), Key(11), RuntimeInspectable]  
     public PerformanceStat Visibility = new PerformanceStat();
     
-    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("ammo"), Key(10), RuntimeInspectable]  
+    [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("ammo"), Key(12), RuntimeInspectable]  
     public Guid AmmoType;
 
-    [InspectablePrefab, JsonProperty("magSize"), Key(11)]
+    [InspectablePrefab, JsonProperty("magSize"), Key(13)]
     public int MagazineSize;
     
-    [InspectablePrefab, JsonProperty("reloadTime"), Key(12)]  
+    [InspectablePrefab, JsonProperty("reloadTime"), Key(14)]  
     public float ReloadTime = 1;
     
-    [InspectablePrefab, JsonProperty("spread"), Key(13)]  
+    [InspectablePrefab, JsonProperty("spread"), Key(15)]  
     public PerformanceStat Spread = new PerformanceStat();
 
-    [InspectableField, JsonProperty("velocity"), Key(14)]
+    [InspectableField, JsonProperty("velocity"), Key(16)]
     public PerformanceStat Velocity = new PerformanceStat();
 }
 
@@ -73,6 +80,7 @@ public abstract class Weapon : IActivatedBehavior
     public float Damage { get; protected set; }
     public float Penetration { get; protected set; }
     public float DamageSpread { get; protected set; }
+    public float MinRange { get; protected set; }
     public float Range { get; protected set; }
     public float Energy { get; protected set; }
     public float Heat { get; protected set; }
@@ -103,6 +111,7 @@ public abstract class Weapon : IActivatedBehavior
         Damage = Context.Evaluate(_data.Damage, Item.EquippableItem, Entity);
         Penetration = Context.Evaluate(_data.Penetration, Item.EquippableItem, Entity);
         DamageSpread = Context.Evaluate(_data.DamageSpread, Item.EquippableItem, Entity);
+        MinRange = Context.Evaluate(_data.MinRange, Item.EquippableItem, Entity);
         Range = Context.Evaluate(_data.Range, Item.EquippableItem, Entity);
         Energy = Context.Evaluate(_data.Energy, Item.EquippableItem, Entity);
         Heat = Context.Evaluate(_data.Heat, Item.EquippableItem, Entity);

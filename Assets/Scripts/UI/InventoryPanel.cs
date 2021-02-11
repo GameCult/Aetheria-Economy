@@ -19,6 +19,7 @@ using int2 = Unity.Mathematics.int2;
 
 public class InventoryPanel : MonoBehaviour
 {
+    public ConfirmationDialog ConfirmationDialog;
     public bool Flip;
     public GameSettings Settings;
     public ActionGameManager GameManager;
@@ -100,9 +101,18 @@ public class InventoryPanel : MonoBehaviour
             {
                 if (_displayedEntity != GameManager.CurrentShip)
                 {
-                    GameManager.CurrentShip = (Ship) _displayedEntity;
-                    GameManager.DockingBay.DockedShip = (Ship) _displayedEntity;
-                    Current.targetGraphic.color = ToggleEnabledColor;
+                    if(_displayedEntity is Ship ship)
+                    {
+                        GameManager.CurrentShip = ship;
+                        GameManager.DockingBay.DockedShip = ship;
+                        Current.targetGraphic.color = ToggleEnabledColor;
+                    }
+                    else
+                    {
+                        ConfirmationDialog.Clear();
+                        ConfirmationDialog.Title.text = "Can't select entity, you can only pilot a ship!";
+                        ConfirmationDialog.Show();
+                    }
                 }
             });
         }
@@ -111,18 +121,18 @@ public class InventoryPanel : MonoBehaviour
             Dropdown.onClick.AddListener(() =>
             {
                 ContextMenu.Clear();
-                foreach (var ship in GameManager.AvailableShips())
+                foreach (var entity in GameManager.AvailableEntities())
                 {
-                    if (ship.CargoBays.Any())
+                    if (entity.CargoBays.Any())
                     {
-                        var options = ship.CargoBays
+                        var options = entity.CargoBays
                             .Where(bay => bay != _displayedCargo)
                             .Select<EquippedCargoBay, (string text, Action action, bool enabled)>((bay, index) =>
                                 ($"Bay {index}", () => Display(bay), true));
-                        if(ship != _displayedEntity) options = options.Prepend(("Equipment", () => Display(ship), true));
-                        ContextMenu.AddDropdown(ship.Name, options);
+                        if(entity != _displayedEntity) options = options.Prepend(("Equipment", () => Display(entity), true));
+                        ContextMenu.AddDropdown(entity.Name, options);
                     }
-                    else if(ship != _displayedEntity) ContextMenu.AddOption(ship.Name, () => Display(ship));
+                    else if(entity != _displayedEntity) ContextMenu.AddOption(entity.Name, () => Display(entity));
                 }
 
                 if(GameManager.DockingBay!=null && _displayedCargo!=GameManager.DockingBay)
@@ -143,7 +153,7 @@ public class InventoryPanel : MonoBehaviour
                                 {
                                     var ship = EntityPack.Unpack(GameManager.ItemManager, GameManager.Zone, pack, true);
                                     ship.SetParent(GameManager.DockedEntity);
-                                    GameManager.PlayerShips.Add(ship);
+                                    GameManager.PlayerEntities.Add(ship);
                                     GameManager.Credits -= pack.Price(GameManager.ItemManager);
                                     GameManager.CurrentShip = ship;
                                     GameManager.DockingBay.DockedShip = ship;

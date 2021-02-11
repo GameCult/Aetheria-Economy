@@ -17,6 +17,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
+using Random = UnityEngine.Random;
 
 public class ActionGameManager : MonoBehaviour
 {
@@ -48,20 +49,21 @@ public class ActionGameManager : MonoBehaviour
     // private CinemachineComposer _composer;
     
     private DirectoryInfo _filePath;
-    private DirectoryInfo _presetPath;
+    private DirectoryInfo _loadoutPath;
     private bool _editMode;
     private float _time;
     private AetheriaInput _input;
     private int _zoomLevelIndex;
-    public List<EntityPack> Loadouts { get; set; } = new List<EntityPack>();
 
     // private ShipInput _shipInput;
+    private List<Agent> _shipAgents = new List<Agent>();
     private IDisposable _shipTargetSubscription;
     private float2 _shipYawPitch;
     private float3 _viewDirection;
     private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] _articulationGroups;
     private (LockWeapon targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] _lockingIndicators;
-    public List<Ship> PlayerShips { get; } = new List<Ship>();
+    
+    public List<Entity> PlayerEntities { get; } = new List<Entity>();
     public EquippedDockingBay DockingBay { get; private set; }
     public Entity DockedEntity { get; private set; }
     
@@ -69,6 +71,7 @@ public class ActionGameManager : MonoBehaviour
     public DatabaseCache ItemData { get; private set; }
     public ItemManager ItemManager { get; private set; }
     public Zone Zone { get; private set; }
+    public List<EntityPack> Loadouts { get; } = new List<EntityPack>();
 
     private readonly (float2 direction, string name)[] _directions = {
         (float2(0, 1), "Front"),
@@ -79,7 +82,7 @@ public class ActionGameManager : MonoBehaviour
 
     public void SaveLoadout(EntityPack pack)
     {
-        File.WriteAllBytes(Path.Combine(_presetPath.FullName, $"{pack.Name}.preset"), MessagePackSerializer.Serialize(pack));
+        File.WriteAllBytes(Path.Combine(_loadoutPath.FullName, $"{pack.Name}.preset"), MessagePackSerializer.Serialize(pack));
     }
 
     void Start()
@@ -90,12 +93,12 @@ public class ActionGameManager : MonoBehaviour
         
         ConsoleController.MessageReceiver = this;
         _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
-        _presetPath = _filePath.CreateSubdirectory("Presets");
+        _loadoutPath = _filePath.CreateSubdirectory("Loadouts");
         ItemData = new DatabaseCache();
         ItemData.Load(_filePath.FullName);
         ItemManager = new ItemManager(ItemData, Settings.GameplaySettings, Debug.Log);
 
-        Loadouts.AddRange(_presetPath.EnumerateFiles("*.preset")
+        Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.preset")
             .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
 
         var zoneFile = Path.Combine(_filePath.FullName, "Home.zone");
@@ -112,6 +115,7 @@ public class ActionGameManager : MonoBehaviour
             );
         
         Zone = new Zone(Settings.PlanetSettings, zonePack);
+        Zone.Log = s => Debug.Log($"Zone: {s}");
         SectorRenderer.ItemManager = ItemManager;
         SectorRenderer.LoadZone(Zone);
 
@@ -353,37 +357,33 @@ public class ActionGameManager : MonoBehaviour
         var dockingBay = ItemManager.CreateInstance(dockingBayData, 1, 1) as EquippableItem;
         station.TryEquip(dockingBay);
         station.Active = true;
-        
-        var reactorData = ItemData.GetAll<GearData>().First(x => x.HardpointType == HardpointType.Reactor && x.Shape.Height == 2);
-        var radiatorData = ItemData.GetAll<GearData>().First(x => x.Name == "Long Radiator");
-        var autocannonData = ItemData.GetAll<GearData>().First(x => x.Name == "Autocannon");
-        var ammoData = ItemData.GetAll<SimpleCommodityData>().First(x => x.Name == "Autocannon Ammo");
 
-        var turretType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Turret);
-        var controlModuleData = ItemData.GetAll<GearData>().First(x => x.Name == "Murder Module");
-        var cargo1Data = ItemData.GetAll<CargoBayData>().First(x => x.Name == "Cargo Bay 1x1");
+        var turretLoadout = Loadouts.First(x => x.Name == "Turret");
 
-        for(int i=0; i<5; i++)
+        for(int i=0; i<3; i++)
         {
-            var turretParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(5+i);
-            var turretParentOrbit = turretParent.Orbit.Data.ID;
-            var turretParentPos = Zone.GetOrbitPosition(turretParentOrbit);
-            var turretPos = turretParentPos + ItemManager.Random.NextFloat2Direction() * turretParent.GravityWellRadius.Value * .25f;
-            var turretOrbit = Zone.CreateOrbit(turretParentOrbit, turretPos);
-            var turret = new OrbitalEntity(ItemManager, Zone, ItemManager.CreateInstance(turretType, 0, 1) as EquippableItem, turretOrbit.ID);
-            turret.TryEquip(ItemManager.CreateInstance(reactorData, .5f, 1) as EquippableItem);
-            turret.TryEquip(ItemManager.CreateInstance(radiatorData, .5f, 1) as EquippableItem);
-            turret.TryEquip(ItemManager.CreateInstance(radiatorData, .5f, 1) as EquippableItem);
-            turret.TryEquip(ItemManager.CreateInstance(controlModuleData, .5f, 1) as EquippableItem);
-            turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
-            turret.TryEquip(ItemManager.CreateInstance(autocannonData, .5f, 1) as EquippableItem);
-            turret.TryEquip(ItemManager.CreateInstance(cargo1Data, .5f, 1) as EquippableItem);
-            turret.CargoBays.First().TryStore(ItemManager.CreateInstance(ammoData, 400));
-            foreach (var v in turretType.Shape.Coordinates)
-                turret.HullConductivity[v.x, v.y] = bool2(true);
-            turret.Active = true;
-            Zone.Entities.Add(turret);
+            var planet = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(4+i);
+            var planetOrbit = planet.Orbit.Data.ID;
+            var planetPos = Zone.GetOrbitPosition(planetOrbit);
+            for (int j = 0; j < 2; j++)
+            {
+                var pos = planetPos + ItemManager.Random.NextFloat2Direction() * planet.GravityWellRadius.Value * (.1f + .1f * j);
+                var orbit = Zone.CreateOrbit(planetOrbit, pos);
+                var turret = EntityPack.Unpack(ItemManager, Zone, turretLoadout, orbit.ID, true);
+                turret.Active = true;
+                Zone.Entities.Add(turret);
+            }
         }
+
+        var enemyShipLoadout = Loadouts.First(x => ((HullData) ItemManager.GetData(x.Hull)).HullType == HullType.Ship);
+        var enemyShip = EntityPack.Unpack(ItemManager, Zone, enemyShipLoadout, true);
+        enemyShip.Active = true;
+        Zone.Entities.Add(enemyShip);
+        var agent = new Agent(enemyShip);
+        var task = new PatrolOrbitsTask();
+        task.Circuit = Zone.Orbits.OrderBy(_ => Random.value).Take(4).Select(x => x.Key).ToArray();
+        agent.Task = task;
+        _shipAgents.Add(agent);
 
         DockedEntity = station;
         DockingBay = station.DockingBays.First();
@@ -544,25 +544,20 @@ public class ActionGameManager : MonoBehaviour
         {
             foreach (var bay in CurrentShip.Parent.DockingBays)
             {
-                if (PlayerShips.Contains(bay.DockedShip)) yield return bay;
+                if (PlayerEntities.Contains(bay.DockedShip)) yield return bay;
             }
         }
     }
 
-    public IEnumerable<Ship> AvailableShips()
+    public IEnumerable<Entity> AvailableEntities()
     {
-        if (CurrentShip != null)
-        {
-            if (CurrentShip.Parent != null)
+        if(DockedEntity != null)
+            foreach (var entity in PlayerEntities)
             {
-                foreach (var ship in PlayerShips)
-                {
-                    if (CurrentShip.Parent.Children.Contains(ship)) yield return ship;
-                }
+                if (DockedEntity.Children.Contains(entity)) yield return entity;
             }
-            else
-                yield return CurrentShip;
-        }
+        else if (CurrentShip != null)
+            yield return CurrentShip;
     }
 
     void Update()
@@ -580,6 +575,8 @@ public class ActionGameManager : MonoBehaviour
                 CurrentShip.MovementDirection = _input.Player.Move.ReadValue<Vector2>();
             }
         }
+        foreach(var agent in _shipAgents)
+            agent.Update(Time.deltaTime);
         Zone.Update(_time, Time.deltaTime);
         SectorRenderer.Time = _time;
     }

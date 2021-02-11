@@ -9,40 +9,40 @@ using static Unity.Mathematics.math;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ChargedWeaponData : InstantWeaponData
 {
-    [InspectableField, JsonProperty("chargeTime"), Key(19), RuntimeInspectable]
+    [InspectableField, JsonProperty("chargeTime"), Key(21), RuntimeInspectable]
     public PerformanceStat ChargeTime = new PerformanceStat();
     
-    [InspectableField, JsonProperty("chargeEnergy"), Key(20), RuntimeInspectable]
+    [InspectableField, JsonProperty("chargeEnergy"), Key(22), RuntimeInspectable]
     public PerformanceStat ChargeEnergy = new PerformanceStat();
     
-    [InspectableField, JsonProperty("chargeHeat"), Key(21), RuntimeInspectable]
+    [InspectableField, JsonProperty("chargeHeat"), Key(23), RuntimeInspectable]
     public PerformanceStat ChargeHeat = new PerformanceStat();
 
-    [InspectableField, JsonProperty("canFireEarly"), Key(22)]
+    [InspectableField, JsonProperty("canFireEarly"), Key(24)]
     public bool CanFireEarly;
 
-    [InspectableField, JsonProperty("failureCharge"), Key(23)]
+    [InspectableField, JsonProperty("failureCharge"), Key(25)]
     public float FailureCharge;
 
-    [InspectableField, JsonProperty("failureDamage"), Key(24)]
+    [InspectableField, JsonProperty("failureDamage"), Key(26)]
     public float FailureDamage = 1;
 
-    [InspectableField, JsonProperty("chargeDamage"), Key(25)]
+    [InspectableField, JsonProperty("chargeDamage"), Key(27)]
     public float ChargeFiringDamageMultiplier = 1;
 
-    [InspectableField, JsonProperty("chargeSpread"), Key(26)]
+    [InspectableField, JsonProperty("chargeSpread"), Key(28)]
     public float ChargeFiringSpreadMultiplier = 1;
 
-    [InspectableField, JsonProperty("chargeBurstCount"), Key(27)]
+    [InspectableField, JsonProperty("chargeBurstCount"), Key(29)]
     public float ChargeFiringBurstCountMultiplier = 1;
 
-    [InspectableField, JsonProperty("chargeVisibility"), Key(28)]
+    [InspectableField, JsonProperty("chargeVisibility"), Key(30)]
     public float ChargeFiringVisibilityMultiplier = 1;
 
-    [InspectableField, JsonProperty("chargeVelocity"), Key(29)]
+    [InspectableField, JsonProperty("chargeVelocity"), Key(31)]
     public float ChargeFiringVelocityMultiplier = 1;
 
-    [InspectableField, JsonProperty("chargeHeatMul"), Key(30)]
+    [InspectableField, JsonProperty("chargeHeatMul"), Key(32)]
     public float ChargeFiringHeatMultiplier = 1;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
@@ -131,7 +131,7 @@ public class ChargedWeapon : InstantWeapon
 
     public override void Activate()
     {
-        if(!_coolingDown)
+        if(!_charging && !_coolingDown)
         {
             OnStartCharging?.Invoke();
             _charging = true;

@@ -16,6 +16,7 @@ using Random = Unity.Mathematics.Random;
 
 public class Zone
 {
+    public Action<string> Log;
     //public HashSet<Guid> Planets = new HashSet<Guid>();
     public ReactiveCollection<Entity> Entities = new ReactiveCollection<Entity>();
     //public Dictionary<Guid, OrbitData> Orbits = new Dictionary<Guid, OrbitData>();
@@ -24,10 +25,10 @@ public class Zone
 
     public Dictionary<Guid, Orbit> Orbits = new Dictionary<Guid, Orbit>();
     public Dictionary<Guid, AsteroidBelt> AsteroidBelts = new Dictionary<Guid, AsteroidBelt>();
+    public PlanetSettings Settings;
     
     private HashSet<Guid> _updatedOrbits = new HashSet<Guid>();
 
-    public PlanetSettings Settings;
     private float _time;
     private Random _random;
 
@@ -121,6 +122,11 @@ public class Zone
         // Root orbit is fixed at origin
         if(orbitID==Guid.Empty)
             return float2.zero;
+        if (!Orbits.ContainsKey(orbitID))
+        {
+            Log?.Invoke("Requested orbit is not part of this zone!");
+            return float2.zero;
+        }
         
         if (!_updatedOrbits.Contains(orbitID))
         {

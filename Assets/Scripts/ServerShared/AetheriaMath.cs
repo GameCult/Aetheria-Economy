@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-public class AetheriaMath
+public static class AetheriaMath
 {
     //first-order intercept using absolute target position
     public static float3 FirstOrderIntercept

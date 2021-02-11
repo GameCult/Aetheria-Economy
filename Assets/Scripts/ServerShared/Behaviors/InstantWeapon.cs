@@ -9,16 +9,16 @@ using static Unity.Mathematics.math;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class InstantWeaponData : WeaponData
 {
-    [InspectableField, JsonProperty("count"), Key(15)]
+    [InspectableField, JsonProperty("count"), Key(17)]
     public PerformanceStat Count = new PerformanceStat();
 
-    [InspectableField, JsonProperty("burstTime"), Key(16)]
+    [InspectableField, JsonProperty("burstTime"), Key(18)]
     public PerformanceStat BurstTime = new PerformanceStat();
     
-    [InspectableField, JsonProperty("cooldown"), Key(17), RuntimeInspectable]
+    [InspectableField, JsonProperty("cooldown"), Key(19), RuntimeInspectable]
     public PerformanceStat Cooldown = new PerformanceStat();
     
-    [InspectablePrefab, JsonProperty("ammoInterval"), Key(18)]  
+    [InspectablePrefab, JsonProperty("ammoInterval"), Key(20)]  
     public bool SingleAmmoBurst;
 
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

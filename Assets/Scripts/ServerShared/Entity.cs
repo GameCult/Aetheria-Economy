@@ -21,6 +21,7 @@ using int2 = Unity.Mathematics.int2;
 public abstract class Entity
 {
     public Zone Zone;
+    public MegaCorporation Faction;
     public EquippableItem Hull;
     
     public float3 Position;
@@ -50,6 +51,7 @@ public abstract class Entity
     
     public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
+    public readonly Dictionary<Entity, float> EntityInfoGathered = new Dictionary<Entity, float>(); 
     public readonly Dictionary<HardpointData, (float3 position, float3 direction)> HardpointTransforms = 
         new Dictionary<HardpointData, (float3 position, float3 direction)>();
     
@@ -63,7 +65,18 @@ public abstract class Entity
     public float[,] MaxArmor;
     
     private EquippedItem[] _orderedEquipment;
+    private List<Weapon> _weapons = new List<Weapon>();
+    private List<Weapon> _weaponsInRange = new List<Weapon>();
     protected bool _active;
+    
+    public IEnumerable<Weapon> Weapons
+    {
+        get => _weapons;
+    }
+    public IEnumerable<Weapon> WeaponsInRange
+    {
+        get => _weaponsInRange;
+    }
     
     public float MaxTemp { get; private set; }
     public float MinTemp { get; private set; }
@@ -246,6 +259,9 @@ public abstract class Entity
                 GearOccupancy[i.x, i.y] = null;
             }
         Mass -= itemData.Mass;
+        foreach (var b in item.Behaviors)
+            if (b is Weapon weapon)
+                _weapons.Add(weapon);
 
         return item.EquippableItem;
     }
@@ -397,6 +413,9 @@ public abstract class Entity
         {
             equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
             Equipment.Add(equippedItem);
+            foreach (var b in equippedItem.Behaviors)
+                if (b is Weapon weapon)
+                    _weapons.Add(weapon);
         }
             
         foreach (var i in itemData.Shape.Coordinates)
@@ -537,6 +556,15 @@ public abstract class Entity
     public virtual void Update(float delta)
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
+        
+        _weaponsInRange.Clear();
+        if (Target.Value != null)
+        {
+            var dist = length(Position - Target.Value.Position);
+            foreach (var w in _weapons)
+                if (w.MinRange < dist && dist < w.Range)
+                    _weaponsInRange.Add(w);
+        }
 
         foreach (var v in VisibilitySources.Keys.ToArray())
         {

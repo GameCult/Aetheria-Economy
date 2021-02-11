@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using MessagePack;
 using Newtonsoft.Json;
+using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using quaternion = Unity.Mathematics.quaternion;
@@ -26,28 +27,127 @@ public class Ship : Entity
     public float2 MovementDirection;
     
     private Thruster[] _allThrusters;
-    private Thruster[] _forwardThrusters;
-    private Thruster[] _reverseThrusters;
-    private Thruster[] _rightThrusters;
-    private Thruster[] _leftThrusters;
-    private Thruster[] _clockwiseThrusters;
-    private Thruster[] _counterClockwiseThrusters;
+    private HashSet<Thruster> _forwardThrusters;
+    private HashSet<Thruster> _reverseThrusters;
+    private HashSet<Thruster> _rightThrusters;
+    private HashSet<Thruster> _leftThrusters;
+    private HashSet<Thruster> _clockwiseThrusters;
+    private HashSet<Thruster> _counterClockwiseThrusters;
+    
+    public float ForwardThrust { get; private set; }
+    public float ReverseThrust { get; private set; }
+    public float LeftStrafeThrust { get; private set; }
+    public float RightStrafeThrust { get; private set; }
+    public float ClockwiseTorque { get; private set; }
+    public float CounterClockwiseTorque { get; private set; }
     
     public quaternion Rotation { get; private set; }
 
     protected override void OnActivate()
     {
         _allThrusters = GetBehaviors<Thruster>().ToArray();
-        _forwardThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Reversed).ToArray();
-        _reverseThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.None).ToArray();
-        _rightThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.CounterClockwise).ToArray();
-        _leftThrusters = _allThrusters.Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Clockwise).ToArray();
-        _counterClockwiseThrusters = _allThrusters.Where(x => x.Torque < -ItemManager.GameplaySettings.TorqueFloor).ToArray();
-        _clockwiseThrusters = _allThrusters.Where(x => x.Torque > ItemManager.GameplaySettings.TorqueFloor).ToArray();
+        
+        _forwardThrusters = new HashSet<Thruster>(_allThrusters
+            .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Reversed));
+        RecalculateForwardThrust();
+        
+        _reverseThrusters = new HashSet<Thruster>(_allThrusters
+            .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.None));
+        RecalculateReverseThrust();
+        
+        _rightThrusters = new HashSet<Thruster>(_allThrusters
+            .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.CounterClockwise));
+        RecalculateRightStrafeThrust();
+        
+        _leftThrusters = new HashSet<Thruster>(_allThrusters
+            .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Clockwise));
+        RecalculateLeftStrafeThrust();
+        
+        _counterClockwiseThrusters = new HashSet<Thruster>(_allThrusters
+            .Where(x => x.Torque < -ItemManager.GameplaySettings.TorqueFloor));
+        RecalculateCounterClockwiseTorque();
+        
+        _clockwiseThrusters = new HashSet<Thruster>(_allThrusters
+            .Where(x => x.Torque > ItemManager.GameplaySettings.TorqueFloor));
+        RecalculateClockwiseTorque();
     }
 
     public Ship(ItemManager itemManager, Zone zone, EquippableItem hull) : base(itemManager, zone, hull)
     {
+        ItemDamage.Subscribe(x =>
+        {
+            if (Hardpoints[x.item.Position.x, x.item.Position.y]?.Type == HardpointType.Thruster)
+            {
+                foreach (var behavior in x.item.Behaviors)
+                {
+                    if (behavior is Thruster thruster)
+                    {
+                        if(_forwardThrusters.Contains(thruster)) RecalculateForwardThrust();
+                        if(_reverseThrusters.Contains(thruster)) RecalculateReverseThrust();
+                        if(_rightThrusters.Contains(thruster)) RecalculateRightStrafeThrust();
+                        if(_leftThrusters.Contains(thruster)) RecalculateLeftStrafeThrust();
+                        if(_clockwiseThrusters.Contains(thruster)) RecalculateClockwiseTorque();
+                        if(_counterClockwiseThrusters.Contains(thruster)) RecalculateCounterClockwiseTorque();
+                    }
+                }
+                if(x.item.EquippableItem.Rotation == ItemRotation.Reversed)
+                    RecalculateForwardThrust();
+            }
+        });
+    }
+
+    private void RecalculateForwardThrust()
+    {
+        ForwardThrust = 0;
+        foreach (var thruster in _forwardThrusters)
+        {
+            ForwardThrust += thruster.Thrust;
+        }
+    }
+
+    private void RecalculateReverseThrust()
+    {
+        ReverseThrust = 0;
+        foreach (var thruster in _reverseThrusters)
+        {
+            ReverseThrust += thruster.Thrust;
+        }
+    }
+
+    private void RecalculateLeftStrafeThrust()
+    {
+        LeftStrafeThrust = 0;
+        foreach (var thruster in _leftThrusters)
+        {
+            LeftStrafeThrust += thruster.Thrust;
+        }
+    }
+
+    private void RecalculateRightStrafeThrust()
+    {
+        RightStrafeThrust = 0;
+        foreach (var thruster in _rightThrusters)
+        {
+            RightStrafeThrust += thruster.Thrust;
+        }
+    }
+
+    private void RecalculateClockwiseTorque()
+    {
+        ClockwiseTorque = 0;
+        foreach (var thruster in _clockwiseThrusters)
+        {
+            ClockwiseTorque += thruster.Torque;
+        }
+    }
+
+    private void RecalculateCounterClockwiseTorque()
+    {
+        CounterClockwiseTorque = 0;
+        foreach (var thruster in _counterClockwiseThrusters)
+        {
+            CounterClockwiseTorque -= thruster.Torque;
+        }
     }
 
     public override void Update(float delta)

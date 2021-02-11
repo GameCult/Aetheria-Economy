@@ -32,7 +32,7 @@ public class Locomotion : AgentBehavior
         var diff = Objective - Entity.Position.xz;
         
         // We want to go top speed in the direction of our target
-        var topSpeed = _velocityLimit?.Limit ?? 1000;
+        var topSpeed = _velocityLimit?.Limit ?? 100;
         float2 desiredVelocity = normalize(diff) * topSpeed;
         
         var accelerationTime = length(desiredVelocity - Entity.Velocity) / (_thrust / Entity.Mass);
