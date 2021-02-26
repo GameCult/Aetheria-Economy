@@ -37,10 +37,20 @@ public class InstantWeapon : Weapon, IProgressBehavior
     protected float _cooldown; // Normalized
     private int _ammo = 0;
     protected bool _coolingDown;
-    
+
     public float BurstCount { get; protected set; }
     public float BurstTime { get; protected set; }
     public float Cooldown { get; protected set; }
+    public virtual bool CanFire
+    {
+        get => !_coolingDown;
+    }
+
+    public override float DamagePerSecond => Damage / Cooldown;
+    public override float RangeDamagePerSecond(float range)
+    {
+        return Damage * _data.DamageCurve.Evaluate(saturate(unlerp(MinRange, Range, range))) / Cooldown;
+    }
 
     public override int Ammo
     {
@@ -126,11 +136,11 @@ public class InstantWeapon : Weapon, IProgressBehavior
         base.Execute(delta);
         if (_coolingDown)
         {
-            _cooldown -= delta / (_ammo == 0 ? _data.ReloadTime : Cooldown);
+            _cooldown -= delta / (_data.AmmoType != Guid.Empty && _ammo == 0 ? _data.ReloadTime : Cooldown);
             if (_cooldown < 0)
             {
                 _coolingDown = false;
-                if (_ammo == 0)
+                if (_data.AmmoType != Guid.Empty && _ammo == 0)
                 {
                     _ammo = _data.MagazineSize;
                     OnReloadComplete?.Invoke();
@@ -159,7 +169,7 @@ public class InstantWeapon : Weapon, IProgressBehavior
 
     public override void Activate()
     {
-        if(!_coolingDown)
+        if(CanFire)
             Trigger();
         base.Activate();
     }

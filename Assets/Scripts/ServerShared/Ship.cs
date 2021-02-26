@@ -40,11 +40,20 @@ public class Ship : Entity
     public float RightStrafeThrust { get; private set; }
     public float ClockwiseTorque { get; private set; }
     public float CounterClockwiseTorque { get; private set; }
+
+    public float TurnTime(float2 direction)
+    {
+        var angleDiff = Direction.Angle(normalize(direction));
+        var clockwise = dot(direction, Direction.Rotate(ItemRotation.Clockwise)) > 0;
+        return angleDiff / ((clockwise ? ClockwiseTorque : CounterClockwiseTorque) / Mass);
+    }
     
     public quaternion Rotation { get; private set; }
 
-    protected override void OnActivate()
+    public override void Activate()
     {
+        base.Activate();
+        
         _allThrusters = GetBehaviors<Thruster>().ToArray();
         
         _forwardThrusters = new HashSet<Thruster>(_allThrusters

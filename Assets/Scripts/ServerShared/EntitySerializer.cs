@@ -114,12 +114,14 @@ public class EntityPack
         }
 
         for (var bayIndex = 0; bayIndex < pack.CargoContents.Length; bayIndex++)
-            foreach (var (position, item) in pack.CargoContents[bayIndex])
-                entity.CargoBays[bayIndex].TryStore(instantiate ? itemManager.Instantiate(item) : item, position);
+            if(entity.CargoBays.Count >= bayIndex + 1)
+                foreach (var (position, item) in pack.CargoContents[bayIndex])
+                    entity.CargoBays[bayIndex].TryStore(instantiate ? itemManager.Instantiate(item) : item, position);
 
         for (var bayIndex = 0; bayIndex < pack.DockingBayContents.Length; bayIndex++)
-            foreach (var (position, item) in pack.DockingBayContents[bayIndex])
-                entity.DockingBays[bayIndex].TryStore(instantiate ? itemManager.Instantiate(item) : item, position);
+            if(entity.DockingBays.Count >= bayIndex + 1)
+                foreach (var (position, item) in pack.DockingBayContents[bayIndex])
+                    entity.DockingBays[bayIndex].TryStore(instantiate ? itemManager.Instantiate(item) : item, position);
 
         // Iterate only over the behaviors of items which contain persistent data
         // Filter the behaviors for each item to get the persistent ones, then cast them and combine with the persisted data array for that item

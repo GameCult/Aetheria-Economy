@@ -105,7 +105,7 @@ public class TurretController : IBehavior
         }
         else
         {
-            EquippedEntity.Target.Value = EquippedEntity.Zone.Entities.FirstOrDefault(e => e is Ship);
+            EquippedEntity.Target.Value = EquippedEntity.VisibleHostiles.FirstOrDefault(e => e is Ship);
         }
         return true;
     }

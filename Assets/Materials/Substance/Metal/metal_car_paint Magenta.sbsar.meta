@@ -99,7 +99,7 @@ ScriptedImporter:
         offset: {x: 0, y: 0}
       - name: _EmissionMap
         texture: {instanceID: 0}
-        scale: {x: 2, y: 2}
+        scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MainTex
         texture: {fileID: 5917659159057834157, guid: a1d39ea984432bf44b4a0686afe2bf1a,
@@ -133,17 +133,17 @@ ScriptedImporter:
       - name: _GlossMapScale
         float: 1
       - name: _Glossiness
-        float: 0.5
+        float: 1
       - name: _GlossyReflections
         float: 1
       - name: _Metallic
-        float: 0
+        float: 1
       - name: _Mode
         float: 0
       - name: _OcclusionStrength
         float: 1
       - name: _Parallax
-        float: 0.005
+        float: 0.02
       - name: _SmoothnessTextureChannel
         float: 0
       - name: _SpecularHighlights

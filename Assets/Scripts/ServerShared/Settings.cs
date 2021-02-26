@@ -116,4 +116,8 @@ public class GameplaySettings
     public float TargetArmorInfoThreshold;
     public float TargetGearInfoThreshold;
     public float ConvergenceMinimumDistance;
+    public float AgentRangeExponent = .25f;
+    public float AgentForwardLerp = .5f;
+    public float AgentMaxForwardDistance = 50;
+    public float AgentFiringMinDot = .99f;
 }

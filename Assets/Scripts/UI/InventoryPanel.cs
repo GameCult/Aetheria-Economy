@@ -327,7 +327,7 @@ public class InventoryPanel : MonoBehaviour
                     {
                         var rect = cell.GetComponent<RectTransform>();
                         var point = Rect.PointToNormalized(rect.rect, rect.InverseTransformPoint(data.position));
-                        Debug.Log($"Clicked at pos {data.position}, normalized {point}");
+//                        Debug.Log($"Clicked at pos {data.position}, normalized {point}");
                         if (hullData.Shape[int2(v.x - 1, v.y)] && point.x < ThermalToggleRegionSize)
                         {
                             entity.HullConductivity[v.x - 1, v.y].x = !entity.HullConductivity[v.x - 1, v.y].x;

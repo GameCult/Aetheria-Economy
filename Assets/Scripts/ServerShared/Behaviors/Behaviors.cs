@@ -71,14 +71,6 @@ public interface IPopulationAssignment
     int AssignedPopulation { get; set; }
 }
 
-public interface IController<T> where T: AgentTask
-{
-    bool Available { get; }
-    //TaskType TaskType { get; }
-    Zone Zone { get; }
-    void AssignTask(T task);
-}
-
 [MessagePackObject,
  Union(0, typeof(FactoryPersistence)),
  JsonObject(MemberSerialization.OptIn),
@@ -101,8 +93,8 @@ public abstract class PersistentBehaviorData
  Union(10, typeof(VelocityConversionData)),
  Union(11, typeof(VelocityLimitData)),
  Union(12, typeof(FactoryData)),
- Union(13, typeof(PatrolControllerData)),
- Union(14, typeof(TowingControllerData)),
+ // Union(13, typeof(PatrolControllerData)),
+ // Union(14, typeof(TowingControllerData)),
  Union(15, typeof(CooldownData)),
  Union(16, typeof(HeatData)),
  // Union(17, typeof(HitscanData)),
@@ -113,12 +105,12 @@ public abstract class PersistentBehaviorData
  Union(22, typeof(VisibilityData)),
  Union(23, typeof(ThermotoggleData)),
  Union(24, typeof(EnergyDrawData)),
- Union(25, typeof(MiningControllerData)),
+ // Union(25, typeof(MiningControllerData)),
  Union(26, typeof(MiningToolData)),
- Union(27, typeof(SurveyControllerData)),
+ // Union(27, typeof(SurveyControllerData)),
  Union(28, typeof(ResourceScannerData)),
- Union(29, typeof(WanderControllerData)),
- Union(30, typeof(HaulingControllerData)),
+ // Union(29, typeof(WanderControllerData)),
+ // Union(30, typeof(HaulingControllerData)),
  Union(31, typeof(CapacitorData)),
  Union(32, typeof(CockpitData)),
  Union(33, typeof(HeatsinkData)),

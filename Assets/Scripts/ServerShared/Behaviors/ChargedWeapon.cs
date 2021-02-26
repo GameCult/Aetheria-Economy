@@ -62,6 +62,15 @@ public class ChargedWeapon : InstantWeapon
     public float ChargeTime { get; protected set; }
     public float ChargeEnergy { get; protected set; }
     public float ChargeHeat { get; protected set; }
+    
+    public override float DamagePerSecond => Damage * _data.ChargeFiringDamageMultiplier / (Cooldown + ChargeTime);
+    public override float RangeDamagePerSecond(float range)
+    {
+        return Damage *
+               _data.ChargeFiringDamageMultiplier *
+               _data.DamageCurve.Evaluate(saturate(unlerp(MinRange, Range, range))) /
+               (Cooldown + ChargeTime);
+    }
 
     public event Action OnStartCharging;
     public event Action OnStopCharging;

@@ -49,6 +49,8 @@ public class LockWeapon : InstantWeapon
 
     public override float Progress => saturate(_cooldown > 0 ? _cooldown : _lock);
 
+    public override bool CanFire => base.CanFire && _lock > .99f && Entity.TargetRange > MinRange && Entity.TargetRange < Range;
+
     public float Lock
     {
         get => saturate(_lock);
@@ -85,14 +87,6 @@ public class LockWeapon : InstantWeapon
         }
 
         return base.Execute(delta);
-    }
-
-    public override void Activate()
-    {
-        if(_lock > .99f)
-        {
-            base.Activate();
-        }
     }
 }
 

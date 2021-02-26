@@ -5,6 +5,9 @@ using static Unity.Mathematics.math;
 
 public static class AetheriaMath
 {
+    public const float Deg2Rad = 0.01745329f;
+    public const float Rad2Deg = 57.29578f;
+    
     //first-order intercept using absolute target position
     public static float3 FirstOrderIntercept
     (

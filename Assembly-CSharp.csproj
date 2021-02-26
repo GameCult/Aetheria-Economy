@@ -56,8 +56,9 @@
      <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Primitives\UILineTextureRenderer.cs" />
      <Compile Include="Assets\Scripts\UI\BoolField.cs" />
      <Compile Include="Assets\Scripts\UI\PropertyButton.cs" />
+     <Compile Include="Assets\ShieldManager.cs" />
      <Compile Include="Assets\Scripts\UI\FlatButton.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\EntityPrefab.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\EntityInstance.cs" />
      <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Primitives\UILineRendererList.cs" />
      <Compile Include="Assets\Scripts\UI\SchematicDisplay.cs" />
      <Compile Include="Assets\Scripts\RethinkConnection.cs" />
@@ -89,6 +90,8 @@
      <Compile Include="Assets\Scripts\Sector Display\SunObject.cs" />
      <Compile Include="Assets\Scripts\Gameplay\ArticulationPoint.cs" />
      <Compile Include="Assets\Scripts\UI\SchematicListElement.cs" />
+     <Compile Include="Assets\MusicTest.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\ShipInstance.cs" />
      <Compile Include="Assets\Scripts\UI\ClickCatcher.cs" />
      <Compile Include="Assets\Scripts\UI\TradeMenu.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantLaserManager.cs" />
@@ -96,9 +99,11 @@
      <Compile Include="Assets\Scripts\CultClient.cs" />
      <Compile Include="Assets\Scripts\UI\ZoneShip.cs" />
      <Compile Include="Assets\Scripts\Sector Display\BlueNoiseProvider.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantLightning.cs" />
      <Compile Include="Assets\Scripts\Sector Display\CopyTransform.cs" />
      <Compile Include="Assets\Scripts\UI\InventoryMenu.cs" />
      <Compile Include="Assets\Scripts\UI\ClickRaycaster.cs" />
+     <Compile Include="Assets\ShieldAnimation.cs" />
      <Compile Include="Assets\Scripts\UI\RangedFloatField.cs" />
      <Compile Include="Assets\Scripts\FitToCamera.cs" />
      <Compile Include="Assets\Scripts\Sector Display\GasGiantObject.cs" />
@@ -111,6 +116,8 @@
      <Compile Include="Assets\Scripts\UnityFormatters.cs" />
      <Compile Include="Assets\Scripts\Sector Display\SnapToGrid.cs" />
      <Compile Include="Assets\Scripts\Gameplay\WeaponHardpoint.cs" />
+     <Compile Include="Assets\ShieldTest.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantParticleWeapon.cs" />
      <Compile Include="Assets\Scripts\UI\MapMenuInput.cs" />
      <Compile Include="Assets\com.unity.uiextensions\Runtime\Scripts\Utilities\CableCurve.cs" />
      <Compile Include="Assets\Scripts\UI\ClickableCollider.cs" />
@@ -138,6 +145,7 @@
      <Compile Include="Assets\Scripts\Gameplay\Weapons\HitscanManager.cs" />
      <Compile Include="Assets\Scripts\Prototype.cs" />
      <Compile Include="Assets\Scripts\Sector Display\SectorRenderer.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\Mine.cs" />
      <Compile Include="Assets\Scripts\TechTreeMsagl.cs" />
      <Compile Include="Assets\Scripts\UI\SchematicTriggerGroupElement.cs" />
      <Compile Include="Assets\Scripts\UI\ConsoleView.cs" />
@@ -160,8 +168,11 @@
      <Compile Include="Assets\Scripts\UI\Icons.cs" />
      <Compile Include="Assets\Scripts\UI\ConfirmationDialog.cs" />
      <Compile Include="Assets\Scripts\Gameplay\ThrusterHardpoint.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantLightningManager.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Weapons\ProjectileManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantParticleWeaponManager.cs" />
      <Compile Include="Assets\Scripts\UI\TabButton.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\Weapons\MineManager.cs" />
      <Compile Include="Assets\Shaders\Compute\Stardust\Stardust.cs" />
      <Compile Include="Assets\Scripts\UI\EnumField.cs" />
      <Compile Include="Assets\HoverCursorChange.cs" />
@@ -176,12 +187,6 @@
      <Compile Include="Assets\Scripts\UI\Spreadsheet.cs" />
      <Compile Include="Assets\Scripts\CameraPerlinOrbit.cs" />
      <Compile Include="Assets\Scripts\Gameplay\HullCollider.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantLightning.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantLightningManager.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Weapons\MineManager.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Weapons\Mine.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantParticleWeapon.cs" />
-     <Compile Include="Assets\Scripts\Gameplay\Weapons\ConstantParticleWeaponManager.cs" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UIAdditive.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
@@ -226,6 +231,7 @@
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
      <None Include="Assets\Shaders\Compute\Lightning\Lightning.compute" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
+     <None Include="Assets\Shaders\Shield.shader" />
      <None Include="Assets\Shaders\Raymarching\VolumeRender.shader" />
      <None Include="Assets\Shaders\Background.shader" />
      <None Include="Assets\Shaders\Brushes\RadialWaveBrush.shader" />
@@ -240,10 +246,12 @@
      <None Include="Assets\Shaders\GaussianBlurFilter.shader" />
      <None Include="Assets\Shaders\AdditiveUIScreenSpaceDetail.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
+     <None Include="Assets\Shaders\GlowFade.shader" />
      <None Include="Assets\Shaders\Isolines.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Fonts\LiberationSans - OFL.txt" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
+     <None Include="Assets\Shaders\ViewNormalEmissiveGlowFade.shader" />
      <None Include="Assets\Shaders\Brushes\CellBrush.shader" />
      <None Include="Assets\Shaders\MaskedWorldSpaceAdditiveUI.shader" />
      <None Include="Assets\Shaders\AdditiveUIDetail.shader" />

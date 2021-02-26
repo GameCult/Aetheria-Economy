@@ -34,6 +34,7 @@
 	uniform sampler2D _Patch;
 	uniform sampler2D _Displacement;
 	uniform sampler2D _TintTexture;
+	//uniform sampler3D _NoiseTex;
 
 	#include "UnityCG.cginc"
 	
@@ -86,15 +87,15 @@
 	float tri(in float x){return abs(frac(x)-.5);}
 	float3 tri3(in float3 p){return float3( tri(p.z+tri(p.y*1.)), tri(p.z+tri(p.x*1.)), tri(p.y+tri(p.x*1.)));}
 
-	float triNoise3d(in float3 p, in float spd)
+	float triNoise3d(in float3 p)
 	{
 	    float z=1.4;
 		float rz = 0.;
 	    float3 bp = p;
 		for (float i=0.; i<=2.; i++ )
 		{
-	        float3 dg = tri3(bp*2.);
-	        p += (dg+_Time.y*spd);
+	        float3 dg = tri3(bp * 2.);
+	        p += dg + _Time.y * _NoiseSpeed;
 
 	        bp *= 1.8;
 			z *= 1.5;
@@ -118,8 +119,9 @@
 		{
 			float patch = tex2Dlod(_Patch, half4(uv, 0, 0)).r;
 			float displacement = tex2Dlod(_Displacement, half4(uv, 0, 0)).r;
-		
-			float noise = pow(triNoise3d(pos*_NoiseFrequency, _NoiseSpeed),2);// + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
+
+			//float noise = tex3D(_NoiseTex, pos*_NoiseFrequency);
+			float noise = pow(triNoise3d(pos*_NoiseFrequency),2);// + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
 			pos.y += noise * _NoiseStrength;
 			float patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
 			float floorDist = -pos.y-(surface)+_GridFloorOffset;

@@ -15,6 +15,7 @@ Shader "Aetheria/Dithered Particles"
     {
         Tags { "RenderType"="Opaque" }
         LOD 200
+        Cull Off
 
         CGPROGRAM
         #include "Dither Functions.cginc"

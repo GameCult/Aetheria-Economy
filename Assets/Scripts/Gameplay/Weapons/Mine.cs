@@ -102,7 +102,7 @@ public class Mine : MonoBehaviour
                 }
             }
 
-            if ((position - Source.Prefab.transform.position).magnitude > Range ||
+            if ((position - Source.transform.position).magnitude > Range ||
                 Time.time - _startTime > Lifetime ||
                 _blastCountdown && Time.time > _blastTime)
             {

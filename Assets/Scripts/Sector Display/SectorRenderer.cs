@@ -9,15 +9,16 @@ using System.Linq;
 using Cinemachine;
 using UniRx;
 using UnityEngine;
-using static Unity.Mathematics.math;
-using Unity.Mathematics;
 using UnityEngine.Serialization;
-using float2 = Unity.Mathematics.float2;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
+using float2 = Unity.Mathematics.float2;
 
 public class SectorRenderer : MonoBehaviour
 {
+    public float EntityFadeTime;
     public Transform EffectManagerParent;
     public Transform FogCameraParent;
     public GameSettings Settings;
@@ -63,9 +64,6 @@ public class SectorRenderer : MonoBehaviour
     private Dictionary<Guid, AsteroidBeltUI> _beltObjects = new Dictionary<Guid, AsteroidBeltUI>();
     private Dictionary<Guid, InstancedMesh[]> _beltMeshes = new Dictionary<Guid, InstancedMesh[]>();
     private Dictionary<Guid, Matrix4x4[][]> _beltMatrices = new Dictionary<Guid, Matrix4x4[][]>();
-    private Dictionary<InstantWeaponData, InstantWeaponEffectManager> _instantWeaponManagers = new Dictionary<InstantWeaponData, InstantWeaponEffectManager>();
-    private Dictionary<ConstantWeaponData, ConstantWeaponEffectManager> _constantWeaponManagers = new Dictionary<ConstantWeaponData, ConstantWeaponEffectManager>();
-    private Zone _zone;
     private float _viewDistance;
     private float _maxDepth;
 
@@ -75,8 +73,40 @@ public class SectorRenderer : MonoBehaviour
     private CinemachineTransposer _transposer;
     private PlanetObject _root;
     private bool _rootFound;
-    
+    private Entity _perspectiveEntity;
+    private IDisposable[] _perspectiveSubscriptions = new IDisposable[2];
+
+    public Zone Zone { get; private set; }
     public ItemManager ItemManager { get; set; }
+
+    public Entity PerspectiveEntity
+    {
+        get => _perspectiveEntity;
+        set
+        {
+            _perspectiveEntity = value;
+            _perspectiveSubscriptions[0]?.Dispose();
+            _perspectiveSubscriptions[1]?.Dispose();
+            if (value == null)
+            {
+                foreach (var e in EntityInstances.Values)
+                    e.FadeOut(EntityFadeTime);
+            }
+            else
+            {
+                foreach(var entity in EntityInstances.Values)
+                    entity.FadeOut(EntityFadeTime);
+                foreach(var entity in value.VisibleEntities)
+                    EntityInstances[entity].FadeIn(EntityFadeTime);
+                EntityInstances[value].FadeIn(EntityFadeTime);
+                _perspectiveSubscriptions[0] = value.VisibleEntities.ObserveAdd()
+                    .Subscribe(add => EntityInstances[add.Value].FadeIn(EntityFadeTime));
+                _perspectiveSubscriptions[1] = value.VisibleEntities.ObserveRemove()
+                    .Where(removeEvent => EntityInstances.ContainsKey(removeEvent.Value))
+                    .Subscribe(removeEvent => EntityInstances[removeEvent.Value].FadeOut(EntityFadeTime));
+            }
+        }
+    }
 
     public float Time { get; set; }
 
@@ -105,6 +135,7 @@ public class SectorRenderer : MonoBehaviour
 
     void Start()
     {
+        EntityInstance.EffectManagerParent = EffectManagerParent;
         ViewDistance = Settings.DefaultViewDistance;
         MinimapDistance = Settings.MinimapZoomLevels[Settings.DefaultMinimapZoom];
         
@@ -115,7 +146,7 @@ public class SectorRenderer : MonoBehaviour
     public void LoadZone(Zone zone)
     {
         _maxDepth = 0;
-        _zone = zone;
+        Zone = zone;
         SectorBrushes.localScale = zone.Data.Radius * 2 * Vector3.one;
         ClearZone();
         foreach(var p in zone.Planets.Values)
@@ -125,17 +156,17 @@ public class SectorRenderer : MonoBehaviour
         {
             if (!(zone.Planets[x.Key] is GasGiantData))
             {
-                var parentOrbit = _zone.Orbits[_zone.Planets[x.Key].Orbit].Data.Parent;
+                var parentOrbit = Zone.Orbits[Zone.Planets[x.Key].Orbit].Data.Parent;
                 PlanetObject parent;
                 if (parentOrbit == Guid.Empty)
                     parent = _root;
                 else
                 {
-                    var parentPlanetData = _zone.Planets.Values.FirstOrDefault(p => p.Orbit == parentOrbit);
+                    var parentPlanetData = Zone.Planets.Values.FirstOrDefault(p => p.Orbit == parentOrbit);
                     if(parentPlanetData == null)
                     {
-                        parentOrbit = _zone.Orbits[parentOrbit].Data.Parent;
-                        parentPlanetData = _zone.Planets.Values.FirstOrDefault(p => p.Orbit == parentOrbit);
+                        parentOrbit = Zone.Orbits[parentOrbit].Data.Parent;
+                        parentPlanetData = Zone.Planets.Values.FirstOrDefault(p => p.Orbit == parentOrbit);
                     }
 
                     if (parentPlanetData == null)
@@ -174,247 +205,31 @@ public class SectorRenderer : MonoBehaviour
     {
         var hullData = ItemManager.GetData(entity.Hull) as HullData;
         EntityInstance instance;
-        if (entity is Ship ship)
+        if (entity is Ship)
         {
-            instance = new ShipInstance();
-            instance.Transform = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab), ZoneRoot).transform;
-            instance.Prefab = instance.Transform.GetComponent<EntityPrefab>();
-            var shipInstance = (ShipInstance) instance;
-            shipInstance.Particles = ship.GetBehaviors<Thruster>()
-                .Select<Thruster, (Thruster effect, ParticleSystem system, float baseEmission)>(x =>
-                {
-                    var effectData = (ThrusterData) x.Data;
-                    var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(effectData.ParticlesPrefab), shipInstance.Transform, false);
-                    var particlesShape = particles.shape;
-                    particlesShape.meshRenderer = shipInstance.Prefab.ThrusterHardpoints
-                        .FirstOrDefault(t => t.name == x.Entity.Hardpoints[x.Item.Position.x, x.Item.Position.y].Transform)
-                        ?.Emitter;
-                    return (x, particles, particles.emission.rateOverTimeMultiplier);
-                })
-                .ToArray();
+            instance = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab), ZoneRoot).GetComponent<ShipInstance>();
+            if (instance == null)
+            {
+                ItemManager.Log($"Failed to instantiate {hullData.Name} ship with invalid prefab: no ShipInstance component!");
+                return;
+            }
         }
         else
         {
-            instance = new EntityInstance();
-            instance.Transform = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab), ZoneRoot).transform;
-            instance.Prefab = instance.Transform.GetComponent<EntityPrefab>();
-        }
-
-        instance.Entity = entity;
-        foreach (var hullCollider in instance.Prefab.HullColliders) hullCollider.Entity = entity;
-
-        foreach (var item in entity.Equipment)
-        {
-            foreach (var behavior in item.Behaviors)
+            instance = Instantiate(UnityHelpers.LoadAsset<GameObject>(hullData.Prefab), ZoneRoot).GetComponent<EntityInstance>();
+            if (instance == null)
             {
-                if (behavior is InstantWeapon instantWeapon)
-                {
-                    var data = (InstantWeaponData) instantWeapon.Data;
-                    if (!_instantWeaponManagers.ContainsKey(data))
-                    {
-                        var managerPrefab = UnityHelpers.LoadAsset<InstantWeaponEffectManager>(data.EffectPrefab);
-                        if(managerPrefab)
-                        {
-                            _instantWeaponManagers.Add(data, Instantiate(managerPrefab, EffectManagerParent));
-                        }
-                        else Debug.LogError($"No InstantWeaponEffectManager prefab found at path {data.EffectPrefab}");
-                    }
-
-                    instantWeapon.OnFire += () => 
-                        _instantWeaponManagers[data].Fire(instantWeapon, item, instance, entity.Target.Value != null && EntityInstances.ContainsKey(entity.Target.Value) ? EntityInstances[entity.Target.Value] : null);
-
-                    if (behavior is ChargedWeapon chargedWeapon)
-                    {
-                        var chargeManager = _instantWeaponManagers[data].GetComponent<ChargeEffectManager>();
-                        if (chargeManager)
-                        {
-                            chargedWeapon.OnStartCharging += () => chargeManager.StartCharging(chargedWeapon, item, instance);
-                            chargedWeapon.OnStopCharging += () => chargeManager.StopCharging(chargedWeapon);
-                            chargedWeapon.OnCharged += () => chargeManager.Charged(chargedWeapon);
-                            chargedWeapon.OnFailed += () => chargeManager.Failed(chargedWeapon);
-                        }
-                    }
-                }
-
-                if (behavior is ConstantWeapon constantWeapon)
-                {
-                    var data = (ConstantWeaponData) constantWeapon.Data;
-                    if (!_constantWeaponManagers.ContainsKey(data))
-                    {
-                        var managerPrefab = UnityHelpers.LoadAsset<ConstantWeaponEffectManager>(data.EffectPrefab);
-                        if(managerPrefab)
-                        {
-                            _constantWeaponManagers.Add(data, Instantiate(managerPrefab, EffectManagerParent));
-                        }
-                        else Debug.LogError($"No ConstantWeaponEffectManager prefab found at path {data.EffectPrefab}");
-                    }
-
-                    constantWeapon.OnStartFiring += () => 
-                        _constantWeaponManagers[data].StartFiring(data, item, instance, entity.Target.Value != null ? EntityInstances[entity.Target.Value] : null);
-                    constantWeapon.OnStopFiring += () => 
-                        _constantWeaponManagers[data].StopFiring(item);
-                }
-            }
-        }
-        instance.RadiatorMeshes = new Dictionary<HardpointData, MeshRenderer>();
-        instance.Barrels = new Dictionary<HardpointData, Transform[]>();
-        instance.BarrelIndices = new Dictionary<HardpointData, int>();
-        foreach (var hp in hullData.Hardpoints)
-        {
-            if (hp.Type == HardpointType.Radiator)
-            {
-                var mesh = instance.Prefab.RadiatorHardpoints.FirstOrDefault(x => x.name == hp.Transform);
-                if (mesh)
-                {
-                    instance.RadiatorMeshes.Add(hp, mesh.Mesh);
-                }
-            }
-            if(hp.Type == HardpointType.Ballistic || hp.Type == HardpointType.Energy || hp.Type == HardpointType.Launcher)
-            {
-                var whp = instance.Prefab.WeaponHardpoints.FirstOrDefault(x => x.name == hp.Transform);
-                if (whp)
-                {
-                    instance.Barrels.Add(hp, whp.FiringPoint);
-                    instance.BarrelIndices.Add(hp, 0);
-                }
+                ItemManager.Log($"Failed to instantiate {hullData.Name} entity with invalid prefab: no EntityInstance component!");
+                return;
             }
         }
 
-        void DamageSchematic(float damage, Shape hitShape)
-        {
-            foreach (var v in hitShape.Coordinates)
-                hitShape[v] = hitShape[v] && hullData.Shape[v];
-
-            float hullDamage = 0;
-            var damagePerCell = damage / hitShape.Coordinates.Length;
-            foreach (var v in hitShape.Coordinates)
-            {
-                var d = damagePerCell;
-                
-                // Subtract surface damage from armor, passing on the remainder to the item and then to the hull
-                var prev = entity.Armor[v.x, v.y];
-                entity.Armor[v.x, v.y] = max(prev - d, 0);
-                entity.ArmorDamage.OnNext((v, d));
-                d = max(d - prev, 0);
-
-                if (d > 0.1f)
-                {
-                    var item = entity.GearOccupancy[v.x, v.y];
-                    if (item != null)
-                    {
-                        prev = item.EquippableItem.Durability;
-                        item.EquippableItem.Durability = max(prev - d, 0);
-                        entity.ItemDamage.OnNext((item, d));
-                        d = max(d - prev, 0);
-                    }
-                }
-
-                hullDamage += d;
-            }
-
-            if(hullDamage > .1f)
-            {
-                entity.Hull.Durability -= hullDamage;
-                entity.HullDamage.OnNext(hullDamage);
-            }
-        }
-
-        foreach (var collider in instance.Prefab.HullColliders)
-        {
-            collider.Splash.Subscribe(splash =>
-            {
-                var hitShape = new Shape(hullData.Shape.Width, hullData.Shape.Height);
-                foreach (var v in hullData.Shape.Coordinates)
-                {
-                    var localHitDirection = instance.Prefab.transform.InverseTransformDirection(splash.Direction);
-                    var direction = normalize(float2(localHitDirection.x, localHitDirection.z));
-                    var cellDot = dot(normalize(v - hullData.Shape.CenterOfMass), direction);
-                    if (cellDot < 0) hitShape[v] = true;
-                }
-                DamageSchematic(splash.Damage, hitShape);
-            });
-            
-            collider.Hit.Subscribe(hit =>
-            {
-                var hardpointIndex = (int) hit.TexCoord.x - 1;
-                
-                var hitShape = new Shape(hullData.Shape.Width, hullData.Shape.Height);
-
-                // U coordinate between 0-1 indicates a hit that didn't land directly on a hardpoint
-                // Find the 2D position of the hit scaled to the schematic
-                float2 hitPos = float2.zero;
-                if (hardpointIndex < 0)
-                {
-                    hitPos = float2(hit.TexCoord.x * hullData.Shape.Width, hit.TexCoord.y * hullData.Shape.Height);
-                    // Search all schematic border cells for the cell which is closest to the hit position
-                    var hitCell = int2(-1);
-                    var distance = float.MaxValue;
-                    foreach (var v in hullData.Shape.Coordinates)
-                    {
-                        var cellDist = lengthsq(hitPos - v);
-                        if (cellDist < distance)
-                        {
-                            distance = cellDist;
-                            hitCell = v;
-                        }
-                    }
-
-                    hitShape[hitCell] = true;
-                }
-                else
-                {
-                    // Collider UV coordinates starting with 1 correspond to hardpoint index
-                    var hardpoint = hullData.Hardpoints[hardpointIndex];
-                    
-                    // Obtain the hull coordinates of all cells occupied by the hardpoint
-                    var hardpointCells = hullData.Shape.Inset(hardpoint.Shape, hardpoint.Position);
-                    hitPos = hardpointCells.CenterOfMass;
-                    foreach (var v in hardpointCells.Coordinates)
-                        hitShape[v] = true;
-                }
-                
-                for (int i = 0; i < Mathf.RoundToInt(hit.Spread); i++)
-                {
-                    hitShape = hitShape.Expand();
-                }
-
-                if (hit.Penetration > .5f)
-                {
-                    // Find the local 2D vector corresponding to the direction of the incoming hit
-                    var localHitDirection = instance.Prefab.transform.InverseTransformDirection(hit.Direction);
-                    var penetrationVector = normalize(float2(localHitDirection.x, localHitDirection.z));
-
-                    // March a ray through the ship from the hit position
-                    var penetrationPoint = hitPos;
-                    var penetrationDistance = 0;
-                    while (penetrationDistance < hit.Penetration)
-                    {
-                        penetrationPoint += penetrationVector * .5f;
-                        hitShape[int2(penetrationPoint)] = true;
-                    }
-                }
-                
-                DamageSchematic(hit.Damage, hitShape);
-            });
-        }
-
-        instance.LookAtPoint = new GameObject($"{entity.Name} Look Point").transform;
-        
-        foreach (var articulationPoint in instance.Prefab.ArticulationPoints)
-        {
-            articulationPoint.Target = instance.LookAtPoint;
-        }
+        instance.SetEntity(this, entity);
         EntityInstances.Add(entity, instance);
     }
 
-    void UnloadEntity(Entity entity)
+    public void UnloadEntity(Entity entity)
     {
-        if (EntityInstances[entity].Prefab.DestroyEffect != null)
-        {
-            var t = Instantiate(EntityInstances[entity].Prefab.DestroyEffect).transform;
-            t.position = EntityInstances[entity].Prefab.transform.position;
-        }
-
         foreach (var item in entity.Equipment)
         {
             foreach (var behavior in item.Behaviors)
@@ -424,7 +239,7 @@ public class SectorRenderer : MonoBehaviour
             }
         }
         
-        Destroy(EntityInstances[entity].Transform.gameObject);
+        Destroy(EntityInstances[entity].gameObject);
         EntityInstances.Remove(entity);
     }
 
@@ -446,7 +261,7 @@ public class SectorRenderer : MonoBehaviour
             
             var beltObject = Instantiate(AsteroidBeltUI, ZoneRoot);
             var collider = beltObject.GetComponent<MeshCollider>();
-            var belt = new AsteroidBeltUI(_zone, _zone.AsteroidBelts[beltData.ID], beltObject, collider, AsteroidSpritesheetWidth, AsteroidSpritesheetHeight, Settings.MinimapAsteroidSize);
+            var belt = new AsteroidBeltUI(Zone, Zone.AsteroidBelts[beltData.ID], beltObject, collider, AsteroidSpritesheetWidth, AsteroidSpritesheetHeight, Settings.MinimapAsteroidSize);
             _beltObjects[beltData.ID] = belt;
         }
         else
@@ -466,7 +281,7 @@ public class SectorRenderer : MonoBehaviour
                 else planet = Instantiate(GasGiant, ZoneRoot);
 
                 var gas = (GasGiantObject) planet;
-                var gasGiant = _zone.PlanetInstances[planetData.ID] as GasGiant;
+                var gasGiant = Zone.PlanetInstances[planetData.ID] as GasGiant;
                 gasGiantData.Colors.Subscribe(c => gas.Body.material.SetTexture("_ColorRamp", c.ToGradient(!(planetData is SunData)).ToTexture()));
                 gasGiantData.AlbedoRotationSpeed.Subscribe(f => gas.SunMaterial.AlbedoRotationSpeed = f);
                 gasGiantData.FirstOffsetRotationSpeed.Subscribe(f => gas.SunMaterial.FirstOffsetRotationSpeed = f);
@@ -489,7 +304,7 @@ public class SectorRenderer : MonoBehaviour
                 //planet.Icon.material.mainTexture = planetData.Mass > Context.GlobalData.PlanetMass ? PlanetIcon : PlanetoidIcon;
             }
 
-            var planetInstance = _zone.PlanetInstances[planetData.ID];
+            var planetInstance = Zone.PlanetInstances[planetData.ID];
             planetInstance.BodyRadius.Subscribe(f =>
             {
                 planet.Body.transform.localScale = f * Vector3.one;
@@ -541,7 +356,7 @@ public class SectorRenderer : MonoBehaviour
 
     void Update()
     {
-        foreach(var belt in _zone.AsteroidBelts)
+        foreach(var belt in Zone.AsteroidBelts)
         {
             var meshes = _beltMeshes[belt.Key];
             var count = belt.Value.Positions.Length / meshes.Length;
@@ -565,69 +380,20 @@ public class SectorRenderer : MonoBehaviour
         
         foreach (var planet in Planets)
         {
-            var planetInstance = _zone.PlanetInstances[planet.Key];
-            var p = _zone.GetOrbitPosition(planetInstance.BodyData.Orbit);
+            var planetInstance = Zone.PlanetInstances[planet.Key];
+            var p = Zone.GetOrbitPosition(planetInstance.BodyData.Orbit);
             planet.Value.transform.position = new Vector3(p.x, 0, p.y);
-            planet.Value.Body.transform.localPosition = new Vector3(0, _zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
+            planet.Value.Body.transform.localPosition = new Vector3(0, Zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
             if(planet.Value is GasGiantObject gasGiantObject)
             {
-                gasGiantObject.GravityWaves.material.SetFloat("_Phase", Time * ((GasGiant) _zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
+                gasGiantObject.GravityWaves.material.SetFloat("_Phase", Time * ((GasGiant) Zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
                 if(!(planet.Value is SunObject))
                 {
-                    var toParent = normalize(_zone.GetOrbitPosition(_zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);
+                    var toParent = normalize(Zone.GetOrbitPosition(Zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);
                     gasGiantObject.SunMaterial.LightingDirection = new Vector3(toParent.x, 0, toParent.y);
                 }
             }
             else planet.Value.Body.transform.rotation *= Quaternion.AngleAxis(Settings.PlanetRotationSpeed, Vector3.up);
-        }
-
-        var hitList = new List<Entity>();
-        foreach (var entity in EntityInstances)
-        {
-            if(entity.Key.Hull.Durability <= 0)
-            {
-                hitList.Add(entity.Key);
-                continue;
-            }
-            if(entity.Value is ShipInstance shipInstance)
-            {
-                foreach (var (effect, system, baseEmission) in shipInstance.Particles)
-                {
-                    var emissionModule = system.emission;
-                    var item = effect.Item.EquippableItem;
-                    var data = shipInstance.Entity.ItemManager.GetData(item);
-                    emissionModule.rateOverTimeMultiplier = baseEmission * effect.Axis * (item.Durability / data.Durability);
-                }
-
-                entity.Value.Transform.rotation = ((Ship) entity.Key).Rotation;
-            }
-
-            foreach (var x in entity.Value.RadiatorMeshes)
-            {
-                var temp = 0f;
-                foreach (var v in x.Key.Shape.Coordinates)
-                {
-                    var v2 = v + x.Key.Position;
-                    temp += entity.Key.Temperature[v2.x, v2.y];
-                }
-                temp /= x.Key.Shape.Coordinates.Length;
-                x.Value.material.SetFloat("_Emission", Settings.GameplaySettings.TemperatureEmissionCurve.Evaluate(temp));
-            }
-
-            foreach (var x in entity.Value.Barrels)
-            {
-                entity.Key.HardpointTransforms[x.Key] = (x.Value[0].position, x.Value[0].forward);
-            }
-
-            if (entity.Key.Target.Value != null && !EntityInstances.ContainsKey(entity.Key.Target.Value))
-                entity.Key.Target.Value = null;
-            entity.Value.LookAtPoint.position = entity.Value.Transform.position + (Vector3) entity.Key.LookDirection * (entity.Key.Target.Value != null
-                ? max((EntityInstances[entity.Key.Target.Value].Transform.position - entity.Value.Transform.position).magnitude,Settings.GameplaySettings.ConvergenceMinimumDistance) : 10000);
-            entity.Value.Transform.position = entity.Key.Position;
-        }
-        foreach(var e in hitList)
-        {
-            _zone.Entities.Remove(e);
         }
 
         var fogPos = FogCameraParent.position;
@@ -646,32 +412,6 @@ public class SectorRenderer : MonoBehaviour
     }
 }
 
-public class EntityInstance
-{
-    public Entity Entity;
-    public Transform Transform;
-    public EntityPrefab Prefab;
-    public Dictionary<HardpointData, Transform[]> Barrels;
-    public Dictionary<HardpointData, int> BarrelIndices;
-    public Dictionary<HardpointData, MeshRenderer> RadiatorMeshes;
-    public Transform LookAtPoint;
-    public Transform GetBarrel(HardpointData hardpoint)
-    {
-        if (Barrels.ContainsKey(hardpoint))
-        {
-            var barrel = Barrels[hardpoint][BarrelIndices[hardpoint]];
-            BarrelIndices[hardpoint] = (BarrelIndices[hardpoint] + 1) % Barrels[hardpoint].Length;
-            return barrel;
-        }
-
-        return Transform;
-    }
-}
-
-public class ShipInstance : EntityInstance
-{
-    public (Thruster effect, ParticleSystem system, float baseEmission)[] Particles;
-}
 
 [Serializable]
 public class InstancedMesh

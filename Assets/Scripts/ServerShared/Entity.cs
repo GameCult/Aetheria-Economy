@@ -37,6 +37,8 @@ public abstract class Entity
     public readonly ReactiveCollection<EquippedItem> Equipment = new ReactiveCollection<EquippedItem>();
     public readonly ReactiveCollection<EquippedCargoBay> CargoBays = new ReactiveCollection<EquippedCargoBay>();
     public readonly ReactiveCollection<EquippedDockingBay> DockingBays = new ReactiveCollection<EquippedDockingBay>();
+    public readonly ReactiveCollection<Entity> VisibleEntities = new ReactiveCollection<Entity>();
+    public readonly ReactiveCollection<Entity> VisibleHostiles = new ReactiveCollection<Entity>();
 
     public Entity Parent;
     public List<Entity> Children = new List<Entity>();
@@ -51,11 +53,11 @@ public abstract class Entity
     
     public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
-    public readonly Dictionary<Entity, float> EntityInfoGathered = new Dictionary<Entity, float>(); 
+    public readonly ReactiveDictionary<Entity, float> EntityInfoGathered = new ReactiveDictionary<Entity, float>(); 
     public readonly Dictionary<HardpointData, (float3 position, float3 direction)> HardpointTransforms = 
         new Dictionary<HardpointData, (float3 position, float3 direction)>();
     
-    public readonly (List<IActivatedBehavior> behaviors, List<EquippedItem> items)[] TriggerGroups;
+    public readonly (List<Weapon> weapons, List<EquippedItem> items)[] TriggerGroups;
 
     public List<IPopulationAssignment> PopulationAssignments = new List<IPopulationAssignment>();
 
@@ -66,20 +68,20 @@ public abstract class Entity
     
     private EquippedItem[] _orderedEquipment;
     private List<Weapon> _weapons = new List<Weapon>();
-    private List<Weapon> _weaponsInRange = new List<Weapon>();
     protected bool _active;
     
     public IEnumerable<Weapon> Weapons
     {
         get => _weapons;
     }
-    public IEnumerable<Weapon> WeaponsInRange
-    {
-        get => _weaponsInRange;
-    }
     
+    public float TargetRange { get; private set; }
     public float MaxTemp { get; private set; }
     public float MinTemp { get; private set; }
+    public bool ShieldEnabled // TODO: MAKE SHIELDS
+    {
+        get => true;
+    }
     public ItemManager ItemManager { get; }
     public int AssignedPopulation => PopulationAssignments.Sum(pa => pa.AssignedPopulation);
     public float Mass { get; private set; }
@@ -88,31 +90,48 @@ public abstract class Entity
     public Subject<(int2 pos, float damage)> ArmorDamage = new Subject<(int2, float)>();
     public Subject<(EquippedItem item, float damage)> ItemDamage = new Subject<(EquippedItem, float)>();
     public Subject<float> HullDamage = new Subject<float>();
+    public Subject<Entity> Docked = new Subject<Entity>();
     
     public UniRx.IObservable<EquippedItem> ItemDestroyed;
     public UniRx.IObservable<int2> HullArmorDepleted;
     public UniRx.IObservable<HardpointData> HardpointArmorDepleted;
+    public UniRx.IObservable<Weapon> WeaponDestroyed;
 
-    public bool Active
+    private List<IDisposable> _subscriptions = new List<IDisposable>();
+
+    public virtual void Activate()
     {
-        get => _active;
-        set
+        _active = true;
+        foreach (var item in Equipment)
+        foreach (var behavior in item.Behaviors)
         {
-            _active = value;
-            if (_active)
-            {
-                foreach (var item in Equipment)
-                    foreach (var behavior in item.Behaviors)
-                    {
-                        if(behavior is IInitializableBehavior initializableBehavior)
-                            initializableBehavior.Initialize();
-                    }
-                OnActivate();
-            }
+            if(behavior is IInitializableBehavior initializableBehavior)
+                initializableBehavior.Initialize();
         }
+        //foreach(var entity in Zone.Entities) EntityInfoGathered.Add(entity, 0);
+        _subscriptions.Add(Zone.Entities.ObserveRemove().Subscribe(remove =>
+        {
+            if (Target.Value == remove.Value) Target.Value = null;
+            EntityInfoGathered.Remove(remove.Value);
+            VisibleEntities.Remove(remove.Value);
+            VisibleHostiles.Remove(remove.Value);
+        }));
+        _subscriptions.Add(VisibleEntities.ObserveRemove().Subscribe(remove =>
+        {
+            if (Target.Value == remove.Value) Target.Value = null;
+        }));
+        GenerateTriggerGroups();
     }
 
-    protected virtual void OnActivate(){}
+    public virtual void Deactivate()
+    {
+        foreach(var s in _subscriptions) s.Dispose();
+        _subscriptions.Clear();
+        _active = false;
+        EntityInfoGathered.Clear();
+        VisibleEntities.Clear();
+        VisibleHostiles.Clear();
+    }
 
     public Entity(ItemManager itemManager, Zone zone, EquippableItem hull)
     {
@@ -121,12 +140,42 @@ public abstract class Entity
         Hull = hull;
         Name = hull.Name;
         MapEntity();
-        TriggerGroups = new (List<IActivatedBehavior> triggers, List<EquippedItem> items)[itemManager.GameplaySettings.TriggerGroupCount];
+        TriggerGroups = new (List<Weapon> triggers, List<EquippedItem> items)[itemManager.GameplaySettings.TriggerGroupCount];
         for(int i=0; i<itemManager.GameplaySettings.TriggerGroupCount; i++)
-            TriggerGroups[i] = (new List<IActivatedBehavior>(), new List<EquippedItem>());
+            TriggerGroups[i] = (new List<Weapon>(), new List<EquippedItem>());
 
         ItemDestroyed = ItemDamage.Where(x => x.item.EquippableItem.Durability < .01f).Select(x=>x.item);
+        WeaponDestroyed = ItemDestroyed.Select(x => x.Behaviors.FirstOrDefault(b => b is Weapon) as Weapon).Where(x => x != null);
         HullArmorDepleted = ArmorDamage.Where(x => Armor[x.pos.x, x.pos.y] < .01f).Select(x => x.pos);
+
+        EntityInfoGathered.ObserveReplace().Subscribe(replace =>
+        {
+            if (replace.OldValue < ItemManager.GameplaySettings.TargetDetectionInfoThreshold &&
+                replace.NewValue > ItemManager.GameplaySettings.TargetDetectionInfoThreshold)
+            {
+                VisibleEntities.Add(replace.Key);
+                if(IsHostileTo(replace.Key))
+                    VisibleHostiles.Add(replace.Key);
+            }
+            if (replace.OldValue > ItemManager.GameplaySettings.TargetDetectionInfoThreshold &&
+                replace.NewValue < ItemManager.GameplaySettings.TargetDetectionInfoThreshold)
+            {
+                VisibleEntities.Remove(replace.Key);
+                if(IsHostileTo(replace.Key))
+                    VisibleHostiles.Add(replace.Key);
+            }
+        });
+        EntityInfoGathered.ObserveRemove().Subscribe(remove => VisibleEntities.Remove(remove.Key));
+    }
+
+    public bool IsHostileTo(Entity other)
+    {
+        if (Faction == null)
+        {
+            return other.Faction != null;
+        }
+
+        return Faction.PlayerHostile && other.Faction == null;
     }
 
     private void MapEntity()
@@ -163,6 +212,17 @@ public abstract class Entity
             ThermalMass[v.x, v.y] = hullData.Mass * hullData.SpecificHeat / cellCount;
         }
         GearOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
+    }
+
+    public void GenerateTriggerGroups()
+    {
+        foreach (var group in Weapons
+            .GroupBy(w => w.Item.EquippableItem.Data)
+            .Select((weapons, index) => (weapons, index)))
+        {
+            TriggerGroups[group.index].weapons = group.weapons.ToList();
+            TriggerGroups[group.index].items = group.weapons.Select(w=>w.Item).ToList();
+        }
     }
 
     public void AddHeat(int2 position, float heat, bool ignoreThermalMass = false)
@@ -439,6 +499,8 @@ public abstract class Entity
             bay.DockedShip = ship;
             ship.SetParent(this);
             Zone.Entities.Remove(ship);
+            Deactivate();
+            ship.Docked.OnNext(this);
         }
 
         return bay;
@@ -459,6 +521,7 @@ public abstract class Entity
         bay.DockedShip = null;
         ship.RemoveParent();
         Zone.Entities.Add(ship);
+        ship.Activate();
 
         return true;
     }
@@ -556,15 +619,8 @@ public abstract class Entity
     public virtual void Update(float delta)
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
-        
-        _weaponsInRange.Clear();
-        if (Target.Value != null)
-        {
-            var dist = length(Position - Target.Value.Position);
-            foreach (var w in _weapons)
-                if (w.MinRange < dist && dist < w.Range)
-                    _weaponsInRange.Add(w);
-        }
+
+        TargetRange = Target.Value == null ? -1 : length(Position - Target.Value.Position);
 
         foreach (var v in VisibilitySources.Keys.ToArray())
         {
@@ -572,6 +628,37 @@ public abstract class Entity
 
             if (VisibilitySources[v] < 0.01f) VisibilitySources.Remove(v);
         }
+
+        UpdateTemperature(delta);
+        
+        if (_active)
+        {
+            foreach (var equippedItem in _orderedEquipment)
+            {
+                equippedItem.Update(delta);
+            }
+
+            foreach (var message in Messages.Keys.ToArray())
+            {
+                Messages[message] = Messages[message] - delta;
+                if (Messages[message] < 0)
+                    Messages.Remove(message);
+            }
+        }
+        foreach(var child in Children)
+            child.Update(delta);
+
+        if (Parent != null)
+        {
+            Position = Parent.Position;
+            Velocity = Parent.Velocity;
+        }
+        else Position.y = Zone.GetHeight(Position.xz) + hullData.GridOffset;
+    }
+
+    private void UpdateTemperature(float delta)
+    {
+        var hullData = ItemManager.GetData(Hull) as HullData;
         
         MaxTemp = Single.MinValue;
         MinTemp = Single.MaxValue;
@@ -657,65 +744,12 @@ public abstract class Entity
         var swap = Temperature;
         Temperature = NewTemperature;
         NewTemperature = swap;
-        
-        if (Active)
-        {
-            foreach (var equippedItem in _orderedEquipment)
-            {
-                equippedItem.Update(delta);
-            }
-
-            foreach (var message in Messages.Keys.ToArray())
-            {
-                Messages[message] = Messages[message] - delta;
-                if (Messages[message] < 0)
-                    Messages.Remove(message);
-            }
-        }
-        foreach(var child in Children)
-            child.Update(delta);
-
-        if (Parent != null)
-        {
-            Position = Parent.Position;
-            Velocity = Parent.Velocity;
-        }
-        else Position.y = Zone.GetHeight(Position.xz) + hullData.GridOffset;
     }
 
     public void SetMessage(string message)
     {
         Messages[message] = ItemManager.GameplaySettings.MessageDuration;
     }
-
-    // public void OnBeforeSerialize()
-    // {
-    //     // Filter item behavior collections by those with any persistent behaviors
-    //     // For each item create an object containing the item ID and a list of persistent behaviors
-    //     // Then turn that into a dictionary mapping from item ID to an array of every behaviors persistent data
-    //     PersistedBehaviors = EquippedItems
-    //         .Where(item => item.Behaviors.Any(b=>b is IPersistentBehavior))
-    //         .Select(item => new {equippable=item, behaviors = item.Behaviors
-    //             .Where(b=>b is IPersistentBehavior)
-    //             .Cast<IPersistentBehavior>()})
-    //         .ToDictionary(x=> x.equippable.Position, x=>x.behaviors.Select(b => b.Store()).ToArray());
-    // }
-    //
-    // public void OnAfterDeserialize()
-    // {
-    //     foreach(var item in EquippedItems)
-    //         Hydrate(item);
-    //
-    //     // Iterate only over the behaviors of items which contain persistent data
-    //     // Filter the behaviors for each item to get the persistent ones, then cast them and combine with the persisted data array for that item
-    //     foreach (var persistentBehaviorData in EquippedItems
-    //         .Where(item => PersistedBehaviors.ContainsKey(item.Position))
-    //         .SelectMany(item => item.Behaviors
-    //             .Where(b=> b is IPersistentBehavior)
-    //             .Cast<IPersistentBehavior>()
-    //             .Zip(PersistedBehaviors[item.Position], (behavior, data) => new{behavior, data})))
-    //         persistentBehaviorData.behavior.Restore(persistentBehaviorData.data);
-    // }
 }
 
 public class EquippedItem
@@ -727,6 +761,9 @@ public class EquippedItem
     public IBehavior[] Behaviors;
     
     public Dictionary<int, BehaviorGroup> BehaviorGroups;
+
+    public event Action OnDisable;
+    public event Action OnEnable;
     
     public float Conductivity { get; }
     
@@ -734,7 +771,10 @@ public class EquippedItem
 
     public int SortPosition;
 
-    public bool Online => EquippableItem.Durability > .01f && Temperature > _data.MinimumTemperature && Temperature < _data.MaximumTemperature;
+    public bool Online
+    {
+        get => _online;
+    }
 
     public float Temperature
     {
@@ -749,6 +789,7 @@ public class EquippedItem
     protected readonly ItemManager _itemManager;
     private readonly EquippableItemData _data;
     private Entity _entity;
+    private bool _online;
 
     public EquippedItem(ItemManager itemManager, EquippableItem item, int2 position, Entity entity)
     {
@@ -792,16 +833,22 @@ public class EquippedItem
 
     public void Update(float delta)
     {
-
         if (Temperature < _data.MinimumTemperature || Temperature > _data.MaximumTemperature)
         {
+            _entity.ItemDamage.OnNext((this, delta));
             EquippableItem.Durability -= delta;
         }
 
-        foreach (var behavior in Behaviors)//.Where(b => b is IAlwaysUpdatedBehavior).Cast<IAlwaysUpdatedBehavior>())
+        foreach (var behavior in Behaviors)
             if(behavior is IAlwaysUpdatedBehavior alwaysUpdatedBehavior) alwaysUpdatedBehavior.Update(delta);
 
-        if (Online)
+        var previouslyOnline = _online;
+        _online = EquippableItem.Durability > .01f && Temperature > _data.MinimumTemperature && Temperature < _data.MaximumTemperature;
+
+        if (!previouslyOnline && _online) OnEnable?.Invoke();
+        if (previouslyOnline && !_online) OnDisable?.Invoke(); 
+
+        if (_online)
         {
             foreach (var group in BehaviorGroups.Values)
             {

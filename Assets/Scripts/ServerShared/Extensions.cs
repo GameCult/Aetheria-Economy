@@ -289,14 +289,10 @@ public static class Extensions
         return t * (t * (a * t + b) + c) + d;
     }
     
-    public static float AngleDiff(this float2 a, float2 b)
+    public static float Angle(this float2 from, float2 to)
     {
-        var directionAngle = atan2(b.y, b.x);
-        var currentAngle = atan2(a.y, a.x);
-        var d1 = directionAngle - currentAngle;
-        var d2 = directionAngle - 2 * PI - currentAngle;
-        var d3 = directionAngle + 2 * PI - currentAngle;
-        return abs(d1) < abs(d2) ? abs(d1) < abs(d3) ? d1 : d3 : abs(d2) < abs(d3) ? d2 : d3;
+        var num = sqrt(lengthsq(from) * lengthsq(to));
+        return num < 1.00000000362749E-15 ? 0.0f : acos(clamp(dot(from, to) / num, -1f, 1f)) * 57.29578f;
     }
     
     // https://stackoverflow.com/a/3188835

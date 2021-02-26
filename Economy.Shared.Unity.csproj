@@ -110,6 +110,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetManager.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetDataWriter.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Single.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\States\Combat.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\June.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\GetAll.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\InnerJoin.cs" />
@@ -118,12 +119,10 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Get.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\ResponseNote.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\OrderBy.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\PatrolController.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Tuesday.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlUserError.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSelect.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ToJsonString.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Locomotion.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\InsertAt.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonDiscriminatorAttribute.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thruster.cs" />
@@ -173,6 +172,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\Query.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Zone.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Connection.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\Minion.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Sunday.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\ChargedWeapon.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetUtils.cs" />
@@ -191,10 +191,10 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Seconds.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Extras\Dao\IDao.cs" />
      <Compile Include="Assets\Scripts\ServerShared\PlayerData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Survey.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\Survey.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\ICursor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\October.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\StationTowing.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\StationTowing.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Map.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\HostEntry.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\ReliableChannel.cs" />
@@ -232,6 +232,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkDbQueryModelVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\SurveyController.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\MakeObj.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\PatrolOrbits.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Month.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlRuntimeError.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlServerCompileError.cs" />
@@ -302,8 +303,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetDataReader.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlBinaryConverter.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\DbCreate.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Controller.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\HaulingTask.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\HaulingTask.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Update.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Polygon.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Hours.cs" />
@@ -336,7 +336,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\ISubQueryVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetDifference.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Reconfigure.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentTask.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\AgentTask.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ColorMath.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\July.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Slice.cs" />
@@ -345,10 +345,11 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\DefaultParser.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\BaseFilterableSubQueryVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ExtensionsForJsonConverters.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\States\MoveTo.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Handshake.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Var.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Lt.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\WanderTask.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\WanderTask.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\Unit.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Model\Profile.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\IndexCreate.cs" />
@@ -356,10 +357,10 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Delete.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Distinct.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Min.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlDriverCompileError.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlQueryLogicError.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\TopLevel.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetConstants.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlDriverCompileError.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\Protocol.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Filter.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Response.cs" />
@@ -373,6 +374,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Le.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Sensor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Now.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\States\MatchVelocity.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlNonExistenceError.cs" />
      <Compile Include="Assets\Scripts\ServerShared\AetheriaMath.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\Utils\Mapper.cs" />
@@ -397,7 +399,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\AllSubQueryVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Log.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Values.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Mining.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\Mining.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Keys.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Reduce.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\IncrementalSHA256.cs" />
@@ -416,6 +418,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkDbGroup.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Entity.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ReqlObject.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\States\BaseState.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\ReqlAuthError.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetExceptions.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\December.cs" />
@@ -443,7 +446,6 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Json.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ResultFormat.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Awaiter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\VelocityMatch.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReqlFunction4.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\XorEncryptLayer.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Model\ReadMode.cs" />
@@ -511,7 +513,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Clustering\RoundRobinHostPool.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\ReqlExpr.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\TableList.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\AgentBehavior.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Agents\Agent.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Javascript.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\SequencedChannel.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Without.cs" />

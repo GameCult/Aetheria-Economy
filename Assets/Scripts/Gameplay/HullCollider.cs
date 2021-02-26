@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using Unity.Mathematics;
@@ -37,7 +38,12 @@ public class HullCollider : MonoBehaviour
             Direction = direction
         });
     }
-    
+
+    private void OnCollisionEnter(Collision other)
+    {
+        Entity.Velocity += ((float3) other.impulse).xz / Time.deltaTime;
+    }
+
     public class HullHitEventArgs
     {
         public float Damage;

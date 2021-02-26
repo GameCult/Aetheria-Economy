@@ -68,6 +68,7 @@
         <e p="HoverCursorChange.cs" t="Include" />
         <e p="ItemFilter.cs" t="Include" />
         <e p="LineMaterialOffset.cs" t="Include" />
+        <e p="MusicTest.cs" t="Include" />
         <e p="Plugins" t="Include">
           <e p="AsyncAwaitUtil" t="Include">
             <e p="Source" t="Include">
@@ -1440,10 +1441,11 @@
           <e p="Gameplay" t="Include">
             <e p="ActionGameManager.cs" t="Include" />
             <e p="ArticulationPoint.cs" t="Include" />
-            <e p="EntityPrefab.cs" t="Include" />
+            <e p="EntityInstance.cs" t="Include" />
             <e p="GameSettings.cs" t="Include" />
             <e p="HullCollider.cs" t="Include" />
             <e p="RadiatorHardpoint.cs" t="Include" />
+            <e p="ShipInstance.cs" t="Include" />
             <e p="ThrusterHardpoint.cs" t="Include" />
             <e p="WeaponHardpoint.cs" t="Include" />
             <e p="Weapons" t="Include">
@@ -1498,15 +1500,23 @@
             <e p="ActionCollection.cs" t="Include" />
             <e p="AetheriaMath.cs" t="Include" />
             <e p="Agents" t="Include">
-              <e p="AgentBehavior.cs" t="Include" />
-              <e p="AgentTask.cs" t="Include" />
-              <e p="HaulingTask.cs" t="Include" />
-              <e p="Locomotion.cs" t="Include" />
-              <e p="Mining.cs" t="Include" />
-              <e p="StationTowing.cs" t="Include" />
-              <e p="Survey.cs" t="Include" />
-              <e p="VelocityMatch.cs" t="Include" />
-              <e p="WanderTask.cs" t="Include" />
+              <e p="Agent.cs" t="Include" />
+              <e p="Minion.cs" t="Include" />
+              <e p="States" t="Include">
+                <e p="BaseState.cs" t="Include" />
+                <e p="Combat.cs" t="Include" />
+                <e p="MatchVelocity.cs" t="Include" />
+                <e p="MoveTo.cs" t="Include" />
+              </e>
+              <e p="Tasks" t="Include">
+                <e p="AgentTask.cs" t="Include" />
+                <e p="HaulingTask.cs" t="Include" />
+                <e p="Mining.cs" t="Include" />
+                <e p="PatrolOrbits.cs" t="Include" />
+                <e p="StationTowing.cs" t="Include" />
+                <e p="Survey.cs" t="Include" />
+                <e p="WanderTask.cs" t="Include" />
+              </e>
             </e>
             <e p="Attributes.cs" t="Include" />
             <e p="Behaviors" t="Include">
@@ -1516,7 +1526,6 @@
               <e p="ChargedWeapon.cs" t="Include" />
               <e p="Cockpit.cs" t="Include" />
               <e p="ConstantWeapon.cs" t="Include" />
-              <e p="Controller.cs" t="Include" />
               <e p="Cooldown.cs" t="Include" />
               <e p="EnergyDraw.cs" t="Include" />
               <e p="FactoryBehavior.cs" t="Include" />
@@ -1530,7 +1539,6 @@
               <e p="MiningController.cs" t="Include" />
               <e p="MiningTool.cs" t="Include" />
               <e p="ParticleEffect.cs" t="Include" />
-              <e p="PatrolController.cs" t="Include" />
               <e p="Radiance.cs" t="Include" />
               <e p="Radiator.cs" t="Include" />
               <e p="Reactor.cs" t="Include" />
@@ -2117,6 +2125,7 @@
           <e p="DitheredParticles.shader" t="Include" />
           <e p="GalaxyMap.shader" t="Include" />
           <e p="GaussianBlurFilter.shader" t="Include" />
+          <e p="GlowFade.shader" t="Include" />
           <e p="Isolines.shader" t="Include" />
           <e p="IsolinesUI.shader" t="Include" />
           <e p="MaskedUIBlur.shader" t="Include" />
@@ -2128,8 +2137,13 @@
             <e p="VolumeRender.shader" t="Include" />
             <e p="VolumeSun.shader" t="Include" />
           </e>
+          <e p="Shield.shader" t="Include" />
           <e p="ViewNormalEmissive.shader" t="Include" />
+          <e p="ViewNormalEmissiveGlowFade.shader" t="Include" />
         </e>
+        <e p="ShieldAnimation.cs" t="Include" />
+        <e p="ShieldManager.cs" t="Include" />
+        <e p="ShieldTest.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Fonts" t="Include">
             <e p="LiberationSans - OFL.txt" t="Include" />

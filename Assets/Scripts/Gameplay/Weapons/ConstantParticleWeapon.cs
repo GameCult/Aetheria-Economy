@@ -47,7 +47,7 @@ public class ConstantParticleWeapon : MonoBehaviour
         
         if (Target == null) return;
         
-        foreach (var collider in Target.Prefab.HullColliders)
+        foreach (var collider in Target.HullColliders)
         {
             _hull = collider;
             trigger.AddCollider(collider.GetComponent<Collider>());
@@ -57,7 +57,7 @@ public class ConstantParticleWeapon : MonoBehaviour
     private void Update()
     {
         if (Source == null) return;
-        _simulationSpace.position = Source.Prefab.transform.position;
+        _simulationSpace.position = Source.transform.position;
         if (_stopping && Particles.All(p=>p.particleCount == 0))
         {
             GetComponent<Prototype>().ReturnToPool();
@@ -77,7 +77,7 @@ public class ConstantParticleWeapon : MonoBehaviour
                 Damage * Time.deltaTime,
                 DamageType,
                 Source.Entity,
-                (transform.position - Target.Prefab.transform.position).normalized);
+                (transform.position - Target.transform.position).normalized);
         }
     }
 

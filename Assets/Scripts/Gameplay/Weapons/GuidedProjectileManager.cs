@@ -13,9 +13,9 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
         if(weapon.Data is LauncherData launcher)
         {
             var p = ProjectilePrototype.Instantiate<GuidedProjectile>();
-            p.Source = source.Transform;
+            p.Source = source.transform;
             p.SourceEntity = source.Entity;
-            p.Target = target.Transform;
+            p.Target = target.transform;
             p.Frequency = launcher.DodgeFrequency;
             var hp = source.Entity.Hardpoints[item.Position.x, item.Position.y];
             var barrel = source.GetBarrel(hp);
@@ -35,9 +35,9 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
         else if(weapon.Data is GuidedWeaponData guidance)
         {
             var p = ProjectilePrototype.Instantiate<GuidedProjectile>();
-            p.Source = source.Transform;
+            p.Source = source.transform;
             p.SourceEntity = source.Entity;
-            p.Target = target?.Transform;
+            p.Target = target?.transform;
             p.Frequency = guidance.DodgeFrequency;
             var hp = source.Entity.Hardpoints[item.Position.x, item.Position.y];
             var barrel = source.GetBarrel(hp);

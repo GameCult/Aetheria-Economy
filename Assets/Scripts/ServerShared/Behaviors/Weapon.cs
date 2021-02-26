@@ -73,6 +73,8 @@ public abstract class Weapon : IActivatedBehavior
     public EquippedItem Item { get; }
     public ItemManager Context { get; }
 
+    public abstract float DamagePerSecond { get; }
+    public abstract float RangeDamagePerSecond(float range);
     public abstract int Ammo { get; }
     public WeaponData WeaponData => _data;
     public BehaviorData Data => _data;

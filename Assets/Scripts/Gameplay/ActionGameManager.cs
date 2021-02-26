@@ -120,7 +120,6 @@ public class ActionGameManager : MonoBehaviour
         SectorRenderer.LoadZone(Zone);
 
         _input = new AetheriaInput();
-        _input.Player.Enable();
         _input.Global.Enable();
         _input.UI.Enable();
 
@@ -136,10 +135,10 @@ public class ActionGameManager : MonoBehaviour
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Map)
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                _input.Player.Enable();
                 Menu.gameObject.SetActive(false);
                 if (CurrentShip != null && CurrentShip.Parent == null)
                 {
+                    _input.Player.Enable();
                     GameplayUI.SetActive(true);
                     
                     SchematicDisplay.ShowShip(CurrentShip);
@@ -161,10 +160,10 @@ public class ActionGameManager : MonoBehaviour
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Inventory)
             {
                 Cursor.lockState = CursorLockMode.Locked;
-                _input.Player.Enable();
                 Menu.gameObject.SetActive(false);
                 if (CurrentShip != null && CurrentShip.Parent == null)
                 {
+                    _input.Player.Enable();
                     GameplayUI.SetActive(true);
                     
                     SchematicDisplay.ShowShip(CurrentShip);
@@ -251,12 +250,12 @@ public class ActionGameManager : MonoBehaviour
             else CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].items.Add(item.Item);
             foreach (var group in item.Item.BehaviorGroups.Values)
             {
-                var behavior = group.GetBehavior<IActivatedBehavior>();
-                if(behavior != null)
+                var weapon = group.GetBehavior<Weapon>();
+                if(weapon != null)
                 {
-                    if (CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].behaviors.Contains(behavior))
-                        CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].behaviors.Remove(behavior);
-                    else CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].behaviors.Add(behavior);
+                    if (CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].weapons.Contains(weapon))
+                        CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].weapons.Remove(weapon);
+                    else CurrentShip.TriggerGroups[SchematicDisplay.SelectedGroupIndex].weapons.Add(weapon);
                 }
             }
             SchematicDisplay.UpdateTriggerGroups();
@@ -265,73 +264,73 @@ public class ActionGameManager : MonoBehaviour
         _input.Player.FireGroup1.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[0].behaviors) s.Activate();
+            foreach (var s in CurrentShip.TriggerGroups[0].weapons) s.Activate();
         };
 
         _input.Player.FireGroup1.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[0].behaviors) s.Deactivate();
+            foreach (var s in CurrentShip.TriggerGroups[0].weapons) s.Deactivate();
         };
 
         _input.Player.FireGroup2.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[1].behaviors) s.Activate();
+            foreach (var s in CurrentShip.TriggerGroups[1].weapons) s.Activate();
         };
 
         _input.Player.FireGroup2.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[1].behaviors) s.Deactivate();
+            foreach (var s in CurrentShip.TriggerGroups[1].weapons) s.Deactivate();
         };
 
         _input.Player.FireGroup3.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[2].behaviors) s.Activate();
+            foreach (var s in CurrentShip.TriggerGroups[2].weapons) s.Activate();
         };
 
         _input.Player.FireGroup3.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[2].behaviors) s.Deactivate();
+            foreach (var s in CurrentShip.TriggerGroups[2].weapons) s.Deactivate();
         };
 
         _input.Player.FireGroup4.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[3].behaviors) s.Activate();
+            foreach (var s in CurrentShip.TriggerGroups[3].weapons) s.Activate();
         };
 
         _input.Player.FireGroup4.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[3].behaviors) s.Deactivate();
+            foreach (var s in CurrentShip.TriggerGroups[3].weapons) s.Deactivate();
         };
 
         _input.Player.FireGroup5.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[4].behaviors) s.Activate();
+            foreach (var s in CurrentShip.TriggerGroups[4].weapons) s.Activate();
         };
 
         _input.Player.FireGroup5.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[4].behaviors) s.Deactivate();
+            foreach (var s in CurrentShip.TriggerGroups[4].weapons) s.Deactivate();
         };
 
         _input.Player.FireGroup6.started += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[5].behaviors) s.Activate();
+            foreach (var s in CurrentShip.TriggerGroups[5].weapons) s.Activate();
         };
 
         _input.Player.FireGroup6.canceled += context =>
         {
             if (CurrentShip.Parent != null) return;
-            foreach (var s in CurrentShip.TriggerGroups[5].behaviors) s.Deactivate();
+            foreach (var s in CurrentShip.TriggerGroups[5].weapons) s.Deactivate();
         };
         
         #endregion
@@ -344,6 +343,10 @@ public class ActionGameManager : MonoBehaviour
             SaveZone();
         });
         
+        var testCorp = new MegaCorporation();
+        testCorp.Name = "TestCorp";
+        testCorp.PlayerHostile = true;
+        
         var stationType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
         var stationHull = ItemManager.CreateInstance(stationType, 0, 1) as EquippableItem;
         var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(3);
@@ -352,11 +355,12 @@ public class ActionGameManager : MonoBehaviour
         var stationPos = stationParentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
         var stationOrbit = Zone.CreateOrbit(stationParentOrbit, stationPos);
         var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID);
+        station.Faction = testCorp;
         Zone.Entities.Add(station);
         var dockingBayData = ItemData.GetAll<DockingBayData>().First();
         var dockingBay = ItemManager.CreateInstance(dockingBayData, 1, 1) as EquippableItem;
         station.TryEquip(dockingBay);
-        station.Active = true;
+        station.Activate();
 
         var turretLoadout = Loadouts.First(x => x.Name == "Turret");
 
@@ -370,26 +374,30 @@ public class ActionGameManager : MonoBehaviour
                 var pos = planetPos + ItemManager.Random.NextFloat2Direction() * planet.GravityWellRadius.Value * (.1f + .1f * j);
                 var orbit = Zone.CreateOrbit(planetOrbit, pos);
                 var turret = EntityPack.Unpack(ItemManager, Zone, turretLoadout, orbit.ID, true);
-                turret.Active = true;
+                turret.Activate();
+                turret.Name = $"Turret {i}-{(char) ('A' + j)}";
+                turret.Faction = testCorp;
                 Zone.Entities.Add(turret);
             }
         }
 
         var enemyShipLoadout = Loadouts.First(x => ((HullData) ItemManager.GetData(x.Hull)).HullType == HullType.Ship);
         var enemyShip = EntityPack.Unpack(ItemManager, Zone, enemyShipLoadout, true);
-        enemyShip.Active = true;
+        enemyShip.Faction = testCorp;
+        enemyShip.Activate();
         Zone.Entities.Add(enemyShip);
-        var agent = new Agent(enemyShip);
+        var agent = new Minion(enemyShip);
         var task = new PatrolOrbitsTask();
         task.Circuit = Zone.Orbits.OrderBy(_ => Random.value).Take(4).Select(x => x.Key).ToArray();
         agent.Task = task;
         _shipAgents.Add(agent);
 
         DockedEntity = station;
+        SectorRenderer.PerspectiveEntity = DockedEntity;
         DockingBay = station.DockingBays.First();
         DockCamera.enabled = true;
         FollowCamera.enabled = false;
-        DockCamera.Follow = SectorRenderer.EntityInstances[station].Transform;
+        DockCamera.Follow = SectorRenderer.EntityInstances[station].transform;
         var parentOrbit = Zone.Orbits[station.OrbitData].Data.Parent;
         var parentPlanet = SectorRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key];
         DockCamera.LookAt = parentPlanet.Body.transform;
@@ -421,12 +429,12 @@ public class ActionGameManager : MonoBehaviour
                 if (bay != null)
                 {
                     DockedEntity = entity;
+                    SectorRenderer.PerspectiveEntity = DockedEntity;
                     DockingBay = bay;
                     DockCamera.enabled = true;
                     FollowCamera.enabled = false;
-                    CurrentShip.Active = false;
                     var orbital = (OrbitalEntity) entity;
-                    DockCamera.Follow = SectorRenderer.EntityInstances[orbital].Transform;
+                    DockCamera.Follow = SectorRenderer.EntityInstances[orbital].transform;
                     var parentOrbit = Zone.Orbits[orbital.OrbitData].Data.Parent;
                     var parentPlanet = SectorRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key];
                     DockCamera.LookAt = parentPlanet.Body.transform;
@@ -464,15 +472,15 @@ public class ActionGameManager : MonoBehaviour
         }
         else if (CurrentShip.Parent.TryUndock(CurrentShip))
         {
+            SectorRenderer.PerspectiveEntity = CurrentShip;
             Menu.gameObject.SetActive(false);
             DockedEntity = null;
             DockingBay = null;
-            CurrentShip.Active = true;
             //_shipInput = new ShipInput(_input.Player, _currentShip);
             DockCamera.enabled = false;
             FollowCamera.enabled = true;
             FollowCamera.LookAt = SectorRenderer.EntityInstances[CurrentShip].LookAtPoint;
-            FollowCamera.Follow = SectorRenderer.EntityInstances[CurrentShip].Transform;
+            FollowCamera.Follow = SectorRenderer.EntityInstances[CurrentShip].transform;
             _articulationGroups = CurrentShip.Equipment
                 .Where(item => item.Behaviors.Any(x => x.Data is WeaponData && !(x.Data is LauncherData)))
                 .GroupBy(item => SectorRenderer.EntityInstances[CurrentShip]

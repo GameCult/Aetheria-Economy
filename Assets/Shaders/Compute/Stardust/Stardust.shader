@@ -7,8 +7,8 @@
 	}
 
 	SubShader {
+		Tags { "Queue"="AlphaTest" "RenderType"="TransparentCutout" "IgnoreProjector"="True" }
 		Pass {
-		    Tags { "RenderType"="Opaque" }
 			
 			CGPROGRAM
 			#pragma vertex particle_vertex

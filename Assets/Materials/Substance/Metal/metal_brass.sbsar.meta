@@ -58,7 +58,13 @@ ScriptedImporter:
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://metal_brass\" label=\"\" >\n </sbspreset>\n"
+    preset: " <sbspreset pkgurl=\"pkg://metal_brass\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"2699195248\" type=\"8\" value=\"10,10\" />\n 
+      <presetinput identifier=\"dirt\" uid=\"3700793424\" type=\"0\" value=\"1\"
+      />\n  <presetinput identifier=\"scratches\" uid=\"2782264294\" type=\"0\" value=\"1\"
+      />\n  <presetinput identifier=\"oxidation\" uid=\"3665635746\" type=\"0\" value=\"0.226\"
+      />\n  <presetinput identifier=\"brass_roughness\" uid=\"3708655714\" type=\"0\"
+      value=\"0.092\" />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
@@ -354,8 +360,8 @@ ScriptedImporter:
     - label: Default
       bOverride: 0
       bLockRatio: 1
-      textureWidth: 256
-      textureHeight: 256
+      textureWidth: 1024
+      textureHeight: 1024
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1

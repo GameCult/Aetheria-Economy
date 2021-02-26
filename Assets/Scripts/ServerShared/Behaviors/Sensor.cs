@@ -13,7 +13,7 @@ public class SensorData : BehaviorData
     [InspectableField, JsonProperty("sensitivity"), Key(3), RuntimeInspectable]  
     public PerformanceStat Sensitivity = new PerformanceStat();
 
-    [InspectableField, JsonProperty("sensitivityCurve"), Key(4), RuntimeInspectable]  
+    [InspectableAnimationCurve, JsonProperty("sensitivityCurve"), Key(4), RuntimeInspectable]  
     public float4[] SensitivityCurve;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
@@ -44,19 +44,28 @@ public class Sensor : IBehavior
     {
         // TODO: Handle Active Detection / Visibility From Reflected Radiance
         var hardpoint = Entity.Hardpoints[Item.Position.x, Item.Position.y];
-        var forward = Entity.HardpointTransforms.ContainsKey(hardpoint) ? 
+        var forward = hardpoint != null && Entity.HardpointTransforms.ContainsKey(hardpoint) ? 
             normalize(Entity.HardpointTransforms[hardpoint].direction.xz) : 
             Entity.Direction;
         foreach (var entity in Entity.Zone.Entities)
-        { 
-            var diff = entity.Position.xz - Entity.Position.xz;
-            var angle = acos(dot(forward, normalize(diff)));
-            var dist = length(diff);
-            Entity.EntityInfoGathered[entity] +=
-                entity.Visibility *
-                Context.Evaluate(_data.Sensitivity, Item.EquippableItem, Entity) *
-                _data.SensitivityCurve.Evaluate(angle / PI) *
-                delta / dist;
+        {
+            if(entity != Entity)
+            {
+                var diff = entity.Position.xz - Entity.Position.xz;
+                var angle = acos(dot(forward, normalize(diff)));
+                var dist = length(diff);
+                float previous;
+                Entity.EntityInfoGathered.TryGetValue(entity, out previous);
+                var next = saturate(
+                    previous +
+                    entity.Visibility *
+                    Context.Evaluate(_data.Sensitivity, Item.EquippableItem, Entity) *
+                    _data.SensitivityCurve.Evaluate(angle / PI) *
+                    delta / dist);
+                next *= 1 - Context.GameplaySettings.TargetInfoDecay * delta;
+                //Context.Log($"{entity.Name} visibility {(int)(previous * 100)}% -> {(int)(next * 100)}%");
+                Entity.EntityInfoGathered[entity] = next;
+            }
         }
         return true;
         // var ship = Hardpoint.Ship.Ship.transform;

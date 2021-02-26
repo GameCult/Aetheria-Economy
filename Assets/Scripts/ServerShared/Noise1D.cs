@@ -1,10 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 public static class Noise1D

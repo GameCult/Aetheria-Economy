@@ -37,6 +37,12 @@ public class ConstantWeapon : Weapon, IProgressBehavior
     {
         get { return saturate(_reload); }
     }
+    
+    public override float DamagePerSecond => Damage;
+    public override float RangeDamagePerSecond(float range)
+    {
+        return Damage * _data.DamageCurve.Evaluate(saturate(unlerp(MinRange, Range, range)));
+    }
 
     public event Action OnReloadBegin;
     public event Action OnReloadComplete;

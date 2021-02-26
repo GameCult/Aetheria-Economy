@@ -64,7 +64,6 @@ public class GuidedProjectile : MonoBehaviour
     {
         if (SourceEntity == null) return;
 
-        
         var t = transform;
         
         if (_active)

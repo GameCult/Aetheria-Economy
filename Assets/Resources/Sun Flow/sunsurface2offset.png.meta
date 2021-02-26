@@ -10,7 +10,7 @@ TextureImporter:
   mipmaps:
     mipMapMode: 1
     enableMipMap: 1
-    sRGBTexture: 1
+    sRGBTexture: 0
     linearTexture: 0
     fadeOut: 1
     borderMipMap: 0
@@ -58,6 +58,8 @@ TextureImporter:
   textureType: 0
   textureShape: 2
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
