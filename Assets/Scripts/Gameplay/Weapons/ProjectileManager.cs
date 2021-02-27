@@ -17,13 +17,13 @@ public class ProjectileManager : InstantWeaponEffectManager
         var barrel = source.GetBarrel(hp);
         var angle = weapon.Spread / 2;
         p.SourceEntity = source.Entity;
-        p.StartPosition = p.transform.position = barrel.position;
         p.Velocity = Quaternion.Euler(
                          Random.Range(-angle, angle), 
                          Random.Range(-angle, angle), 
                          Random.Range(-angle, angle)) * 
                      barrel.forward * 
                      weapon.Velocity;
+        p.StartPosition = p.transform.position = barrel.position + p.Velocity * (Random.value * Time.deltaTime);
         if(InheritVelocity)
             p.Velocity += new Vector3(source.Entity.Velocity.x, 0, source.Entity.Velocity.y);
         p.Damage = weapon.Damage;

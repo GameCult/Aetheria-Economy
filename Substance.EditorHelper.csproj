@@ -288,9 +288,6 @@
  <Reference Include="Remotion.Linq">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
  </Reference>
- <Reference Include="Newtonsoft.Json">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
- </Reference>
  <Reference Include="System.Memory">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
  </Reference>
@@ -300,20 +297,23 @@
  <Reference Include="nunit.framework">
  <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.ext.nunit@1.0.5/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.Burst.Unsafe">
+ <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.burst@1.4.3/Unity.Burst.Unsafe.dll</HintPath>
+ </Reference>
  <Reference Include="Google.Protobuf">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
  </Reference>
  <Reference Include="System.Buffers">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
  </Reference>
- <Reference Include="Unity.Burst.Unsafe">
- <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.burst@1.4.3/Unity.Burst.Unsafe.dll</HintPath>
+ <Reference Include="Substance.Game">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
+ </Reference>
+ <Reference Include="Newtonsoft.Json">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
  </Reference>
  <Reference Include="QuickGraph">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Game">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
  </Reference>
  <Reference Include="SourceUnityLib">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Source/Editor/SourceUnityLib.dll</HintPath>

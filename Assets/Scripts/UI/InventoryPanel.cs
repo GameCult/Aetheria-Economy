@@ -85,6 +85,10 @@ public class InventoryPanel : MonoBehaviour
         int2(-1, 1)
     };
 
+    public InventoryPanelTarget Target => 
+        _displayedEntity != null ? InventoryPanelTarget.Equipment :
+        _displayedCargo != null ? InventoryPanelTarget.Cargo : InventoryPanelTarget.None;
+
     private void Start()
     {
         if (Thermal)
@@ -691,4 +695,11 @@ public class InventoryCargoEventData : InventoryEventData
     }
 
     public EquippedCargoBay CargoBay { get; }
+}
+
+public enum InventoryPanelTarget
+{
+    None,
+    Cargo,
+    Equipment
 }

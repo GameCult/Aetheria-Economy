@@ -105,6 +105,11 @@ public class TurretController : IBehavior
         }
         else
         {
+            foreach (var x in _weapons)
+            {
+                if (x.Firing)
+                    x.Deactivate();
+            }
             EquippedEntity.Target.Value = EquippedEntity.VisibleHostiles.FirstOrDefault(e => e is Ship);
         }
         return true;

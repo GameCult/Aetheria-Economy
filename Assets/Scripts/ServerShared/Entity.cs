@@ -162,7 +162,7 @@ public abstract class Entity
             {
                 VisibleEntities.Remove(replace.Key);
                 if(IsHostileTo(replace.Key))
-                    VisibleHostiles.Add(replace.Key);
+                    VisibleHostiles.Remove(replace.Key);
             }
         });
         EntityInfoGathered.ObserveRemove().Subscribe(remove => VisibleEntities.Remove(remove.Key));

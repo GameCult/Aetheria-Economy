@@ -117,8 +117,8 @@
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\LayoutAlgorithmHelpers.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\Port.cs" />
      <Compile Include="Assets\Plugins\MSAGL\GraphmapsWithMesh\MsaglUtilities.cs" />
-     <Compile Include="Assets\Plugins\MSAGL\GraphmapsWithMesh\PlanarGraphUtilities.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\Curves\LinearSystem2.cs" />
+     <Compile Include="Assets\Plugins\MSAGL\GraphmapsWithMesh\PlanarGraphUtilities.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\LargeGraphLayout\LgEdgeInfo.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\Arrowheads.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Spline\Bundling\BundlingStatus.cs" />
@@ -232,8 +232,8 @@
      <Compile Include="Assets\Plugins\MSAGL\Routing\Corner.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\OverlapRemovalFixedSegments\OverlapRemovalFixedSegmentsBitmap.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\Layered\LayerEdge.cs" />
-     <Compile Include="Assets\Plugins\MSAGL\Layout\Layered\SmoothedPolylineCalculator.cs" />
      <Compile Include="Assets\Plugins\MIConvexHull\ConvexHull\ConvexHullAlgorithm.Initialize.cs" />
+     <Compile Include="Assets\Plugins\MSAGL\Layout\Layered\SmoothedPolylineCalculator.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\DataStructures\CollectionUtilities.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\DataStructures\RBTree\RBTreeEnumerator.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Routing\Spline\ConeSpanner\LeftVertexEvent.cs" />
@@ -521,8 +521,8 @@
      <Compile Include="Assets\Plugins\MSAGL\Core\GraphAlgorithms\TopologicalSort.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\OverlapRemoval\OverlapRemovalNode.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\Curves\PlaneTransformation.cs" />
-     <Compile Include="Assets\Plugins\SizedQueue.cs" />
      <Compile Include="Assets\Plugins\NaughtyAttributes\Scripts\Core\DrawerAttributes\ReadOnlyAttribute.cs" />
+     <Compile Include="Assets\Plugins\SizedQueue.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Geometry\ConvexHull\HullStack.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Core\Layout\PortEntry.cs" />
      <Compile Include="Assets\Plugins\MSAGL\Layout\Initial\InitialLayout.cs" />
@@ -942,9 +942,6 @@
  <Reference Include="Remotion.Linq">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
  </Reference>
- <Reference Include="Newtonsoft.Json">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
- </Reference>
  <Reference Include="System.Memory">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
  </Reference>
@@ -954,20 +951,23 @@
  <Reference Include="nunit.framework">
  <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.ext.nunit@1.0.5/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.Burst.Unsafe">
+ <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.burst@1.4.3/Unity.Burst.Unsafe.dll</HintPath>
+ </Reference>
  <Reference Include="Google.Protobuf">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
  </Reference>
  <Reference Include="System.Buffers">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
  </Reference>
- <Reference Include="Unity.Burst.Unsafe">
- <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.burst@1.4.3/Unity.Burst.Unsafe.dll</HintPath>
+ <Reference Include="Substance.Game">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
+ </Reference>
+ <Reference Include="Newtonsoft.Json">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
  </Reference>
  <Reference Include="QuickGraph">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Game">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
  </Reference>
  <Reference Include="System.Runtime.CompilerServices.Unsafe">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>

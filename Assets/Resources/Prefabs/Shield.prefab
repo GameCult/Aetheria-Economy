@@ -29,13 +29,13 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
-      inSlope: -2.6076918
-      outSlope: -2.6076918
+      value: 10
+      inSlope: -33.07317
+      outSlope: -33.07317
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.057522126
+      outWeight: 0.045353983
     - serializedVersion: 3
       time: 1
       value: 0
@@ -258,6 +258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShieldPrototype: {fileID: 6560402906539973100}
+  CollisionHitDuration: 3
 --- !u!1001 &3514832566420628377
 PrefabInstance:
   m_ObjectHideFlags: 0

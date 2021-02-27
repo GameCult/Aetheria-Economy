@@ -15,7 +15,6 @@ public class Projectile : MonoBehaviour
     
     public float AirburstDistance;
     public float AirburstRange;
-    public float AirburstVelocity;
     public float DirectHitDamageMultiplier = 1;
     
     private bool _alive;
@@ -87,7 +86,7 @@ public class Projectile : MonoBehaviour
             var distanceTraveled = (transform.position - StartPosition).magnitude;
             if(distanceTraveled > Range)
                 StartCoroutine(Kill());
-            if (AirburstDistance > 1 && distanceTraveled > AirburstDistance)
+            if (AirburstRange > 1 && distanceTraveled > AirburstDistance)
             {
                 StartCoroutine(Kill());
                 var ht = HitEffect.Instantiate<Transform>();

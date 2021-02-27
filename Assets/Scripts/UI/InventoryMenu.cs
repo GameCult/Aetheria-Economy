@@ -48,6 +48,7 @@ public class InventoryMenu : MonoBehaviour
 
     private void OnEnable()
     {
+        AkSoundEngine.RegisterGameObj(gameObject);
         BackgroundEntered.gameObject.SetActive(true);
 
         BackgroundEntered.OnPointerEnterAsObservable().Subscribe(enter =>
@@ -68,6 +69,7 @@ public class InventoryMenu : MonoBehaviour
 
     private void OnDisable()
     {
+        AkSoundEngine.UnregisterGameObj(gameObject);
         BackgroundEntered.gameObject.SetActive(false);
     }
 
@@ -103,6 +105,7 @@ public class InventoryMenu : MonoBehaviour
                         _dragOffsets = _dragCells.Select(x => (Vector2) x.position - data.PointerEventData.position).ToArray();
                         panel.IgnoreOccupancy = _originalOccupancy;
                         panel.RefreshCells(_originalOccupancy.Expand().Coordinates);
+                        AkSoundEngine.PostEvent("Pickup", gameObject);
                     }
                 }
                 else if (data is InventoryEntityEventData entityEvent)
@@ -130,6 +133,7 @@ public class InventoryMenu : MonoBehaviour
                         _dragOffsets = _dragCells.Select(x => (Vector2) x.position - data.PointerEventData.position).ToArray();
                         panel.IgnoreOccupancy = _originalOccupancy;
                         panel.RefreshCells(_originalOccupancy.Expand().Coordinates);
+                        AkSoundEngine.PostEvent("Pickup", gameObject);
                     }
                 }
             });
@@ -155,15 +159,21 @@ public class InventoryMenu : MonoBehaviour
                     {
                         cargoEvent.CargoBay.Remove(_dragItem);
                         _dragTargetPanel.DropItem(_dragItem, _dragTargetPosition);
+                        if(_dragTargetPanel.Target == InventoryPanelTarget.Cargo)
+                            AkSoundEngine.PostEvent("Drop", gameObject);
+                        else
+                            AkSoundEngine.PostEvent("Equip", gameObject);
                     }
                     else if (data is InventoryEntityEventData entityEvent)
                     {
                         if (entityEvent.Entity.Unequip(_originalEquippedItem) != null)
                         {
                             _dragTargetPanel.DropItem(_dragItem, _dragTargetPosition);
+                            AkSoundEngine.PostEvent("Unequip", gameObject);
                         }
                         else
                         {
+                            AkSoundEngine.PostEvent("UI_Fail", gameObject);
                             Dialog.Clear();
                             Dialog.Title.text = "Unable to move item!";
                             Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
@@ -282,6 +292,7 @@ public class InventoryMenu : MonoBehaviour
                             var otherPanel = panel == InventoryPanels[0] ? InventoryPanels[1] : InventoryPanels[0];
                             if (otherPanel.DropItem(item))
                             {
+                                AkSoundEngine.PostEvent("Equip", gameObject);
                                 cargoEvent.CargoBay.Remove(item);
                                 panel.RefreshCells();
                                 otherPanel.RefreshCells();
@@ -313,6 +324,7 @@ public class InventoryMenu : MonoBehaviour
                                 var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
                                 _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
                             }
+                            AkSoundEngine.PostEvent("UI_Success", gameObject);
                         }
                     }
                 }
@@ -326,6 +338,7 @@ public class InventoryMenu : MonoBehaviour
                             var otherPanel = panel == InventoryPanels[0] ? InventoryPanels[1] : InventoryPanels[0];
                             if (otherPanel.DropItem(item.EquippableItem))
                             {
+                                AkSoundEngine.PostEvent("Unequip", gameObject);
                                 entityEvent.Entity.Unequip(item);
                                 panel.RefreshCells();
                                 otherPanel.RefreshCells();
@@ -355,6 +368,7 @@ public class InventoryMenu : MonoBehaviour
                                 var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
                                 _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
                             }
+                            AkSoundEngine.PostEvent("UI_Success", gameObject);
                         }
                     }
                 }

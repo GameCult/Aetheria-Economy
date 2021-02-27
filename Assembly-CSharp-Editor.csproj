@@ -52,14 +52,66 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkSwitchInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseSetupWizard\AkPluginActivator.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkBankInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseMenu\Mac\AkWwiseMenu_Mac.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseMenu\Windows\AkWwiseMenu_Windows.cs" />
      <Compile Include="Assets\Scripts\Editor\SerializerTestWindow.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkRTPCPlayableInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkRoomPortalInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkRoomInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseWindows\AkWwiseTreeView.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseWindows\AkWwisePicker.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseWindows\AkWwiseComponentPicker.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkUnityEventHandlerInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkAmbientInspector.cs" />
      <Compile Include="Assets\Scripts\Editor\SpriteProcessor.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseMenu\Common\AkUnityPluginInstallerBase.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseWindows\AkWwiseProjectInfo.cs" />
      <Compile Include="Assets\Scripts\Editor\EditorDispatch.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseTypes\TriggerDrawer.cs" />
      <Compile Include="Assets\Scripts\Editor\DatabaseInspector.cs" />
      <Compile Include="Assets\Scripts\Editor\GameplaySettingsEditor.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkEnvironmentPortalInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseWindows\TreeViewControl\TreeViewItem.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseSetupWizard\AkXboxOneUtils.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseSetupWizard\AkWwiseSetupWizard.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkEventInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkGameObjListenerListDrawer.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseSetupWizard\AkWwisePostImportCallbackSetup.cs" />
+     <Compile Include="Assets\Wwise\Editor\EditorPlatformHelpers\Mac\AkMacPluginActivator.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseWindows\TreeViewControl\TreeViewControl.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkRoomAwareObjectInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseTypes\AcousticTextureDrawer.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseWindows\AkWwiseWWUBuilder.cs" />
      <Compile Include="Assets\Scripts\Editor\GalaxyEditor.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseTypes\StateDrawer.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseMenu\Common\AkWwiseIdConverter.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseTypes\RTPCDrawer.cs" />
      <Compile Include="Assets\Scripts\Editor\DatabaseView.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkEnvironmentInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkRTPCTrackInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseTypes\SwitchDrawer.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseTypes\AuxBusDrawer.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseTypes\BankDrawer.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkEventPlayableInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseWindows\AkWwiseProjectData.cs" />
      <Compile Include="Assets\com.unity.uiextensions\Editor\BezierLineRendererEditor.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseSetupWizard\AkUnitySettingsParser.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseSetupWizard\AkBuildPreprocessor.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkPortalManager.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseTypes\EventDrawer.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseWindows\AkWwiseXMLBuilder.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkAudioListenerInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseTypes\BaseTypeDrawer.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkStateInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseSetupWizard\AkWSAUtils.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseMenu\Common\AkUnityBuilderBase.cs" />
+     <Compile Include="Assets\Wwise\Editor\EditorPlatformHelpers\Windows\AkWindowsPluginActivator.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkSpatialAudioListenerInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkBaseInspector.cs" />
+     <Compile Include="Assets\Wwise\Editor\WwiseComponents\AkGameObjectInspector.cs" />
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
@@ -294,9 +346,6 @@
  <Reference Include="Remotion.Linq">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
  </Reference>
- <Reference Include="Newtonsoft.Json">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
- </Reference>
  <Reference Include="System.Memory">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
  </Reference>
@@ -306,20 +355,23 @@
  <Reference Include="nunit.framework">
  <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.ext.nunit@1.0.5/net35/unity-custom/nunit.framework.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.Burst.Unsafe">
+ <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.burst@1.4.3/Unity.Burst.Unsafe.dll</HintPath>
+ </Reference>
  <Reference Include="Google.Protobuf">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Google.Protobuf/lib/net45/Google.Protobuf.dll</HintPath>
  </Reference>
  <Reference Include="System.Buffers">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Buffers.dll</HintPath>
  </Reference>
- <Reference Include="Unity.Burst.Unsafe">
- <HintPath>E:/Projects/Aetheria-Economy/Library/PackageCache/com.unity.burst@1.4.3/Unity.Burst.Unsafe.dll</HintPath>
+ <Reference Include="Substance.Game">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
+ </Reference>
+ <Reference Include="Newtonsoft.Json">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
  </Reference>
  <Reference Include="QuickGraph">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Game">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance.Game.dll</HintPath>
  </Reference>
  <Reference Include="SourceUnityLib">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Source/Editor/SourceUnityLib.dll</HintPath>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Mac" BasePlatform="Mac" SchemaVersion="12" SoundbankVersion="135">
+	<RootPaths>
+		<ProjectRoot>E:\Projects\Aetheria-Economy\Aetheria-Economy_WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>E:\Projects\Aetheria-Economy\Aetheria-Economy_WwiseProject\.cache\Mac\</SourceFilesRoot>
+		<SoundBanksRoot>E:\Projects\Aetheria-Economy\Aetheria-Economy_WwiseProject\GeneratedSoundBanks\Mac\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>E:\Projects\Aetheria-Economy\Aetheria-Economy_WwiseProject\GeneratedSoundBanks\Mac</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1355168291" Language="SFX" Hash="2953616821">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="1551306167" Language="SFX" Hash="1859951076">
+			<ObjectPath>\SoundBanks\Default Work Unit\UI</ObjectPath>
+			<ShortName>UI</ShortName>
+			<Path>UI.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1878686274" Name="Drop" ObjectPath="\Events\Default Work Unit\Drop" DurationType="OneShot" DurationMin="1.471896" DurationMax="1.471896">
+					<IncludedMemoryFiles>
+						<File Id="409680203" Language="SFX">
+							<ShortName>putdown.wav</ShortName>
+							<Path>SFX\putdown_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="2412608643" Name="Equip" ObjectPath="\Events\Default Work Unit\Equip" DurationType="OneShot" DurationMin="1.147354" DurationMax="1.147354">
+					<IncludedMemoryFiles>
+						<File Id="286482309" Language="SFX">
+							<ShortName>equip.wav</ShortName>
+							<Path>SFX\equip_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="3978245845" Name="Pickup" ObjectPath="\Events\Default Work Unit\Pickup" DurationType="OneShot" DurationMin="0.881604" DurationMax="0.881604">
+					<IncludedMemoryFiles>
+						<File Id="375041892" Language="SFX">
+							<ShortName>pickup.wav</ShortName>
+							<Path>SFX\pickup_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="3050276906" Name="UI_Fail" ObjectPath="\Events\Default Work Unit\UI_Fail" DurationType="OneShot" DurationMin="0.070396" DurationMax="0.070396">
+					<IncludedMemoryFiles>
+						<File Id="628544089" Language="SFX">
+							<ShortName>blip2.wav</ShortName>
+							<Path>SFX\blip2_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="981465891" Name="UI_Success" ObjectPath="\Events\Default Work Unit\UI_Success" DurationType="OneShot" DurationMin="0.116646" DurationMax="0.116646">
+					<IncludedMemoryFiles>
+						<File Id="907378552" Language="SFX">
+							<ShortName>blip1.wav</ShortName>
+							<Path>SFX\blip1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="588409068" Name="Unequip" ObjectPath="\Events\Default Work Unit\Unequip" DurationType="OneShot" DurationMin="1.241646" DurationMax="1.241646">
+					<IncludedMemoryFiles>
+						<File Id="105294056" Language="SFX">
+							<ShortName>unequip.wav</ShortName>
+							<Path>SFX\unequip_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>
