@@ -87,9 +87,7 @@ public class ActionGameManager : MonoBehaviour
 
     void Start()
     {
-        // _transposer = DockCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
-        // _composer = DockCamera.GetCinemachineComponent<CinemachineComposer>();
-        //_lookAt = new GameObject().transform;
+        AkSoundEngine.RegisterGameObj(gameObject);
         
         ConsoleController.MessageReceiver = this;
         _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
@@ -182,6 +180,7 @@ public class ActionGameManager : MonoBehaviour
         {
             if (CurrentShip == null)
             {
+                AkSoundEngine.PostEvent("UI_Fail", gameObject);
                 ConfirmationDialog.Clear();
                 ConfirmationDialog.Title.text = "Can't undock. You dont have a ship!";
                 ConfirmationDialog.Show();
@@ -444,9 +443,12 @@ public class ActionGameManager : MonoBehaviour
                     GameplayUI.SetActive(false);
                     if(_lockingIndicators!=null) foreach(var (_, indicator, _) in _lockingIndicators)
                         indicator.GetComponent<Prototype>().ReturnToPool();
+                    AkSoundEngine.PostEvent("Dock", gameObject);
+                    return;
                 }
             }
         }
+        AkSoundEngine.PostEvent("Dock_Fail", gameObject);
     }
 
     public void Undock()
@@ -457,18 +459,21 @@ public class ActionGameManager : MonoBehaviour
             ConfirmationDialog.Clear();
             ConfirmationDialog.Title.text = "Can't undock. Missing cockpit component!";
             ConfirmationDialog.Show();
+            AkSoundEngine.PostEvent("UI_Fail", gameObject);
         }
         else if (CurrentShip.GetBehavior<Thruster>() == null)
         {
             ConfirmationDialog.Clear();
             ConfirmationDialog.Title.text = "Can't undock. Missing thruster component!";
             ConfirmationDialog.Show();
+            AkSoundEngine.PostEvent("UI_Fail", gameObject);
         }
         else if (CurrentShip.GetBehavior<Reactor>() == null)
         {
             ConfirmationDialog.Clear();
             ConfirmationDialog.Title.text = "Can't undock. Missing reactor component!";
             ConfirmationDialog.Show();
+            AkSoundEngine.PostEvent("UI_Fail", gameObject);
         }
         else if (CurrentShip.Parent.TryUndock(CurrentShip))
         {
@@ -528,11 +533,13 @@ public class ActionGameManager : MonoBehaviour
             _input.Player.Enable();
             ShipPanel.Display(CurrentShip, true);
             SchematicDisplay.ShowShip(CurrentShip);
+            AkSoundEngine.PostEvent("Undock", gameObject);
         }
         else
         {
             ConfirmationDialog.Title.text = "Can't undock. Must empty docking bay!";
             ConfirmationDialog.Show();
+            AkSoundEngine.PostEvent("UI_Fail", gameObject);
         }
     }
 

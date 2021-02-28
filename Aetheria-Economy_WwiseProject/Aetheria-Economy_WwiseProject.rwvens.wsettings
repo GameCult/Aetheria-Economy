@@ -3,13 +3,16 @@
 	<UserProjectSettingsInfo>
 		<UserProjectSettings Name="" ID="{9FB9938C-46B1-4C97-A524-371A23DC3EBF}">
 			<PropertyList>
-				<Property Name="AudioFilesImporter\Path" Type="string" Value="E:\Projects\Aetheria-Economy\Aetheria-Economy_WwiseProject\Originals\SFX\"/>
+				<Property Name="AudioFilesImporter\Path" Type="string" Value="D:\Google Drive\Gamecult\Aetheria\Music\WIP &amp; Ideas\Defirm\SFX completed\Docking-Undocking\"/>
 				<Property Name="Event Action List\{0E497EDC-A42D-4478-AF76-5114508A5B8B}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{3125BD51-8FFC-4E24-BD2E-D102896B8A0B}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{44FA1280-D160-4DB5-B7EB-AA6E4CFBB17A}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{507ECF50-2D22-4222-A984-367EF0411E8F}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{7DB8939E-DD1B-4B8C-B787-8C4440712523}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Event Action List\{89374ED6-A730-48E4-AAF7-0E1C575CE1C2}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{A64914D4-7F8A-4586-BB48-8FA3137E2F1F}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Event Action List\{BE28B971-A0E1-4D96-B576-1B68C4CA5AA9}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Event Action List\{CC95135D-D17F-4088-B23C-BF8238FCA221}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="EventView\FilterMode1" Type="int32" Value="2"/>
 				<Property Name="ExternalSourcesInputPath" Type="string">
 					<ValueList>

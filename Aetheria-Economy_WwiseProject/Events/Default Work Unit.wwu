@@ -69,6 +69,39 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Dock" ID="{CC95135D-D17F-4088-B23C-BF8238FCA221}">
+					<ChildrenList>
+						<Action Name="" ID="{8484998A-D398-4F8E-9028-6F4986F8C9BB}" ShortID="1067480388">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Aetheria_docking_spaceship_V2_1" ID="{032A1D4F-3BD6-4AC7-B619-799C3E968EC3}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Undock" ID="{89374ED6-A730-48E4-AAF7-0E1C575CE1C2}">
+					<ChildrenList>
+						<Action Name="" ID="{5209E7B6-5FBB-483C-B04D-EE58DA12145A}" ShortID="968319449">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Aetheria_undocking_spaceship_V2_1" ID="{8545BD8D-4232-45EC-B3BF-9FD8B4AE3598}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Dock_Fail" ID="{BE28B971-A0E1-4D96-B576-1B68C4CA5AA9}">
+					<ChildrenList>
+						<Action Name="" ID="{FDB56FA3-430B-4AA0-A91C-973CDCC6111F}" ShortID="70313087">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="blip2" ID="{B86B7D38-A9E2-4F1D-AF93-9256FEBA8749}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

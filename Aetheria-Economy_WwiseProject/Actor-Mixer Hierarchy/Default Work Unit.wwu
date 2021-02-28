@@ -157,6 +157,50 @@
 						<ActiveSource Name="unequip" ID="{C9CDFF70-33F9-4758-A169-0D52EC498508}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
+				<Sound Name="Aetheria_docking_spaceship_V2_1" ID="{032A1D4F-3BD6-4AC7-B619-799C3E968EC3}" ShortID="882150710">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Aetheria_docking_spaceship_V2_1" ID="{1EDDBD3A-F0B3-4C92-8A32-C682B4A9BD47}">
+							<Language>SFX</Language>
+							<AudioFile>Aetheria_docking_spaceship_V2.1.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="741366116"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Aetheria_docking_spaceship_V2_1" ID="{1EDDBD3A-F0B3-4C92-8A32-C682B4A9BD47}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
+				<Sound Name="Aetheria_undocking_spaceship_V2_1" ID="{8545BD8D-4232-45EC-B3BF-9FD8B4AE3598}" ShortID="884493620">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<AudioFileSource Name="Aetheria_undocking_spaceship_V2_1" ID="{2F310946-0054-4047-89FA-D9E572368CC9}">
+							<Language>SFX</Language>
+							<AudioFile>Aetheria_undocking_spaceship_V2.1.wav</AudioFile>
+							<MediaIDList>
+								<MediaID ID="217524873"/>
+							</MediaIDList>
+						</AudioFileSource>
+					</ChildrenList>
+					<ActiveSourceList>
+						<ActiveSource Name="Aetheria_undocking_spaceship_V2_1" ID="{2F310946-0054-4047-89FA-D9E572368CC9}" Platform="Linked"/>
+					</ActiveSourceList>
+				</Sound>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>

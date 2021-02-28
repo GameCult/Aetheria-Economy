@@ -5,10 +5,13 @@
 			<ChildrenList>
 				<SoundBank Name="UI" ID="{86130C21-81DD-4DB8-902A-F172CCD79666}">
 					<ObjectInclusionList>
+						<ObjectRef Name="Dock" ID="{CC95135D-D17F-4088-B23C-BF8238FCA221}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Drop" ID="{507ECF50-2D22-4222-A984-367EF0411E8F}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="UI_Success" ID="{0E497EDC-A42D-4478-AF76-5114508A5B8B}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Pickup" ID="{A64914D4-7F8A-4586-BB48-8FA3137E2F1F}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Undock" ID="{89374ED6-A730-48E4-AAF7-0E1C575CE1C2}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="UI_Fail" ID="{7DB8939E-DD1B-4B8C-B787-8C4440712523}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Dock_Fail" ID="{BE28B971-A0E1-4D96-B576-1B68C4CA5AA9}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Equip" ID="{44FA1280-D160-4DB5-B7EB-AA6E4CFBB17A}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="Unequip" ID="{3125BD51-8FFC-4E24-BD2E-D102896B8A0B}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>

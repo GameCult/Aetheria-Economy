@@ -16,11 +16,27 @@
 			<ShortName>Init</ShortName>
 			<Path>Init.bnk</Path>
 		</SoundBank>
-		<SoundBank Id="1551306167" Language="SFX" Hash="1859951076">
+		<SoundBank Id="1551306167" Language="SFX" Hash="1564929817">
 			<ObjectPath>\SoundBanks\Default Work Unit\UI</ObjectPath>
 			<ShortName>UI</ShortName>
 			<Path>UI.bnk</Path>
 			<IncludedEvents>
+				<Event Id="1944958176" Name="Dock" ObjectPath="\Events\Default Work Unit\Dock" DurationType="OneShot" DurationMin="1.426553" DurationMax="1.426553">
+					<IncludedMemoryFiles>
+						<File Id="741366116" Language="SFX">
+							<ShortName>Aetheria_docking_spaceship_V2.1.wav</ShortName>
+							<Path>SFX\Aetheria_docking_spaceship_V2.1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="2820966551" Name="Dock_Fail" ObjectPath="\Events\Default Work Unit\Dock_Fail" DurationType="OneShot" DurationMin="0.070396" DurationMax="0.070396">
+					<IncludedMemoryFiles>
+						<File Id="628544089" Language="SFX">
+							<ShortName>blip2.wav</ShortName>
+							<Path>SFX\blip2_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
 				<Event Id="1878686274" Name="Drop" ObjectPath="\Events\Default Work Unit\Drop" DurationType="OneShot" DurationMin="1.471896" DurationMax="1.471896">
 					<IncludedMemoryFiles>
 						<File Id="409680203" Language="SFX">
@@ -58,6 +74,14 @@
 						<File Id="907378552" Language="SFX">
 							<ShortName>blip1.wav</ShortName>
 							<Path>SFX\blip1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="2826728501" Name="Undock" ObjectPath="\Events\Default Work Unit\Undock" DurationType="OneShot" DurationMin="2.464853" DurationMax="2.464853">
+					<IncludedMemoryFiles>
+						<File Id="217524873" Language="SFX">
+							<ShortName>Aetheria_undocking_spaceship_V2.1.wav</ShortName>
+							<Path>SFX\Aetheria_undocking_spaceship_V2.1_10C4C929.wem</Path>
 						</File>
 					</IncludedMemoryFiles>
 				</Event>
