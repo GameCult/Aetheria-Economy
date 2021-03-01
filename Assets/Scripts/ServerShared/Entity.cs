@@ -719,13 +719,10 @@ public abstract class Entity
             // For all cells on the border of the entity, radiate some heat into space, increasing the visibility of the ship
             if (Parent==null && !hullData.InteriorCells[v])
             {
-                // for(int i = 0; i<4; i++)
-                // {
-                    var rad = pow(NewTemperature[v.x, v.y], ItemManager.GameplaySettings.HeatRadiationExponent) *
-                              ItemManager.GameplaySettings.HeatRadiationMultiplier;
-                    NewTemperature[v.x, v.y] -= rad * delta / 4;
-                    r += rad;
-                // }
+                var rad = pow(NewTemperature[v.x, v.y], ItemManager.GameplaySettings.HeatRadiationExponent) *
+                          ItemManager.GameplaySettings.HeatRadiationMultiplier;
+                NewTemperature[v.x, v.y] -= rad * delta;
+                r += rad;
             }
 
             radiation += r;

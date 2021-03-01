@@ -211,11 +211,11 @@ public class SchematicDisplay : MonoBehaviour
             {
 
                 if (_radiators.Length == 1)
-                    RadiatorTemperatureLabel.text = $"{((int)(_radiators[0].Item.Temperature - 273.15f)).ToString()}°C";
+                    RadiatorTemperatureLabel.text = $"{((int)(_radiators[0].Temperature - 273.15f)).ToString()}°C";
                 else if (_radiators.Length > 1)
                     RadiatorTemperatureLabel.text =
-                        $"{((int)(_radiators.Min(r => r.Item.Temperature) - 273.15f)).ToString()}-" +
-                        $"{((int)(_radiators.Max(r => r.Item.Temperature) - 273.15f)).ToString()}°C";
+                        $"{((int)(_radiators.Min(r => r.Temperature) - 273.15f)).ToString()}-" +
+                        $"{((int)(_radiators.Max(r => r.Temperature) - 273.15f)).ToString()}°C";
 
                 if (_heatsinks.Length == 1)
                     HeatsinkTemperatureLabel.text = $"{((int)(_heatsinks[0].Item.Temperature - 273.15f)).ToString()}°C";

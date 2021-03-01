@@ -41,7 +41,7 @@ public class EntityInstance : MonoBehaviour
 
     public Dictionary<HardpointData, Transform[]> Barrels { get; private set; }
     public Dictionary<HardpointData, int> BarrelIndices { get; private set; }
-    public Dictionary<HardpointData, MeshRenderer> RadiatorMeshes { get; private set; }
+    public Dictionary<Radiator, MeshRenderer> RadiatorMeshes { get; private set; }
     public Transform LookAtPoint { get; private set; }
     public Entity Entity { get; private set; }
     public SectorRenderer SectorRenderer { get; private set; }
@@ -196,19 +196,23 @@ public class EntityInstance : MonoBehaviour
                 }
             }
         }
-        RadiatorMeshes = new Dictionary<HardpointData, MeshRenderer>();
+        RadiatorMeshes = new Dictionary<Radiator, MeshRenderer>();
         Barrels = new Dictionary<HardpointData, Transform[]>();
         BarrelIndices = new Dictionary<HardpointData, int>();
-        foreach (var hp in hullData.Hardpoints)
+        foreach (var radiator in entity.GetBehaviors<Radiator>())
         {
-            if (hp.Type == HardpointType.Radiator)
+            var hp = Entity.Hardpoints[radiator.Item.Position.x, radiator.Item.Position.y];
+            if (hp != null && hp.Type == HardpointType.Radiator)
             {
                 var mesh = RadiatorHardpoints.FirstOrDefault(x => x.name == hp.Transform);
                 if (mesh)
                 {
-                    RadiatorMeshes.Add(hp, mesh.Mesh);
+                    RadiatorMeshes.Add(radiator, mesh.Mesh);
                 }
             }
+        }
+        foreach (var hp in hullData.Hardpoints)
+        {
             if(hp.Type == HardpointType.Ballistic || hp.Type == HardpointType.Energy || hp.Type == HardpointType.Launcher)
             {
                 var whp = WeaponHardpoints.FirstOrDefault(x => x.name == hp.Transform);
@@ -422,14 +426,7 @@ public class EntityInstance : MonoBehaviour
         
         foreach (var x in RadiatorMeshes)
         {
-            var temp = 0f;
-            foreach (var v in x.Key.Shape.Coordinates)
-            {
-                var v2 = v + x.Key.Position;
-                temp += Entity.Temperature[v2.x, v2.y];
-            }
-            temp /= x.Key.Shape.Coordinates.Length;
-            x.Value.material.SetFloat("_Emission", Entity.ItemManager.GameplaySettings.TemperatureEmissionCurve.Evaluate(temp));
+            x.Value.material.SetFloat("_Emission", Entity.ItemManager.GameplaySettings.TemperatureEmissionCurve.Evaluate(x.Key.Temperature));
         }
 
         foreach (var x in Barrels)
