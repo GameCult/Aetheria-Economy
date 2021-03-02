@@ -66,6 +66,8 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
         
         // Temperature ratio would cause more waste heat than pump capacity, stop executing
         if (tempRatio > PumpedHeat / WasteHeat) return true;
+
+        if (!Entity.TryConsumeEnergy(EnergyUsage * tempRatio * delta)) return false;
         
         var pumpedHeat = PumpedHeat * max(itemTemperature - _data.TemperatureFloor, 0);
         
@@ -73,7 +75,6 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
         if (pumpedHeat < 0.01f) return true;
         
         var wasteHeat = WasteHeat * tempRatio;
-        Entity.Energy -= EnergyUsage * tempRatio * delta;
         
         Item.AddHeat((wasteHeat - pumpedHeat) * delta);
         Temperature += pumpedHeat / Context.GetThermalMass(Item.EquippableItem) * delta;

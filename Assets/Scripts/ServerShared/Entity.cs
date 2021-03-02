@@ -32,7 +32,6 @@ public abstract class Entity
     public float[,] NewTemperature;
     public bool2[,] HullConductivity;
     public float[,] ThermalMass;
-    public float Energy;
 
     public readonly ReactiveCollection<EquippedItem> Equipment = new ReactiveCollection<EquippedItem>();
     public readonly ReactiveCollection<EquippedCargoBay> CargoBays = new ReactiveCollection<EquippedCargoBay>();
@@ -68,6 +67,8 @@ public abstract class Entity
     
     private EquippedItem[] _orderedEquipment;
     private List<Weapon> _weapons = new List<Weapon>();
+    private List<Capacitor> _capacitors = new List<Capacitor>();
+    private List<Reactor> _reactors = new List<Reactor>();
     protected bool _active;
     
     public IEnumerable<Weapon> Weapons
@@ -320,8 +321,14 @@ public abstract class Entity
             }
         Mass -= itemData.Mass;
         foreach (var b in item.Behaviors)
+        {
             if (b is Weapon weapon)
-                _weapons.Add(weapon);
+                _weapons.Remove(weapon);
+            if(b is Capacitor capacitor)
+                _capacitors.Remove(capacitor);
+            if(b is Reactor reactor)
+                _reactors.Remove(reactor);
+        }
 
         return item.EquippableItem;
     }
@@ -467,6 +474,11 @@ public abstract class Entity
             {
                 equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
                 Equipment.Add(equippedItem);
+                foreach (var b in equippedItem.Behaviors)
+                {
+                    if(b is Capacitor capacitor)
+                        _capacitors.Add(capacitor);
+                }
             }
         }
         else
@@ -474,8 +486,12 @@ public abstract class Entity
             equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
             Equipment.Add(equippedItem);
             foreach (var b in equippedItem.Behaviors)
+            {
                 if (b is Weapon weapon)
                     _weapons.Add(weapon);
+                if(b is Reactor reactor)
+                    _reactors.Add(reactor);
+            }
         }
             
         foreach (var i in itemData.Shape.Coordinates)
@@ -524,6 +540,39 @@ public abstract class Entity
         ship.Activate();
 
         return true;
+    }
+
+    public bool TryConsumeEnergy(float energy)
+    {
+        if (energy < .01f) return true;
+        int chargedCapacitors;
+        do
+        {
+            chargedCapacitors = _capacitors.Count(capacitor => capacitor.Charge > .01f);
+            var chargeToRemove = energy;
+            foreach (var cap in _capacitors)
+            {
+                if(cap.Charge > 0.01f)
+                {
+                    var chargeRemoved = min(chargeToRemove / chargedCapacitors, cap.Charge);
+                    cap.AddCharge(-chargeRemoved);
+                    energy -= chargeRemoved;
+                }
+            }
+        } while (chargedCapacitors > 0 && energy > .01f);
+
+        if (energy < .01f) return true;
+
+        int onlineReactors = _reactors.Count(reactor=>reactor.Item.Online);
+        foreach (var reactor in _reactors)
+        {
+            if (reactor.Item.Online)
+            {
+                reactor.ConsumeEnergy(energy / onlineReactors);
+            }
+        }
+
+        return onlineReactors > 0;
     }
 
     private void AddChild(Entity entity)
@@ -856,7 +905,14 @@ public class EquippedItem
                 }
             }
         }
-        
+    }
+
+    public T GetBehavior<T>() where T : class, IBehavior
+    {
+        foreach (var behavior in Behaviors)
+            if (behavior is T b)
+                return b;
+        return null;
     }
 }
 

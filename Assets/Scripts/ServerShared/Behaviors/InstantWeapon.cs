@@ -153,6 +153,11 @@ public class InstantWeapon : Weapon, IProgressBehavior
         _burstTimer += delta;
         while (_burstRemaining > 0 && _burstTimer > 0)
         {
+            if (!Entity.TryConsumeEnergy(Energy))
+            {
+                _burstRemaining = 0;
+                return false;
+            }
             // If 1 ammo is consumed per shot in the burst, perform ammo consumption here
             // UseAmmo returns false when triggering reload; cancel firing if that is the case
             if (!_data.SingleAmmoBurst && !UseAmmo()) return false;
@@ -162,7 +167,6 @@ public class InstantWeapon : Weapon, IProgressBehavior
             OnFire?.Invoke();
             Item.AddHeat(Heat);
             Entity.VisibilitySources[this] = Visibility;
-            Entity.Energy -= Energy;
         }
         return true;
     }

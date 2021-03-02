@@ -239,14 +239,14 @@ public class SchematicDisplay : MonoBehaviour
                 if (_capacitors.Length == 0)
                 {
                     EnergyFill.anchorMax = Vector2.up;
-                    EnergyLabel.text = _reactor.Surplus.SignificantDigits(3);
+                    EnergyLabel.text = _reactor.Draw.SignificantDigits(3);
                 }
                 else
                 {
                     var charge = _capacitors.Sum(x => x.Charge);
                     var maxCharge = _capacitors.Sum(x => x.Capacity);
                     EnergyFill.anchorMax = new Vector2(charge / maxCharge, 1);
-                    EnergyLabel.text = $"{((int)charge).ToString()}/{((int)maxCharge).ToString()} + ({((int)_reactor.Surplus).ToString()})";
+                    EnergyLabel.text = $"{((int)charge).ToString()}/{((int)maxCharge).ToString()} + ({((int)_reactor.Draw).ToString()})";
                 }
             }
             else

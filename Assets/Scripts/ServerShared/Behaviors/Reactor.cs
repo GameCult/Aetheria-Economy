@@ -39,7 +39,7 @@ public class Reactor : IBehavior, IOrderedBehavior
     public EquippedItem Item { get; }
     public ItemManager Context { get; }
     
-    public float Surplus { get; private set; }
+    public float Draw { get; private set; }
 
     public int Order => 100;
 
@@ -56,10 +56,20 @@ public class Reactor : IBehavior, IOrderedBehavior
         _capacitors = entity.GetBehaviors<Capacitor>().ToList();
         entity.Equipment.ObserveAdd().Subscribe(onAdd =>
         {
-            var cap = onAdd.Value.Behaviors.FirstOrDefault(x => x is Capacitor);
-            if (cap != null)
-                _capacitors.Add((Capacitor) cap);
+            var capacitor = onAdd.Value.GetBehavior<Capacitor>();
+            if (capacitor != null) _capacitors.Add(capacitor);
         });
+        entity.Equipment.ObserveRemove().Subscribe(onRemove =>
+        {
+            var capacitor = onRemove.Value.GetBehavior<Capacitor>();
+            if (capacitor != null) _capacitors.Remove(capacitor);
+        });
+        
+    }
+
+    public void ConsumeEnergy(float energy)
+    {
+        Draw += energy;
     }
 
     public bool Execute(float delta)
@@ -67,63 +77,54 @@ public class Reactor : IBehavior, IOrderedBehavior
         var charge = Context.Evaluate(_data.Charge, Item.EquippableItem, Entity) * delta;
         var efficiency = Context.Evaluate(_data.Efficiency, Item.EquippableItem, Entity);
 
-        Item.AddHeat(charge / efficiency);
-        Entity.Energy += charge;
+        // This behavior executes last, so any components drawing power have already done so
+        
+        // Subtract the baseline charge from draw
+        Draw -= charge;
+        
+        // Generate heat using baseline efficiency
+        var heat = charge / efficiency;
 
-        Surplus = Entity.Energy;
-        
-        // We have an energy deficit, try to get some energy out of our capacitors first
-        if (Entity.Energy < 0)
-        {
-            int chargedCapacitors = 0;
-            do
-            {
-                chargedCapacitors = 0;
-                var chargeToRemove = -Entity.Energy;
-                foreach (var cap in _capacitors)
-                {
-                    if(cap.Charge > 0.01f)
-                    {
-                        chargedCapacitors++;
-                        var chargeRemoved = min(chargeToRemove / chargedCapacitors, cap.Charge);
-                        cap.AddCharge(-chargeRemoved);
-                        Entity.Energy += chargeRemoved;
-                    }
-                }
-            } while (chargedCapacitors > 0 && Entity.Energy < -.01f);
-        }
-        
-        // We still have an energy deficit, have to overload the reactor, run at reduced efficiency
-        if (Entity.Energy < -.01f)
+        // We have an energy deficit, have to overload the reactor
+        if (Draw > .01f)
         {
             var overloadEfficiency = Context.Evaluate(_data.OverloadEfficiency, Item.EquippableItem, Entity);
-            Item.AddHeat(-Entity.Energy / overloadEfficiency); 
-            Entity.Energy = 0;
+            
+            // Generate heat using overload efficiency, usually much less efficient!
+            heat += Draw / overloadEfficiency;
+            
+            // Overload power will always neutralize the energy deficit
+            Draw = 0;
         }
 
         // We have an energy surplus, try to store energy in our capacitors
-        if (Entity.Energy > .01f)
+        if (Draw < -.01f)
         {
-            Capacitor[] capacitors;
+            int nonFullCapacitorCount;
             do
             {
-                var chargeToAdd = Entity.Energy;
-                capacitors = _capacitors.Where(x => x.Charge < x.Capacity - .01f).ToArray();
-                foreach (var cap in capacitors)
+                var chargeToAdd = -Draw;
+                nonFullCapacitorCount = _capacitors.Count(c => c.Charge < c.Capacity - .01f);
+                foreach (var capacitor in _capacitors)
                 {
-                    var chargeAdded = min(chargeToAdd / capacitors.Length, cap.Capacity - cap.Charge);
-                    cap.AddCharge(chargeAdded);
-                    Entity.Energy -= chargeAdded;
+                    if (capacitor.Charge < capacitor.Capacity - .01f)
+                    {
+                        var chargeAdded = min(chargeToAdd / nonFullCapacitorCount, capacitor.Capacity - capacitor.Charge);
+                        capacitor.AddCharge(chargeAdded);
+                        Draw += chargeAdded;
+                    }
                 }
-            } while (capacitors.Length > 0 && Entity.Energy < -.01f);
+            } while (nonFullCapacitorCount > 0 && Draw < -.01f);
         }
 
         // We still have an energy surplus, try to throttle the reactor to reduce heat generation
-        if (Entity.Energy > .01f)
+        if (Draw < -.01f)
         {
-            Item.AddHeat(-Entity.Energy / efficiency * (1 - 1 / Context.Evaluate(_data.ThrottlingFactor, Item.EquippableItem, Entity)));
-            Entity.Energy = 0;
+            heat -= Draw / efficiency * (1 - 1 / Context.Evaluate(_data.ThrottlingFactor, Item.EquippableItem, Entity));
+            Draw = 0;
         }
+        
+        Item.AddHeat(heat);
         return true;
     }
 }

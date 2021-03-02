@@ -42,7 +42,6 @@ public class EnergyDraw : IBehavior
 
     public bool Execute(float delta)
     {
-        Entity.Energy -= Context.Evaluate(_data.EnergyDraw, Item.EquippableItem, Entity) * (_data.PerSecond ? delta : 1);
-        return true;
+        return Entity.TryConsumeEnergy(Context.Evaluate(_data.EnergyDraw, Item.EquippableItem, Entity) * (_data.PerSecond ? delta : 1));
     }
 }

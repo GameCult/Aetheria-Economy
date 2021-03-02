@@ -67,6 +67,12 @@ public class ConstantWeapon : Weapon, IProgressBehavior
         base.Execute(delta);
         if (_firing)
         {
+            if (!Entity.TryConsumeEnergy(Context.Evaluate(_data.Energy, Item.EquippableItem, Entity) * delta))
+            {
+                _firing = false;
+                OnStopFiring?.Invoke();
+                return false;
+            }
             if (_data.AmmoType != Guid.Empty)
             {
                 if (_reloading)
@@ -111,7 +117,6 @@ public class ConstantWeapon : Weapon, IProgressBehavior
             
             Item.AddHeat(Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta);
             Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
-            Entity.Energy -= Context.Evaluate(_data.Energy, Item.EquippableItem, Entity) * delta;
         }
         return true;
     }
