@@ -90,6 +90,8 @@ public abstract class Entity
     
     public Subject<(int2 pos, float damage)> ArmorDamage = new Subject<(int2, float)>();
     public Subject<(EquippedItem item, float damage)> ItemDamage = new Subject<(EquippedItem, float)>();
+    public Subject<EquippedItem> ItemOffline = new Subject<EquippedItem>();
+    public Subject<EquippedItem> ItemOnline = new Subject<EquippedItem>();
     public Subject<float> HullDamage = new Subject<float>();
     public Subject<Entity> Docked = new Subject<Entity>();
     
@@ -474,25 +476,26 @@ public abstract class Entity
             {
                 equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
                 Equipment.Add(equippedItem);
-                foreach (var b in equippedItem.Behaviors)
-                {
-                    if(b is Capacitor capacitor)
-                        _capacitors.Add(capacitor);
-                }
             }
         }
         else
         {
             equippedItem = new EquippedItem(ItemManager, item, hullCoord, this);
             Equipment.Add(equippedItem);
-            foreach (var b in equippedItem.Behaviors)
-            {
-                if (b is Weapon weapon)
-                    _weapons.Add(weapon);
-                if(b is Reactor reactor)
-                    _reactors.Add(reactor);
-            }
         }
+        
+        foreach (var b in equippedItem.Behaviors)
+        {
+            if (b is Weapon weapon)
+                _weapons.Add(weapon);
+            if(b is Capacitor capacitor)
+                _capacitors.Add(capacitor);
+            if(b is Reactor reactor)
+                _reactors.Add(reactor);
+        }
+
+        equippedItem.OnEnable += () => ItemOnline.OnNext(equippedItem);
+        equippedItem.OnDisable += () => ItemOffline.OnNext(equippedItem);
             
         foreach (var i in itemData.Shape.Coordinates)
         {

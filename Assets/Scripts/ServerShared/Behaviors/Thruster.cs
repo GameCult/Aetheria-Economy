@@ -61,6 +61,7 @@ public class Thruster : IAnalogBehavior
         var itemCenter = hullData.Shape.Inset(itemData.Shape, item.Position, item.EquippableItem.Rotation).CenterOfMass;
         var toCenter = hullCenter - itemCenter;
         Torque = -dot(normalize(toCenter), float2(1, 0).Rotate(item.EquippableItem.Rotation));
+        Thrust = Context.Evaluate(_data.Thrust, Item.EquippableItem, Entity);
     }
 
     public bool Execute(float delta)
