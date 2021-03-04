@@ -57,9 +57,9 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
 
     public bool Execute(float delta)
     {
-        PumpedHeat = Context.Evaluate(_data.PumpedHeat, Item.EquippableItem, Entity);
-        WasteHeat = Context.Evaluate(_data.WasteHeat, Item.EquippableItem, Entity);
-        EnergyUsage = Context.Evaluate(_data.EnergyUsage, Item.EquippableItem, Entity);
+        PumpedHeat = Context.Evaluate(_data.PumpedHeat, Item);
+        WasteHeat = Context.Evaluate(_data.WasteHeat, Item);
+        EnergyUsage = Context.Evaluate(_data.EnergyUsage, Item);
 
         var itemTemperature = Item.Temperature;
         var tempRatio = max(Temperature / itemTemperature, 1);
@@ -84,7 +84,7 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
 
     public void Update(float delta)
     {
-        Emissivity = Context.Evaluate(_data.Emissivity, Item.EquippableItem, Entity);
+        Emissivity = Context.Evaluate(_data.Emissivity, Item);
         var rad = pow(Temperature, Context.GameplaySettings.HeatRadiationExponent) * Context.GameplaySettings.HeatRadiationMultiplier * Emissivity;
         Temperature -= rad * delta;
         Entity.VisibilitySources[this] = rad;

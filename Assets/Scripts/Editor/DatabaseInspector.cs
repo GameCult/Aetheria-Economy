@@ -1118,8 +1118,10 @@ public class DatabaseInspector : EditorWindow
                     GUILayout.Label("", GUILayout.Width(width));
                     if (!isSimple)
                     {
-                        // GUILayout.Label("H", _labelStyle);
-                        // value.HeatDependent = Toggle(value.HeatDependent);
+                        GUILayout.Label("H", _labelStyle);
+                        value.HeatDependent = Toggle(value.HeatDependent);
+                        GUILayout.Label("HEx", _labelStyle, GUILayout.Width(labelWidth + 5));
+                        value.HeatExponentMultiplier = DelayedFloatField(value.HeatExponentMultiplier);
                         GUILayout.Label("D", _labelStyle);
                         value.DurabilityDependent = Toggle(value.DurabilityDependent);
                         GUILayout.Label("QEx", _labelStyle, GUILayout.Width(labelWidth + 5));

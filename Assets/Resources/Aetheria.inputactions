@@ -148,6 +148,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Toggle Heatsinks",
+                    "type": "Button",
+                    "id": "e6c6ff6a-4ac2-4e53-a3c9-9461f52e723f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -533,6 +541,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Target Nearest",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "71ac6088-1e18-4810-86be-1179918dd4a2",
+                    "path": "<Keyboard>/#(H)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Heatsinks",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

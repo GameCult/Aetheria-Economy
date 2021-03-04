@@ -53,8 +53,8 @@ public class Capacitor : IBehavior
 
     public bool Execute(float delta)
     {
-        Capacity = Context.Evaluate(_data.Capacity, Item.EquippableItem, Entity);
-        Efficiency = Context.Evaluate(_data.Efficiency, Item.EquippableItem, Entity);
+        Capacity = Context.Evaluate(_data.Capacity, Item);
+        Efficiency = Context.Evaluate(_data.Efficiency, Item);
         return true;
     }
 }

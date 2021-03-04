@@ -71,11 +71,11 @@ public class LockWeapon : InstantWeapon
 
         if (Entity.Target.Value != null)
         {
-            LockSpeed = Context.Evaluate(_data.LockSpeed, Item.EquippableItem, Entity);
-            SensorImpact = Context.Evaluate(_data.SensorImpact, Item.EquippableItem, Entity);
-            LockAngle = Context.Evaluate(_data.LockAngle, Item.EquippableItem, Entity);
-            DirectionImpact = Context.Evaluate(_data.DirectionImpact, Item.EquippableItem, Entity);
-            Decay = Context.Evaluate(_data.Decay, Item.EquippableItem, Entity);
+            LockSpeed = Context.Evaluate(_data.LockSpeed, Item);
+            SensorImpact = Context.Evaluate(_data.SensorImpact, Item);
+            LockAngle = Context.Evaluate(_data.LockAngle, Item);
+            DirectionImpact = Context.Evaluate(_data.DirectionImpact, Item);
+            Decay = Context.Evaluate(_data.Decay, Item);
 
             var degrees = acos(dot(normalize(Entity.Target.Value.Position - Entity.Position), normalize(Entity.LookDirection))) * 57.2958f;
             if (degrees < LockAngle)

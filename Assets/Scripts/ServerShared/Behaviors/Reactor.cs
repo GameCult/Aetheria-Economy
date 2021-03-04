@@ -74,8 +74,8 @@ public class Reactor : IBehavior, IOrderedBehavior
 
     public bool Execute(float delta)
     {
-        var charge = Context.Evaluate(_data.Charge, Item.EquippableItem, Entity) * delta;
-        var efficiency = Context.Evaluate(_data.Efficiency, Item.EquippableItem, Entity);
+        var charge = Context.Evaluate(_data.Charge, Item) * delta;
+        var efficiency = Context.Evaluate(_data.Efficiency, Item);
 
         // This behavior executes last, so any components drawing power have already done so
         
@@ -88,7 +88,7 @@ public class Reactor : IBehavior, IOrderedBehavior
         // We have an energy deficit, have to overload the reactor
         if (Draw > .01f)
         {
-            var overloadEfficiency = Context.Evaluate(_data.OverloadEfficiency, Item.EquippableItem, Entity);
+            var overloadEfficiency = Context.Evaluate(_data.OverloadEfficiency, Item);
             
             // Generate heat using overload efficiency, usually much less efficient!
             heat += Draw / overloadEfficiency;
@@ -120,7 +120,7 @@ public class Reactor : IBehavior, IOrderedBehavior
         // We still have an energy surplus, try to throttle the reactor to reduce heat generation
         if (Draw < -.01f)
         {
-            heat -= Draw / efficiency * (1 - 1 / Context.Evaluate(_data.ThrottlingFactor, Item.EquippableItem, Entity));
+            heat -= Draw / efficiency * (1 - 1 / Context.Evaluate(_data.ThrottlingFactor, Item));
             Draw = 0;
         }
         

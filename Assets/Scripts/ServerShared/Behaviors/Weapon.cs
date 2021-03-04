@@ -68,6 +68,7 @@ public abstract class WeaponData : BehaviorData
 public abstract class Weapon : IActivatedBehavior
 {
     private WeaponData _data;
+    private EquippableItemData _itemData;
     
     public Entity Entity { get; }
     public EquippedItem Item { get; }
@@ -89,6 +90,7 @@ public abstract class Weapon : IActivatedBehavior
     public float Visibility { get; protected set; }
     public float Spread { get; protected set; }
     public float Velocity { get; protected set; }
+    public float Wear { get; protected set; }
 
     protected bool _firing;
 
@@ -104,22 +106,24 @@ public abstract class Weapon : IActivatedBehavior
         Entity = entity;
         Item = item;
         _data = data;
+        _itemData = context.GetData(item.EquippableItem);
     }
 
     public virtual void ResetEvents(){}
 
     protected virtual void UpdateStats()
     {
-        Damage = Context.Evaluate(_data.Damage, Item.EquippableItem, Entity);
-        Penetration = Context.Evaluate(_data.Penetration, Item.EquippableItem, Entity);
-        DamageSpread = Context.Evaluate(_data.DamageSpread, Item.EquippableItem, Entity);
-        MinRange = Context.Evaluate(_data.MinRange, Item.EquippableItem, Entity);
-        Range = Context.Evaluate(_data.Range, Item.EquippableItem, Entity);
-        Energy = Context.Evaluate(_data.Energy, Item.EquippableItem, Entity);
-        Heat = Context.Evaluate(_data.Heat, Item.EquippableItem, Entity);
-        Visibility = Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
-        Spread = Context.Evaluate(_data.Spread, Item.EquippableItem, Entity);
-        Velocity = Context.Evaluate(_data.Velocity, Item.EquippableItem, Entity);
+        Damage = Context.Evaluate(_data.Damage, Item);
+        Penetration = Context.Evaluate(_data.Penetration, Item);
+        DamageSpread = Context.Evaluate(_data.DamageSpread, Item);
+        MinRange = Context.Evaluate(_data.MinRange, Item);
+        Range = Context.Evaluate(_data.Range, Item);
+        Energy = Context.Evaluate(_data.Energy, Item);
+        Heat = Context.Evaluate(_data.Heat, Item);
+        Visibility = Context.Evaluate(_data.Visibility, Item);
+        Spread = Context.Evaluate(_data.Spread, Item);
+        Velocity = Context.Evaluate(_data.Velocity, Item);
+        Wear = Context.Evaluate(_itemData.WearDamage, Item);
     }
 
     public virtual bool Execute(float delta)

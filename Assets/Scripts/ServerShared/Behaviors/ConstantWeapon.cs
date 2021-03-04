@@ -67,7 +67,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior
         base.Execute(delta);
         if (_firing)
         {
-            if (!Entity.TryConsumeEnergy(Context.Evaluate(_data.Energy, Item.EquippableItem, Entity) * delta))
+            if (!Entity.TryConsumeEnergy(Context.Evaluate(_data.Energy, Item) * delta))
             {
                 _firing = false;
                 OnStopFiring?.Invoke();
@@ -114,9 +114,10 @@ public class ConstantWeapon : Weapon, IProgressBehavior
                     }
                 }
             }
-            
-            Item.AddHeat(Context.Evaluate(_data.Heat, Item.EquippableItem, Entity) * delta);
-            Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
+
+            Item.EquippableItem.Durability -= Wear * delta;
+            Item.AddHeat(Context.Evaluate(_data.Heat, Item) * delta);
+            Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item);
         }
         return true;
     }

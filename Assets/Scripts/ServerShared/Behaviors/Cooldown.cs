@@ -56,6 +56,6 @@ public class Cooldown : IBehavior, IAlwaysUpdatedBehavior, IProgressBehavior
 
     public void Update(float delta)
     {
-        _cooldown -= delta / Context.Evaluate(_data.Cooldown, Item.EquippableItem, Entity);
+        _cooldown -= delta / Context.Evaluate(_data.Cooldown, Item);
     }
 }

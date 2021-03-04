@@ -92,9 +92,9 @@ public class InstantWeapon : Weapon, IProgressBehavior
     protected override void UpdateStats()
     {
         base.UpdateStats();
-        BurstCount = Context.Evaluate(_data.Count, Item.EquippableItem, Entity);
-        BurstTime = Context.Evaluate(_data.BurstTime, Item.EquippableItem, Entity);
-        Cooldown = Context.Evaluate(_data.Cooldown, Item.EquippableItem, Entity);
+        BurstCount = Context.Evaluate(_data.Count, Item);
+        BurstTime = Context.Evaluate(_data.BurstTime, Item);
+        Cooldown = Context.Evaluate(_data.Cooldown, Item);
 
         Damage /= (int) BurstCount;
         Heat /= (int) BurstCount;
@@ -165,6 +165,7 @@ public class InstantWeapon : Weapon, IProgressBehavior
             _burstRemaining--;
             _burstTimer -= _burstInterval;
             OnFire?.Invoke();
+            Item.EquippableItem.Durability -= Wear;
             Item.AddHeat(Heat);
             Entity.VisibilitySources[this] = Visibility;
         }

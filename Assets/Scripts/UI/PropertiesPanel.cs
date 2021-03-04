@@ -386,7 +386,7 @@ public class PropertiesPanel : MonoBehaviour
 						else if (fieldType == typeof(PerformanceStat))
 						{
 							var stat = (PerformanceStat) field.GetValue(behavior);
-							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear, entity).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
 						}
 					}
 				}

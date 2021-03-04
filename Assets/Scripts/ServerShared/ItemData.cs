@@ -290,6 +290,15 @@ public abstract class EquippableItemData : CraftedItemData
 
     [InspectableField, JsonProperty("durabilityExponent"), Key(15), SimplePerformanceStat]
     public PerformanceStat DurabilityExponent = new PerformanceStat();
+
+    [InspectableField, JsonProperty("heatExponent"), Key(16), SimplePerformanceStat]
+    public PerformanceStat HeatExponent = new PerformanceStat();
+    
+    [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(17)]
+    public float4[] HeatPerformanceCurve;
+
+    [InspectableField, JsonProperty("wearDamage"), Key(18)]
+    public PerformanceStat WearDamage = new PerformanceStat();
     
     [IgnoreMember]
     public abstract HardpointType HardpointType { get; }
@@ -297,12 +306,42 @@ public abstract class EquippableItemData : CraftedItemData
     [IgnoreMember] private const int STEPS = 64;
 
     [IgnoreMember] private float? _optimum;
+    
+    [IgnoreMember]
+    public float OptimalTemperature
+    {
+        get
+        {
+            if (_optimum==null)
+            {
+                var samples = Enumerable.Range(0, STEPS).Select(i => (float) i / STEPS).ToArray();
+                float max = 0;
+                _optimum = 0;
+                foreach (var f in samples)
+                {
+                    var p = HeatPerformanceCurve?.Evaluate(f)??0;
+                    if (p > max)
+                    {
+                        max = p;
+                        _optimum = f;
+                    }
+                }
+            }
+
+            return (float) (MinimumTemperature + _optimum * (MaximumTemperature - MinimumTemperature));
+        }
+    }
+
+    public float Performance(float temperature)
+    {
+        return saturate(HeatPerformanceCurve.Evaluate(unlerp(MinimumTemperature, MaximumTemperature, temperature)));
+    }
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GearData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpointType"), Key(16)]
+    [InspectableField, JsonProperty("hardpointType"), Key(19)]
     public HardpointType Hardpoint;
 
     [IgnoreMember] public override HardpointType HardpointType => Hardpoint;
@@ -311,7 +350,7 @@ public class GearData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class CargoBayData : EquippableItemData
 {
-    [InspectableField, JsonProperty("interiorShape"), Key(16)]
+    [InspectableField, JsonProperty("interiorShape"), Key(19)]
     public Shape InteriorShape;
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }
@@ -319,7 +358,7 @@ public class CargoBayData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class DockingBayData : CargoBayData
 {
-    [InspectableField, JsonProperty("maxSize"), Key(17)]
+    [InspectableField, JsonProperty("maxSize"), Key(20)]
     public int2 MaxSize;
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }
@@ -327,19 +366,19 @@ public class DockingBayData : CargoBayData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HullData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpoints"), Key(16)]  
+    [InspectableField, JsonProperty("hardpoints"), Key(19)]  
     public List<HardpointData> Hardpoints = new List<HardpointData>();
 
-    [InspectablePrefab, JsonProperty("prefab"), Key(17)]  
+    [InspectablePrefab, JsonProperty("prefab"), Key(20)]  
     public string Prefab;
 
-    [InspectableField, JsonProperty("hullType"), Key(18)]
+    [InspectableField, JsonProperty("hullType"), Key(21)]
     public HullType HullType;
 
-    [InspectableField, JsonProperty("gridOffset"), Key(19)]
+    [InspectableField, JsonProperty("gridOffset"), Key(22)]
     public float GridOffset;
 
-    [InspectableField, JsonProperty("armor"), Key(20)]
+    [InspectableField, JsonProperty("armor"), Key(23)]
     public float Armor;
 
     [IgnoreMember]
@@ -410,11 +449,14 @@ public class PerformanceStat
     [JsonProperty("durabilityDependent"), Key(2)] 
     public bool DurabilityDependent;
 
-    // [JsonProperty("heatDependent"), Key(3)] 
-    // public bool HeatDependent;
-
     [JsonProperty("qualityExponent"), Key(3)] 
     public float QualityExponent;
+
+    [JsonProperty("heatDependent"), Key(4)] 
+    public bool HeatDependent;
+
+    [JsonProperty("heatExponentMultiplier"), Key(5)] 
+    public float HeatExponentMultiplier = 1;
     
     //[JsonProperty("id"), Key(5)]  public Guid ID = Guid.NewGuid();
 

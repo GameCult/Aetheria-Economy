@@ -59,7 +59,7 @@ public class Sensor : IBehavior
                 var next = saturate(
                     previous +
                     entity.Visibility *
-                    Context.Evaluate(_data.Sensitivity, Item.EquippableItem, Entity) *
+                    Context.Evaluate(_data.Sensitivity, Item) *
                     _data.SensitivityCurve.Evaluate(angle / PI) *
                     delta / dist);
                 next *= 1 - Context.GameplaySettings.TargetInfoDecay * delta;

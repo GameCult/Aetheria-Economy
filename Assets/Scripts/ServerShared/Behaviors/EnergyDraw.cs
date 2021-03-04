@@ -7,7 +7,7 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(12), RuntimeInspectable]
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20), RuntimeInspectable]
 public class EnergyDrawData : BehaviorData
 {
     [InspectableField, JsonProperty("draw"), Key(1), RuntimeInspectable]
@@ -42,6 +42,6 @@ public class EnergyDraw : IBehavior
 
     public bool Execute(float delta)
     {
-        return Entity.TryConsumeEnergy(Context.Evaluate(_data.EnergyDraw, Item.EquippableItem, Entity) * (_data.PerSecond ? delta : 1));
+        return Entity.TryConsumeEnergy(Context.Evaluate(_data.EnergyDraw, Item) * (_data.PerSecond ? delta : 1));
     }
 }

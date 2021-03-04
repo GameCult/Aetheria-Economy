@@ -86,7 +86,7 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
         foreach (var stat in _stats)
             (_data.Type == StatModifierType.Constant
                 ? stat.GetConstantModifiers(Entity)
-                : stat.GetScaleModifiers(Entity))[this] = Context.Evaluate(_data.Modifier, Item.EquippableItem, Entity);
+                : stat.GetScaleModifiers(Entity))[this] = Context.Evaluate(_data.Modifier, Item);
         return true;
     }
 

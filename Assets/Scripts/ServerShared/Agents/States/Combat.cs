@@ -18,8 +18,8 @@ public class CombatState : BaseState
         SampleDps();
         foreach (var weapon in _agent.Ship.Weapons)
         {
-            weapon.Item.OnDisable += SampleDps;
-            weapon.Item.OnEnable += SampleDps;
+            weapon.Item.OnOffline += SampleDps;
+            weapon.Item.OnOnline += SampleDps;
         }
     }
 

@@ -16,10 +16,10 @@ public class ConstantLightningManager : ConstantWeaponEffectManager
         var hp = source.Entity.Hardpoints[item.Position.x, item.Position.y];
         var barrel = source.GetBarrel(hp);
         p.Barrel = barrel;
-        p.Damage = source.Entity.ItemManager.Evaluate(data.Damage, item.EquippableItem, source.Entity);
-        p.Range = source.Entity.ItemManager.Evaluate(data.Range, item.EquippableItem, source.Entity);
-        p.Penetration = source.Entity.ItemManager.Evaluate(data.Penetration, item.EquippableItem, source.Entity);
-        p.Spread = source.Entity.ItemManager.Evaluate(data.DamageSpread, item.EquippableItem, source.Entity);
+        p.Damage = source.Entity.ItemManager.Evaluate(data.Damage, item);
+        p.Range = source.Entity.ItemManager.Evaluate(data.Range, item);
+        p.Penetration = source.Entity.ItemManager.Evaluate(data.Penetration, item);
+        p.Spread = source.Entity.ItemManager.Evaluate(data.DamageSpread, item);
         p.DamageType = data.DamageType;
         _bolts.Add(item, p);
     }

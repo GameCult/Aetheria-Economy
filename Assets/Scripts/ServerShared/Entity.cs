@@ -69,7 +69,27 @@ public abstract class Entity
     private List<Weapon> _weapons = new List<Weapon>();
     private List<Capacitor> _capacitors = new List<Capacitor>();
     private List<Reactor> _reactors = new List<Reactor>();
+    private List<Radiator> _heatsinks = new List<Radiator>();
     protected bool _active;
+
+    private bool _heatsinksEnabled = true;
+
+    public bool HeatsinksEnabled
+    {
+        get => _heatsinksEnabled;
+        set
+        {
+            if (value == _heatsinksEnabled) return;
+            _heatsinksEnabled = value;
+            foreach (var heatsink in _heatsinks)
+                heatsink.Item.Enabled = value;
+        }
+    }
+    
+    public bool Active
+    {
+        get => _active;
+    }
     
     public IEnumerable<Weapon> Weapons
     {
@@ -291,8 +311,11 @@ public abstract class Entity
         return quantityTransferred;
     }
 
-    public EquippableItem Unequip(EquippedItem item)
+    public EquippableItem TryUnequip(EquippedItem item)
     {
+        // Don't allow unequipping when the entity is active
+        if (_active) return null;
+        
         if (item.EquippableItem == null)
         {
             ItemManager.Log("Attempted to remove equipped item with no equippable item on it! This should be impossible!");
@@ -330,6 +353,8 @@ public abstract class Entity
                 _capacitors.Remove(capacitor);
             if(b is Reactor reactor)
                 _reactors.Remove(reactor);
+            if(b is Radiator heatsink)
+                _heatsinks.Remove(heatsink);
         }
 
         return item.EquippableItem;
@@ -396,6 +421,9 @@ public abstract class Entity
     // Check whether the given item will fit when its origin is placed at the given coordinate on the hull
     public bool ItemFits(EquippableItem item, int2 hullCoord)
     {
+        // Don't allow equipping while deployed
+        if (_active) return false;
+
         var itemData = ItemManager.GetData(item);
         var hullData = ItemManager.GetData(Hull) as HullData;
         return ItemFits(itemData, hullData, item, hullCoord);
@@ -403,6 +431,12 @@ public abstract class Entity
 
     public bool TryFindSpace(EquippableItem item, out int2 hullCoord)
     {
+        // Don't allow equipping while deployed
+        if (_active)
+        {
+            hullCoord = int2.zero;
+            return false;
+        }
         var itemData = ItemManager.GetData(item);
         var hullData = ItemManager.GetData(Hull) as HullData;
         
@@ -451,6 +485,9 @@ public abstract class Entity
     // Try to equip the given item to the given location
     public bool TryEquip(EquippableItem item, int2 hullCoord)
     {
+        // Don't allow equipping while deployed
+        if (_active) return false;
+        
         var itemData = ItemManager.GetData(item);
         var hullData = ItemManager.GetData(Hull) as HullData;
 
@@ -492,10 +529,12 @@ public abstract class Entity
                 _capacitors.Add(capacitor);
             if(b is Reactor reactor)
                 _reactors.Add(reactor);
+            if(b is Radiator heatsink)
+                _heatsinks.Add(heatsink);
         }
 
-        equippedItem.OnEnable += () => ItemOnline.OnNext(equippedItem);
-        equippedItem.OnDisable += () => ItemOffline.OnNext(equippedItem);
+        equippedItem.OnOnline += () => ItemOnline.OnNext(equippedItem);
+        equippedItem.OnOffline += () => ItemOffline.OnNext(equippedItem);
             
         foreach (var i in itemData.Shape.Coordinates)
         {
@@ -811,8 +850,10 @@ public class EquippedItem
     
     public Dictionary<int, BehaviorGroup> BehaviorGroups;
 
-    public event Action OnDisable;
-    public event Action OnEnable;
+    public bool Enabled = true;
+
+    public event Action OnOffline;
+    public event Action OnOnline;
     
     public float Conductivity { get; }
     
@@ -833,6 +874,11 @@ public class EquippedItem
             foreach (var x in InsetShape.Coordinates) sum += _entity.Temperature[x.x, x.y];
             return sum/InsetShape.Coordinates.Length;
         }
+    }
+    
+    public Entity Entity
+    {
+        get => _entity;
     }
 
     protected readonly ItemManager _itemManager;
@@ -882,22 +928,16 @@ public class EquippedItem
 
     public void Update(float delta)
     {
-        if (Temperature < _data.MinimumTemperature || Temperature > _data.MaximumTemperature)
-        {
-            _entity.ItemDamage.OnNext((this, delta));
-            EquippableItem.Durability -= delta;
-        }
-
         foreach (var behavior in Behaviors)
             if(behavior is IAlwaysUpdatedBehavior alwaysUpdatedBehavior) alwaysUpdatedBehavior.Update(delta);
 
         var previouslyOnline = _online;
         _online = EquippableItem.Durability > .01f && Temperature > _data.MinimumTemperature && Temperature < _data.MaximumTemperature;
 
-        if (!previouslyOnline && _online) OnEnable?.Invoke();
-        if (previouslyOnline && !_online) OnDisable?.Invoke(); 
+        if (!previouslyOnline && _online) OnOnline?.Invoke();
+        if (previouslyOnline && !_online) OnOffline?.Invoke(); 
 
-        if (_online)
+        if (Enabled && _online)
         {
             foreach (var group in BehaviorGroups.Values)
             {
@@ -958,6 +998,15 @@ public class EquippedCargoBay : EquippedItem
 
         return true;
     }
+    
+    public bool TryFindSpace(ItemInstance item)
+    {
+        if (item is SimpleCommodity simpleCommodity)
+            return TryFindSpace(simpleCommodity, out _);
+        if (item is CraftedItemInstance craftedItem)
+            return TryFindSpace(craftedItem, out _);
+        return false;
+    }
 
     // Tries to find a place to put the given items in the inventory
     // Will attempt to fill existing item stacks first
@@ -994,6 +1043,23 @@ public class EquippedCargoBay : EquippedItem
             }
         }
 
+        return false;
+    }
+
+    // Searches the cargo bay for a position where the item will fit, returns true when found
+    public bool TryFindSpace(CraftedItemInstance item, out int2 position)
+    {
+        // Search all the space in the cargo bay for an empty space where the item fits
+        foreach (var cargoCoord in Data.InteriorShape.Coordinates)
+        {
+            if (ItemFits(item, cargoCoord))
+            {
+                position = cargoCoord;
+                return true;
+            }
+        }
+
+        position = int2.zero;
         return false;
     }
     
@@ -1070,23 +1136,6 @@ public class EquippedCargoBay : EquippedItem
         Mass += _itemManager.GetMass(item);
         ThermalMass += _itemManager.GetThermalMass(item);
         return true;
-    }
-
-    // Searches the cargo bay for a position where the item will fit, returns true when found
-    public bool TryFindSpace(CraftedItemInstance item, out int2 position)
-    {
-        // Search all the space in the cargo bay for an empty space where the item fits
-        foreach (var cargoCoord in Data.InteriorShape.Coordinates)
-        {
-            if (ItemFits(item, cargoCoord))
-            {
-                position = cargoCoord;
-                return true;
-            }
-        }
-
-        position = int2.zero;
-        return false;
     }
 
     // Try to store the given item anywhere it will fit, returns true when the item was successfully stored

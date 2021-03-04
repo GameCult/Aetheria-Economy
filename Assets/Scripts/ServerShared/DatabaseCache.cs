@@ -18,6 +18,8 @@ public class DatabaseCache
     public event Action<DatabaseEntry> OnDataUpdateRemote;
     public event Action<DatabaseEntry> OnDataDeleteRemote;
 
+    private readonly object addLock = new object();
+
     public Action<string> Logger = Console.WriteLine;
 
     private readonly Dictionary<Guid, DatabaseEntry> _entries = new Dictionary<Guid, DatabaseEntry>();
@@ -28,32 +30,35 @@ public class DatabaseCache
 
     public void Add(DatabaseEntry entry, bool remote = false)
     {
-        if (entry != null)
+        lock(addLock)
         {
-            var exists = _entries.ContainsKey(entry.ID);
-            _entries[entry.ID] = entry;
-            var type = entry.GetType();
-            var types = type.GetParentTypes();
-            foreach (var t in types)
+            if (entry != null)
             {
-                if(!_types.ContainsKey(t))
-                    _types[t] = new Dictionary<Guid, DatabaseEntry>();
-                _types[t][entry.ID] = entry;
-            }
+                var exists = _entries.ContainsKey(entry.ID);
+                _entries[entry.ID] = entry;
+                var type = entry.GetType();
+                var types = type.GetParentTypes();
+                foreach (var t in types)
+                {
+                    if (!_types.ContainsKey(t))
+                        _types[t] = new Dictionary<Guid, DatabaseEntry>();
+                    _types[t][entry.ID] = entry;
+                }
 
-            if (remote)
-            {
-                if (exists)
-                    OnDataUpdateRemote?.Invoke(entry);
+                if (remote)
+                {
+                    if (exists)
+                        OnDataUpdateRemote?.Invoke(entry);
+                    else
+                        OnDataInsertRemote?.Invoke(entry);
+                }
                 else
-                    OnDataInsertRemote?.Invoke(entry);
-            }
-            else
-            {
-                if (exists)
-                    OnDataUpdateLocal?.Invoke(entry);
-                else
-                    OnDataInsertLocal?.Invoke(entry);
+                {
+                    if (exists)
+                        OnDataUpdateLocal?.Invoke(entry);
+                    else
+                        OnDataInsertLocal?.Invoke(entry);
+                }
             }
         }
     }

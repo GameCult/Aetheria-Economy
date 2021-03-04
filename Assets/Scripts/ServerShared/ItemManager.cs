@@ -273,21 +273,21 @@ public class ItemManager
     }
 
     // Returns stat using ship temperature and modifiers
-    public float Evaluate(PerformanceStat stat, EquippableItem item, Entity entity)
+    public float Evaluate(PerformanceStat stat, EquippedItem item)
     {
-        var itemData = GetData(item);
+        var itemData = GetData(item.EquippableItem);
     
-        //var heat = !stat.HeatDependent ? 1 : pow(itemData.Performance(entity.Temperature), Evaluate(itemData.HeatExponent,item));
-        var durability = !stat.DurabilityDependent ? 1 : pow(item.Durability / itemData.Durability, Evaluate(itemData.DurabilityExponent,item));
-        var quality = pow(Quality(stat, item), stat.QualityExponent);
+        var heat = !stat.HeatDependent ? 1 : pow(itemData.Performance(item.Temperature), Evaluate(itemData.HeatExponent, item.EquippableItem) * stat.HeatExponentMultiplier);
+        var durability = !stat.DurabilityDependent ? 1 : pow(item.EquippableItem.Durability / itemData.Durability, Evaluate(itemData.DurabilityExponent,item.EquippableItem));
+        var quality = pow(Quality(stat, item.EquippableItem), stat.QualityExponent);
 
         var scaleModifier = 1.0f;
-        foreach (var value in stat.GetScaleModifiers(entity).Values) scaleModifier = scaleModifier * value;
+        foreach (var value in stat.GetScaleModifiers(item.Entity).Values) scaleModifier = scaleModifier * value;
 
         float constantModifier = 0;
-        foreach (var value in stat.GetConstantModifiers(entity).Values) constantModifier += value;
+        foreach (var value in stat.GetConstantModifiers(item.Entity).Values) constantModifier += value;
 
-        var result = lerp(stat.Min, stat.Max, durability * quality) * scaleModifier + constantModifier;
+        var result = lerp(stat.Min, stat.Max, durability * quality * heat) * scaleModifier + constantModifier;
         if (float.IsNaN(result))
             return stat.Min;
         return result;

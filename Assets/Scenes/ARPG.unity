@@ -4547,6 +4547,9 @@ MonoBehaviour:
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   ListElementPrototype: {fileID: 1277237367}
   TriggerGroupPrototype: {fileID: 1564656282}
+  HeaderElementEnabledColor: {r: 0, g: 0, b: 0, a: 0}
+  HeaderElementDisabledColor: {r: 0, g: 0, b: 0, a: 0}
+  HeatsinkBackground: {fileID: 0}
   EnergyLabel: {fileID: 0}
   CockpitTemperatureLabel: {fileID: 0}
   RadiatorTemperatureLabel: {fileID: 0}
@@ -13279,7 +13282,7 @@ MonoBehaviour:
   Spacing: 16
   Ceiling: -400
   Floor: 5
-  HeightExponent: 10000
+  HeightExponent: 1000
   Heightmap: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   ParticleColors: {fileID: 2800000, guid: 56db63da398b2d04394ddbccedce943c, type: 3}
   GravityCamera: {fileID: 1537342003}
@@ -29466,6 +29469,9 @@ MonoBehaviour:
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   ListElementPrototype: {fileID: 232470599}
   TriggerGroupPrototype: {fileID: 1564656282}
+  HeaderElementEnabledColor: {r: 1, g: 1, b: 1, a: 0.078431375}
+  HeaderElementDisabledColor: {r: 1, g: 1, b: 1, a: 0.011764706}
+  HeatsinkBackground: {fileID: 661332569}
   EnergyLabel: {fileID: 804489113}
   CockpitTemperatureLabel: {fileID: 212527384}
   RadiatorTemperatureLabel: {fileID: 1752418078}

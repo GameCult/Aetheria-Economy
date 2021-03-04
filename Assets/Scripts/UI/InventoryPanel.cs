@@ -640,6 +640,21 @@ public class InventoryPanel : MonoBehaviour
         return false;
     }
 
+    public bool CanDropItem(ItemInstance item)
+    {
+        if (_displayedEntity != null && item is EquippableItem equippableItem)
+        {
+            return _displayedEntity.TryFindSpace(equippableItem, out _);
+        }
+
+        if (_displayedCargo != null)
+        {
+            return _displayedCargo.TryFindSpace(item);
+        }
+
+        return false;
+    }
+
     public bool DropItem(ItemInstance item)
     {
         if (_displayedEntity != null && item is EquippableItem equippableItem)

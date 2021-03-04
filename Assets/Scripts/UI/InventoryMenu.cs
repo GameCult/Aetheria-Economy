@@ -110,30 +110,34 @@ public class InventoryMenu : MonoBehaviour
                 }
                 else if (data is InventoryEntityEventData entityEvent)
                 {
-                    var item = entityEvent.Entity.GearOccupancy[entityEvent.Position.x, entityEvent.Position.y];
-                    if (item != null)
+                    if(!entityEvent.Entity.Active)
                     {
-                        var itemData = GameManager.ItemManager.GetData(item.EquippableItem);
-                        var hullData = GameManager.ItemManager.GetData(entityEvent.Entity.Hull);
-
-                        _originalRotation = item.EquippableItem.Rotation;
-                        _originalEquippedItem = entityEvent.Entity.GearOccupancy[data.Position.x, data.Position.y];
-                        _originalOccupancy = hullData.Shape.Inset(itemData.Shape, item.Position, item.EquippableItem.Rotation);
-                        _originalPanel = panel;
-                        _dragItem = item.EquippableItem;
-                        _dragCellOffset = item.Position - entityEvent.Position;
-                        _dragCells = _originalOccupancy.Coordinates
-                            .Select(v => Instantiate(panel.CellInstances[v], DragParent, true).transform).ToArray();
-                        foreach(var cell in _dragCells)
+                        var item = entityEvent.Entity.GearOccupancy[entityEvent.Position.x, entityEvent.Position.y];
+                        if (item != null)
                         {
-                            foreach (var component in cell.GetComponentsInChildren<ObservableTriggerBase>())
-                                component.enabled = false;
-                            cell.GetComponentInChildren<Image>().raycastTarget = false;
+                            var itemData = GameManager.ItemManager.GetData(item.EquippableItem);
+                            var hullData = GameManager.ItemManager.GetData(entityEvent.Entity.Hull);
+
+                            _originalRotation = item.EquippableItem.Rotation;
+                            _originalEquippedItem = entityEvent.Entity.GearOccupancy[data.Position.x, data.Position.y];
+                            _originalOccupancy = hullData.Shape.Inset(itemData.Shape, item.Position, item.EquippableItem.Rotation);
+                            _originalPanel = panel;
+                            _dragItem = item.EquippableItem;
+                            _dragCellOffset = item.Position - entityEvent.Position;
+                            _dragCells = _originalOccupancy.Coordinates
+                                .Select(v => Instantiate(panel.CellInstances[v], DragParent, true).transform).ToArray();
+                            foreach (var cell in _dragCells)
+                            {
+                                foreach (var component in cell.GetComponentsInChildren<ObservableTriggerBase>())
+                                    component.enabled = false;
+                                cell.GetComponentInChildren<Image>().raycastTarget = false;
+                            }
+
+                            _dragOffsets = _dragCells.Select(x => (Vector2) x.position - data.PointerEventData.position).ToArray();
+                            panel.IgnoreOccupancy = _originalOccupancy;
+                            panel.RefreshCells(_originalOccupancy.Expand().Coordinates);
+                            AkSoundEngine.PostEvent("Pickup", gameObject);
                         }
-                        _dragOffsets = _dragCells.Select(x => (Vector2) x.position - data.PointerEventData.position).ToArray();
-                        panel.IgnoreOccupancy = _originalOccupancy;
-                        panel.RefreshCells(_originalOccupancy.Expand().Coordinates);
-                        AkSoundEngine.PostEvent("Pickup", gameObject);
                     }
                 }
             });
@@ -166,7 +170,7 @@ public class InventoryMenu : MonoBehaviour
                     }
                     else if (data is InventoryEntityEventData entityEvent)
                     {
-                        if (entityEvent.Entity.Unequip(_originalEquippedItem) != null)
+                        if (entityEvent.Entity.TryUnequip(_originalEquippedItem) != null)
                         {
                             _dragTargetPanel.DropItem(_dragItem, _dragTargetPosition);
                             AkSoundEngine.PostEvent("Unequip", gameObject);
@@ -196,7 +200,7 @@ public class InventoryMenu : MonoBehaviour
                     }
                     else if (data is InventoryEntityEventData entityEvent)
                     {
-                        if (entityEvent.Entity.Unequip(_originalEquippedItem) == null)
+                        if (entityEvent.Entity.TryUnequip(_originalEquippedItem) == null)
                         {
                             Dialog.Clear();
                             Dialog.Title.text = "Unable to destroy item!";
@@ -290,13 +294,15 @@ public class InventoryMenu : MonoBehaviour
                         if (Mouse.current.clickCount.ReadValue() == 2)
                         {
                             var otherPanel = panel == InventoryPanels[0] ? InventoryPanels[1] : InventoryPanels[0];
-                            if (otherPanel.DropItem(item))
+                            if (otherPanel.CanDropItem(item))
                             {
+                                otherPanel.DropItem(item);
                                 AkSoundEngine.PostEvent("Equip", gameObject);
                                 cargoEvent.CargoBay.Remove(item);
                                 panel.RefreshCells();
                                 otherPanel.RefreshCells();
                             }
+                            else AkSoundEngine.PostEvent("UI_Fail", gameObject);
                         }
                         else
                         {
@@ -336,12 +342,20 @@ public class InventoryMenu : MonoBehaviour
                         if (Mouse.current.clickCount.ReadValue() == 2)
                         {
                             var otherPanel = panel == InventoryPanels[0] ? InventoryPanels[1] : InventoryPanels[0];
-                            if (otherPanel.DropItem(item.EquippableItem))
+                            if (otherPanel.CanDropItem(item.EquippableItem))
                             {
-                                AkSoundEngine.PostEvent("Unequip", gameObject);
-                                entityEvent.Entity.Unequip(item);
-                                panel.RefreshCells();
-                                otherPanel.RefreshCells();
+                                if (!entityEvent.Entity.Active)
+                                {
+                                    if (entityEvent.Entity.TryUnequip(item) != null)
+                                    {
+                                        otherPanel.DropItem(item.EquippableItem);
+                                        AkSoundEngine.PostEvent("Unequip", gameObject);
+                                        panel.RefreshCells();
+                                        otherPanel.RefreshCells();
+                                    }
+                                    else AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                                }
+                                else AkSoundEngine.PostEvent("UI_Fail", gameObject);
                             }
                         }
                         else

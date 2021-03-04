@@ -189,6 +189,12 @@ public class ActionGameManager : MonoBehaviour
             else Undock();
         };
 
+        _input.Player.ToggleHeatsinks.performed += context =>
+        {
+            CurrentShip.HeatsinksEnabled = !CurrentShip.HeatsinksEnabled;
+            AkSoundEngine.PostEvent(CurrentShip.HeatsinksEnabled ? "UI_Success" : "UI_Fail", gameObject);
+        };
+
         _input.Player.TargetReticle.performed += context =>
         {
             var underReticle = Zone.Entities.Where(x => x != CurrentShip).MaxBy(x => dot(normalize(x.Position - CurrentShip.Position), CurrentShip.LookDirection));

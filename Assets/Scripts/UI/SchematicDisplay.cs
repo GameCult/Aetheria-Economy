@@ -14,6 +14,11 @@ public class SchematicDisplay : MonoBehaviour
     public Prototype ListElementPrototype;
     public Prototype TriggerGroupPrototype;
 
+    public Color HeaderElementEnabledColor;
+    public Color HeaderElementDisabledColor;
+
+    public Image HeatsinkBackground;
+
     public TextMeshProUGUI EnergyLabel;
     public TextMeshProUGUI CockpitTemperatureLabel;
     public TextMeshProUGUI RadiatorTemperatureLabel;
@@ -209,13 +214,13 @@ public class SchematicDisplay : MonoBehaviour
         {
             if (!_enemy)
             {
-
                 if (_radiators.Length == 1)
                     RadiatorTemperatureLabel.text = $"{((int)(_radiators[0].Temperature - 273.15f)).ToString()}°C";
                 else if (_radiators.Length > 1)
                     RadiatorTemperatureLabel.text =
                         $"{((int)(_radiators.Min(r => r.Temperature) - 273.15f)).ToString()}-" +
                         $"{((int)(_radiators.Max(r => r.Temperature) - 273.15f)).ToString()}°C";
+                HeatsinkBackground.color = _entity.HeatsinksEnabled ? HeaderElementEnabledColor : HeaderElementDisabledColor;
 
                 if (_heatsinks.Length == 1)
                     HeatsinkTemperatureLabel.text = $"{((int)(_heatsinks[0].Item.Temperature - 273.15f)).ToString()}°C";
@@ -282,7 +287,7 @@ public class SchematicDisplay : MonoBehaviour
 
                 if (x.Weapon.WeaponData != null)
                 {
-                    x.ListElement.RangeLabel.text = ((int) _entity.ItemManager.Evaluate(x.Weapon.WeaponData.Range, x.Item.EquippableItem, _entity)).ToString();
+                    x.ListElement.RangeLabel.text = ((int) _entity.ItemManager.Evaluate(x.Weapon.WeaponData.Range, x.Item)).ToString();
                 }
             }
         }

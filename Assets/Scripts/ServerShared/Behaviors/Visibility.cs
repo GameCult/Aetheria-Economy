@@ -44,7 +44,7 @@ public class Visibility : IBehavior, IAlwaysUpdatedBehavior
 
     public bool Execute(float delta)
     {
-        Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item.EquippableItem, Entity);
+        Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item);
         return true;
     }
 
@@ -53,7 +53,7 @@ public class Visibility : IBehavior, IAlwaysUpdatedBehavior
         // TODO: Time independent decay?
         if(Entity.VisibilitySources.ContainsKey(this))
         {
-            Entity.VisibilitySources[this] *= Context.Evaluate(_data.VisibilityDecay, Item.EquippableItem, Entity);
+            Entity.VisibilitySources[this] *= Context.Evaluate(_data.VisibilityDecay, Item);
         }
     }
 }

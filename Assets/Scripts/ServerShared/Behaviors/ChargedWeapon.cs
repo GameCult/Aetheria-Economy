@@ -100,9 +100,9 @@ public class ChargedWeapon : InstantWeapon
     protected override void UpdateStats()
     {
         base.UpdateStats();
-        ChargeTime = Context.Evaluate(_data.ChargeTime, Item.EquippableItem, Entity);
-        ChargeEnergy = Context.Evaluate(_data.ChargeEnergy, Item.EquippableItem, Entity);
-        ChargeHeat = Context.Evaluate(_data.ChargeHeat, Item.EquippableItem, Entity);
+        ChargeTime = Context.Evaluate(_data.ChargeTime, Item);
+        ChargeEnergy = Context.Evaluate(_data.ChargeEnergy, Item);
+        ChargeHeat = Context.Evaluate(_data.ChargeHeat, Item);
         Damage *= lerp(1, _data.ChargeFiringDamageMultiplier, saturate(_charge));
         Heat *= lerp(1, _data.ChargeFiringHeatMultiplier, saturate(_charge));
         Spread *= lerp(1, _data.ChargeFiringSpreadMultiplier, saturate(_charge));

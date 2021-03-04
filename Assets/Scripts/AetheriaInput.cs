@@ -161,6 +161,14 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Toggle Heatsinks"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6c6ff6a-4ac2-4e53-a3c9-9461f52e723f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -546,6 +554,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Target Nearest"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""71ac6088-1e18-4810-86be-1179918dd4a2"",
+                    ""path"": ""<Keyboard>/#(H)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Toggle Heatsinks"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1132,6 +1151,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player_TargetPrevious = m_Player.FindAction("Target Previous", throwIfNotFound: true);
         m_Player_TargetNext = m_Player.FindAction("Target Next", throwIfNotFound: true);
         m_Player_TargetNearest = m_Player.FindAction("Target Nearest", throwIfNotFound: true);
+        m_Player_ToggleHeatsinks = m_Player.FindAction("Toggle Heatsinks", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1215,6 +1235,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_TargetPrevious;
     private readonly InputAction m_Player_TargetNext;
     private readonly InputAction m_Player_TargetNearest;
+    private readonly InputAction m_Player_ToggleHeatsinks;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1237,6 +1258,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @TargetPrevious => m_Wrapper.m_Player_TargetPrevious;
         public InputAction @TargetNext => m_Wrapper.m_Player_TargetNext;
         public InputAction @TargetNearest => m_Wrapper.m_Player_TargetNearest;
+        public InputAction @ToggleHeatsinks => m_Wrapper.m_Player_ToggleHeatsinks;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1300,6 +1322,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @TargetNearest.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetNearest;
                 @TargetNearest.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetNearest;
                 @TargetNearest.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTargetNearest;
+                @ToggleHeatsinks.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleHeatsinks;
+                @ToggleHeatsinks.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleHeatsinks;
+                @ToggleHeatsinks.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleHeatsinks;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1358,6 +1383,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @TargetNearest.started += instance.OnTargetNearest;
                 @TargetNearest.performed += instance.OnTargetNearest;
                 @TargetNearest.canceled += instance.OnTargetNearest;
+                @ToggleHeatsinks.started += instance.OnToggleHeatsinks;
+                @ToggleHeatsinks.performed += instance.OnToggleHeatsinks;
+                @ToggleHeatsinks.canceled += instance.OnToggleHeatsinks;
             }
         }
     }
@@ -1555,6 +1583,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnTargetPrevious(InputAction.CallbackContext context);
         void OnTargetNext(InputAction.CallbackContext context);
         void OnTargetNearest(InputAction.CallbackContext context);
+        void OnToggleHeatsinks(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
