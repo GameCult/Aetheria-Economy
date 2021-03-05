@@ -98,7 +98,16 @@ public class ActionGameManager : MonoBehaviour
         
         Zone = new Zone(Settings.PlanetSettings, zonePack);
         Zone.Log = s => Debug.Log($"Zone: {s}");
+
+        if (CurrentShip != null)
+        {
+            Zone.Entities.Add(CurrentShip);
+        }
+        
         SectorRenderer.LoadZone(Zone);
+        
+        if (CurrentShip != null)
+            BindToEntity();
     }
 
     void Start()
@@ -204,6 +213,7 @@ public class ActionGameManager : MonoBehaviour
                         GenerateLevel();
                         CurrentShip.ExitWormhole(SectorRenderer.WormholeInstances.Keys.First().Position,
                             Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
+                        CurrentShip.Zone = Zone;
                     };
                 }
             }
@@ -214,6 +224,8 @@ public class ActionGameManager : MonoBehaviour
             CurrentShip.HeatsinksEnabled = !CurrentShip.HeatsinksEnabled;
             AkSoundEngine.PostEvent(CurrentShip.HeatsinksEnabled ? "UI_Success" : "UI_Fail", gameObject);
         };
+
+        #region Targeting
 
         _input.Player.TargetReticle.performed += context =>
         {
@@ -241,6 +253,9 @@ public class ActionGameManager : MonoBehaviour
             var currentTargetIndex = Array.IndexOf(targets, CurrentShip.Target.Value);
             CurrentShip.Target.Value = targets[(currentTargetIndex + targets.Length - 1) % targets.Length];
         };
+        
+        #endregion
+
 
         #region Trigger Groups
 
@@ -505,32 +520,14 @@ public class ActionGameManager : MonoBehaviour
         }
         else if (CurrentShip.Parent.TryUndock(CurrentShip))
         {
-            SectorRenderer.PerspectiveEntity = CurrentShip;
             Menu.gameObject.SetActive(false);
             DockedEntity = null;
             DockingBay = null;
             //_shipInput = new ShipInput(_input.Player, _currentShip);
             DockCamera.enabled = false;
             FollowCamera.enabled = true;
-            FollowCamera.LookAt = SectorRenderer.EntityInstances[CurrentShip].LookAtPoint;
-            FollowCamera.Follow = SectorRenderer.EntityInstances[CurrentShip].transform;
-            _articulationGroups = CurrentShip.Equipment
-                .Where(item => item.Behaviors.Any(x => x.Data is WeaponData && !(x.Data is LauncherData)))
-                .GroupBy(item => SectorRenderer.EntityInstances[CurrentShip]
-                    .GetBarrel(CurrentShip.Hardpoints[item.Position.x, item.Position.y])
-                    .GetComponentInParent<ArticulationPoint>()?.Group ?? -1)
-                .Select((group, index) => {
-                    return (
-                        group.Select(item => CurrentShip.Hardpoints[item.Position.x, item.Position.y]).ToArray(),
-                        group.Select(item => SectorRenderer.EntityInstances[CurrentShip].GetBarrel(CurrentShip.Hardpoints[item.Position.x, item.Position.y])).ToArray(),
-                        Crosshairs[index]
-                    );
-                }).ToArray();
-
-            foreach (var crosshair in Crosshairs)
-                crosshair.gameObject.SetActive(false);
-            foreach (var group in _articulationGroups)
-                group.crosshair.gameObject.SetActive(true);
+            
+            BindToEntity();
 
             _lockingIndicators = CurrentShip.GetBehaviors<LockWeapon>()
                 .Select(x =>
@@ -569,6 +566,31 @@ public class ActionGameManager : MonoBehaviour
             ConfirmationDialog.Show();
             AkSoundEngine.PostEvent("UI_Fail", gameObject);
         }
+    }
+
+    private void BindToEntity()
+    {
+        SectorRenderer.PerspectiveEntity = CurrentShip;
+        
+        FollowCamera.LookAt = SectorRenderer.EntityInstances[CurrentShip].LookAtPoint;
+        FollowCamera.Follow = SectorRenderer.EntityInstances[CurrentShip].transform;
+        _articulationGroups = CurrentShip.Equipment
+            .Where(item => item.Behaviors.Any(x => x.Data is WeaponData && !(x.Data is LauncherData)))
+            .GroupBy(item => SectorRenderer.EntityInstances[CurrentShip]
+                .GetBarrel(CurrentShip.Hardpoints[item.Position.x, item.Position.y])
+                .GetComponentInParent<ArticulationPoint>()?.Group ?? -1)
+            .Select((group, index) => {
+                return (
+                    group.Select(item => CurrentShip.Hardpoints[item.Position.x, item.Position.y]).ToArray(),
+                    group.Select(item => SectorRenderer.EntityInstances[CurrentShip].GetBarrel(CurrentShip.Hardpoints[item.Position.x, item.Position.y])).ToArray(),
+                    Crosshairs[index]
+                );
+            }).ToArray();
+        
+        foreach (var crosshair in Crosshairs)
+            crosshair.gameObject.SetActive(false);
+        foreach (var group in _articulationGroups)
+            group.crosshair.gameObject.SetActive(true);
     }
 
     public void SaveZone() => File.WriteAllBytes(

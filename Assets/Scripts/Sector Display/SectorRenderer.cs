@@ -148,10 +148,10 @@ public class SectorRenderer : MonoBehaviour
 
     public void LoadZone(Zone zone)
     {
+        ClearZone();
         _maxDepth = 0;
         Zone = zone;
         SectorBrushes.localScale = zone.Data.Radius * 2 * Vector3.one;
-        ClearZone();
         foreach(var p in zone.Planets.Values)
             LoadPlanet(p);
         
@@ -204,8 +204,14 @@ public class SectorRenderer : MonoBehaviour
 
     public void ClearZone()
     {
+        if (Zone == null) return;
         foreach (var wormhole in WormholeInstances.Values) Destroy(wormhole);
         WormholeInstances.Clear();
+
+        foreach (var entity in Zone.Entities)
+        {
+            UnloadEntity(entity);
+        }
         
         if (Planets.Count > 0)
         {
@@ -214,10 +220,10 @@ public class SectorRenderer : MonoBehaviour
                 DestroyImmediate(planet.gameObject);
             }
             Planets.Clear();
-            // foreach (var beltObject in _beltObjects.Values)
-            // {
-            //     beltObject.
-            // }
+            foreach (var beltObject in _beltObjects.Values)
+            {
+                Destroy(beltObject.Filter);
+            }
             _beltObjects.Clear();
             _beltMeshes.Clear();
             _beltMatrices.Clear();
@@ -446,7 +452,7 @@ public class InstancedMesh
 
 public class AsteroidBeltUI
 {
-    private MeshFilter _filter;
+    public MeshFilter Filter;
     private MeshCollider _collider;
     private Vector3[] _vertices;
     private Vector3[] _normals;
@@ -463,7 +469,7 @@ public class AsteroidBeltUI
     {
         _belt = belt;
         _zone = zone;
-        _filter = meshFilter;
+        Filter = meshFilter;
         _collider = collider;
         var orbit = zone.Orbits[belt.Data.Orbit];
         _orbitParent = orbit.Data.Parent;
@@ -509,7 +515,7 @@ public class AsteroidBeltUI
         _mesh.bounds = new Bounds(Vector3.zero, Vector3.one * maxDist);
         _size = maxDist;
 
-        _filter.mesh = _mesh;
+        Filter.mesh = _mesh;
         //_collider.sharedMesh = _mesh;
     }
 

@@ -222,7 +222,7 @@ public class Ship : Entity
 
     public override void Update(float delta)
     {
-        if (_active && !_exitingWormhole)
+        if (_active && !_exitingWormhole && !_enteringWormhole)
         {
             foreach (var thruster in _allThrusters) thruster.Axis = 0;
             var rightThrusterTorqueCompensation = abs(RightStrafeTotalTorque) / RightStrafeTorqueThrusters.Length;
@@ -287,8 +287,8 @@ public class Ship : Entity
                 }
                 else
                 {
-                    var exitLerp = _wormholeAnimationProgress - ItemManager.GameplaySettings.WormholeExitCurveStart /
-                        (1 - ItemManager.GameplaySettings.WormholeExitCurveStart);
+                    var exitLerp = (_wormholeAnimationProgress - ItemManager.GameplaySettings.WormholeExitCurveStart) /
+                                   (1 - ItemManager.GameplaySettings.WormholeExitCurveStart);
                     exitLerp *= exitLerp; // Square the interpolation variable to produce curve with zero slope at start
                     Position.xz = _wormholePosition + normalize(_wormholeExitVelocity) * exitLerp * ItemManager.GameplaySettings.WormholeExitRadius;
                     Rotation = quaternion.LookRotation(

@@ -126,6 +126,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\InsertAt.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\JsonKnownTypes\JsonDiscriminatorAttribute.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thruster.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Wormhole.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Grant.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSum.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\TowingController.cs" />
@@ -524,7 +525,6 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Wormhole.cs" />
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Economy.Shared.Unity.asmdef" />
  <Reference Include="System.Threading.Tasks.Extensions">
