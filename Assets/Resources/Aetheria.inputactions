@@ -156,6 +156,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "EnterWormhole",
+                    "type": "Button",
+                    "id": "c918ac22-b029-4805-9c85-e615a52641f2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -552,6 +560,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Toggle Heatsinks",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "95817d40-4c8d-4660-bd68-a93afe74b6e1",
+                    "path": "<Keyboard>/#(V)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "EnterWormhole",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

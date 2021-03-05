@@ -9,17 +9,17 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
-public class HeatsinkData : BehaviorData
+public class HeatStorageData : BehaviorData
 {
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
-        return new Heatsink(context, this, entity, item);
+        return new HeatStorage(context, this, entity, item);
     }
 }
 
-public class Heatsink : IBehavior
+public class HeatStorage : IBehavior
 {
-    private HeatsinkData _data;
+    private HeatStorageData _data;
 
     public Entity Entity { get; }
     public EquippedItem Item { get; }
@@ -27,7 +27,7 @@ public class Heatsink : IBehavior
 
     public BehaviorData Data => _data;
 
-    public Heatsink(ItemManager context, HeatsinkData data, Entity entity, EquippedItem item)
+    public HeatStorage(ItemManager context, HeatStorageData data, Entity entity, EquippedItem item)
     {
         Context = context;
         _data = data;

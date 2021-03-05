@@ -425,6 +425,7 @@
      <None Include="Assets\Shaders\Brushes\PowerBrush.shader" />
      <None Include="Assets\Shaders\DitheredParticles.shader" />
      <None Include="Assets\Shaders\Raymarching\VolumeJupiter.shader" />
+     <None Include="Assets\Shaders\Brushes\WormholeBrush.shader" />
      <None Include="Assets\Shaders\ViewNormalEmissive.shader" />
      <None Include="Assets\Shaders\Particle Standard Unlit.shader" />
      <None Include="Assets\com.unity.uiextensions\Runtime\Resources\Shaders\UI Particle MultiplyDouble.shader" />

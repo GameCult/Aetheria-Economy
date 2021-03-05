@@ -17,6 +17,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
+using quaternion = Unity.Mathematics.quaternion;
 using Random = UnityEngine.Random;
 
 public class ActionGameManager : MonoBehaviour
@@ -85,6 +86,21 @@ public class ActionGameManager : MonoBehaviour
         File.WriteAllBytes(Path.Combine(_loadoutPath.FullName, $"{pack.Name}.preset"), MessagePackSerializer.Serialize(pack));
     }
 
+    public void GenerateLevel()
+    {
+        var zonePack = ZoneGenerator.GenerateZone(
+            settings: Settings.ZoneSettings,
+            // mapLayers: Context.MapLayers,
+            // resources: Context.Resources,
+            mass: Settings.DefaultZoneMass,
+            radius: Settings.DefaultZoneRadius
+        );
+        
+        Zone = new Zone(Settings.PlanetSettings, zonePack);
+        Zone.Log = s => Debug.Log($"Zone: {s}");
+        SectorRenderer.LoadZone(Zone);
+    }
+
     void Start()
     {
         AkSoundEngine.RegisterGameObj(gameObject);
@@ -95,27 +111,14 @@ public class ActionGameManager : MonoBehaviour
         ItemData = new DatabaseCache();
         ItemData.Load(_filePath.FullName);
         ItemManager = new ItemManager(ItemData, Settings.GameplaySettings, Debug.Log);
+        SectorRenderer.ItemManager = ItemManager;
 
         Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.preset")
             .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
 
-        var zoneFile = Path.Combine(_filePath.FullName, "Home.zone");
+        //var zoneFile = Path.Combine(_filePath.FullName, "Home.zone");
         
-        // If the game has already been run, there will be a Home file containing a ZonePack; if not, generate one
-        var zonePack = File.Exists(zoneFile) ? 
-            MessagePackSerializer.Deserialize<ZonePack>(File.ReadAllBytes(zoneFile)): 
-            ZoneGenerator.GenerateZone(
-                settings: Settings.ZoneSettings,
-                // mapLayers: Context.MapLayers,
-                // resources: Context.Resources,
-                mass: Settings.DefaultZoneMass,
-                radius: Settings.DefaultZoneRadius
-            );
-        
-        Zone = new Zone(Settings.PlanetSettings, zonePack);
-        Zone.Log = s => Debug.Log($"Zone: {s}");
-        SectorRenderer.ItemManager = ItemManager;
-        SectorRenderer.LoadZone(Zone);
+        GenerateLevel();
 
         _input = new AetheriaInput();
         _input.Global.Enable();
@@ -189,6 +192,23 @@ public class ActionGameManager : MonoBehaviour
             else Undock();
         };
 
+        _input.Player.EnterWormhole.performed += context =>
+        {
+            foreach (var wormhole in SectorRenderer.WormholeInstances.Keys)
+            {
+                if (length(wormhole.Position - CurrentShip.Position.xz) < Settings.GameplaySettings.WormholeExitRadius)
+                {
+                    CurrentShip.EnterWormhole(wormhole.Position);
+                    CurrentShip.OnEnteredWormhole += () =>
+                    {
+                        GenerateLevel();
+                        CurrentShip.ExitWormhole(SectorRenderer.WormholeInstances.Keys.First().Position,
+                            Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
+                    };
+                }
+            }
+        };
+
         _input.Player.ToggleHeatsinks.performed += context =>
         {
             CurrentShip.HeatsinksEnabled = !CurrentShip.HeatsinksEnabled;
@@ -197,13 +217,15 @@ public class ActionGameManager : MonoBehaviour
 
         _input.Player.TargetReticle.performed += context =>
         {
-            var underReticle = Zone.Entities.Where(x => x != CurrentShip).MaxBy(x => dot(normalize(x.Position - CurrentShip.Position), CurrentShip.LookDirection));
+            var underReticle = Zone.Entities.Where(x => x != CurrentShip)
+                .MaxBy(x => dot(normalize(x.Position - CurrentShip.Position), CurrentShip.LookDirection));
             CurrentShip.Target.Value = CurrentShip.Target.Value == underReticle ? null : underReticle;
         };
 
         _input.Player.TargetNearest.performed += context =>
         {
-            CurrentShip.Target.Value = Zone.Entities.Where(x=>x!=CurrentShip).MaxBy(x => length(x.Position - CurrentShip.Position));
+            CurrentShip.Target.Value = Zone.Entities.Where(x=>x!=CurrentShip)
+                .MaxBy(x => length(x.Position - CurrentShip.Position));
         };
 
         _input.Player.TargetNext.performed += context =>
@@ -599,7 +621,7 @@ public class ActionGameManager : MonoBehaviour
         foreach(var agent in _shipAgents)
             agent.Update(Time.deltaTime);
         Zone.Update(_time, Time.deltaTime);
-        SectorRenderer.Time = _time;
+        SectorRenderer.GameTime = _time;
     }
 
     private void LateUpdate()

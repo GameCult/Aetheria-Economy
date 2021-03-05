@@ -483,7 +483,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Add.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Select.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\SetUnion.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Heatsink.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\HeatStorage.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\ReqlAssertFailure.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Weapon.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver.Linq\RethinkQueryable.cs" />
@@ -517,13 +517,14 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Javascript.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\SequencedChannel.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Without.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Wear.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Distinct.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Time.cs" />
      <Compile Include="Assets\Scripts\ServerShared\LoadoutData.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Wear.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Wormhole.cs" />
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Economy.Shared.Unity.asmdef" />
  <Reference Include="System.Threading.Tasks.Extensions">

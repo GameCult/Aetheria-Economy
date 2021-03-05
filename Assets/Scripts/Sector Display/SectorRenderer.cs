@@ -18,6 +18,7 @@ using float2 = Unity.Mathematics.float2;
 
 public class SectorRenderer : MonoBehaviour
 {
+    public Transform WormholePrefab;
     public float EntityFadeTime;
     public Transform EffectManagerParent;
     public Transform FogCameraParent;
@@ -76,6 +77,8 @@ public class SectorRenderer : MonoBehaviour
     private Entity _perspectiveEntity;
     private IDisposable[] _perspectiveSubscriptions = new IDisposable[2];
 
+    public Dictionary<Wormhole, GameObject> WormholeInstances = new Dictionary<Wormhole, GameObject>();
+
     public Zone Zone { get; private set; }
     public ItemManager ItemManager { get; set; }
 
@@ -108,7 +111,7 @@ public class SectorRenderer : MonoBehaviour
         }
     }
 
-    public float Time { get; set; }
+    public float GameTime { get; set; }
 
     public float ViewDistance
     {
@@ -176,7 +179,7 @@ public class SectorRenderer : MonoBehaviour
                         Debug.Log("WTF!");
                     }
                 }
-                _tourPlanets.Add((x.Value.Body.transform, parent.Body.transform));
+                //_tourPlanets.Add((x.Value.Body.transform, parent.Body.transform));
             }
         }
         
@@ -184,10 +187,26 @@ public class SectorRenderer : MonoBehaviour
             LoadEntity(entity);
         zone.Entities.ObserveAdd().Subscribe(e => LoadEntity(e.Value));
         zone.Entities.ObserveRemove().Subscribe(e => UnloadEntity(e.Value));
+
+        var southernWormhole = new Wormhole {Position = float2(0, -Settings.DefaultZoneRadius * Settings.WormholeDistanceRatio)};
+        AddWormhole(southernWormhole);
+        
+        var northernWormhole = new Wormhole {Position = float2(0, Settings.DefaultZoneRadius * Settings.WormholeDistanceRatio)};
+        AddWormhole(northernWormhole);
+    }
+
+    public void AddWormhole(Wormhole wormhole)
+    {
+        var instance = Instantiate(WormholePrefab);
+        instance.position = new Vector3(wormhole.Position.x, 0, wormhole.Position.y);
+        WormholeInstances.Add(wormhole, instance.gameObject);
     }
 
     public void ClearZone()
     {
+        foreach (var wormhole in WormholeInstances.Values) Destroy(wormhole);
+        WormholeInstances.Clear();
+        
         if (Planets.Count > 0)
         {
             foreach (var planet in Planets.Values)
@@ -195,6 +214,11 @@ public class SectorRenderer : MonoBehaviour
                 DestroyImmediate(planet.gameObject);
             }
             Planets.Clear();
+            // foreach (var beltObject in _beltObjects.Values)
+            // {
+            //     beltObject.
+            // }
+            _beltObjects.Clear();
             _beltMeshes.Clear();
             _beltMatrices.Clear();
             _tourPlanets.Clear();
@@ -386,7 +410,7 @@ public class SectorRenderer : MonoBehaviour
             planet.Value.Body.transform.localPosition = new Vector3(0, Zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
             if(planet.Value is GasGiantObject gasGiantObject)
             {
-                gasGiantObject.GravityWaves.material.SetFloat("_Phase", Time * ((GasGiant) Zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
+                gasGiantObject.GravityWaves.material.SetFloat("_Phase", GameTime * ((GasGiant) Zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
                 if(!(planet.Value is SunObject))
                 {
                     var toParent = normalize(Zone.GetOrbitPosition(Zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);

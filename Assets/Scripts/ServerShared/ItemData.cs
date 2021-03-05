@@ -297,8 +297,8 @@ public abstract class EquippableItemData : CraftedItemData
     [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(17)]
     public float4[] HeatPerformanceCurve;
 
-    [InspectableField, JsonProperty("wearDamage"), Key(18)]
-    public PerformanceStat WearDamage = new PerformanceStat();
+    [InspectableField, JsonProperty("resilience"), Key(18)]
+    public float ThermalResilience = 1;
     
     [IgnoreMember]
     public abstract HardpointType HardpointType { get; }

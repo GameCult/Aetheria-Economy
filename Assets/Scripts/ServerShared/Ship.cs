@@ -34,7 +34,15 @@ public class Ship : Entity
     private HashSet<Thruster> _leftThrusters;
     private HashSet<Thruster> _clockwiseThrusters;
     private HashSet<Thruster> _counterClockwiseThrusters;
-    
+
+    private bool _exitingWormhole = false;
+    private bool _enteringWormhole = false;
+    private float _wormholeAnimationProgress;
+    private float2 _wormholeEntryPosition;
+    private float2 _wormholeEntryDirection;
+    private float2 _wormholePosition;
+    private float2 _wormholeExitVelocity;
+
     public float ForwardThrust { get; private set; }
     public float ReverseThrust { get; private set; }
     public float LeftStrafeThrust { get; private set; }
@@ -52,8 +60,29 @@ public class Ship : Entity
         var clockwise = dot(direction, Direction.Rotate(ItemRotation.Clockwise)) > 0;
         return angleDiff / ((clockwise ? ClockwiseTorque : CounterClockwiseTorque) / Mass);
     }
+
+    public event Action OnExitedWormhole;
+    public event Action OnEnteredWormhole;
     
     public quaternion Rotation { get; private set; }
+
+    public void ExitWormhole(float2 wormholePosition, float2 exitVelocity)
+    {
+        _exitingWormhole = true;
+        _wormholeAnimationProgress = 0;
+        _wormholePosition = wormholePosition;
+        _wormholeExitVelocity = exitVelocity;
+        Direction = normalize(exitVelocity);
+    }
+
+    public void EnterWormhole(float2 wormholePosition)
+    {
+        _wormholeAnimationProgress = 0;
+        _enteringWormhole = true;
+        _wormholeEntryPosition = Position.xz;
+        _wormholeEntryDirection = normalize(_wormholeEntryPosition-wormholePosition);
+        _wormholePosition = wormholePosition;
+    }
 
     public override void Activate()
     {
@@ -113,6 +142,8 @@ public class Ship : Entity
         ItemOnline.Subscribe(CheckForThruster);
     }
 
+    #region ThrustCalculation
+    
     private void RecalculateForwardThrust()
     {
         ForwardThrust = 0;
@@ -187,10 +218,11 @@ public class Ship : Entity
         }
     }
 
+    #endregion
+
     public override void Update(float delta)
     {
-        Position.xz += Velocity * delta;
-        if (_active)
+        if (_active && !_exitingWormhole)
         {
             foreach (var thruster in _allThrusters) thruster.Axis = 0;
             var rightThrusterTorqueCompensation = abs(RightStrafeTotalTorque) / RightStrafeTorqueThrusters.Length;
@@ -226,6 +258,9 @@ public class Ship : Entity
             foreach (var thruster in _clockwiseThrusters) thruster.Axis += deltaRot;
             foreach (var thruster in _counterClockwiseThrusters) thruster.Axis += -deltaRot;
         }
+        
+        Position.xz += Velocity * delta;
+        
         var normal = Zone.GetNormal(Position.xz);
         var force = new float2(normal.x, normal.z);
         var forceMagnitude = lengthsq(force);
@@ -239,6 +274,69 @@ public class Ship : Entity
         Rotation = quaternion.LookRotation(forward, normal);
         
         base.Update(delta);
+
+        if (_exitingWormhole)
+        {
+            _wormholeAnimationProgress += delta / ItemManager.GameplaySettings.WormholeAnimationDuration;
+            if(_wormholeAnimationProgress < 1)
+            {
+                if (_wormholeAnimationProgress < ItemManager.GameplaySettings.WormholeExitCurveStart)
+                {
+                    Position.xz = _wormholePosition;
+                    Rotation = quaternion.LookRotation(float3(0, 1, 0), float3(-Direction.x, 0, -Direction.y));
+                }
+                else
+                {
+                    var exitLerp = _wormholeAnimationProgress - ItemManager.GameplaySettings.WormholeExitCurveStart /
+                        (1 - ItemManager.GameplaySettings.WormholeExitCurveStart);
+                    exitLerp *= exitLerp; // Square the interpolation variable to produce curve with zero slope at start
+                    Position.xz = _wormholePosition + normalize(_wormholeExitVelocity) * exitLerp * ItemManager.GameplaySettings.WormholeExitRadius;
+                    Rotation = quaternion.LookRotation(
+                        lerp(float3(0, 1, 0), forward, exitLerp),
+                        lerp(float3(-Direction.x, 0, -Direction.y), normal, exitLerp));
+                }
+
+                Position.y = Position.y - lerp(ItemManager.GameplaySettings.WormholeDepth, 0, _wormholeAnimationProgress);
+            }
+            else
+            {
+                _exitingWormhole = false;
+                OnExitedWormhole?.Invoke();
+                OnExitedWormhole = null;
+                Velocity = _wormholeExitVelocity;
+            }
+        }
+
+        if (_enteringWormhole)
+        {
+            _wormholeAnimationProgress += delta / ItemManager.GameplaySettings.WormholeAnimationDuration;
+            if(_wormholeAnimationProgress < 1)
+            {
+                if (_wormholeAnimationProgress < 1 - ItemManager.GameplaySettings.WormholeExitCurveStart)
+                {
+                    var enterLerp = _wormholeAnimationProgress / (1 - ItemManager.GameplaySettings.WormholeExitCurveStart);
+                    enterLerp *= enterLerp; // Square the interpolation variable to produce curve with zero slope at vertical
+                    Position.xz = lerp(_wormholeEntryPosition, _wormholePosition, enterLerp);
+                    Rotation = quaternion.LookRotation(
+                        lerp(forward, float3(0, -1, 0), enterLerp),
+                        lerp(normal, float3(-_wormholeEntryDirection.x, 0, -_wormholeEntryDirection.y), enterLerp));
+                }
+                else
+                {
+                    Position.xz = _wormholePosition;
+                    Rotation = quaternion.LookRotation(float3(0, -1, 0), 
+                        float3(-_wormholeEntryDirection.x, 0, -_wormholeEntryDirection.y));
+                }
+
+                Position.y = Position.y - lerp(0, ItemManager.GameplaySettings.WormholeDepth, _wormholeAnimationProgress);
+            }
+            else
+            {
+                _enteringWormhole = false;
+                OnEnteredWormhole?.Invoke();
+                OnEnteredWormhole = null;
+            }
+        }
     }
 }
 

@@ -1531,7 +1531,7 @@
               <e p="FactoryBehavior.cs" t="Include" />
               <e p="HaulingController.cs" t="Include" />
               <e p="Heat.cs" t="Include" />
-              <e p="Heatsink.cs" t="Include" />
+              <e p="HeatStorage.cs" t="Include" />
               <e p="InstantWeapon.cs" t="Include" />
               <e p="ItemUsage.cs" t="Include" />
               <e p="Launcher.cs" t="Include" />
@@ -2028,6 +2028,7 @@
             <e p="Settings.cs" t="Include" />
             <e p="Ship.cs" t="Include" />
             <e p="TypeFormatterResolver.cs" t="Include" />
+            <e p="Wormhole.cs" t="Include" />
             <e p="Zone.cs" t="Include" />
             <e p="ZoneData.cs" t="Include" />
             <e p="ZoneGenerator.cs" t="Include" />
@@ -2107,6 +2108,7 @@
             <e p="PowerBrush.shader" t="Include" />
             <e p="RadialWaveBrush.shader" t="Include" />
             <e p="SimplexBrush.shader" t="Include" />
+            <e p="WormholeBrush.shader" t="Include" />
           </e>
           <e p="Clouds.shader" t="Include" />
           <e p="Compute" t="Include">

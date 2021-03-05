@@ -12,7 +12,7 @@ using static Unity.Mathematics.math;
 public class WearData : BehaviorData
 {
     [TemperatureInspectable, JsonProperty("perSecond"), Key(1)]
-    public bool PerSecond;
+    public bool PerSecond = true;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
@@ -42,7 +42,10 @@ public class Wear : IBehavior
 
     public bool Execute(float delta)
     {
-        var wear = Context.Evaluate(_itemData.WearDamage, Item);
+        var wear = (1 - pow(_itemData.Performance(Item.Temperature),
+                (1 - pow(Item.EquippableItem.Quality, Context.GameplaySettings.QualityWearExponent)) *
+                Context.GameplaySettings.ThermalWearExponent)
+            ) * _itemData.Durability / _itemData.ThermalResilience;
         if (_data.PerSecond) wear *= delta;
         Item.EquippableItem.Durability -= wear;
         return true;

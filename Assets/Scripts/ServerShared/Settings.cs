@@ -88,6 +88,13 @@ public class ZoneGenerationSettings
 [Serializable, MessagePackObject(keyAsPropertyName: true), JsonObject]
 public class GameplaySettings
 {
+    public float WormholeDepth = 1000;
+    public float WormholeExitVelocity = 20;
+    public float WormholeExitRadius = 50;
+    public float WormholeAnimationDuration = 4;
+    public float WormholeExitCurveStart = .8f;
+    public float ThermalWearExponent = .01f;
+    public float QualityWearExponent = 2;
     public int TriggerGroupCount = 6;
     public float WarpDistance = 25;
     public float DockingDistance = 25;

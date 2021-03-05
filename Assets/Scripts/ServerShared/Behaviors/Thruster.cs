@@ -73,6 +73,6 @@ public class Thruster : IAnalogBehavior
         var vis = _input * Context.Evaluate(_data.Visibility, Item);
         if(!Entity.VisibilitySources.ContainsKey(this) || vis > Entity.VisibilitySources[this])
             Entity.VisibilitySources[this] = vis;
-        return true;
+        return _input > .01f;
     }
 }

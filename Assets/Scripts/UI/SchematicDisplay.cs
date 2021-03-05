@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Unity.Mathematics;
+using UnityEngine.Serialization;
 using static Unity.Mathematics.math;
 
 public class SchematicDisplay : MonoBehaviour
@@ -22,7 +23,7 @@ public class SchematicDisplay : MonoBehaviour
     public TextMeshProUGUI EnergyLabel;
     public TextMeshProUGUI CockpitTemperatureLabel;
     public TextMeshProUGUI RadiatorTemperatureLabel;
-    public TextMeshProUGUI HeatsinkTemperatureLabel;
+    [FormerlySerializedAs("HeatsinkTemperatureLabel")] public TextMeshProUGUI HeatStorageTemperatureLabel;
     public TextMeshProUGUI CargoTemperatureLabel;
     public TextMeshProUGUI VisibilityLabel;
     public TextMeshProUGUI HullDurabilityLabel;
@@ -45,7 +46,7 @@ public class SchematicDisplay : MonoBehaviour
     private Cockpit _cockpit;
     private Reactor _reactor;
     private Capacitor[] _capacitors;
-    private Heatsink[] _heatsinks;
+    private HeatStorage[] _heatStorages;
     private EquippedCargoBay[] _cargoBays;
     private SchematicDisplayItem[] _schematicItems;
     private Graphic[] _groupGraphics;
@@ -115,9 +116,9 @@ public class SchematicDisplay : MonoBehaviour
             if (_radiators.Length == 0)
                 RadiatorTemperatureLabel.text = "N/A";
 
-            _heatsinks = entity.GetBehaviors<Heatsink>().ToArray();
-            if (_heatsinks.Length == 0)
-                HeatsinkTemperatureLabel.text = "N/A";
+            _heatStorages = entity.GetBehaviors<HeatStorage>().ToArray();
+            if (_heatStorages.Length == 0)
+                HeatStorageTemperatureLabel.text = "N/A";
 
             _cargoBays = entity.CargoBays.ToArray();
             if (_cargoBays.Length == 0)
@@ -222,12 +223,12 @@ public class SchematicDisplay : MonoBehaviour
                         $"{((int)(_radiators.Max(r => r.Temperature) - 273.15f)).ToString()}°C";
                 HeatsinkBackground.color = _entity.HeatsinksEnabled ? HeaderElementEnabledColor : HeaderElementDisabledColor;
 
-                if (_heatsinks.Length == 1)
-                    HeatsinkTemperatureLabel.text = $"{((int)(_heatsinks[0].Item.Temperature - 273.15f)).ToString()}°C";
-                else if (_heatsinks.Length > 1)
-                    HeatsinkTemperatureLabel.text =
-                        $"{((int)(_heatsinks.Min(r => r.Item.Temperature) - 273.15f)).ToString()}-" +
-                        $"{((int)(_heatsinks.Max(r => r.Item.Temperature) - 273.15f)).ToString()}°C";
+                if (_heatStorages.Length == 1)
+                    HeatStorageTemperatureLabel.text = $"{((int)(_heatStorages[0].Item.Temperature - 273.15f)).ToString()}°C";
+                else if (_heatStorages.Length > 1)
+                    HeatStorageTemperatureLabel.text =
+                        $"{((int)(_heatStorages.Min(r => r.Item.Temperature) - 273.15f)).ToString()}-" +
+                        $"{((int)(_heatStorages.Max(r => r.Item.Temperature) - 273.15f)).ToString()}°C";
 
                 if (_cargoBays.Length == 1)
                     CargoTemperatureLabel.text = $"{((int)(_cargoBays[0].Temperature - 273.15f)).ToString()}°C";

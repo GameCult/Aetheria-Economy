@@ -10,6 +10,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Sector Display Properties", menuName = "Aetheria/Sector Display Properties")]
 public class GameSettings : ScriptableObject
 {
+    public float WormholeDistanceRatio;
     public float DefaultZoneRadius;
     public float DefaultZoneMass;
     public float DefaultViewDistance;

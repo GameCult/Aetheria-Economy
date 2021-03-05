@@ -8,6 +8,7 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 [Union(0, typeof(InstantWeaponData)),
  Union(1, typeof(LauncherData)),
@@ -123,7 +124,10 @@ public abstract class Weapon : IActivatedBehavior
         Visibility = Context.Evaluate(_data.Visibility, Item);
         Spread = Context.Evaluate(_data.Spread, Item);
         Velocity = Context.Evaluate(_data.Velocity, Item);
-        Wear = Context.Evaluate(_itemData.WearDamage, Item);
+        Wear = (1 - pow(_itemData.Performance(Item.Temperature),
+                (1 - pow(Item.EquippableItem.Quality, Context.GameplaySettings.QualityWearExponent)) *
+                Context.GameplaySettings.ThermalWearExponent)
+            ) * _itemData.Durability;
     }
 
     public virtual bool Execute(float delta)

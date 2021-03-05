@@ -4553,7 +4553,7 @@ MonoBehaviour:
   EnergyLabel: {fileID: 0}
   CockpitTemperatureLabel: {fileID: 0}
   RadiatorTemperatureLabel: {fileID: 0}
-  HeatsinkTemperatureLabel: {fileID: 0}
+  HeatStorageTemperatureLabel: {fileID: 0}
   CargoTemperatureLabel: {fileID: 517688448}
   VisibilityLabel: {fileID: 858665366}
   HullDurabilityLabel: {fileID: 2101419019}
@@ -13046,6 +13046,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bed3b49fe74863340b2a75f3d0517e86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  WormholePrefab: {fileID: 463084220523011477, guid: 4a77c480b4bb2a148954bd57dfe91d0b,
+    type: 3}
   EntityFadeTime: 3
   EffectManagerParent: {fileID: 134113271}
   FogCameraParent: {fileID: 1547889399}
@@ -29475,7 +29477,7 @@ MonoBehaviour:
   EnergyLabel: {fileID: 804489113}
   CockpitTemperatureLabel: {fileID: 212527384}
   RadiatorTemperatureLabel: {fileID: 1752418078}
-  HeatsinkTemperatureLabel: {fileID: 1060591360}
+  HeatStorageTemperatureLabel: {fileID: 1060591360}
   CargoTemperatureLabel: {fileID: 388927456}
   VisibilityLabel: {fileID: 2122035461}
   HullDurabilityLabel: {fileID: 697075017}
