@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Mathematics.math;
 
 public class HitscanEffect : MonoBehaviour
 {
@@ -25,17 +26,39 @@ public class HitscanEffect : MonoBehaviour
     public void Fire()
     {
         _startTime = Time.time;
-        RaycastHit hit;
-        if (Physics.Raycast(new Ray(transform.position, transform.forward), out hit, Range, 1))
+        var hitFound = false;
+        var ray = new Ray(transform.position, transform.forward);
+        foreach (var hit in Physics.RaycastAll(ray, Range, 1 | (1 << 17)))
         {
+            var shield = hit.collider.GetComponent<ShieldManager>();
+            if (shield)
+            {
+                if (!(shield.Entity.Shield != null && shield.Entity.Shield.Item.Active && shield.Entity.Shield.CanTakeHit(DamageType, Damage))) continue;
+                if (shield.Entity != SourceEntity)
+                {
+                    shield.Entity.Shield.TakeHit(DamageType, Damage);
+                    shield.ShowHit(hit.point, sqrt(Damage));
+                    hitFound = true;
+                }
+            }
             var hull = hit.collider.GetComponent<HullCollider>();
             if (hull)
             {
                 if (hull.Entity != SourceEntity)
                 {
                     hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, transform.forward);
+                    transform.position = hit.point;
+                    hitFound = true;
                 }
             }
+                
+            if (hitFound && HitEffect != null)
+            {
+                var ht = HitEffect.Instantiate<Transform>();
+                ht.SetParent(hit.collider.transform);
+                ht.position = hit.point;
+            }
+            
             var length = (hit.point - transform.position).magnitude;
             Line.SetPosition(1, Vector3.forward * length);
             var emission = LineEffect.emission;
@@ -44,7 +67,7 @@ public class HitscanEffect : MonoBehaviour
             shape.position = Vector3.forward * (length / 2);
             shape.scale = Vector3.one * (length / 2);
         }
-        else
+        if(!hitFound)
         {
             Line.SetPosition(1, Vector3.forward * Range);
             var emission = LineEffect.emission;

@@ -177,6 +177,14 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Toggle Shield"",
+                    ""type"": ""Button"",
+                    ""id"": ""5566504f-ee89-4eb9-9bbb-03f4b22dfe7d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -584,6 +592,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""EnterWormhole"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d59fb542-6ac5-466d-a668-67fd8c890232"",
+                    ""path"": ""<Keyboard>/#(G)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Toggle Shield"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1172,6 +1191,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player_TargetNearest = m_Player.FindAction("Target Nearest", throwIfNotFound: true);
         m_Player_ToggleHeatsinks = m_Player.FindAction("Toggle Heatsinks", throwIfNotFound: true);
         m_Player_EnterWormhole = m_Player.FindAction("EnterWormhole", throwIfNotFound: true);
+        m_Player_ToggleShield = m_Player.FindAction("Toggle Shield", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1257,6 +1277,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_TargetNearest;
     private readonly InputAction m_Player_ToggleHeatsinks;
     private readonly InputAction m_Player_EnterWormhole;
+    private readonly InputAction m_Player_ToggleShield;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1281,6 +1302,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @TargetNearest => m_Wrapper.m_Player_TargetNearest;
         public InputAction @ToggleHeatsinks => m_Wrapper.m_Player_ToggleHeatsinks;
         public InputAction @EnterWormhole => m_Wrapper.m_Player_EnterWormhole;
+        public InputAction @ToggleShield => m_Wrapper.m_Player_ToggleShield;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1350,6 +1372,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @EnterWormhole.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
                 @EnterWormhole.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
                 @EnterWormhole.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
+                @ToggleShield.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleShield;
+                @ToggleShield.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleShield;
+                @ToggleShield.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleShield;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1414,6 +1439,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @EnterWormhole.started += instance.OnEnterWormhole;
                 @EnterWormhole.performed += instance.OnEnterWormhole;
                 @EnterWormhole.canceled += instance.OnEnterWormhole;
+                @ToggleShield.started += instance.OnToggleShield;
+                @ToggleShield.performed += instance.OnToggleShield;
+                @ToggleShield.canceled += instance.OnToggleShield;
             }
         }
     }
@@ -1613,6 +1641,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnTargetNearest(InputAction.CallbackContext context);
         void OnToggleHeatsinks(InputAction.CallbackContext context);
         void OnEnterWormhole(InputAction.CallbackContext context);
+        void OnToggleShield(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

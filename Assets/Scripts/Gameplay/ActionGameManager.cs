@@ -225,6 +225,15 @@ public class ActionGameManager : MonoBehaviour
             AkSoundEngine.PostEvent(CurrentShip.HeatsinksEnabled ? "UI_Success" : "UI_Fail", gameObject);
         };
 
+        _input.Player.ToggleShield.performed += context =>
+        {
+            if (CurrentShip.Shield != null)
+            {
+                CurrentShip.Shield.Item.Enabled = !CurrentShip.Shield.Item.Enabled;
+                AkSoundEngine.PostEvent(CurrentShip.Shield.Item.Enabled ? "UI_Success" : "UI_Fail", gameObject);
+            }
+        };
+
         #region Targeting
 
         _input.Player.TargetReticle.performed += context =>

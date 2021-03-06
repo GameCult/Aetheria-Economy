@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;
 using Random = UnityEngine.Random;
+using static Unity.Mathematics.math;
 
 public class Lightning : MonoBehaviour
 {
@@ -31,11 +32,21 @@ public class Lightning : MonoBehaviour
         _colliderHit = false;
         LightningCompute.OnLeaderComplete = null;
         LightningCompute.FixedEndpoint = false;
-        var hits = Physics.SphereCastAll(Barrel.position, HitRadius, Barrel.forward, Range, 1);
+        var hits = Physics.SphereCastAll(Barrel.position, HitRadius, Barrel.forward, Range, 1 | (1 << 17));
         foreach (var hit in hits)
         {
+            var shield = hit.collider.GetComponent<ShieldManager>();
+            if (shield && (shield.Entity.Shield != null && shield.Entity.Shield.Item.Active && shield.Entity.Shield.CanTakeHit(DamageType, Damage)))
+            {
+                if (shield.Entity == Source.Entity) continue;
+                LightningCompute.OnLeaderComplete = () =>
+                {
+                    shield.Entity.Shield.TakeHit(DamageType, Damage);
+                    shield.ShowHit(hit.point, sqrt(Damage));
+                };
+            }
             var hull = hit.collider.GetComponent<HullCollider>();
-            if (hull)
+            if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
             {
                 if (hull.Entity == Source.Entity) continue;
                 LightningCompute.OnLeaderComplete = () => 

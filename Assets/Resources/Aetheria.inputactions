@@ -164,6 +164,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Toggle Shield",
+                    "type": "Button",
+                    "id": "5566504f-ee89-4eb9-9bbb-03f4b22dfe7d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -571,6 +579,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "EnterWormhole",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d59fb542-6ac5-466d-a668-67fd8c890232",
+                    "path": "<Keyboard>/#(G)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle Shield",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

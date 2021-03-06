@@ -12,12 +12,6 @@ public class GuidedProjectile : MonoBehaviour
 {
     public Prototype HitEffect;
     public Prototype ChildProjectile;
-    public Prototype AirburstProjectile;
-    public int AirburstCount;
-    public float AirburstDirectionality;
-    public float AirburstDistance;
-    public float AirburstRange;
-    public float AirburstVelocity;
     public int Children;
     public float SplitTime;
     public float SplitSeparationForwardness;
@@ -81,34 +75,13 @@ public class GuidedProjectile : MonoBehaviour
             var position = (float3) t.position;
             var sourceDist = length(StartPosition.xz - position.xz);
             
-            if (sourceDist > Range || dot(diff,Velocity) < 0 || AirburstCount > 0 && targetDist < AirburstDistance)
+            if (sourceDist > Range || dot(diff,Velocity) < 0)
             {
                 StartCoroutine(FadeOut());
                 if (HitEffect != null)
                 {
                     var ht = HitEffect.Instantiate<Transform>();
                     ht.position = t.position;
-                }
-
-                if (AirburstCount > 0 && AirburstProjectile)
-                {
-                    var targetDiff = Target.position - transform.position;
-                    if (targetDiff.magnitude < AirburstRange)
-                    {
-                        for (int i = 0; i < AirburstCount; i++)
-                        {
-                            var child = AirburstProjectile.Instantiate<Projectile>();
-                            child.StartPosition = child.transform.position = t.position;
-                            var randomDirection = Random.onUnitSphere;
-                            child.Velocity = Vector3.Lerp(randomDirection, targetDiff.normalized, AirburstDirectionality).normalized * AirburstVelocity;
-                            child.Range = AirburstRange;
-                            child.Damage = Damage / AirburstCount;
-                            child.Penetration = Penetration;
-                            child.Spread = Spread;
-                            child.DamageType = DamageType;
-                            child.SourceEntity = SourceEntity;
-                        }
-                    }
                 }
                 return;
             }
@@ -169,15 +142,34 @@ public class GuidedProjectile : MonoBehaviour
         if(_alive)
         {
             var ray = new Ray(t.position, Velocity);
-            if (Physics.Raycast(ray, out var hit, Velocity.magnitude * Time.deltaTime, 1))
+            foreach (var hit in Physics.RaycastAll(ray, Velocity.magnitude * Time.deltaTime, 1 | (1 << 17)))
             {
-                var hull = hit.collider.GetComponent<HullCollider>();
-                if (hull)
+                var shield = hit.collider.GetComponent<ShieldManager>();
+                if (shield)
                 {
-                    hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, Velocity.normalized);
+                    if (!(shield.Entity.Shield != null && shield.Entity.Shield.Item.Active && shield.Entity.Shield.CanTakeHit(DamageType, Damage))) continue;
+                    if (shield.Entity != SourceEntity)
+                    {
+                        shield.Entity.Shield.TakeHit(DamageType, Damage);
+                        shield.ShowHit(hit.point, sqrt(Damage));
+                    }
                 }
-
-                StartCoroutine(Kill());
+                var hull = hit.collider.GetComponent<HullCollider>();
+                if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
+                {
+                    if (hull.Entity != SourceEntity)
+                    {
+                        hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, transform.forward);
+                        transform.position = hit.point;
+                        StartCoroutine(Kill());
+                    }
+                }
+                else// if (hit.transform.gameObject.layer == 1)
+                {
+                    StartCoroutine(Kill());
+                    return;
+                }
+                
                 if (HitEffect != null)
                 {
                     var ht = HitEffect.Instantiate<Transform>();

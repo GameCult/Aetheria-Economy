@@ -18,6 +18,7 @@ public class SchematicDisplay : MonoBehaviour
     public Color HeaderElementEnabledColor;
     public Color HeaderElementDisabledColor;
 
+    public GameObject ShieldIcon;
     public Image HeatsinkBackground;
 
     public TextMeshProUGUI EnergyLabel;
@@ -215,6 +216,7 @@ public class SchematicDisplay : MonoBehaviour
         {
             if (!_enemy)
             {
+                ShieldIcon.SetActive(_entity.Shield!=null && _entity.Shield.Item.Active);
                 if (_radiators.Length == 1)
                     RadiatorTemperatureLabel.text = $"{((int)(_radiators[0].Temperature - 273.15f)).ToString()}°C";
                 else if (_radiators.Length > 1)

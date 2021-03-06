@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.Mathematics.math;
 
 public class ConstantLightning : MonoBehaviour
 {
@@ -50,11 +51,18 @@ public class ConstantLightning : MonoBehaviour
         }
         
         Lightning.FixedEndpoint = false;
-        var hits = Physics.SphereCastAll(Barrel.position, HitRadius, Barrel.forward, Range, 1);
+        var hits = Physics.SphereCastAll(Barrel.position, HitRadius, Barrel.forward, Range, 1 | (1 << 17));
         foreach (var hit in hits)
         {
+            var shield = hit.collider.GetComponent<ShieldManager>();
+            if (shield && (shield.Entity.Shield != null && shield.Entity.Shield.Item.Active && shield.Entity.Shield.CanTakeHit(DamageType, Damage)))
+            {
+                if (shield.Entity == Source.Entity) continue;
+                shield.Entity.Shield.TakeHit(DamageType, Damage * Time.deltaTime);
+                shield.ShowHit(hit.point, sqrt(Damage));
+            }
             var hull = hit.collider.GetComponent<HullCollider>();
-            if (hull)
+            if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
             {
                 if (hull.Entity == Source.Entity) continue;
                 hull.SendHit(Damage * Time.deltaTime, Penetration, Spread, DamageType, Source.Entity, hit.textureCoord, Barrel.forward);

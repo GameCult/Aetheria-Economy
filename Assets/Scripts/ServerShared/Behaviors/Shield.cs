@@ -13,8 +13,8 @@ public class ShieldData : BehaviorData
     [InspectableField, JsonProperty("efficiency"), Key(1), RuntimeInspectable]  
     public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("shielding"), Key(2), RuntimeInspectable]  
-    public PerformanceStat Shielding = new PerformanceStat();
+    [InspectableField, JsonProperty("energy"), Key(2), RuntimeInspectable]  
+    public PerformanceStat EnergyUsage = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
@@ -27,6 +27,9 @@ public class Shield : IBehavior
     public Entity Entity { get; }
     public EquippedItem Item { get; }
     public ItemManager Context { get; }
+    
+    public float Efficiency { get; private set; }
+    public float EnergyUsage { get; private set; }
 
     public BehaviorData Data => _data;
     
@@ -38,12 +41,23 @@ public class Shield : IBehavior
         _data = data;
         Entity = entity;
         Item = item;
-        
-        // TODO: Detect hits on Ship, keep a list of callbacks that modify the hit by reference
     }
 
     public bool Execute(float delta)
     {
+        Efficiency = Context.Evaluate(_data.Efficiency, Item);
+        EnergyUsage = Context.Evaluate(_data.EnergyUsage, Item);
         return true;
+    }
+
+    public bool CanTakeHit(DamageType type, float damage)
+    {
+        return Entity.CanConsumeEnergy(damage * EnergyUsage);
+    }
+
+    public void TakeHit(DamageType type, float damage)
+    {
+        Entity.TryConsumeEnergy(damage * EnergyUsage);
+        Item.AddHeat(damage / Efficiency);
     }
 }

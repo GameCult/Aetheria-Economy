@@ -96,13 +96,11 @@ public abstract class Entity
         get => _weapons;
     }
     
+    public Shield Shield { get; private set; }
+    
     public float TargetRange { get; private set; }
     public float MaxTemp { get; private set; }
     public float MinTemp { get; private set; }
-    public bool ShieldEnabled // TODO: MAKE SHIELDS
-    {
-        get => true;
-    }
     public ItemManager ItemManager { get; }
     public int AssignedPopulation => PopulationAssignments.Sum(pa => pa.AssignedPopulation);
     public float Mass { get; private set; }
@@ -349,12 +347,14 @@ public abstract class Entity
         {
             if (b is Weapon weapon)
                 _weapons.Remove(weapon);
-            if(b is Capacitor capacitor)
+            if (b is Capacitor capacitor)
                 _capacitors.Remove(capacitor);
-            if(b is Reactor reactor)
+            if (b is Reactor reactor)
                 _reactors.Remove(reactor);
-            if(b is Radiator heatsink)
+            if (b is Radiator heatsink)
                 _heatsinks.Remove(heatsink);
+            if (b is Shield)
+                Shield = null;
         }
 
         return item.EquippableItem;
@@ -531,6 +531,8 @@ public abstract class Entity
                 _reactors.Add(reactor);
             if(b is Radiator heatsink)
                 _heatsinks.Add(heatsink);
+            if (b is Shield shield)
+                Shield = shield;
         }
 
         equippedItem.OnOnline += () => ItemOnline.OnNext(equippedItem);
@@ -582,6 +584,13 @@ public abstract class Entity
         ship.Activate();
 
         return true;
+    }
+
+    public bool CanConsumeEnergy(float energy)
+    {
+        var capEnergy = _capacitors.Sum(cap => cap.Charge);
+        int onlineReactors = _reactors.Count(reactor=>reactor.Item.Online);
+        return capEnergy > energy || onlineReactors > 0;
     }
 
     public bool TryConsumeEnergy(float energy)
@@ -860,6 +869,11 @@ public class EquippedItem
     public Shape InsetShape { get; }
 
     public int SortPosition;
+    
+    public bool Active
+    {
+        get => _online && Enabled;
+    }
 
     public bool Online
     {
@@ -937,7 +951,7 @@ public class EquippedItem
         if (!previouslyOnline && _online) OnOnline?.Invoke();
         if (previouslyOnline && !_online) OnOffline?.Invoke(); 
 
-        if (Enabled && _online)
+        if (Active)
         {
             foreach (var group in BehaviorGroups.Values)
             {
