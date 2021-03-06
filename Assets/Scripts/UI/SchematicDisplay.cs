@@ -241,7 +241,7 @@ public class SchematicDisplay : MonoBehaviour
 
                 CockpitTemperatureLabel.text = $"{((int)(_cockpit.Item.Temperature - 273.15f)).ToString()}°C";
 
-                HeatstrokeMeterFill.anchorMax = new Vector2(_cockpit.Heatstroke, 1);
+                HeatstrokeMeterFill.anchorMax = new Vector2(_entity.Heatstroke, 1);
                 HeatstrokeLimitFill.anchorMax = new Vector2(_cockpit.Item.Temperature / Settings.GameplaySettings.HeatstrokeTemperature, 1);
 
                 if (_capacitors.Length == 0)

@@ -14,6 +14,7 @@ using UniRx;
 using UnityEngine;
 using Unity.Mathematics;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
@@ -22,6 +23,8 @@ using Random = UnityEngine.Random;
 
 public class ActionGameManager : MonoBehaviour
 {
+    public PostProcessVolume HeatstrokePP;
+    public PostProcessVolume SevereHeatstrokePP;
     public PlaceUIElementWorldspace ViewDot;
     public PlaceUIElementWorldspace TargetIndicator;
     public Prototype LockIndicator;
@@ -55,20 +58,27 @@ public class ActionGameManager : MonoBehaviour
     private float _time;
     private AetheriaInput _input;
     private int _zoomLevelIndex;
+    private Ship _currentShip;
 
     // private ShipInput _shipInput;
     private List<Agent> _shipAgents = new List<Agent>();
-    private IDisposable _shipTargetSubscription;
     private float2 _shipYawPitch;
     private float3 _viewDirection;
     private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] _articulationGroups;
     private (LockWeapon targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] _lockingIndicators;
+    private List<IDisposable> _shipSubscriptions = new List<IDisposable>();
+    private float _severeHeatstrokePhase;
     
     public List<Entity> PlayerEntities { get; } = new List<Entity>();
     public EquippedDockingBay DockingBay { get; private set; }
     public Entity DockedEntity { get; private set; }
-    
-    public Ship CurrentShip { get; set; }
+
+    public Ship CurrentShip
+    {
+        get => _currentShip;
+        set => _currentShip = value;
+    }
+
     public DatabaseCache ItemData { get; private set; }
     public ItemManager ItemManager { get; private set; }
     public Zone Zone { get; private set; }
@@ -80,6 +90,7 @@ public class ActionGameManager : MonoBehaviour
         (float2(-1, 0), "Left"),
         (float2(0, -1), "Rear")
     };
+
 
     public void SaveLoadout(EntityPack pack)
     {
@@ -479,6 +490,8 @@ public class ActionGameManager : MonoBehaviour
                 var bay = entity.TryDock(CurrentShip);
                 if (bay != null)
                 {
+                    foreach(var subscription in _shipSubscriptions) subscription.Dispose();
+                    _shipSubscriptions.Clear();
                     DockedEntity = entity;
                     SectorRenderer.PerspectiveEntity = DockedEntity;
                     DockingBay = bay;
@@ -550,8 +563,7 @@ public class ActionGameManager : MonoBehaviour
                 if (float.IsNaN(CurrentShip.Hull.Durability))
                     Debug.Log("WTF!");
             });
-            _shipTargetSubscription?.Dispose();
-            _shipTargetSubscription = CurrentShip.Target.Subscribe(target =>
+            _shipSubscriptions.Add(CurrentShip.Target.Subscribe(target =>
             {
                 TargetIndicator.gameObject.SetActive(CurrentShip.Target.Value != null);
                 TargetShipPanel.gameObject.SetActive(target != null);
@@ -560,7 +572,9 @@ public class ActionGameManager : MonoBehaviour
                     TargetShipPanel.Display(target, true);
                     TargetSchematicDisplay.ShowShip(target, CurrentShip);
                 }
-            });
+            }));
+            
+            //_shipSubscriptions.Add(CurrentShip.HeatstrokeRisk.Subscribe(_ => _severeHeatstrokePhase = 0));
 
             Cursor.lockState = CursorLockMode.Locked;
             GameplayUI.SetActive(true);
@@ -647,6 +661,11 @@ public class ActionGameManager : MonoBehaviour
                 _viewDirection = mul(float3(0, 0, 1), Unity.Mathematics.float3x3.Euler(float3(_shipYawPitch.yx, 0), RotationOrder.YXZ));
                 CurrentShip.LookDirection = _viewDirection;
                 CurrentShip.MovementDirection = _input.Player.Move.ReadValue<Vector2>();
+                HeatstrokePP.weight = saturate(unlerp(0, Settings.GameplaySettings.SevereHeatstrokeRiskThreshold, CurrentShip.Heatstroke));
+                var severeHeatstrokeLerp = saturate(unlerp(Settings.GameplaySettings.SevereHeatstrokeRiskThreshold, 1, CurrentShip.Heatstroke));
+                SevereHeatstrokePP.weight =
+                    severeHeatstrokeLerp + severeHeatstrokeLerp * (1 - severeHeatstrokeLerp) *
+                    max(Settings.HeatstrokePhasingFloor, sin(Time.time * Settings.HeatstrokePhasingFrequency));
             }
         }
         foreach(var agent in _shipAgents)

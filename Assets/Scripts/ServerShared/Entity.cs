@@ -97,6 +97,8 @@ public abstract class Entity
     }
     
     public Shield Shield { get; private set; }
+    public Cockpit Cockpit { get; private set; }
+    public float Heatstroke { get; private set; }
     
     public float TargetRange { get; private set; }
     public float MaxTemp { get; private set; }
@@ -112,6 +114,7 @@ public abstract class Entity
     public Subject<EquippedItem> ItemOnline = new Subject<EquippedItem>();
     public Subject<float> HullDamage = new Subject<float>();
     public Subject<Entity> Docked = new Subject<Entity>();
+    public Subject<Unit> HeatstrokeRisk = new Subject<Unit>();
     
     public UniRx.IObservable<EquippedItem> ItemDestroyed;
     public UniRx.IObservable<int2> HullArmorDepleted;
@@ -123,6 +126,7 @@ public abstract class Entity
     public virtual void Activate()
     {
         _active = true;
+        Heatstroke = 0;
         foreach (var item in Equipment)
         foreach (var behavior in item.Behaviors)
         {
@@ -355,6 +359,8 @@ public abstract class Entity
                 _heatsinks.Remove(heatsink);
             if (b is Shield)
                 Shield = null;
+            if (b is Cockpit)
+                Cockpit = null;
         }
 
         return item.EquippableItem;
@@ -533,6 +539,8 @@ public abstract class Entity
                 _heatsinks.Add(heatsink);
             if (b is Shield shield)
                 Shield = shield;
+            if (b is Cockpit cockpit)
+                Cockpit = cockpit;
         }
 
         equippedItem.OnOnline += () => ItemOnline.OnNext(equippedItem);
@@ -730,6 +738,24 @@ public abstract class Entity
         }
 
         UpdateTemperature(delta);
+        
+        if(Cockpit != null)
+        {
+            if (Cockpit.Item.Temperature > ItemManager.GameplaySettings.HeatstrokeTemperature)
+            {
+                var previous = Heatstroke;
+                Heatstroke = saturate(
+                    Heatstroke +
+                    pow(Cockpit.Item.Temperature - ItemManager.GameplaySettings.HeatstrokeTemperature, ItemManager.GameplaySettings.HeatstrokeExponent) *
+                    ItemManager.GameplaySettings.HeatstrokeMultiplier * delta);
+                if(previous < ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold && Heatstroke > ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold)
+                    HeatstrokeRisk.OnNext(Unit.Default);
+            }
+            else
+            {
+                Heatstroke = saturate(Heatstroke - ItemManager.GameplaySettings.HeatstrokeRecoverySpeed * delta);
+            }
+        }
         
         if (_active)
         {

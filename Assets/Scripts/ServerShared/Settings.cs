@@ -88,6 +88,7 @@ public class ZoneGenerationSettings
 [Serializable, MessagePackObject(keyAsPropertyName: true), JsonObject]
 public class GameplaySettings
 {
+    public float SevereHeatstrokeRiskThreshold = .25f;
     public float WormholeDepth = 1000;
     public float WormholeExitVelocity = 20;
     public float WormholeExitRadius = 50;

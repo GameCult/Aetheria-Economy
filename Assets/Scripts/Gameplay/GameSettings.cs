@@ -10,6 +10,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Sector Display Properties", menuName = "Aetheria/Sector Display Properties")]
 public class GameSettings : ScriptableObject
 {
+    public float HeatstrokePhasingFloor = 0;
+    public float HeatstrokePhasingFrequency = 5;
     public float WormholeDistanceRatio;
     public float DefaultZoneRadius;
     public float DefaultZoneMass;
