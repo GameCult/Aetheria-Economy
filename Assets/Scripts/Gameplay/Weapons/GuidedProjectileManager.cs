@@ -29,8 +29,8 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
             p.LiftCurve = launcher.LiftCurve.ToCurve();
             p.ThrustCurve = launcher.ThrustCurve.ToCurve();
             p.Velocity = barrel.forward * weapon.Velocity;
-            p.Thrust = source.Entity.ItemManager.Evaluate(launcher.Thrust, item);
-            p.TopSpeed = source.Entity.ItemManager.Evaluate(launcher.MissileVelocity, item);
+            p.Thrust = item.Evaluate(launcher.Thrust);
+            p.TopSpeed = item.Evaluate(launcher.MissileVelocity);
         }
         else if(weapon.Data is GuidedWeaponData guidance)
         {
@@ -51,8 +51,8 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
             p.LiftCurve = guidance.LiftCurve.ToCurve();
             p.ThrustCurve = guidance.ThrustCurve.ToCurve();
             p.Velocity = barrel.forward * weapon.Velocity;
-            p.Thrust = source.Entity.ItemManager.Evaluate(guidance.Thrust, item);
-            p.TopSpeed = source.Entity.ItemManager.Evaluate(guidance.MissileVelocity, item);
+            p.Thrust = item.Evaluate(guidance.Thrust);
+            p.TopSpeed = item.Evaluate(guidance.MissileVelocity);
             p.TargetPosition = () => source.Entity.Position + length( (float3)source.LookAtPoint.position - source.Entity.Position) * source.Entity.LookDirection;
         }
         else Debug.LogError($"Weapon {item.EquippableItem.Name} linked to {name} effect, but is not a Launcher!");

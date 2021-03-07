@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using float3 = Unity.Mathematics.float3;
@@ -18,8 +19,7 @@ public class CombatState : BaseState
         SampleDps();
         foreach (var weapon in _agent.Ship.Weapons)
         {
-            weapon.Item.OnOffline += SampleDps;
-            weapon.Item.OnOnline += SampleDps;
+            weapon.Item.Online.Subscribe(b => SampleDps());
         }
     }
 
@@ -38,7 +38,7 @@ public class CombatState : BaseState
             var group = _agent.Ship.TriggerGroups[i];
             var dps = 0f;
             foreach (var weapon in group.weapons)
-                if (weapon.Item.Online && 
+                if (weapon.Item.Online.Value && 
                     weapon.MinRange < targetDistance && 
                     targetDistance < weapon.Range && 
                     (weapon is ConstantWeapon || 
@@ -134,7 +134,7 @@ public class CombatState : BaseState
             float dps = 0;
             foreach (var weapon in _agent.Ship.Weapons)
             {
-                if (weapon.Item.Online && weapon.MinRange < range && range < weapon.Range)
+                if (weapon.Item.Online.Value && weapon.MinRange < range && range < weapon.Range)
                     dps += weapon.RangeDamagePerSecond(range);
             }
 

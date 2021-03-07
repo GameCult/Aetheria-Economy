@@ -172,6 +172,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Override Shutdown",
+                    "type": "Button",
+                    "id": "62a64686-4670-43c9-81ee-bbb8578e284b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -588,8 +596,19 @@
                     "path": "<Keyboard>/#(G)",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard&Mouse",
                     "action": "Toggle Shield",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e8b5d19-20fd-43f3-88cf-6246f374e7cf",
+                    "path": "<Keyboard>/#(O)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Override Shutdown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

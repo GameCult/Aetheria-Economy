@@ -109,7 +109,7 @@ public class DatabaseCache
     public void Load(string path)
     {
         RegisterResolver.Register();
-        var bytes = File.ReadAllBytes(Path.Combine(path, "AetherDB.msgpack"));
+        var bytes = File.ReadAllBytes(path);
         var entries = MessagePackSerializer.Deserialize<DatabaseEntry[]>(bytes);
         AddAll(entries);
     }

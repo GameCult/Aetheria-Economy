@@ -363,6 +363,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Ast\TopLevel.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetConstants.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Proto\Protocol.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\PlayerSettings.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Generated\Ast\Filter.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\Response.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb.Driver\Net\JsonConverters\ReqlExprConverter.cs" />

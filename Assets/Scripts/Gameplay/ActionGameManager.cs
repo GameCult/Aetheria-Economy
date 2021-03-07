@@ -52,6 +52,7 @@ public class ActionGameManager : MonoBehaviour
     // private CinemachineFramingTransposer _transposer;
     // private CinemachineComposer _composer;
     
+    public PlayerSettings PlayerSettings { get; private set; }
     private DirectoryInfo _filePath;
     private DirectoryInfo _loadoutPath;
     private bool _editMode;
@@ -112,7 +113,10 @@ public class ActionGameManager : MonoBehaviour
 
         if (CurrentShip != null)
         {
+            CurrentShip.Deactivate();
+            CurrentShip.Zone = Zone;
             Zone.Entities.Add(CurrentShip);
+            CurrentShip.Activate();
         }
         
         SectorRenderer.LoadZone(Zone);
@@ -128,10 +132,19 @@ public class ActionGameManager : MonoBehaviour
         ConsoleController.MessageReceiver = this;
         _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
         _loadoutPath = _filePath.CreateSubdirectory("Loadouts");
+        
         ItemData = new DatabaseCache();
-        ItemData.Load(_filePath.FullName);
+        ItemData.Load(Path.Combine(_filePath.FullName, "AetherDB.msgpack"));
         ItemManager = new ItemManager(ItemData, Settings.GameplaySettings, Debug.Log);
         SectorRenderer.ItemManager = ItemManager;
+
+        FileInfo playerSettingsFile = new FileInfo(Path.Combine(_filePath.FullName, "PlayerSettings.msgpack"));
+        if (!playerSettingsFile.Exists)
+        {
+            File.WriteAllBytes(playerSettingsFile.FullName, MessagePackSerializer.Serialize(Settings.DefaultPlayerSettings));
+        }
+        PlayerSettings = MessagePackSerializer.Deserialize<PlayerSettings>(
+            File.ReadAllBytes(playerSettingsFile.FullName));
 
         Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.preset")
             .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
@@ -230,6 +243,11 @@ public class ActionGameManager : MonoBehaviour
             }
         };
 
+        _input.Player.OverrideShutdown.performed += context =>
+        {
+            CurrentShip.OverrideShutdown = !CurrentShip.OverrideShutdown;
+        };
+
         _input.Player.ToggleHeatsinks.performed += context =>
         {
             CurrentShip.HeatsinksEnabled = !CurrentShip.HeatsinksEnabled;
@@ -240,8 +258,8 @@ public class ActionGameManager : MonoBehaviour
         {
             if (CurrentShip.Shield != null)
             {
-                CurrentShip.Shield.Item.Enabled = !CurrentShip.Shield.Item.Enabled;
-                AkSoundEngine.PostEvent(CurrentShip.Shield.Item.Enabled ? "UI_Success" : "UI_Fail", gameObject);
+                CurrentShip.Shield.Item.Enabled.Value = !CurrentShip.Shield.Item.Enabled.Value;
+                AkSoundEngine.PostEvent(CurrentShip.Shield.Item.Enabled.Value ? "UI_Success" : "UI_Fail", gameObject);
             }
         };
 

@@ -54,7 +54,7 @@ public class MiningTool : IBehavior
 
     public bool Execute(float delta)
     {
-        Range = Context.Evaluate(_data.Range, Item);
+        Range = Item.Evaluate(_data.Range);
         var belt = Entity.Zone.AsteroidBelts[AsteroidBelt];
         if (AsteroidBelt != Guid.Empty && 
             Entity.Zone.AsteroidExists(AsteroidBelt, Asteroid) && 
@@ -64,9 +64,9 @@ public class MiningTool : IBehavior
                 Entity,
                 AsteroidBelt,
                 Asteroid,
-                Context.Evaluate(_data.DamagePerSecond, Item) * delta,
-                Context.Evaluate(_data.Efficiency, Item),
-                Context.Evaluate(_data.Penetration, Item));
+                Item.Evaluate(_data.DamagePerSecond) * delta,
+                Item.Evaluate(_data.Efficiency),
+                Item.Evaluate(_data.Penetration));
             return true;
         }
 

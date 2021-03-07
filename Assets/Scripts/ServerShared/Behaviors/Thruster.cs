@@ -61,16 +61,16 @@ public class Thruster : IAnalogBehavior
         var itemCenter = hullData.Shape.Inset(itemData.Shape, item.Position, item.EquippableItem.Rotation).CenterOfMass;
         var toCenter = hullCenter - itemCenter;
         Torque = -dot(normalize(toCenter), float2(1, 0).Rotate(item.EquippableItem.Rotation));
-        Thrust = Context.Evaluate(_data.Thrust, Item);
+        Thrust = Item.Evaluate(_data.Thrust);
     }
 
     public bool Execute(float delta)
     {
-        Thrust = Context.Evaluate(_data.Thrust, Item);
+        Thrust = Item.Evaluate(_data.Thrust);
         Entity.Velocity -= Entity.Direction.Rotate(Item.EquippableItem.Rotation) * _input * Thrust / Entity.Mass * delta;
         Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque * Thrust * Context.GameplaySettings.TorqueMultiplier / Entity.Mass * delta));
-        Item.AddHeat(_input * Context.Evaluate(_data.Heat, Item) * delta);
-        var vis = _input * Context.Evaluate(_data.Visibility, Item);
+        Item.AddHeat(_input * Item.Evaluate(_data.Heat) * delta);
+        var vis = _input * Item.Evaluate(_data.Visibility);
         if(!Entity.VisibilitySources.ContainsKey(this) || vis > Entity.VisibilitySources[this])
             Entity.VisibilitySources[this] = vis;
         return _input > .01f;

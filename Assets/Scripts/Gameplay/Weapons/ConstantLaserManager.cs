@@ -14,14 +14,14 @@ public class ConstantLaserManager : ConstantWeaponEffectManager
         p.SourceEntity = source.Entity;
         var hp = source.Entity.Hardpoints[item.Position.x, item.Position.y];
         var barrel = source.GetBarrel(hp);
-        p.Range = source.Entity.ItemManager.Evaluate(data.Range, item);
+        p.Range = item.Evaluate(data.Range);
         var t = p.transform;
         t.SetParent(barrel);
         t.forward = barrel.forward;
         t.position = barrel.position;
-        p.Damage = source.Entity.ItemManager.Evaluate(data.Damage, item);
-        p.Penetration = source.Entity.ItemManager.Evaluate(data.Penetration, item);
-        p.Spread = source.Entity.ItemManager.Evaluate(data.DamageSpread, item);
+        p.Damage = item.Evaluate(data.Damage);
+        p.Penetration = item.Evaluate(data.Penetration);
+        p.Spread = item.Evaluate(data.DamageSpread);
         p.DamageType = data.DamageType;
         _lasers.Add(item, p);
     }

@@ -147,7 +147,7 @@ public class GuidedProjectile : MonoBehaviour
                 var shield = hit.collider.GetComponent<ShieldManager>();
                 if (shield)
                 {
-                    if (!(shield.Entity.Shield != null && shield.Entity.Shield.Item.Active && shield.Entity.Shield.CanTakeHit(DamageType, Damage))) continue;
+                    if (!(shield.Entity.Shield != null && shield.Entity.Shield.Item.Active.Value && shield.Entity.Shield.CanTakeHit(DamageType, Damage))) continue;
                     if (shield.Entity != SourceEntity)
                     {
                         shield.Entity.Shield.TakeHit(DamageType, Damage);
@@ -155,7 +155,7 @@ public class GuidedProjectile : MonoBehaviour
                     }
                 }
                 var hull = hit.collider.GetComponent<HullCollider>();
-                if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
+                if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active.Value && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
                 {
                     if (hull.Entity != SourceEntity)
                     {

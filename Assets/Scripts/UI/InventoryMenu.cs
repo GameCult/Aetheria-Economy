@@ -282,8 +282,7 @@ public class InventoryMenu : MonoBehaviour
                     floatCells();
                 }
             });
-            
-            
+
             panel.OnClickAsObservable().Subscribe(data =>
             {
                 if (data is InventoryCargoEventData cargoEvent)
@@ -386,6 +385,16 @@ public class InventoryMenu : MonoBehaviour
                         }
                     }
                 }
+            });
+
+            panel.OnBackgroundClick.Subscribe(data =>
+            {
+                PropertiesPanel.Clear();
+                PropertiesPanel.AddField("Shutdown Threshold",
+                    () => GameManager.PlayerSettings.ShutdownPerformance,
+                    f => GameManager.PlayerSettings.ShutdownPerformance = f,
+                    0,
+                    1);
             });
         }
     }

@@ -17,7 +17,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using int2 = Unity.Mathematics.int2;
 
-public class InventoryPanel : MonoBehaviour
+public class InventoryPanel : MonoBehaviour, IPointerClickHandler
 {
     public ConfirmationDialog ConfirmationDialog;
     public bool Flip;
@@ -669,13 +669,19 @@ public class InventoryPanel : MonoBehaviour
 
         return false;
     }
-    
+
+    public Subject<PointerEventData> OnBackgroundClick = new Subject<PointerEventData>();
     public UniRx.IObservable<InventoryEventData> OnClickAsObservable() => _onClick ?? (_onClick = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnBeginDragAsObservable() => _onBeginDrag ?? (_onBeginDrag = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnDragAsObservable() => _onDrag ?? (_onDrag = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnEndDragAsObservable() => _onEndDrag ?? (_onEndDrag = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnPointerEnterAsObservable() => _onPointerEnter ?? (_onPointerEnter = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnPointerExitAsObservable() => _onPointerExit ?? (_onPointerExit = new Subject<InventoryEventData>());
+    
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        OnBackgroundClick.OnNext(eventData);
+    }
 }
 
 public abstract class InventoryEventData

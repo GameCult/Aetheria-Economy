@@ -42,12 +42,9 @@ public class Wear : IBehavior
 
     public bool Execute(float delta)
     {
-        var wear = (1 - pow(_itemData.Performance(Item.Temperature),
-                (1 - pow(Item.EquippableItem.Quality, Context.GameplaySettings.QualityWearExponent)) *
-                Context.GameplaySettings.ThermalWearExponent)
-            ) * _itemData.Durability / _itemData.ThermalResilience;
-        if (_data.PerSecond) wear *= delta;
-        Item.EquippableItem.Durability -= wear;
+        if (_data.PerSecond)
+            Item.EquippableItem.Durability -= Item.Wear * delta;
+        else Item.EquippableItem.Durability -= Item.Wear;
         return true;
     }
 }

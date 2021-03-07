@@ -18,6 +18,8 @@ public class SchematicDisplay : MonoBehaviour
     public Color HeaderElementEnabledColor;
     public Color HeaderElementDisabledColor;
 
+    public GameObject OverrideIcon;
+    public float OverrideIconBlinkSpeed;
     public GameObject ShieldIcon;
     public Image HeatsinkBackground;
 
@@ -216,7 +218,8 @@ public class SchematicDisplay : MonoBehaviour
         {
             if (!_enemy)
             {
-                ShieldIcon.SetActive(_entity.Shield!=null && _entity.Shield.Item.Active);
+                OverrideIcon.SetActive(_entity.OverrideShutdown && cos(Time.time * OverrideIconBlinkSpeed) > 0);
+                ShieldIcon.SetActive(_entity.Shield!=null && _entity.Shield.Item.Active.Value);
                 if (_radiators.Length == 1)
                     RadiatorTemperatureLabel.text = $"{((int)(_radiators[0].Temperature - 273.15f)).ToString()}°C";
                 else if (_radiators.Length > 1)
@@ -290,7 +293,7 @@ public class SchematicDisplay : MonoBehaviour
 
                 if (x.Weapon.WeaponData != null)
                 {
-                    x.ListElement.RangeLabel.text = ((int) _entity.ItemManager.Evaluate(x.Weapon.WeaponData.Range, x.Item)).ToString();
+                    x.ListElement.RangeLabel.text = ((int) x.Weapon.Range).ToString();
                 }
             }
         }

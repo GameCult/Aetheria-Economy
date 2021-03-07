@@ -91,7 +91,6 @@ public abstract class Weapon : IActivatedBehavior
     public float Visibility { get; protected set; }
     public float Spread { get; protected set; }
     public float Velocity { get; protected set; }
-    public float Wear { get; protected set; }
 
     protected bool _firing;
 
@@ -114,20 +113,16 @@ public abstract class Weapon : IActivatedBehavior
 
     protected virtual void UpdateStats()
     {
-        Damage = Context.Evaluate(_data.Damage, Item);
-        Penetration = Context.Evaluate(_data.Penetration, Item);
-        DamageSpread = Context.Evaluate(_data.DamageSpread, Item);
-        MinRange = Context.Evaluate(_data.MinRange, Item);
-        Range = Context.Evaluate(_data.Range, Item);
-        Energy = Context.Evaluate(_data.Energy, Item);
-        Heat = Context.Evaluate(_data.Heat, Item);
-        Visibility = Context.Evaluate(_data.Visibility, Item);
-        Spread = Context.Evaluate(_data.Spread, Item);
-        Velocity = Context.Evaluate(_data.Velocity, Item);
-        Wear = (1 - pow(_itemData.Performance(Item.Temperature),
-                (1 - pow(Item.EquippableItem.Quality, Context.GameplaySettings.QualityWearExponent)) *
-                Context.GameplaySettings.ThermalWearExponent)
-            ) * _itemData.Durability;
+        Damage = Item.Evaluate(_data.Damage);
+        Penetration = Item.Evaluate(_data.Penetration);
+        DamageSpread = Item.Evaluate(_data.DamageSpread);
+        MinRange = Item.Evaluate(_data.MinRange);
+        Range = Item.Evaluate(_data.Range);
+        Energy = Item.Evaluate(_data.Energy);
+        Heat = Item.Evaluate(_data.Heat);
+        Visibility = Item.Evaluate(_data.Visibility);
+        Spread = Item.Evaluate(_data.Spread);
+        Velocity = Item.Evaluate(_data.Velocity);
     }
 
     public virtual bool Execute(float delta)

@@ -1,5 +1,5 @@
 ﻿Shader "VolSample/Volume Render" {
-	Properties{
+	Properties {
 		_MainTex( "", 2D ) = "white" {}
 		_StepExponent("Step Exponent", float) = 1
 		_Surface("Surface", 2D) = "black" {}

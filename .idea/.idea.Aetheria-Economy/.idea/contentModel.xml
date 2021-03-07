@@ -2023,6 +2023,7 @@
             <e p="Noise1D.cs" t="Include" />
             <e p="OrbitalEntity.cs" t="Include" />
             <e p="PlayerData.cs" t="Include" />
+            <e p="PlayerSettings.cs" t="Include" />
             <e p="Rect.cs" t="Include" />
             <e p="RegisterResolver.cs" t="Include" />
             <e p="Settings.cs" t="Include" />
