@@ -23,8 +23,11 @@ using Random = UnityEngine.Random;
 
 public class ActionGameManager : MonoBehaviour
 {
+    public float TargetSpottedBlinkFrequency = 20;
+    public float TargetSpottedBlinkOffset = -.25f;
     public PostProcessVolume HeatstrokePP;
     public PostProcessVolume SevereHeatstrokePP;
+    public Prototype HostileTargetIndicator;
     public PlaceUIElementWorldspace ViewDot;
     public PlaceUIElementWorldspace TargetIndicator;
     public Prototype LockIndicator;
@@ -67,6 +70,7 @@ public class ActionGameManager : MonoBehaviour
     private float3 _viewDirection;
     private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] _articulationGroups;
     private (LockWeapon targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] _lockingIndicators;
+    private Dictionary<Entity, VisibleHostileIndicator> _visibleHostileIndicators = new Dictionary<Entity, VisibleHostileIndicator>();
     private List<IDisposable> _shipSubscriptions = new List<IDisposable>();
     private float _severeHeatstrokePhase;
     
@@ -576,21 +580,11 @@ public class ActionGameManager : MonoBehaviour
                 return (x, i, i.GetComponent<Rotate>());
             }).ToArray();
 
-            CurrentShip.HullDamage.Subscribe(f =>
-            {
-                if (float.IsNaN(CurrentShip.Hull.Durability))
-                    Debug.Log("WTF!");
-            });
-            _shipSubscriptions.Add(CurrentShip.Target.Subscribe(target =>
-            {
-                TargetIndicator.gameObject.SetActive(CurrentShip.Target.Value != null);
-                TargetShipPanel.gameObject.SetActive(target != null);
-                if (target != null)
-                {
-                    TargetShipPanel.Display(target, true);
-                    TargetSchematicDisplay.ShowShip(target, CurrentShip);
-                }
-            }));
+            // CurrentShip.HullDamage.Subscribe(f =>
+            // {
+            //     if (float.IsNaN(CurrentShip.Hull.Durability))
+            //         Debug.Log("WTF!");
+            // });
             
             //_shipSubscriptions.Add(CurrentShip.HeatstrokeRisk.Subscribe(_ => _severeHeatstrokePhase = 0));
 
@@ -632,6 +626,36 @@ public class ActionGameManager : MonoBehaviour
             crosshair.gameObject.SetActive(false);
         foreach (var group in _articulationGroups)
             group.crosshair.gameObject.SetActive(true);
+        
+        foreach(var subscription in _shipSubscriptions) subscription.Dispose();
+        _shipSubscriptions.Clear();
+        
+        _shipSubscriptions.Add(CurrentShip.Target.Subscribe(target =>
+        {
+            TargetIndicator.gameObject.SetActive(CurrentShip.Target.Value != null);
+            TargetShipPanel.gameObject.SetActive(target != null);
+            if (target != null)
+            {
+                TargetShipPanel.Display(target, true);
+                TargetSchematicDisplay.ShowShip(target, CurrentShip);
+            }
+        }));
+
+        foreach (var entity in CurrentShip.VisibleHostiles)
+        {
+            var indicator = HostileTargetIndicator.Instantiate<VisibleHostileIndicator>();
+            _visibleHostileIndicators.Add(entity, indicator);
+        }
+        _shipSubscriptions.Add(CurrentShip.VisibleHostiles.ObserveAdd().Subscribe(addEvent =>
+        {
+            var indicator = HostileTargetIndicator.Instantiate<VisibleHostileIndicator>();
+            _visibleHostileIndicators.Add(addEvent.Value, indicator);
+        }));
+        _shipSubscriptions.Add(CurrentShip.VisibleHostiles.ObserveRemove().Subscribe(removeEvent =>
+        {
+            _visibleHostileIndicators[removeEvent.Value].GetComponent<Prototype>().ReturnToPool();
+            _visibleHostileIndicators.Remove(removeEvent.Value);
+        }));
     }
 
     public void SaveZone() => File.WriteAllBytes(
@@ -674,6 +698,16 @@ public class ActionGameManager : MonoBehaviour
             ItemManager.Time = Time.time;
             if(CurrentShip !=null && CurrentShip.Parent==null)
             {
+                foreach (var indicator in _visibleHostileIndicators)
+                {
+                    indicator.Value.gameObject.SetActive(indicator.Key!=CurrentShip.Target.Value);
+                    indicator.Value.Place.Target = indicator.Key.Position;
+                    indicator.Value.Fill.fillAmount =
+                        saturate(indicator.Key.EntityInfoGathered[CurrentShip] / Settings.GameplaySettings.TargetDetectionInfoThreshold);
+                    indicator.Value.Fill.enabled =
+                        !(indicator.Key.EntityInfoGathered[CurrentShip] > Settings.GameplaySettings.TargetDetectionInfoThreshold) ||
+                        sin(TargetSpottedBlinkFrequency * Time.time) + TargetSpottedBlinkOffset > 0;
+                }
                 var look = _input.Player.Look.ReadValue<Vector2>();
                 _shipYawPitch = float2(_shipYawPitch.x + look.x * Sensitivity.x, clamp(_shipYawPitch.y + look.y * Sensitivity.y, -.45f * PI, .45f * PI));
                 _viewDirection = mul(float3(0, 0, 1), Unity.Mathematics.float3x3.Euler(float3(_shipYawPitch.yx, 0), RotationOrder.YXZ));

@@ -2088,6 +2088,7 @@
             <e p="TechArrow.cs" t="Include" />
             <e p="TechNode.cs" t="Include" />
             <e p="TradeMenu.cs" t="Include" />
+            <e p="VisibleHostileIndicator.cs" t="Include" />
             <e p="ZoneGravityObject.cs" t="Include" />
             <e p="ZoneObject.cs" t="Include" />
             <e p="ZoneRenderer.cs" t="Include" />
