@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using float2 = Unity.Mathematics.float2;
 using float3 = Unity.Mathematics.float3;
 
 [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -225,6 +226,9 @@ public class OrbitData : DatabaseEntry
 
     [JsonProperty("phase"), Key(3)]
     public float Phase;
+    
+    [JsonProperty("phase"), Key(3)]
+    public float2 FixedPosition = float2.zero;
     
     // [JsonProperty("period"), Key(4)]
     // public float Period;

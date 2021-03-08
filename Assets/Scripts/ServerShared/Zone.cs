@@ -144,7 +144,10 @@ public class Zone
                 }
             }
 
-            Orbits[orbitID].Position = GetOrbitPosition(orbit.Data.Parent) + pos;
+            var parentPosition = Orbits[orbitID].Data.Parent == Guid.Empty 
+                ? Orbits[orbitID].Data.FixedPosition : 
+                GetOrbitPosition(orbit.Data.Parent);
+            Orbits[orbitID].Position = parentPosition + pos;
             _updatedOrbits.Add(orbitID);
         }
 

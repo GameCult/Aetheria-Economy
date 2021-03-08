@@ -11,6 +11,7 @@ using MessagePack;
 using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using float2 = Unity.Mathematics.float2;
 using Random = Unity.Mathematics.Random;
 
 public class ZoneGenerator
@@ -40,9 +41,27 @@ public class ZoneGenerator
 		var position = float2(0f);
 		var random = new Random(Convert.ToUInt32(abs(name.GetHashCode())));
 		
-		return GenerateZone(settings, name, position, mass, radius, random);
+		return GenerateZone(settings, name, position, mass, radius, random, 6);
 	}
-	
+
+	private class Circle
+	{
+		public float2 Center;
+		public float Radius;
+
+		public float Area => PI * Radius * Radius;
+
+		public Circle(float2 center, float radius)
+		{
+			Center = center;
+			Radius = radius;
+		}
+
+		public float DistanceTo(float2 point) => length(point - Center) - Radius;
+		public float DistanceTo(Circle other) => length(other.Center - Center) - Radius - other.Radius;
+	}
+
+	private const int MaximumPlacementSamples = 32;
 	private static ZonePack GenerateZone(
 		ZoneGenerationSettings settings,
 		// Dictionary<string,GalaxyMapLayerData> mapLayers,
@@ -51,7 +70,8 @@ public class ZoneGenerator
 		float2 position,
 		float mass,
 		float radius,
-		Random random)
+		Random random,
+		int targetSubzoneCount)
 	{
 		var zone = new ZoneData
 		{
@@ -68,8 +88,45 @@ public class ZoneGenerator
 		zone.Mass = mass;
 		
 		//Debug.Log($"Generating zone at position {zone.Position} with radius {zoneRadius} and mass {zoneMass}");
-		
-		var planets = GenerateEntities(settings, ref random, zone);
+
+		var planets = new List<GeneratorPlanet>();
+		if (targetSubzoneCount > 1)
+		{
+			var zoneBoundary = new Circle(float2.zero, radius);
+			float boundaryTangentRadius(float2 point) => -zoneBoundary.DistanceTo(point);
+			
+			var occupiedAreas = new List<Circle>();
+			float tangentRadius(float2 point) => min(boundaryTangentRadius(point), occupiedAreas.Min(circle => circle.DistanceTo(point)));
+			
+			var startPosition = random.NextFloat(radius * .25f, radius * .75f) * random.NextFloat2Direction();
+			occupiedAreas.Add(new Circle(startPosition, boundaryTangentRadius(startPosition)));
+
+			int samples = 0;
+			while (occupiedAreas.Count < targetSubzoneCount && samples < MaximumPlacementSamples)
+			{
+				samples = 0;
+				for (int i = 0; i < MaximumPlacementSamples; i++)
+				{
+					var samplePos = random.NextFloat2(-radius, radius);
+					var rad = tangentRadius(samplePos);
+					if (rad > 0)
+					{
+						occupiedAreas.Add(new Circle(samplePos, rad));
+						break;
+					}
+
+					samples++;
+				}
+			}
+
+			var totalArea = occupiedAreas.Sum(c => c.Area);
+			foreach (var c in occupiedAreas)
+			{
+				planets.AddRange(GenerateEntities(settings, ref random, c.Area / totalArea * zone.Mass, c.Radius, c.Center));
+			}
+		}
+		else
+			planets.AddRange(GenerateEntities(settings, ref random, zone.Mass, zone.Radius, float2.zero));
         
         // Create collections to map between zone generator output and database entries
         var orbitMap = new Dictionary<GeneratorPlanet, OrbitData>();
@@ -80,6 +137,7 @@ public class ZoneGenerator
         {
             var data = new OrbitData
             {
+	            FixedPosition = planet.FixedPosition,
                 Distance = new ReactiveProperty<float>(planet.Distance),
                 //Period = planet.Period,
                 Phase = planet.Phase
@@ -209,14 +267,15 @@ public class ZoneGenerator
 	// 		1 / lerp(settings.ResourceDensityMinimum, settings.ResourceDensityMaximum, density));
 	// }
 
-	public static GeneratorPlanet[] GenerateEntities(ZoneGenerationSettings settings, ref Random random, ZoneData zone)
+	public static GeneratorPlanet[] GenerateEntities(ZoneGenerationSettings settings, ref Random random, float mass, float radius, float2 fixedPosition)
 	{
 		var root = new GeneratorPlanet
 		{
+			FixedPosition = fixedPosition,
 			Settings = settings,
-			Mass = zone.Mass,
-			ChildDistanceMaximum = zone.Radius * .75f,
-			ChildDistanceMinimum = settings.PlanetSafetyRadius.Evaluate(zone.Mass)
+			Mass = mass,
+			ChildDistanceMaximum = radius * .75f,
+			ChildDistanceMinimum = settings.PlanetSafetyRadius.Evaluate(mass)
 		};
 
 		// There is some chance of generating a rosette or binary system
@@ -350,6 +409,7 @@ public class GeneratorPlanet
 	public bool Belt = false;
 	public List<GeneratorPlanet> Children = new List<GeneratorPlanet>(); // Planets orbiting this one are referred to as children
 	public GeneratorPlanet Parent;
+	public float2 FixedPosition;
 
 	// Recursively gather all planets in the hierarchy
 	public IEnumerable<GeneratorPlanet> AllPlanets()

@@ -193,6 +193,7 @@ Shader "UI/Isolines"
 				for (float ia = 0.5; ia < 13; ia++) {
 				    float isoline = abs(angle - ia / 6.0);
 					float l = 1-smoothstep(_AngleWidth, _AngleWidth * _AngleFade, isoline);
+					l *= smoothstep(-_StartDepth - _DepthRange, -_StartDepth, h);
 					col += l * angcol;
 					// col += (1-smoothstep(_Angle2Width, _Angle2Width * _Angle2Fade, isoline / angmag)) * _AngleColor * blend; // Isoline
 				}
