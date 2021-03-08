@@ -10,6 +10,7 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
 
     public override void Fire(InstantWeapon weapon, EquippedItem item, EntityInstance source, EntityInstance target)
     {
+        if (target == null) return;
         if(weapon.Data is LauncherData launcher)
         {
             var p = ProjectilePrototype.Instantiate<GuidedProjectile>();

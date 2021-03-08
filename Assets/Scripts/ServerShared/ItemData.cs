@@ -193,8 +193,8 @@ public abstract class ItemData : DatabaseEntry, INamedEntry
     [InspectableText, JsonProperty("description"), Key(2)]
     public string Description;
     
-    [InspectableText, JsonProperty("manufacturer"), Key(3)]
-    public string Manufacturer;
+    [InspectableDatabaseLink(typeof(MegaCorporation)), JsonProperty("creator"), Key(3)]
+    public Guid Manufacturer;
 
     [InspectableField, JsonProperty("mass"), Key(4)]
     public float Mass;

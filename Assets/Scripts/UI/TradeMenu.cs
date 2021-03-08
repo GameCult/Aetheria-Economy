@@ -355,7 +355,7 @@ public class TradeMenu : MonoBehaviour
     {
         if (data.Price < GameManager.Credits)
         {
-            var hull = GameManager.ItemManager.CreateInstance(data, .1f, 1) as EquippableItem;
+            var hull = GameManager.ItemManager.CreateInstance(data) as EquippableItem;
             Entity entity;
             if(data.HullType==HullType.Ship)
                 entity = new Ship(GameManager.ItemManager, GameManager.Zone, hull);
@@ -379,7 +379,7 @@ public class TradeMenu : MonoBehaviour
         {
             if (data.Price < GameManager.Credits)
             {
-                if (_targetCargo.TryStore(GameManager.ItemManager.CreateInstance(data, .1f, 1)))
+                if (_targetCargo.TryStore(GameManager.ItemManager.CreateInstance(data)))
                 {
                     GameManager.Credits -= data.Price;
                 }

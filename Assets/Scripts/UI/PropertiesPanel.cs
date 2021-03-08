@@ -71,6 +71,7 @@ public class PropertiesPanel : MonoBehaviour
 	    //RemoveListener();
         foreach(var property in Properties)
             Destroy(property);
+        Title.text = "Properties";
         Properties.Clear();
         Buttons.Clear();
         SelectedChild = null;
@@ -340,34 +341,30 @@ public class PropertiesPanel : MonoBehaviour
 	{
 		AddField("Name", () => entity.Name, name => entity.Name = name);
 		AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-		// AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
-		// AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehavior<Reactor>()?.Capacitance??0:0}");
 	}
 
 	public void AddItemProperties(Entity entity, ItemInstance item)
 	{
 		var data = Context.ItemData.Get<ItemData>(item.Data);
-		AddProperty("Type", () => data.Name);
 		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
-		// if (item is CraftedItemInstance craftedItemInstance)
-		// {
-		// 	var sourceEntity = Context.ItemData.Get<Entity>(craftedItemInstance.SourceEntity);
-		// 	if (sourceEntity != null)
-		// 	{
-		// 		var corporation = Context.ItemData.Get<Corporation>(sourceEntity.Corporation);
-		// 		AddProperty("Manufacturer", () => corporation.Name);
-		// 	}
-		// 	else
-		// 	{
-		// 		AddProperty("Manufacturer", () => "GameCult");
-		// 	}
-		// }
+		var manufacturer = Context.ItemData.Get<MegaCorporation>(data.Manufacturer);
+		if (manufacturer != null)
+		{
+			AddProperty("Manufacturer", () => manufacturer.Name);
+		}
+		else
+		{
+			AddProperty("Manufacturer", () => "GameCult");
+		}
 		if (item is SimpleCommodity simpleCommodity)
 			AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
 		AddProperty("Mass", () => Context.GetMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
 		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
 		if (item is EquippableItem gear)
 		{
+			var tier = entity.ItemManager.GetTier(gear);
+			Title.text =
+				$"<color=#{ColorUtility.ToHtmlStringRGB(tier.tier.Color.ToColor())}>{gear.Name}</color><smallcaps><size=60%> ({tier.tier.Name}{new string('+', tier.upgrades)})";
 			var gearData = Context.GetData(gear);
 			AddProperty("Durability", () =>
 				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
@@ -497,53 +494,6 @@ public class PropertiesPanel : MonoBehaviour
 					        () => 0, () => entity.Population - entity.AssignedPopulation + populationAssignment.AssignedPopulation);
 			        if (behavior is Thermotoggle thermotoggle)
 				        AddField("Target Temperature", () => thermotoggle.TargetTemperature, temp => thermotoggle.TargetTemperature = temp);
-		            // if (behavior is Factory factory)
-		            // {
-		            //     AddField("Production Quality", () => factory.ProductionQuality, f => factory.ProductionQuality = f, 0, 1);
-		            //     var corporation = Context.ItemData.Get<Corporation>(entity.Corporation);
-		            //     var compatibleBlueprints = corporation.UnlockedBlueprints
-		            //         .Select(id => Context.ItemData.Get<BlueprintData>(id))
-		            //         .Where(bp => bp.FactoryItem == item.ItemData.ID).ToList();
-		            //     if (factory.RetoolingTime > 0)
-		            //     {
-		            //         AddProgressField("Retooling", () => (factory.ToolingTime - (float) factory.RetoolingTime) / factory.ToolingTime);
-		            //     }
-		            //     else
-		            //     {
-		            //         AddField("Item", 
-		            //             () => compatibleBlueprints.FindIndex(bp=>bp.ID== factory.Blueprint) + 1, 
-		            //             i => factory.Blueprint = i == 0 ? Guid.Empty : compatibleBlueprints[i - 1].ID,
-		            //             new []{"None"}.Concat(compatibleBlueprints.Select(bp=>bp.Name)).ToArray());
-		            //         AddField("Active", () => factory.Active, active => factory.Active = active);
-		            //         if (factory.Blueprint != Guid.Empty)
-		            //         {
-		            //             if (factory.Active && factory.ItemUnderConstruction != Guid.Empty)
-		            //             {
-		            //                 AddProgressField("Production", () =>
-		            //                 {
-			           //                  if (factory.ItemUnderConstruction == Guid.Empty) return 1;
-			           //                  var itemInstance = Context.ItemData.Get<CraftedItemInstance>(factory.ItemUnderConstruction);
-			           //                  var blueprintData = Context.ItemData.Get<BlueprintData>(itemInstance.Blueprint);
-			           //                  return (blueprintData.ProductionTime - (float) entity.IncompleteCargo[factory.ItemUnderConstruction]) / blueprintData.ProductionTime;
-		            //                 });
-		            //             }
-		            //             else
-		            //             {
-			           //              //AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
-			           //              AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
-		            //                 var ingredientsList = AddList("Ingredients Needed");
-		            //                 var blueprintData = Context.ItemData.Get<BlueprintData>(factory.Blueprint);
-		            //                 foreach (var ingredient in blueprintData.Ingredients)
-		            //                 {
-		            //                     var itemData = Context.ItemData.Get<ItemData>(ingredient.Key);
-		            //                     ingredientsList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
-		            //                 }
-		            //                 // ingredientsList.SetExpanded(false, true);
-		            //                 ingredientsList.RefreshValues();
-		            //             }
-		            //         }
-		            //     }
-		            // }
 		        }
 			}
 			RefreshValues();

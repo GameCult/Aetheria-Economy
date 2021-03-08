@@ -432,7 +432,7 @@ public class ActionGameManager : MonoBehaviour
         testCorp.PlayerHostile = true;
         
         var stationType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
-        var stationHull = ItemManager.CreateInstance(stationType, 0, 1) as EquippableItem;
+        var stationHull = ItemManager.CreateInstance(stationType) as EquippableItem;
         var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(3);
         var stationParentOrbit = stationParent.Orbit.Data.ID;
         var stationParentPos = Zone.GetOrbitPosition(stationParentOrbit);
@@ -442,7 +442,7 @@ public class ActionGameManager : MonoBehaviour
         station.Faction = testCorp;
         Zone.Entities.Add(station);
         var dockingBayData = ItemData.GetAll<DockingBayData>().First();
-        var dockingBay = ItemManager.CreateInstance(dockingBayData, 1, 1) as EquippableItem;
+        var dockingBay = ItemManager.CreateInstance(dockingBayData) as EquippableItem;
         station.TryEquip(dockingBay);
         station.Activate();
 

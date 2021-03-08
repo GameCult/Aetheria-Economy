@@ -88,6 +88,7 @@ public class ZoneGenerationSettings
 [Serializable, MessagePackObject(keyAsPropertyName: true), JsonObject]
 public class GameplaySettings
 {
+    public RarityTier[] Tiers;
     public float DefaultShutdownPerformance = .25f;
     public float SevereHeatstrokeRiskThreshold = .25f;
     public float WormholeDepth = 1000;
@@ -129,4 +130,13 @@ public class GameplaySettings
     public float AgentForwardLerp = .5f;
     public float AgentMaxForwardDistance = 50;
     public float AgentFiringMinDot = .99f;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName: true), JsonObject]
+public class RarityTier
+{
+    public string Name;
+    public float Quality;
+    public float3 Color;
+    public float Rarity;
 }
