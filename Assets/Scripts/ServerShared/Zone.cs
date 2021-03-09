@@ -31,6 +31,7 @@ public class Zone
 
     private float _time;
     private Random _random;
+    public List<Agent> Agents = new List<Agent>();
 
     public ZoneData Data { get; }
     private List<Task> BeltUpdates = new List<Task>();
@@ -106,6 +107,9 @@ public class Zone
             Array.Copy(belt.Value.NewRotations, belt.Value.Rotations, belt.Value.Rotations.Length);
             BeltUpdates.Add(Task.Run(() => UpdateAsteroidTransformsAsync(belt.Key)));
         }
+        
+        foreach(var agent in Agents)
+            agent.Update(deltaTime);
         
         foreach (var entity in Entities) entity.Update(deltaTime);
     }

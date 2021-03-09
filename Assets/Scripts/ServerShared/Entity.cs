@@ -118,11 +118,13 @@ public abstract class Entity
     public Subject<float> HullDamage = new Subject<float>();
     public Subject<Entity> Docked = new Subject<Entity>();
     public Subject<Unit> HeatstrokeRisk = new Subject<Unit>();
+    public Subject<Unit> HeatstrokeDeath = new Subject<Unit>();
     
     public UniRx.IObservable<EquippedItem> ItemDestroyed;
     public UniRx.IObservable<int2> HullArmorDepleted;
     public UniRx.IObservable<HardpointData> HardpointArmorDepleted;
     public UniRx.IObservable<Weapon> WeaponDestroyed;
+    public UniRx.IObservable<Unit> Death;
 
     private List<IDisposable> _subscriptions = new List<IDisposable>();
 
@@ -175,6 +177,7 @@ public abstract class Entity
         ItemDestroyed = ItemDamage.Where(x => x.item.EquippableItem.Durability < .01f).Select(x=>x.item);
         WeaponDestroyed = ItemDestroyed.Select(x => x.Behaviors.FirstOrDefault(b => b is Weapon) as Weapon).Where(x => x != null);
         HullArmorDepleted = ArmorDamage.Where(x => Armor[x.pos.x, x.pos.y] < .01f).Select(x => x.pos);
+        Death = HullDamage.Select(_ => Unit.Default).Where(_ => Hull.Durability < .01f).Merge(HeatstrokeDeath);
 
         EntityInfoGathered.ObserveReplace().Subscribe(replace =>
         {
@@ -742,26 +745,32 @@ public abstract class Entity
 
         UpdateTemperature(delta);
         
-        if(Cockpit != null)
-        {
-            if (Cockpit.Item.Temperature > ItemManager.GameplaySettings.HeatstrokeTemperature)
-            {
-                var previous = Heatstroke;
-                Heatstroke = saturate(
-                    Heatstroke +
-                    pow(Cockpit.Item.Temperature - ItemManager.GameplaySettings.HeatstrokeTemperature, ItemManager.GameplaySettings.HeatstrokeExponent) *
-                    ItemManager.GameplaySettings.HeatstrokeMultiplier * delta);
-                if(previous < ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold && Heatstroke > ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold)
-                    HeatstrokeRisk.OnNext(Unit.Default);
-            }
-            else
-            {
-                Heatstroke = saturate(Heatstroke - ItemManager.GameplaySettings.HeatstrokeRecoverySpeed * delta);
-            }
-        }
         
         if (_active)
         {
+            if(Cockpit != null)
+            {
+                if (Cockpit.Item.Temperature > ItemManager.GameplaySettings.HeatstrokeTemperature)
+                {
+                    var previous = Heatstroke;
+                    Heatstroke = saturate(
+                        Heatstroke +
+                        pow(Cockpit.Item.Temperature - ItemManager.GameplaySettings.HeatstrokeTemperature, ItemManager.GameplaySettings.HeatstrokeExponent) *
+                        ItemManager.GameplaySettings.HeatstrokeMultiplier * delta);
+                    if(previous < ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold && Heatstroke > ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold)
+                        HeatstrokeRisk.OnNext(Unit.Default);
+                    if(Heatstroke > 1)
+                    {
+                        HeatstrokeDeath.OnNext(Unit.Default);
+                        Deactivate();
+                    }
+                }
+                else
+                {
+                    Heatstroke = saturate(Heatstroke - ItemManager.GameplaySettings.HeatstrokeRecoverySpeed * delta);
+                }
+            }
+            
             foreach (var equippedItem in _orderedEquipment)
             {
                 equippedItem.Update(delta);

@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -15,6 +16,8 @@ public class ConfirmationDialog : PropertiesPanel
     public GameObject ButtonGroup;
     public Button Cancel;
     public Button Confirm;
+    public TextMeshProUGUI ConfirmText;
+    public TextMeshProUGUI CancelText;
 
     private Action _onCancel;
     private Action _onConfirm;
@@ -52,15 +55,17 @@ public class ConfirmationDialog : PropertiesPanel
         gameObject.SetActive(false);
     }
 
-    public void Show(Action onConfirm = null, Action onCancel = null)
+    public void Show(Action onConfirm = null, Action onCancel = null, string confirmText = "OK", string cancelText = "Cancel")
     {
         gameObject.SetActive(true);
         
         _onConfirm = onConfirm;
         Confirm.gameObject.SetActive(onConfirm!=null);
+        ConfirmText.text = confirmText;
         
         _onCancel = onCancel;
         Cancel.gameObject.SetActive(onCancel!=null);
+        CancelText.text = cancelText;
         
         ButtonGroup.SetActive(onConfirm!=null || onCancel!=null);
         
