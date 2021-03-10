@@ -52,6 +52,8 @@ Assembly-CSharp-Editor.csproj
 Assembly-CSharp-firstpass.csproj
 Economy.Shared.Unity.csproj
 MessagePack.csproj
+Substance.EditorHelper.csproj
+Substance.Platform.csproj
 
 # Unity3D generated meta files
 *.pidb.meta

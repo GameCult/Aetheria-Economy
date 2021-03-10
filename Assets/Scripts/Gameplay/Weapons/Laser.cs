@@ -49,17 +49,18 @@ public class Laser : MonoBehaviour
                     shield.ShowHit(hit.point, sqrt(Damage));
                     LineRenderer.SetPosition(1, hit.point);
                     hitFound = true;
+                    break;
                 }
             }
             var hull = hit.collider.GetComponent<HullCollider>();
-            if (hull)
+            if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active.Value && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
             {
                 if (hull.Entity != SourceEntity)
                 {
                     hull.SendHit(Damage * (Time.deltaTime / Duration), Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, transform.forward);
-                    transform.position = hit.point;
                     LineRenderer.SetPosition(1, hit.point);
                     hitFound = true;
+                    break;
                 }
             }
         }

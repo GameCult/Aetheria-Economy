@@ -56,25 +56,28 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - Arms: 2
+    - Arms: 0
+    - CloudAmplitude: 0.01
+    - CloudExponent: 10
     - CoreBoost: 1
     - CoreBoostOffset: 0
-    - CoreBoostPower: 1.5
-    - EdgeReduction: 5
-    - GalaxyAmplitude: 0.4
-    - GlowAmount: 0.2
+    - CoreBoostPower: 24.71
+    - EdgeReduction: 7.03
+    - GalaxyAmplitude: 0.01
+    - GlowAmount: -0.05
     - GlowOffset: 0
-    - GlowPower: 0.75
-    - NoiseAmplitude: 2
-    - NoiseFrequency: 1
-    - NoiseGain: 0.75
-    - NoiseLacunarity: 3
-    - NoiseOffset: 0
-    - NoisePosition: -2.1
+    - GlowPower: 1
+    - NoiseAmplitude: 1.25
+    - NoiseFrequency: 2
+    - NoiseGain: 0.55
+    - NoiseLacunarity: 2.5
+    - NoiseOffset: 0.3
+    - NoisePosition: 3
     - SpokeOffset: 0.25
-    - SpokeScale: 1.75
-    - StarBoost: 2
-    - Twist: -3.5
+    - SpokeScale: 4.82
+    - StarBoost: 0.1
+    - StarExponent: 12
+    - Twist: 7.85
     - TwistPower: 2
     - _BumpScale: 1
     - _ColorMask: 15
@@ -99,7 +102,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _CloudColor: {r: 0.643, g: 0.7932566, b: 1, a: 1}
+    - _CloudColor: {r: 0.050980393, g: 0.4509804, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GlowColor: {r: 0.94633335, g: 1, b: 0.678, a: 1}
+    - _GlowColor: {r: 0.15, g: 0.15, b: 0.060000006, a: 1}
+  m_BuildTextureStacks: []

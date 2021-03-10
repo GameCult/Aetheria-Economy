@@ -242,10 +242,13 @@ public class SchematicDisplay : MonoBehaviour
                         $"{((int)(_cargoBays.Min(r => r.Temperature) - 273.15f)).ToString()}-" +
                         $"{((int)(_cargoBays.Max(r => r.Temperature) - 273.15f)).ToString()}°C";
 
-                CockpitTemperatureLabel.text = $"{((int)(_cockpit.Item.Temperature - 273.15f)).ToString()}°C";
+                if(_cockpit != null)
+                {
+                    CockpitTemperatureLabel.text = $"{((int) (_cockpit.Item.Temperature - 273.15f)).ToString()}°C";
 
-                HeatstrokeMeterFill.anchorMax = new Vector2(_entity.Heatstroke, 1);
-                HeatstrokeLimitFill.anchorMax = new Vector2(_cockpit.Item.Temperature / Settings.GameplaySettings.HeatstrokeTemperature, 1);
+                    HeatstrokeMeterFill.anchorMax = new Vector2(_entity.Heatstroke, 1);
+                    HeatstrokeLimitFill.anchorMax = new Vector2(_cockpit.Item.Temperature / Settings.GameplaySettings.HeatstrokeTemperature, 1);
+                }
 
                 if (_capacitors.Length == 0)
                 {

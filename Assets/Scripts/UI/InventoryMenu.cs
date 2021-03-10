@@ -59,11 +59,11 @@ public class InventoryMenu : MonoBehaviour
         {
             _destroyItem = false;
         });
-        var cargo = GameManager.DockingBay ?? GameManager.CurrentShip.CargoBays.FirstOrDefault();
+        var cargo = GameManager.DockingBay ?? GameManager.CurrentEntity.CargoBays.FirstOrDefault();
         if (cargo!=null)
             InventoryPanels[0].Display(cargo);
-        if(GameManager.CurrentShip != null)
-            InventoryPanels[1].Display(GameManager.CurrentShip);
+        if(GameManager.CurrentEntity != null)
+            InventoryPanels[1].Display(GameManager.CurrentEntity);
         else InventoryPanels[1].Clear();
     }
 

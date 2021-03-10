@@ -9,6 +9,7 @@ using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using static Unity.Mathematics.noise;
 
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
 public class PlanetSettings
@@ -40,6 +41,40 @@ public class GalaxyShapeSettings
     public int Arms = 4;
     public float Twist = 10;
     public float TwistExponent = 2;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
+public class SectorGenerationSettings
+{
+    public float NoisePosition;
+    public float CloudExponent;
+    public float CloudAmplitude;
+    public float NoiseAmplitude;
+    public float NoiseOffset;
+    public float NoiseGain;
+    public float NoiseLacunarity;
+    public float NoiseFrequency;
+    
+    public float fBm(float2 p, int octaves)
+    {
+        float freq = NoiseFrequency, amp = .5f;
+        float sum = 0;	
+        for(int i = 0; i < octaves; i++) 
+        {
+            if(i<4)
+                sum += (1-abs(snoise(p * freq))) * amp;
+            else sum += abs(snoise(p * freq)) * amp;
+            freq *= NoiseLacunarity;
+            amp *= NoiseGain;
+        }
+        return (sum + NoiseOffset)*NoiseAmplitude;
+    }
+
+    public float CloudDensity(float2 uv)
+    {
+        float noise = fBm(uv + NoisePosition, 8);
+        return pow(noise, CloudExponent) * CloudAmplitude;
+    }
 }
 
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
@@ -83,6 +118,8 @@ public class ZoneGenerationSettings
     public float GasGiantBandAltColorChance = .25f;
     public ExponentialLerp GasGiantBandSaturation;
     public ExponentialLerp GasGiantBandBrightness;
+
+    public string[] NameData;
 }
 
 [Serializable, MessagePackObject(keyAsPropertyName: true), JsonObject]

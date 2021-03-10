@@ -47,7 +47,6 @@ public class HitscanEffect : MonoBehaviour
                 if (hull.Entity != SourceEntity)
                 {
                     hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, transform.forward);
-                    transform.position = hit.point;
                     hitFound = true;
                 }
             }

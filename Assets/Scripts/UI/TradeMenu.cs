@@ -448,7 +448,7 @@ public class TradeMenu : MonoBehaviour
                         _targetCargo = GameManager.DockingBay;
                         TargetCargoLabel.text = "Docking Bay";
                     });
-            foreach (var ship in GameManager.CurrentShip.Parent.Children.Where(GameManager.PlayerEntities.Contains))
+            foreach (var ship in GameManager.CurrentEntity.Parent.Children.Where(GameManager.PlayerEntities.Contains))
             {
                 foreach (var bay in ship.CargoBays.Select((bay, index) => (bay, index)))
                     ContextMenu.AddOption($"{ship.Name} Bay {bay.index}",

@@ -47,7 +47,7 @@ public class MenuPanel : MonoBehaviour
     {
         foreach (var tabButton in _tabs.Values)
         {
-            tabButton.gameObject.SetActive(!tabButton.RequireParent || GameManager.CurrentShip.Parent != null);
+            tabButton.gameObject.SetActive(!tabButton.RequireParent || GameManager.CurrentEntity.Parent != null);
         }
     }
 

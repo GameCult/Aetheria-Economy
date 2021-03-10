@@ -103,11 +103,11 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
         {
             Current.onClick.AddListener(() =>
             {
-                if (_displayedEntity != GameManager.CurrentShip)
+                if (_displayedEntity != GameManager.CurrentEntity)
                 {
                     if(_displayedEntity is Ship ship)
                     {
-                        GameManager.CurrentShip = ship;
+                        GameManager.CurrentEntity = ship;
                         GameManager.DockingBay.DockedShip = ship;
                         Current.targetGraphic.color = ToggleEnabledColor;
                     }
@@ -159,7 +159,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                                     ship.SetParent(GameManager.DockedEntity);
                                     GameManager.PlayerEntities.Add(ship);
                                     GameManager.Credits -= pack.Price(GameManager.ItemManager);
-                                    GameManager.CurrentShip = ship;
+                                    GameManager.CurrentEntity = ship;
                                     GameManager.DockingBay.DockedShip = ship;
                                     Display(ship);
                                 }, pack.Price(GameManager.ItemManager) < GameManager.Credits
@@ -282,7 +282,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
         if (Current)
         {
             Current.gameObject.SetActive(true);
-            Current.targetGraphic.color = entity == GameManager.CurrentShip ? ToggleEnabledColor : ToggleDisabledColor;
+            Current.targetGraphic.color = entity == GameManager.CurrentEntity ? ToggleEnabledColor : ToggleDisabledColor;
         }
         if (Thermal)
         {
