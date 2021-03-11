@@ -8,6 +8,7 @@ Shader "Unlit/GalaxyMap"
 	{
 		_MainTex ("Texture", 2D) = "white" {}
 		[HDR]_CloudColor ("Cloud Color", Color) = (1,1,1,1)
+		Zoom("Zoom", Float) = 1
 		CloudAmplitude("Cloud Amplitude", Float) = 1
 		CloudExponent ("Cloud Exponent", Float) = 2
 		_GlowColor ("GlowColor", Color) = (1,1,1,1)
@@ -54,6 +55,7 @@ Shader "Unlit/GalaxyMap"
 		    fixed4 _CloudColor;
 		    fixed4 _GlowColor;
 
+			float Zoom;
 			float CloudExponent;
 	        float CloudAmplitude;
             float NoisePosition;
@@ -92,7 +94,7 @@ Shader "Unlit/GalaxyMap"
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-			    float noise = fBm(i.uv + NoisePosition.xx, 8);
+			    float noise = fBm(i.uv / Zoom + NoisePosition.xx, 10);
 			    float gal = pow(noise, CloudExponent) * CloudAmplitude;
 			    float stars = tex2D(_MainTex, i.uv2) * pow(noise, StarExponent) * StarBoost;
 				return fixed4(max(gal*_CloudColor.rgb - _GlowColor.rgb, 0) + stars.xxx, 1);

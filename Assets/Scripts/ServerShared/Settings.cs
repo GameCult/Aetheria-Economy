@@ -54,6 +54,7 @@ public class SectorGenerationSettings
     public float NoiseGain;
     public float NoiseLacunarity;
     public float NoiseFrequency;
+    public float Zoom = 1;
     
     public float fBm(float2 p, int octaves)
     {
@@ -72,7 +73,7 @@ public class SectorGenerationSettings
 
     public float CloudDensity(float2 uv)
     {
-        float noise = fBm(uv + NoisePosition, 8);
+        float noise = fBm(uv / Zoom + NoisePosition, 10);
         return pow(noise, CloudExponent) * CloudAmplitude;
     }
 }

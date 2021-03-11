@@ -6,6 +6,7 @@ using DataStructures.ViliWonka.KDTree;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
+using Random = Unity.Mathematics.Random;
 
 public static class WeightedSampleElimination
 {
@@ -70,6 +71,43 @@ public static class WeightedSampleElimination
 		}, d_max);
 	}
 
+	public static void Eliminate(
+		float2[] inputPoints, 
+		float2[] outputPoints,
+		Func<float2, float> density = null, 
+		float d_max = 0)
+	{
+		if ( d_max < .001f ) d_max = 2 * GetMaxPoissonDiskRadius( outputPoints.Length );
+		Eliminate( inputPoints, outputPoints, (p0, p1, d2, dmax) => 
+		{
+			float d = sqrt(d2);
+			return pow( 1 - (d / dmax), 5 + 6 * saturate((density ?? (v => .5f))((p0 + p1) / 2)) );
+		}, d_max);
+	}
+
+	public static float2[] GeneratePoints(int count, Func<float2, float> density = null, Func<float2, float> envelope = null, uint seed = 1337)
+	{
+		if (density == null) density = v => .5f;
+		if (envelope == null) envelope = v => 1;
+		var random = new Random(seed);
+		var inputSamples = new float2[count * 8];
+		var sample = 0;
+		var accumulator = 0f;
+		while (sample < inputSamples.Length)
+		{
+			var v = random.NextFloat2();
+			accumulator += pow(saturate(density(v)), 2f) * envelope(v);
+			if (accumulator > .5f)
+			{
+				accumulator = 0;
+				inputSamples[sample++] = v;
+			}
+		}
+		var outputSamples = new float2[count];
+		Eliminate(inputSamples, outputSamples, density);
+		return outputSamples;
+	}
+
 	// Returns the maximum possible Poisson disk radius in the given dimensions for the given sampleCount
 	// to spread over the given domainSize. If the domainSize argument is zero or negative, it is computed
 	// as the area or N-dimensional volume of the box defined by the minimum and maximum bounds.
@@ -100,15 +138,6 @@ public static class WeightedSampleElimination
 		for (int i = 0; i < inputPoints.Length; i++)
 		{
 			var p = inputPoints[i];
-			// for (int qi = 0; qi < inputPoints.Length; qi++)
-			// {
-			// 	var d2 = lengthsq(inputPoints[i] - inputPoints[qi]);
-			// 	if (i != qi && d2 < dmax2)
-			// 	{
-			// 		var p2 = inputPoints[qi];
-			// 		weights[i] += weightFunction(p, p2, d2, d_max);
-			// 	}
-			// }
 			foreach (var (qi, d2) in query.Radius(kdtree, inputPoints[i], d_max))
 			{
 				var p2 = inputPoints[qi];
@@ -129,16 +158,6 @@ public static class WeightedSampleElimination
 			var i = heap.PopObj();
 			var p = inputPoints[i];
 			// For each sample around it, remove its weight contribution and update the heap
-			// for (int qi = 0; qi < inputPoints.Length; qi++)
-			// {
-			// 	var d2 = lengthsq(inputPoints[i] - inputPoints[qi]);
-			// 	if (i != qi && d2 < dmax2)
-			// 	{
-			// 		var p2 = inputPoints[qi];
-			// 		weights[qi] -= weightFunction(p, p2, d2, d_max);
-			// 		heap.SetValue(qi, weights[qi]);
-			// 	}
-			// }
 			foreach (var (qi, d2) in query.Radius(kdtree, p, d_max))
 			{
 				var p2 = inputPoints[qi];

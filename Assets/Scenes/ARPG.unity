@@ -13409,11 +13409,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39f95af24dd29a645895a57a75460b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   StarterShipTemplate: Longinus
+  Sensitivity:
+    x: -0.001
+    y: 0.001
+  Credits: 100000000
   TargetSpottedBlinkFrequency: 20
   TargetSpottedBlinkOffset: -0.25
-  DeathPPTransitionTime: 0
-  DeathPP: {fileID: 0}
+  NameFile: {fileID: 4900000, guid: 8ba25d5d0ecee31408c7ce7460b4e015, type: 3}
+  NameGeneratorMinLength: 5
+  NameGeneratorMaxLength: 10
+  NameGeneratorOrder: 4
+  DeathPPTransitionTime: 3
+  DeathPP: {fileID: 803284856}
   HeatstrokePP: {fileID: 1404901906}
   SevereHeatstrokePP: {fileID: 837424435}
   HostileTargetIndicator: {fileID: 1787772783}
@@ -13427,7 +13436,6 @@ MonoBehaviour:
   - {fileID: 1771741750}
   - {fileID: 1631662979}
   EventLog: {fileID: 1396909588}
-  Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   SectorRenderer: {fileID: 1009503731}
   DockCamera: {fileID: 393266593}
   FollowCamera: {fileID: 887677622}
@@ -13440,10 +13448,6 @@ MonoBehaviour:
   ShipPanel: {fileID: 7628189704109037582}
   TargetShipPanel: {fileID: 410701133}
   ConfirmationDialog: {fileID: 620555924}
-  Sensitivity:
-    x: -0.001
-    y: 0.001
-  Credits: 100000000
 --- !u!4 &1009503730
 Transform:
   m_ObjectHideFlags: 0
@@ -23664,7 +23668,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &2075269401
 MeshCollider:
   m_ObjectHideFlags: 0

@@ -54,6 +54,7 @@ Economy.Shared.Unity.csproj
 MessagePack.csproj
 Substance.EditorHelper.csproj
 Substance.Platform.csproj
+UniRx.csproj
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -78,3 +79,4 @@ Economy.Shared/obj/
 
 # JetBrains Rider .idea folder
 .idea/
+Assembly-CSharp-Editor-firstpass.csproj

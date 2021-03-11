@@ -111,7 +111,7 @@ public class Zone
         foreach(var agent in Agents)
             agent.Update(deltaTime);
         
-        foreach (var entity in Entities) entity.Update(deltaTime);
+        foreach (var entity in Entities.ToArray()) entity.Update(deltaTime);
     }
 
     public float2 WormholePosition(ZoneDefinition target)
