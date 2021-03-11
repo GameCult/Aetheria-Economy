@@ -74,10 +74,16 @@ public class InspectablePrefabAttribute : InspectableFieldAttribute { }
 public class InspectableTextureAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
-public class TemperatureInspectableAttribute : InspectableFieldAttribute { }
+public class InspectableTextAssetAttribute : InspectableFieldAttribute { }
+
+[AttributeUsage(AttributeTargets.Field)]
+public class InspectableTemperatureAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
 public class InspectableAnimationCurveAttribute : InspectableFieldAttribute { }
+
+[AttributeUsage(AttributeTargets.Field)]
+public class InspectableColorAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
 public class InspectableDatabaseLinkAttribute : InspectableFieldAttribute

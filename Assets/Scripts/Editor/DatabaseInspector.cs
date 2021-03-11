@@ -135,7 +135,7 @@ public class DatabaseInspector : EditorWindow
                 var range = inspectable as RangedFloatInspectableAttribute;
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (float) value, range.Min, range.Max));
             }
-            else if (inspectable is TemperatureInspectableAttribute)
+            else if (inspectable is InspectableTemperatureAttribute)
                 field.SetValue(obj, InspectTemperature(field.Name.SplitCamelCase(), (float) value));
             else
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (float) value));
@@ -158,6 +158,13 @@ public class DatabaseInspector : EditorWindow
         {
             field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (int2) field.GetValue(obj)));
         }
+        else if (type == typeof(float3))
+        {
+            if (inspectable is InspectableColorAttribute)
+            {
+                field.SetValue(obj, ColorField(field.Name.SplitCamelCase(), ((float3)field.GetValue(obj)).ToColor()).ToFloat3());
+            }
+        }
         else if (type.IsEnum)
         {
             var isflags = type.GetCustomAttributes<FlagsAttribute>().Any();
@@ -179,6 +186,8 @@ public class DatabaseInspector : EditorWindow
                 field.SetValue(obj, InspectUnityObject<GameObject>(field.Name.SplitCamelCase(), (string) value));
             else if(inspectable is InspectableTextureAttribute)
                 field.SetValue(obj, InspectUnityObject<Texture2D>(field.Name.SplitCamelCase(), (string) value));
+            else if(inspectable is InspectableTextAssetAttribute)
+                field.SetValue(obj, InspectUnityObject<TextAsset>(field.Name.SplitCamelCase(), (string) value));
             else
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (string) value, inspectable is InspectableTextAttribute));
         }

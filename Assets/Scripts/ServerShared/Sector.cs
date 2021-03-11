@@ -7,6 +7,9 @@ using static Unity.Mathematics.math;
 public class Sector
 {
     public List<SectorZone> Zones = new List<SectorZone>();
+    public Dictionary<MegaCorporation, SectorZone> OccupantSources = new Dictionary<MegaCorporation, SectorZone>();
+    public SectorZone Entrance;
+    public SectorZone Exit;
     
     class DijkstraVertex
     {
@@ -21,7 +24,7 @@ public class Sector
         members.Add(v);
         while (true)
         {
-            int lastCount = members.Count;
+            var lastCount = members.Count;
             // For each member, add all vertices that are connected to it but are not already a member
             // Also, if there is a zone being ignored, do not traverse across it
             foreach (SectorZone m in members.ToArray())
@@ -30,6 +33,31 @@ public class Sector
             // If we have stopped finding neighbors, stop traversing
             if (members.Count == lastCount)
                 return members;
+        }
+    }
+
+    //public int TotalDistance(SectorZone v) => ConnectedRegionDistance(v).Sum(x => x.distance);
+    
+    public Dictionary<SectorZone, int> ConnectedRegionDistance(SectorZone v)
+    {
+        Dictionary<SectorZone, int> members = new Dictionary<SectorZone, int>();
+        members.Add(v,0);
+        int cost = 1;
+        while (true)
+        {
+            var lastCount = members.Count;
+            // For each member, add all vertices that are connected to it but are not already a member
+            // Also, if there is a zone being ignored, do not traverse across it
+            foreach (var member in members.Keys.ToArray())
+            foreach (var adjacentZone in member.AdjacentZones)
+            {
+                if(!members.ContainsKey(adjacentZone))
+                    members.Add(adjacentZone, cost);
+            }
+            // If we have stopped finding neighbors, stop traversing
+            if (members.Count == lastCount)
+                return members;
+            cost++;
         }
     }
     
@@ -66,4 +94,7 @@ public class SectorZone
     public string Name;
     public float2 Position;
     public List<SectorZone> AdjacentZones = new List<SectorZone>();
+    public int Isolation;
+    public Dictionary<SectorZone, int> Distance;
+    public MegaCorporation[] Occupants;
 }

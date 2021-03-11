@@ -282,10 +282,10 @@ public abstract class EquippableItemData : CraftedItemData
     [InspectableField, JsonProperty("durability"), Key(12)]
     public float Durability;
     
-    [TemperatureInspectable, JsonProperty("minTemp"), Key(13)]
+    [InspectableTemperature, JsonProperty("minTemp"), Key(13)]
     public float MinimumTemperature;
 
-    [TemperatureInspectable, JsonProperty("maxTemp"), Key(14)]
+    [InspectableTemperature, JsonProperty("maxTemp"), Key(14)]
     public float MaximumTemperature;
 
     [InspectableField, JsonProperty("durabilityExponent"), Key(15), SimplePerformanceStat]

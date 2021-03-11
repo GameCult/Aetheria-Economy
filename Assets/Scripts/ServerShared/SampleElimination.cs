@@ -96,7 +96,7 @@ public static class WeightedSampleElimination
 		while (sample < inputSamples.Length)
 		{
 			var v = random.NextFloat2();
-			accumulator += pow(saturate(density(v)), 2f) * envelope(v);
+			accumulator += pow(saturate(density(v)), 2f) * saturate(envelope(v));
 			if (accumulator > .5f)
 			{
 				accumulator = 0;

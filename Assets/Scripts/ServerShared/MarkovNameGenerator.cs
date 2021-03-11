@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Random = Unity.Mathematics.Random;
 
 //Generates random names based on the statistical weight of letter sequences
@@ -34,7 +35,7 @@ public class MarkovNameGenerator
         //split comma delimited lines
         foreach (string line in sampleNames)
         {
-            string[] tokens = line.Split(' ','-','\'','(',')');
+            string[] tokens = line.Split(' ','\'','(',')');
             foreach (string word in tokens)
             {
                 string upper = word.Trim().ToLowerInvariant();
@@ -89,7 +90,7 @@ public class MarkovNameGenerator
             }
             while (_used.Contains(s) || s.Length < _minLength || s.Length > _maxLength);
             _used.Add(s);
-            return s;
+            return s.First().ToString().ToUpper() + s.Substring(1);
         }
     }
 

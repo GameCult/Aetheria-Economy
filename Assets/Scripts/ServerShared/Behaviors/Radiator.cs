@@ -16,7 +16,7 @@ public class RadiatorData : BehaviorData
     [InspectableField, JsonProperty("pumpedHeat"), Key(2), RuntimeInspectable]  
     public PerformanceStat PumpedHeat = new PerformanceStat();
     
-    [TemperatureInspectable, JsonProperty("temperatureFloor"), Key(3), RuntimeInspectable]  
+    [InspectableTemperature, JsonProperty("temperatureFloor"), Key(3), RuntimeInspectable]  
     public float TemperatureFloor;
     
     [InspectableField, JsonProperty("wasteHeat"), Key(4), RuntimeInspectable]  

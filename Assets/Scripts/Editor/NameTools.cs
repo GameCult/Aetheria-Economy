@@ -1,5 +1,8 @@
+using System.Buffers.Text;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEditor;
@@ -13,6 +16,7 @@ public class NameTools : EditorWindow
     private int minWordLength = 4;
     private TextAsset nameFile;
     private MarkovNameGenerator _nameGenerator;
+    private bool _stripNumberTokens;
 
     // Add menu named "My Window" to the Window menu
     [MenuItem("Window/Aetheria/Name Tools")]
@@ -30,6 +34,32 @@ public class NameTools : EditorWindow
         NameGeneratorMinLength = EditorGUILayout.IntField("Generated Minimum Word Length", NameGeneratorMinLength);
         NameGeneratorMaxLength = EditorGUILayout.IntField("Generated Maximum Word Length", NameGeneratorMaxLength);
         NameGeneratorOrder = EditorGUILayout.IntField("Generator Order", NameGeneratorOrder);
+        _stripNumberTokens = GUILayout.Toggle(_stripNumberTokens, "Strip Number Tokens");
+
+        if (GUILayout.Button("Clean Name File"))
+        {
+            var lines = nameFile.text.Split('\n');
+            using StreamWriter outputFile = new StreamWriter(Path.Combine(Application.dataPath, nameFile.name + ".csv"));
+            foreach (var line in lines)
+            {
+                if (!_stripNumberTokens)
+                {
+                    if (!string.IsNullOrEmpty(line) && Regex.IsMatch(line, "^[\\x00-\\x7F]+$") && !char.IsDigit(line[0]))
+                    {
+                        outputFile.WriteLine(line.Trim());
+                    }
+                }
+                else
+                {
+                    var tokens = line.Split('_', '-', ' ');
+                    if(!(tokens.Any(t => t.Length == 2 && char.IsUpper(t[0]) && char.IsUpper(t[1]))))
+                    //if (Regex.IsMatch(line, "^[\\x00-\\x7F]+$") && !tokens.Any(t=>int.TryParse(t, out _)) && !tokens.Any(t=>t=="AM"||t=="FM"||t=="TV"))
+                    {
+                        outputFile.WriteLine(line.Trim());
+                    }
+                }
+            }
+        }
 
         if (GUILayout.Button("Process Name File") && nameFile != null)
         {

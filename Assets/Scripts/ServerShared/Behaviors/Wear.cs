@@ -11,7 +11,7 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(1000), RuntimeInspectable]
 public class WearData : BehaviorData
 {
-    [TemperatureInspectable, JsonProperty("perSecond"), Key(1)]
+    [InspectableTemperature, JsonProperty("perSecond"), Key(1)]
     public bool PerSecond = true;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

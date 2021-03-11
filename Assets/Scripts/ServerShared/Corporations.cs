@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
+using Unity.Mathematics;
 
 
 [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -51,6 +52,17 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
 
     [InspectableField, JsonProperty("hostile"), Key(5)]
     public bool PlayerHostile;
+
+    [InspectableColor, JsonProperty("primaryColor"), Key(6)]
+    public float3 PrimaryColor;
+    
+    [InspectableColor, JsonProperty("secondaryColor"), Key(7)]
+    public float3 SecondaryColor;
+
+    [InspectableTextAsset, JsonProperty("geonames"), Key(8)]
+    public string GeonameFile;
+
+    [IgnoreMember] public MarkovNameGenerator NameGenerator { get; set; }
     
     [IgnoreMember] public string EntryName
     {
