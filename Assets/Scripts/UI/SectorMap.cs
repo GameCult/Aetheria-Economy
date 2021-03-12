@@ -13,6 +13,8 @@ using float2 = Unity.Mathematics.float2;
 
 public class SectorMap : MonoBehaviour
 {
+    public Camera InfluenceCamera;
+    public Prototype InfluenceRendererPrototype;
     public MeshRenderer SectorRenderer;
     public SectorGenerationSettings Settings;
     public Prototype ZonePrototype;
@@ -28,7 +30,9 @@ public class SectorMap : MonoBehaviour
     public int ZoneCount = 64;
     public float LinkDensity = .5f;
     public float LabelDistance = .4f;
-    // Start is called before the first frame update
+
+    private RenderTexture[] _influenceTextures;
+    
     void Start()
     {
         var filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
@@ -43,7 +47,8 @@ public class SectorMap : MonoBehaviour
         {
             mega.NameGenerator = new MarkovNameGenerator(ref random, UnityHelpers.LoadAsset<TextAsset>(mega.GeonameFile).text, Settings);
             var legendElement = LegendPrototype.Instantiate<LegendElement>();
-            legendElement.Icon.color = mega.PrimaryColor.ToColor();
+            legendElement.Primary.color = mega.PrimaryColor.ToColor();
+            legendElement.Secondary.color = mega.SecondaryColor.ToColor();
             legendElement.Label.text = mega.ShortName;
         }
 
@@ -51,9 +56,11 @@ public class SectorMap : MonoBehaviour
         var sector = SectorGenerator.GenerateSector(Settings, sectorMegas, ref random);
         var visitedZones = new HashSet<SectorZone>();
         Debug.Log($"Found {sector.Zones.Count(z=>!z.AdjacentZones.Any())} orphaned zones!");
+        var zoneInstances = new Dictionary<SectorZone, SectorZoneUI>();
         foreach (var zone in sector.Zones)
         {
             var zoneInstance = ZonePrototype.Instantiate<SectorZoneUI>();
+            zoneInstances[zone] = zoneInstance;
             var zoneInstanceTransform = zoneInstance.transform;
             zoneInstanceTransform.localPosition = new Vector3(zone.Position.x, zone.Position.y);
             if(zone.Owner != null)
@@ -110,18 +117,6 @@ public class SectorMap : MonoBehaviour
                 iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
             }
 
-            var bossMega = sector.BossZones.Keys.FirstOrDefault(m => sector.BossZones[m] == zone);
-            if (bossMega != null)
-            {
-                var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
-                iconInstance.material.mainTexture = BossIcon;
-                iconInstance.material.SetColor("_TintColor", bossMega.PrimaryColor.ToColor());
-                var iconTransform = iconInstance.transform;
-                iconTransform.SetParent(zoneInstanceTransform);
-                iconTransform.localScale = Vector3.one;
-                iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
-            }
-
             var homeMega = sector.HomeZones.Keys.FirstOrDefault(m => sector.HomeZones[m] == zone);
             if (homeMega != null)
             {
@@ -133,6 +128,52 @@ public class SectorMap : MonoBehaviour
                 iconTransform.localScale = Vector3.one;
                 iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
             }
+
+            var bossMega = sector.BossZones.Keys.FirstOrDefault(m => sector.BossZones[m] == zone);
+            if (bossMega != null)
+            {
+                var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
+                iconInstance.material.mainTexture = BossIcon;
+                iconInstance.material.SetColor("_TintColor", bossMega.PrimaryColor.ToColor());
+                var iconTransform = iconInstance.transform;
+                iconTransform.SetParent(zoneInstanceTransform);
+                iconTransform.localScale = Vector3.one;
+                if(homeMega != null)
+                    iconTransform.localPosition = new Vector3(linkDirection.x * IconDistance, linkDirection.y * IconDistance);
+                else iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
+            }
+        }
+        
+        // Render Influence Textures
+        _influenceTextures = new RenderTexture[sectorMegas.Length];
+        for (var i = 0; i < sectorMegas.Length; i++)
+        {
+            _influenceTextures[i] = new RenderTexture(1024, 1024, 1, RenderTextureFormat.RHalf);
+            var influenceRenderer = InfluenceRendererPrototype.Instantiate<MeshRenderer>();
+            foreach (var zone in sector.Zones)
+            {
+                var instance = zoneInstances[zone];
+                var influence = 0f;
+                if (zone.Megas.Length > 0)
+                {
+                    if (zone.Megas.Contains(sectorMegas[i]))
+                    {
+                        influence = 10;
+                        if (zone.Owner != sectorMegas[i])
+                            influence *= .5f;
+                    }
+                    else influence = -10;
+                }
+                instance.Influence.material.SetFloat("_Depth", influence);
+            }
+
+            InfluenceCamera.targetTexture = _influenceTextures[i];
+            InfluenceCamera.Render();
+            
+            influenceRenderer.material.mainTexture = _influenceTextures[i];
+            influenceRenderer.material.SetColor("_Color1", sectorMegas[i].PrimaryColor.ToColor());
+            influenceRenderer.material.SetColor("_Color2", sectorMegas[i].SecondaryColor.ToColor());
+            influenceRenderer.material.SetFloat("_FillTilt", random.NextFloat(PI));
         }
     }
 

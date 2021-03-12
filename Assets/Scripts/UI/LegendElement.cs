@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class LegendElement : MonoBehaviour
 {
-    public Image Icon;
+    public Image Primary;
+    public Image Secondary;
     public TextMeshProUGUI Label;
 }
