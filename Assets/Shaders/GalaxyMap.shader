@@ -23,10 +23,10 @@ Shader "Unlit/GalaxyMap"
 	}
 	SubShader
 	{
-	    Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" }
+        Tags { "RenderType"="Opaque" }
 		LOD 100
-        Blend One One
-	    Cull Off Lighting Off ZWrite Off
+        //Blend One One
+	    Lighting Off ZWrite Off
 
 		Pass
 		{

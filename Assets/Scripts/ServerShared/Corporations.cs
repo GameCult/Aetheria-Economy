@@ -41,26 +41,35 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("name"), Key(1)]
     public string Name;
     
-    [InspectableText, JsonProperty("description"), Key(2)]
+    [InspectableField, JsonProperty("shortName"), Key(2)]
+    public string ShortName;
+    
+    [InspectableText, JsonProperty("description"), Key(3)]
     public string Description;
     
-    [InspectableTexture, JsonProperty("logo"), Key(3)]
+    [InspectableTexture, JsonProperty("logo"), Key(4)]
     public string Logo;
     
-    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(4)]  
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(5)]  
     public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
 
-    [InspectableField, JsonProperty("hostile"), Key(5)]
+    [InspectableField, JsonProperty("hostile"), Key(6)]
     public bool PlayerHostile;
 
-    [InspectableColor, JsonProperty("primaryColor"), Key(6)]
+    [InspectableColor, JsonProperty("primaryColor"), Key(7)]
     public float3 PrimaryColor;
     
-    [InspectableColor, JsonProperty("secondaryColor"), Key(7)]
+    [InspectableColor, JsonProperty("secondaryColor"), Key(8)]
     public float3 SecondaryColor;
 
-    [InspectableTextAsset, JsonProperty("geonames"), Key(8)]
+    [InspectableTextAsset, JsonProperty("geonames"), Key(9)]
     public string GeonameFile;
+
+    [InspectableDatabaseLink(typeof(HullData)), JsonProperty("bossHull"), Key(10)]  
+    public Guid BossHull;
+
+    [InspectableField, JsonProperty("influence"), Key(11)]
+    public int InfluenceDistance = 4;
 
     [IgnoreMember] public MarkovNameGenerator NameGenerator { get; set; }
     

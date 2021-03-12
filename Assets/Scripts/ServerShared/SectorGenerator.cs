@@ -5,12 +5,13 @@ using DataStructures.ViliWonka.Heap;
 using MIConvexHull;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using Random = Unity.Mathematics.Random;
 
 public static class SectorGenerator
 {
-    public static Sector GenerateSector(SectorGenerationSettings settings, MegaCorporation[] megas, int zoneCount = 32, float linkDensity = .5f, float minLineSeparation = .01f)
+    public static Sector GenerateSector(SectorGenerationSettings settings, MegaCorporation[] megas, ref Random random, float minLineSeparation = .01f)
     {
-        var outputSamples = WeightedSampleElimination.GeneratePoints(zoneCount,
+        var outputSamples = WeightedSampleElimination.GeneratePoints(settings.ZoneCount,
             settings.CloudDensity,
             v => (.2f - lengthsq(v - float2(.5f))) * 4);
         var sector = new Sector();
@@ -60,10 +61,10 @@ public static class SectorGenerator
         
         var heap = new MaxHeap<(SectorZone, SectorZone)>(links.Count);
         foreach(var link in links) heap.PushObj(link, LinkWeight(link));
-        while (heap.Count > linkDensity * links.Count)
+        while (heap.Count > settings.LinkDensity * links.Count)
         {
             var link = heap.PopObj();
-            if(sector.ConnectedRegion(link.Item1, link.Item2).Contains(link.Item2))
+            if(sector.ConnectedRegion(link.Item1, link.Item1, link.Item2).Contains(link.Item2))
             {
                 link.Item1.AdjacentZones.Remove(link.Item2);
                 link.Item2.AdjacentZones.Remove(link.Item1);
@@ -83,60 +84,80 @@ public static class SectorGenerator
 
         #endregion
 
+        // Cache distance set and calculate isolation for every zone (used extensively for placing stuff)
         foreach (var zone in sector.Zones)
         {
             zone.Distance = sector.ConnectedRegionDistance(zone);
             zone.Isolation = zone.Distance.Sum(x => x.Value);
         }
 
+        // Exit is the most isolated zone (highest total distance to all other zones
         sector.Exit = sector.Zones.MaxBy(z => z.Isolation);
+        
+        // Entrance is the zone furthest from the exit
         sector.Entrance = sector.Zones.MaxBy(z => sector.Exit.Distance[z]);
-        foreach (var mega in megas)
+
+        // Store exit path in hash set for querying
+        var exitPathSet = new HashSet<SectorZone>(sector.ExitPath);
+        
+        // Find all zones on the exit path where removing that zone would disconnect the entrance from the exit
+        // Disregard "corridor" zones with only two adjacent zones
+        var chokePoints = sector.ExitPath
+            .Where(z => z.AdjacentZones.Count > 2 && !sector.ConnectedRegion(sector.Entrance, z).Contains(sector.Exit));
+
+        // Choose some megas to have bosses placed based on whether a boss hull is assigned
+        var bossMegas = megas
+            .Where(m => m.BossHull != Guid.Empty)
+            .Take(settings.BossCount)
+            .ToArray();
+
+        // Place boss zones along the critical path as far apart from each other as possible
+        foreach (var mega in bossMegas)
         {
-            sector.OccupantSources[mega] = sector.Zones.MaxBy(z =>
+            sector.BossZones[mega] = chokePoints.MaxBy(z =>
                 sector.Exit.Distance[z] * sector.Entrance.Distance[z] * 
-                sector.OccupantSources.Values.Aggregate(1, (i, os) => i * os.Distance[z]));
+                sector.BossZones.Values.Aggregate(1, (i, os) => i * os.Distance[z]));
         }
 
-        foreach (var zone in sector.Zones)
+        // Place boss mega headquarters such that their sphere of influence encompasses their boss zone
+        // While occupying as much territory as possible
+        foreach (var mega in bossMegas)
         {
-            var sourceDistances = new int[megas.Length];
-            var minSourceDistance = int.MaxValue;
-            var occupants = 0;
-            for (var i = 0; i < megas.Length; i++)
-            {
-                sourceDistances[i] = sector.OccupantSources[megas[i]].Distance[zone];
-
-                if (sourceDistances[i] == minSourceDistance)
-                {
-                    occupants++;
-                }
-                
-                if (sourceDistances[i] < minSourceDistance)
-                {
-                    minSourceDistance = sourceDistances[i];
-                    occupants = 1;
-                }
-            }
-
-            zone.Occupants = new MegaCorporation[occupants];
-
-            var occupantIndex = 0;
-            for (var i = 0; i < megas.Length; i++)
-            {
-                if (sourceDistances[i] == minSourceDistance)
-                {
-                    zone.Occupants[occupantIndex++] = megas[i];
-                }
-            }
-        }
-
-        sector.Zones[0].Name = "Hello World!";
-        foreach (var zone in sector.Zones)
-        {
-            zone.Name = zone.Occupants[0].NameGenerator.NextName; // TODO: Merge Naming
+            sector.HomeZones[mega] = sector
+                .ConnectedRegion(sector.BossZones[mega], mega.InfluenceDistance)
+                .MaxBy(z =>
+                    sector.ConnectedRegion(z, mega.InfluenceDistance).Count *
+                    sector.HomeZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])));
         }
         
+        // Place remaining headquarters away from existing megas while also maximizing territory
+        foreach (var mega in megas.Where(m=>!bossMegas.Contains(m)))
+        {
+            sector.HomeZones[mega] = sector.Zones.MaxBy(z =>
+                pow(sector.ConnectedRegion(z, mega.InfluenceDistance).Count, sector.HomeZones.Count) *
+                sector.Exit.Distance[z] * sector.Entrance.Distance[z] * 
+                sector.HomeZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])) * 
+                sector.BossZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])));
+        }
+
+        // Assign faction presence
+        foreach (var zone in sector.Zones)
+        {
+            // All megas for are present in zones within their sphere of influence
+            zone.Megas = megas
+                .Where(m => zone.Distance[sector.HomeZones[m]] <= m.InfluenceDistance)
+                .ToArray();
+            
+            // Owner of a zone is the one with the nearest headquarters
+            var nearestMega = megas.MinBy(m => zone.Distance[sector.HomeZones[m]]);
+            if (zone.Distance[sector.HomeZones[nearestMega]] <= nearestMega.InfluenceDistance)
+                zone.Owner = nearestMega;
+        }
+
+        // Generate zone name using the owner's name generator, otherwise assign catalogue ID
+        foreach (var zone in sector.Zones) 
+            zone.Name = zone.Owner?.NameGenerator.NextName ?? $"EAC-{random.NextInt(99999).ToString()}";
+
         return sector;
     }
 }

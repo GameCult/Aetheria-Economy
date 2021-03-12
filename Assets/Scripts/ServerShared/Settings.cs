@@ -46,6 +46,13 @@ public class GalaxyShapeSettings
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
 public class SectorGenerationSettings
 {
+    public float LinkDensity = .5f;
+    public int ZoneCount = 128;
+    public int NameGeneratorMinLength = 5;
+    public int NameGeneratorMaxLength = 10;
+    public int NameGeneratorOrder = 4;
+    public int MegaCount;
+    public int BossCount;
     public float NoisePosition;
     public float CloudExponent;
     public float CloudAmplitude;

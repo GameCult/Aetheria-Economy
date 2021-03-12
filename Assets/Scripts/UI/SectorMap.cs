@@ -17,18 +17,17 @@ public class SectorMap : MonoBehaviour
     public SectorGenerationSettings Settings;
     public Prototype ZonePrototype;
     public Prototype LinkPrototype;
-    public Prototype EntrancePrototype;
-    public Prototype ExitPrototype;
-    public float ExitDistance = 1;
+    public Prototype IconPrototype;
+    public Texture2D EntranceIcon;
+    public Texture2D ExitIcon;
+    public Texture2D BossIcon;
+    public Texture2D HomeIcon;
+    public Prototype LegendPrototype;
+    public float IconDistance = 1;
+    public float MegaColorBoost = 2.5f;
     public int ZoneCount = 64;
-    public int MegaCount = 2;
     public float LinkDensity = .5f;
     public float LabelDistance = .4f;
-    
-    [Header("Name Generation")]
-    public int NameGeneratorMinLength = 5;
-    public int NameGeneratorMaxLength = 10;
-    public int NameGeneratorOrder = 4;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,33 +37,28 @@ public class SectorMap : MonoBehaviour
 
         var megas = cache.GetAll<MegaCorporation>();
 
-        var sectorMegas = megas.OrderBy(x => Random.value).Take(MegaCount).ToArray();
+        var random = new Unity.Mathematics.Random((uint) (DateTime.Now.Ticks % uint.MaxValue));
+        var sectorMegas = megas.OrderBy(x => Random.value).Take(Settings.MegaCount).ToArray();
         foreach (var mega in sectorMegas)
         {
-            var nameFile = UnityHelpers.LoadAsset<TextAsset>(mega.GeonameFile);
-            var names = new HashSet<string>();
-            var lines = nameFile.text.Split('\n');
-            foreach (var line in lines)
-            {
-                foreach(var word in line.ToUpperInvariant().Split(' ', ',', '.', '"'))
-                    if (word.Length >= NameGeneratorMinLength && !names.Contains(word))
-                        names.Add(word);
-            }
-
-            var random = new Unity.Mathematics.Random((uint) (DateTime.Now.Ticks % uint.MaxValue));
-            mega.NameGenerator = new MarkovNameGenerator(ref random, names, NameGeneratorOrder, NameGeneratorMinLength, NameGeneratorMaxLength);
+            mega.NameGenerator = new MarkovNameGenerator(ref random, UnityHelpers.LoadAsset<TextAsset>(mega.GeonameFile).text, Settings);
+            var legendElement = LegendPrototype.Instantiate<LegendElement>();
+            legendElement.Icon.color = mega.PrimaryColor.ToColor();
+            legendElement.Label.text = mega.ShortName;
         }
-        
+
         Settings.NoisePosition = Random.value * 100;
-        var sector = SectorGenerator.GenerateSector(Settings, sectorMegas, ZoneCount, LinkDensity);
+        var sector = SectorGenerator.GenerateSector(Settings, sectorMegas, ref random);
         var visitedZones = new HashSet<SectorZone>();
         Debug.Log($"Found {sector.Zones.Count(z=>!z.AdjacentZones.Any())} orphaned zones!");
         foreach (var zone in sector.Zones)
         {
             var zoneInstance = ZonePrototype.Instantiate<SectorZoneUI>();
-            zoneInstance.transform.localPosition = new Vector3(zone.Position.x, zone.Position.y);
-            zoneInstance.Background.material.SetColor("_TintColor", zone.Occupants[0].PrimaryColor.ToColor());
-            zoneInstance.Background.transform.localScale = Vector3.one * (sector.OccupantSources.Values.Any(os=>os==zone) ? 4 : 2);
+            var zoneInstanceTransform = zoneInstance.transform;
+            zoneInstanceTransform.localPosition = new Vector3(zone.Position.x, zone.Position.y);
+            if(zone.Owner != null)
+                zoneInstance.Background.material.SetColor("_TintColor", zone.Owner.PrimaryColor.ToColor() * MegaColorBoost);
+            //zoneInstance.Background.transform.localScale = Vector3.one * (sector.HomeZones.Values.Any(os=>os==zone) ? 4 : 2);
             var linkDirection = float2.zero;
             foreach (var link in zone.AdjacentZones)
             {
@@ -74,9 +68,9 @@ public class SectorMap : MonoBehaviour
                     var linkInstance = LinkPrototype.Instantiate<Transform>();
                     var pos = (zone.Position + link.Position) / 2;
                     linkInstance.localPosition = new Vector3(pos.x, pos.y);
-                    if (zone.Occupants.Length == 1 && link.Occupants.Length == 1 && zone.Occupants[0] == link.Occupants[0])
+                    if (zone.Owner != null && zone.Owner == link.Owner)
                     {
-                        linkInstance.GetComponent<MeshRenderer>().material.SetColor("_TintColor", zone.Occupants[0].PrimaryColor.ToColor());
+                        linkInstance.GetComponent<MeshRenderer>().material.SetColor("_TintColor", zone.Owner.PrimaryColor.ToColor());
                     }
                     
                     var localScale = linkInstance.localScale;
@@ -98,18 +92,46 @@ public class SectorMap : MonoBehaviour
 
             if (zone == sector.Entrance)
             {
-                var entranceInstance = EntrancePrototype.Instantiate<Transform>();
-                entranceInstance.localPosition = new Vector3(
-                    zone.Position.x - linkDirection.x * ExitDistance,
-                    zone.Position.y - linkDirection.y * ExitDistance);
+                var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
+                iconInstance.material.mainTexture = EntranceIcon;
+                var iconTransform = iconInstance.transform;
+                iconTransform.SetParent(zoneInstanceTransform);
+                iconTransform.localScale = Vector3.one;
+                iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
             }
 
             if (zone == sector.Exit)
             {
-                var entranceInstance = ExitPrototype.Instantiate<Transform>();
-                entranceInstance.localPosition = new Vector3(
-                    zone.Position.x - linkDirection.x * ExitDistance,
-                    zone.Position.y - linkDirection.y * ExitDistance);
+                var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
+                iconInstance.material.mainTexture = ExitIcon;
+                var iconTransform = iconInstance.transform;
+                iconTransform.SetParent(zoneInstanceTransform);
+                iconTransform.localScale = Vector3.one;
+                iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
+            }
+
+            var bossMega = sector.BossZones.Keys.FirstOrDefault(m => sector.BossZones[m] == zone);
+            if (bossMega != null)
+            {
+                var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
+                iconInstance.material.mainTexture = BossIcon;
+                iconInstance.material.SetColor("_TintColor", bossMega.PrimaryColor.ToColor());
+                var iconTransform = iconInstance.transform;
+                iconTransform.SetParent(zoneInstanceTransform);
+                iconTransform.localScale = Vector3.one;
+                iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
+            }
+
+            var homeMega = sector.HomeZones.Keys.FirstOrDefault(m => sector.HomeZones[m] == zone);
+            if (homeMega != null)
+            {
+                var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
+                iconInstance.material.mainTexture = HomeIcon;
+                iconInstance.material.SetColor("_TintColor", homeMega.PrimaryColor.ToColor());
+                var iconTransform = iconInstance.transform;
+                iconTransform.SetParent(zoneInstanceTransform);
+                iconTransform.localScale = Vector3.one;
+                iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
             }
         }
     }
