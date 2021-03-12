@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" SchemaVersion="97">
+	<Events>
+		<WorkUnit Name="test_sounds" ID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="test_spaship_full_unit" ID="{5E7D0CDC-6E2B-49AE-89E9-B39335CE8CAF}">
+					<ChildrenList>
+						<Action Name="" ID="{D6F2996A-8361-4D78-88C6-D60D15DD2F0E}" ShortID="692204141">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="thuster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{B3F56B03-9140-4EF5-899C-4752BAFA8ADC}" ShortID="26652537">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="reactor_type1" ID="{3AA3BAA8-A42D-4EAE-B9BD-BC64D22B2753}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{F165B595-D783-4B56-A5AF-5DD85C00DEF8}" ShortID="97635930">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="spaceship_reactor_overheat_alarm" ID="{C9F5C84F-7414-4607-B8F0-8734CCB51061}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

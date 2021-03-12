@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{02152354-45CF-4389-B435-5367FA80C881}" SchemaVersion="97">
+	<GameParameters>
+		<WorkUnit Name="test_paramenters" ID="{02152354-45CF-4389-B435-5367FA80C881}" PersistMode="Standalone">
+			<ChildrenList>
+				<GameParameter Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="thruster_durability" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="reactor_duravility" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="reactor_temp" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+			</ChildrenList>
+		</WorkUnit>
+	</GameParameters>
+</WwiseDocument>
