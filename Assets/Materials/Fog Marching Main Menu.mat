@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Jittered Grid Fog Marching
+  m_Name: Fog Marching Main Menu
   m_Shader: {fileID: 4800000, guid: 7a890b6ceccf53c44bfc54b18b5daa58, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -43,23 +43,23 @@ Material:
     - _AlphaFloor: 0
     - _DepthBlend: 512
     - _DepthCeiling: 4096
-    - _Gamma: 0.5
+    - _Gamma: 0.3
     - _GridCeilingBlend: -300
     - _GridCeilingDensity: 0.01
     - _GridCeilingFollow: 0
     - _GridCeilingOffset: 0
-    - _GridFillDensity: 0.000006
-    - _GridFloorBlend: 100
-    - _GridFloorDensity: 4
-    - _GridFloorOffset: 25
+    - _GridFillDensity: 0.00002
+    - _GridFloorBlend: 39.6
+    - _GridFloorDensity: 1
+    - _GridFloorOffset: -16.46
     - _GridPatchBlend: 200
-    - _GridPatchDensity: 6
+    - _GridPatchDensity: 3
     - _NoiseFrequency: 0.01
-    - _NoiseSpeed: 0.02
-    - _NoiseStrength: 75
+    - _NoiseSpeed: 0.01
+    - _NoiseStrength: 150
     - _SafetyDistance: 50
     - _StepExponent: 2
     - _TintExponent: 8
     m_Colors:
-    - _Tint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _Tint: {r: 0.34, g: 0.34, b: 0.34, a: 1}
   m_BuildTextureStacks: []

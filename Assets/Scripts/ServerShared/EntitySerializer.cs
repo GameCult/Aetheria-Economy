@@ -6,53 +6,15 @@ using MessagePack;
 using RethinkDb.Driver.Ast;
 using Unity.Mathematics;
 
-[MessagePackObject]
-public class EntityPack
+public static class EntitySerializer
 {
-    [Key(0)]
-    public string Name;
-    
-    [Key(1)]
-    public EquippableItem Hull;
-    
-    [Key(2)]
-    public (int2 position, EquippableItem item)[] Equipment;
-    
-    [Key(3)]
-    public (int2 position, EquippableItem item)[] CargoBays;
-    
-    [Key(4)]
-    public (int2 position, EquippableItem item)[] DockingBays;
-
-    [Key(5)]
-    public Dictionary<int2, PersistentBehaviorData[]> PersistedBehaviors;
-
-    [Key(6)]
-    public float[,] Temperature;
-    
-    [Key(7)]
-    public float[,] Armor;
-    
-    [Key(8)]
-    public bool2[,] Conductivity;
-    
-    [Key(10)]
-    public int[] DockingBayAssignments;
-    
-    [Key(11)]
-    public (int2 position, ItemInstance item)[][] CargoContents;
-    
-    [Key(12)]
-    public (int2 position, ItemInstance item)[][] DockingBayContents;
-
-    [Key(13)]
-    public EntityPack[] Children;
-
-    private int _price;
 
     public static EntityPack Pack(Entity entity)
     {
-        var pack = new EntityPack();
+        EntityPack pack;
+        if (entity is OrbitalEntity orbital)
+            pack = new OrbitalEntityPack {Orbit = orbital.OrbitData};
+        else pack = new ShipPack();
         
         // Filter item behavior collections by those with any persistent behaviors
         // For each item create an object containing the item position and a list of persistent behaviors
@@ -80,16 +42,27 @@ public class EntityPack
         return pack;
     }
 
-    public static Ship Unpack(ItemManager itemManager, Zone zone, EntityPack pack, bool instantiate = false)
+    public static Entity Unpack(ItemManager itemManager, Zone zone, EntityPack pack, bool instantiate = false)
+    {
+        return pack switch
+        {
+            ShipPack shipPack => Unpack(itemManager, zone, shipPack, instantiate),
+            OrbitalEntityPack orbitalEntityPack => Unpack(itemManager, zone, orbitalEntityPack, instantiate),
+            _ => null
+        };
+    }
+    
+
+    public static Ship Unpack(ItemManager itemManager, Zone zone, ShipPack pack, bool instantiate = false)
     {
         var entity = new Ship(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull);
         Restore(itemManager, zone, pack, entity, instantiate);
         return entity;
     }
 
-    public static OrbitalEntity Unpack(ItemManager itemManager, Zone zone, EntityPack pack, Guid orbit, bool instantiate = false)
+    public static OrbitalEntity Unpack(ItemManager itemManager, Zone zone, OrbitalEntityPack pack, bool instantiate = false)
     {
-        var entity = new OrbitalEntity(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull, orbit);
+        var entity = new OrbitalEntity(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull, pack.Orbit);
         Restore(itemManager, zone, pack, entity, instantiate);
         return entity;
     }
@@ -144,6 +117,63 @@ public class EntityPack
         foreach(var v in hullData.Shape.Coordinates)
             entity.HullConductivity[v.x,v.y] = pack.Conductivity[v.x,v.y];
     }
+}
+
+[MessagePackObject]
+public class ShipPack : EntityPack { }
+
+[MessagePackObject]
+public class OrbitalEntityPack : EntityPack
+{
+    [Key(14)]
+    public Guid Orbit;
+}
+
+[MessagePackObject, 
+ Union(0, typeof(OrbitalEntityPack)),
+ Union(1, typeof(ShipPack))]
+public class EntityPack
+{
+    [Key(0)]
+    public string Name;
+    
+    [Key(1)]
+    public EquippableItem Hull;
+    
+    [Key(2)]
+    public (int2 position, EquippableItem item)[] Equipment;
+    
+    [Key(3)]
+    public (int2 position, EquippableItem item)[] CargoBays;
+    
+    [Key(4)]
+    public (int2 position, EquippableItem item)[] DockingBays;
+
+    [Key(5)]
+    public Dictionary<int2, PersistentBehaviorData[]> PersistedBehaviors;
+
+    [Key(6)]
+    public float[,] Temperature;
+    
+    [Key(7)]
+    public float[,] Armor;
+    
+    [Key(8)]
+    public bool2[,] Conductivity;
+    
+    [Key(10)]
+    public int[] DockingBayAssignments;
+    
+    [Key(11)]
+    public (int2 position, ItemInstance item)[][] CargoContents;
+    
+    [Key(12)]
+    public (int2 position, ItemInstance item)[][] DockingBayContents;
+
+    [Key(13)]
+    public EntityPack[] Children;
+
+    private int _price;
 
     public int Price(ItemManager itemManager)
     {

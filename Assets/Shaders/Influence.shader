@@ -68,13 +68,6 @@ Shader "Aetheria/Influence"
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
-			
-            float2 calcGrad (float2 uv, float me)
-            {
-                float n = -tex2D(_MainTex, float2(uv.x, uv.y + _MainTex_TexelSize.y)).x;
-                float e = -tex2D(_MainTex, float2(uv.x + _MainTex_TexelSize.x, uv.y)).x;
-                return float2(e-me,n-me);
-            }
 
             fixed4 frag (v2f i) : SV_Target
             {
@@ -82,8 +75,6 @@ Shader "Aetheria/Influence"
                 float influence = tex2D(_MainTex, i.uv).r;
 
             	// Calculate gradient and rate of change of influence
-				//float2 grad = calcGrad(i.uv, influence);
-				//float diff = length(grad);
 				float2 grad = float2(ddx(influence), ddy(influence));
 				float diff = length(grad);
 

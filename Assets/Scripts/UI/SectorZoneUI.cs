@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class SectorZoneUI : MonoBehaviour
 {
-    public MeshRenderer Background;
+    public MeshRenderer Primary;
+    public MeshRenderer Secondary;
     public MeshRenderer Influence;
     public TextMeshPro Label;
 }

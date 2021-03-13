@@ -5,19 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using JsonKnownTypes;
-using MessagePack;
-using Newtonsoft.Json;
 using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using int2 = Unity.Mathematics.int2;
 
-[MessagePackObject, 
- Union(0, typeof(Ship)),
- Union(1, typeof(OrbitalEntity)),
- JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<Entity>))]
 public abstract class Entity
 {
     public Zone Zone;

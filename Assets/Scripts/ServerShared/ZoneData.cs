@@ -60,7 +60,7 @@ public class ZonePack : INamedEntry
     public List<OrbitData> Orbits = new List<OrbitData>();
     
     [JsonProperty("entities"), Key(3)]
-    public List<Entity> Entities = new List<Entity>();
+    public List<EntityPack> Entities = new List<EntityPack>();
     
     [IgnoreMember] public string EntryName
     {

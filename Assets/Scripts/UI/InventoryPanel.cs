@@ -145,7 +145,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                 ContextMenu.AddOption("Save Loadout",
                     () =>
                     {
-                        GameManager.SaveLoadout(EntityPack.Pack(_displayedEntity));
+                        GameManager.SaveLoadout(EntitySerializer.Pack(_displayedEntity));
                     });
 
                 if (GameManager.Loadouts.Any())
@@ -155,13 +155,16 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                             (
                                 $"{pack.Name} - {pack.Price(GameManager.ItemManager):n0}", () =>
                                 {
-                                    var ship = EntityPack.Unpack(GameManager.ItemManager, GameManager.Zone, pack, true);
-                                    ship.SetParent(GameManager.DockedEntity);
-                                    GameManager.PlayerEntities.Add(ship);
+                                    var entity = EntitySerializer.Unpack(GameManager.ItemManager, GameManager.Zone, pack, true);
+                                    entity.SetParent(GameManager.DockedEntity);
+                                    GameManager.PlayerEntities.Add(entity);
                                     GameManager.Credits -= pack.Price(GameManager.ItemManager);
-                                    GameManager.CurrentEntity = ship;
-                                    GameManager.DockingBay.DockedShip = ship;
-                                    Display(ship);
+                                    GameManager.CurrentEntity = entity;
+                                    if(entity is Ship ship)
+                                    {
+                                        GameManager.DockingBay.DockedShip = ship;
+                                    }
+                                    Display(entity);
                                 }, pack.Price(GameManager.ItemManager) < GameManager.Credits
                                 )));
                 }

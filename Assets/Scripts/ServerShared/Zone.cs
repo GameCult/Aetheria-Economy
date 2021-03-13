@@ -29,6 +29,7 @@ public class Zone
     
     private HashSet<Guid> _updatedOrbits = new HashSet<Guid>();
 
+    private ItemManager _itemManager;
     private float _time;
     private Random _random;
     public List<Agent> Agents = new List<Agent>();
@@ -36,8 +37,9 @@ public class Zone
     public ZoneData Data { get; }
     private List<Task> BeltUpdates = new List<Task>();
 
-    public Zone(PlanetSettings settings, ZonePack pack)
+    public Zone(ItemManager itemManager, PlanetSettings settings, ZonePack pack)
     {
+        _itemManager = itemManager;
         Data = pack.Data;
         Settings = settings;
         _random = new Random(Convert.ToUInt32(abs(Data.ID.GetHashCode())));
@@ -63,8 +65,11 @@ public class Zone
                     break;
             }
         }
-        
-        foreach (var entity in pack.Entities) Entities.Add(entity);
+
+        foreach (var entity in pack.Entities)
+        {
+            Entities.Add(EntitySerializer.Unpack(_itemManager, this, entity));
+        }
 
         // TODO: Associate planets with stored entities for planetary colonies
     }
@@ -74,7 +79,7 @@ public class Zone
         return new ZonePack
         {
             Data = Data,
-            //Entities = Entities.ToList(),
+            Entities = Entities.Select(EntitySerializer.Pack).ToList(),
             Orbits = Orbits.Values.Select(o=>o.Data).ToList(),
             Planets = Planets.Values.ToList()
         };

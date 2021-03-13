@@ -135,7 +135,7 @@ public class ActionGameManager : MonoBehaviour
         PlayerSettings = MessagePackSerializer.Deserialize<PlayerSettings>(
             File.ReadAllBytes(playerSettingsFile.FullName));
 
-        Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.preset")
+        Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.loadout")
             .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
 
         var names = new HashSet<string>();
@@ -449,7 +449,7 @@ public class ActionGameManager : MonoBehaviour
             radius: Settings.DefaultZoneRadius
         );
         
-        Zone = new Zone(Settings.PlanetSettings, zonePack);
+        Zone = new Zone(ItemManager, Settings.PlanetSettings, zonePack);
         Zone.Log = s => Debug.Log($"Zone: {s}");
 
         if (CurrentEntity != null)
@@ -468,7 +468,7 @@ public class ActionGameManager : MonoBehaviour
         
         if (CurrentEntity != null)
         {
-            DisposeEntityBinding();
+            UnbindEntity();
             BindToEntity(CurrentEntity);
         }
 
@@ -477,50 +477,32 @@ public class ActionGameManager : MonoBehaviour
 
     private void GenerateZoneEntities(Zone zone)
     {
-        var testCorp = new MegaCorporation();
-        testCorp.Name = "TestCorp";
-        testCorp.PlayerHostile = true;
-        
-        var stationType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
-        var stationHull = ItemManager.CreateInstance(stationType) as EquippableItem;
-        var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(3);
-        var stationParentOrbit = stationParent.Orbit.Data.ID;
-        var stationParentPos = Zone.GetOrbitPosition(stationParentOrbit);
-        var stationPos = stationParentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
-        var stationOrbit = Zone.CreateOrbit(stationParentOrbit, stationPos);
-        var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID);
-        //station.Faction = testCorp;
-        zone.Entities.Add(station);
-        var dockingBayData = ItemData.GetAll<DockingBayData>().First();
-        var dockingBay = ItemManager.CreateInstance(dockingBayData) as EquippableItem;
-        station.TryEquip(dockingBay);
-        station.Activate();
-
-        var turretLoadout = Loadouts.First(x => x.Name == "Turret");
-
-        for(int i=0; i<3; i++)
-        {
-            var planet = zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(4+i);
-            var planetOrbit = planet.Orbit.Data.ID;
-            var planetPos = zone.GetOrbitPosition(planetOrbit);
-            for (int j = 0; j < 2; j++)
-            {
-                var pos = planetPos + ItemManager.Random.NextFloat2Direction() * planet.GravityWellRadius.Value * (.1f + .1f * j);
-                var orbit = zone.CreateOrbit(planetOrbit, pos);
-                var turret = EntityPack.Unpack(ItemManager, Zone, turretLoadout, orbit.ID, true);
-                turret.Activate();
-                turret.Name = $"Turret {i}-{(char) ('A' + j)}";
-                turret.Faction = testCorp;
-                zone.Entities.Add(turret);
-            }
-        }
-
-        var enemyShipLoadout = Loadouts.First(x => ((HullData) ItemManager.GetData(x.Hull)).HullType == HullType.Ship);
-        var enemyShip = EntityPack.Unpack(ItemManager, Zone, enemyShipLoadout, true);
-        enemyShip.Faction = testCorp;
-        enemyShip.Activate();
-        zone.Entities.Add(enemyShip);
-        zone.Agents.Add(CreateAgent(enemyShip));
+        //
+        // var turretLoadout = Loadouts.First(x => x.Name == "Turret");
+        //
+        // for(int i=0; i<3; i++)
+        // {
+        //     var planet = zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(4+i);
+        //     var planetOrbit = planet.Orbit.Data.ID;
+        //     var planetPos = zone.GetOrbitPosition(planetOrbit);
+        //     for (int j = 0; j < 2; j++)
+        //     {
+        //         var pos = planetPos + ItemManager.Random.NextFloat2Direction() * planet.GravityWellRadius.Value * (.1f + .1f * j);
+        //         var orbit = zone.CreateOrbit(planetOrbit, pos);
+        //         var turret = EntityPack.Unpack(ItemManager, Zone, turretLoadout, orbit.ID, true);
+        //         turret.Activate();
+        //         turret.Name = $"Turret {i}-{(char) ('A' + j)}";
+        //         turret.Faction = testCorp;
+        //         zone.Entities.Add(turret);
+        //     }
+        // }
+        //
+        // var enemyShipLoadout = Loadouts.First(x => ((HullData) ItemManager.GetData(x.Hull)).HullType == HullType.Ship);
+        // var enemyShip = EntityPack.Unpack(ItemManager, Zone, enemyShipLoadout, true);
+        // enemyShip.Faction = testCorp;
+        // enemyShip.Activate();
+        // zone.Entities.Add(enemyShip);
+        // zone.Agents.Add(CreateAgent(enemyShip));
     }
 
     private Agent CreateAgent(Ship ship)
@@ -535,17 +517,31 @@ public class ActionGameManager : MonoBehaviour
     private void StartGame()
     {
         GenerateLevel();
-        // var turret = Zone.Entities.First(e => e.Name.StartsWith("Turret"));
-        // BindToEntity(turret);
-        var ship = EntityPack.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
-        ship.Zone = Zone;
-        Zone.Entities.Add(ship);
-        ship.Activate();
-        BindToEntity(ship);
-        ship.ExitWormhole(
-            SectorRenderer.WormholeInstances.Keys.First().Position,
-            ItemManager.Random.NextFloat2Direction() * Settings.GameplaySettings.WormholeExitVelocity);
-        EnterOverworld();
+        
+        var stationType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
+        var stationHull = ItemManager.CreateInstance(stationType) as EquippableItem;
+        var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(3);
+        var stationParentOrbit = stationParent.Orbit.Data.ID;
+        var stationParentPos = Zone.GetOrbitPosition(stationParentOrbit);
+        var stationPos = stationParentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
+        var stationOrbit = Zone.CreateOrbit(stationParentOrbit, stationPos);
+        var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID);
+        Zone.Entities.Add(station);
+        var dockingBayData = ItemData.GetAll<DockingBayData>().First();
+        var dockingBay = ItemManager.CreateInstance(dockingBayData) as EquippableItem;
+        station.TryEquip(dockingBay);
+        station.Activate();
+        
+        DoDock(station, station.DockingBays.First());
+        
+        // var ship = EntityPack.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
+        // ship.Zone = Zone;
+        // Zone.Entities.Add(ship);
+        // ship.Activate();
+        // BindToEntity(ship);
+        // ship.ExitWormhole(
+        //     SectorRenderer.WormholeInstances.Keys.First().Position,
+        //     ItemManager.Random.NextFloat2Direction() * Settings.GameplaySettings.WormholeExitVelocity);
     }
 
     public void Dock()
@@ -561,18 +557,8 @@ public class ActionGameManager : MonoBehaviour
                     var bay = entity.TryDock(ship);
                     if (bay != null)
                     {
-                        DisposeEntityBinding();
-                        DockedEntity = entity;
-                        SectorRenderer.PerspectiveEntity = DockedEntity;
-                        DockingBay = bay;
-                        DockCamera.enabled = true;
-                        FollowCamera.enabled = false;
-                        var orbital = (OrbitalEntity) entity;
-                        DockCamera.Follow = SectorRenderer.EntityInstances[orbital].transform;
-                        var parentOrbit = Zone.Orbits[orbital.OrbitData].Data.Parent;
-                        var parentPlanet = SectorRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key];
-                        DockCamera.LookAt = parentPlanet.Body.transform;
-                        Menu.ShowTab(MenuTab.Inventory);
+                        UnbindEntity();
+                        DoDock(entity, bay);
                         AkSoundEngine.PostEvent("Dock", gameObject);
                         return;
                     }
@@ -580,6 +566,21 @@ public class ActionGameManager : MonoBehaviour
             }
         }
         AkSoundEngine.PostEvent("Dock_Fail", gameObject);
+    }
+
+    private void DoDock(Entity entity, EquippedDockingBay dockingBay)
+    {
+        DockedEntity = entity;
+        SectorRenderer.PerspectiveEntity = DockedEntity;
+        DockingBay = dockingBay;
+        DockCamera.enabled = true;
+        FollowCamera.enabled = false;
+        var orbital = (OrbitalEntity) entity;
+        DockCamera.Follow = SectorRenderer.EntityInstances[orbital].transform;
+        var parentOrbit = Zone.Orbits[orbital.OrbitData].Data.Parent;
+        var parentPlanet = SectorRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key];
+        DockCamera.LookAt = parentPlanet.Body.transform;
+        Menu.ShowTab(MenuTab.Inventory);
     }
 
     public void Undock()
@@ -611,8 +612,6 @@ public class ActionGameManager : MonoBehaviour
             else if (CurrentEntity.Parent.TryUndock(ship))
             {
                 BindToEntity(ship);
-
-                EnterOverworld();
                 AkSoundEngine.PostEvent("Undock", gameObject);
             }
             else
@@ -624,7 +623,7 @@ public class ActionGameManager : MonoBehaviour
         }
     }
 
-    private void DisposeEntityBinding()
+    private void UnbindEntity()
     {
         foreach (var indicator in _visibleHostileIndicators)
         {
@@ -642,8 +641,18 @@ public class ActionGameManager : MonoBehaviour
         _shipSubscriptions.Clear();
     }
 
-    private void EnterOverworld()
+    private void BindToEntity(Entity entity)
     {
+        if (!SectorRenderer.EntityInstances.ContainsKey(entity))
+        {
+            Debug.LogError($"Attempted to bind to entity {entity.Name}, but SectorRenderer has no such instance!");
+            return;
+        }
+        
+        CurrentEntity = entity;
+        DeathPP.weight = 0;
+        SectorRenderer.PerspectiveEntity = CurrentEntity;
+        
         Menu.gameObject.SetActive(false);
         DockedEntity = null;
         DockingBay = null;
@@ -655,17 +664,6 @@ public class ActionGameManager : MonoBehaviour
         _input.Player.Enable();
         ShipPanel.Display(CurrentEntity, true);
         SchematicDisplay.ShowShip(CurrentEntity);
-    }
-
-    private void BindToEntity(Entity entity)
-    {
-        if (!SectorRenderer.EntityInstances.ContainsKey(entity))
-        {
-            Debug.LogError($"Attempted to bind to entity {entity.Name}, but SectorRenderer has no such instance!");
-            return;
-        }
-        CurrentEntity = entity;
-        SectorRenderer.PerspectiveEntity = CurrentEntity;
         
         FollowCamera.LookAt = SectorRenderer.EntityInstances[CurrentEntity].LookAtPoint;
         FollowCamera.Follow = SectorRenderer.EntityInstances[CurrentEntity].transform;
@@ -717,7 +715,7 @@ public class ActionGameManager : MonoBehaviour
         _shipSubscriptions.Add(CurrentEntity.Death.Subscribe(_ =>
         {
             var deathTime = Time.time;
-            DisposeEntityBinding();
+            UnbindEntity();
             CurrentEntity = null;
             ConfirmationDialog.Clear();
             ConfirmationDialog.Title.text = "You have died!";

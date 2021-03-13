@@ -20,18 +20,24 @@ public class SectorMap : MonoBehaviour
     public Prototype ZonePrototype;
     public Prototype LinkPrototype;
     public Prototype IconPrototype;
+    public Material ZonePrimaryMaterial;
+    public Material ZoneSecondaryMaterial;
+    public Material ZoneLinkMaterial;
+    public float MegaPrimaryBoost = .75f;
+    public float MegaSecondaryBoost = 2f;
+    public float MegaLinkBoost = 2f;
     public Texture2D EntranceIcon;
     public Texture2D ExitIcon;
     public Texture2D BossIcon;
     public Texture2D HomeIcon;
     public Prototype LegendPrototype;
     public float IconDistance = 1;
-    public float MegaColorBoost = 2.5f;
     public int ZoneCount = 64;
     public float LinkDensity = .5f;
     public float LabelDistance = .4f;
 
-    private RenderTexture[] _influenceTextures;
+    private Dictionary<MegaCorporation, (RenderTexture influence, Material primaryMaterial, Material secondaryMaterial, Material linkMaterial)> _factionMaterials =
+        new Dictionary<MegaCorporation, (RenderTexture influence, Material primaryMaterial, Material secondaryMaterial, Material linkMaterial)>();
     
     void Start()
     {
@@ -45,6 +51,13 @@ public class SectorMap : MonoBehaviour
         var sectorMegas = megas.OrderBy(x => Random.value).Take(Settings.MegaCount).ToArray();
         foreach (var mega in sectorMegas)
         {
+            var primary = Instantiate(ZonePrimaryMaterial);
+            primary.SetColor("_TintColor", (mega.PrimaryColor * MegaPrimaryBoost).ToColor());
+            var secondary = Instantiate(ZoneSecondaryMaterial);
+            secondary.SetColor("_TintColor", (mega.SecondaryColor * MegaSecondaryBoost).ToColor());
+            var link = Instantiate(ZoneLinkMaterial);
+            link.SetColor("_TintColor", (mega.PrimaryColor * MegaLinkBoost).ToColor());
+            _factionMaterials.Add(mega, (new RenderTexture(1024, 1024, 1, RenderTextureFormat.RHalf), primary, secondary, link));
             mega.NameGenerator = new MarkovNameGenerator(ref random, UnityHelpers.LoadAsset<TextAsset>(mega.GeonameFile).text, Settings);
             var legendElement = LegendPrototype.Instantiate<LegendElement>();
             legendElement.Primary.color = mega.PrimaryColor.ToColor();
@@ -56,6 +69,7 @@ public class SectorMap : MonoBehaviour
         var sector = SectorGenerator.GenerateSector(Settings, sectorMegas, ref random);
         var visitedZones = new HashSet<SectorZone>();
         Debug.Log($"Found {sector.Zones.Count(z=>!z.AdjacentZones.Any())} orphaned zones!");
+
         var zoneInstances = new Dictionary<SectorZone, SectorZoneUI>();
         foreach (var zone in sector.Zones)
         {
@@ -64,7 +78,10 @@ public class SectorMap : MonoBehaviour
             var zoneInstanceTransform = zoneInstance.transform;
             zoneInstanceTransform.localPosition = new Vector3(zone.Position.x, zone.Position.y);
             if(zone.Owner != null)
-                zoneInstance.Background.material.SetColor("_TintColor", zone.Owner.PrimaryColor.ToColor() * MegaColorBoost);
+            {
+                zoneInstance.Primary.sharedMaterial = _factionMaterials[zone.Owner].primaryMaterial;
+                zoneInstance.Secondary.sharedMaterial = _factionMaterials[zone.Owner].secondaryMaterial;
+            }
             //zoneInstance.Background.transform.localScale = Vector3.one * (sector.HomeZones.Values.Any(os=>os==zone) ? 4 : 2);
             var linkDirection = float2.zero;
             foreach (var link in zone.AdjacentZones)
@@ -76,10 +93,8 @@ public class SectorMap : MonoBehaviour
                     var pos = (zone.Position + link.Position) / 2;
                     linkInstance.localPosition = new Vector3(pos.x, pos.y);
                     if (zone.Owner != null && zone.Owner == link.Owner)
-                    {
-                        linkInstance.GetComponent<MeshRenderer>().material.SetColor("_TintColor", zone.Owner.PrimaryColor.ToColor());
-                    }
-                    
+                        linkInstance.GetComponent<MeshRenderer>().sharedMaterial = _factionMaterials[zone.Owner].linkMaterial;
+
                     var localScale = linkInstance.localScale;
                     localScale = new Vector3(length(zone.Position - link.Position), localScale.y, localScale.z);
                     linkInstance.localScale = localScale;
@@ -145,10 +160,8 @@ public class SectorMap : MonoBehaviour
         }
         
         // Render Influence Textures
-        _influenceTextures = new RenderTexture[sectorMegas.Length];
-        for (var i = 0; i < sectorMegas.Length; i++)
+        foreach (var mega in sectorMegas)
         {
-            _influenceTextures[i] = new RenderTexture(1024, 1024, 1, RenderTextureFormat.RHalf);
             var influenceRenderer = InfluenceRendererPrototype.Instantiate<MeshRenderer>();
             foreach (var zone in sector.Zones)
             {
@@ -156,10 +169,10 @@ public class SectorMap : MonoBehaviour
                 var influence = 0f;
                 if (zone.Megas.Length > 0)
                 {
-                    if (zone.Megas.Contains(sectorMegas[i]))
+                    if (zone.Megas.Contains(mega))
                     {
                         influence = 10;
-                        if (zone.Owner != sectorMegas[i])
+                        if (zone.Owner != mega)
                             influence *= .5f;
                     }
                     else influence = -10;
@@ -167,12 +180,12 @@ public class SectorMap : MonoBehaviour
                 instance.Influence.material.SetFloat("_Depth", influence);
             }
 
-            InfluenceCamera.targetTexture = _influenceTextures[i];
+            InfluenceCamera.targetTexture = _factionMaterials[mega].influence;
             InfluenceCamera.Render();
             
-            influenceRenderer.material.mainTexture = _influenceTextures[i];
-            influenceRenderer.material.SetColor("_Color1", sectorMegas[i].PrimaryColor.ToColor());
-            influenceRenderer.material.SetColor("_Color2", sectorMegas[i].SecondaryColor.ToColor());
+            influenceRenderer.material.mainTexture = _factionMaterials[mega].influence;
+            influenceRenderer.material.SetColor("_Color1", mega.PrimaryColor.ToColor());
+            influenceRenderer.material.SetColor("_Color2", mega.SecondaryColor.ToColor());
             influenceRenderer.material.SetFloat("_FillTilt", random.NextFloat(PI));
         }
     }
