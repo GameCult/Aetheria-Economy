@@ -20,6 +20,7 @@ public class SectorMap : MonoBehaviour
     public Prototype ZonePrototype;
     public Prototype LinkPrototype;
     public Prototype IconPrototype;
+    public Prototype IconBackgroundPrototype;
     public Material ZonePrimaryMaterial;
     public Material ZoneSecondaryMaterial;
     public Material ZoneLinkMaterial;
@@ -32,8 +33,7 @@ public class SectorMap : MonoBehaviour
     public Texture2D HomeIcon;
     public Prototype LegendPrototype;
     public float IconDistance = 1;
-    public int ZoneCount = 64;
-    public float LinkDensity = .5f;
+    public float IconBackgroundSize = 3;
     public float LabelDistance = .4f;
 
     private Dictionary<MegaCorporation, (RenderTexture influence, Material primaryMaterial, Material secondaryMaterial, Material linkMaterial)> _factionMaterials =
@@ -66,7 +66,7 @@ public class SectorMap : MonoBehaviour
         }
 
         Settings.NoisePosition = Random.value * 100;
-        var sector = SectorGenerator.GenerateSector(Settings, sectorMegas, ref random);
+        var sector = new Sector(Settings, sectorMegas, ref random);
         var visitedZones = new HashSet<SectorZone>();
         Debug.Log($"Found {sector.Zones.Count(z=>!z.AdjacentZones.Any())} orphaned zones!");
 
@@ -135,27 +135,55 @@ public class SectorMap : MonoBehaviour
             var homeMega = sector.HomeZones.Keys.FirstOrDefault(m => sector.HomeZones[m] == zone);
             if (homeMega != null)
             {
+                var backgroundInstance = IconBackgroundPrototype.Instantiate<MeshRenderer>();
                 var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
+                
+                backgroundInstance.material.SetColor("_TintColor", homeMega.SecondaryColor.ToColor());
                 iconInstance.material.mainTexture = HomeIcon;
                 iconInstance.material.SetColor("_TintColor", homeMega.PrimaryColor.ToColor());
+                
+                var backgroundTransform = backgroundInstance.transform;
                 var iconTransform = iconInstance.transform;
+                
+                backgroundTransform.SetParent(zoneInstanceTransform);
                 iconTransform.SetParent(zoneInstanceTransform);
+                
+                backgroundTransform.localScale = Vector3.one * IconBackgroundSize;
                 iconTransform.localScale = Vector3.one;
+                
+                backgroundTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance, .5f);
                 iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
             }
 
             var bossMega = sector.BossZones.Keys.FirstOrDefault(m => sector.BossZones[m] == zone);
             if (bossMega != null)
             {
+                var backgroundInstance = IconBackgroundPrototype.Instantiate<MeshRenderer>();
                 var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
+                
+                backgroundInstance.material.SetColor("_TintColor", bossMega.SecondaryColor.ToColor());
                 iconInstance.material.mainTexture = BossIcon;
                 iconInstance.material.SetColor("_TintColor", bossMega.PrimaryColor.ToColor());
+                
+                var backgroundTransform = backgroundInstance.transform;
                 var iconTransform = iconInstance.transform;
+                
+                backgroundTransform.SetParent(zoneInstanceTransform);
                 iconTransform.SetParent(zoneInstanceTransform);
+                
+                backgroundTransform.localScale = Vector3.one * IconBackgroundSize;
                 iconTransform.localScale = Vector3.one;
-                if(homeMega != null)
+                
+                if (homeMega != null)
+                {
+                    backgroundTransform.localPosition = new Vector3(linkDirection.x * IconDistance, linkDirection.y * IconDistance, .5f);
                     iconTransform.localPosition = new Vector3(linkDirection.x * IconDistance, linkDirection.y * IconDistance);
-                else iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
+                }
+                else
+                {
+                    backgroundTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance, .5f);
+                    iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
+                }
             }
         }
         
@@ -167,9 +195,9 @@ public class SectorMap : MonoBehaviour
             {
                 var instance = zoneInstances[zone];
                 var influence = 0f;
-                if (zone.Megas.Length > 0)
+                if (zone.Factions.Length > 0)
                 {
-                    if (zone.Megas.Contains(mega))
+                    if (zone.Factions.Contains(mega))
                     {
                         influence = 10;
                         if (zone.Owner != mega)

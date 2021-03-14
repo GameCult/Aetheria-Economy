@@ -23,6 +23,28 @@ using Random = UnityEngine.Random;
 
 public class ActionGameManager : MonoBehaviour
 {
+    public static DirectoryInfo GameDataDirectory
+    {
+        get => _gameDataDirectory ??= new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
+    }
+    private static DirectoryInfo _gameDataDirectory;
+    
+    public static PlayerSettings PlayerSettings
+    {
+        get => _playerSettings ??= File.Exists(_playerSettingsFilePath)
+            ? MessagePackSerializer.Deserialize<PlayerSettings>(File.ReadAllBytes(_playerSettingsFilePath))
+            : new PlayerSettings {Name = Environment.UserName};
+    }
+    private static PlayerSettings _playerSettings;
+    private static string _playerSettingsFilePath => Path.Combine(GameDataDirectory.FullName, "PlayerSettings.msgpack");
+    public static void SavePlayerSettings()
+    {
+        File.WriteAllBytes(_playerSettingsFilePath, MessagePackSerializer.Serialize(_playerSettings));
+    }
+    
+    public static SavedGame Save;
+    
+    
     public GameSettings Settings;
     public string StarterShipTemplate = "Longinus";
     public float2 Sensitivity;
@@ -67,8 +89,6 @@ public class ActionGameManager : MonoBehaviour
     // private CinemachineFramingTransposer _transposer;
     // private CinemachineComposer _composer;
     
-    public PlayerSettings PlayerSettings { get; private set; }
-    private DirectoryInfo _filePath;
     private DirectoryInfo _loadoutPath;
     private bool _editMode;
     private float _time;
@@ -84,7 +104,6 @@ public class ActionGameManager : MonoBehaviour
     private Dictionary<Entity, VisibleHostileIndicator> _visibleHostileIndicators = new Dictionary<Entity, VisibleHostileIndicator>();
     private List<IDisposable> _shipSubscriptions = new List<IDisposable>();
     private float _severeHeatstrokePhase;
-    private MarkovNameGenerator _nameGenerator;
     
     public List<Entity> PlayerEntities { get; } = new List<Entity>();
     public EquippedDockingBay DockingBay { get; private set; }
@@ -119,36 +138,15 @@ public class ActionGameManager : MonoBehaviour
         AkSoundEngine.RegisterGameObj(gameObject);
         
         ConsoleController.MessageReceiver = this;
-        _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
-        _loadoutPath = _filePath.CreateSubdirectory("Loadouts");
+        _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");
         
         ItemData = new DatabaseCache();
-        ItemData.Load(Path.Combine(_filePath.FullName, "AetherDB.msgpack"));
+        ItemData.Load(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack"));
         ItemManager = new ItemManager(ItemData, Settings.GameplaySettings, Debug.Log);
         SectorRenderer.ItemManager = ItemManager;
 
-        FileInfo playerSettingsFile = new FileInfo(Path.Combine(_filePath.FullName, "PlayerSettings.msgpack"));
-        if (!playerSettingsFile.Exists)
-        {
-            File.WriteAllBytes(playerSettingsFile.FullName, MessagePackSerializer.Serialize(Settings.DefaultPlayerSettings));
-        }
-        PlayerSettings = MessagePackSerializer.Deserialize<PlayerSettings>(
-            File.ReadAllBytes(playerSettingsFile.FullName));
-
         Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.loadout")
             .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
-
-        var names = new HashSet<string>();
-        var lines = NameFile.text.Split('\n');
-        foreach (var line in lines)
-        {
-            foreach(var word in line.ToUpperInvariant().Split(' ', ',', '.', '"'))
-                if (word.Length >= NameGeneratorMinLength && !names.Contains(word))
-                    names.Add(word);
-        }
-
-        _nameGenerator = new MarkovNameGenerator(ref ItemManager.Random, names, NameGeneratorOrder, NameGeneratorMinLength, NameGeneratorMaxLength);
-        //var zoneFile = Path.Combine(_filePath.FullName, "Home.zone");
 
         #region Input Handling
 
@@ -525,7 +523,7 @@ public class ActionGameManager : MonoBehaviour
         var stationParentPos = Zone.GetOrbitPosition(stationParentOrbit);
         var stationPos = stationParentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
         var stationOrbit = Zone.CreateOrbit(stationParentOrbit, stationPos);
-        var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID);
+        var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID, Settings.DefaultEntitySettings);
         Zone.Entities.Add(station);
         var dockingBayData = ItemData.GetAll<DockingBayData>().First();
         var dockingBay = ItemManager.CreateInstance(dockingBayData) as EquippableItem;
@@ -745,7 +743,7 @@ public class ActionGameManager : MonoBehaviour
     }
 
     public void SaveZone() => File.WriteAllBytes(
-        Path.Combine(_filePath.FullName, $"{Zone.Data.Name}.zone"), MessagePackSerializer.Serialize(Zone.Pack()));
+        Path.Combine(_gameDataDirectory.FullName, $"{Zone.Data.Name}.zone"), MessagePackSerializer.Serialize(Zone.Pack()));
 
     // public void ToggleEditMode()
     // {

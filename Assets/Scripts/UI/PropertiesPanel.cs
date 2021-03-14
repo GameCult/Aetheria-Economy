@@ -147,6 +147,7 @@ public class PropertiesPanel : MonoBehaviour
     {
 	    var button = Instantiate(PropertyButton, Content ?? transform);
 	    button.Label.text = name;
+	    button.Button.interactable = onClick != null;
 	    button.Button.onClick.AddListener(() => onClick());
 	    Properties.Add(button.gameObject);
 	    OnPropertyAdded?.Invoke(button.gameObject);
@@ -158,6 +159,7 @@ public class PropertiesPanel : MonoBehaviour
 	    var button = Instantiate(ButtonField, Content ?? transform);
 	    button.Label.text = name;
 	    button.ButtonLabel.text = label;
+	    button.Button.interactable = onClick != null;
 	    button.Button.onClick.AddListener(() => onClick());
 	    Properties.Add(button.gameObject);
 	    OnPropertyAdded?.Invoke(button.gameObject);
@@ -302,7 +304,7 @@ public class PropertiesPanel : MonoBehaviour
 	{
 		var field = Instantiate(EnumField, Content ?? transform);
 		field.Label.text = name;
-		field.Dropdown.OnClick += data =>
+		field.Dropdown.onClick.AddListener(() =>
 		{
 			var selected = read();
 			Dropdown.gameObject.SetActive(true);
@@ -314,8 +316,8 @@ public class PropertiesPanel : MonoBehaviour
 			}
 
 			Dropdown.Show((RectTransform) field.Dropdown.transform);
-		};
-		RefreshPropertyValues += () => field.Dropdown.Label.text = enumOptions[read()];
+		});
+		RefreshPropertyValues += () => field.DropdownLabel.text = enumOptions[read()];
 		Properties.Add(field.gameObject);
 		OnPropertyAdded?.Invoke(field.gameObject);
 	}

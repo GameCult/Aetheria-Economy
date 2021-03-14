@@ -358,8 +358,8 @@ public class TradeMenu : MonoBehaviour
             var hull = GameManager.ItemManager.CreateInstance(data) as EquippableItem;
             Entity entity;
             if(data.HullType==HullType.Ship)
-                entity = new Ship(GameManager.ItemManager, GameManager.Zone, hull);
-            else entity = new OrbitalEntity(GameManager.ItemManager, GameManager.Zone, hull, Guid.Empty);
+                entity = new Ship(GameManager.ItemManager, GameManager.Zone, hull, GameManager.Settings.DefaultEntitySettings);
+            else entity = new OrbitalEntity(GameManager.ItemManager, GameManager.Zone, hull, Guid.Empty, GameManager.Settings.DefaultEntitySettings);
             entity.SetParent(GameManager.DockedEntity);
             GameManager.PlayerEntities.Add(entity);
             

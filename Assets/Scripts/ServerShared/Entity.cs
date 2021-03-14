@@ -14,7 +14,6 @@ public abstract class Entity
 {
     public Zone Zone;
     public MegaCorporation Faction;
-    public PlayerSettings PlayerSettings;
     public EquippableItem Hull;
     
     public float3 Position;
@@ -78,6 +77,8 @@ public abstract class Entity
                 heatsink.Item.Enabled.Value = value;
         }
     }
+    
+    public EntitySettings Settings { get; }
     
     public bool OverrideShutdown { get; set; }
     
@@ -155,8 +156,9 @@ public abstract class Entity
         VisibleHostiles.Clear();
     }
 
-    public Entity(ItemManager itemManager, Zone zone, EquippableItem hull)
+    public Entity(ItemManager itemManager, Zone zone, EquippableItem hull, EntitySettings settings)
     {
+        Settings = settings;
         ItemManager = itemManager;
         Zone = zone;
         Hull = hull;
@@ -997,7 +999,7 @@ public class EquippedItem
         var temp = Temperature;
         ThermalPerformance = Data.Performance(temp);
         DurabilityPerformance = EquippableItem.Durability / Data.Durability;
-        var performanceThreshold = Entity.PlayerSettings?.ShutdownPerformance ?? _itemManager.GameplaySettings.DefaultShutdownPerformance;
+        var performanceThreshold = Entity.Settings.ShutdownPerformance;
         Wear = (1 - pow(Data.Performance(temp),
                 (1 - pow(_itemManager.CompoundQuality(EquippableItem), _itemManager.GameplaySettings.QualityWearExponent)) *
                 _itemManager.GameplaySettings.ThermalWearExponent)

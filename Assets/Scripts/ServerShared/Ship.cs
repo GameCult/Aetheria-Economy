@@ -128,7 +128,7 @@ public class Ship : Entity
             thruster.Item.Online.Skip(1).Subscribe(b => RecalculateClockwiseTorque());
     }
 
-    public Ship(ItemManager itemManager, Zone zone, EquippableItem hull) : base(itemManager, zone, hull)
+    public Ship(ItemManager itemManager, Zone zone, EquippableItem hull, EntitySettings settings) : base(itemManager, zone, hull, settings)
     {
         void CheckForThruster(EquippedItem item)
         {
