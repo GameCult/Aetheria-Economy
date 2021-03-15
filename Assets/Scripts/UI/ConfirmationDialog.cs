@@ -18,26 +18,20 @@ public class ConfirmationDialog : PropertiesPanel
     public Button Confirm;
     public TextMeshProUGUI ConfirmText;
     public TextMeshProUGUI CancelText;
+    
+    public bool LockDialog { get; set; }
 
     private Action _onCancel;
     private Action _onConfirm;
 
     private void Start()
     {
-        Cancel.onClick.AddListener(() =>
-        {
-            _onCancel?.Invoke();
-            End();
-        });
-        Confirm.onClick.AddListener(() =>
-        {
-            _onConfirm?.Invoke();
-            End();
-        });
+        Cancel.onClick.AddListener(() => End());
+        Confirm.onClick.AddListener(() => End());
         if (CancelClickCatcher != null)
             CancelClickCatcher.OnClick += data =>
             {
-                _onCancel?.Invoke();
+                if (LockDialog) return;
                 End();
             };
 
@@ -49,10 +43,17 @@ public class ConfirmationDialog : PropertiesPanel
         gameObject.SetActive(false);
     }
     
-    private void End()
+    public void End(bool success = false)
     {
-        CancelClickCatcher.gameObject.SetActive(false);
+        if(success) _onConfirm?.Invoke();
+        else _onCancel?.Invoke();
+        CancelClickCatcher?.gameObject.SetActive(false);
         gameObject.SetActive(false);
+    }
+
+    public void MoveToCursor()
+    {
+        transform.position = Mouse.current.position.ReadValue();
     }
 
     public void Show(Action onConfirm = null, Action onCancel = null, string confirmText = "OK", string cancelText = "Cancel")
@@ -69,7 +70,6 @@ public class ConfirmationDialog : PropertiesPanel
         
         ButtonGroup.SetActive(onConfirm!=null || onCancel!=null);
         
-        transform.position = Mouse.current.position.ReadValue();
-        CancelClickCatcher.gameObject.SetActive(true);
+        CancelClickCatcher?.gameObject.SetActive(true);
     }
 }

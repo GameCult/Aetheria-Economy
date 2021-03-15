@@ -147,10 +147,10 @@ public static class RethinkConnection
             }
         }).WrapErrors();
 
-        Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).Subscribe(_ =>
-        {
-            Debug.Log(R.Now().Run<DateTime>(connection).ToString() as string);
-        });
+        // Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).Subscribe(_ =>
+        // {
+        //     Debug.Log(R.Now().Run<DateTime>(connection).ToString() as string);
+        // });
         
         return status;
     }

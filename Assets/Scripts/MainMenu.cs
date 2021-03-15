@@ -2,14 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Unity.Mathematics.math;
+using Random = UnityEngine.Random;
 
 public class MainMenu : MonoBehaviour
 {
+    public SectorGenerationSettings Settings;
+    public ConfirmationDialog Dialog;
     public bool InGame;
     public Prototype PanelPrototype;
     public float FadeTime = .5f;
@@ -22,10 +28,13 @@ public class MainMenu : MonoBehaviour
     private float _fadeLerp;
     private bool _fading;
     private Vector3 _panelPosition;
-    private DirectoryInfo _saveDirectory;
+    //private Task<DatabaseCache> _databaseLoad;
     
     void Start()
     {
+        // Start loading the database in the background 'cause it takes a few seconds
+        //_databaseLoad = Task.Run(() => ActionGameManager.Database);
+        
         RegisterResolver.Register();
         _panelPosition = PanelPrototype.transform.position;
         
@@ -36,7 +45,7 @@ public class MainMenu : MonoBehaviour
         _nextMenu = (panel2, panel2.GetComponent<CanvasGroup>());
 
         _currentMenu.panel.gameObject.SetActive(false);
-        _saveDirectory = ActionGameManager.GameDataDirectory.CreateSubdirectory("Saves");
+        //_saveDirectory = ActionGameManager.GameDataDirectory.CreateSubdirectory("Saves");
         
         ShowMain();
         Fade(true);
@@ -84,14 +93,36 @@ public class MainMenu : MonoBehaviour
         if (!InGame)
         {
             if(ActionGameManager.PlayerSettings.CurrentRun != null)
-                _nextMenu.panel.AddButton("Continue", () => SceneManager.LoadScene("ARPG"));
+                _nextMenu.panel.AddButton("Continue",
+                    () =>
+                    {
+                        ActionGameManager.CurrentSector = new Sector(ActionGameManager.Database, ActionGameManager.PlayerSettings.CurrentRun);
+                        SceneManager.LoadScene("ARPG");
+                    });
             else
                 _nextMenu.panel.AddButton("Continue", null);
         }
         _nextMenu.panel.AddButton("New Game",
             () =>
             {
-                // TODO: Initialize Run
+                var generatorState = "Loading Database Contents";
+                Action<string> setState = s => generatorState = s;
+
+                Fade(true);
+                _nextMenu.panel.gameObject.SetActive(false);
+                Dialog.Clear();
+                Dialog.Title.text = "Generating Galaxy";
+                Dialog.AddProperty(() => generatorState);
+                Dialog.Show();
+                Settings.NoisePosition = Random.value * 100;
+                
+                var task = Task.Run(() => new Sector(Settings, ActionGameManager.Database, 0, setState));
+                task.ContinueWith(task => Observable.NextFrame().Subscribe(_ =>
+                {
+                    ActionGameManager.PlayerSettings.CurrentRun = null;
+                    ActionGameManager.CurrentSector = task.Result;
+                    SceneManager.LoadScene("ARPG");
+                }));
             });
         _nextMenu.panel.AddButton("Settings",
             () =>

@@ -18,7 +18,7 @@
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
-				<Folder Name="spacehsip" ID="{0F9E27C7-E2CC-4D3A-A0A9-BB3618502681}" ShortID="465647461">
+				<Folder Name="Ship" ID="{0F9E27C7-E2CC-4D3A-A0A9-BB3618502681}" ShortID="465647461">
 					<ChildrenList>
 						<Folder Name="Thruster_type" ID="{B2386FE9-E148-47F3-B75B-6132C8639B2E}" ShortID="981236698">
 							<ChildrenList>

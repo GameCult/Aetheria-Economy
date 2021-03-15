@@ -13,60 +13,23 @@ using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using float3 = Unity.Mathematics.float3;
 
-[RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class ZoneData : DatabaseEntry, INamedEntry
+[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class ZonePack
 {
-    [JsonProperty("name"), Key(1)]
-    public string Name;
-
-    [JsonProperty("position"), Key(2)]
-    public float2 Position = 500;
-
+    [JsonProperty("planets"), Key(0)]
+    public List<BodyData> Planets = new List<BodyData>();
+    
+    [JsonProperty("orbits"), Key(1)]
+    public List<OrbitData> Orbits = new List<OrbitData>();
+    
+    [JsonProperty("entities"), Key(2)]
+    public List<EntityPack> Entities = new List<EntityPack>();
+    
     [JsonProperty("radius"), Key(3)]
     public float Radius = 2000;
 
     [JsonProperty("mass"), Key(4)]
     public float Mass = 10000;
-
-    // [JsonProperty("visited"), Key(5)]
-    // public bool Visited;
-
-    [JsonProperty("wormholes"), Key(5)]
-    public List<Guid> Wormholes = new List<Guid>();
-
-    // [JsonProperty("planets"), Key(7)]
-    // public Guid[] Planets;// = new List<Guid>();
-    //
-    // [JsonProperty("orbits"), Key(8)]
-    // public List<Guid> Orbits = new List<Guid>();
-    
-    [IgnoreMember] public string EntryName
-    {
-        get => Name;
-        set => Name = value;
-    }
-}
-
-[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class ZonePack : INamedEntry
-{
-    [JsonProperty("data"), Key(0)]
-    public ZoneData Data;
-    
-    [JsonProperty("planets"), Key(1)]
-    public List<BodyData> Planets = new List<BodyData>();
-    
-    [JsonProperty("orbits"), Key(2)]
-    public List<OrbitData> Orbits = new List<OrbitData>();
-    
-    [JsonProperty("entities"), Key(3)]
-    public List<EntityPack> Entities = new List<EntityPack>();
-    
-    [IgnoreMember] public string EntryName
-    {
-        get => Data.Name;
-        set => Data.Name = value;
-    }
 }
 
 // [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -227,7 +190,7 @@ public class OrbitData : DatabaseEntry
     [JsonProperty("phase"), Key(3)]
     public float Phase;
     
-    [JsonProperty("phase"), Key(3)]
+    [JsonProperty("phase"), Key(4)]
     public float2 FixedPosition = float2.zero;
     
     // [JsonProperty("period"), Key(4)]

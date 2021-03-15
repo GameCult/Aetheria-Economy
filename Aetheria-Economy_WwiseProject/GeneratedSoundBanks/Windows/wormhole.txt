@@ -4,7 +4,7 @@ Event	ID	Name			Wwise Object Path	Notes
 	3842220822	wormhole_travel_loop			\Default Work Unit\wormhole_travel_loop	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	305405244	Aetheria_Wormhole_travel_jumpin	Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\.cache\Windows\SFX\Aetheria_Wormhole_travel_jumpin_3CA8C70E.wem		\Actor-Mixer Hierarchy\Default Work Unit\wormhole\Aetheria_Wormhole_travel_jumpin		1127356
-	416185788	Aetheria_Wormhole_travel	Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\.cache\Windows\SFX\Aetheria_Wormhole_travel_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\wormhole\Aetheria_Wormhole_travel		5292064
-	857805897	Aetheria_Wormhole_travel_jumpout	Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\.cache\Windows\SFX\Aetheria_Wormhole_travel_jumpout_8FC987B8.wem		\Actor-Mixer Hierarchy\Default Work Unit\wormhole\Aetheria_Wormhole_travel_jumpout		929780
+	305405244	Aetheria_Wormhole_travel_jumpin	E:\Projects\Aetheria-Economy\Aetheria-Economy_WwiseProject\.cache\Windows\SFX\Aetheria_Wormhole_travel_jumpin_3CA8C70E.wem		\Actor-Mixer Hierarchy\Default Work Unit\wormhole\Aetheria_Wormhole_travel_jumpin		1127356
+	416185788	Aetheria_Wormhole_travel	E:\Projects\Aetheria-Economy\Aetheria-Economy_WwiseProject\.cache\Windows\SFX\Aetheria_Wormhole_travel_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\wormhole\Aetheria_Wormhole_travel		5292064
+	857805897	Aetheria_Wormhole_travel_jumpout	E:\Projects\Aetheria-Economy\Aetheria-Economy_WwiseProject\.cache\Windows\SFX\Aetheria_Wormhole_travel_jumpout_8FC987B8.wem		\Actor-Mixer Hierarchy\Default Work Unit\wormhole\Aetheria_Wormhole_travel_jumpout		929780
 

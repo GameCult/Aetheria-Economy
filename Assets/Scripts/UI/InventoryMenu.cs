@@ -182,6 +182,7 @@ public class InventoryMenu : MonoBehaviour
                             Dialog.Title.text = "Unable to move item!";
                             Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
                             Dialog.Show();
+                            Dialog.MoveToCursor();
                         }
                     }
 
@@ -206,6 +207,7 @@ public class InventoryMenu : MonoBehaviour
                             Dialog.Title.text = "Unable to destroy item!";
                             Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
                             Dialog.Show();
+                            Dialog.MoveToCursor();
                         }
                     }
                 }
@@ -389,6 +391,8 @@ public class InventoryMenu : MonoBehaviour
 
             panel.OnBackgroundClick.Subscribe(data =>
             {
+                if (GameManager.CurrentEntity == null) return; // Only show ship settings if there's a ship, duh!
+                
                 PropertiesPanel.Clear();
                 PropertiesPanel.AddField("Shutdown Threshold",
                     () => GameManager.CurrentEntity.Settings.ShutdownPerformance,

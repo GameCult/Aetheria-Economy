@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MessagePack;
 using TMPro;
 using UnityEngine;
 using Unity.Mathematics;
@@ -16,7 +17,6 @@ public class SectorMap : MonoBehaviour
     public Camera InfluenceCamera;
     public Prototype InfluenceRendererPrototype;
     public MeshRenderer SectorRenderer;
-    public SectorGenerationSettings Settings;
     public Prototype ZonePrototype;
     public Prototype LinkPrototype;
     public Prototype IconPrototype;
@@ -38,40 +38,34 @@ public class SectorMap : MonoBehaviour
 
     private Dictionary<MegaCorporation, (RenderTexture influence, Material primaryMaterial, Material secondaryMaterial, Material linkMaterial)> _factionMaterials =
         new Dictionary<MegaCorporation, (RenderTexture influence, Material primaryMaterial, Material secondaryMaterial, Material linkMaterial)>();
-    
-    void Start()
+
+    public void Start()
     {
-        var filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
-        var cache = new DatabaseCache();
-        cache.Load(Path.Combine(filePath.FullName, "AetherDB.msgpack"));
-
-        var megas = cache.GetAll<MegaCorporation>();
-
-        var random = new Unity.Mathematics.Random((uint) (DateTime.Now.Ticks % uint.MaxValue));
-        var sectorMegas = megas.OrderBy(x => Random.value).Take(Settings.MegaCount).ToArray();
-        foreach (var mega in sectorMegas)
+        if (ActionGameManager.CurrentSector == null)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+        foreach (var mega in ActionGameManager.CurrentSector.Factions)
         {
             var primary = Instantiate(ZonePrimaryMaterial);
-            primary.SetColor("_TintColor", (mega.PrimaryColor * MegaPrimaryBoost).ToColor());
+            primary.SetColor("_Color", (mega.PrimaryColor * MegaPrimaryBoost).ToColor());
             var secondary = Instantiate(ZoneSecondaryMaterial);
-            secondary.SetColor("_TintColor", (mega.SecondaryColor * MegaSecondaryBoost).ToColor());
+            secondary.SetColor("_Color", (mega.SecondaryColor * MegaSecondaryBoost).ToColor());
             var link = Instantiate(ZoneLinkMaterial);
-            link.SetColor("_TintColor", (mega.PrimaryColor * MegaLinkBoost).ToColor());
-            _factionMaterials.Add(mega, (new RenderTexture(1024, 1024, 1, RenderTextureFormat.RHalf), primary, secondary, link));
-            mega.NameGenerator = new MarkovNameGenerator(ref random, UnityHelpers.LoadAsset<TextAsset>(mega.GeonameFile).text, Settings);
+            link.SetColor("_Color", (mega.PrimaryColor * MegaLinkBoost).ToColor());
+            _factionMaterials.Add(mega, (new RenderTexture(1024, 1024, 0, RenderTextureFormat.RHalf), primary, secondary, link));
             var legendElement = LegendPrototype.Instantiate<LegendElement>();
             legendElement.Primary.color = mega.PrimaryColor.ToColor();
             legendElement.Secondary.color = mega.SecondaryColor.ToColor();
             legendElement.Label.text = mega.ShortName;
         }
 
-        Settings.NoisePosition = Random.value * 100;
-        var sector = new Sector(Settings, sectorMegas, ref random);
         var visitedZones = new HashSet<SectorZone>();
-        Debug.Log($"Found {sector.Zones.Count(z=>!z.AdjacentZones.Any())} orphaned zones!");
+        //Debug.Log($"Found {sector.Zones.Count(z=>!z.AdjacentZones.Any())} orphaned zones!");
 
         var zoneInstances = new Dictionary<SectorZone, SectorZoneUI>();
-        foreach (var zone in sector.Zones)
+        foreach (var zone in ActionGameManager.CurrentSector.Zones)
         {
             var zoneInstance = ZonePrototype.Instantiate<SectorZoneUI>();
             zoneInstances[zone] = zoneInstance;
@@ -109,10 +103,10 @@ public class SectorMap : MonoBehaviour
             zoneText.text = zone.Name;
             var zoneTextTransform = zoneText.GetComponent<RectTransform>();
             zoneTextTransform.pivot = new Vector2(sign(linkDirection.x)/2+.5f,sign(linkDirection.y)/2+.5f);
-            zoneTextTransform.localPosition = new Vector3(-linkDirection.x * LabelDistance, -linkDirection.y * LabelDistance);
+            zoneTextTransform.localPosition = new Vector3(-linkDirection.x * LabelDistance, -linkDirection.y * LabelDistance, -1);
             visitedZones.Add(zone);
 
-            if (zone == sector.Entrance)
+            if (zone == ActionGameManager.CurrentSector.Entrance)
             {
                 var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
                 iconInstance.material.mainTexture = EntranceIcon;
@@ -122,7 +116,7 @@ public class SectorMap : MonoBehaviour
                 iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
             }
 
-            if (zone == sector.Exit)
+            if (zone == ActionGameManager.CurrentSector.Exit)
             {
                 var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
                 iconInstance.material.mainTexture = ExitIcon;
@@ -132,15 +126,16 @@ public class SectorMap : MonoBehaviour
                 iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
             }
 
-            var homeMega = sector.HomeZones.Keys.FirstOrDefault(m => sector.HomeZones[m] == zone);
+            var homeMega = ActionGameManager.CurrentSector.HomeZones.Keys
+                .FirstOrDefault(m => ActionGameManager.CurrentSector.HomeZones[m] == zone);
             if (homeMega != null)
             {
                 var backgroundInstance = IconBackgroundPrototype.Instantiate<MeshRenderer>();
                 var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
                 
-                backgroundInstance.material.SetColor("_TintColor", homeMega.SecondaryColor.ToColor());
+                backgroundInstance.material.SetColor("_Color", homeMega.SecondaryColor.ToColor());
                 iconInstance.material.mainTexture = HomeIcon;
-                iconInstance.material.SetColor("_TintColor", homeMega.PrimaryColor.ToColor());
+                iconInstance.material.SetColor("_Color", homeMega.PrimaryColor.ToColor());
                 
                 var backgroundTransform = backgroundInstance.transform;
                 var iconTransform = iconInstance.transform;
@@ -155,15 +150,16 @@ public class SectorMap : MonoBehaviour
                 iconTransform.localPosition = new Vector3(-linkDirection.x * IconDistance, -linkDirection.y * IconDistance);
             }
 
-            var bossMega = sector.BossZones.Keys.FirstOrDefault(m => sector.BossZones[m] == zone);
+            var bossMega = ActionGameManager.CurrentSector.BossZones.Keys
+                .FirstOrDefault(m => ActionGameManager.CurrentSector.BossZones[m] == zone);
             if (bossMega != null)
             {
                 var backgroundInstance = IconBackgroundPrototype.Instantiate<MeshRenderer>();
                 var iconInstance = IconPrototype.Instantiate<MeshRenderer>();
                 
-                backgroundInstance.material.SetColor("_TintColor", bossMega.SecondaryColor.ToColor());
+                backgroundInstance.material.SetColor("_Color", bossMega.SecondaryColor.ToColor());
                 iconInstance.material.mainTexture = BossIcon;
-                iconInstance.material.SetColor("_TintColor", bossMega.PrimaryColor.ToColor());
+                iconInstance.material.SetColor("_Color", bossMega.PrimaryColor.ToColor());
                 
                 var backgroundTransform = backgroundInstance.transform;
                 var iconTransform = iconInstance.transform;
@@ -188,10 +184,10 @@ public class SectorMap : MonoBehaviour
         }
         
         // Render Influence Textures
-        foreach (var mega in sectorMegas)
+        foreach (var mega in ActionGameManager.CurrentSector.Factions)
         {
             var influenceRenderer = InfluenceRendererPrototype.Instantiate<MeshRenderer>();
-            foreach (var zone in sector.Zones)
+            foreach (var zone in ActionGameManager.CurrentSector.Zones)
             {
                 var instance = zoneInstances[zone];
                 var influence = 0f;
@@ -214,21 +210,16 @@ public class SectorMap : MonoBehaviour
             influenceRenderer.material.mainTexture = _factionMaterials[mega].influence;
             influenceRenderer.material.SetColor("_Color1", mega.PrimaryColor.ToColor());
             influenceRenderer.material.SetColor("_Color2", mega.SecondaryColor.ToColor());
-            influenceRenderer.material.SetFloat("_FillTilt", random.NextFloat(PI));
+            influenceRenderer.material.SetFloat("_FillTilt", Random.value * PI);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        SectorRenderer.material.SetFloat("CloudAmplitude", Settings.CloudAmplitude);
-        SectorRenderer.material.SetFloat("CloudExponent", Settings.CloudExponent);
-        SectorRenderer.material.SetFloat("NoisePosition", Settings.NoisePosition);
-        SectorRenderer.material.SetFloat("Zoom", Settings.Zoom);
-        SectorRenderer.material.SetFloat("NoiseAmplitude", Settings.NoiseAmplitude);
-        SectorRenderer.material.SetFloat("NoiseOffset", Settings.NoiseOffset);
-        SectorRenderer.material.SetFloat("NoiseGain", Settings.NoiseGain);
-        SectorRenderer.material.SetFloat("NoiseLacunarity", Settings.NoiseLacunarity);
-        SectorRenderer.material.SetFloat("NoiseFrequency", Settings.NoiseFrequency);
+        
+        SectorRenderer.material.SetFloat("CloudAmplitude", ActionGameManager.CurrentSector.Settings.CloudAmplitude);
+        SectorRenderer.material.SetFloat("CloudExponent", ActionGameManager.CurrentSector.Settings.CloudExponent);
+        SectorRenderer.material.SetFloat("NoisePosition", ActionGameManager.CurrentSector.Settings.NoisePosition);
+        SectorRenderer.material.SetFloat("NoiseAmplitude", ActionGameManager.CurrentSector.Settings.NoiseAmplitude);
+        SectorRenderer.material.SetFloat("NoiseOffset", ActionGameManager.CurrentSector.Settings.NoiseOffset);
+        SectorRenderer.material.SetFloat("NoiseGain", ActionGameManager.CurrentSector.Settings.NoiseGain);
+        SectorRenderer.material.SetFloat("NoiseLacunarity", ActionGameManager.CurrentSector.Settings.NoiseLacunarity);
+        SectorRenderer.material.SetFloat("NoiseFrequency", ActionGameManager.CurrentSector.Settings.NoiseFrequency);
     }
 }

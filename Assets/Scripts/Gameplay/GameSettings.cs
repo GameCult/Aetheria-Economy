@@ -27,7 +27,6 @@ public class GameSettings : ScriptableObject
     public PlanetSettings PlanetSettings;
     public ZoneGenerationSettings ZoneSettings;
     public GameplaySettings GameplaySettings;
-    public EntitySettings DefaultEntitySettings;
     public Color HullHitColor;
     public Color ArmorHitColor;
     public Color HardpointHitColor;

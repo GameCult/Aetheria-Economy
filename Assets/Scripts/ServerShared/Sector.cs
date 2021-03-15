@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using DataStructures.ViliWonka.Heap;
 using MIConvexHull;
 using JM.LinqFaster;
@@ -13,11 +15,14 @@ public class Sector
     public Dictionary<MegaCorporation, SectorZone> HomeZones = new Dictionary<MegaCorporation, SectorZone>();
     public Dictionary<MegaCorporation, SectorZone> BossZones = new Dictionary<MegaCorporation, SectorZone>();
     
+    public SectorGenerationSettings Settings { get; }
+    public MegaCorporation[] Factions { get; }
     public SectorZone[] Zones { get; }
     public SectorZone Entrance { get; }
     public SectorZone Exit { get; }
 
     private SectorZone[] _exitPath;
+    private Dictionary<MegaCorporation, MarkovNameGenerator> _nameGenerators = new Dictionary<MegaCorporation, MarkovNameGenerator>();
 
     public SectorZone[] ExitPath
     {
@@ -29,28 +34,30 @@ public class Sector
 
     public Sector(DatabaseCache database, SavedGame savedGame)
     {
-        var factions = savedGame.Factions.Select(database.Get<MegaCorporation>).ToArray();
+        Settings = savedGame.Settings;
+        Factions = savedGame.Factions.Select(database.Get<MegaCorporation>).ToArray();
         Zones = savedGame.Zones.Select(zone =>
         {
             return new SectorZone
             {
                 Name = zone.Name,
-                Position = zone.Position
+                Position = zone.Position,
+                PackedContents = zone.Contents
             };
         }).ToArray();
         for (var i = 0; i < Zones.Length; i++)
         {
             Zones[i].AdjacentZones = savedGame.Zones[i].AdjacentZones.Select(azi => Zones[azi]).ToList();
-            Zones[i].Factions = savedGame.Zones[i].Factions.Select(mi => factions[mi]).ToArray();
-            Zones[i].Owner = factions[savedGame.Zones[i].Owner];
+            Zones[i].Factions = savedGame.Zones[i].Factions.Select(mi => Factions[mi]).ToArray();
+            Zones[i].Owner = savedGame.Zones[i].Owner < 0 ? null : Factions[savedGame.Zones[i].Owner];
         }
 
         HomeZones = savedGame.HomeZones.ToDictionary(
-            x => factions[x.Key], 
+            x => Factions[x.Key], 
             x => Zones[x.Value]);
 
         BossZones = savedGame.BossZones.ToDictionary(
-            x => factions[x.Key], 
+            x => Factions[x.Key], 
             x => Zones[x.Value]);
 
         Entrance = Zones[savedGame.Entrance];
@@ -59,15 +66,24 @@ public class Sector
         CalculateDistanceMatrix();
     }
 
-    public Sector(SectorGenerationSettings settings, MegaCorporation[] factions, ref Random random, float minLineSeparation = .01f)
+    public Sector(SectorGenerationSettings settings, DatabaseCache database, uint seed = 0, Action<string> progressCallback = null, float minLineSeparation = .01f)
     {
+        Settings = settings;
+        var megas = database.GetAll<MegaCorporation>();
+        var random = new Random(seed == 0 ? (uint) (DateTime.Now.Ticks % uint.MaxValue) : seed);
+        Factions = megas.OrderBy(x => random.NextFloat()).Take(settings.MegaCount).ToArray();
+
         var outputSamples = WeightedSampleElimination.GeneratePoints(settings.ZoneCount,
             settings.CloudDensity,
-            v => (.2f - lengthsq(v - float2(.5f))) * 4);
+            v => (.2f - lengthsq(v - float2(.5f))) * 4,
+            progressCallback);
         Zones = outputSamples.Select(v => new SectorZone {Position = v}).ToArray();
 
         #region Link Placement
 
+        progressCallback?.Invoke("Triangulating Zone Positions");
+        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
+        
         // Create a delaunay triangulation to connect adjacent sectors
         var triangulation = DelaunayTriangulation<Vertex2<SectorZone>, Cell2<SectorZone>>
             .Create(Zones.Select(z => new Vertex2<SectorZone>(z.Position, z)).ToList(), 1e-5f);
@@ -85,6 +101,8 @@ public class Sector
                 links.Add((cell.Vertices[0].StoredObject, cell.Vertices[2].StoredObject));
         }
 
+        progressCallback?.Invoke("Eliminating Zone Links");
+        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
         foreach (var link in links.ToArray())
         {
             foreach (var zone in Zones)
@@ -133,25 +151,33 @@ public class Sector
 
         #endregion
 
+        progressCallback?.Invoke("Calculating Distance Matrix");
+        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
         CalculateDistanceMatrix();
+        
+        progressCallback?.Invoke("Finding Chokepoints");
+        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
         
         // Entrance is the most isolated zone (highest total distance to all other zones
         Entrance = Zones.MaxBy(z => z.Isolation);
 
-        // Exit is the zone furthest from the exit
-        Exit = Zones.MaxBy(z => Exit.Distance[z]);
+        // Exit is the zone furthest from the entrance
+        Exit = Zones.MaxBy(z => Entrance.Distance[z]);
         
         // Find all zones on the exit path where removing that zone would disconnect the entrance from the exit
         // Disregard "corridor" zones with only two adjacent zones
         var chokePoints = ExitPath
             .Where(z => z.AdjacentZones.Count > 2 && !ConnectedRegion(Entrance, z).Contains(Exit));
-
+        
+        progressCallback?.Invoke("Placing Factions");
+        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
+        
         // Choose some megas to have bosses placed based on whether a boss hull is assigned
-        var bossMegas = factions
+        var bossMegas = Factions
             .Where(m => m.BossHull != Guid.Empty)
             .Take(settings.BossCount)
             .ToArray();
-
+        
         // Place boss zones along the critical path as far apart from each other as possible
         foreach (var mega in bossMegas)
         {
@@ -171,7 +197,7 @@ public class Sector
         }
         
         // Place remaining headquarters away from existing megas while also maximizing territory
-        foreach (var mega in factions.Where(m=>!bossMegas.Contains(m)))
+        foreach (var mega in Factions.Where(m=>!bossMegas.Contains(m)))
         {
             HomeZones[mega] = Zones.MaxBy(z =>
                 pow(ConnectedRegion(z, mega.InfluenceDistance).Count, HomeZones.Count) *
@@ -179,24 +205,53 @@ public class Sector
                 HomeZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])) * 
                 BossZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])));
         }
+        
+        progressCallback?.Invoke("Calculating Faction Influence");
+        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
 
         // Assign faction presence
         foreach (var zone in Zones)
         {
             // Factions are present in all zones within their sphere of influence
-            zone.Factions = factions
+            zone.Factions = Factions
                 .Where(m => zone.Distance[HomeZones[m]] <= m.InfluenceDistance)
                 .ToArray();
             
             // Owner of a zone is the faction with the nearest headquarters
-            var nearestFaction = factions.MinBy(m => zone.Distance[HomeZones[m]]);
+            var nearestFaction = Factions.MinBy(m => zone.Distance[HomeZones[m]]);
             if (zone.Distance[HomeZones[nearestFaction]] <= nearestFaction.InfluenceDistance)
                 zone.Owner = nearestFaction;
         }
 
+        for (var i = 0; i < Factions.Length; i++)
+        {
+            progressCallback?.Invoke($"Feeding Markov Chains: {i} / {Factions.Length}");
+            //if(progressCallback!=null) Thread.Sleep(250); // Inserting Delay to make it seem like it's doing more work lmao
+            var faction = Factions[i];
+            _nameGenerators[faction] = new MarkovNameGenerator(ref random, database.Get<NameFile>(faction.GeonameFile).Names, settings);
+        }
+
         // Generate zone name using the owner's name generator, otherwise assign catalogue ID
-        foreach (var zone in Zones) 
-            zone.Name = zone.Owner?.NameGenerator.NextName ?? $"EAC-{random.NextInt(99999).ToString()}";
+        foreach (var zone in Zones)
+        {
+            if (zone.Owner != null)
+            {
+                zone.Name = _nameGenerators[zone.Owner].NextName.Trim();
+            }
+            else
+            {
+                zone.Name = $"EAC-{random.NextInt(99999).ToString()}";
+            }
+        }
+        
+        
+        progressCallback?.Invoke("Done!");
+        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
+    }
+
+    private void GenerateSector()
+    {
+        
     }
 
     // Cache distance matrix and calculate isolation for every zone (used extensively for placing stuff)
@@ -328,4 +383,5 @@ public class SectorZone
     public MegaCorporation[] Factions;
     public MegaCorporation Owner;
     public Zone Contents;
+    public ZonePack PackedContents;
 }

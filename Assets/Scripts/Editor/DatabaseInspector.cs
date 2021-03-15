@@ -70,32 +70,6 @@ public class DatabaseInspector : EditorWindow
             Inspect(obj, field, inspectablesOnly);
         }
 
-        // if (obj is GalaxyMapLayerData mapLayer)
-        // {
-        //     var global = DatabaseCache.GetAll<GlobalData>().FirstOrDefault();
-        //     if (global != null)
-        //     {
-        //         GUILayout.Label("Preview", EditorStyles.boldLabel);
-        //         _galaxyMat.SetFloat("Arms", global.Arms);
-        //         _galaxyMat.SetFloat("Twist", global.Twist);
-        //         _galaxyMat.SetFloat("TwistPower", global.TwistPower);
-        //         _galaxyMat.SetFloat("SpokeOffset", mapLayer.SpokeOffset);
-        //         _galaxyMat.SetFloat("SpokeScale", mapLayer.SpokeScale);
-        //         _galaxyMat.SetFloat("CoreBoost", mapLayer.CoreBoost);
-        //         _galaxyMat.SetFloat("CoreBoostOffset", mapLayer.CoreBoostOffset);
-        //         _galaxyMat.SetFloat("CoreBoostPower", mapLayer.CoreBoostPower);
-        //         _galaxyMat.SetFloat("EdgeReduction", mapLayer.EdgeReduction);
-        //         _galaxyMat.SetFloat("NoisePosition", mapLayer.NoisePosition);
-        //         _galaxyMat.SetFloat("NoiseAmplitude", mapLayer.NoiseAmplitude);
-        //         _galaxyMat.SetFloat("NoiseOffset", mapLayer.NoiseOffset);
-        //         _galaxyMat.SetFloat("NoiseGain", mapLayer.NoiseGain);
-        //         _galaxyMat.SetFloat("NoiseLacunarity", mapLayer.NoiseLacunarity);
-        //         _galaxyMat.SetFloat("NoiseFrequency", mapLayer.NoiseFrequency);
-        //         var rect = GetControlRect(false, Screen.width);
-        //         EditorGUI.DrawPreviewTexture(rect, _white, _galaxyMat);
-        //     }
-        // }
-        
         if (obj is EquippableItemData equippableItemData)
         {
             var restricted = false;

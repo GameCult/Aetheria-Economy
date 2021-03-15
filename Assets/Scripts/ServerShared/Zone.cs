@@ -34,15 +34,18 @@ public class Zone
     private Random _random;
     public List<Agent> Agents = new List<Agent>();
 
-    public ZoneData Data { get; }
     private List<Task> BeltUpdates = new List<Task>();
+    
+    public ZonePack Pack { get; }
+    public SectorZone SectorZone { get; }
 
-    public Zone(ItemManager itemManager, PlanetSettings settings, ZonePack pack)
+    public Zone(ItemManager itemManager, PlanetSettings settings, ZonePack pack, SectorZone sectorZone)
     {
+        SectorZone = sectorZone;
+        Pack = pack;
         _itemManager = itemManager;
-        Data = pack.Data;
         Settings = settings;
-        _random = new Random(Convert.ToUInt32(abs(Data.ID.GetHashCode())));
+        _random = new Random(Convert.ToUInt32(abs(sectorZone?.Name.GetHashCode() ?? 1337)));
         
         foreach (var orbit in pack.Orbits)
         {
@@ -66,19 +69,22 @@ public class Zone
             }
         }
 
-        foreach (var entity in pack.Entities)
+        foreach (var entityPack in pack.Entities)
         {
-            Entities.Add(EntitySerializer.Unpack(_itemManager, this, entity));
+            var entity = EntitySerializer.Unpack(_itemManager, this, entityPack);
+            Entities.Add(entity);
+            entity.Activate();
         }
 
         // TODO: Associate planets with stored entities for planetary colonies
     }
 
-    public ZonePack Pack()
+    public ZonePack PackZone()
     {
         return new ZonePack
         {
-            Data = Data,
+            Radius = Pack.Radius,
+            Mass = Pack.Mass,
             Entities = Entities.Select(EntitySerializer.Pack).ToList(),
             Orbits = Orbits.Values.Select(o=>o.Data).ToList(),
             Planets = Planets.Values.ToList()
@@ -117,12 +123,6 @@ public class Zone
             agent.Update(deltaTime);
         
         foreach (var entity in Entities.ToArray()) entity.Update(deltaTime);
-    }
-
-    public float2 WormholePosition(ZoneDefinition target)
-    {
-        var direction = target.Position - Data.Position;
-        return normalize(direction) * Data.Radius * .95f;
     }
     
     // Determine orbital position recursively, caching parent positions to avoid repeated calculations
@@ -284,7 +284,7 @@ public class Zone
     }
     public float GetHeight(float2 position)
     {
-        float result = -PowerPulse(length(position)/(Data.Radius*2), Settings.ZoneDepthExponent) * Settings.ZoneDepth;
+        float result = -PowerPulse(length(position)/(Pack.Radius*2), Settings.ZoneDepthExponent) * Settings.ZoneDepth;
         foreach (var body in PlanetInstances.Values)
         {
             var p = position - body.Orbit.Position; //GetOrbitPosition(body.BodyData.Orbit)
@@ -342,11 +342,6 @@ public class Zone
         // Deduce terrain normal
         float3 normal = new float3((hL - hR), (hD - hU), step*2);
         return normalize(normal).xzy;
-    }
-
-    public override int GetHashCode()
-    {
-        return Data.ID.GetHashCode();
     }
 }
 

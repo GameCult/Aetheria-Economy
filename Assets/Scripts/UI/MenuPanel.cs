@@ -72,5 +72,6 @@ public enum MenuTab
 {
     Map,
     Inventory,
-    Trade
+    Trade,
+    Galaxy
 }

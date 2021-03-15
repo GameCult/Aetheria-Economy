@@ -8,7 +8,6 @@ using Unity.Mathematics;
 
 public static class EntitySerializer
 {
-
     public static EntityPack Pack(Entity entity)
     {
         EntityPack pack;
@@ -21,9 +20,12 @@ public static class EntitySerializer
             pack = new ShipPack
             {
                 Position = ship.Position,
-                Direction = ship.Direction
+                Direction = ship.Direction,
+                IsPlayerShip = ship.IsPlayerShip
             };
         else throw new ArgumentException("Attempted to pack an instance of abstract class Entity!");
+
+        pack.Settings = entity.Settings;
         
         // Filter item behavior collections by those with any persistent behaviors
         // For each item create an object containing the item position and a list of persistent behaviors
@@ -52,6 +54,8 @@ public static class EntitySerializer
 
     public static Entity Unpack(ItemManager itemManager, Zone zone, EntityPack pack, bool instantiate = false)
     {
+        pack.Settings ??= MessagePackSerializer.Deserialize<EntitySettings>(
+            MessagePackSerializer.Serialize(itemManager.GameplaySettings.DefaultEntitySettings));
         return pack switch
         {
             ShipPack shipPack => Unpack(itemManager, zone, shipPack, instantiate),
@@ -63,8 +67,12 @@ public static class EntitySerializer
 
     private static Ship Unpack(ItemManager itemManager, Zone zone, ShipPack pack, bool instantiate = false)
     {
+        
         var entity = new Ship(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull, pack.Settings);
         Restore(itemManager, zone, pack, entity, instantiate);
+        entity.Position = pack.Position;
+        entity.Direction = pack.Direction;
+        entity.IsPlayerShip = pack.IsPlayerShip;
         return entity;
     }
 
@@ -130,11 +138,9 @@ public static class EntitySerializer
 [MessagePackObject]
 public class ShipPack : EntityPack
 {
-    [Key(15)]
-    public float3 Position;
-    
-    [Key(16)]
-    public float2 Direction;
+    [Key(15)] public float3 Position;
+    [Key(16)] public float2 Direction;
+    [Key(17)] public bool IsPlayerShip;
 }
 
 [MessagePackObject]
@@ -147,7 +153,7 @@ public class OrbitalEntityPack : EntityPack
 [MessagePackObject, 
  Union(0, typeof(OrbitalEntityPack)),
  Union(1, typeof(ShipPack))]
-public class EntityPack
+public abstract class EntityPack
 {
     [Key(0)]
     public string Name;

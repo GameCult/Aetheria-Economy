@@ -85,7 +85,7 @@ public static class WeightedSampleElimination
 		}, d_max);
 	}
 
-	public static float2[] GeneratePoints(int count, Func<float2, float> density = null, Func<float2, float> envelope = null, uint seed = 1337)
+	public static float2[] GeneratePoints(int count, Func<float2, float> density = null, Func<float2, float> envelope = null, Action<string> progressCallback = null, uint seed = 1337)
 	{
 		if (density == null) density = v => .5f;
 		if (envelope == null) envelope = v => 1;
@@ -101,9 +101,11 @@ public static class WeightedSampleElimination
 			{
 				accumulator = 0;
 				inputSamples[sample++] = v;
+				progressCallback?.Invoke($"Generating Samples: {sample} / {inputSamples.Length}");
 			}
 		}
 		var outputSamples = new float2[count];
+		progressCallback?.Invoke("Eliminating Samples");
 		Eliminate(inputSamples, outputSamples, density);
 		return outputSamples;
 	}

@@ -10,6 +10,7 @@ using Random = Unity.Mathematics.Random;
 
 public class NameTools : EditorWindow
 {
+    public TextAsset[] NameFiles;
     public int NameGeneratorMinLength = 5;
     public int NameGeneratorMaxLength = 10;
     public int NameGeneratorOrder = 4;
@@ -17,6 +18,7 @@ public class NameTools : EditorWindow
     private TextAsset nameFile;
     private MarkovNameGenerator _nameGenerator;
     private bool _stripNumberTokens;
+
 
     // Add menu named "My Window" to the Window menu
     [MenuItem("Window/Aetheria/Name Tools")]
@@ -29,6 +31,25 @@ public class NameTools : EditorWindow
 
     void OnGUI()
     {
+        ScriptableObject target = this;
+        SerializedObject so = new SerializedObject(target);
+        SerializedProperty stringsProperty = so.FindProperty("NameFiles");
+
+        EditorGUILayout.PropertyField(stringsProperty, true); // True means show children
+        so.ApplyModifiedProperties(); // Remember to apply modified properties
+
+        if (GUILayout.Button("Save Name Files"))
+        {
+            var database = new DatabaseCache();
+            foreach (var nameFile in NameFiles)
+            {
+                var entry = new NameFile();
+                entry.Names = nameFile.text.Split('\n');
+                database.Add(entry);
+            }
+            database.Save(Path.Combine(ActionGameManager.GameDataDirectory.FullName, "Names.msgpack"));
+        }
+        
         nameFile = (TextAsset) EditorGUILayout.ObjectField("Name File", nameFile, typeof(TextAsset), false);
         minWordLength = EditorGUILayout.IntField("Minimum File Word Length", minWordLength);
         NameGeneratorMinLength = EditorGUILayout.IntField("Generated Minimum Word Length", NameGeneratorMinLength);

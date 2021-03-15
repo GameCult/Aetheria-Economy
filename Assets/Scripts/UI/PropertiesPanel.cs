@@ -95,6 +95,19 @@ public class PropertiesPanel : MonoBehaviour
         return section;
     }
 
+    public Property AddProperty(Func<string> read)
+    {
+	    if (read == null) throw new ArgumentException("Attempted to add property with null read function!");
+	    
+	    var property = Instantiate(Property, Content ?? transform);
+	    property.Label.text = read();
+
+		RefreshPropertyValues += () => property.Label.text = read();
+	    Properties.Add(property.gameObject);
+	    OnPropertyAdded?.Invoke(property.gameObject);
+	    return property;
+    }
+
     public Property AddProperty(string name, Func<string> read = null)
     {
 	    Property property;
@@ -348,7 +361,7 @@ public class PropertiesPanel : MonoBehaviour
 	public void AddItemProperties(Entity entity, ItemInstance item)
 	{
 		var data = Context.ItemData.Get<ItemData>(item.Data);
-		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
+		AddProperty(data.Description);//.Label.fontStyle = FontStyles.Normal;
 		var manufacturer = Context.ItemData.Get<MegaCorporation>(data.Manufacturer);
 		if (manufacturer != null)
 		{

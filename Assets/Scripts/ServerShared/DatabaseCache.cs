@@ -118,6 +118,6 @@ public class DatabaseCache
     {
         RegisterResolver.Register();
         var entries = AllEntries.ToArray();
-        File.WriteAllBytes(Path.Combine(path, "AetherDB.msgpack"), MessagePackSerializer.Serialize(entries));
+        File.WriteAllBytes(path, MessagePackSerializer.Serialize(entries));
     }
 }

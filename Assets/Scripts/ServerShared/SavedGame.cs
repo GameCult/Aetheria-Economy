@@ -31,11 +31,15 @@ public class SavedGame
     
     [Key(7)]
     public int CurrentZoneEntity;
+
+    [Key(8)]
+    public SectorGenerationSettings Settings;
     
     public SavedGame() { }
 
-    public SavedGame(Sector sector)
+    public SavedGame(Sector sector, Zone currentZone, Entity currentEntity)
     {
+        Settings = sector.Settings;
         Factions = sector.HomeZones.Keys.Select(f => f.ID).ToArray();
         
         HomeZones = sector.HomeZones.ToDictionary(
@@ -45,15 +49,18 @@ public class SavedGame
             x => Array.IndexOf(Factions, x.Key.ID),
             x => Array.IndexOf(sector.Zones, x.Value));
         
-        Zones = sector.Zones.Select(zone=> new SavedZone
+        Zones = sector.Zones.Select(zone => new SavedZone
         {
             Name = zone.Name,
             Position = zone.Position,
             AdjacentZones = zone.AdjacentZones.Select(az=> Array.IndexOf(sector.Zones, az)).ToArray(),
             Factions = zone.Factions.Select(f=> Array.IndexOf(Factions, f.ID)).ToArray(),
-            Contents = zone.Contents.Pack(),
-            Owner = Array.IndexOf(Factions, zone.Owner.ID)
+            Contents = zone.Contents?.PackZone(),
+            Owner = zone.Owner == null ? -1 : Array.IndexOf(Factions, zone.Owner.ID)
         }).ToArray();
+
+        CurrentZone = Array.FindIndex(sector.Zones, zone => zone.Contents == currentZone);
+        CurrentZoneEntity = currentZone.Entities.IndexOf(currentEntity);
         
         Entrance = Array.IndexOf(sector.Zones, sector.Entrance);
         Exit = Array.IndexOf(sector.Zones, sector.Exit);

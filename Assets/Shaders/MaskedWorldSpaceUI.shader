@@ -5,7 +5,7 @@ Shader "UI/MaskedWorldSpaceUI"
     Properties
     {
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-    	_DetailTex ("Detail Texture", 2D) = "white" {}
+    	_DetailTex ("Detail Texture", 2D) = "black" {}
 		[HDR] _Color ("Color", Color) = (.5,.5,.5,1)
         _DetailGamma ("Detail Gamma", Float) = 1
 

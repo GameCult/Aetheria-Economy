@@ -11,6 +11,9 @@
 /[Mm]emoryCaptures/
 /Recordings/
 
+# Wwise cache folder
+/Aetheria-Economy_WwiseProject/.cache
+
 # Wwise profiling sessions
 *.prof
 

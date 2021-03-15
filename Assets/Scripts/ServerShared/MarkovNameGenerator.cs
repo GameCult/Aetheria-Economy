@@ -20,11 +20,10 @@ public class MarkovNameGenerator
     private int _maxLength;
     private Random _random;
 
-    public MarkovNameGenerator(ref Random random, string nameData, SectorGenerationSettings settings)
+    public MarkovNameGenerator(ref Random random, IEnumerable<string> sampleNames, SectorGenerationSettings settings)
     {
         var names = new HashSet<string>();
-        var lines = nameData.Split('\n');
-        foreach (var line in lines)
+        foreach (var line in sampleNames)
         {
             foreach(var word in line.ToUpperInvariant().Split(' ', ',', '.', '"'))
                 if (word.Length >= settings.NameGeneratorMinLength && !names.Contains(word))

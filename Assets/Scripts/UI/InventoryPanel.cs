@@ -14,12 +14,13 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering;
 using Unity.Mathematics;
+using UnityEngine.Serialization;
 using static Unity.Mathematics.math;
 using int2 = Unity.Mathematics.int2;
 
 public class InventoryPanel : MonoBehaviour, IPointerClickHandler
 {
-    public ConfirmationDialog ConfirmationDialog;
+    [FormerlySerializedAs("ConfirmationDialog")] public ConfirmationDialog Dialog;
     public bool Flip;
     public GameSettings Settings;
     public ActionGameManager GameManager;
@@ -113,9 +114,10 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                     }
                     else
                     {
-                        ConfirmationDialog.Clear();
-                        ConfirmationDialog.Title.text = "Can't select entity, you can only pilot a ship!";
-                        ConfirmationDialog.Show();
+                        Dialog.Clear();
+                        Dialog.Title.text = "Can't select entity, you can only pilot a ship!";
+                        Dialog.Show();
+                        Dialog.MoveToCursor();
                     }
                 }
             });
@@ -157,11 +159,11 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                                 {
                                     var entity = EntitySerializer.Unpack(GameManager.ItemManager, GameManager.Zone, pack, true);
                                     entity.SetParent(GameManager.DockedEntity);
-                                    GameManager.PlayerEntities.Add(entity);
                                     GameManager.Credits -= pack.Price(GameManager.ItemManager);
                                     GameManager.CurrentEntity = entity;
                                     if(entity is Ship ship)
                                     {
+                                        ship.IsPlayerShip = true;
                                         GameManager.DockingBay.DockedShip = ship;
                                     }
                                     Display(entity);

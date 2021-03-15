@@ -73,19 +73,11 @@ public class ZoneGenerator
 		Random random,
 		int targetSubzoneCount)
 	{
-		var zone = new ZoneData
-		{
-			Name = name, 
-			Position = position
-		};
+
+		var pack = new ZonePack();
 		
-		var pack = new ZonePack
-		{
-			Data = zone
-		};
-		
-		zone.Radius = radius;
-		zone.Mass = mass;
+		pack.Radius = radius;
+		pack.Mass = mass;
 		
 		//Debug.Log($"Generating zone at position {zone.Position} with radius {zoneRadius} and mass {zoneMass}");
 
@@ -122,11 +114,11 @@ public class ZoneGenerator
 			var totalArea = occupiedAreas.Sum(c => c.Area);
 			foreach (var c in occupiedAreas)
 			{
-				planets.AddRange(GenerateEntities(settings, ref random, c.Area / totalArea * zone.Mass, c.Radius, c.Center));
+				planets.AddRange(GenerateEntities(settings, ref random, c.Area / totalArea * pack.Mass, c.Radius, c.Center));
 			}
 		}
 		else
-			planets.AddRange(GenerateEntities(settings, ref random, zone.Mass, zone.Radius, float2.zero));
+			planets.AddRange(GenerateEntities(settings, ref random, pack.Mass, pack.Radius, float2.zero));
         
         // Create collections to map between zone generator output and database entries
         var orbitMap = new Dictionary<GeneratorPlanet, OrbitData>();

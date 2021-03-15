@@ -51,7 +51,8 @@ public class DatabaseListView : EditorWindow
     private Dictionary<Guid, HashSet<Guid>> _itemBlueprints = new Dictionary<Guid, HashSet<Guid>>();
     private HashSet<Guid> _itemBlueprintFoldouts = new HashSet<Guid>();
     private HashSet<string> _itemGroupFoldouts = new HashSet<string>();
-    private DirectoryInfo _filePath;
+    private string _filePath => Path.Combine(ActionGameManager.GameDataDirectory.FullName, _fileName);
+    private string _fileName = "AetherDB.msgpack";
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
@@ -60,7 +61,7 @@ public class DatabaseListView : EditorWindow
     
     void OnEnable()
     {
-        _filePath = new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
+        //_filePath = ;
         // Create database cache
         _databaseCache = new DatabaseCache();
         
@@ -140,16 +141,6 @@ public class DatabaseListView : EditorWindow
     {
         Event currentEvent = Event.current;
         EventType currentEventType = currentEvent.type;
-        
-        _view = BeginScrollView(
-            _view, 
-            false,
-            false,
-            GUIStyle.none,
-            GUI.skin.verticalScrollbar,
-            GUI.skin.scrollView,
-            GUILayout.Width(EditorGUIUtility.currentViewWidth),
-            GUILayout.ExpandHeight(true));
 
         if (currentEventType == EventType.DragUpdated)
             // Indicate that we don't accept drags ourselves
@@ -163,24 +154,24 @@ public class DatabaseListView : EditorWindow
                 EditorPrefs.SetString("RethinkDB.URL", _connectionString);
                 _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString);
             }
+            // if (GUILayout.Button("Connect All"))
+            // {
+            //     EditorPrefs.SetString("RethinkDB.URL", _connectionString);
+            //     _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString, true, false);
+            // }
         }
         using (var h = new HorizontalScope())
         {
-            if (GUILayout.Button("Connect All"))
-            {
-                EditorPrefs.SetString("RethinkDB.URL", _connectionString);
-                _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString, true, false);
-            }
-
+            _fileName = TextField(_fileName);
             if (GUILayout.Button("Save"))
             {
-                _databaseCache.Save(_filePath.FullName);
+                _databaseCache.Save(_filePath);
                 Debug.Log("Local DB Cache Saved!");
             }
 
             if (GUILayout.Button("Load"))
             {
-                _databaseCache.Load(_filePath.FullName);
+                _databaseCache.Load(_filePath);
                 Debug.Log("Loaded DB From Local Cache!");
             }
         }
@@ -207,17 +198,17 @@ public class DatabaseListView : EditorWindow
             var progressRect = GetControlRect(false, 20);
             EditorGUI.ProgressBar(progressRect, (float)_queryStatus.RetrievedItems/(_queryStatus.GalaxyEntries + _queryStatus.ItemsEntries), "Sync Progress");
         }
-        // else
-        // {
-        //     if(_itemBlueprints == null)
-        //         _itemBlueprints = _databaseCache.GetAll<ItemData>()
-        //             .Select(itemData => new {itemData, blueprints = _databaseCache.GetAll<BlueprintData>()
-        //                 .Where(blueprintData => blueprintData.Item == itemData.ID)
-        //                 .Select(bp => bp.ID)
-        //                 .ToList()})
-        //             .ToDictionary(x => x.itemData.ID, x => x.blueprints);
-        // }
         GUILayout.Space(5);
+        
+        _view = BeginScrollView(
+            _view, 
+            false,
+            false,
+            GUIStyle.none,
+            GUI.skin.verticalScrollbar,
+            GUI.skin.scrollView,
+            GUILayout.Width(EditorGUIUtility.currentViewWidth),
+            GUILayout.ExpandHeight(true));
         
         // if(GUILayout.Button("Log Cache Count"))
         //     Debug.Log($"Cache contains {_databaseCache.AllEntries.Count()} elements");

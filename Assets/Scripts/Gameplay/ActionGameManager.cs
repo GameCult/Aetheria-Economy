@@ -12,10 +12,11 @@ using MessagePack;
 using TMPro;
 using UniRx;
 using UnityEngine;
-using Unity.Mathematics;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using quaternion = Unity.Mathematics.quaternion;
@@ -23,27 +24,41 @@ using Random = UnityEngine.Random;
 
 public class ActionGameManager : MonoBehaviour
 {
+    private static DirectoryInfo _gameDataDirectory;
     public static DirectoryInfo GameDataDirectory
     {
         get => _gameDataDirectory ??= new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
     }
-    private static DirectoryInfo _gameDataDirectory;
-    
+
+    private static DatabaseCache _database;
+
+    public static DatabaseCache Database
+    {
+        get
+        {
+            if (_database != null) return _database;
+
+            _database = new DatabaseCache();
+            _database.Load(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack"));
+            
+            return _database;
+        }
+    }
+
+    private static PlayerSettings _playerSettings;
     public static PlayerSettings PlayerSettings
     {
         get => _playerSettings ??= File.Exists(_playerSettingsFilePath)
             ? MessagePackSerializer.Deserialize<PlayerSettings>(File.ReadAllBytes(_playerSettingsFilePath))
             : new PlayerSettings {Name = Environment.UserName};
     }
-    private static PlayerSettings _playerSettings;
     private static string _playerSettingsFilePath => Path.Combine(GameDataDirectory.FullName, "PlayerSettings.msgpack");
     public static void SavePlayerSettings()
     {
         File.WriteAllBytes(_playerSettingsFilePath, MessagePackSerializer.Serialize(_playerSettings));
     }
-    
-    public static SavedGame Save;
-    
+
+    public static Sector CurrentSector;
     
     public GameSettings Settings;
     public string StarterShipTemplate = "Longinus";
@@ -71,18 +86,20 @@ public class ActionGameManager : MonoBehaviour
     public Prototype LockIndicator;
     public PlaceUIElementWorldspace[] Crosshairs;
     public EventLog EventLog;
-    public SectorRenderer SectorRenderer;
+    [FormerlySerializedAs("SectorRenderer")] public ZoneRenderer ZoneRenderer;
     public CinemachineVirtualCamera DockCamera;
     public CinemachineVirtualCamera FollowCamera;
     public GameObject GameplayUI;
     public MenuPanel Menu;
     public MapRenderer MenuMap;
+    //public SectorRenderer SectorRenderer;
+    public SectorMap SectorMap;
     public SchematicDisplay SchematicDisplay;
     public SchematicDisplay TargetSchematicDisplay;
     public InventoryMenu Inventory;
     public InventoryPanel ShipPanel;
     public InventoryPanel TargetShipPanel;
-    public ConfirmationDialog ConfirmationDialog;
+    [FormerlySerializedAs("ConfirmationDialog")] public ConfirmationDialog Dialog;
     
     //public PlayerInput Input;
     
@@ -105,7 +122,6 @@ public class ActionGameManager : MonoBehaviour
     private List<IDisposable> _shipSubscriptions = new List<IDisposable>();
     private float _severeHeatstrokePhase;
     
-    public List<Entity> PlayerEntities { get; } = new List<Entity>();
     public EquippedDockingBay DockingBay { get; private set; }
     public Entity DockedEntity { get; private set; }
 
@@ -114,8 +130,7 @@ public class ActionGameManager : MonoBehaviour
         get => _currentEntity;
         set => _currentEntity = value;
     }
-
-    public DatabaseCache ItemData { get; private set; }
+    
     public ItemManager ItemManager { get; private set; }
     public Zone Zone { get; private set; }
     public List<EntityPack> Loadouts { get; } = new List<EntityPack>();
@@ -130,21 +145,32 @@ public class ActionGameManager : MonoBehaviour
 
     public void SaveLoadout(EntityPack pack)
     {
-        File.WriteAllBytes(Path.Combine(_loadoutPath.FullName, $"{pack.Name}.preset"), MessagePackSerializer.Serialize(pack));
+        File.WriteAllBytes(Path.Combine(_loadoutPath.FullName, $"{pack.Name}.loadout"), MessagePackSerializer.Serialize(pack));
+    }
+
+    private void OnApplicationQuit()
+    {
+        if(CurrentSector!=null)
+        {
+            SaveState();
+        }
+    }
+
+    public void SaveState()
+    {
+        PlayerSettings.CurrentRun = new SavedGame(CurrentSector, Zone, CurrentEntity);
+        SavePlayerSettings();
     }
 
     void Start()
     {
         AkSoundEngine.RegisterGameObj(gameObject);
-        
         ConsoleController.MessageReceiver = this;
-        _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");
         
-        ItemData = new DatabaseCache();
-        ItemData.Load(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack"));
-        ItemManager = new ItemManager(ItemData, Settings.GameplaySettings, Debug.Log);
-        SectorRenderer.ItemManager = ItemManager;
+        ItemManager = new ItemManager(Database, Settings.GameplaySettings, Debug.Log);
+        ZoneRenderer.ItemManager = ItemManager;
 
+        _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");
         Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.loadout")
             .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
 
@@ -158,7 +184,7 @@ public class ActionGameManager : MonoBehaviour
         _input.Player.MinimapZoom.performed += context =>
         {
             _zoomLevelIndex = (_zoomLevelIndex + 1) % Settings.MinimapZoomLevels.Length;
-            SectorRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
+            ZoneRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
         };
 
         _input.Global.MapToggle.performed += context =>
@@ -214,9 +240,10 @@ public class ActionGameManager : MonoBehaviour
             if (CurrentEntity == null)
             {
                 AkSoundEngine.PostEvent("UI_Fail", gameObject);
-                ConfirmationDialog.Clear();
-                ConfirmationDialog.Title.text = "Can't undock. You dont have a ship!";
-                ConfirmationDialog.Show();
+                Dialog.Clear();
+                Dialog.Title.text = "Can't undock. You dont have a ship!";
+                Dialog.Show();
+                Dialog.MoveToCursor();
             }
             else if (CurrentEntity.Parent == null) Dock();
             else Undock();
@@ -226,15 +253,15 @@ public class ActionGameManager : MonoBehaviour
         {
             if(CurrentEntity is Ship ship)
             {
-                foreach (var wormhole in SectorRenderer.WormholeInstances.Keys)
+                foreach (var wormhole in ZoneRenderer.WormholeInstances.Keys)
                 {
                     if (length(wormhole.Position - CurrentEntity.Position.xz) < Settings.GameplaySettings.WormholeExitRadius)
                     {
                         ship.EnterWormhole(wormhole.Position);
                         ship.OnEnteredWormhole += () =>
                         {
-                            GenerateLevel();
-                            ship.ExitWormhole(SectorRenderer.WormholeInstances.Keys.First().Position,
+                            GenerateLevel(wormhole.Target);
+                            ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First().Position,
                                 Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
                             CurrentEntity.Zone = Zone;
                         };
@@ -418,36 +445,33 @@ public class ActionGameManager : MonoBehaviour
         #endregion
         
         StartGame();
-        // ConsoleController.AddCommand("editmode", _ => ToggleEditMode());
-        ConsoleController.AddCommand("savezone", args =>
-        {
-            if (args.Length > 0)
-                Zone.Data.Name = args[0];
-            SaveZone();
-        });
-
-        // MapButton.onClick.AddListener(() =>
-        // {
-        //     if (_currentMenuTabButton == MapPanel) return;
-        //     
-        //     _currentMenuTabButton.GetComponent<TextMeshProUGUI>().color = Color.white;
-        //     _currentMenuTabButton = MapButton;
-        // });
-        //
-        //InventoryPanel.Display(ItemManager, entity);
     }
 
-    public void GenerateLevel()
+    public void GenerateLevel(SectorZone sectorZone = null)
     {
-        var zonePack = ZoneGenerator.GenerateZone(
-            settings: Settings.ZoneSettings,
-            // mapLayers: Context.MapLayers,
-            // resources: Context.Resources,
-            mass: Settings.DefaultZoneMass,
-            radius: Settings.DefaultZoneRadius
-        );
+        if (sectorZone != null)
+        {
+            if (sectorZone.Contents == null)
+            {
+                sectorZone.PackedContents ??= ZoneGenerator.GenerateZone(
+                    settings: Settings.ZoneSettings,
+                    mass: Settings.DefaultZoneMass,
+                    radius: Settings.DefaultZoneRadius
+                );
+                sectorZone.Contents = new Zone(ItemManager, Settings.PlanetSettings, sectorZone.PackedContents, sectorZone);
+            }
+            Zone = sectorZone.Contents;
+        }
+        else
+        {
+            var zonePack = ZoneGenerator.GenerateZone(
+                settings: Settings.ZoneSettings,
+                mass: Settings.DefaultZoneMass,
+                radius: Settings.DefaultZoneRadius
+            );
+            Zone = new Zone(ItemManager, Settings.PlanetSettings, zonePack, sectorZone);
+        }
         
-        Zone = new Zone(ItemManager, Settings.PlanetSettings, zonePack);
         Zone.Log = s => Debug.Log($"Zone: {s}");
 
         if (CurrentEntity != null)
@@ -462,7 +486,7 @@ public class ActionGameManager : MonoBehaviour
             CurrentEntity.Activate();
         }
         
-        SectorRenderer.LoadZone(Zone);
+        ZoneRenderer.LoadZone(Zone);
         
         if (CurrentEntity != null)
         {
@@ -514,29 +538,45 @@ public class ActionGameManager : MonoBehaviour
 
     private void StartGame()
     {
-        GenerateLevel();
+        if (CurrentSector != null)
+        {
+            if (PlayerSettings.CurrentRun == null)
+            {
+                GenerateLevel(CurrentSector.Entrance);
+                var ship = EntitySerializer.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
+                ship.Zone = Zone;
+                Zone.Entities.Add(ship);
+                ship.Activate();
+                BindToEntity(ship);
+            }
+            else
+            {
+                GenerateLevel(CurrentSector.Zones[PlayerSettings.CurrentRun.CurrentZone]);
+                var targetEntity = Zone.Entities[PlayerSettings.CurrentRun.CurrentZoneEntity];
+                if (targetEntity is OrbitalEntity orbitalEntity)
+                    DoDock(orbitalEntity, orbitalEntity.DockingBays.First());
+                else
+                    BindToEntity(targetEntity);
+            }
+        }
+        else GenerateLevel();
         
-        var stationType = ItemData.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
-        var stationHull = ItemManager.CreateInstance(stationType) as EquippableItem;
-        var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(3);
-        var stationParentOrbit = stationParent.Orbit.Data.ID;
-        var stationParentPos = Zone.GetOrbitPosition(stationParentOrbit);
-        var stationPos = stationParentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
-        var stationOrbit = Zone.CreateOrbit(stationParentOrbit, stationPos);
-        var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID, Settings.DefaultEntitySettings);
-        Zone.Entities.Add(station);
-        var dockingBayData = ItemData.GetAll<DockingBayData>().First();
-        var dockingBay = ItemManager.CreateInstance(dockingBayData) as EquippableItem;
-        station.TryEquip(dockingBay);
-        station.Activate();
+        // var stationType = Database.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
+        // var stationHull = ItemManager.CreateInstance(stationType) as EquippableItem;
+        // var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(3);
+        // var stationParentOrbit = stationParent.Orbit.Data.ID;
+        // var stationParentPos = Zone.GetOrbitPosition(stationParentOrbit);
+        // var stationPos = stationParentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
+        // var stationOrbit = Zone.CreateOrbit(stationParentOrbit, stationPos);
+        // var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID, Settings.DefaultEntitySettings);
+        // Zone.Entities.Add(station);
+        // var dockingBayData = Database.GetAll<DockingBayData>().First();
+        // var dockingBay = ItemManager.CreateInstance(dockingBayData) as EquippableItem;
+        // station.TryEquip(dockingBay);
+        // station.Activate();
+        //
+        // DoDock(station, station.DockingBays.First());
         
-        DoDock(station, station.DockingBays.First());
-        
-        // var ship = EntityPack.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
-        // ship.Zone = Zone;
-        // Zone.Entities.Add(ship);
-        // ship.Activate();
-        // BindToEntity(ship);
         // ship.ExitWormhole(
         //     SectorRenderer.WormholeInstances.Keys.First().Position,
         //     ItemManager.Random.NextFloat2Direction() * Settings.GameplaySettings.WormholeExitVelocity);
@@ -569,14 +609,14 @@ public class ActionGameManager : MonoBehaviour
     private void DoDock(Entity entity, EquippedDockingBay dockingBay)
     {
         DockedEntity = entity;
-        SectorRenderer.PerspectiveEntity = DockedEntity;
+        ZoneRenderer.PerspectiveEntity = DockedEntity;
         DockingBay = dockingBay;
         DockCamera.enabled = true;
         FollowCamera.enabled = false;
         var orbital = (OrbitalEntity) entity;
-        DockCamera.Follow = SectorRenderer.EntityInstances[orbital].transform;
+        DockCamera.Follow = ZoneRenderer.EntityInstances[orbital].transform;
         var parentOrbit = Zone.Orbits[orbital.OrbitData].Data.Parent;
-        var parentPlanet = SectorRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key];
+        var parentPlanet = ZoneRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key];
         DockCamera.LookAt = parentPlanet.Body.transform;
         Menu.ShowTab(MenuTab.Inventory);
     }
@@ -588,23 +628,26 @@ public class ActionGameManager : MonoBehaviour
         {
             if (CurrentEntity.GetBehavior<Cockpit>() == null)
             {
-                ConfirmationDialog.Clear();
-                ConfirmationDialog.Title.text = "Can't undock. Missing cockpit component!";
-                ConfirmationDialog.Show();
+                Dialog.Clear();
+                Dialog.Title.text = "Can't undock. Missing cockpit component!";
+                Dialog.Show();
+                Dialog.MoveToCursor();
                 AkSoundEngine.PostEvent("UI_Fail", gameObject);
             }
             else if (CurrentEntity.GetBehavior<Thruster>() == null)
             {
-                ConfirmationDialog.Clear();
-                ConfirmationDialog.Title.text = "Can't undock. Missing thruster component!";
-                ConfirmationDialog.Show();
+                Dialog.Clear();
+                Dialog.Title.text = "Can't undock. Missing thruster component!";
+                Dialog.Show();
+                Dialog.MoveToCursor();
                 AkSoundEngine.PostEvent("UI_Fail", gameObject);
             }
             else if (CurrentEntity.GetBehavior<Reactor>() == null)
             {
-                ConfirmationDialog.Clear();
-                ConfirmationDialog.Title.text = "Can't undock. Missing reactor component!";
-                ConfirmationDialog.Show();
+                Dialog.Clear();
+                Dialog.Title.text = "Can't undock. Missing reactor component!";
+                Dialog.Show();
+                Dialog.MoveToCursor();
                 AkSoundEngine.PostEvent("UI_Fail", gameObject);
             }
             else if (CurrentEntity.Parent.TryUndock(ship))
@@ -614,8 +657,9 @@ public class ActionGameManager : MonoBehaviour
             }
             else
             {
-                ConfirmationDialog.Title.text = "Can't undock. Must empty docking bay!";
-                ConfirmationDialog.Show();
+                Dialog.Title.text = "Can't undock. Must empty docking bay!";
+                Dialog.Show();
+                Dialog.MoveToCursor();
                 AkSoundEngine.PostEvent("UI_Fail", gameObject);
             }
         }
@@ -641,7 +685,7 @@ public class ActionGameManager : MonoBehaviour
 
     private void BindToEntity(Entity entity)
     {
-        if (!SectorRenderer.EntityInstances.ContainsKey(entity))
+        if (!ZoneRenderer.EntityInstances.ContainsKey(entity))
         {
             Debug.LogError($"Attempted to bind to entity {entity.Name}, but SectorRenderer has no such instance!");
             return;
@@ -649,7 +693,7 @@ public class ActionGameManager : MonoBehaviour
         
         CurrentEntity = entity;
         DeathPP.weight = 0;
-        SectorRenderer.PerspectiveEntity = CurrentEntity;
+        ZoneRenderer.PerspectiveEntity = CurrentEntity;
         
         Menu.gameObject.SetActive(false);
         DockedEntity = null;
@@ -663,17 +707,17 @@ public class ActionGameManager : MonoBehaviour
         ShipPanel.Display(CurrentEntity, true);
         SchematicDisplay.ShowShip(CurrentEntity);
         
-        FollowCamera.LookAt = SectorRenderer.EntityInstances[CurrentEntity].LookAtPoint;
-        FollowCamera.Follow = SectorRenderer.EntityInstances[CurrentEntity].transform;
+        FollowCamera.LookAt = ZoneRenderer.EntityInstances[CurrentEntity].LookAtPoint;
+        FollowCamera.Follow = ZoneRenderer.EntityInstances[CurrentEntity].transform;
         _articulationGroups = CurrentEntity.Equipment
             .Where(item => item.Behaviors.Any(x => x.Data is WeaponData && !(x.Data is LauncherData)))
-            .GroupBy(item => SectorRenderer.EntityInstances[CurrentEntity]
+            .GroupBy(item => ZoneRenderer.EntityInstances[CurrentEntity]
                 .GetBarrel(CurrentEntity.Hardpoints[item.Position.x, item.Position.y])
                 .GetComponentInParent<ArticulationPoint>()?.Group ?? -1)
             .Select((group, index) => {
                 return (
                     group.Select(item => CurrentEntity.Hardpoints[item.Position.x, item.Position.y]).ToArray(),
-                    group.Select(item => SectorRenderer.EntityInstances[CurrentEntity].GetBarrel(CurrentEntity.Hardpoints[item.Position.x, item.Position.y])).ToArray(),
+                    group.Select(item => ZoneRenderer.EntityInstances[CurrentEntity].GetBarrel(CurrentEntity.Hardpoints[item.Position.x, item.Position.y])).ToArray(),
                     Crosshairs[index]
                 );
             }).ToArray();
@@ -715,9 +759,10 @@ public class ActionGameManager : MonoBehaviour
             var deathTime = Time.time;
             UnbindEntity();
             CurrentEntity = null;
-            ConfirmationDialog.Clear();
-            ConfirmationDialog.Title.text = "You have died!";
-            ConfirmationDialog.Show(StartGame, null, "Try again!");
+            Dialog.Clear();
+            Dialog.Title.text = "You have died!";
+            Dialog.Show(StartGame, null, "Try again!");
+            Dialog.MoveToCursor();
             Observable.EveryUpdate()
                 .Select(_ => (Time.time - deathTime) / DeathPPTransitionTime)
                 .Where(t => t < 1)
@@ -742,8 +787,8 @@ public class ActionGameManager : MonoBehaviour
             }).ToArray();
     }
 
-    public void SaveZone() => File.WriteAllBytes(
-        Path.Combine(_gameDataDirectory.FullName, $"{Zone.Data.Name}.zone"), MessagePackSerializer.Serialize(Zone.Pack()));
+    public void SaveZone(string name) => File.WriteAllBytes(
+        Path.Combine(_gameDataDirectory.FullName, $"{name}.zone"), MessagePackSerializer.Serialize(Zone.PackZone()));
 
     // public void ToggleEditMode()
     // {
@@ -758,7 +803,7 @@ public class ActionGameManager : MonoBehaviour
         {
             foreach (var bay in CurrentEntity.Parent.DockingBays)
             {
-                if (PlayerEntities.Contains(bay.DockedShip)) yield return bay;
+                if (bay.DockedShip.IsPlayerShip) yield return bay;
             }
         }
     }
@@ -766,9 +811,9 @@ public class ActionGameManager : MonoBehaviour
     public IEnumerable<Entity> AvailableEntities()
     {
         if(DockedEntity != null)
-            foreach (var entity in PlayerEntities)
+            foreach (var entity in DockedEntity.Children)
             {
-                if (DockedEntity.Children.Contains(entity)) yield return entity;
+                if (entity is Ship { IsPlayerShip: true }) yield return entity;
             }
         else if (CurrentEntity != null)
             yield return CurrentEntity;
@@ -809,7 +854,7 @@ public class ActionGameManager : MonoBehaviour
             }
         }
         Zone.Update(_time, Time.deltaTime);
-        SectorRenderer.GameTime = _time;
+        ZoneRenderer.GameTime = _time;
     }
 
     private void LateUpdate()
@@ -821,7 +866,7 @@ public class ActionGameManager : MonoBehaviour
     {
         if (CurrentEntity == null || CurrentEntity.Parent != null) return;
 
-        ViewDot.Target = SectorRenderer.EntityInstances[CurrentEntity].LookAtPoint.position;
+        ViewDot.Target = ZoneRenderer.EntityInstances[CurrentEntity].LookAtPoint.position;
         if (CurrentEntity.Target.Value != null)
             TargetIndicator.Target = CurrentEntity.Target.Value.Position;
         var distance = length((float3)ViewDot.Target - CurrentEntity.Position);

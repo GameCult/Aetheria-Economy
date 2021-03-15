@@ -44,7 +44,7 @@ public class EntityInstance : MonoBehaviour
     public Dictionary<Radiator, MeshRenderer> RadiatorMeshes { get; private set; }
     public Transform LookAtPoint { get; private set; }
     public Entity Entity { get; private set; }
-    public SectorRenderer SectorRenderer { get; private set; }
+    public ZoneRenderer ZoneRenderer { get; private set; }
     public bool Visible
     {
         get => _fade > 0.01f;
@@ -132,11 +132,11 @@ public class EntityInstance : MonoBehaviour
         _fadingIn = false;
     }
 
-    public virtual void SetEntity(SectorRenderer sectorRenderer, Entity entity)
+    public virtual void SetEntity(ZoneRenderer zoneRenderer, Entity entity)
     {
         gameObject.name = entity.Name;
         Entity = entity;
-        SectorRenderer = sectorRenderer;
+        ZoneRenderer = zoneRenderer;
         var hullData = entity.ItemManager.GetData(entity.Hull) as HullData;
 
         if(Shield)
@@ -161,7 +161,7 @@ public class EntityInstance : MonoBehaviour
                     }
 
                     instantWeapon.OnFire += () => 
-                        _instantWeaponManagers[data].Fire(instantWeapon, item, this, entity.Target.Value != null && SectorRenderer.EntityInstances.ContainsKey(entity.Target.Value) ? SectorRenderer.EntityInstances[entity.Target.Value] : null);
+                        _instantWeaponManagers[data].Fire(instantWeapon, item, this, entity.Target.Value != null && ZoneRenderer.EntityInstances.ContainsKey(entity.Target.Value) ? ZoneRenderer.EntityInstances[entity.Target.Value] : null);
 
                     if (behavior is ChargedWeapon chargedWeapon)
                     {
@@ -190,7 +190,7 @@ public class EntityInstance : MonoBehaviour
                     }
 
                     constantWeapon.OnStartFiring += () =>
-                        _constantWeaponManagers[data].StartFiring(data, item, this, entity.Target.Value != null ? SectorRenderer.EntityInstances[entity.Target.Value] : null);
+                        _constantWeaponManagers[data].StartFiring(data, item, this, entity.Target.Value != null ? ZoneRenderer.EntityInstances[entity.Target.Value] : null);
                     constantWeapon.OnStopFiring += () => 
                         _constantWeaponManagers[data].StopFiring(item);
                 }
