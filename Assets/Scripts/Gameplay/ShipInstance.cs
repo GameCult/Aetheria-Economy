@@ -92,6 +92,7 @@ public class ShipInstance : EntityInstance
                 var throttle = 0f;
                 if (thrusterInstance.System.particleCount > 0)
                     throttle = (float) thrusterInstance.System.particleCount / thrusterInstance.MaxParticleCount;
+                AkSoundEngine.SetObjectPosition(thrusterInstance.SfxSource, thrusterInstance.SfxSource.transform);
                 AkSoundEngine.SetRTPCValue("thruster_throttle", throttle, thrusterInstance.SfxSource);
                 AkSoundEngine.SetRTPCValue("performance_durability", thrusterInstance.Thruster.Item.DurabilityPerformance, thrusterInstance.SfxSource);
                 AkSoundEngine.SetRTPCValue("performance_thermal", thrusterInstance.Thruster.Item.ThermalPerformance, thrusterInstance.SfxSource);

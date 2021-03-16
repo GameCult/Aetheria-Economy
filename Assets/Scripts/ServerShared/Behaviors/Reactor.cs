@@ -80,7 +80,6 @@ public class Reactor : IBehavior, IOrderedBehavior
 
         // This behavior executes last, so any components drawing power have already done so
 
-        CurrentLoadRatio = Draw / max(charge, .01f);
         // Subtract the baseline charge from draw
         Draw -= charge;
         
@@ -90,6 +89,7 @@ public class Reactor : IBehavior, IOrderedBehavior
         // We have an energy deficit, have to overload the reactor
         if (Draw > .01f)
         {
+            CurrentLoadRatio = (Draw + charge) / max(charge, .01f);
             var overloadEfficiency = Item.Evaluate(_data.OverloadEfficiency);
             
             // Generate heat using overload efficiency, usually much less efficient!
@@ -122,8 +122,13 @@ public class Reactor : IBehavior, IOrderedBehavior
         // We still have an energy surplus, try to throttle the reactor to reduce heat generation
         if (Draw < -.01f)
         {
+            CurrentLoadRatio = (Draw + charge) / max(charge, .01f);
             heat -= Draw / efficiency * (1 - 1 / Item.Evaluate(_data.ThrottlingFactor));
             Draw = 0;
+        }
+        else
+        {
+            CurrentLoadRatio = 1;
         }
         
         Item.AddHeat(heat);

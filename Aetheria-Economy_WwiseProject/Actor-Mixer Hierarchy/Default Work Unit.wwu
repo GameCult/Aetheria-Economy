@@ -205,10 +205,14 @@
 					<ChildrenList>
 						<ActorMixer Name="Spaceship" ID="{C6CE2D3B-502C-4CC5-815A-B01D11C157EE}" ShortID="291090047">
 							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="1"/>
 								<Property Name="Color" Type="int16" Value="3"/>
 								<Property Name="OverrideColor" Type="bool" Value="True"/>
 							</PropertyList>
 							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+								</Reference>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
 								</Reference>
@@ -224,15 +228,15 @@
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Attenuation">
-											<Custom>
-												<Attenuation Name="Attenuation (Custom)" ID="{505F8F56-EE33-409A-A053-92E65207DEE5}" ShortID="1015097335">
+											<Custom CreatedFrom="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}">
+												<Attenuation Name="Global (Custom)" ID="{7C6E349B-A8DF-42AF-A121-81EDB128A17F}" ShortID="135451905">
 													<PropertyList>
-														<Property Name="RadiusMax" Type="Real64" Value="1000"/>
+														<Property Name="RadiusMax" Type="Real64" Value="2000"/>
 													</PropertyList>
 													<CurveUsageInfoList>
 														<VolumeDryUsage>
 															<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
-																<Curve Name="VolumeDry" ID="{4613ED8A-0FE9-44F0-9192-BE375AF00EA8}">
+																<Curve Name="VolumeDry" ID="{CD8DFF13-655A-49FC-A984-0D0C4767D9DE}">
 																	<PropertyList>
 																		<Property Name="Flags" Type="int32" Value="3"/>
 																	</PropertyList>
@@ -244,7 +248,7 @@
 																			<SegmentShape>Log3</SegmentShape>
 																		</Point>
 																		<Point>
-																			<XPos>1000</XPos>
+																			<XPos>2000</XPos>
 																			<YPos>-200</YPos>
 																			<Flags>37</Flags>
 																		</Point>
@@ -284,6 +288,7 @@
 									<ChildrenList>
 										<BlendContainer Name="thruster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" ShortID="493176318">
 											<PropertyList>
+												<Property Name="EnableAttenuation" Type="bool" Value="False"/>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
 														<Value>2.8</Value>
@@ -2535,15 +2540,17 @@
 											</ChildrenList>
 										</BlendContainer>
 									</ChildrenList>
+									<PositioningInfo>
+										<Panner Name="" ID="{445B7FB9-8B58-4FB3-A064-C753B668FFB8}"/>
+									</PositioningInfo>
 								</ActorMixer>
 								<Sound Name="reactor_type1" ID="{3AA3BAA8-A42D-4EAE-B9BD-BC64D22B2753}" ShortID="920506659">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="1"/>
 										<Property Name="OverrideEffect" Type="bool" Value="True"/>
-										<Property Name="OverridePositioning" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>-7.4</Value>
+												<Value>0.6</Value>
 											</ValueList>
 											<RTPCList>
 												<RTPC Name="" ID="{285F5B1C-FCC2-4201-9C09-78E410762672}" ShortID="728973403">
@@ -2559,8 +2566,13 @@
 														<PointList>
 															<Point>
 																<XPos>0</XPos>
-																<YPos>-200</YPos>
+																<YPos>-12.14909</YPos>
 																<Flags>5</Flags>
+															</Point>
+															<Point>
+																<XPos>1</XPos>
+																<YPos>-5</YPos>
+																<Flags>0</Flags>
 															</Point>
 															<Point>
 																<XPos>10</XPos>
@@ -2601,10 +2613,13 @@
 										<Reference Name="Attenuation">
 											<Custom>
 												<Attenuation Name="Attenuation (Custom)" ID="{6CBE652C-F9FF-4117-92B4-786A4F684E42}" ShortID="155989005">
+													<PropertyList>
+														<Property Name="RadiusMax" Type="Real64" Value="1000"/>
+													</PropertyList>
 													<CurveUsageInfoList>
 														<VolumeDryUsage>
 															<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
-																<Curve Name="VolumeDry" ID="{4F485AC2-4335-455A-9B5F-C879B6268D9B}">
+																<Curve Name="VolumeDry" ID="{4CC4FE0C-0142-4A61-B3C7-7E11EA93BCE9}">
 																	<PropertyList>
 																		<Property Name="Flags" Type="int32" Value="3"/>
 																	</PropertyList>
@@ -2615,7 +2630,7 @@
 																			<Flags>5</Flags>
 																		</Point>
 																		<Point>
-																			<XPos>100</XPos>
+																			<XPos>1000</XPos>
 																			<YPos>-200</YPos>
 																			<Flags>37</Flags>
 																		</Point>
@@ -2852,6 +2867,9 @@
 											<Language>SFX</Language>
 										</SourcePlugin>
 									</ChildrenList>
+									<PositioningInfo>
+										<Position Name="" ID="{F729D680-DCFC-4114-87D9-9CEFABB93FA1}"/>
+									</PositioningInfo>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{977AC916-0B90-426D-88DC-F48040D2DB92}" Platform="Linked"/>
 									</ActiveSourceList>

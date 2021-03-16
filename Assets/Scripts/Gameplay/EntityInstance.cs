@@ -464,6 +464,7 @@ public class EntityInstance : MonoBehaviour
         foreach (var r in _radiatorSfx)
         {
             r.Value.SetActive(r.Key.Item.Online.Value);
+            AkSoundEngine.SetObjectPosition(r.Value, r.Value.transform);
             AkSoundEngine.SetRTPCValue("performance_durability", r.Key.Item.DurabilityPerformance, r.Value);
             AkSoundEngine.SetRTPCValue("performance_thermal", r.Key.Item.ThermalPerformance, r.Value);
             AkSoundEngine.SetRTPCValue("performance_quality", r.Key.Item.ItemManager.CompoundQuality(r.Key.Item.EquippableItem), r.Value);
@@ -472,6 +473,7 @@ public class EntityInstance : MonoBehaviour
         if (_reactor.reactor != null)
         {
             _reactor.sfxSource.SetActive(_reactor.reactor.Item.Online.Value);
+            AkSoundEngine.SetObjectPosition(_reactor.sfxSource, _reactor.sfxSource.transform);
             AkSoundEngine.SetRTPCValue("reactor_load", _reactor.reactor.CurrentLoadRatio, _reactor.sfxSource);
             AkSoundEngine.SetRTPCValue("performance_durability", _reactor.reactor.Item.DurabilityPerformance, _reactor.sfxSource);
             AkSoundEngine.SetRTPCValue("performance_thermal", _reactor.reactor.Item.ThermalPerformance, _reactor.sfxSource);
