@@ -19,10 +19,14 @@ namespace AK
         static const AkUniqueID EQUIP = 2412608643U;
         static const AkUniqueID PICKUP = 3978245845U;
         static const AkUniqueID REACTOR_TYPE01 = 108700025U;
+        static const AkUniqueID REACTOR_TYPE01_STOP = 1226299660U;
         static const AkUniqueID TEST_SPASHIP_FULL_UNIT = 937212177U;
         static const AkUniqueID THRUSTER_LARGE = 2370087034U;
+        static const AkUniqueID THRUSTER_LARGE_STOP = 1006509321U;
         static const AkUniqueID THRUSTER_MEDIUM = 2528260676U;
+        static const AkUniqueID THRUSTER_MEDIUM_STOP = 2044992675U;
         static const AkUniqueID THRUSTER_SMALL = 1944968294U;
+        static const AkUniqueID THRUSTER_SMALL_STOP = 1154341749U;
         static const AkUniqueID UI_FAIL = 3050276906U;
         static const AkUniqueID UI_SUCCESS = 981465891U;
         static const AkUniqueID UNDOCK = 2826728501U;
@@ -36,7 +40,7 @@ namespace AK
     {
         static const AkUniqueID PERFORMANCE_DURABILITY = 965148665U;
         static const AkUniqueID PERFORMANCE_QUALITY = 875134311U;
-        static const AkUniqueID PERFORMANCE_TEMPERATURE = 2129580506U;
+        static const AkUniqueID PERFORMANCE_THERMAL = 3835443961U;
         static const AkUniqueID REACTOR_LOAD = 3735272724U;
         static const AkUniqueID SHIP_VELOCITY = 3579545711U;
         static const AkUniqueID THRUSTER_THROTTLE = 4116566921U;
@@ -45,12 +49,8 @@ namespace AK
     namespace BANKS
     {
         static const AkUniqueID INIT = 1355168291U;
-        static const AkUniqueID REACTOR_TYPE01 = 108700025U;
-        static const AkUniqueID THRUSTER_LARGE = 2370087034U;
-        static const AkUniqueID THRUSTER_MEDIUM = 2528260676U;
-        static const AkUniqueID THRUSTER_SMALL = 1944968294U;
+        static const AkUniqueID SHIP = 284967655U;
         static const AkUniqueID UI = 1551306167U;
-        static const AkUniqueID WORMHOLE = 1857378326U;
     } // namespace BANKS
 
     namespace BUSSES

@@ -300,6 +300,9 @@ public abstract class EquippableItemData : CraftedItemData
     [InspectableField, JsonProperty("resilience"), Key(18)]
     public float ThermalResilience = 1;
     
+    [InspectableField, JsonProperty("sfx"), Key(19)]
+    public string SoundEffectTrigger;
+    
     [IgnoreMember]
     public abstract HardpointType HardpointType { get; }
     
@@ -341,7 +344,7 @@ public abstract class EquippableItemData : CraftedItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GearData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpointType"), Key(19)]
+    [InspectableField, JsonProperty("hardpointType"), Key(20)]
     public HardpointType Hardpoint;
 
     [IgnoreMember] public override HardpointType HardpointType => Hardpoint;
@@ -350,7 +353,7 @@ public class GearData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class CargoBayData : EquippableItemData
 {
-    [InspectableField, JsonProperty("interiorShape"), Key(19)]
+    [InspectableField, JsonProperty("interiorShape"), Key(20)]
     public Shape InteriorShape;
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }
@@ -358,7 +361,7 @@ public class CargoBayData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class DockingBayData : CargoBayData
 {
-    [InspectableField, JsonProperty("maxSize"), Key(20)]
+    [InspectableField, JsonProperty("maxSize"), Key(21)]
     public int2 MaxSize;
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }
@@ -366,19 +369,19 @@ public class DockingBayData : CargoBayData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HullData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpoints"), Key(19)]  
+    [InspectableField, JsonProperty("hardpoints"), Key(20)]  
     public List<HardpointData> Hardpoints = new List<HardpointData>();
 
-    [InspectablePrefab, JsonProperty("prefab"), Key(20)]  
+    [InspectablePrefab, JsonProperty("prefab"), Key(21)]  
     public string Prefab;
 
-    [InspectableField, JsonProperty("hullType"), Key(21)]
+    [InspectableField, JsonProperty("hullType"), Key(22)]
     public HullType HullType;
 
-    [InspectableField, JsonProperty("gridOffset"), Key(22)]
+    [InspectableField, JsonProperty("gridOffset"), Key(23)]
     public float GridOffset;
 
-    [InspectableField, JsonProperty("armor"), Key(23)]
+    [InspectableField, JsonProperty("armor"), Key(24)]
     public float Armor;
 
     [IgnoreMember]

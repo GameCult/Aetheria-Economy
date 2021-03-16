@@ -907,7 +907,7 @@ public class EquippedItem
     public ReadOnlyReactiveProperty<bool> Online { get; }
     public ReactiveProperty<bool> Enabled { get; } = new ReactiveProperty<bool>(true);
     public ReadOnlyReactiveProperty<bool> Active { get; }
-
+    public ItemManager ItemManager { get; }
 
     public float Temperature
     {
@@ -919,20 +919,18 @@ public class EquippedItem
         }
     }
     
-
-    protected readonly ItemManager _itemManager;
     //private bool _online;
 
     public EquippedItem(ItemManager itemManager, EquippableItem item, int2 position, Entity entity)
     {
-        _itemManager = itemManager;
-        Data = _itemManager.GetData(item);
+        ItemManager = itemManager;
+        Data = ItemManager.GetData(item);
         Entity = entity;
         EquippableItem = item;
         Position = position;
         Conductivity = Data.Conductivity;
-        ThermalExponent = _itemManager.Evaluate(Data.HeatExponent, EquippableItem);
-        DurabilityExponent = _itemManager.Evaluate(Data.DurabilityExponent, EquippableItem);
+        ThermalExponent = ItemManager.Evaluate(Data.HeatExponent, EquippableItem);
+        DurabilityExponent = ItemManager.Evaluate(Data.DurabilityExponent, EquippableItem);
         var hullData = itemManager.GetData(entity.Hull);
         InsetShape = hullData.Shape.Inset(Data.Shape, position, item.Rotation);
 
@@ -971,7 +969,7 @@ public class EquippedItem
         var durability = 1f;
         if(stat.DurabilityDependent)
             durability = pow(DurabilityPerformance, DurabilityExponent);
-        var quality = pow(_itemManager.Quality(stat, EquippableItem), stat.QualityExponent);
+        var quality = pow(ItemManager.Quality(stat, EquippableItem), stat.QualityExponent);
 
         var scaleModifier = 1.0f;
         foreach (var value in stat.GetScaleModifiers(Entity).Values) scaleModifier = scaleModifier * value;
@@ -1001,8 +999,8 @@ public class EquippedItem
         DurabilityPerformance = EquippableItem.Durability / Data.Durability;
         var performanceThreshold = Entity.Settings.ShutdownPerformance;
         Wear = (1 - pow(Data.Performance(temp),
-                (1 - pow(_itemManager.CompoundQuality(EquippableItem), _itemManager.GameplaySettings.QualityWearExponent)) *
-                _itemManager.GameplaySettings.ThermalWearExponent)
+                (1 - pow(ItemManager.CompoundQuality(EquippableItem), ItemManager.GameplaySettings.QualityWearExponent)) *
+                ItemManager.GameplaySettings.ThermalWearExponent)
             ) * Data.Durability / Data.ThermalResilience;
         ThermalOnline.Value = ThermalPerformance > performanceThreshold || Entity.OverrideShutdown && EquippableItem.OverrideShutdown;
         DurabilityOnline.Value = EquippableItem.Durability > .01f;
@@ -1045,7 +1043,7 @@ public class EquippedCargoBay : EquippedItem
     
     public EquippedCargoBay(ItemManager itemManager, EquippableItem item, int2 position, Entity entity, string name) : base(itemManager, item, position, entity)
     {
-        Data = _itemManager.GetData(EquippableItem) as CargoBayData;
+        Data = ItemManager.GetData(EquippableItem) as CargoBayData;
         Name = name;
 
         Mass = Data.Mass;
@@ -1057,7 +1055,7 @@ public class EquippedCargoBay : EquippedItem
     // Check whether the given item will fit when its origin is placed at the given coordinate
     public bool ItemFits(ItemInstance item, int2 cargoCoord)
     {
-        var itemData = _itemManager.GetData(item);
+        var itemData = ItemManager.GetData(item);
         // Check every cell of the item's shape
         foreach (var i in itemData.Shape.Coordinates)
         {
@@ -1084,7 +1082,7 @@ public class EquippedCargoBay : EquippedItem
     public bool TryFindSpace(SimpleCommodity item, out List<int2> positions)
     {
         positions = new List<int2>();
-        var itemData = _itemManager.GetData(item);
+        var itemData = ItemManager.GetData(item);
         var remainingQuantity = item.Quantity;
         
         // For simple commodities, search for existing item stacks to add to
@@ -1170,7 +1168,7 @@ public class EquippedCargoBay : EquippedItem
     // Returns true only when ALL of the items are successfully stored
     public bool TryStore(SimpleCommodity item, int2 cargoCoord)
     {
-        var itemData = _itemManager.GetData(item);
+        var itemData = ItemManager.GetData(item);
         if (ItemFits(item, cargoCoord))
         {
             foreach (var p in itemData.Shape.Coordinates)
@@ -1203,8 +1201,8 @@ public class EquippedCargoBay : EquippedItem
         }
         else return false;
         
-        Mass += _itemManager.GetMass(item);
-        ThermalMass += _itemManager.GetThermalMass(item);
+        Mass += ItemManager.GetMass(item);
+        ThermalMass += ItemManager.GetThermalMass(item);
         return true;
     }
 
@@ -1216,7 +1214,7 @@ public class EquippedCargoBay : EquippedItem
     {
         if (!ItemFits(item, cargoCoord)) return false;
         
-        var itemData = _itemManager.GetData(item);
+        var itemData = ItemManager.GetData(item);
         foreach (var p in itemData.Shape.Coordinates)
         {
             var pos = cargoCoord + itemData.Shape.Rotate(p, item.Rotation);
@@ -1228,8 +1226,8 @@ public class EquippedCargoBay : EquippedItem
             ItemsOfType[item.Data] = new List<ItemInstance>();
         ItemsOfType[item.Data].Add(item);
         
-        Mass += _itemManager.GetMass(item);
-        ThermalMass += _itemManager.GetThermalMass(item);
+        Mass += ItemManager.GetMass(item);
+        ThermalMass += ItemManager.GetThermalMass(item);
 
         return true;
     }
@@ -1238,10 +1236,10 @@ public class EquippedCargoBay : EquippedItem
     {
         if (!Cargo.ContainsKey(item))
         {
-            _itemManager.Log("Attempted to remove item from a cargo bay that it wasn't even in! Something went wrong here!");
+            ItemManager.Log("Attempted to remove item from a cargo bay that it wasn't even in! Something went wrong here!");
             return null;
         }
-        var itemData = _itemManager.GetData(item);
+        var itemData = ItemManager.GetData(item);
         if(quantity >= item.Quantity)
         {
             foreach(var v in Data.InteriorShape.Coordinates)
@@ -1253,8 +1251,8 @@ public class EquippedCargoBay : EquippedItem
             if (!ItemsOfType[item.Data].Any())
                 ItemsOfType.Remove(item.Data);
 
-            Mass -= _itemManager.GetMass(item);
-            ThermalMass -= _itemManager.GetThermalMass(item);
+            Mass -= ItemManager.GetMass(item);
+            ThermalMass -= ItemManager.GetThermalMass(item);
 
             return item;
         }
@@ -1269,10 +1267,10 @@ public class EquippedCargoBay : EquippedItem
     {
         if (!Cargo.ContainsKey(item))
         {
-            _itemManager.Log("Attempted to remove item from a cargo bay that it wasn't even in! Something went wrong here!");
+            ItemManager.Log("Attempted to remove item from a cargo bay that it wasn't even in! Something went wrong here!");
             return;
         }
-        var itemData = _itemManager.GetData(item);
+        var itemData = ItemManager.GetData(item);
         foreach(var v in Data.InteriorShape.Coordinates)
             if (Occupancy[v.x, v.y] == item)
                 Occupancy[v.x, v.y] = null;
@@ -1282,8 +1280,8 @@ public class EquippedCargoBay : EquippedItem
         if (!ItemsOfType[item.Data].Any())
             ItemsOfType.Remove(item.Data);
         
-        Mass -= _itemManager.GetMass(item);
-        ThermalMass -= _itemManager.GetThermalMass(item);
+        Mass -= ItemManager.GetMass(item);
+        ThermalMass -= ItemManager.GetThermalMass(item);
     }
 
     public void Remove(ItemInstance item)
@@ -1298,7 +1296,7 @@ public class EquippedCargoBay : EquippedItem
     {
         if (!Cargo.ContainsKey(item))
         {
-            _itemManager.Log("Attempted to remove item from a cargo bay that it wasn't even in! Something went wrong here!");
+            ItemManager.Log("Attempted to remove item from a cargo bay that it wasn't even in! Something went wrong here!");
             return false;
         }
 
@@ -1316,7 +1314,7 @@ public class EquippedCargoBay : EquippedItem
     {
         if (!Cargo.ContainsKey(item))
         {
-            _itemManager.Log("Attempted to remove item from a cargo bay that it wasn't even in! Something went wrong here!");
+            ItemManager.Log("Attempted to remove item from a cargo bay that it wasn't even in! Something went wrong here!");
             return false;
         }
         
@@ -1333,7 +1331,7 @@ public class EquippedDockingBay : EquippedCargoBay
     private DockingBayData _data;
     public EquippedDockingBay(ItemManager itemManager, EquippableItem item, int2 position, Entity entity, string name) : base(itemManager, item, position, entity, name)
     {
-        _data = _itemManager.GetData(EquippableItem) as DockingBayData;
+        _data = ItemManager.GetData(EquippableItem) as DockingBayData;
     }
 }
 

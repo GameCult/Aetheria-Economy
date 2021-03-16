@@ -20,22 +20,25 @@
 						<Property Name="Max" Type="Real64" Value="1"/>
 					</PropertyList>
 				</GameParameter>
-				<GameParameter Name="performance_temperature" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}">
+				<GameParameter Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}">
 					<PropertyList>
-						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="InitialValue" Type="Real64" Value="1"/>
 						<Property Name="Max" Type="Real64" Value="1"/>
 					</PropertyList>
 				</GameParameter>
 				<GameParameter Name="reactor_load" ID="{FC156F43-A577-4DCB-B6E8-84E4072A38C9}">
 					<PropertyList>
 						<Property Name="InitialValue" Type="Real64" Value="1"/>
-						<Property Name="Max" Type="Real64" Value="1"/>
+						<Property Name="Max" Type="Real64" Value="10"/>
 					</PropertyList>
 				</GameParameter>
 				<GameParameter Name="thruster_throttle" ID="{2A6D7A97-7D45-4B6C-96EE-CCD56FA83773}">
 					<PropertyList>
-						<Property Name="InitialValue" Type="Real64" Value="1"/>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
 						<Property Name="Max" Type="Real64" Value="1"/>
+						<Property Name="RTPCRamping" Type="int16" Value="1"/>
+						<Property Name="SlewRateDown" Type="Real64" Value="2"/>
+						<Property Name="SlewRateUp" Type="Real64" Value="10"/>
 					</PropertyList>
 				</GameParameter>
 			</ChildrenList>

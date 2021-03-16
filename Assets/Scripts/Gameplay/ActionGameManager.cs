@@ -257,11 +257,12 @@ public class ActionGameManager : MonoBehaviour
                 {
                     if (length(wormhole.Position - CurrentEntity.Position.xz) < Settings.GameplaySettings.WormholeExitRadius)
                     {
+                        var oldZone = Zone;
                         ship.EnterWormhole(wormhole.Position);
                         ship.OnEnteredWormhole += () =>
                         {
                             GenerateLevel(wormhole.Target);
-                            ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First().Position,
+                            ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w=>w.Target==Zone.SectorZone).Position,
                                 Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
                             CurrentEntity.Zone = Zone;
                         };
@@ -477,10 +478,7 @@ public class ActionGameManager : MonoBehaviour
         if (CurrentEntity != null)
         {
             CurrentEntity.Deactivate();
-            if (CurrentEntity.Zone != null)
-            {
-                CurrentEntity.Zone.Entities.Remove(CurrentEntity);
-            }
+            CurrentEntity.Zone?.Entities.Remove(CurrentEntity);
             CurrentEntity.Zone = Zone;
             Zone.Entities.Add(CurrentEntity);
             CurrentEntity.Activate();

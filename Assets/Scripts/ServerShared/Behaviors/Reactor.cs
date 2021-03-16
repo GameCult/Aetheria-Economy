@@ -40,6 +40,8 @@ public class Reactor : IBehavior, IOrderedBehavior
     public ItemManager Context { get; }
     
     public float Draw { get; private set; }
+    
+    public float CurrentLoadRatio { get; private set; }
 
     public int Order => 100;
 
@@ -64,7 +66,6 @@ public class Reactor : IBehavior, IOrderedBehavior
             var capacitor = onRemove.Value.GetBehavior<Capacitor>();
             if (capacitor != null) _capacitors.Remove(capacitor);
         });
-        
     }
 
     public void ConsumeEnergy(float energy)
@@ -78,7 +79,8 @@ public class Reactor : IBehavior, IOrderedBehavior
         var efficiency = Item.Evaluate(_data.Efficiency);
 
         // This behavior executes last, so any components drawing power have already done so
-        
+
+        CurrentLoadRatio = Draw / max(charge, .01f);
         // Subtract the baseline charge from draw
         Draw -= charge;
         

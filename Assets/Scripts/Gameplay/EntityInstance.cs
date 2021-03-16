@@ -15,6 +15,7 @@ public class EntityInstance : MonoBehaviour
     public ShieldManager Shield;
     public HullCollider[] HullColliders;
 
+    public Transform[] EquipmentHardpoints;
     public RadiatorHardpoint[] RadiatorHardpoints;
     public ThrusterHardpoint[] ThrusterHardpoints;
     public WeaponHardpoint[] WeaponHardpoints;
@@ -35,6 +36,9 @@ public class EntityInstance : MonoBehaviour
     private bool _fadedElementsVisible = false;
     private bool _unfadedElementsVisible = false;
     private float _fadeTime;
+    
+    private (Reactor reactor, GameObject sfxSource) _reactor;
+    private Dictionary<Radiator, GameObject> _radiatorSfx = new Dictionary<Radiator, GameObject>();
     
     private static Dictionary<InstantWeaponData, InstantWeaponEffectManager> _instantWeaponManagers = new Dictionary<InstantWeaponData, InstantWeaponEffectManager>();
     private static Dictionary<ConstantWeaponData, ConstantWeaponEffectManager> _constantWeaponManagers = new Dictionary<ConstantWeaponData, ConstantWeaponEffectManager>();
@@ -193,6 +197,39 @@ public class EntityInstance : MonoBehaviour
                         _constantWeaponManagers[data].StartFiring(data, item, this, entity.Target.Value != null ? ZoneRenderer.EntityInstances[entity.Target.Value] : null);
                     constantWeapon.OnStopFiring += () => 
                         _constantWeaponManagers[data].StopFiring(item);
+                }
+            }
+            
+            var hp = Entity.Hardpoints[item.Position.x, item.Position.y];
+            if (hp != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger))
+            {
+                if(hp.Type == HardpointType.Radiator)
+                {
+                    var radiatorHardpoint = RadiatorHardpoints.FirstOrDefault(x => x.name == hp.Transform);
+                    if (radiatorHardpoint)
+                    {
+                        var rad = item.GetBehavior<Radiator>();
+                        if(rad != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger))
+                        {
+                            AkSoundEngine.RegisterGameObj(radiatorHardpoint.gameObject);
+                            AkSoundEngine.PostEvent(item.Data.SoundEffectTrigger, radiatorHardpoint.gameObject);
+                            _radiatorSfx[rad] = radiatorHardpoint.gameObject;
+                        }
+                    }
+                }
+                if(hp.Type == HardpointType.Reactor)
+                {
+                    var reactorHardpoint = EquipmentHardpoints.FirstOrDefault(x => x.name == hp.Transform);
+                    if (reactorHardpoint)
+                    {
+                        var reactor = item.GetBehavior<Reactor>();
+                        if( reactor != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger) )
+                        {
+                            AkSoundEngine.RegisterGameObj(reactorHardpoint.gameObject);
+                            AkSoundEngine.PostEvent(item.Data.SoundEffectTrigger, reactorHardpoint.gameObject);
+                            _reactor = (reactor, reactorHardpoint.gameObject);
+                        }
+                    }
                 }
             }
         }
@@ -423,6 +460,23 @@ public class EntityInstance : MonoBehaviour
                 foreach(var material in _fadeMaterials) material.SetFloat("_Fade", _fade);
             }
         }
+
+        foreach (var r in _radiatorSfx)
+        {
+            r.Value.SetActive(r.Key.Item.Online.Value);
+            AkSoundEngine.SetRTPCValue("performance_durability", r.Key.Item.DurabilityPerformance, r.Value);
+            AkSoundEngine.SetRTPCValue("performance_thermal", r.Key.Item.ThermalPerformance, r.Value);
+            AkSoundEngine.SetRTPCValue("performance_quality", r.Key.Item.ItemManager.CompoundQuality(r.Key.Item.EquippableItem), r.Value);
+        }
+
+        if (_reactor.reactor != null)
+        {
+            _reactor.sfxSource.SetActive(_reactor.reactor.Item.Online.Value);
+            AkSoundEngine.SetRTPCValue("reactor_load", _reactor.reactor.CurrentLoadRatio, _reactor.sfxSource);
+            AkSoundEngine.SetRTPCValue("performance_durability", _reactor.reactor.Item.DurabilityPerformance, _reactor.sfxSource);
+            AkSoundEngine.SetRTPCValue("performance_thermal", _reactor.reactor.Item.ThermalPerformance, _reactor.sfxSource);
+            AkSoundEngine.SetRTPCValue("performance_quality", _reactor.reactor.Item.ItemManager.CompoundQuality(_reactor.reactor.Item.EquippableItem), _reactor.sfxSource);
+        }
         
         foreach (var x in RadiatorMeshes)
         {
@@ -439,8 +493,19 @@ public class EntityInstance : MonoBehaviour
         transform.position = Entity.Position;
     }
 
-    private void OnDestroy()
+    public virtual void OnDestroy()
     {
+        foreach (var r in _radiatorSfx)
+        {
+            AkSoundEngine.PostEvent(r.Key.Item.Data.SoundEffectTrigger + "_stop", r.Value);
+            AkSoundEngine.UnregisterGameObj(r.Value);
+        }
+
+        if (_reactor.reactor != null)
+        {
+            AkSoundEngine.PostEvent(_reactor.reactor.Item.Data.SoundEffectTrigger + "_stop", _reactor.sfxSource);
+            AkSoundEngine.UnregisterGameObj(_reactor.sfxSource);
+        }
         foreach(var x in _subscriptions)
             x.Dispose();
     }

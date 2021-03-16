@@ -79,6 +79,62 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="reactor_type01_stop" ID="{ACD01933-582E-4049-B99E-8A202B5324F7}">
+					<ChildrenList>
+						<Action Name="" ID="{F057BAA2-A046-491E-80F8-73D4824BD6CE}" ShortID="883340450">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="reactor_type1" ID="{3AA3BAA8-A42D-4EAE-B9BD-BC64D22B2753}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="thruster_large_stop" ID="{14D488A4-89B5-4582-B79C-D6032306F95E}">
+					<ChildrenList>
+						<Action Name="" ID="{953BF9C4-D2A8-4B33-AF9D-BB70634938BB}" ShortID="48468523">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="thruster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="thruster_medium_stop" ID="{BDAB58BA-0893-41E9-B425-2FAA069219F0}">
+					<ChildrenList>
+						<Action Name="" ID="{86B85CF7-7CE2-4459-89E4-B5ADCB221E0D}" ShortID="873188303">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="thruster_medium" ID="{4261D6D4-BDC3-4423-BA6B-A92DE2181A21}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="thruster_small_stop" ID="{11565353-AF3C-4C1E-A6C1-0C06D05C834D}">
+					<ChildrenList>
+						<Action Name="" ID="{E12D089D-D6EB-47F6-8480-E0E977ED1C89}" ShortID="153875743">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="thruster_small" ID="{D355F5AE-732C-4638-988F-F1E01D1FC547}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

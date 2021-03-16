@@ -218,7 +218,62 @@
 							</ReferenceList>
 							<ChildrenList>
 								<ActorMixer Name="Thruster_type01" ID="{34E9BB36-7D92-4631-996F-92EE46968C71}" ShortID="423370694">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="OverridePositioning" Type="bool" Value="True"/>
+									</PropertyList>
 									<ReferenceList>
+										<Reference Name="Attenuation">
+											<Custom>
+												<Attenuation Name="Attenuation (Custom)" ID="{505F8F56-EE33-409A-A053-92E65207DEE5}" ShortID="1015097335">
+													<PropertyList>
+														<Property Name="RadiusMax" Type="Real64" Value="1000"/>
+													</PropertyList>
+													<CurveUsageInfoList>
+														<VolumeDryUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																<Curve Name="VolumeDry" ID="{4613ED8A-0FE9-44F0-9192-BE375AF00EA8}">
+																	<PropertyList>
+																		<Property Name="Flags" Type="int32" Value="3"/>
+																	</PropertyList>
+																	<PointList>
+																		<Point>
+																			<XPos>0</XPos>
+																			<YPos>0</YPos>
+																			<Flags>5</Flags>
+																			<SegmentShape>Log3</SegmentShape>
+																		</Point>
+																		<Point>
+																			<XPos>1000</XPos>
+																			<YPos>-200</YPos>
+																			<Flags>37</Flags>
+																		</Point>
+																	</PointList>
+																</Curve>
+															</CurveUsageInfo>
+														</VolumeDryUsage>
+														<VolumeWetGameUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+														</VolumeWetGameUsage>
+														<VolumeWetUserUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+														</VolumeWetUserUsage>
+														<LowPassFilterUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</LowPassFilterUsage>
+														<HighPassFilterUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</HighPassFilterUsage>
+														<SpreadUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</SpreadUsage>
+														<FocusUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</FocusUsage>
+													</CurveUsageInfoList>
+												</Attenuation>
+											</Custom>
+										</Reference>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
 										</Reference>
@@ -2483,7 +2538,9 @@
 								</ActorMixer>
 								<Sound Name="reactor_type1" ID="{3AA3BAA8-A42D-4EAE-B9BD-BC64D22B2753}" ShortID="920506659">
 									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="1"/>
 										<Property Name="OverrideEffect" Type="bool" Value="True"/>
+										<Property Name="OverridePositioning" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
 												<Value>-7.4</Value>
@@ -2506,7 +2563,7 @@
 																<Flags>5</Flags>
 															</Point>
 															<Point>
-																<XPos>1</XPos>
+																<XPos>10</XPos>
 																<YPos>0</YPos>
 																<Flags>37</Flags>
 															</Point>
@@ -2541,6 +2598,53 @@
 										</Property>
 									</PropertyList>
 									<ReferenceList>
+										<Reference Name="Attenuation">
+											<Custom>
+												<Attenuation Name="Attenuation (Custom)" ID="{6CBE652C-F9FF-4117-92B4-786A4F684E42}" ShortID="155989005">
+													<CurveUsageInfoList>
+														<VolumeDryUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="Custom">
+																<Curve Name="VolumeDry" ID="{4F485AC2-4335-455A-9B5F-C879B6268D9B}">
+																	<PropertyList>
+																		<Property Name="Flags" Type="int32" Value="3"/>
+																	</PropertyList>
+																	<PointList>
+																		<Point>
+																			<XPos>0</XPos>
+																			<YPos>0</YPos>
+																			<Flags>5</Flags>
+																		</Point>
+																		<Point>
+																			<XPos>100</XPos>
+																			<YPos>-200</YPos>
+																			<Flags>37</Flags>
+																		</Point>
+																	</PointList>
+																</Curve>
+															</CurveUsageInfo>
+														</VolumeDryUsage>
+														<VolumeWetGameUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+														</VolumeWetGameUsage>
+														<VolumeWetUserUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="UseVolumeDry"/>
+														</VolumeWetUserUsage>
+														<LowPassFilterUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</LowPassFilterUsage>
+														<HighPassFilterUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</HighPassFilterUsage>
+														<SpreadUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</SpreadUsage>
+														<FocusUsage>
+															<CurveUsageInfo Platform="Linked" CurveToUse="None"/>
+														</FocusUsage>
+													</CurveUsageInfoList>
+												</Attenuation>
+											</Custom>
+										</Reference>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
 										</Reference>
@@ -2553,7 +2657,7 @@
 																<RTPC Name="" ID="{7D6A4393-8439-4522-A5D9-55488FF03763}" ShortID="170283030">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="performance_temperature" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																			<ObjectRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{C17C2065-13F6-47CB-8996-E6D24AFBAAC1}">
@@ -2763,7 +2867,7 @@
 												<RTPC Name="" ID="{A0C08DE3-84E8-410D-9A58-D76EB7BDA9EF}" ShortID="28639104">
 													<ReferenceList>
 														<Reference Name="ControlInput">
-															<ObjectRef Name="performance_temperature" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+															<ObjectRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 														</Reference>
 													</ReferenceList>
 													<Curve Name="" ID="{EF9F1D10-1499-42F9-BE2B-65705CCF296E}">

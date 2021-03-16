@@ -88,7 +88,7 @@ Material:
     - _OcclusionStrength: 1
     - _OffsetSize: 0.5
     - _Parallax: 0.02
-    - _Radius: 3.6
+    - _Radius: 0.38
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
