@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Unity.Mathematics;
 using UnityEngine.UI;
@@ -13,7 +14,8 @@ using int2 = Unity.Mathematics.int2;
 
 public class MapRenderer : MonoBehaviour
 {
-    public Canvas Canvas;
+    public ActionGameManager GameManager;
+    public TextMeshProUGUI Title;
     public Camera MapOverlayCamera;
     public Camera GravityCamera;
     public Camera TintCamera;
@@ -41,6 +43,7 @@ public class MapRenderer : MonoBehaviour
         MapOverlayCamera.gameObject.SetActive(true);
         GravityCamera.gameObject.SetActive(true);
         TintCamera.gameObject.SetActive(true);
+        Title.text = $"Zone: {GameManager.Zone.SectorZone.Name}";
     }
 
     private void OnDisable()
@@ -75,8 +78,6 @@ public class MapRenderer : MonoBehaviour
                 _tintTexture.Release();
                 _tintTexture = null;
             }
-            var canvasCorners = new Vector3[4];
-            Canvas.GetComponent<RectTransform>().GetWorldCorners(canvasCorners);
             _mapTexture = new RenderTexture(_size.x, _size.y, 0, RenderTextureFormat.Default);
             MapOverlayCamera.targetTexture = _mapTexture;
             OverlayDisplay.material.SetTexture("_DetailTex", _mapTexture);

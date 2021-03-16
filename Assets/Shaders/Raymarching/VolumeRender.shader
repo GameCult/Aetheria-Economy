@@ -1,5 +1,5 @@
-Shader "VolSample/Volume Render" {
-	Properties{
+﻿Shader "VolSample/Volume Render" {
+	Properties {
 		_MainTex( "", 2D ) = "white" {}
 		_StepExponent("Step Exponent", float) = 1
 		_Surface("Surface", 2D) = "black" {}
@@ -39,8 +39,7 @@ Shader "VolSample/Volume Render" {
 	#include "UnityCG.cginc"
 	
 	// the number of volume samples to take
-	#define SAMPLE_COUNT 32
-    
+	#define SAMPLE_COUNT 256
 
 	// spacing between samples
 	//#define SAMPLE_PERIOD 16

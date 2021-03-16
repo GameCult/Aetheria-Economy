@@ -69,13 +69,13 @@ public class LockWeapon : InstantWeapon
             _target = Entity.Target.Value;
         }
 
-        if (Entity.Target.Value != null)
+        if (Entity.Target.Value != null && Entity.Target.Value.IsHostileTo(Entity))
         {
-            LockSpeed = Context.Evaluate(_data.LockSpeed, Item);
-            SensorImpact = Context.Evaluate(_data.SensorImpact, Item);
-            LockAngle = Context.Evaluate(_data.LockAngle, Item);
-            DirectionImpact = Context.Evaluate(_data.DirectionImpact, Item);
-            Decay = Context.Evaluate(_data.Decay, Item);
+            LockSpeed = Item.Evaluate(_data.LockSpeed);
+            SensorImpact = Item.Evaluate(_data.SensorImpact);
+            LockAngle = Item.Evaluate(_data.LockAngle);
+            DirectionImpact = Item.Evaluate(_data.DirectionImpact);
+            Decay = Item.Evaluate(_data.Decay);
 
             var degrees = acos(dot(normalize(Entity.Target.Value.Position - Entity.Position), normalize(Entity.LookDirection))) * 57.2958f;
             if (degrees < LockAngle)

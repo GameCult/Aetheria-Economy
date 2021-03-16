@@ -25,6 +25,7 @@ public class Ship : Entity
     // [IgnoreMember] public Targetable Target;
     public Entity HomeEntity;
     public float2 MovementDirection;
+    public bool IsPlayerShip;
 
     private HashSet<EquippedItem> _thrusterItems;
     private Thruster[] _allThrusters;
@@ -94,29 +95,41 @@ public class Ship : Entity
         _forwardThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Reversed));
         RecalculateForwardThrust();
-        
+        foreach (var thruster in _forwardThrusters) 
+            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateForwardThrust());
+
         _reverseThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.None));
         RecalculateReverseThrust();
+        foreach (var thruster in _reverseThrusters) 
+            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateReverseThrust());
         
         _rightThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.CounterClockwise));
         RecalculateRightStrafeThrust();
+        foreach (var thruster in _rightThrusters) 
+            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateRightStrafeThrust());
         
         _leftThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Clockwise));
         RecalculateLeftStrafeThrust();
+        foreach (var thruster in _leftThrusters) 
+            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateLeftStrafeThrust());
         
         _counterClockwiseThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Torque < -ItemManager.GameplaySettings.TorqueFloor));
         RecalculateCounterClockwiseTorque();
+        foreach (var thruster in _counterClockwiseThrusters) 
+            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateCounterClockwiseTorque());
         
         _clockwiseThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Torque > ItemManager.GameplaySettings.TorqueFloor));
         RecalculateClockwiseTorque();
+        foreach (var thruster in _clockwiseThrusters) 
+            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateClockwiseTorque());
     }
 
-    public Ship(ItemManager itemManager, Zone zone, EquippableItem hull) : base(itemManager, zone, hull)
+    public Ship(ItemManager itemManager, Zone zone, EquippableItem hull, EntitySettings settings) : base(itemManager, zone, hull, settings)
     {
         void CheckForThruster(EquippedItem item)
         {
@@ -138,8 +151,6 @@ public class Ship : Entity
         }
 
         ItemDamage.Select(x => x.item).Subscribe(CheckForThruster);
-        ItemOffline.Subscribe(CheckForThruster);
-        ItemOnline.Subscribe(CheckForThruster);
     }
 
     #region ThrustCalculation
@@ -149,7 +160,7 @@ public class Ship : Entity
         ForwardThrust = 0;
         foreach (var thruster in _forwardThrusters)
         {
-            if(thruster.Item.Online)
+            if(thruster.Item.Active.Value)
                 ForwardThrust += thruster.Thrust;
         }
     }
@@ -159,7 +170,7 @@ public class Ship : Entity
         ReverseThrust = 0;
         foreach (var thruster in _reverseThrusters)
         {
-            if(thruster.Item.Online)
+            if(thruster.Item.Active.Value)
                 ReverseThrust += thruster.Thrust;
         }
     }
@@ -170,7 +181,7 @@ public class Ship : Entity
         LeftStrafeTotalTorque = 0;
         foreach (var thruster in _leftThrusters)
         {
-            if(thruster.Item.Online)
+            if(thruster.Item.Active.Value)
             {
                 LeftStrafeThrust += thruster.Thrust;
                 LeftStrafeTotalTorque += thruster.Torque * thruster.Thrust;
@@ -187,7 +198,7 @@ public class Ship : Entity
         RightStrafeTotalTorque = 0;
         foreach (var thruster in _rightThrusters)
         {
-            if(thruster.Item.Online)
+            if(thruster.Item.Active.Value)
             {
                 RightStrafeThrust += thruster.Thrust;
                 RightStrafeTotalTorque += thruster.Torque * thruster.Thrust;
@@ -203,7 +214,7 @@ public class Ship : Entity
         ClockwiseTorque = 0;
         foreach (var thruster in _clockwiseThrusters)
         {
-            if(thruster.Item.Online)
+            if(thruster.Item.Active.Value)
                 ClockwiseTorque += thruster.Torque;
         }
     }
@@ -213,7 +224,7 @@ public class Ship : Entity
         CounterClockwiseTorque = 0;
         foreach (var thruster in _counterClockwiseThrusters)
         {
-            if(thruster.Item.Online)
+            if(thruster.Item.Active.Value)
                 CounterClockwiseTorque -= thruster.Torque;
         }
     }

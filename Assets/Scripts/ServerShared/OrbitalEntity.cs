@@ -13,7 +13,7 @@ public class OrbitalEntity : Entity
 {
     public Guid OrbitData;
     
-    public OrbitalEntity(ItemManager itemManager, Zone zone, EquippableItem hull, Guid orbit) : base(itemManager, zone, hull)
+    public OrbitalEntity(ItemManager itemManager, Zone zone, EquippableItem hull, Guid orbit, EntitySettings settings) : base(itemManager, zone, hull, settings)
     {
         OrbitData = orbit;
     }

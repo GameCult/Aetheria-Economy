@@ -272,7 +272,7 @@ public class TradeMenu : MonoBehaviour
             data => () =>
             {
                 if (data is HullData)
-                    return GameManager.PlayerEntities.Count(s => s.Hull.Data == data.ID && s.Parent == GameManager.DockedEntity).ToString();
+                    return GameManager.DockedEntity.Children.Count(s => s.Hull.Data == data.ID && s is Ship {IsPlayerShip: true}).ToString();
                 if(data is SimpleCommodityData)
                     return (_targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Cast<SimpleCommodity>().Sum(s=>s.Quantity) : 0).ToString();
                 return (_targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Count : 0).ToString();
@@ -280,7 +280,7 @@ public class TradeMenu : MonoBehaviour
             data =>
             {
                 if (data is HullData)
-                    return GameManager.PlayerEntities.Count(s => s.Hull.Data == data.ID && s.Parent == GameManager.DockedEntity);
+                    return GameManager.DockedEntity.Children.Count(s => s.Hull.Data == data.ID && s is Ship {IsPlayerShip: true});
                 if(data is SimpleCommodityData)
                     return _targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Cast<SimpleCommodity>().Sum(s=>s.Quantity) : 0;
                 return _targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Count : 0;
@@ -344,6 +344,7 @@ public class TradeMenu : MonoBehaviour
 
                                     Populate();
                                 });
+                                Dialog.MoveToCursor();
                             });
                         ContextMenu.Show();
                     }
@@ -355,13 +356,12 @@ public class TradeMenu : MonoBehaviour
     {
         if (data.Price < GameManager.Credits)
         {
-            var hull = GameManager.ItemManager.CreateInstance(data, .1f, 1) as EquippableItem;
+            var hull = GameManager.ItemManager.CreateInstance(data) as EquippableItem;
             Entity entity;
             if(data.HullType==HullType.Ship)
-                entity = new Ship(GameManager.ItemManager, GameManager.Zone, hull);
-            else entity = new OrbitalEntity(GameManager.ItemManager, GameManager.Zone, hull, Guid.Empty);
+                entity = new Ship(GameManager.ItemManager, GameManager.Zone, hull, GameManager.Settings.GameplaySettings.DefaultEntitySettings) {IsPlayerShip = true};
+            else entity = new OrbitalEntity(GameManager.ItemManager, GameManager.Zone, hull, Guid.Empty, GameManager.Settings.GameplaySettings.DefaultEntitySettings);
             entity.SetParent(GameManager.DockedEntity);
-            GameManager.PlayerEntities.Add(entity);
             
             GameManager.Credits -= data.Price;
         }
@@ -370,6 +370,7 @@ public class TradeMenu : MonoBehaviour
             Dialog.Clear();
             Dialog.Title.text = "Unable to buy: Insufficient Credits!";
             Dialog.Show();
+            Dialog.MoveToCursor();
         }
     }
 
@@ -379,7 +380,7 @@ public class TradeMenu : MonoBehaviour
         {
             if (data.Price < GameManager.Credits)
             {
-                if (_targetCargo.TryStore(GameManager.ItemManager.CreateInstance(data, .1f, 1)))
+                if (_targetCargo.TryStore(GameManager.ItemManager.CreateInstance(data)))
                 {
                     GameManager.Credits -= data.Price;
                 }
@@ -388,6 +389,7 @@ public class TradeMenu : MonoBehaviour
                     Dialog.Clear();
                     Dialog.Title.text = "Unable to buy: Insufficient Cargo Space!";
                     Dialog.Show();
+                    Dialog.MoveToCursor();
                     return;
                 }
             }
@@ -396,6 +398,7 @@ public class TradeMenu : MonoBehaviour
                 Dialog.Clear();
                 Dialog.Title.text = "Unable to buy: Insufficient Credits!";
                 Dialog.Show();
+                Dialog.MoveToCursor();
                 return;
             }
         }
@@ -421,6 +424,7 @@ public class TradeMenu : MonoBehaviour
                     Dialog.Clear();
                     Dialog.Title.text = "Unable to buy: Insufficient Cargo Space!";
                     Dialog.Show();
+                    Dialog.MoveToCursor();
                     return;
                 }
             }
@@ -429,6 +433,7 @@ public class TradeMenu : MonoBehaviour
                 Dialog.Clear();
                 Dialog.Title.text = "Unable to buy: Insufficient Credits!";
                 Dialog.Show();
+                Dialog.MoveToCursor();
                 return;
             }
 
@@ -448,7 +453,7 @@ public class TradeMenu : MonoBehaviour
                         _targetCargo = GameManager.DockingBay;
                         TargetCargoLabel.text = "Docking Bay";
                     });
-            foreach (var ship in GameManager.CurrentShip.Parent.Children.Where(GameManager.PlayerEntities.Contains))
+            foreach (var ship in GameManager.CurrentEntity.Parent.Children.Where(e => e is Ship {IsPlayerShip: true}))
             {
                 foreach (var bay in ship.CargoBays.Select((bay, index) => (bay, index)))
                     ContextMenu.AddOption($"{ship.Name} Bay {bay.index}",

@@ -32,28 +32,14 @@ namespace AK
         static const AkUniqueID WORMHOLE_TRAVEL_LOOP = 3842220822U;
     } // namespace EVENTS
 
-    namespace SWITCHES
-    {
-        namespace TECHNOLOGY_STATE
-        {
-            static const AkUniqueID GROUP = 3657230105U;
-
-            namespace SWITCH
-            {
-                static const AkUniqueID LOW_ENERGY = 2073286940U;
-                static const AkUniqueID OPTIMAL = 4124647433U;
-                static const AkUniqueID OVERHEAT = 916477217U;
-            } // namespace SWITCH
-        } // namespace TECHNOLOGY_STATE
-
-    } // namespace SWITCHES
-
     namespace GAME_PARAMETERS
     {
-        static const AkUniqueID REACTOR_DURAVILITY = 2187658529U;
-        static const AkUniqueID REACTOR_TEMP = 1438681362U;
-        static const AkUniqueID SPACESHIP_VELOCITY = 3387986107U;
-        static const AkUniqueID THRUSTER_DURABILITY = 652189180U;
+        static const AkUniqueID PERFORMANCE_DURABILITY = 965148665U;
+        static const AkUniqueID PERFORMANCE_QUALITY = 875134311U;
+        static const AkUniqueID PERFORMANCE_TEMPERATURE = 2129580506U;
+        static const AkUniqueID REACTOR_LOAD = 3735272724U;
+        static const AkUniqueID SHIP_VELOCITY = 3579545711U;
+        static const AkUniqueID THRUSTER_THROTTLE = 4116566921U;
     } // namespace GAME_PARAMETERS
 
     namespace BANKS

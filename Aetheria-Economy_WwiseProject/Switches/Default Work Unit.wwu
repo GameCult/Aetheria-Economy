@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{4DA45702-4508-4AEC-8591-074957EEB14E}" SchemaVersion="97">
 	<Switches>
-		<WorkUnit Name="Default Work Unit" ID="{4DA45702-4508-4AEC-8591-074957EEB14E}" PersistMode="Standalone">
-			<ChildrenList>
-				<SwitchGroup Name="technology_state" ID="{D11A81AE-1DE3-4F53-9AB9-D1647FDA0058}">
-					<ChildrenList>
-						<Switch Name="optimal" ID="{DFA09B78-7841-4885-92C7-F829AA84219F}"/>
-						<Switch Name="overheat" ID="{F2C51EE7-9A91-4EC9-B76A-2A0B7253F02D}"/>
-						<Switch Name="low_energy" ID="{A88865F6-AA65-4D1F-8EB3-72E6E88A1BD0}"/>
-					</ChildrenList>
-				</SwitchGroup>
-			</ChildrenList>
-		</WorkUnit>
+		<WorkUnit Name="Default Work Unit" ID="{4DA45702-4508-4AEC-8591-074957EEB14E}" PersistMode="Standalone"/>
 	</Switches>
 </WwiseDocument>

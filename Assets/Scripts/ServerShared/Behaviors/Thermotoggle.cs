@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-22)]
 public class ThermotoggleData : BehaviorData
 {
-    [TemperatureInspectable, JsonProperty("targetTemp"), Key(1)]
+    [InspectableTemperature, JsonProperty("targetTemp"), Key(1)]
     public float TargetTemperature;
     
     [InspectableField, JsonProperty("highPass"), Key(2)]

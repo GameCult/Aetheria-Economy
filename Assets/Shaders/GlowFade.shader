@@ -67,7 +67,7 @@ Shader "Aetheria/GlowFade"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            half f = tex2D (_FadeTex, IN.uv_FadeTex).r + (1-_Fade);
+            half f = tex2D (_FadeTex, IN.uv_FadeTex).r + (1-_FadeEdge-_Fade);
             half3 e = _EdgeColor * smoothstep(1 - _FadeEdge, 1, f);
             o.Emission = e;
             // Apply screen space dithering

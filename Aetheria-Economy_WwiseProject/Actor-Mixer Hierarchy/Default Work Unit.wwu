@@ -227,12 +227,38 @@
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<BlendContainer Name="thuster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" ShortID="493176318">
+										<BlendContainer Name="thruster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" ShortID="493176318">
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
 														<Value>2.8</Value>
 													</ValueList>
+													<RTPCList>
+														<RTPC Name="" ID="{F597BEE0-D17B-4E58-90FB-65895394D5AF}" ShortID="255392150">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="thruster_throttle" ID="{2A6D7A97-7D45-4B6C-96EE-CCD56FA83773}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{06F2C7D9-7CA3-43ED-8215-411E12D779FF}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="3"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>-200</YPos>
+																		<Flags>5</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>0</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
 												</Property>
 											</PropertyList>
 											<ReferenceList>
@@ -254,7 +280,7 @@
 																<RTPC Name="" ID="{E0A46996-5A35-4EC4-AFFF-631C73647473}" ShortID="93136578">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{48B6A080-1659-4FD5-9712-9977A28EAF4B}">
@@ -304,7 +330,7 @@
 																				<RTPC Name="" ID="{9A2D3FA7-B8C0-4FFD-8DA0-AA960C063F40}" ShortID="63256601">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{8E0A55B8-DAED-415D-BE08-E0E7FC8E33A8}">
@@ -395,7 +421,7 @@
 																				<RTPC Name="" ID="{8A38F3FC-886A-468F-B8CA-A6B85B40BFFD}" ShortID="954779871">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{F1E77763-0571-442B-8DDA-A472CA61658F}">
@@ -479,7 +505,7 @@
 																				<RTPC Name="" ID="{189F2A82-9BE5-4D25-B9EA-B4C5B9E7276F}" ShortID="264674396">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{983BA66C-041B-4431-BCF1-CE9E104C64F4}">
@@ -563,7 +589,7 @@
 																				<RTPC Name="" ID="{3014B4C6-9A52-4CAF-B8C2-8598F53AC68B}" ShortID="1021684782">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{CD049BDC-B84B-4CAE-8109-38D064EE8FAC}">
@@ -640,7 +666,7 @@
 																<RTPC Name="" ID="{CB4A7608-7236-40F6-A286-86B69EEE18E5}" ShortID="949541124">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{E8B0C29C-2ADA-47FE-B7F9-4EE0303050B5}">
@@ -680,7 +706,7 @@
 																		<RTPC Name="" ID="{802959E3-8480-41DF-8278-18A4E9E833C8}" ShortID="875865075">
 																			<ReferenceList>
 																				<Reference Name="ControlInput">
-																					<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																					<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																				</Reference>
 																			</ReferenceList>
 																			<Curve Name="" ID="{16AB408B-8B4D-4940-A20F-291CAC85DABA}">
@@ -713,7 +739,7 @@
 																		<RTPC Name="" ID="{DEB9AC09-ECD8-4ECB-9F84-1739C2C6C3EC}" ShortID="496088037">
 																			<ReferenceList>
 																				<Reference Name="ControlInput">
-																					<ObjectRef Name="thruster_durability" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																					<ObjectRef Name="performance_quality" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																				</Reference>
 																			</ReferenceList>
 																			<Curve Name="" ID="{E0CCEB62-F358-4A82-80F5-4FDFAF497E00}">
@@ -741,7 +767,7 @@
 																		<RTPC Name="" ID="{3BCB41E5-B665-4F0F-BB83-0016EA1AF5FF}" ShortID="1052815589">
 																			<ReferenceList>
 																				<Reference Name="ControlInput">
-																					<ObjectRef Name="thruster_durability" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																					<ObjectRef Name="performance_quality" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																				</Reference>
 																			</ReferenceList>
 																			<Curve Name="" ID="{AF598AB2-6696-48C6-B6EC-24F99D15B774}">
@@ -847,7 +873,7 @@
 																<RTPC Name="" ID="{C1364214-AA22-4D94-A358-28605E94DE21}" ShortID="69038405">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{3D2A9FAE-D50D-4E1A-A697-9A30A3D99595}">
@@ -857,7 +883,7 @@
 																		<PointList>
 																			<Point>
 																				<XPos>0</XPos>
-																				<YPos>-6.69195</YPos>
+																				<YPos>-6.46329</YPos>
 																				<Flags>21</Flags>
 																			</Point>
 																			<Point>
@@ -929,7 +955,7 @@
 																<RTPC Name="" ID="{2729F136-5012-4C9F-AF13-2D8CA12EFA2D}" ShortID="521954">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{8EEE1CC7-45F4-434E-B671-26B24001AB0A}">
@@ -989,12 +1015,38 @@
 												</Sound>
 											</ChildrenList>
 										</BlendContainer>
-										<BlendContainer Name="thuster_medium" ID="{4261D6D4-BDC3-4423-BA6B-A92DE2181A21}" ShortID="616815775">
+										<BlendContainer Name="thruster_medium" ID="{4261D6D4-BDC3-4423-BA6B-A92DE2181A21}" ShortID="616815775">
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
 														<Value>2.8</Value>
 													</ValueList>
+													<RTPCList>
+														<RTPC Name="" ID="{687A6838-9952-4B80-A27C-895464A198BA}" ShortID="811857653">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="thruster_throttle" ID="{2A6D7A97-7D45-4B6C-96EE-CCD56FA83773}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{285BF1D9-532D-41DF-AF11-303CB85DE515}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="3"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>-200</YPos>
+																		<Flags>5</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>0</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
 												</Property>
 											</PropertyList>
 											<ReferenceList>
@@ -1016,7 +1068,7 @@
 																<RTPC Name="" ID="{174E05D0-D7D2-47EB-A26D-A7B7887F8524}" ShortID="275918339">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{2B32A404-8D6F-4D9B-A1B2-2E27F71A96B6}">
@@ -1066,7 +1118,7 @@
 																				<RTPC Name="" ID="{3B88AC91-58D1-4EE4-A9D3-4EAA5E197661}" ShortID="42809294">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{CD3821D0-DFC7-4BD6-855E-B1FC67539CD6}">
@@ -1157,7 +1209,7 @@
 																				<RTPC Name="" ID="{84F139E7-B484-47EA-971B-FFEA2B84C408}" ShortID="861046683">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{1FFA3AD0-41BC-4862-9820-A1451266A333}">
@@ -1241,7 +1293,7 @@
 																				<RTPC Name="" ID="{02E9C6A7-36AB-414B-B900-DB8265F5688A}" ShortID="270629260">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{87CDE0AD-AE08-44CD-B9B1-CB5272FAA04C}">
@@ -1325,7 +1377,7 @@
 																				<RTPC Name="" ID="{FE81C4A2-F6DB-4D94-9D53-B4A36C8913B8}" ShortID="495253853">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{BAC81F20-A32F-4817-9597-D863537048F5}">
@@ -1402,7 +1454,7 @@
 																<RTPC Name="" ID="{08567863-0FD2-4576-A2AF-14AD95CCD689}" ShortID="644736064">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{B115E3EB-0CBC-465C-BF54-D32816277906}">
@@ -1443,7 +1495,7 @@
 																		<RTPC Name="" ID="{1EF2CA09-7811-4E16-9DE0-2A4FC611CB8E}" ShortID="107590825">
 																			<ReferenceList>
 																				<Reference Name="ControlInput">
-																					<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																					<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																				</Reference>
 																			</ReferenceList>
 																			<Curve Name="" ID="{8145E605-8950-489A-9EDD-AE413777FEB2}">
@@ -1553,7 +1605,30 @@
 																<Value>3.6</Value>
 															</ValueList>
 															<RTPCList>
-																<RTPC Name="" ID="{AA52CC13-F93D-4D11-B911-A3E47301D92F}" ShortID="197859904"/>
+																<RTPC Name="" ID="{AA52CC13-F93D-4D11-B911-A3E47301D92F}" ShortID="197859904">
+																	<ReferenceList>
+																		<Reference Name="ControlInput">
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																		</Reference>
+																	</ReferenceList>
+																	<Curve Name="" ID="{28F5A457-F090-4BDD-AF68-FE0F2F69F331}">
+																		<PropertyList>
+																			<Property Name="Flags" Type="int32" Value="3"/>
+																		</PropertyList>
+																		<PointList>
+																			<Point>
+																				<XPos>0</XPos>
+																				<YPos>-5.70471</YPos>
+																				<Flags>21</Flags>
+																			</Point>
+																			<Point>
+																				<XPos>1</XPos>
+																				<YPos>-22.60668</YPos>
+																				<Flags>53</Flags>
+																			</Point>
+																		</PointList>
+																	</Curve>
+																</RTPC>
 															</RTPCList>
 														</Property>
 													</PropertyList>
@@ -1613,7 +1688,7 @@
 																<RTPC Name="" ID="{88DCD405-16C3-49AD-AB72-4174E1744042}" ShortID="513517491">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{F55A4534-62B0-46B0-94B8-B1D41089DC03}">
@@ -1673,12 +1748,38 @@
 												</Sound>
 											</ChildrenList>
 										</BlendContainer>
-										<BlendContainer Name="thuster_small" ID="{D355F5AE-732C-4638-988F-F1E01D1FC547}" ShortID="429644083">
+										<BlendContainer Name="thruster_small" ID="{D355F5AE-732C-4638-988F-F1E01D1FC547}" ShortID="429644083">
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
 														<Value>2.8</Value>
 													</ValueList>
+													<RTPCList>
+														<RTPC Name="" ID="{CC48B971-27C6-4D6A-BF2C-1BC053F982E9}" ShortID="229417677">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="thruster_throttle" ID="{2A6D7A97-7D45-4B6C-96EE-CCD56FA83773}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{F028B2CB-9538-4B3D-98BF-9ED3F87C0EC1}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="3"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>-200</YPos>
+																		<Flags>5</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>0</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
 												</Property>
 											</PropertyList>
 											<ReferenceList>
@@ -1700,7 +1801,7 @@
 																<RTPC Name="" ID="{9D1FF783-7872-419C-8DA5-F4C2F916DF65}" ShortID="888450512">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{826A252B-11C8-4F3C-82D6-7CBC3AD4823B}">
@@ -1750,7 +1851,7 @@
 																				<RTPC Name="" ID="{04D07FBA-774D-401F-89D1-1ABDB85A7D1D}" ShortID="912690334">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{0B4303E4-B0A3-4858-9623-A27AACC49E2B}">
@@ -1841,7 +1942,7 @@
 																				<RTPC Name="" ID="{FAEEC911-6DC7-4452-82B2-B8F296B67A84}" ShortID="84816995">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{25E569A0-0D4B-4C7E-9159-517675CAB73B}">
@@ -1925,7 +2026,7 @@
 																				<RTPC Name="" ID="{53B947B6-09EA-4669-B4B7-C10F5B714B9E}" ShortID="909753075">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{00CFA9A8-B42A-4E4B-91E1-3C834EFC8861}">
@@ -2009,7 +2110,7 @@
 																				<RTPC Name="" ID="{7C805ED9-F709-41D8-9B42-0EDF1FD5BC6C}" ShortID="568868020">
 																					<ReferenceList>
 																						<Reference Name="ControlInput">
-																							<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																							<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																						</Reference>
 																					</ReferenceList>
 																					<Curve Name="" ID="{7C407FF4-0B15-4F78-BC5D-09394D44632A}">
@@ -2086,7 +2187,7 @@
 																<RTPC Name="" ID="{3EA1E80A-36B3-4555-8248-98F0B380AD67}" ShortID="499842614">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{E1384880-3C21-4C68-8256-5412D7445606}">
@@ -2127,7 +2228,7 @@
 																		<RTPC Name="" ID="{83243778-02F4-46C3-B9F4-FE5A5098DFD2}" ShortID="290592907">
 																			<ReferenceList>
 																				<Reference Name="ControlInput">
-																					<ObjectRef Name="spaceship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																					<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																				</Reference>
 																			</ReferenceList>
 																			<Curve Name="" ID="{3C7B4220-7775-48FE-A6E9-B188EC0C6370}">
@@ -2240,7 +2341,7 @@
 																<RTPC Name="" ID="{4D129F2D-442B-42CE-AE96-A6743D974FCE}" ShortID="359611012">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{51770DD6-B9A9-4BC6-9B7B-7717DB0C791A}">
@@ -2318,7 +2419,7 @@
 																<RTPC Name="" ID="{3A7E216C-54C8-4BAC-A0CC-582EB00B7398}" ShortID="285685333">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="New Modulator LFO_low_dur" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{9B6E5752-91B3-4923-A7E6-783C0B52A8A2}">
@@ -2388,6 +2489,30 @@
 												<Value>-7.4</Value>
 											</ValueList>
 											<RTPCList>
+												<RTPC Name="" ID="{285F5B1C-FCC2-4201-9C09-78E410762672}" ShortID="728973403">
+													<ReferenceList>
+														<Reference Name="ControlInput">
+															<ObjectRef Name="reactor_load" ID="{FC156F43-A577-4DCB-B6E8-84E4072A38C9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+														</Reference>
+													</ReferenceList>
+													<Curve Name="" ID="{7C4719DE-F2E6-42B7-8B67-B814C4AA23B3}">
+														<PropertyList>
+															<Property Name="Flags" Type="int32" Value="3"/>
+														</PropertyList>
+														<PointList>
+															<Point>
+																<XPos>0</XPos>
+																<YPos>-200</YPos>
+																<Flags>5</Flags>
+															</Point>
+															<Point>
+																<XPos>1</XPos>
+																<YPos>0</YPos>
+																<Flags>37</Flags>
+															</Point>
+														</PointList>
+													</Curve>
+												</RTPC>
 												<RTPC Name="" ID="{6C7DBBD6-6DBB-4036-BCEC-5199659BA2C0}" ShortID="483932196">
 													<ReferenceList>
 														<Reference Name="ControlInput">
@@ -2428,7 +2553,7 @@
 																<RTPC Name="" ID="{7D6A4393-8439-4522-A5D9-55488FF03763}" ShortID="170283030">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="reactor_temp" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																			<ObjectRef Name="performance_temperature" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{C17C2065-13F6-47CB-8996-E6D24AFBAAC1}">
@@ -2438,7 +2563,7 @@
 																		<PointList>
 																			<Point>
 																				<XPos>0</XPos>
-																				<YPos>-0</YPos>
+																				<YPos>0</YPos>
 																				<Flags>5</Flags>
 																			</Point>
 																			<Point>
@@ -2474,7 +2599,7 @@
 														<RTPC Name="" ID="{5CC51E14-F18B-4C04-B570-F0CB2C6FBA5F}" ShortID="813739990">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="reactor_duravility" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{C77C2589-C0D1-4A70-941E-0F7A71687972}">
@@ -2504,7 +2629,7 @@
 														<RTPC Name="" ID="{76A17E2C-2568-492F-AE05-74DE86233AD6}" ShortID="499354992">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="reactor_duravility" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{55BA5C4F-DC7C-4137-8CC8-A134C2D19DBC}">
@@ -2587,7 +2712,7 @@
 														<RTPC Name="" ID="{CCB18F90-FA5E-43D9-92A1-88613DE3B4D8}" ShortID="637046889">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="reactor_duravility" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{0A28E75C-E26B-4930-A67C-0052BE284C56}">
@@ -2638,7 +2763,7 @@
 												<RTPC Name="" ID="{A0C08DE3-84E8-410D-9A58-D76EB7BDA9EF}" ShortID="28639104">
 													<ReferenceList>
 														<Reference Name="ControlInput">
-															<ObjectRef Name="reactor_duravility" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+															<ObjectRef Name="performance_temperature" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 														</Reference>
 													</ReferenceList>
 													<Curve Name="" ID="{EF9F1D10-1499-42F9-BE2B-65705CCF296E}">
@@ -2650,12 +2775,6 @@
 																<XPos>0</XPos>
 																<YPos>-4.88957</YPos>
 																<Flags>5</Flags>
-															</Point>
-															<Point>
-																<XPos>0.30069</XPos>
-																<YPos>-12.2097</YPos>
-																<Flags>0</Flags>
-																<SegmentShape>Log1</SegmentShape>
 															</Point>
 															<Point>
 																<XPos>0.49826</XPos>
@@ -2682,7 +2801,7 @@
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Aetheia_Overheat_Alarm" ID="{62246652-9231-4A63-8732-A26E011D8D3F}">
+										<AudioFileSource Name="Reactor_Overheat" ID="{62246652-9231-4A63-8732-A26E011D8D3F}">
 											<Language>SFX</Language>
 											<AudioFile>Aetheia_Overheat_Alarm.wav</AudioFile>
 											<MediaIDList>
@@ -2691,7 +2810,7 @@
 										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Aetheia_Overheat_Alarm" ID="{62246652-9231-4A63-8732-A26E011D8D3F}" Platform="Linked"/>
+										<ActiveSource Name="Reactor_Overheat" ID="{62246652-9231-4A63-8732-A26E011D8D3F}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
 							</ChildrenList>

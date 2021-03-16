@@ -51,6 +51,9 @@ public class RuntimeInspectable : Attribute { }
 [AttributeUsage(AttributeTargets.Class)]
 public class InspectableAttribute : Attribute { }
 
+[AttributeUsage(AttributeTargets.Class)]
+public class ExternalEntryAttribute : Attribute { }
+
 public class InspectableFieldAttribute : Attribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
@@ -74,10 +77,16 @@ public class InspectablePrefabAttribute : InspectableFieldAttribute { }
 public class InspectableTextureAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
-public class TemperatureInspectableAttribute : InspectableFieldAttribute { }
+public class InspectableTextAssetAttribute : InspectableFieldAttribute { }
+
+[AttributeUsage(AttributeTargets.Field)]
+public class InspectableTemperatureAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
 public class InspectableAnimationCurveAttribute : InspectableFieldAttribute { }
+
+[AttributeUsage(AttributeTargets.Field)]
+public class InspectableColorAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
 public class InspectableDatabaseLinkAttribute : InspectableFieldAttribute
@@ -96,6 +105,18 @@ public class RangedFloatInspectableAttribute : InspectableFieldAttribute
     public readonly float Min, Max;
 
     public RangedFloatInspectableAttribute(float min, float max)
+    {
+        Min = min;
+        Max = max;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Field)]
+public class RangedFloatAttribute : Attribute
+{
+    public readonly float Min, Max;
+
+    public RangedFloatAttribute(float min, float max)
     {
         Min = min;
         Max = max;

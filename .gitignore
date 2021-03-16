@@ -11,6 +11,10 @@
 /[Mm]emoryCaptures/
 /Recordings/
 
+# Wwise folders
+/Aetheria-Economy_WwiseProject/.cache
+/Aetheria-Economy_WwiseProject/GeneratedSoundBanks
+
 # Wwise profiling sessions
 *.prof
 
@@ -52,6 +56,10 @@ Assembly-CSharp-Editor.csproj
 Assembly-CSharp-firstpass.csproj
 Economy.Shared.Unity.csproj
 MessagePack.csproj
+Substance.EditorHelper.csproj
+Substance.Platform.csproj
+UniRx.csproj
+Assembly-CSharp-Editor-firstpass.csproj
 
 # Unity3D generated meta files
 *.pidb.meta

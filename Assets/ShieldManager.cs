@@ -30,7 +30,7 @@ public class ShieldManager : MonoBehaviour
 
         var v1np = PostCollisionVelocity(v1n, Entity.Mass, v2n, otherShield.Entity.Mass);
         Entity.Velocity = tangent * v1t + normal * v1np;
-        if(Entity.Shield != null && Entity.Shield.Item.Active) ShowHit(contact.point, CollisionHitDuration);
+        if(Entity.Shield != null && Entity.Shield.Item.Active.Value) ShowHit(contact.point, CollisionHitDuration);
     }
 
     private float PostCollisionVelocity(float v1, float m1, float v2, float m2)

@@ -33,7 +33,7 @@ public class HitscanEffect : MonoBehaviour
             var shield = hit.collider.GetComponent<ShieldManager>();
             if (shield)
             {
-                if (!(shield.Entity.Shield != null && shield.Entity.Shield.Item.Active && shield.Entity.Shield.CanTakeHit(DamageType, Damage))) continue;
+                if (!(shield.Entity.Shield != null && shield.Entity.Shield.Item.Active.Value && shield.Entity.Shield.CanTakeHit(DamageType, Damage))) continue;
                 if (shield.Entity != SourceEntity)
                 {
                     shield.Entity.Shield.TakeHit(DamageType, Damage);
@@ -47,7 +47,6 @@ public class HitscanEffect : MonoBehaviour
                 if (hull.Entity != SourceEntity)
                 {
                     hull.SendHit(Damage, Penetration, Spread, DamageType, SourceEntity, hit.textureCoord, transform.forward);
-                    transform.position = hit.point;
                     hitFound = true;
                 }
             }

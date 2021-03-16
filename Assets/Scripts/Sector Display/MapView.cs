@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class MapView : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class MapView : MonoBehaviour
     public Camera Minimap;
     public MeshRenderer GravityRenderer;
     public float ZoomSpeed;
-    public SectorRenderer SectorRenderer;
+    [FormerlySerializedAs("SectorRenderer")] public ZoneRenderer ZoneRenderer;
 
     private Transform _minimapTransform;
     private CopyTransform _minimapCopyTransform;
@@ -57,7 +58,7 @@ public class MapView : MonoBehaviour
 
     void SetZoom()
     {
-        SectorRenderer.ViewDistance = _viewDistance * _aspectRatio;
+        ZoneRenderer.ViewDistance = _viewDistance * _aspectRatio;
         Minimap.orthographicSize = MinimapGravity.orthographicSize = _viewDistance;
         _gravityRendererTransform.localScale = new Vector3(_viewDistance*_aspectRatio*2, _viewDistance*2, 1);
     }

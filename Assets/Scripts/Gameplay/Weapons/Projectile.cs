@@ -61,14 +61,14 @@ public class Projectile : MonoBehaviour
                 var hull = hit.collider.GetComponent<HullCollider>();
                 if (shield)
                 {
-                    if (!(shield.Entity.Shield != null && shield.Entity.Shield.Item.Active && shield.Entity.Shield.CanTakeHit(DamageType, Damage))) continue;
+                    if (!(shield.Entity.Shield != null && shield.Entity.Shield.Item.Active.Value && shield.Entity.Shield.CanTakeHit(DamageType, Damage))) continue;
                     if (shield.Entity != SourceEntity)
                     {
                         shield.Entity.Shield.TakeHit(DamageType, Damage*DirectHitDamageMultiplier);
                         shield.ShowHit(hit.point, sqrt(Damage * DirectHitDamageMultiplier));
                     }
                 }
-                else if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
+                else if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active.Value && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
                 {
                     if (hull.Entity != SourceEntity)
                     {

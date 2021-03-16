@@ -27,8 +27,8 @@ public interface INamedEntry
  Union(6, typeof(EquippableItem)),
  Union(7, typeof(BlueprintData)),
  Union(8, typeof(GalaxyMapLayerData)),
- // Union(9, typeof(GlobalData)), 
- Union(10, typeof(ZoneData)), 
+ Union(9, typeof(NameFile)), 
+ //Union(10, typeof(ZoneData)), 
  Union(11, typeof(PlayerData)), 
  Union(12, typeof(Corporation)),
  Union(13, typeof(MegaCorporation)),
@@ -56,4 +56,7 @@ public abstract class DatabaseEntry
 {
     [JsonProperty("id"), Key(0)]
     public Guid ID = Guid.NewGuid();
+
+    [IgnoreMember]
+    public DatabaseCache Database;
 }

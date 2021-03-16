@@ -5,19 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using JsonKnownTypes;
-using MessagePack;
-using Newtonsoft.Json;
 using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using int2 = Unity.Mathematics.int2;
 
-[MessagePackObject, 
- Union(0, typeof(Ship)),
- Union(1, typeof(OrbitalEntity)),
- JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<Entity>))]
 public abstract class Entity
 {
     public Zone Zone;
@@ -82,9 +74,13 @@ public abstract class Entity
             if (value == _heatsinksEnabled) return;
             _heatsinksEnabled = value;
             foreach (var heatsink in _heatsinks)
-                heatsink.Item.Enabled = value;
+                heatsink.Item.Enabled.Value = value;
         }
     }
+    
+    public EntitySettings Settings { get; }
+    
+    public bool OverrideShutdown { get; set; }
     
     public bool Active
     {
@@ -110,16 +106,18 @@ public abstract class Entity
     
     public Subject<(int2 pos, float damage)> ArmorDamage = new Subject<(int2, float)>();
     public Subject<(EquippedItem item, float damage)> ItemDamage = new Subject<(EquippedItem, float)>();
-    public Subject<EquippedItem> ItemOffline = new Subject<EquippedItem>();
-    public Subject<EquippedItem> ItemOnline = new Subject<EquippedItem>();
+    // public Subject<EquippedItem> ItemOffline = new Subject<EquippedItem>();
+    // public Subject<EquippedItem> ItemOnline = new Subject<EquippedItem>();
     public Subject<float> HullDamage = new Subject<float>();
     public Subject<Entity> Docked = new Subject<Entity>();
     public Subject<Unit> HeatstrokeRisk = new Subject<Unit>();
+    public Subject<Unit> HeatstrokeDeath = new Subject<Unit>();
     
     public UniRx.IObservable<EquippedItem> ItemDestroyed;
     public UniRx.IObservable<int2> HullArmorDepleted;
     public UniRx.IObservable<HardpointData> HardpointArmorDepleted;
     public UniRx.IObservable<Weapon> WeaponDestroyed;
+    public UniRx.IObservable<Unit> Death;
 
     private List<IDisposable> _subscriptions = new List<IDisposable>();
 
@@ -158,8 +156,9 @@ public abstract class Entity
         VisibleHostiles.Clear();
     }
 
-    public Entity(ItemManager itemManager, Zone zone, EquippableItem hull)
+    public Entity(ItemManager itemManager, Zone zone, EquippableItem hull, EntitySettings settings)
     {
+        Settings = settings;
         ItemManager = itemManager;
         Zone = zone;
         Hull = hull;
@@ -172,6 +171,7 @@ public abstract class Entity
         ItemDestroyed = ItemDamage.Where(x => x.item.EquippableItem.Durability < .01f).Select(x=>x.item);
         WeaponDestroyed = ItemDestroyed.Select(x => x.Behaviors.FirstOrDefault(b => b is Weapon) as Weapon).Where(x => x != null);
         HullArmorDepleted = ArmorDamage.Where(x => Armor[x.pos.x, x.pos.y] < .01f).Select(x => x.pos);
+        Death = HullDamage.Select(_ => Unit.Default).Where(_ => Hull.Durability < .01f).Merge(HeatstrokeDeath);
 
         EntityInfoGathered.ObserveReplace().Subscribe(replace =>
         {
@@ -543,8 +543,8 @@ public abstract class Entity
                 Cockpit = cockpit;
         }
 
-        equippedItem.OnOnline += () => ItemOnline.OnNext(equippedItem);
-        equippedItem.OnOffline += () => ItemOffline.OnNext(equippedItem);
+        // equippedItem.OnOnline += () => ItemOnline.OnNext(equippedItem);
+        // equippedItem.OnOffline += () => ItemOffline.OnNext(equippedItem);
             
         foreach (var i in itemData.Shape.Coordinates)
         {
@@ -597,7 +597,7 @@ public abstract class Entity
     public bool CanConsumeEnergy(float energy)
     {
         var capEnergy = _capacitors.Sum(cap => cap.Charge);
-        int onlineReactors = _reactors.Count(reactor=>reactor.Item.Online);
+        int onlineReactors = _reactors.Count(reactor=>reactor.Item.Online.Value);
         return capEnergy > energy || onlineReactors > 0;
     }
 
@@ -622,10 +622,10 @@ public abstract class Entity
 
         if (energy < .01f) return true;
 
-        int onlineReactors = _reactors.Count(reactor=>reactor.Item.Online);
+        int onlineReactors = _reactors.Count(reactor=>reactor.Item.Online.Value);
         foreach (var reactor in _reactors)
         {
-            if (reactor.Item.Online)
+            if (reactor.Item.Online.Value)
             {
                 reactor.ConsumeEnergy(energy / onlineReactors);
             }
@@ -739,26 +739,32 @@ public abstract class Entity
 
         UpdateTemperature(delta);
         
-        if(Cockpit != null)
-        {
-            if (Cockpit.Item.Temperature > ItemManager.GameplaySettings.HeatstrokeTemperature)
-            {
-                var previous = Heatstroke;
-                Heatstroke = saturate(
-                    Heatstroke +
-                    pow(Cockpit.Item.Temperature - ItemManager.GameplaySettings.HeatstrokeTemperature, ItemManager.GameplaySettings.HeatstrokeExponent) *
-                    ItemManager.GameplaySettings.HeatstrokeMultiplier * delta);
-                if(previous < ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold && Heatstroke > ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold)
-                    HeatstrokeRisk.OnNext(Unit.Default);
-            }
-            else
-            {
-                Heatstroke = saturate(Heatstroke - ItemManager.GameplaySettings.HeatstrokeRecoverySpeed * delta);
-            }
-        }
         
         if (_active)
         {
+            if(Cockpit != null)
+            {
+                if (Cockpit.Item.Temperature > ItemManager.GameplaySettings.HeatstrokeTemperature)
+                {
+                    var previous = Heatstroke;
+                    Heatstroke = saturate(
+                        Heatstroke +
+                        pow(Cockpit.Item.Temperature - ItemManager.GameplaySettings.HeatstrokeTemperature, ItemManager.GameplaySettings.HeatstrokeExponent) *
+                        ItemManager.GameplaySettings.HeatstrokeMultiplier * delta);
+                    if(previous < ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold && Heatstroke > ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold)
+                        HeatstrokeRisk.OnNext(Unit.Default);
+                    if(Heatstroke > 1)
+                    {
+                        HeatstrokeDeath.OnNext(Unit.Default);
+                        Deactivate();
+                    }
+                }
+                else
+                {
+                    Heatstroke = saturate(Heatstroke - ItemManager.GameplaySettings.HeatstrokeRecoverySpeed * delta);
+                }
+            }
+            
             foreach (var equippedItem in _orderedEquipment)
             {
                 equippedItem.Update(delta);
@@ -877,67 +883,66 @@ public abstract class Entity
 
 public class EquippedItem
 {
+    public int SortPosition;
     public EquippableItem EquippableItem;
-
     public int2 Position;
-    
-    public IBehavior[] Behaviors;
-    
     public Dictionary<int, BehaviorGroup> BehaviorGroups;
 
-    public bool Enabled = true;
-
-    public event Action OnOffline;
-    public event Action OnOnline;
+    private bool _thermalOnline;
+    private bool _durabilityOnline;
     
+    public IBehavior[] Behaviors { get; }
     public float Conductivity { get; }
-    
+    public float ThermalPerformance { get; private set; }
+    public float ThermalExponent { get; }
+    public float DurabilityPerformance { get; private set; }
+    public float DurabilityExponent { get; }
+    public float Wear { get; private set; }
     public Shape InsetShape { get; }
+    public Entity Entity { get; }
+    public EquippableItemData Data { get; }
 
-    public int SortPosition;
-    
-    public bool Active
-    {
-        get => _online && Enabled;
-    }
+    public ReactiveProperty<bool> ThermalOnline { get; } = new ReactiveProperty<bool>(false);
+    public ReactiveProperty<bool> DurabilityOnline { get; } = new ReactiveProperty<bool>(false);
+    public ReadOnlyReactiveProperty<bool> Online { get; }
+    public ReactiveProperty<bool> Enabled { get; } = new ReactiveProperty<bool>(true);
+    public ReadOnlyReactiveProperty<bool> Active { get; }
 
-    public bool Online
-    {
-        get => _online;
-    }
 
     public float Temperature
     {
         get
         {
             float sum = 0;
-            foreach (var x in InsetShape.Coordinates) sum += _entity.Temperature[x.x, x.y];
+            foreach (var x in InsetShape.Coordinates) sum += Entity.Temperature[x.x, x.y];
             return sum/InsetShape.Coordinates.Length;
         }
     }
     
-    public Entity Entity
-    {
-        get => _entity;
-    }
 
     protected readonly ItemManager _itemManager;
-    private readonly EquippableItemData _data;
-    private Entity _entity;
-    private bool _online;
+    //private bool _online;
 
     public EquippedItem(ItemManager itemManager, EquippableItem item, int2 position, Entity entity)
     {
         _itemManager = itemManager;
-        _data = _itemManager.GetData(item);
-        _entity = entity;
+        Data = _itemManager.GetData(item);
+        Entity = entity;
         EquippableItem = item;
         Position = position;
-        Conductivity = _data.Conductivity;
+        Conductivity = Data.Conductivity;
+        ThermalExponent = _itemManager.Evaluate(Data.HeatExponent, EquippableItem);
+        DurabilityExponent = _itemManager.Evaluate(Data.DurabilityExponent, EquippableItem);
         var hullData = itemManager.GetData(entity.Hull);
-        InsetShape = hullData.Shape.Inset(_data.Shape, position, item.Rotation);
+        InsetShape = hullData.Shape.Inset(Data.Shape, position, item.Rotation);
 
-        Behaviors = _data.Behaviors
+        Online = new ReadOnlyReactiveProperty<bool>(ThermalOnline
+            .CombineLatest(DurabilityOnline, (thermal, durability) => thermal && durability).DistinctUntilChanged());
+        Active = new ReadOnlyReactiveProperty<bool>(Enabled
+            .CombineLatest(Online, (enabled, online) => enabled && online).DistinctUntilChanged());
+        
+
+        Behaviors = Data.Behaviors
             .Select(bd => bd.CreateInstance(itemManager, entity, this))
             .ToArray();
 
@@ -946,9 +951,7 @@ public class EquippedItem
             .OrderBy(g => g.Key)
             .ToDictionary(g => g.Key, g => new BehaviorGroup
             {
-                Behaviors = g.ToArray(),
-                // Switch = (Switch) g.FirstOrDefault(b => b is Switch),
-                // Trigger = (Trigger) g.FirstOrDefault(b => b is Trigger)
+                Behaviors = g.ToArray()
             });
 
         foreach (var behavior in Behaviors)
@@ -960,10 +963,32 @@ public class EquippedItem
         }
     }
 
+    public float Evaluate(PerformanceStat stat)
+    {
+        var heat = 1f;
+        if(stat.HeatDependent)
+            heat = pow(ThermalPerformance, ThermalExponent * stat.HeatExponentMultiplier);
+        var durability = 1f;
+        if(stat.DurabilityDependent)
+            durability = pow(DurabilityPerformance, DurabilityExponent);
+        var quality = pow(_itemManager.Quality(stat, EquippableItem), stat.QualityExponent);
+
+        var scaleModifier = 1.0f;
+        foreach (var value in stat.GetScaleModifiers(Entity).Values) scaleModifier = scaleModifier * value;
+
+        float constantModifier = 0;
+        foreach (var value in stat.GetConstantModifiers(Entity).Values) constantModifier += value;
+
+        var result = lerp(stat.Min, stat.Max, durability * quality * heat) * scaleModifier + constantModifier;
+        if (float.IsNaN(result))
+            return stat.Min;
+        return result;
+    }
+
     public void AddHeat(float heat, bool ignoreThermalMass = false)
     {
         foreach(var hullCoord in InsetShape.Coordinates)
-            _entity.AddHeat(hullCoord, heat / InsetShape.Coordinates.Length, ignoreThermalMass);
+            Entity.AddHeat(hullCoord, heat / InsetShape.Coordinates.Length, ignoreThermalMass);
     }
 
     public void Update(float delta)
@@ -971,13 +996,18 @@ public class EquippedItem
         foreach (var behavior in Behaviors)
             if(behavior is IAlwaysUpdatedBehavior alwaysUpdatedBehavior) alwaysUpdatedBehavior.Update(delta);
 
-        var previouslyOnline = _online;
-        _online = EquippableItem.Durability > .01f && Temperature > _data.MinimumTemperature && Temperature < _data.MaximumTemperature;
+        var temp = Temperature;
+        ThermalPerformance = Data.Performance(temp);
+        DurabilityPerformance = EquippableItem.Durability / Data.Durability;
+        var performanceThreshold = Entity.Settings.ShutdownPerformance;
+        Wear = (1 - pow(Data.Performance(temp),
+                (1 - pow(_itemManager.CompoundQuality(EquippableItem), _itemManager.GameplaySettings.QualityWearExponent)) *
+                _itemManager.GameplaySettings.ThermalWearExponent)
+            ) * Data.Durability / Data.ThermalResilience;
+        ThermalOnline.Value = ThermalPerformance > performanceThreshold || Entity.OverrideShutdown && EquippableItem.OverrideShutdown;
+        DurabilityOnline.Value = EquippableItem.Durability > .01f;
 
-        if (!previouslyOnline && _online) OnOnline?.Invoke();
-        if (previouslyOnline && !_online) OnOffline?.Invoke(); 
-
-        if (Active)
+        if (Active.Value)
         {
             foreach (var group in BehaviorGroups.Values)
             {

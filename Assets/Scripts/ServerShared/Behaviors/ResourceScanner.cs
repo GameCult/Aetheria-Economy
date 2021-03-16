@@ -105,8 +105,8 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
 
     public void Update(float delta)
     {
-        Range = Context.Evaluate(_data.Range, Item);
-        MinimumDensity = Context.Evaluate(_data.MinimumDensity, Item);
-        ScanDuration = Context.Evaluate(_data.ScanDuration, Item);
+        Range = Item.Evaluate(_data.Range);
+        MinimumDensity = Item.Evaluate(_data.MinimumDensity);
+        ScanDuration = Item.Evaluate(_data.ScanDuration);
     }
 }

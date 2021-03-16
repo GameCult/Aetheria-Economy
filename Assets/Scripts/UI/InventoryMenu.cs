@@ -59,11 +59,11 @@ public class InventoryMenu : MonoBehaviour
         {
             _destroyItem = false;
         });
-        var cargo = GameManager.DockingBay ?? GameManager.CurrentShip.CargoBays.FirstOrDefault();
+        var cargo = GameManager.DockingBay ?? GameManager.CurrentEntity.CargoBays.FirstOrDefault();
         if (cargo!=null)
             InventoryPanels[0].Display(cargo);
-        if(GameManager.CurrentShip != null)
-            InventoryPanels[1].Display(GameManager.CurrentShip);
+        if(GameManager.CurrentEntity != null)
+            InventoryPanels[1].Display(GameManager.CurrentEntity);
         else InventoryPanels[1].Clear();
     }
 
@@ -182,6 +182,7 @@ public class InventoryMenu : MonoBehaviour
                             Dialog.Title.text = "Unable to move item!";
                             Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
                             Dialog.Show();
+                            Dialog.MoveToCursor();
                         }
                     }
 
@@ -206,6 +207,7 @@ public class InventoryMenu : MonoBehaviour
                             Dialog.Title.text = "Unable to destroy item!";
                             Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
                             Dialog.Show();
+                            Dialog.MoveToCursor();
                         }
                     }
                 }
@@ -282,8 +284,7 @@ public class InventoryMenu : MonoBehaviour
                     floatCells();
                 }
             });
-            
-            
+
             panel.OnClickAsObservable().Subscribe(data =>
             {
                 if (data is InventoryCargoEventData cargoEvent)
@@ -386,6 +387,18 @@ public class InventoryMenu : MonoBehaviour
                         }
                     }
                 }
+            });
+
+            panel.OnBackgroundClick.Subscribe(data =>
+            {
+                if (GameManager.CurrentEntity == null) return; // Only show ship settings if there's a ship, duh!
+                
+                PropertiesPanel.Clear();
+                PropertiesPanel.AddField("Shutdown Threshold",
+                    () => GameManager.CurrentEntity.Settings.ShutdownPerformance,
+                    f => GameManager.CurrentEntity.Settings.ShutdownPerformance = f,
+                    0,
+                    1);
             });
         }
     }

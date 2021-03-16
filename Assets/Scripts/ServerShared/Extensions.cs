@@ -30,12 +30,34 @@ public static class Extensions
         peer.Send(MessagePackSerializer.Serialize(message as Message), method);
     }
 
-    // public static float Performance(this EquippableItemData itemData, float temperature)
-    // {
-    //     return saturate(itemData.HeatPerformanceCurve.Evaluate(saturate(
-    //         (temperature - itemData.MinimumTemperature) /
-    //         (itemData.MaximumTemperature - itemData.MinimumTemperature))));
-    // }
+    public static T[] WeightedRandomElements<T>(this IEnumerable<T> collection, ref Random random, Func<T, float> weightFunction, int count)
+    {
+        var weights = new Dictionary<T, float>(collection.Count());
+        var totalWeight = 0f;
+        foreach (var x in collection)
+        {
+            weights[x] = weightFunction(x);
+            totalWeight += weights[x];
+        }
+
+        var elements = new T[count];
+        for (int i = 0; i < count; i++)
+        {
+            var targetWeight = random.NextFloat(totalWeight);
+            var accumWeight = 0f;
+            foreach (var x in collection)
+            {
+                accumWeight += weights[x];
+                if (accumWeight > targetWeight)
+                {
+                    elements[i] = x;
+                    break;
+                }
+            }
+        }
+
+        return elements;
+    }
     
     // Thanks, https://stackoverflow.com/a/48599119
     public static bool ByteArrayCompare(ReadOnlySpan<byte> a1, ReadOnlySpan<byte> a2)

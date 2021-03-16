@@ -109,13 +109,13 @@ public class Mine : MonoBehaviour
                 foreach (var collider in Physics.OverlapSphere(t.position, BlastRange, 1 | (1 << 17)))
                 {
                     var shield = collider.GetComponent<ShieldManager>();
-                    if (shield && (shield.Entity.Shield != null && shield.Entity.Shield.Item.Active && shield.Entity.Shield.CanTakeHit(DamageType, Damage)))
+                    if (shield && (shield.Entity.Shield != null && shield.Entity.Shield.Item.Active.Value && shield.Entity.Shield.CanTakeHit(DamageType, Damage)))
                     {
                         shield.Entity.Shield.TakeHit(DamageType, Damage);
                         shield.ShowHit(t.position, sqrt(Damage));
                     }
                     var hull = collider.GetComponent<HullCollider>();
-                    if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
+                    if (hull && !(hull.Entity.Shield != null && hull.Entity.Shield.Item.Active.Value && hull.Entity.Shield.CanTakeHit(DamageType, Damage)))
                     {
                         hull.SendSplash(Damage, DamageType, Source.Entity, (collider.transform.position - t.position).normalized);
                     }

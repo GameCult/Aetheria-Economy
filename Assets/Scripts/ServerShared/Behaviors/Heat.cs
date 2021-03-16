@@ -42,7 +42,7 @@ public class Heat : IBehavior
 
     public bool Execute(float delta)
     {
-        Item.AddHeat(Context.Evaluate(_data.Heat, Item) * (_data.PerSecond ? delta : 1));
+        Item.AddHeat(Item.Evaluate(_data.Heat) * (_data.PerSecond ? delta : 1));
 
         return true;
     }

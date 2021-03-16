@@ -70,32 +70,6 @@ public class DatabaseInspector : EditorWindow
             Inspect(obj, field, inspectablesOnly);
         }
 
-        // if (obj is GalaxyMapLayerData mapLayer)
-        // {
-        //     var global = DatabaseCache.GetAll<GlobalData>().FirstOrDefault();
-        //     if (global != null)
-        //     {
-        //         GUILayout.Label("Preview", EditorStyles.boldLabel);
-        //         _galaxyMat.SetFloat("Arms", global.Arms);
-        //         _galaxyMat.SetFloat("Twist", global.Twist);
-        //         _galaxyMat.SetFloat("TwistPower", global.TwistPower);
-        //         _galaxyMat.SetFloat("SpokeOffset", mapLayer.SpokeOffset);
-        //         _galaxyMat.SetFloat("SpokeScale", mapLayer.SpokeScale);
-        //         _galaxyMat.SetFloat("CoreBoost", mapLayer.CoreBoost);
-        //         _galaxyMat.SetFloat("CoreBoostOffset", mapLayer.CoreBoostOffset);
-        //         _galaxyMat.SetFloat("CoreBoostPower", mapLayer.CoreBoostPower);
-        //         _galaxyMat.SetFloat("EdgeReduction", mapLayer.EdgeReduction);
-        //         _galaxyMat.SetFloat("NoisePosition", mapLayer.NoisePosition);
-        //         _galaxyMat.SetFloat("NoiseAmplitude", mapLayer.NoiseAmplitude);
-        //         _galaxyMat.SetFloat("NoiseOffset", mapLayer.NoiseOffset);
-        //         _galaxyMat.SetFloat("NoiseGain", mapLayer.NoiseGain);
-        //         _galaxyMat.SetFloat("NoiseLacunarity", mapLayer.NoiseLacunarity);
-        //         _galaxyMat.SetFloat("NoiseFrequency", mapLayer.NoiseFrequency);
-        //         var rect = GetControlRect(false, Screen.width);
-        //         EditorGUI.DrawPreviewTexture(rect, _white, _galaxyMat);
-        //     }
-        // }
-        
         if (obj is EquippableItemData equippableItemData)
         {
             var restricted = false;
@@ -135,7 +109,7 @@ public class DatabaseInspector : EditorWindow
                 var range = inspectable as RangedFloatInspectableAttribute;
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (float) value, range.Min, range.Max));
             }
-            else if (inspectable is TemperatureInspectableAttribute)
+            else if (inspectable is InspectableTemperatureAttribute)
                 field.SetValue(obj, InspectTemperature(field.Name.SplitCamelCase(), (float) value));
             else
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (float) value));
@@ -158,6 +132,13 @@ public class DatabaseInspector : EditorWindow
         {
             field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (int2) field.GetValue(obj)));
         }
+        else if (type == typeof(float3))
+        {
+            if (inspectable is InspectableColorAttribute)
+            {
+                field.SetValue(obj, ColorField(field.Name.SplitCamelCase(), ((float3)field.GetValue(obj)).ToColor()).ToFloat3());
+            }
+        }
         else if (type.IsEnum)
         {
             var isflags = type.GetCustomAttributes<FlagsAttribute>().Any();
@@ -179,6 +160,8 @@ public class DatabaseInspector : EditorWindow
                 field.SetValue(obj, InspectUnityObject<GameObject>(field.Name.SplitCamelCase(), (string) value));
             else if(inspectable is InspectableTextureAttribute)
                 field.SetValue(obj, InspectUnityObject<Texture2D>(field.Name.SplitCamelCase(), (string) value));
+            else if(inspectable is InspectableTextAssetAttribute)
+                field.SetValue(obj, InspectUnityObject<TextAsset>(field.Name.SplitCamelCase(), (string) value));
             else
                 field.SetValue(obj, Inspect(field.Name.SplitCamelCase(), (string) value, inspectable is InspectableTextAttribute));
         }
@@ -216,7 +199,10 @@ public class DatabaseInspector : EditorWindow
         else if (type == typeof(Dictionary<Guid, float>))
         {
             var dict = (Dictionary<Guid, float>) field.GetValue(obj);
-            Inspect(field.Name.SplitCamelCase(), ref dict, link.EntryType);
+            var ranged = field.GetCustomAttribute<RangedFloatAttribute>();
+            if(ranged != null)
+                Inspect(field.Name.SplitCamelCase(), ref dict, link.EntryType, ranged.Min, ranged.Max);
+            else Inspect(field.Name.SplitCamelCase(), ref dict, link.EntryType);
         }
         else if (type == typeof(List<BlueprintStatEffect>))
         {
@@ -861,6 +847,65 @@ public class DatabaseInspector : EditorWindow
                     {
                         DragAndDrop.AcceptDrag();
                         value[guid] = 1;
+                        GUI.changed = true;
+                    }
+                }
+            }
+        }
+    }
+    
+    public void Inspect(string label, ref Dictionary<Guid,float> value, Type referenceType, float min, float max)
+    {
+        Space();
+        LabelField(label, EditorStyles.boldLabel);
+
+        using (var v = new VerticalScope(GUI.skin.box))
+        {
+            if (value.Count == 0)
+            {
+                using (var h = new HorizontalScope(_list.ListItemStyle))
+                {
+                    GUILayout.Label("Drag from list to add item");
+                }
+            }
+            foreach (var ingredient in value.ToArray())
+            {
+                using (var h = new HorizontalScope(_list.ListItemStyle))
+                {
+                    var entry = DatabaseCache.Get(ingredient.Key);
+                    if (entry == null)
+                    {
+                        value.Remove(ingredient.Key);
+                        GUI.changed = true;
+                        return;
+                    }
+                    
+                    if(entry is INamedEntry named)
+                        GUILayout.Label(named.EntryName);
+                    else GUILayout.Label(entry.ID.ToString());
+                    value[ingredient.Key] = Slider(value[ingredient.Key], min, max);
+                    
+                    var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                    if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                        value.Remove(ingredient.Key);
+                }
+            }
+
+            if (v.rect.Contains(Event.current.mousePosition))
+            {
+                var dragData = DragAndDrop.GetGenericData("Item");
+                var isId = dragData is Guid guid;
+                var dragEntry = isId ? DatabaseCache.Get(guid) : null;
+                var correctType = referenceType.IsInstanceOfType(dragEntry);
+                if(Event.current.type == EventType.DragUpdated)
+                    DragAndDrop.visualMode = correctType ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
+                else if(Event.current.type == EventType.DragPerform)
+                {
+                    if (isId && correctType)
+                    {
+                        DragAndDrop.AcceptDrag();
+                        value[guid] = max;
                         GUI.changed = true;
                     }
                 }

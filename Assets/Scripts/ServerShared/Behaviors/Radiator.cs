@@ -16,7 +16,7 @@ public class RadiatorData : BehaviorData
     [InspectableField, JsonProperty("pumpedHeat"), Key(2), RuntimeInspectable]  
     public PerformanceStat PumpedHeat = new PerformanceStat();
     
-    [TemperatureInspectable, JsonProperty("temperatureFloor"), Key(3), RuntimeInspectable]  
+    [InspectableTemperature, JsonProperty("temperatureFloor"), Key(3), RuntimeInspectable]  
     public float TemperatureFloor;
     
     [InspectableField, JsonProperty("wasteHeat"), Key(4), RuntimeInspectable]  
@@ -57,9 +57,9 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
 
     public bool Execute(float delta)
     {
-        PumpedHeat = Context.Evaluate(_data.PumpedHeat, Item);
-        WasteHeat = Context.Evaluate(_data.WasteHeat, Item);
-        EnergyUsage = Context.Evaluate(_data.EnergyUsage, Item);
+        PumpedHeat = Item.Evaluate(_data.PumpedHeat);
+        WasteHeat = Item.Evaluate(_data.WasteHeat);
+        EnergyUsage = Item.Evaluate(_data.EnergyUsage);
 
         var itemTemperature = Item.Temperature;
         var tempRatio = max(Temperature / itemTemperature, 1);
@@ -84,7 +84,7 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
 
     public void Update(float delta)
     {
-        Emissivity = Context.Evaluate(_data.Emissivity, Item);
+        Emissivity = Item.Evaluate(_data.Emissivity);
         var rad = pow(Temperature, Context.GameplaySettings.HeatRadiationExponent) * Context.GameplaySettings.HeatRadiationMultiplier * Emissivity;
         Temperature -= rad * delta;
         Entity.VisibilitySources[this] = rad;

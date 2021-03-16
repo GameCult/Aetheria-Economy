@@ -38,7 +38,7 @@ public class Agent
 
     public void Transition(BaseState targetState, Action onTransition = null)
     {
-        ItemManager.Log($"{Ship.Name} changing state from {_currentState.GetType().Name} to {targetState.GetType().Name}");
+        //ItemManager.Log($"{Ship.Name} changing state from {_currentState.GetType().Name} to {targetState.GetType().Name}");
         _currentState.OnExitState();
         _currentState = targetState;
         onTransition?.Invoke();

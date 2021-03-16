@@ -14,12 +14,13 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering;
 using Unity.Mathematics;
+using UnityEngine.Serialization;
 using static Unity.Mathematics.math;
 using int2 = Unity.Mathematics.int2;
 
-public class InventoryPanel : MonoBehaviour
+public class InventoryPanel : MonoBehaviour, IPointerClickHandler
 {
-    public ConfirmationDialog ConfirmationDialog;
+    [FormerlySerializedAs("ConfirmationDialog")] public ConfirmationDialog Dialog;
     public bool Flip;
     public GameSettings Settings;
     public ActionGameManager GameManager;
@@ -103,19 +104,20 @@ public class InventoryPanel : MonoBehaviour
         {
             Current.onClick.AddListener(() =>
             {
-                if (_displayedEntity != GameManager.CurrentShip)
+                if (_displayedEntity != GameManager.CurrentEntity)
                 {
                     if(_displayedEntity is Ship ship)
                     {
-                        GameManager.CurrentShip = ship;
+                        GameManager.CurrentEntity = ship;
                         GameManager.DockingBay.DockedShip = ship;
                         Current.targetGraphic.color = ToggleEnabledColor;
                     }
                     else
                     {
-                        ConfirmationDialog.Clear();
-                        ConfirmationDialog.Title.text = "Can't select entity, you can only pilot a ship!";
-                        ConfirmationDialog.Show();
+                        Dialog.Clear();
+                        Dialog.Title.text = "Can't select entity, you can only pilot a ship!";
+                        Dialog.Show();
+                        Dialog.MoveToCursor();
                     }
                 }
             });
@@ -145,7 +147,7 @@ public class InventoryPanel : MonoBehaviour
                 ContextMenu.AddOption("Save Loadout",
                     () =>
                     {
-                        GameManager.SaveLoadout(EntityPack.Pack(_displayedEntity));
+                        GameManager.SaveLoadout(EntitySerializer.Pack(_displayedEntity));
                     });
 
                 if (GameManager.Loadouts.Any())
@@ -155,13 +157,16 @@ public class InventoryPanel : MonoBehaviour
                             (
                                 $"{pack.Name} - {pack.Price(GameManager.ItemManager):n0}", () =>
                                 {
-                                    var ship = EntityPack.Unpack(GameManager.ItemManager, GameManager.Zone, pack, true);
-                                    ship.SetParent(GameManager.DockedEntity);
-                                    GameManager.PlayerEntities.Add(ship);
+                                    var entity = EntitySerializer.Unpack(GameManager.ItemManager, GameManager.Zone, pack, true);
+                                    entity.SetParent(GameManager.DockedEntity);
                                     GameManager.Credits -= pack.Price(GameManager.ItemManager);
-                                    GameManager.CurrentShip = ship;
-                                    GameManager.DockingBay.DockedShip = ship;
-                                    Display(ship);
+                                    GameManager.CurrentEntity = entity;
+                                    if(entity is Ship ship)
+                                    {
+                                        ship.IsPlayerShip = true;
+                                        GameManager.DockingBay.DockedShip = ship;
+                                    }
+                                    Display(entity);
                                 }, pack.Price(GameManager.ItemManager) < GameManager.Credits
                                 )));
                 }
@@ -282,7 +287,7 @@ public class InventoryPanel : MonoBehaviour
         if (Current)
         {
             Current.gameObject.SetActive(true);
-            Current.targetGraphic.color = entity == GameManager.CurrentShip ? ToggleEnabledColor : ToggleDisabledColor;
+            Current.targetGraphic.color = entity == GameManager.CurrentEntity ? ToggleEnabledColor : ToggleDisabledColor;
         }
         if (Thermal)
         {
@@ -669,13 +674,19 @@ public class InventoryPanel : MonoBehaviour
 
         return false;
     }
-    
+
+    public Subject<PointerEventData> OnBackgroundClick = new Subject<PointerEventData>();
     public UniRx.IObservable<InventoryEventData> OnClickAsObservable() => _onClick ?? (_onClick = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnBeginDragAsObservable() => _onBeginDrag ?? (_onBeginDrag = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnDragAsObservable() => _onDrag ?? (_onDrag = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnEndDragAsObservable() => _onEndDrag ?? (_onEndDrag = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnPointerEnterAsObservable() => _onPointerEnter ?? (_onPointerEnter = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnPointerExitAsObservable() => _onPointerExit ?? (_onPointerExit = new Subject<InventoryEventData>());
+    
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        OnBackgroundClick.OnNext(eventData);
+    }
 }
 
 public abstract class InventoryEventData

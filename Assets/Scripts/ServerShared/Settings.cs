@@ -9,6 +9,7 @@ using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
+using static Unity.Mathematics.noise;
 
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
 public class PlanetSettings
@@ -40,6 +41,47 @@ public class GalaxyShapeSettings
     public int Arms = 4;
     public float Twist = 10;
     public float TwistExponent = 2;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
+public class SectorGenerationSettings
+{
+    public float LinkDensity = .5f;
+    public int ZoneCount = 128;
+    public int NameGeneratorMinLength = 5;
+    public int NameGeneratorMaxLength = 10;
+    public int NameGeneratorOrder = 4;
+    public int MegaCount;
+    public int BossCount;
+    public float NoisePosition;
+    public float CloudExponent;
+    public float CloudAmplitude;
+    public float NoiseAmplitude;
+    public float NoiseOffset;
+    public float NoiseGain;
+    public float NoiseLacunarity;
+    public float NoiseFrequency;
+    
+    public float fBm(float2 p, int octaves)
+    {
+        float freq = NoiseFrequency, amp = .5f;
+        float sum = 0;	
+        for(int i = 0; i < octaves; i++) 
+        {
+            if(i<4)
+                sum += (1-abs(snoise(p * freq))) * amp;
+            else sum += abs(snoise(p * freq)) * amp;
+            freq *= NoiseLacunarity;
+            amp *= NoiseGain;
+        }
+        return (sum + NoiseOffset)*NoiseAmplitude;
+    }
+
+    public float CloudDensity(float2 uv)
+    {
+        float noise = fBm(uv + NoisePosition, 10);
+        return pow(noise, CloudExponent) * CloudAmplitude;
+    }
 }
 
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
@@ -83,11 +125,16 @@ public class ZoneGenerationSettings
     public float GasGiantBandAltColorChance = .25f;
     public ExponentialLerp GasGiantBandSaturation;
     public ExponentialLerp GasGiantBandBrightness;
+
+    public string[] NameData;
 }
 
 [Serializable, MessagePackObject(keyAsPropertyName: true), JsonObject]
 public class GameplaySettings
 {
+    public EntitySettings DefaultEntitySettings;
+    public RarityTier[] Tiers;
+    public float DefaultShutdownPerformance = .25f;
     public float SevereHeatstrokeRiskThreshold = .25f;
     public float WormholeDepth = 1000;
     public float WormholeExitVelocity = 20;
@@ -128,4 +175,13 @@ public class GameplaySettings
     public float AgentForwardLerp = .5f;
     public float AgentMaxForwardDistance = 50;
     public float AgentFiringMinDot = .99f;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName: true), JsonObject]
+public class RarityTier
+{
+    public string Name;
+    public float Quality;
+    public float3 Color;
+    public float Rarity;
 }

@@ -38,7 +38,7 @@ public class ConsoleView : MonoBehaviour {
 	{
 		//AcceptingInput = false;
         //_console = new ConsoleController();
-        Application.logMessageReceived += (condition, trace, type) => ConsoleController.Instance.AppendLogLine("<color=" + (type == LogType.Error ? "red" : type == LogType.Warning ? "yellow" : "white") + ">" + condition + "</color>");
+        Application.logMessageReceived += OnLogCallback;
 
         SetVisibility(false);
 
@@ -56,8 +56,14 @@ public class ConsoleView : MonoBehaviour {
 		
 		// var sizeFitter = GetComponentInChildren<ContentSizeFitter>().on
 	}
-	
-	~ConsoleView() {
+
+    private void OnLogCallback(string condition, string trace, LogType type)
+    {
+	    ConsoleController.Instance.AppendLogLine("<color=" + (type == LogType.Error ? "red" : type == LogType.Warning ? "yellow" : "white") + ">" + condition + "</color>");
+    }
+
+    private void OnDestroy() {
+	    Application.logMessageReceived -= OnLogCallback;
         ConsoleController.Instance.VisibilityChanged -= OnVisibilityChanged;
         ConsoleController.Instance.LogChanged -= OnLogChanged;
 	}

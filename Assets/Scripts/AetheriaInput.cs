@@ -185,6 +185,14 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Override Shutdown"",
+                    ""type"": ""Button"",
+                    ""id"": ""62a64686-4670-43c9-81ee-bbb8578e284b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -601,8 +609,19 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""path"": ""<Keyboard>/#(G)"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Toggle Shield"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8e8b5d19-20fd-43f3-88cf-6246f374e7cf"",
+                    ""path"": ""<Keyboard>/#(O)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Override Shutdown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1192,6 +1211,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player_ToggleHeatsinks = m_Player.FindAction("Toggle Heatsinks", throwIfNotFound: true);
         m_Player_EnterWormhole = m_Player.FindAction("EnterWormhole", throwIfNotFound: true);
         m_Player_ToggleShield = m_Player.FindAction("Toggle Shield", throwIfNotFound: true);
+        m_Player_OverrideShutdown = m_Player.FindAction("Override Shutdown", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1278,6 +1298,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_ToggleHeatsinks;
     private readonly InputAction m_Player_EnterWormhole;
     private readonly InputAction m_Player_ToggleShield;
+    private readonly InputAction m_Player_OverrideShutdown;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1303,6 +1324,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @ToggleHeatsinks => m_Wrapper.m_Player_ToggleHeatsinks;
         public InputAction @EnterWormhole => m_Wrapper.m_Player_EnterWormhole;
         public InputAction @ToggleShield => m_Wrapper.m_Player_ToggleShield;
+        public InputAction @OverrideShutdown => m_Wrapper.m_Player_OverrideShutdown;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1375,6 +1397,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @ToggleShield.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleShield;
                 @ToggleShield.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleShield;
                 @ToggleShield.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleShield;
+                @OverrideShutdown.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOverrideShutdown;
+                @OverrideShutdown.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOverrideShutdown;
+                @OverrideShutdown.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOverrideShutdown;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1442,6 +1467,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @ToggleShield.started += instance.OnToggleShield;
                 @ToggleShield.performed += instance.OnToggleShield;
                 @ToggleShield.canceled += instance.OnToggleShield;
+                @OverrideShutdown.started += instance.OnOverrideShutdown;
+                @OverrideShutdown.performed += instance.OnOverrideShutdown;
+                @OverrideShutdown.canceled += instance.OnOverrideShutdown;
             }
         }
     }
@@ -1642,6 +1670,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnToggleHeatsinks(InputAction.CallbackContext context);
         void OnEnterWormhole(InputAction.CallbackContext context);
         void OnToggleShield(InputAction.CallbackContext context);
+        void OnOverrideShutdown(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

@@ -6,53 +6,26 @@ using MessagePack;
 using RethinkDb.Driver.Ast;
 using Unity.Mathematics;
 
-[MessagePackObject]
-public class EntityPack
+public static class EntitySerializer
 {
-    [Key(0)]
-    public string Name;
-    
-    [Key(1)]
-    public EquippableItem Hull;
-    
-    [Key(2)]
-    public (int2 position, EquippableItem item)[] Equipment;
-    
-    [Key(3)]
-    public (int2 position, EquippableItem item)[] CargoBays;
-    
-    [Key(4)]
-    public (int2 position, EquippableItem item)[] DockingBays;
-
-    [Key(5)]
-    public Dictionary<int2, PersistentBehaviorData[]> PersistedBehaviors;
-
-    [Key(6)]
-    public float[,] Temperature;
-    
-    [Key(7)]
-    public float[,] Armor;
-    
-    [Key(8)]
-    public bool2[,] Conductivity;
-    
-    [Key(10)]
-    public int[] DockingBayAssignments;
-    
-    [Key(11)]
-    public (int2 position, ItemInstance item)[][] CargoContents;
-    
-    [Key(12)]
-    public (int2 position, ItemInstance item)[][] DockingBayContents;
-
-    [Key(13)]
-    public EntityPack[] Children;
-
-    private int _price;
-
     public static EntityPack Pack(Entity entity)
     {
-        var pack = new EntityPack();
+        EntityPack pack;
+        if (entity is OrbitalEntity orbital)
+            pack = new OrbitalEntityPack
+            {
+                Orbit = orbital.OrbitData
+            };
+        else if (entity is Ship ship)
+            pack = new ShipPack
+            {
+                Position = ship.Position,
+                Direction = ship.Direction,
+                IsPlayerShip = ship.IsPlayerShip
+            };
+        else throw new ArgumentException("Attempted to pack an instance of abstract class Entity!");
+
+        pack.Settings = entity.Settings;
         
         // Filter item behavior collections by those with any persistent behaviors
         // For each item create an object containing the item position and a list of persistent behaviors
@@ -75,33 +48,49 @@ public class EntityPack
         pack.Armor = entity.Armor;
         pack.Temperature = entity.Temperature;
         pack.Conductivity = entity.HullConductivity;
-        var hullData = entity.ItemManager.GetData(entity.Hull) as HullData;
         pack.Children = entity.Children.Select(Pack).ToArray();
         return pack;
     }
 
-    public static Ship Unpack(ItemManager itemManager, Zone zone, EntityPack pack, bool instantiate = false)
+    public static Entity Unpack(ItemManager itemManager, Zone zone, EntityPack pack, bool instantiate = false)
     {
-        var entity = new Ship(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull);
+        pack.Settings ??= MessagePackSerializer.Deserialize<EntitySettings>(
+            MessagePackSerializer.Serialize(itemManager.GameplaySettings.DefaultEntitySettings));
+        return pack switch
+        {
+            ShipPack shipPack => Unpack(itemManager, zone, shipPack, instantiate),
+            OrbitalEntityPack orbitalEntityPack => Unpack(itemManager, zone, orbitalEntityPack, instantiate),
+            _ => null
+        };
+    }
+
+
+    private static Ship Unpack(ItemManager itemManager, Zone zone, ShipPack pack, bool instantiate = false)
+    {
+        
+        var entity = new Ship(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull, pack.Settings);
+        Restore(itemManager, zone, pack, entity, instantiate);
+        entity.Position = pack.Position;
+        entity.Direction = pack.Direction;
+        entity.IsPlayerShip = pack.IsPlayerShip;
+        return entity;
+    }
+
+    private static OrbitalEntity Unpack(ItemManager itemManager, Zone zone, OrbitalEntityPack pack, bool instantiate = false)
+    {
+        var entity = new OrbitalEntity(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull, pack.Orbit, pack.Settings);
         Restore(itemManager, zone, pack, entity, instantiate);
         return entity;
     }
 
-    public static OrbitalEntity Unpack(ItemManager itemManager, Zone zone, EntityPack pack, Guid orbit, bool instantiate = false)
-    {
-        var entity = new OrbitalEntity(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull, orbit);
-        Restore(itemManager, zone, pack, entity, instantiate);
-        return entity;
-    }
-
-    public static void Restore(ItemManager itemManager, Zone zone, EntityPack pack, Entity entity, bool instantiate = false)
+    private static void Restore(ItemManager itemManager, Zone zone, EntityPack pack, Entity entity, bool instantiate = false)
     {
         entity.Name = pack.Name;
         entity.Children = pack.Children.Select(c =>
         {
             var child = Unpack(itemManager, zone, c, instantiate);
             child.Parent = entity;
-            return (Entity) child;
+            return child;
         }).ToList();
         foreach (var (position, item) in pack.Equipment) entity.TryEquip(instantiate ? (EquippableItem) itemManager.Instantiate(item) : item, position);
         foreach (var (position, item) in pack.CargoBays) entity.TryEquip(instantiate ? (EquippableItem) itemManager.Instantiate(item) : item, position);
@@ -144,50 +133,117 @@ public class EntityPack
         foreach(var v in hullData.Shape.Coordinates)
             entity.HullConductivity[v.x,v.y] = pack.Conductivity[v.x,v.y];
     }
+}
+
+[MessagePackObject]
+public class ShipPack : EntityPack
+{
+    [Key(15)] public float3 Position;
+    [Key(16)] public float2 Direction;
+    [Key(17)] public bool IsPlayerShip;
+}
+
+[MessagePackObject]
+public class OrbitalEntityPack : EntityPack
+{
+    [Key(15)]
+    public Guid Orbit;
+}
+
+[MessagePackObject, 
+ Union(0, typeof(OrbitalEntityPack)),
+ Union(1, typeof(ShipPack))]
+public abstract class EntityPack
+{
+    [Key(0)]
+    public string Name;
+    
+    [Key(1)]
+    public EquippableItem Hull;
+    
+    [Key(2)]
+    public (int2 position, EquippableItem item)[] Equipment;
+    
+    [Key(3)]
+    public (int2 position, EquippableItem item)[] CargoBays;
+    
+    [Key(4)]
+    public (int2 position, EquippableItem item)[] DockingBays;
+
+    [Key(5)]
+    public Dictionary<int2, PersistentBehaviorData[]> PersistedBehaviors;
+
+    [Key(6)]
+    public float[,] Temperature;
+    
+    [Key(7)]
+    public float[,] Armor;
+    
+    [Key(8)]
+    public bool2[,] Conductivity;
+    
+    [Key(10)]
+    public int[] DockingBayAssignments;
+    
+    [Key(11)]
+    public (int2 position, ItemInstance item)[][] CargoContents;
+    
+    [Key(12)]
+    public (int2 position, ItemInstance item)[][] DockingBayContents;
+
+    [Key(13)]
+    public EntityPack[] Children;
+
+    [Key(14)]
+    public EntitySettings Settings;
+
+    private int _price;
 
     public int Price(ItemManager itemManager)
     {
-        if (_price == 0)
+        if (_price != 0) return _price;
+        
+        var hullData = itemManager.GetData(Hull);
+        _price = hullData.Price;
+
+        foreach (var (_, item) in Equipment)
         {
-            var hullData = itemManager.GetData(Hull);
-            _price = hullData.Price;
+            var itemData = itemManager.GetData(item);
+            _price += itemData.Price;
+        }
+        foreach (var (_, item) in CargoBays)
+        {
+            var itemData = itemManager.GetData(item);
+            _price += itemData.Price;
+        }
+        foreach (var (_, item) in DockingBays)
+        {
+            var itemData = itemManager.GetData(item);
+            _price += itemData.Price;
+        }
 
-            foreach (var (_, item) in Equipment)
+        foreach (var t in CargoContents)
+        {
+            foreach (var (_, item) in t)
             {
                 var itemData = itemManager.GetData(item);
-                _price += itemData.Price;
+                if (item is SimpleCommodity s)
+                    _price += itemData.Price * s.Quantity;
+                else
+                    _price += itemData.Price;
             }
-            foreach (var (_, item) in CargoBays)
+        }
+
+        foreach (var t in DockingBayContents)
+        {
+            foreach (var (_, item) in t)
             {
                 var itemData = itemManager.GetData(item);
-                _price += itemData.Price;
+                if (item is SimpleCommodity s)
+                    _price += itemData.Price * s.Quantity;
+                else
+                    _price += itemData.Price;
             }
-            foreach (var (_, item) in DockingBays)
-            {
-                var itemData = itemManager.GetData(item);
-                _price += itemData.Price;
-            }
-
-            for (var bayIndex = 0; bayIndex < CargoContents.Length; bayIndex++)
-                foreach (var (_, item) in CargoContents[bayIndex])
-                {
-                    var itemData = itemManager.GetData(item);
-                    if (item is SimpleCommodity s)
-                        _price += itemData.Price * s.Quantity;
-                    else
-                        _price += itemData.Price;
-                }
-
-            for (var bayIndex = 0; bayIndex < DockingBayContents.Length; bayIndex++)
-                foreach (var (_, item) in DockingBayContents[bayIndex])
-                {
-                    var itemData = itemManager.GetData(item);
-                    if (item is SimpleCommodity s)
-                        _price += itemData.Price * s.Quantity;
-                    else
-                        _price += itemData.Price;
-                }
-            
         }
 
         return _price;

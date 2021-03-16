@@ -8,9 +8,9 @@ public class ShipInstance : EntityInstance
     
     public Ship Ship { get; private set; }
 
-    public override void SetEntity(SectorRenderer sectorRenderer, Entity entity)
+    public override void SetEntity(ZoneRenderer zoneRenderer, Entity entity)
     {
-        base.SetEntity(sectorRenderer, entity);
+        base.SetEntity(zoneRenderer, entity);
         var ship = entity as Ship;
         if (ship == null)
         {

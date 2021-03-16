@@ -14,6 +14,9 @@ public class PlaceUIElementWorldspace : MonoBehaviour
     public float NoiseFrequency;
     public Canvas Canvas;
     public float BorderPixels = 10;
+    public bool PointAtTarget;
+    public Vector2 ScreenSpaceOffset;
+    public float EdgeMargin = .1f;
 
     public Vector3 Target;
 
@@ -21,6 +24,8 @@ public class PlaceUIElementWorldspace : MonoBehaviour
     private Transform _cameraTransform;
     private float _noiseOffset;
     private RectTransform _canvasRectTransform;
+    private Camera _mainCamera;
+    private Quaternion _startRotation;
 
     void Start()
     {
@@ -28,6 +33,8 @@ public class PlaceUIElementWorldspace : MonoBehaviour
         _rectTransform = GetComponent<RectTransform>();
         _cameraTransform = Camera.main.transform;
         _canvasRectTransform = Canvas.GetComponent<RectTransform>();
+        _mainCamera = Camera.main;
+        _startRotation = transform.rotation;
     }
 
     private void OnEnable()
@@ -42,10 +49,23 @@ public class PlaceUIElementWorldspace : MonoBehaviour
     {
         _noiseOffset += Time.deltaTime * NoiseFrequency;
 
-        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, Target);
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(_mainCamera, Target);
+        var toTarget = (Target - _mainCamera.transform.position).normalized;
+        
         screenPoint *= Mathf.Sign(Vector3.Dot(_cameraTransform.forward, Target - _cameraTransform.position));
         screenPoint += new Vector2(noise(_noiseOffset), noise(10 + _noiseOffset)) * NoiseAmplitude;
-        screenPoint = new Vector2(Mathf.Clamp(screenPoint.x, BorderPixels, Screen.width - BorderPixels),Mathf.Clamp(screenPoint.y, BorderPixels, Screen.height - BorderPixels));
-        _rectTransform.anchoredPosition = screenPoint / Canvas.scaleFactor - _canvasRectTransform.sizeDelta / 2f;
+        var clampedPoint = new Vector2(
+            Mathf.Clamp(screenPoint.x, BorderPixels, Screen.width - BorderPixels),
+            Mathf.Clamp(screenPoint.y, BorderPixels, Screen.height - BorderPixels));
+        var toEdge = _mainCamera.ScreenPointToRay(clampedPoint);
+        var edgeLerp = smoothstep(1 - EdgeMargin, 1, dot(toEdge.direction, toTarget));
+        if (PointAtTarget)
+        {
+            transform.rotation = Quaternion.Slerp(
+                Quaternion.LookRotation(Vector3.forward, (screenPoint - clampedPoint).normalized), 
+                _startRotation, edgeLerp);
+        }
+        clampedPoint += ScreenSpaceOffset * edgeLerp;
+        _rectTransform.anchoredPosition = clampedPoint / Canvas.scaleFactor - _canvasRectTransform.sizeDelta / 2f;
     }
 }

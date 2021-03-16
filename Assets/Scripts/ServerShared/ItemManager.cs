@@ -272,27 +272,6 @@ public class ItemManager
         return result;
     }
 
-    // Returns stat using ship temperature and modifiers
-    public float Evaluate(PerformanceStat stat, EquippedItem item)
-    {
-        var itemData = GetData(item.EquippableItem);
-    
-        var heat = !stat.HeatDependent ? 1 : pow(itemData.Performance(item.Temperature), Evaluate(itemData.HeatExponent, item.EquippableItem) * stat.HeatExponentMultiplier);
-        var durability = !stat.DurabilityDependent ? 1 : pow(item.EquippableItem.Durability / itemData.Durability, Evaluate(itemData.DurabilityExponent,item.EquippableItem));
-        var quality = pow(Quality(stat, item.EquippableItem), stat.QualityExponent);
-
-        var scaleModifier = 1.0f;
-        foreach (var value in stat.GetScaleModifiers(item.Entity).Values) scaleModifier = scaleModifier * value;
-
-        float constantModifier = 0;
-        foreach (var value in stat.GetConstantModifiers(item.Entity).Values) constantModifier += value;
-
-        var result = lerp(stat.Min, stat.Max, durability * quality * heat) * scaleModifier + constantModifier;
-        if (float.IsNaN(result))
-            return stat.Min;
-        return result;
-    }
-
     // public Entity CreateEntity(Guid zoneID, Guid corporation, Guid loadout)
     // {
     //     if (!(ItemData.Get(loadout) is LoadoutData loadoutData))
@@ -453,7 +432,7 @@ public class ItemManager
         var data = GetData(item);
         if(data is CraftedItemData c)
         {
-            var i = CreateInstance(c, 0, 1);
+            var i = CreateInstance(c);
             i.Rotation = item.Rotation;
             return i;
         }
@@ -466,7 +445,7 @@ public class ItemManager
         return null;
     }
     
-    public CraftedItemInstance CreateInstance(CraftedItemData item, float qualityMin, float qualityMax)
+    public CraftedItemInstance CreateInstance(CraftedItemData item)
     {
         if (item == null)
         {
@@ -502,7 +481,7 @@ public class ItemManager
                 var craftedIngredientData = ItemData.Get<CraftedItemData>(ingredient.Key);
                 for (int i = 0; i < ingredient.Value; i++)
                 {
-                    var itemInstance = CreateInstance(craftedIngredientData, qualityMin, qualityMax);
+                    var itemInstance = CreateInstance(craftedIngredientData);
                     if (itemInstance == null)
                     {
                         invalidIngredientFound = true;
@@ -520,6 +499,14 @@ public class ItemManager
         {
             _logger($"Unable to create crafted item ingredient: {invalidIngredient?.Name??"null"} for item {item.Name}");
         }
+
+        var quality = Random.NextFloat();
+        var tier = GameplaySettings.Tiers[0];
+        foreach (var t in GameplaySettings.Tiers)
+        {
+            if (t.Rarity > quality)
+                tier = t;
+        }
         
         if (item is EquippableItemData equippableItemData)
         {
@@ -527,7 +514,7 @@ public class ItemManager
             {
                 Data = item.ID,
                 Ingredients = ingredients,
-                Quality = Random.NextFloat(qualityMin, qualityMax),
+                Quality = tier.Quality,
                 Blueprint = blueprint.ID,
                 Name = $"{item.Name}"
             };
@@ -539,134 +526,20 @@ public class ItemManager
         {
             Data = item.ID,
             Ingredients = ingredients,
-            Quality = Random.NextFloat(qualityMin, qualityMax),
+            Quality = tier.Quality,
             Blueprint = blueprint.ID,
             Name = $"{item.Name}"
         };
         return newCommodity;
     }
-    
-    // class DijkstraNode
-    // {
-    //     public float Cost;
-    //     public DijkstraNode Parent;
-    //     public ZoneDefinition Zone;
-    // }
-	   //
-    // public List<ZoneDefinition> FindPath(ZoneDefinition source, ZoneDefinition target, bool bestFirst = false)
-    // {
-    //     SortedList<float,DijkstraNode> members = new SortedList<float,DijkstraNode>{{0,new DijkstraNode{Zone = source}}};
-    //     List<DijkstraNode> searched = new List<DijkstraNode>();
-    //     while (true)
-    //     {
-    //         var s = members.FirstOrDefault(m => !searched.Contains(m.Value)).Value; // Lowest cost unsearched node
-    //         if (s == null) return null; // No vertices left unsearched
-    //         if (s.Zone == target) // We found the path
-    //         {
-    //             Stack<DijkstraNode> path = new Stack<DijkstraNode>(); // Since we start at the end, use a LIFO collection
-    //             path.Push(s);
-    //             while(path.Peek().Parent!=null) // Keep pushing until we reach the start, which has no parent
-    //                 path.Push(path.Peek().Parent);
-    //             return path.Select(dv => dv.Zone).ToList();
-    //         }
-    //         // For each adjacent star (filter already visited zones unless heuristic is in use)
-    //         foreach (var dijkstraStar in s.Zone.Links.WhereSelectF(i => !bestFirst || members.All(m => m.Value.Zone != GalaxyZones[i]),
-    //                 // Cost is parent cost plus distance
-    //                 i => new DijkstraNode {Parent = s, Zone = GalaxyZones[i], Cost = s.Cost + length(s.Zone.Position - GalaxyZones[i].Position)}))
-    //             // Add new member to list, sorted by cost plus optional heuristic
-    //             members.Add(bestFirst ? dijkstraStar.Cost + length(dijkstraStar.Zone.Position - target.Position) : dijkstraStar.Cost, dijkstraStar);
-    //         searched.Add(s);
-    //     }
-    // }
 
-    // public bool MoveCargo(Entity source, Entity target, ItemInstance item, int quantity = int.MaxValue)
-    // {
-    //     if (item is CraftedItemInstance craftedItemInstance)
-    //     {
-    //         var craftedItemData = Cache.Get<CraftedItemData>(craftedItemInstance.Data);
-    //         if (target.Capacity - target.OccupiedCapacity > craftedItemData.Size)
-    //         {
-    //             // Target has the cargo capacity for the item, simply move the instance
-    //             source.Cargo.Remove(item.ID);
-    //             target.Cargo.Add(item.ID);
-    //             source.RecalculateMass();
-    //             target.RecalculateMass();
-    //             return true;
-    //         }
-    //         return false;
-    //     }
-    //     
-    //     if (item is SimpleCommodity simpleCommoditySource)
-    //     {
-    //         quantity = min(quantity, simpleCommoditySource.Quantity);
-    //         var simpleCommodityData = Cache.Get<SimpleCommodityData>(simpleCommoditySource.Data);
-    //         var spareCapacity = (int) (target.Capacity - target.OccupiedCapacity);
-    //         var simpleCommodityTarget = target.Cargo
-    //             .Select(i => Cache.Get<ItemInstance>(i))
-    //             .FirstOrDefault(i => i.Data == simpleCommodityData.ID) as SimpleCommodity;
-    //         var success = spareCapacity >= quantity;
-    //         quantity = min(quantity, spareCapacity);
-    //         if (simpleCommodityTarget == null)
-    //         {
-    //             if (quantity == simpleCommoditySource.Quantity)
-    //             {
-    //                 // Target has the cargo capacity to hold the full quantity,
-    //                 // and the target has no matching item instance;
-    //                 // simply move the existing item instance to the target
-    //                 source.Cargo.Remove(simpleCommoditySource.ID);
-    //                 target.Cargo.Add(simpleCommoditySource.ID);
-    //                 source.RecalculateMass();
-    //                 target.RecalculateMass();
-    //                 return success;
-    //             }
-    //             else
-    //             {
-    //                 // Target has the cargo capacity to hold the desired quantity
-    //                 // and the target has no matching item instance;
-    //                 // Create a new item instance on the target and decrement the quantity of the source instance
-    //                 var newSimpleCommodity = new SimpleCommodity
-    //                 {
-    //                     Context = this,
-    //                     Data = simpleCommodityData.ID,
-    //                     Quantity = simpleCommoditySource.Quantity
-    //                 };
-    //                 Cache.Add(newSimpleCommodity);
-    //                 target.Cargo.Add(newSimpleCommodity.ID);
-    //                 simpleCommoditySource.Quantity -= quantity;
-    //                 source.RecalculateMass();
-    //                 target.RecalculateMass();
-    //                 return success;
-    //             }
-    //         }
-    //         else
-    //         {
-    //             if (quantity == simpleCommoditySource.Quantity)
-    //             {
-    //                 // Target has the cargo capacity to hold the full quantity,
-    //                 // and there is already a matching item instance;
-    //                 // delete the source entity's item instance and increment the target's quantity
-    //                 source.Cargo.Remove(simpleCommoditySource.ID);
-    //                 Cache.Delete(simpleCommoditySource);
-    //                 simpleCommodityTarget.Quantity += quantity;
-    //                 source.RecalculateMass();
-    //                 target.RecalculateMass();
-    //                 return success;
-    //             }
-    //             else
-    //             {
-    //                 // Target has the cargo capacity to hold the desired quantity,
-    //                 // and there is already a matching item instance;
-    //                 // decrement the source's quantity and increment the target's quantity
-    //                 simpleCommoditySource.Quantity -= quantity;
-    //                 simpleCommodityTarget.Quantity += quantity;
-    //                 source.RecalculateMass();
-    //                 target.RecalculateMass();
-    //                 return success;
-    //             }
-    //         }
-    //         
-    //     }
-    //     
-    //     return false;
-    // }
+    public (RarityTier tier, int upgrades) GetTier(CraftedItemInstance item)
+    {
+        var tier = GameplaySettings.Tiers[0];
+        foreach (var t in GameplaySettings.Tiers)
+            if (item.Quality + .001f > t.Quality)
+                tier = t;
+        int upgrades = (int) ((item.Quality - tier.Quality) / .0499f);
+        return (tier, upgrades);
+    }
 }

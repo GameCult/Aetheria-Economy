@@ -55,5 +55,6 @@ public class SimpleCommodity : ItemInstance
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class EquippableItem : CraftedItemInstance
 {
-    [JsonProperty("durability"), Key(7)]  public float Durability;
+    [JsonProperty("durability"), Key(7)] public float Durability;
+    [JsonProperty("override"), Key(8)] public bool OverrideShutdown;
 }

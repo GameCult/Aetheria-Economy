@@ -18,7 +18,7 @@ public static class RethinkConnection
 {
     public static RethinkDB R = RethinkDB.R;
     
-    public static RethinkQueryStatus RethinkConnect(DatabaseCache cache, string connectionString, bool syncLocalChanges = true, bool filterGalaxyData = true)
+    public static RethinkQueryStatus RethinkConnect(DatabaseCache cache, string connectionString, bool syncLocalChanges = true)
     {
         // Add Unity.Mathematics serialization support to RethinkDB Driver
         //Converter.Serializer.Converters.Add(new MathJsonConverter());
@@ -105,15 +105,7 @@ public static class RethinkConnection
             ReqlAst operation = R
                 .Db("Aetheria")
                 .Table("Galaxy");
-            if (filterGalaxyData)
-            {
-                var filter = ((Table) operation).Filter(o =>
-                    o["$type"] == typeof(GalaxyMapLayerData).Name || 
-                    o["$type"] == typeof(MegaCorporation).Name);
-                status.GalaxyEntries = filter.Count().RunAtom<int>(connection);
-                operation = filter;
-            }
-            else status.GalaxyEntries = ((Table) operation).Count().RunAtom<int>(connection);
+            status.GalaxyEntries = ((Table) operation).Count().RunAtom<int>(connection);
             
             var result = await operation
                 .RunCursorAsync<DatabaseEntry>(connection);
@@ -147,10 +139,10 @@ public static class RethinkConnection
             }
         }).WrapErrors();
 
-        Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).Subscribe(_ =>
-        {
-            Debug.Log(R.Now().Run<DateTime>(connection).ToString() as string);
-        });
+        // Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).Subscribe(_ =>
+        // {
+        //     Debug.Log(R.Now().Run<DateTime>(connection).ToString() as string);
+        // });
         
         return status;
     }

@@ -46,7 +46,7 @@ public class VelocityLimit : IBehavior
 
     public bool Execute(float delta)
     {
-        Limit = Context.Evaluate(_data.TopSpeed, Item);
+        Limit = Item.Evaluate(_data.TopSpeed);
         if (length(Entity.Velocity) > Limit)
             Entity.Velocity = normalize(Entity.Velocity) * Limit;
         return true;

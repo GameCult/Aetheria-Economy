@@ -60,7 +60,7 @@ public class TurretController : IBehavior
             if (b is Weapon weapon)
             {
                 _weapons.Add(weapon);
-                var vel = Context.Evaluate(weapon.WeaponData.Velocity, item);
+                var vel = weapon.Item.Evaluate(weapon.WeaponData.Velocity);
                 if (vel > .1f)
                 {
                     _predictShots = true;
@@ -95,7 +95,7 @@ public class TurretController : IBehavior
                 var fire = dot(
                     EquippedEntity.HardpointTransforms[EquippedEntity.Hardpoints[x.Item.Position.x, x.Item.Position.y]].direction,
                     EquippedEntity.LookDirection) > .99f;
-                if (Context.Evaluate(data.Range, x.Item) > dist && fire)
+                if (x.Item.Evaluate(data.Range) > dist && fire)
                 {
                     x.Activate();
                 }
