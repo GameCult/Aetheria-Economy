@@ -193,7 +193,11 @@ public class ZoneRenderer : MonoBehaviour
             foreach (var adjacentZone in zone.SectorZone.AdjacentZones)
             {
                 var dir = normalize(adjacentZone.Position - zone.SectorZone.Position);
-                AddWormhole(new Wormhole {Position = dir * Settings.DefaultZoneRadius * Settings.WormholeDistanceRatio});
+                AddWormhole(new Wormhole
+                {
+                    Target = adjacentZone,
+                    Position = dir * Settings.DefaultZoneRadius * Settings.WormholeDistanceRatio
+                });
             }
         }
     }

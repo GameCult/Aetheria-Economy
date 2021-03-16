@@ -62,7 +62,7 @@ public class ConsoleView : MonoBehaviour {
 	    ConsoleController.Instance.AppendLogLine("<color=" + (type == LogType.Error ? "red" : type == LogType.Warning ? "yellow" : "white") + ">" + condition + "</color>");
     }
 
-    ~ConsoleView() {
+    private void OnDestroy() {
 	    Application.logMessageReceived -= OnLogCallback;
         ConsoleController.Instance.VisibilityChanged -= OnVisibilityChanged;
         ConsoleController.Instance.LogChanged -= OnLogChanged;

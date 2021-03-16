@@ -51,6 +51,9 @@ public class RuntimeInspectable : Attribute { }
 [AttributeUsage(AttributeTargets.Class)]
 public class InspectableAttribute : Attribute { }
 
+[AttributeUsage(AttributeTargets.Class)]
+public class ExternalEntryAttribute : Attribute { }
+
 public class InspectableFieldAttribute : Attribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
@@ -102,6 +105,18 @@ public class RangedFloatInspectableAttribute : InspectableFieldAttribute
     public readonly float Min, Max;
 
     public RangedFloatInspectableAttribute(float min, float max)
+    {
+        Min = min;
+        Max = max;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Field)]
+public class RangedFloatAttribute : Attribute
+{
+    public readonly float Min, Max;
+
+    public RangedFloatAttribute(float min, float max)
     {
         Min = min;
         Max = max;

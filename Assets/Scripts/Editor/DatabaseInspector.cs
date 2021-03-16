@@ -199,7 +199,10 @@ public class DatabaseInspector : EditorWindow
         else if (type == typeof(Dictionary<Guid, float>))
         {
             var dict = (Dictionary<Guid, float>) field.GetValue(obj);
-            Inspect(field.Name.SplitCamelCase(), ref dict, link.EntryType);
+            var ranged = field.GetCustomAttribute<RangedFloatAttribute>();
+            if(ranged != null)
+                Inspect(field.Name.SplitCamelCase(), ref dict, link.EntryType, ranged.Min, ranged.Max);
+            else Inspect(field.Name.SplitCamelCase(), ref dict, link.EntryType);
         }
         else if (type == typeof(List<BlueprintStatEffect>))
         {
@@ -844,6 +847,65 @@ public class DatabaseInspector : EditorWindow
                     {
                         DragAndDrop.AcceptDrag();
                         value[guid] = 1;
+                        GUI.changed = true;
+                    }
+                }
+            }
+        }
+    }
+    
+    public void Inspect(string label, ref Dictionary<Guid,float> value, Type referenceType, float min, float max)
+    {
+        Space();
+        LabelField(label, EditorStyles.boldLabel);
+
+        using (var v = new VerticalScope(GUI.skin.box))
+        {
+            if (value.Count == 0)
+            {
+                using (var h = new HorizontalScope(_list.ListItemStyle))
+                {
+                    GUILayout.Label("Drag from list to add item");
+                }
+            }
+            foreach (var ingredient in value.ToArray())
+            {
+                using (var h = new HorizontalScope(_list.ListItemStyle))
+                {
+                    var entry = DatabaseCache.Get(ingredient.Key);
+                    if (entry == null)
+                    {
+                        value.Remove(ingredient.Key);
+                        GUI.changed = true;
+                        return;
+                    }
+                    
+                    if(entry is INamedEntry named)
+                        GUILayout.Label(named.EntryName);
+                    else GUILayout.Label(entry.ID.ToString());
+                    value[ingredient.Key] = Slider(value[ingredient.Key], min, max);
+                    
+                    var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                    if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                        value.Remove(ingredient.Key);
+                }
+            }
+
+            if (v.rect.Contains(Event.current.mousePosition))
+            {
+                var dragData = DragAndDrop.GetGenericData("Item");
+                var isId = dragData is Guid guid;
+                var dragEntry = isId ? DatabaseCache.Get(guid) : null;
+                var correctType = referenceType.IsInstanceOfType(dragEntry);
+                if(Event.current.type == EventType.DragUpdated)
+                    DragAndDrop.visualMode = correctType ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
+                else if(Event.current.type == EventType.DragPerform)
+                {
+                    if (isId && correctType)
+                    {
+                        DragAndDrop.AcceptDrag();
+                        value[guid] = max;
                         GUI.changed = true;
                     }
                 }

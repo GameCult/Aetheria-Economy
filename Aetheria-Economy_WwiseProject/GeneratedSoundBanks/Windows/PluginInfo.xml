@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PluginInfo Project="Aetheria-Economy_WwiseProject" Platform="Windows" BasePlatform="Windows">
-	<Plugins>
-		<Plugin Name="Wwise Parametric EQ" ID="6881283" DLL="AkParametricEQ"/>
-		<Plugin Name="Wwise Synth One" ID="9699330" DLL="AkSynthOne"/>
-		<Plugin Name="System" ID="11403271" DLL="DefaultSink"/>
-		<Plugin Name="No Output" ID="11862023" DLL="DefaultSink"/>
-	</Plugins>
-</PluginInfo>

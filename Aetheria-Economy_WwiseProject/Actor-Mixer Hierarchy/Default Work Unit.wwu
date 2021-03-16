@@ -227,7 +227,7 @@
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<BlendContainer Name="thuster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" ShortID="493176318">
+										<BlendContainer Name="thruster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" ShortID="493176318">
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
@@ -883,7 +883,7 @@
 																		<PointList>
 																			<Point>
 																				<XPos>0</XPos>
-																				<YPos>-6.69195</YPos>
+																				<YPos>-6.46329</YPos>
 																				<Flags>21</Flags>
 																			</Point>
 																			<Point>
@@ -1015,7 +1015,7 @@
 												</Sound>
 											</ChildrenList>
 										</BlendContainer>
-										<BlendContainer Name="thuster_medium" ID="{4261D6D4-BDC3-4423-BA6B-A92DE2181A21}" ShortID="616815775">
+										<BlendContainer Name="thruster_medium" ID="{4261D6D4-BDC3-4423-BA6B-A92DE2181A21}" ShortID="616815775">
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
@@ -1605,7 +1605,30 @@
 																<Value>3.6</Value>
 															</ValueList>
 															<RTPCList>
-																<RTPC Name="" ID="{AA52CC13-F93D-4D11-B911-A3E47301D92F}" ShortID="197859904"/>
+																<RTPC Name="" ID="{AA52CC13-F93D-4D11-B911-A3E47301D92F}" ShortID="197859904">
+																	<ReferenceList>
+																		<Reference Name="ControlInput">
+																			<ObjectRef Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" WorkUnitID="{C82BF7F2-D931-4045-B4AA-C026BEE07171}"/>
+																		</Reference>
+																	</ReferenceList>
+																	<Curve Name="" ID="{28F5A457-F090-4BDD-AF68-FE0F2F69F331}">
+																		<PropertyList>
+																			<Property Name="Flags" Type="int32" Value="3"/>
+																		</PropertyList>
+																		<PointList>
+																			<Point>
+																				<XPos>0</XPos>
+																				<YPos>-5.70471</YPos>
+																				<Flags>21</Flags>
+																			</Point>
+																			<Point>
+																				<XPos>1</XPos>
+																				<YPos>-22.60668</YPos>
+																				<Flags>53</Flags>
+																			</Point>
+																		</PointList>
+																	</Curve>
+																</RTPC>
 															</RTPCList>
 														</Property>
 													</PropertyList>
@@ -1725,7 +1748,7 @@
 												</Sound>
 											</ChildrenList>
 										</BlendContainer>
-										<BlendContainer Name="thuster_small" ID="{D355F5AE-732C-4638-988F-F1E01D1FC547}" ShortID="429644083">
+										<BlendContainer Name="thruster_small" ID="{D355F5AE-732C-4638-988F-F1E01D1FC547}" ShortID="429644083">
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
@@ -2778,7 +2801,7 @@
 										</Reference>
 									</ReferenceList>
 									<ChildrenList>
-										<AudioFileSource Name="Aetheia_Overheat_Alarm" ID="{62246652-9231-4A63-8732-A26E011D8D3F}">
+										<AudioFileSource Name="Reactor_Overheat" ID="{62246652-9231-4A63-8732-A26E011D8D3F}">
 											<Language>SFX</Language>
 											<AudioFile>Aetheia_Overheat_Alarm.wav</AudioFile>
 											<MediaIDList>
@@ -2787,7 +2810,7 @@
 										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="Aetheia_Overheat_Alarm" ID="{62246652-9231-4A63-8732-A26E011D8D3F}" Platform="Linked"/>
+										<ActiveSource Name="Reactor_Overheat" ID="{62246652-9231-4A63-8732-A26E011D8D3F}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
 							</ChildrenList>

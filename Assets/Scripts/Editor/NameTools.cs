@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MessagePack;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEditor;
@@ -28,6 +29,11 @@ public class NameTools : EditorWindow
         NameTools window = (NameTools)EditorWindow.GetWindow(typeof(NameTools));
         window.Show();
     }
+    
+    bool HasNonASCIIChars(string str)
+    {
+        return (System.Text.Encoding.UTF8.GetByteCount(str) != str.Length);
+    }
 
     void OnGUI()
     {
@@ -40,14 +46,17 @@ public class NameTools : EditorWindow
 
         if (GUILayout.Button("Save Name Files"))
         {
-            var database = new DatabaseCache();
+            RegisterResolver.Register();
+            var nameFilesDirectory = ActionGameManager.GameDataDirectory.CreateSubdirectory("NameFile");
             foreach (var nameFile in NameFiles)
             {
-                var entry = new NameFile();
-                entry.Names = nameFile.text.Split('\n');
-                database.Add(entry);
+                var entry = new NameFile
+                {
+                    Name = nameFile.name, 
+                    Names = nameFile.text.Split('\n')
+                };
+                File.WriteAllBytes(Path.Combine(nameFilesDirectory.FullName, $"{entry.ID.ToString()}.msgpack"), MessagePackSerializer.Serialize((DatabaseEntry) entry));
             }
-            database.Save(Path.Combine(ActionGameManager.GameDataDirectory.FullName, "Names.msgpack"));
         }
         
         nameFile = (TextAsset) EditorGUILayout.ObjectField("Name File", nameFile, typeof(TextAsset), false);
@@ -61,22 +70,20 @@ public class NameTools : EditorWindow
         {
             var lines = nameFile.text.Split('\n');
             using StreamWriter outputFile = new StreamWriter(Path.Combine(Application.dataPath, nameFile.name + ".csv"));
+            var names = new HashSet<string>();
             foreach (var line in lines)
             {
-                if (!_stripNumberTokens)
+                var tokens = line.Split(',', ' ');
+                foreach (var t in tokens)
                 {
-                    if (!string.IsNullOrEmpty(line) && Regex.IsMatch(line, "^[\\x00-\\x7F]+$") && !char.IsDigit(line[0]))
+                    if (!HasNonASCIIChars(t))
                     {
-                        outputFile.WriteLine(line.Trim());
-                    }
-                }
-                else
-                {
-                    var tokens = line.Split('_', '-', ' ');
-                    if(!(tokens.Any(t => t.Length == 2 && char.IsUpper(t[0]) && char.IsUpper(t[1]))))
-                    //if (Regex.IsMatch(line, "^[\\x00-\\x7F]+$") && !tokens.Any(t=>int.TryParse(t, out _)) && !tokens.Any(t=>t=="AM"||t=="FM"||t=="TV"))
-                    {
-                        outputFile.WriteLine(line.Trim());
+                        var s = new string(t.Where(c => char.IsLetter(c) || c == '-' || c == '`' || c == '\'').ToArray()).Trim().Trim('`','-');
+                        if(s.Length >= minWordLength && !names.Contains(s))
+                        {
+                            names.Add(s);
+                            outputFile.WriteLine(s);
+                        }
                     }
                 }
             }

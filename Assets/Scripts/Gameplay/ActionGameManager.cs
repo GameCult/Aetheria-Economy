@@ -38,8 +38,8 @@ public class ActionGameManager : MonoBehaviour
         {
             if (_database != null) return _database;
 
-            _database = new DatabaseCache();
-            _database.Load(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack"));
+            _database = new DatabaseCache(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack"));
+            _database.Load();
             
             return _database;
         }

@@ -71,6 +71,9 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("influence"), Key(11)]
     public int InfluenceDistance = 4;
     
+    [InspectableDatabaseLink(typeof(MegaCorporation)), RangedFloat(0, 1), JsonProperty("allegiance"), Key(12)]  
+    public Dictionary<Guid, float> Allegiance = new Dictionary<Guid, float>();
+    
     [IgnoreMember] public string EntryName
     {
         get => Name;
@@ -78,9 +81,16 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
     }
 }
 
-[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class NameFile : DatabaseEntry
+[Inspectable, MessagePackObject, ExternalEntry]
+public class NameFile : DatabaseEntry, INamedEntry
 {
-    [JsonProperty("names"), Key(1)]
-    public string[] Names;
+    [Key(1)] public string Name;
+    [Key(2)] public string[] Names;
+
+    [IgnoreMember]
+    public string EntryName
+    {
+        get => Name;
+        set => Name = value;
+    }
 }

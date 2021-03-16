@@ -8,7 +8,7 @@
 						<Action Name="" ID="{D6F2996A-8361-4D78-88C6-D60D15DD2F0E}" ShortID="692204141">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="thuster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+									<ObjectRef Name="thruster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -33,7 +33,7 @@
 						<Action Name="" ID="{9A7AD34B-FB31-46CE-8C31-D47E3DEF198A}" ShortID="644831442">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="thuster_medium" ID="{4261D6D4-BDC3-4423-BA6B-A92DE2181A21}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+									<ObjectRef Name="thruster_medium" ID="{4261D6D4-BDC3-4423-BA6B-A92DE2181A21}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -44,7 +44,7 @@
 						<Action Name="" ID="{AE15152D-2BC4-4BE2-8CC1-CE46A85F2139}" ShortID="131458033">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="thuster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+									<ObjectRef Name="thruster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -55,7 +55,7 @@
 						<Action Name="" ID="{E83A8A35-D933-48D9-BE5B-F2895CD0D141}" ShortID="13039791">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="thuster_small" ID="{D355F5AE-732C-4638-988F-F1E01D1FC547}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
+									<ObjectRef Name="thruster_small" ID="{D355F5AE-732C-4638-988F-F1E01D1FC547}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

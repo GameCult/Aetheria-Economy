@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using MessagePack;
 
 public class DatabaseCache
@@ -20,13 +21,62 @@ public class DatabaseCache
 
     private readonly object addLock = new object();
 
-    public Action<string> Logger = Console.WriteLine;
+    //public Action<string> Logger = Console.WriteLine;
+    private string _filePath;
 
     private readonly Dictionary<Guid, DatabaseEntry> _entries = new Dictionary<Guid, DatabaseEntry>();
 
-    private readonly Dictionary<Type, Dictionary<Guid, DatabaseEntry>> _types = new Dictionary<Type, Dictionary<Guid, DatabaseEntry>>();
+    private readonly Dictionary<Type, HashSet<DatabaseEntry>> _types = new Dictionary<Type, HashSet<DatabaseEntry>>();
+
+    private readonly Dictionary<Type, (DirectoryInfo directory, List<Guid> entries)> _externalTypes = new Dictionary<Type, (DirectoryInfo directory, List<Guid> entries)>();
+
+    private class ExternalEntry
+    {
+        public string FilePath;
+        public DatabaseEntry Entry;
+
+        public ExternalEntry(string filePath, DatabaseEntry entry)
+        {
+            FilePath = filePath;
+            Entry = entry;
+        }
+    }
+    private readonly Dictionary<Guid, ExternalEntry> _externalEntries = new Dictionary<Guid, ExternalEntry>();
 
     public IEnumerable<DatabaseEntry> AllEntries => _entries.Values;
+
+    public DatabaseCache(string filePath)
+    {
+        RegisterResolver.Register();
+        _filePath = filePath;
+        var fileInfo = new FileInfo(filePath);
+        var dataDirectory = fileInfo.Directory;
+        
+        // Entry types can be marked external
+        // External entries are stored individually and loaded on demand
+        // This is mainly to accomodate large files like datasets
+        foreach (var type in typeof(DatabaseEntry).GetAllChildClasses())
+        {
+            if (type.GetCustomAttribute<ExternalEntryAttribute>() != null)
+            {
+                var typeDirectory = dataDirectory.CreateSubdirectory(type.Name);
+                _externalTypes[type] = (typeDirectory, new List<Guid>());
+
+                // Cache the GUIDs for all available external entries for querying
+                // Initially set values to null to indicate they haven't been loaded yet
+                foreach (var file in typeDirectory.EnumerateFiles("*.msgpack"))
+                {
+                    Guid id;
+                    if (Guid.TryParse(file.Name.Substring(0, file.Name.IndexOf('.')), out id))
+                    {
+                        _externalEntries.Add(id, new ExternalEntry(file.FullName, null));
+                        _externalTypes[type].entries.Add(id);
+                    }
+                }
+            }
+            else _types[type] = new HashSet<DatabaseEntry>();
+        }
+    }
 
     public void Add(DatabaseEntry entry, bool remote = false)
     {
@@ -34,30 +84,44 @@ public class DatabaseCache
         {
             if (entry != null)
             {
+                entry.Database = this;
                 var exists = _entries.ContainsKey(entry.ID);
-                _entries[entry.ID] = entry;
+                
+                // If an external entry is added, store it separately
                 var type = entry.GetType();
-                var types = type.GetParentTypes();
-                foreach (var t in types)
+                if (_externalTypes.ContainsKey(type))
                 {
-                    if (!_types.ContainsKey(t))
-                        _types[t] = new Dictionary<Guid, DatabaseEntry>();
-                    _types[t][entry.ID] = entry;
-                }
-
-                if (remote)
-                {
-                    if (exists)
-                        OnDataUpdateRemote?.Invoke(entry);
+                    if (_externalEntries.ContainsKey(entry.ID))
+                    {
+                        _externalEntries[entry.ID].Entry = entry;
+                    }
                     else
-                        OnDataInsertRemote?.Invoke(entry);
+                    {
+                        _externalTypes[type].entries.Add(entry.ID);
+                        _externalEntries[entry.ID] = new ExternalEntry(
+                            Path.Combine(_externalTypes[type].directory.FullName, $"{entry.ID.ToString()}.msgpack"),
+                            entry);
+                    }
                 }
                 else
                 {
-                    if (exists)
-                        OnDataUpdateLocal?.Invoke(entry);
+                    _entries[entry.ID] = entry;
+                    _types[type].Add(entry);
+
+                    if (remote)
+                    {
+                        if (exists)
+                            OnDataUpdateRemote?.Invoke(entry);
+                        else
+                            OnDataInsertRemote?.Invoke(entry);
+                    }
                     else
-                        OnDataInsertLocal?.Invoke(entry);
+                    {
+                        if (exists)
+                            OnDataUpdateLocal?.Invoke(entry);
+                        else
+                            OnDataInsertLocal?.Invoke(entry);
+                    }
                 }
             }
         }
@@ -73,6 +137,19 @@ public class DatabaseCache
 
     public DatabaseEntry Get(Guid guid)
     {
+        if (_externalEntries.ContainsKey(guid))
+        {
+            if(_externalEntries[guid].Entry == null)
+            {
+                var bytes = File.ReadAllBytes(_externalEntries[guid].FilePath);
+                var e = MessagePackSerializer.Deserialize<DatabaseEntry>(bytes);
+                e.Database = this;
+                _externalEntries[guid].Entry = e;
+            }
+
+            return _externalEntries[guid].Entry;
+        }
+
         DatabaseEntry entry;
         _entries.TryGetValue(guid, out entry);
         return entry;
@@ -80,25 +157,31 @@ public class DatabaseCache
 	
     public T Get<T>(Guid guid) where T : DatabaseEntry
     {
-        if (!_types.ContainsKey(typeof(T)))
-            return null;
-        DatabaseEntry entry;
-        _types[typeof(T)].TryGetValue(guid, out entry);
-        return (T) entry;
+        return Get(guid) as T;
     }
 
-    public IEnumerable<T> GetAll<T>()
+    public IEnumerable<DatabaseEntry> GetAll(Type type)
     {
-        return !_types.ContainsKey(typeof(T)) ? Enumerable.Empty<T>() : _types[typeof(T)].Values.Cast<T>();
+        if (_externalTypes.ContainsKey(type))
+        {
+            return _externalTypes[type].entries.Select(Get);
+        }
+        return !_types.ContainsKey(type) ? Enumerable.Empty<DatabaseEntry>() : _types[type];
+    }
+
+    public IEnumerable<T> GetAll<T>() where T : DatabaseEntry
+    {
+        var type = typeof(T);
+        if (_externalTypes.ContainsKey(type))
+        {
+            return _externalTypes[type].entries.Select(Get<T>);
+        }
+        return !_types.ContainsKey(type) ? Enumerable.Empty<T>() : _types[type].Cast<T>();
     }
 
     public void Delete(DatabaseEntry entry, bool remote = false)
     {
         _entries.Remove(entry.ID);
-        foreach (var type in _types.Values)
-        {
-            type.Remove(entry.ID);
-        }
 
         if (remote)
             OnDataDeleteRemote?.Invoke(entry);
@@ -106,18 +189,25 @@ public class DatabaseCache
             OnDataDeleteLocal?.Invoke(entry);
     }
 
-    public void Load(string path)
+    public void Load()
     {
-        RegisterResolver.Register();
-        var bytes = File.ReadAllBytes(path);
+        var bytes = File.ReadAllBytes(_filePath);
         var entries = MessagePackSerializer.Deserialize<DatabaseEntry[]>(bytes);
+        foreach (var entry in entries) entry.Database = this;
         AddAll(entries);
     }
 
-    public void Save(string path)
+    public void Save()
     {
-        RegisterResolver.Register();
         var entries = AllEntries.ToArray();
-        File.WriteAllBytes(path, MessagePackSerializer.Serialize(entries));
+        File.WriteAllBytes(_filePath, MessagePackSerializer.Serialize(entries));
+        
+        foreach (var external in _externalEntries.Values)
+        {
+            if (external.Entry != null)
+            {
+                File.WriteAllBytes(external.FilePath, MessagePackSerializer.Serialize(external.Entry));
+            }
+        }
     }
 }

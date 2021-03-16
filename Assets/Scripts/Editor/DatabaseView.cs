@@ -63,7 +63,7 @@ public class DatabaseListView : EditorWindow
     {
         //_filePath = ;
         // Create database cache
-        _databaseCache = new DatabaseCache();
+        _databaseCache = new DatabaseCache(_filePath);
         
         var onInsert = new Action<DatabaseEntry>(entry =>
         {
@@ -162,16 +162,16 @@ public class DatabaseListView : EditorWindow
         }
         using (var h = new HorizontalScope())
         {
-            _fileName = TextField(_fileName);
+            //_fileName = TextField(_fileName);
             if (GUILayout.Button("Save"))
             {
-                _databaseCache.Save(_filePath);
+                _databaseCache.Save();
                 Debug.Log("Local DB Cache Saved!");
             }
 
             if (GUILayout.Button("Load"))
             {
-                _databaseCache.Load(_filePath);
+                _databaseCache.Load();
                 Debug.Log("Loaded DB From Local Cache!");
             }
         }
@@ -411,7 +411,7 @@ public class DatabaseListView : EditorWindow
             }
         }
         
-        var entries = _databaseCache.AllEntries.Where(item => !(item is ItemData)).ToArray();
+        //var entries = _databaseCache.AllEntries.Where(item => !(item is ItemData)).ToArray();
         for (var i = 0; i < _entryTypes.Length; i++)
         {
             using (var h = new HorizontalScope(ListItemStyle))
@@ -424,7 +424,7 @@ public class DatabaseListView : EditorWindow
             if (_entryFoldouts[i])
             {
                 int index = 0;
-                foreach (var entry in entries.Where(e=>e.GetType()==_entryTypes[i]).OrderBy(entry=>entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString()))
+                foreach (var entry in _databaseCache.GetAll(_entryTypes[i]).OrderBy(entry=>entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString()))
                 {
                     index++;
                     var style = ListItemStyle;
