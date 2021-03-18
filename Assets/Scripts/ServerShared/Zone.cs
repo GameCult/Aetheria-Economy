@@ -74,9 +74,24 @@ public class Zone
             var entity = EntitySerializer.Unpack(_itemManager, this, entityPack);
             Entities.Add(entity);
             entity.Activate();
+            if (entity is Ship {IsPlayerShip: false} ship)
+            {
+                Agents.Add(CreateAgent(ship));
+                if (lengthsq(ship.Position) < 1)
+                    ship.Position = _itemManager.Random.NextFloat3(float3(-pack.Radius * .5f), float3(pack.Radius * .5f));
+            }
         }
 
         // TODO: Associate planets with stored entities for planetary colonies
+    }
+
+    private Agent CreateAgent(Ship ship)
+    {
+        var agent = new Minion(ship);
+        var task = new PatrolOrbitsTask();
+        task.Circuit = Orbits.OrderBy(_ => _itemManager.Random.NextFloat()).Take(4).Select(x => x.Key).ToArray();
+        agent.Task = task;
+        return agent;
     }
 
     public ZonePack PackZone()

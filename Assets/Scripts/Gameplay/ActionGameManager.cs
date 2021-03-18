@@ -19,6 +19,7 @@ using UnityEngine.UI;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
+using float3 = Unity.Mathematics.float3;
 using quaternion = Unity.Mathematics.quaternion;
 using Random = UnityEngine.Random;
 
@@ -262,7 +263,7 @@ public class ActionGameManager : MonoBehaviour
                         ship.OnEnteredWormhole += () =>
                         {
                             GenerateLevel(wormhole.Target);
-                            ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w=>w.Target==Zone.SectorZone).Position,
+                            ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w=>w.Target==oldZone.SectorZone).Position,
                                 Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
                             CurrentEntity.Zone = Zone;
                         };
@@ -448,37 +449,28 @@ public class ActionGameManager : MonoBehaviour
         StartGame();
     }
 
-    public void GenerateLevel(SectorZone sectorZone = null)
+    public void GenerateLevel(SectorZone sectorZone)
     {
-        if (sectorZone != null)
+        if (sectorZone == null) throw new ArgumentNullException(nameof(sectorZone));
+        
+        if (sectorZone.Contents == null)
         {
-            if (sectorZone.Contents == null)
-            {
-                sectorZone.PackedContents ??= ZoneGenerator.GenerateZone(
-                    settings: Settings.ZoneSettings,
-                    mass: Settings.DefaultZoneMass,
-                    radius: Settings.DefaultZoneRadius
-                );
-                sectorZone.Contents = new Zone(ItemManager, Settings.PlanetSettings, sectorZone.PackedContents, sectorZone);
-            }
-            Zone = sectorZone.Contents;
-        }
-        else
-        {
-            var zonePack = ZoneGenerator.GenerateZone(
-                settings: Settings.ZoneSettings,
-                mass: Settings.DefaultZoneMass,
-                radius: Settings.DefaultZoneRadius
+            sectorZone.PackedContents ??= ZoneGenerator.GenerateZone(
+                ItemManager,
+                Settings.ZoneSettings,
+                CurrentSector,
+                sectorZone
             );
-            Zone = new Zone(ItemManager, Settings.PlanetSettings, zonePack, sectorZone);
+            sectorZone.Contents = new Zone(ItemManager, Settings.PlanetSettings, sectorZone.PackedContents, sectorZone);
         }
+        Zone = sectorZone.Contents;
         
         Zone.Log = s => Debug.Log($"Zone: {s}");
 
         if (CurrentEntity != null)
         {
             CurrentEntity.Deactivate();
-            CurrentEntity.Zone?.Entities.Remove(CurrentEntity);
+            CurrentEntity.Zone.Entities.Remove(CurrentEntity);
             CurrentEntity.Zone = Zone;
             Zone.Entities.Add(CurrentEntity);
             CurrentEntity.Activate();
@@ -525,15 +517,6 @@ public class ActionGameManager : MonoBehaviour
         // zone.Agents.Add(CreateAgent(enemyShip));
     }
 
-    private Agent CreateAgent(Ship ship)
-    {
-        var agent = new Minion(ship);
-        var task = new PatrolOrbitsTask();
-        task.Circuit = Zone.Orbits.OrderBy(_ => Random.value).Take(4).Select(x => x.Key).ToArray();
-        agent.Task = task;
-        return agent;
-    }
-
     private void StartGame()
     {
         if (CurrentSector != null)
@@ -542,6 +525,7 @@ public class ActionGameManager : MonoBehaviour
             {
                 GenerateLevel(CurrentSector.Entrance);
                 var ship = EntitySerializer.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
+                ship.Position = float3.zero;
                 ship.Zone = Zone;
                 Zone.Entities.Add(ship);
                 ship.Activate();
@@ -557,7 +541,6 @@ public class ActionGameManager : MonoBehaviour
                     BindToEntity(targetEntity);
             }
         }
-        else GenerateLevel();
         
         // var stationType = Database.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
         // var stationHull = ItemManager.CreateInstance(stationType) as EquippableItem;

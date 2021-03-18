@@ -32,31 +32,32 @@ public static class Extensions
 
     public static T[] WeightedRandomElements<T>(this IEnumerable<T> collection, ref Random random, Func<T, float> weightFunction, int count)
     {
-        var weights = new Dictionary<T, float>(collection.Count());
+        var elements = collection as T[] ?? collection.ToArray();
+        var weights = new Dictionary<T, float>(elements.Length);
         var totalWeight = 0f;
-        foreach (var x in collection)
+        foreach (var x in elements)
         {
             weights[x] = weightFunction(x);
             totalWeight += weights[x];
         }
 
-        var elements = new T[count];
+        var randomElements = new T[count];
         for (int i = 0; i < count; i++)
         {
             var targetWeight = random.NextFloat(totalWeight);
             var accumWeight = 0f;
-            foreach (var x in collection)
+            foreach (var x in elements)
             {
                 accumWeight += weights[x];
                 if (accumWeight > targetWeight)
                 {
-                    elements[i] = x;
+                    randomElements[i] = x;
                     break;
                 }
             }
         }
 
-        return elements;
+        return randomElements;
     }
     
     // Thanks, https://stackoverflow.com/a/48599119

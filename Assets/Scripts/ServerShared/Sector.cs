@@ -21,6 +21,7 @@ public class Sector
     public SectorZone Entrance { get; }
     public SectorZone Exit { get; }
 
+    private HashSet<Guid> _containedFactions;
     private SectorZone[] _exitPath;
     private Dictionary<MegaCorporation, MarkovNameGenerator> _nameGenerators = new Dictionary<MegaCorporation, MarkovNameGenerator>();
 
@@ -249,9 +250,10 @@ public class Sector
         if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
     }
 
-    private void GenerateSector()
+    public bool ContainsFaction(Guid factionID)
     {
-        
+        _containedFactions ??= new HashSet<Guid>(Factions.Select(f => f.ID));
+        return _containedFactions.Contains(factionID);
     }
 
     // Cache distance matrix and calculate isolation for every zone (used extensively for placing stuff)

@@ -128,7 +128,7 @@
 			float floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
 			float fogDensity = patchDensity + max(0,floorDensity);
 			float alpha = min(max(max(fogDensity, 0) + fillDensity, _AlphaFloor), .99);
-			float albedo = (pow(1-alpha, _TintExponent));
+			float albedo = (pow(1-alpha, _TintExponent)) * smoothstep(0,-50,pos.y);
 			return float4((albedo*_Tint*lightTint).rgb, alpha);
 		}
 

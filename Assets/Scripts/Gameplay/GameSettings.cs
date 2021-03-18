@@ -13,8 +13,6 @@ public class GameSettings : ScriptableObject
     public float HeatstrokePhasingFloor = 0;
     public float HeatstrokePhasingFrequency = 5;
     public float WormholeDistanceRatio;
-    public float DefaultZoneRadius;
-    public float DefaultZoneMass;
     public float DefaultViewDistance;
     public float MinimapZoneGravityRange;
     public float[] MinimapZoomLevels;

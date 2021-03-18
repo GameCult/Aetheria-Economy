@@ -87,8 +87,6 @@ public class SectorGenerationSettings
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
 public class ZoneGenerationSettings
 {
-    public GalaxyShapeSettings ShapeSettings;
-    
     public ExponentialCurve PlanetSafetyRadius;
     
     public float MassFloor = 1;
@@ -104,6 +102,8 @@ public class ZoneGenerationSettings
 
     public ExponentialLerp ZoneRadius;
     public ExponentialLerp ZoneMass;
+    public ExponentialLerp SubZoneCount;
+    public float ZoneBoundaryRadius;
     
     public float BeltProbability = .05f;
     public float BeltMassCeiling = 500f;

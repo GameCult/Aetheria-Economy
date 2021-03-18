@@ -405,7 +405,7 @@ public abstract class Entity
             var itemShapeInset = hullData.Shape.Inset(itemData.Shape, hullCoord, item.Rotation);
             var hardpointShapeInset = hullData.Shape.Inset(hardpoint.Shape, hardpoint.Position);
             
-            // Check every cell of the hardpoint shape
+            // Check every cell of the hardpoint shape for existing items
             foreach(var v in hardpointShapeInset.Coordinates)
                 if (GearOccupancy[v.x, v.y] != null)
                     return false;

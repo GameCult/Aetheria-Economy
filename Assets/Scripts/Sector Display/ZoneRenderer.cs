@@ -76,6 +76,7 @@ public class ZoneRenderer : MonoBehaviour
     private bool _rootFound;
     private Entity _perspectiveEntity;
     private IDisposable[] _perspectiveSubscriptions = new IDisposable[2];
+    private List<IDisposable> _zoneSubscriptions = new List<IDisposable>();
 
     public Dictionary<Wormhole, GameObject> WormholeInstances = new Dictionary<Wormhole, GameObject>();
 
@@ -184,9 +185,20 @@ public class ZoneRenderer : MonoBehaviour
         }
         
         foreach(var entity in zone.Entities)
+        {
+            Debug.Log($"Loading entity {entity.Name} from existing zone entity collection");
             LoadEntity(entity);
-        zone.Entities.ObserveAdd().Subscribe(e => LoadEntity(e.Value));
-        zone.Entities.ObserveRemove().Subscribe(e => UnloadEntity(e.Value));
+        }
+        _zoneSubscriptions.Add(zone.Entities.ObserveAdd().Subscribe(e =>
+        {
+            //Debug.Log($"Loading entity {e.Value.Name} from zone add event");
+            LoadEntity(e.Value);
+        }));
+        _zoneSubscriptions.Add(zone.Entities.ObserveRemove().Subscribe(e =>
+        {
+            //Debug.Log($"Unloading entity {e.Value.Name} from zone remove event");
+            UnloadEntity(e.Value);
+        }));
         
         if(zone.SectorZone != null)
         {
@@ -196,7 +208,7 @@ public class ZoneRenderer : MonoBehaviour
                 AddWormhole(new Wormhole
                 {
                     Target = adjacentZone,
-                    Position = dir * Settings.DefaultZoneRadius * Settings.WormholeDistanceRatio
+                    Position = dir * zone.Pack.Radius * Settings.WormholeDistanceRatio
                 });
             }
         }
@@ -214,9 +226,14 @@ public class ZoneRenderer : MonoBehaviour
         if (Zone == null) return;
         foreach (var wormhole in WormholeInstances.Values) Destroy(wormhole);
         WormholeInstances.Clear();
+        
+        foreach(var subscription in _zoneSubscriptions)
+            subscription.Dispose();
+        _zoneSubscriptions.Clear();
 
         foreach (var entity in Zone.Entities)
         {
+            Debug.Log($"Unloading entity {entity.Name} from entities remaining during clear!");
             UnloadEntity(entity);
         }
         

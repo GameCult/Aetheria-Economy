@@ -175,6 +175,50 @@ public class Shape
             );
         return shape;
     }
+
+    // TODO: Use the power of math to optimize this function!
+    // Try to find a rotation and position with which a shape can be placed to fit within another shape
+    public bool FitsWithin(Shape other, out ItemRotation rotation, out int2 position)
+    {
+        // Try every item orientation
+        foreach(var rot in (ItemRotation[])Enum.GetValues(typeof(ItemRotation)))
+        {
+            rotation = rot;
+            if (FitsWithin(other, rot, out var pos))
+            {
+                position = pos;
+                return true;
+            }
+        }
+
+        rotation = ItemRotation.None;
+        position = int2.zero;
+        return false;
+    }
+    
+    // Try to find a position with which a shape can be placed to fit within another shape
+    public bool FitsWithin(Shape other, ItemRotation rotation, out int2 position)
+    {
+        // Try every item position that could possibly fit
+        for(int x = 0; x < other.Width - Width + 1; x++)
+        {
+            for (int y = 0; y < other.Height - Height + 1; y++)
+            {
+                position = int2(x, y);
+                var fits = true;
+                foreach (var v in Coordinates)
+                {
+                    fits = fits && other[Rotate(v, rotation) + position];
+                    if (!fits) break;
+                }
+
+                if (fits) return true;
+            }
+        }
+
+        position = int2.zero;
+        return false;
+    }
 }
 
 [MessagePackObject, 

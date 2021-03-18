@@ -107,6 +107,11 @@ public class DatabaseCache
                 {
                     _entries[entry.ID] = entry;
                     _types[type].Add(entry);
+                    foreach (var parentType in type.GetParentTypes())
+                    {
+                        if(_types.ContainsKey(parentType))
+                            _types[parentType].Add(entry);
+                    }
 
                     if (remote)
                     {
