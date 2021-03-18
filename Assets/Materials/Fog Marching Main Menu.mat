@@ -61,5 +61,5 @@ Material:
     - _StepExponent: 2
     - _TintExponent: 8
     m_Colors:
-    - _Tint: {r: 0.34, g: 0.34, b: 0.34, a: 1}
+    - _Tint: {r: 0.59599996, g: 0.59599996, b: 0.59599996, a: 1}
   m_BuildTextureStacks: []

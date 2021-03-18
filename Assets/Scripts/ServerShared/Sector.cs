@@ -87,7 +87,7 @@ public class Sector
         
         // Create a delaunay triangulation to connect adjacent sectors
         var triangulation = DelaunayTriangulation<Vertex2<SectorZone>, Cell2<SectorZone>>
-            .Create(Zones.Select(z => new Vertex2<SectorZone>(z.Position, z)).ToList(), 1e-5f);
+            .Create(Zones.Select(z => new Vertex2<SectorZone>(z.Position, z)).ToList(), 1e-7f);
         var links = new HashSet<(SectorZone, SectorZone)>();
         foreach(var cell in triangulation.Cells)
         {
@@ -104,22 +104,22 @@ public class Sector
 
         progressCallback?.Invoke("Eliminating Zone Links");
         if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
-        foreach (var link in links.ToArray())
-        {
-            foreach (var zone in Zones)
-            {
-                if(zone != link.Item1 && zone != link.Item2)
-                    if (AetheriaMath.FindDistanceToSegment(zone.Position, link.Item1.Position, link.Item2.Position, out _) < minLineSeparation)
-                        links.Remove(link);
-            }
-        }
+        // foreach (var link in links.ToArray())
+        // {
+        //     foreach (var zone in Zones)
+        //     {
+        //         if(zone != link.Item1 && zone != link.Item2)
+        //             if (AetheriaMath.FindDistanceToSegment(zone.Position, link.Item1.Position, link.Item2.Position, out _) < minLineSeparation)
+        //                 links.Remove(link);
+        //     }
+        // }
 
         foreach (var link in links)
         {
             link.Item1.AdjacentZones.Add(link.Item2);
             link.Item2.AdjacentZones.Add(link.Item1);
         }
-        
+
         float LinkWeight((SectorZone, SectorZone) link)
         {
             return 1 / saturate(settings.CloudDensity((link.Item1.Position + link.Item2.Position) / 2)) *
@@ -158,12 +158,12 @@ public class Sector
         
         progressCallback?.Invoke("Finding Chokepoints");
         if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
-        
-        // Entrance is the most isolated zone (highest total distance to all other zones
-        Entrance = Zones.MaxBy(z => z.Isolation);
 
-        // Exit is the zone furthest from the entrance
-        Exit = Zones.MaxBy(z => Entrance.Distance[z]);
+        // Exit is the most isolated zone (highest total distance to all other zones)
+        Exit = Zones.MaxBy(z => z.Isolation);
+        
+        // Entrance is the zone furthest from the exit
+        Entrance = Zones.MaxBy(z => Exit.Distance[z]);
         
         // Find all zones on the exit path where removing that zone would disconnect the entrance from the exit
         // Disregard "corridor" zones with only two adjacent zones
@@ -226,7 +226,7 @@ public class Sector
 
         for (var i = 0; i < Factions.Length; i++)
         {
-            progressCallback?.Invoke($"Feeding Markov Chains: {i} / {Factions.Length}");
+            progressCallback?.Invoke($"Feeding Markov Chains: {i+1} / {Factions.Length}");
             //if(progressCallback!=null) Thread.Sleep(250); // Inserting Delay to make it seem like it's doing more work lmao
             var faction = Factions[i];
             _nameGenerators[faction] = new MarkovNameGenerator(ref random, database.Get<NameFile>(faction.GeonameFile).Names, settings);
@@ -241,7 +241,7 @@ public class Sector
             }
             else
             {
-                zone.Name = $"EAC-{random.NextInt(99999).ToString()}";
+                zone.Name = $"EAC-{random.NextInt(9999).ToString()}";
             }
         }
         

@@ -39,6 +39,7 @@ public static class EntitySerializer
 
         pack.Hull = entity.Hull;
         pack.Name = entity.Name;
+        pack.Faction = entity.Faction?.ID ?? Guid.Empty;
         pack.Equipment = entity.Equipment.Select(e => (e.Position, e.EquippableItem)).ToArray();
         pack.CargoBays = entity.CargoBays.Select(e => (e.Position, e.EquippableItem)).ToArray();
         pack.DockingBays = entity.DockingBays.Select(e => (e.Position, e.EquippableItem)).ToArray();
@@ -86,6 +87,7 @@ public static class EntitySerializer
     private static void Restore(ItemManager itemManager, Zone zone, EntityPack pack, Entity entity, bool instantiate = false)
     {
         entity.Name = pack.Name;
+        entity.Faction = itemManager.ItemData.Get<MegaCorporation>(pack.Faction);
         entity.Children = pack.Children.Select(c =>
         {
             var child = Unpack(itemManager, zone, c, instantiate);
@@ -138,15 +140,15 @@ public static class EntitySerializer
 [MessagePackObject]
 public class ShipPack : EntityPack
 {
-    [Key(15)] public float3 Position;
-    [Key(16)] public float2 Direction;
-    [Key(17)] public bool IsPlayerShip;
+    [Key(16)] public float3 Position;
+    [Key(17)] public float2 Direction;
+    [Key(18)] public bool IsPlayerShip;
 }
 
 [MessagePackObject]
 public class OrbitalEntityPack : EntityPack
 {
-    [Key(15)]
+    [Key(16)]
     public Guid Orbit;
 }
 
@@ -196,6 +198,9 @@ public abstract class EntityPack
 
     [Key(14)]
     public EntitySettings Settings;
+
+    [Key(15)]
+    public Guid Faction;
 
     private int _price;
 

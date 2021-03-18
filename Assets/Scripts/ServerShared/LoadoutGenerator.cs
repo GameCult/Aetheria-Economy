@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
@@ -50,10 +51,10 @@ public class LoadoutGenerator
     public HullData RandomHull(HullType type)
     {
         return ItemManager.ItemData.GetAll<HullData>()
-            .Where(item => item.HullType == type && (item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)))
+            .Where(item => item.HullType == type && (Faction == null || item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)))
             .WeightedRandomElements(ref Random,
                 item =>
-                    (item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) / // Prioritize items from allied manufacturers
+                    (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) / // Prioritize items from allied manufacturers
                     Zone.Distance[Sector.HomeZones[ItemManager.ItemData.Get<MegaCorporation>(item.Manufacturer)]] / // Penalize distance to manufacturer headquarters
                     pow(item.Price, PriceExponent), // Penalize item price to a controllable degree
                 1
@@ -64,10 +65,10 @@ public class LoadoutGenerator
     {
         return ItemManager.ItemData.GetAll<T>()
             .Where(item => Sector.ContainsFaction(item.Manufacturer) &&
-                           (item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)) &&
+                           (Faction == null || item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)) &&
                            (filter?.Invoke(item) ?? true))
             .WeightedRandomElements(ref Random, item =>
-                    (item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) * // Prioritize items from allied manufacturers
+                    (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) * // Prioritize items from allied manufacturers
                     item.Shape.Coordinates.Length / // Prioritize items that fill more of the hardpoint's slots
                     Zone.Distance[Sector.HomeZones[ItemManager.ItemData.Get<MegaCorporation>(item.Manufacturer)]] / // Penalize distance to manufacturer headquarters
                     pow(item.Price, PriceExponent), // Penalize item price to a controllable degree
@@ -85,6 +86,8 @@ public class LoadoutGenerator
     private void OutfitEntity(Entity entity)
     {
         var hullData = ItemManager.GetData(entity.Hull) as HullData;
+        foreach (var v in hullData.Shape.Coordinates) entity.HullConductivity[v.x, v.y] = true;
+        var previousItems = new List<EquippableItemData>();
         foreach (var hardpoint in hullData.Hardpoints)
         {
             if (hardpoint.Type == HardpointType.ControlModule)
@@ -100,7 +103,10 @@ public class LoadoutGenerator
             }
             else
             {
-                var itemData = RandomItem<GearData>(hardpoint);
+                // If a previously selected item fits, use that one
+                var itemData = previousItems
+                    .FirstOrDefault(i => i.HardpointType == hardpoint.Type && i.Shape.FitsWithin(hardpoint.Shape, hardpoint.Rotation, out _));
+                itemData ??= RandomItem<GearData>(hardpoint);
                 if (itemData == null) ItemManager.Log($"No compatible item found for entity {Enum.GetName(typeof(HardpointType), hardpoint.Type)} hardpoint!");
                 else
                 {
@@ -110,6 +116,7 @@ public class LoadoutGenerator
                     {
                         throw new InvalidLoadoutException($"Failed to equip selected {Enum.GetName(typeof(HardpointType), hardpoint.Type)}!");
                     }
+                    previousItems.Add(itemData);
                 }
             }
         }

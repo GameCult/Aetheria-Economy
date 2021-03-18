@@ -124,11 +124,11 @@
 			float noise = pow(triNoise3d(pos*_NoiseFrequency),2);// + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
 			pos.y += noise * _NoiseStrength;
 			float patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
-			float floorDist = -pos.y-(surface)+_GridFloorOffset;
+			float floorDist = -pos.y-surface+_GridFloorOffset;
 			float floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
 			float fogDensity = patchDensity + max(0,floorDensity);
 			float alpha = min(max(max(fogDensity, 0) + fillDensity, _AlphaFloor), .99);
-			float albedo = (pow(1-alpha, _TintExponent)) * smoothstep(0,-50,pos.y);
+			float albedo = pow(1-alpha, _TintExponent) * smoothstep(0,-250,pos.y);
 			return float4((albedo*_Tint*lightTint).rgb, alpha);
 		}
 

@@ -68,17 +68,13 @@ public class Shape
     
     public int2 Rotate(int2 position, ItemRotation rotation)
     {
-        switch (rotation)
+        return rotation switch
         {
-            case ItemRotation.Clockwise:
-                return int2(position.y, Width - 1 - position.x);
-            case ItemRotation.Reversed:
-                return int2(Width - 1 - position.x, Height - 1 - position.y);
-            case ItemRotation.CounterClockwise:
-                return int2(Height - 1 - position.y, position.x);
-            default:
-                return int2(position.x, position.y);
-        }
+            ItemRotation.Clockwise => int2(position.y, Width - 1 - position.x),
+            ItemRotation.Reversed => int2(Width - 1 - position.x, Height - 1 - position.y),
+            ItemRotation.CounterClockwise => int2(Height - 1 - position.y, position.x),
+            _ => int2(position.x, position.y)
+        };
     }
 
     private int2[] _cachedShapeCoordinates;
@@ -199,10 +195,12 @@ public class Shape
     // Try to find a position with which a shape can be placed to fit within another shape
     public bool FitsWithin(Shape other, ItemRotation rotation, out int2 position)
     {
+        var width = rotation == ItemRotation.Clockwise || rotation == ItemRotation.CounterClockwise ? Height : Width;
+        var height = rotation == ItemRotation.Clockwise || rotation == ItemRotation.CounterClockwise ? Width : Height;
         // Try every item position that could possibly fit
-        for(int x = 0; x < other.Width - Width + 1; x++)
+        for(int x = 0; x < other.Width - width + 1; x++)
         {
-            for (int y = 0; y < other.Height - Height + 1; y++)
+            for (int y = 0; y < other.Height - height + 1; y++)
             {
                 position = int2(x, y);
                 var fits = true;

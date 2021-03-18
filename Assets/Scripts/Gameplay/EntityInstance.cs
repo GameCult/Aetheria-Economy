@@ -36,6 +36,7 @@ public class EntityInstance : MonoBehaviour
     private bool _fadedElementsVisible = false;
     private bool _unfadedElementsVisible = false;
     private float _fadeTime;
+    private bool _destroyed;
     
     private (Reactor reactor, GameObject sfxSource) _reactor;
     private Dictionary<Radiator, GameObject> _radiatorSfx = new Dictionary<Radiator, GameObject>();
@@ -390,6 +391,8 @@ public class EntityInstance : MonoBehaviour
         {
             if (Entity.Hull.Durability < .01f)
             {
+                if (!this) return;
+                _destroyed = true;
                 if (DestroyEffect != null)
                 {
                     var t = Instantiate(DestroyEffect).transform;

@@ -62,7 +62,7 @@ public class ActionGameManager : MonoBehaviour
     public static Sector CurrentSector;
     
     public GameSettings Settings;
-    public string StarterShipTemplate = "Longinus";
+    //public string StarterShipTemplate = "Longinus";
     public float2 Sensitivity;
     public int Credits = 15000000;
     public float TargetSpottedBlinkFrequency = 20;
@@ -171,9 +171,9 @@ public class ActionGameManager : MonoBehaviour
         ItemManager = new ItemManager(Database, Settings.GameplaySettings, Debug.Log);
         ZoneRenderer.ItemManager = ItemManager;
 
-        _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");
-        Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.loadout")
-            .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
+        // _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");
+        // Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.loadout")
+        //     .Select(fi => MessagePackSerializer.Deserialize<EntityPack>(File.ReadAllBytes(fi.FullName))));
 
         #region Input Handling
 
@@ -266,6 +266,7 @@ public class ActionGameManager : MonoBehaviour
                             ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w=>w.Target==oldZone.SectorZone).Position,
                                 Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
                             CurrentEntity.Zone = Zone;
+                            SaveState();
                         };
                     }
                 }
@@ -483,38 +484,6 @@ public class ActionGameManager : MonoBehaviour
             UnbindEntity();
             BindToEntity(CurrentEntity);
         }
-
-        GenerateZoneEntities(Zone);
-    }
-
-    private void GenerateZoneEntities(Zone zone)
-    {
-        //
-        // var turretLoadout = Loadouts.First(x => x.Name == "Turret");
-        //
-        // for(int i=0; i<3; i++)
-        // {
-        //     var planet = zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(4+i);
-        //     var planetOrbit = planet.Orbit.Data.ID;
-        //     var planetPos = zone.GetOrbitPosition(planetOrbit);
-        //     for (int j = 0; j < 2; j++)
-        //     {
-        //         var pos = planetPos + ItemManager.Random.NextFloat2Direction() * planet.GravityWellRadius.Value * (.1f + .1f * j);
-        //         var orbit = zone.CreateOrbit(planetOrbit, pos);
-        //         var turret = EntityPack.Unpack(ItemManager, Zone, turretLoadout, orbit.ID, true);
-        //         turret.Activate();
-        //         turret.Name = $"Turret {i}-{(char) ('A' + j)}";
-        //         turret.Faction = testCorp;
-        //         zone.Entities.Add(turret);
-        //     }
-        // }
-        //
-        // var enemyShipLoadout = Loadouts.First(x => ((HullData) ItemManager.GetData(x.Hull)).HullType == HullType.Ship);
-        // var enemyShip = EntityPack.Unpack(ItemManager, Zone, enemyShipLoadout, true);
-        // enemyShip.Faction = testCorp;
-        // enemyShip.Activate();
-        // zone.Entities.Add(enemyShip);
-        // zone.Agents.Add(CreateAgent(enemyShip));
     }
 
     private void StartGame()
@@ -524,7 +493,10 @@ public class ActionGameManager : MonoBehaviour
             if (PlayerSettings.CurrentRun == null)
             {
                 GenerateLevel(CurrentSector.Entrance);
-                var ship = EntitySerializer.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
+                var loadoutGenerator = new LoadoutGenerator(ref ItemManager.Random, ItemManager, CurrentSector, Zone.SectorZone, null, 2);
+                var ship = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateShipLoadout(), true);
+                // EntitySerializer.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
+                ((Ship) ship).IsPlayerShip = true;
                 ship.Position = float3.zero;
                 ship.Zone = Zone;
                 Zone.Entities.Add(ship);
@@ -742,8 +714,13 @@ public class ActionGameManager : MonoBehaviour
             CurrentEntity = null;
             Dialog.Clear();
             Dialog.Title.text = "You have died!";
-            Dialog.Show(StartGame, null, "Try again!");
-            Dialog.MoveToCursor();
+            Dialog.Show(() =>
+            {
+                PlayerSettings.CurrentRun = null;
+                StartGame();
+            }, null, "Try again!");
+            Dialog.transform.position = new Vector3(Screen.width / 2, Screen.height / 2);
+            //Dialog.MoveToCursor();
             Observable.EveryUpdate()
                 .Select(_ => (Time.time - deathTime) / DeathPPTransitionTime)
                 .Where(t => t < 1)

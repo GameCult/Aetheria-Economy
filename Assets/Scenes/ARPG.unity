@@ -15148,7 +15148,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
-  StarterShipTemplate: Longinus
   Sensitivity:
     x: -0.001
     y: 0.001
@@ -25173,7 +25172,7 @@ Transform:
   m_GameObject: {fileID: 1857285684}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 4}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 1511875452}
   m_RootOrder: 1
