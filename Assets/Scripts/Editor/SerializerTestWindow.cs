@@ -1,6 +1,11 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using MessagePack;
 using MessagePack.Formatters;
 using MessagePack.Resolvers;
@@ -32,7 +37,11 @@ public class SerializerTestWindow : EditorWindow
     public void OnGUI()
     {
         //var obj = new ShieldData() {ID = Guid.NewGuid(), Name = "Bar" , HeatPerformanceCurve = new []{float4(0,0,0,0), float4(1,1,1,1)}} as DatabaseEntry;
-        var obj = new GalaxyRequestMessage() as Message;
+        //var obj = new GalaxyRequestMessage() as Message;
+        var obj = new Gradient();
+        var times = Enumerable.Range(0, 5).Select(i => (float) i / 4).ToArray();
+        obj.alphaKeys = times.Select(f => new GradientAlphaKey(1, f)).ToArray();
+        obj.colorKeys = times.Select(f => new GradientColorKey(UnityEngine.Random.ColorHSV(), f)).ToArray();
         // JsonSerializer serializer = new JsonSerializer();
         // serializer.Converters.Add(new MathJsonConverter());
         // serializer.Converters.Add(Converter.DateTimeConverter);

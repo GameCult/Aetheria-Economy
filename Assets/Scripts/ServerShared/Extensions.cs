@@ -11,6 +11,7 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using Random = Unity.Mathematics.Random;
 using Unity.Tiny;
+using float2 = Unity.Mathematics.float2;
 
 public static class Extensions
 {
@@ -29,11 +30,93 @@ public static class Extensions
         peer.Send(MessagePackSerializer.Serialize(message as Message), method);
     }
 
-    public static float Performance(this EquippableItemData itemData, float temperature)
+    public static T[] WeightedRandomElements<T>(this IEnumerable<T> collection, ref Random random, Func<T, float> weightFunction, int count)
     {
-        return saturate(itemData.HeatPerformanceCurve.Evaluate(saturate(
-            (temperature - itemData.MinimumTemperature) /
-            (itemData.MaximumTemperature - itemData.MinimumTemperature))));
+        var elements = collection as T[] ?? collection.ToArray();
+        var weights = new Dictionary<T, float>(elements.Length);
+        var totalWeight = 0f;
+        foreach (var x in elements)
+        {
+            weights[x] = weightFunction(x);
+            totalWeight += weights[x];
+        }
+
+        var randomElements = new T[count];
+        for (int i = 0; i < count; i++)
+        {
+            var targetWeight = random.NextFloat(totalWeight);
+            var accumWeight = 0f;
+            foreach (var x in elements)
+            {
+                accumWeight += weights[x];
+                if (accumWeight > targetWeight)
+                {
+                    randomElements[i] = x;
+                    break;
+                }
+            }
+        }
+
+        return randomElements;
+    }
+    
+    // Thanks, https://stackoverflow.com/a/48599119
+    public static bool ByteArrayCompare(ReadOnlySpan<byte> a1, ReadOnlySpan<byte> a2)
+    {
+        return a1.SequenceEqual(a2);
+    }
+
+    public static bool ByteEquals(this byte[] a, byte[] b) => ByteArrayCompare(a, b);
+
+    public static char Arrow(this ItemRotation rot)
+    {
+        switch (rot)
+        {
+            case ItemRotation.None:
+                return '\u2191';
+            case ItemRotation.Clockwise:
+                return '\u2192';
+            case ItemRotation.Reversed:
+                return '\u2193';
+            case ItemRotation.CounterClockwise:
+                return '\u2190';
+            default:
+                throw new ArgumentOutOfRangeException(nameof(rot), rot, null);
+        }
+    }
+
+    public static float2 Direction(this ItemRotation rotation)
+    {
+        switch (rotation)
+        {
+            case ItemRotation.None:
+                return float2(0, 1);
+            case ItemRotation.CounterClockwise:
+                return float2(-1, 0);
+            case ItemRotation.Reversed:
+                return float2(0, -1);
+            case ItemRotation.Clockwise:
+                return float2(1, 0);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
+        }
+    }
+
+    public static float2 Rotate(this float2 v, ItemRotation rotation)
+    {
+        switch (rotation)
+        {
+            case ItemRotation.None:
+                return v;
+            case ItemRotation.CounterClockwise:
+                return float2(-v.y, v.x);
+            case ItemRotation.Reversed:
+                return float2(-v.x, -v.y);
+            case ItemRotation.Clockwise:
+                return float2(v.y, -v.x);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
+        }
     }
 	
     public static string SplitCamelCase( this string str )
@@ -49,18 +132,26 @@ public static class Extensions
         );
     }
     
+    public static string FormatTypeName(this string typeName)
+    {
+        return (typeName.EndsWith("Data")
+            ? typeName.Substring(0, typeName.Length - 4)
+            : typeName).SplitCamelCase();
+    }
+    
     public static string SignificantDigits(this float d, int digits=10)
     {
-        int magnitude = (d == 0.0f) ? 0 : (int)Math.Floor(Math.Log10(Math.Abs(d))) + 1;
+        int magnitude = d == 0.0f ? 0 : (int)Math.Floor(Math.Log10(Math.Abs(d))) + 1;
         digits -= magnitude;
         if (digits < 0)
             digits = 0;
-        string fmt = "f" + digits.ToString();
-        return d.ToString(fmt);
+        string fmt = "f" + digits;
+        string strdec = d.ToString(fmt);
+        return strdec.Contains(".") ? strdec.TrimEnd('0').TrimEnd('.') : strdec;
     }
 
     private static Random? _random;
-    private static Random Random => (Random) (_random ?? (_random = new Random((uint) (DateTime.Now.Ticks%uint.MaxValue))));
+    //private static Random Random => (Random) (_random ??= new Random((uint) (DateTime.Now.Ticks%uint.MaxValue)));
     // public static T RandomElement<T>(this IEnumerable<T> enumerable) => enumerable.ElementAt(Random.NextInt(0, enumerable.Count()));
     public static float NextPowerDistribution(this ref Random random, float min, float max, float exp, float randexp) =>
         pow((pow(max, exp + 1) - pow(min, exp + 1)) * pow(random.NextFloat(), randexp) + pow(min, exp + 1), 1 / (exp + 1));
@@ -221,14 +312,10 @@ public static class Extensions
         return t * (t * (a * t + b) + c) + d;
     }
     
-    public static float AngleDiff(this float2 a, float2 b)
+    public static float Angle(this float2 from, float2 to)
     {
-        var directionAngle = atan2(b.y, b.x);
-        var currentAngle = atan2(a.y, a.x);
-        var d1 = directionAngle - currentAngle;
-        var d2 = directionAngle - 2 * PI - currentAngle;
-        var d3 = directionAngle + 2 * PI - currentAngle;
-        return abs(d1) < abs(d2) ? abs(d1) < abs(d3) ? d1 : d3 : abs(d2) < abs(d3) ? d2 : d3;
+        var num = sqrt(lengthsq(from) * lengthsq(to));
+        return num < 1.00000000362749E-15 ? 0.0f : acos(clamp(dot(from, to) / num, -1f, 1f)) * 57.29578f;
     }
     
     // https://stackoverflow.com/a/3188835
@@ -345,12 +432,6 @@ public static class ObjectExtensions
     public static T Copy<T>(this T original)
     {
         return (T)Copy((Object)original);
-    }
-
-    public static bool IntersectsWith(this Rect r1, Rect r2)
-    {
-        return (r2.x + r2.width >= r1.x && r2.x <= r1.x + r1.width) &&
-               (r2.y + r2.height >= r1.y && r2.y <= r1.y + r1.height);
     }
 }
 

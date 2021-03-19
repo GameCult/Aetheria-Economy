@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,74 +12,67 @@ using RethinkDb.Driver.Ast;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship), Order(-100)]
-public class WanderControllerData : ControllerData
-{
-    [InspectableField, JsonProperty("randomDockTime"), Key(6)]  
-    public float RandomDockTime = 5;
-    
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
-    {
-        return new WanderController(context, this, entity, item);
-    }
-}
-
-public class WanderController : ControllerBase, IBehavior
-{
-    public WanderTarget WanderTarget;
-    public override TaskType TaskType => TaskType.None;
-    public BehaviorData Data => _data;
-    
-    private WanderControllerData _data;
-    private GameContext _context;
-    private Entity _entity;
-    private Gear _item;
-    private Guid _target;
-    private float _dockTime = -1;
-    
-    public WanderController(GameContext context, WanderControllerData data, Entity entity, Gear item) : base(context, data, entity)
-    {
-        _context = context;
-        _data = data;
-        _entity = entity;
-        _item = item;
-        Task = Guid.NewGuid();
-    }
-
-    public new bool Update(float delta)
-    {
-        if (!Moving && _dockTime < 0)
-        {
-            NextTarget();
-        }
-
-        _dockTime -= delta;
-        return base.Update(delta);
-    }
-
-    private void NextTarget()
-    {
-        if (WanderTarget == WanderTarget.Planets)
-        {
-            var planets = _context.ZonePlanets[_entity.Zone];
-            var randomPlanet = _context.Cache.Get<PlanetData>(planets[_context.Random.NextInt(planets.Length)]);
-            MoveTo(() => _context.GetOrbitPosition(randomPlanet.Orbit), () => _context.GetOrbitVelocity(randomPlanet.Orbit));
-        }
-        else if (WanderTarget == WanderTarget.Orbitals)
-        {
-            var entities = _context.ZoneEntities[_entity.Zone].Values.ToArray();
-            var randomEntity = entities[_context.Random.NextInt(entities.Length)];
-            MoveTo(randomEntity, true, () =>
-            {
-                _context.SetParent(_entity, randomEntity);
-                _dockTime = _context.Random.NextFloat(_data.RandomDockTime);
-            });
-        }
-    }
-}
-
-public enum WanderTarget
-{
-    Planets,
-    Orbitals
-}
+// [MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship), Order(-100)]
+// public class WanderControllerData : ControllerData
+// {
+//     [InspectableField, JsonProperty("randomDockTime"), Key(6)]  
+//     public float RandomDockTime = 5;
+//     
+//     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+//     {
+//         return new WanderController(context, this, entity, item);
+//     }
+// }
+//
+// public class WanderController : ControllerBase<WanderTask>, IBehavior
+// {
+//     public WanderTarget WanderTarget;
+//     
+//     private WanderControllerData _data;
+//     private EquippedItem Item { get; }
+//     private Guid _target;
+//     private float _dockTime = -1;
+//     
+//     public WanderController(ItemManager itemManager, WanderControllerData data, Entity entity, EquippedItem item) : base(itemManager, data, entity)
+//     {
+//         _data = data;
+//         Item = item;
+//     }
+//
+//     public new bool Execute(float delta)
+//     {
+//         if (!Moving && _dockTime < 0)
+//         {
+//             NextTarget();
+//         }
+//
+//         _dockTime -= delta;
+//         return base.Execute(delta);
+//     }
+//
+//     private void NextTarget()
+//     {
+//         if (WanderTarget == WanderTarget.Planets)
+//         {
+//             var planets = Zone.Planets.Values.ToArray();
+//             var randomPlanet = planets[ItemManager.Random.NextInt(planets.Length)];
+//             MoveTo(() => Zone.GetOrbitPosition(randomPlanet.Orbit), () => Zone.GetOrbitVelocity(randomPlanet.Orbit));
+//         }
+//         else if (WanderTarget == WanderTarget.Orbitals)
+//         {
+//             var entities = Zone.Entities.Where(e=>e is OrbitalEntity).ToArray();
+//             var randomEntity = entities[ItemManager.Random.NextInt(entities.Length)];
+//             MoveTo(randomEntity, true, () =>
+//             {
+//                 Entity.SetParent(randomEntity);
+//                 _dockTime = ItemManager.Random.NextFloat(_data.RandomDockTime);
+//             });
+//         }
+//     }
+// }
+//
+// public enum WanderTarget
+// {
+//     Planets,
+//     Orbitals
+// }

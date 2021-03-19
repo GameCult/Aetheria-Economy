@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 
 public class NameAttribute : Attribute
 {
@@ -47,10 +51,24 @@ public class RuntimeInspectable : Attribute { }
 [AttributeUsage(AttributeTargets.Class)]
 public class InspectableAttribute : Attribute { }
 
+[AttributeUsage(AttributeTargets.Class)]
+public class ExternalEntryAttribute : Attribute { }
+
 public class InspectableFieldAttribute : Attribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
 public class InspectableTextAttribute : InspectableFieldAttribute { }
+
+[AttributeUsage(AttributeTargets.Field)]
+public class InspectableUnityObjectAttribute : InspectableFieldAttribute
+{
+    public Type ObjectType;
+
+    public InspectableUnityObjectAttribute(Type type)
+    {
+        ObjectType = type;
+    }
+}
 
 [AttributeUsage(AttributeTargets.Field)]
 public class InspectablePrefabAttribute : InspectableFieldAttribute { }
@@ -59,10 +77,16 @@ public class InspectablePrefabAttribute : InspectableFieldAttribute { }
 public class InspectableTextureAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
-public class TemperatureInspectableAttribute : InspectableFieldAttribute { }
+public class InspectableTextAssetAttribute : InspectableFieldAttribute { }
+
+[AttributeUsage(AttributeTargets.Field)]
+public class InspectableTemperatureAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
 public class InspectableAnimationCurveAttribute : InspectableFieldAttribute { }
+
+[AttributeUsage(AttributeTargets.Field)]
+public class InspectableColorAttribute : InspectableFieldAttribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
 public class InspectableDatabaseLinkAttribute : InspectableFieldAttribute
@@ -81,6 +105,18 @@ public class RangedFloatInspectableAttribute : InspectableFieldAttribute
     public readonly float Min, Max;
 
     public RangedFloatInspectableAttribute(float min, float max)
+    {
+        Min = min;
+        Max = max;
+    }
+}
+
+[AttributeUsage(AttributeTargets.Field)]
+public class RangedFloatAttribute : Attribute
+{
+    public readonly float Min, Max;
+
+    public RangedFloatAttribute(float min, float max)
     {
         Min = min;
         Max = max;
@@ -112,6 +148,23 @@ public class InspectableTypeAttribute : InspectableFieldAttribute
 [AttributeUsage(AttributeTargets.Field)]
 public class SimplePerformanceStatAttribute : Attribute { }
 
+/// <summary>
+///   <para>Specify a tooltip for a field in the Inspector window.</para>
+/// </summary>
+[AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+public class TooltipAttribute : Attribute
+{
+    /// <summary>
+    ///   <para>The tooltip text.</para>
+    /// </summary>
+    public readonly string tooltip;
+
+    /// <summary>
+    ///   <para>Specify a tooltip for a field.</para>
+    /// </summary>
+    /// <param name="tooltip">The tooltip text.</param>
+    public TooltipAttribute(string tooltip) => this.tooltip = tooltip;
+}
 // public class CategoryAttribute : Attribute
 // {
 //     public readonly Type Type;

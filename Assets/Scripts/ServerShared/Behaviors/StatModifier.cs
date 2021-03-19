@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
@@ -18,7 +22,7 @@ public class StatModifierData : BehaviorData
     [InspectableType(typeof(BehaviorData)), JsonProperty("requireBehavior"), Key(4)]
     public Type RequireBehavior;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new StatModifier(context, this, entity, item);
     }
@@ -29,14 +33,19 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
 {
     private StatModifierData _data;
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
     private PerformanceStat[] _stats;
+    
+    private static Type[] _statObjects;
 
-    public StatModifier(GameContext context, StatModifierData data, Entity entity, Gear item)
+    private static Type[] StatObjects => _statObjects = _statObjects ?? typeof(BehaviorData).GetAllChildClasses()
+        .Concat(typeof(EquippableItemData).GetAllChildClasses()).ToArray();
+
+    public StatModifier(ItemManager context, StatModifierData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -46,7 +55,7 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
 
     public void Initialize()
     {
-        var targetType = Context.StatObjects.FirstOrDefault(so => so.Name == _data.Stat.Target);
+        var targetType = StatObjects.FirstOrDefault(so => so.Name == _data.Stat.Target);
         if (targetType != null)
         {
             var statField = targetType.GetFields()
@@ -54,19 +63,17 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
             if (statField != null)
             {
                 if (typeof(EquippableItemData).IsAssignableFrom(targetType))
-                    _stats = Entity.Hardpoints
-                        .Select(hp => hp.Gear)
-                        .Where(gear => gear != null)
-                        .Where(gear => _data.RequireBehavior == null || gear.ItemData.Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
-                        .Where(gear => gear.ItemData.GetType() == targetType)
-                        .Select(gear => statField.GetValue(gear.ItemData) as PerformanceStat)
+                    _stats = Entity.Equipment
+                        .Select(hp => hp.EquippableItem)
+                        .Where(gear => _data.RequireBehavior == null || Context.GetData(gear).Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
+                        .Where(gear => Context.GetData(gear).GetType() == targetType)
+                        .Select(gear => statField.GetValue(Context.GetData(gear)) as PerformanceStat)
                         .ToArray();
                 else
-                    _stats = Entity.Hardpoints
-                        .Select(hp => hp.Gear)
-                        .Where(gear => gear != null)
-                        .Where(gear => _data.RequireBehavior == null || gear.ItemData.Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
-                        .SelectMany(gear => gear.ItemData.Behaviors)
+                    _stats = Entity.Equipment
+                        .Select(hp => hp.EquippableItem)
+                        .Where(gear => _data.RequireBehavior == null || Context.GetData(gear).Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
+                        .SelectMany(gear => Context.GetData(gear).Behaviors)
                         .Where(behaviorData => behaviorData.GetType() == targetType)
                         .Select(behaviorData => statField.GetValue(behaviorData) as PerformanceStat)
                         .ToArray();
@@ -74,12 +81,12 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
         }
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         foreach (var stat in _stats)
             (_data.Type == StatModifierType.Constant
                 ? stat.GetConstantModifiers(Entity)
-                : stat.GetScaleModifiers(Entity))[this] = Context.Evaluate(_data.Modifier, Item, Entity);
+                : stat.GetScaleModifiers(Entity))[this] = Item.Evaluate(_data.Modifier);
         return true;
     }
 

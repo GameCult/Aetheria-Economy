@@ -36,7 +36,7 @@
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
-			#include "Assets/Scripts/NIH/GPU Noise/SimplexNoiseGrad2D.cginc"
+			#include "Assets/Plugins/GPU Noise/SimplexNoiseGrad2D.cginc"
 
             struct appdata
             {

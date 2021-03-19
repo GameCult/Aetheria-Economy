@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,32 +13,28 @@ using MessagePack;
 using MessagePack.Formatters;
 using Newtonsoft.Json;
 using Unity.Mathematics;
-// TODO: USE THIS EVERYWHERE
 using static Unity.Mathematics.math;
 
 [Union(0, typeof(SimpleCommodity)), 
  Union(1, typeof(CompoundCommodity)), 
- Union(2, typeof(Gear)),
+ Union(2, typeof(EquippableItem)),
  JsonObject(MemberSerialization.OptIn), 
  JsonConverter(typeof(JsonKnownTypesConverter<ItemInstance>))]
-public abstract class ItemInstance : DatabaseEntry
+public abstract class ItemInstance
 {
-    [JsonProperty("data"), Key(1)]  public Guid Data;
-
-    public float Mass => Context.GetMass(this);
-    public float ThermalMass => Context.GetThermalMass(this);
-    public float Size => Context.GetSize(this);
+    [JsonProperty("data"), Key(0)] public Guid Data;
+    [JsonProperty("rotation"), Key(1)] public ItemRotation Rotation;
 }
 
 [Union(0, typeof(CompoundCommodity)), 
- Union(1, typeof(Gear)), 
+ Union(1, typeof(EquippableItem)), 
  JsonObject(MemberSerialization.OptIn),
  JsonConverter(typeof(JsonKnownTypesConverter<CraftedItemInstance>))]
 public abstract class CraftedItemInstance : ItemInstance
 {
     [JsonProperty("quality"), Key(2)]  public float Quality;
 
-    [JsonProperty("ingredients"), Key(3)]  public List<Guid> Ingredients = new List<Guid>();
+    [JsonProperty("ingredients"), Key(3)]  public List<ItemInstance> Ingredients = new List<ItemInstance>();
     
     [JsonProperty("blueprint"), Key(4)]  public Guid Blueprint;
     
@@ -44,27 +44,17 @@ public abstract class CraftedItemInstance : ItemInstance
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class CompoundCommodity : CraftedItemInstance {}
+public class CompoundCommodity : CraftedItemInstance { }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class SimpleCommodity : ItemInstance
 {
     [JsonProperty("quantity"), Key(2)]  public int Quantity;
-
-    public SimpleCommodityData ItemData => Context.GetData(this);
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class Gear : CraftedItemInstance, IChangeSource
+public class EquippableItem : CraftedItemInstance
 {
-    [JsonProperty("durability"), Key(7)]  public float Durability;
-
-    public EquippableItemData ItemData => Context.GetData(this);
-    
-    public event Action OnChanged;
-
-    public void Change()
-    {
-        OnChanged?.Invoke();
-    }
+    [JsonProperty("durability"), Key(7)] public float Durability;
+    [JsonProperty("override"), Key(8)] public bool OverrideShutdown;
 }

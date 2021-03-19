@@ -1,10 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-public class PropertyButton : MonoBehaviour
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PropertyButton : Property
 {
-    public TextMeshProUGUI Label;
-    public FlatFlatButton Button;
+    public Button Button;
 }

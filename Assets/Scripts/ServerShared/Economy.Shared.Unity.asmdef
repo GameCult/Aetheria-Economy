@@ -2,15 +2,16 @@
     "name": "Economy.Shared.Unity",
     "references": [
         "MessagePack",
-        "MagicOnion.Abstractions",
-        "Unity.Mathematics"
+        "Unity.Mathematics",
+        "UniRx"
     ],
-    "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": []
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
 }

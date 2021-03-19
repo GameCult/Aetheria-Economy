@@ -58,7 +58,7 @@ namespace RethinkDb.Driver.Net.Clustering
         private EpsilonValueCalculator calc;
         private float[] weights = null;
 
-        private Timer timer;
+        private System.Threading.Timer timer;
 
         /// <summary>
         /// Random value generator.
@@ -158,7 +158,7 @@ namespace RethinkDb.Driver.Net.Clustering
         public void StartDecayTimer()
         {
             var durationPerBucket = TimeSpan.FromTicks(decayDuration.Ticks / EpsilonBuckets);
-            this.timer = new Timer(PerformEpsilonGreedyDecay, null, Timeout.Infinite, Timeout.Infinite);
+            this.timer = new System.Threading.Timer(PerformEpsilonGreedyDecay, null, Timeout.Infinite, Timeout.Infinite);
 
             //fire now.
             this.timer.Change(TimeSpan.Zero, durationPerBucket);

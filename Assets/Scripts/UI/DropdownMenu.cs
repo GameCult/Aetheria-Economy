@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,12 +50,13 @@ public class DropdownMenu : MonoBehaviour
     {
         var optionButton = Instantiate(OptionPrefab, ContentRoot);
         optionButton.Label.text = text;
-        optionButton.Button.OnClick += data =>
+        optionButton.Button.onClick.AddListener(() =>
         {
             action();
             End();
-        };
-        optionButton.Button.CurrentState = !enabled ? FlatButtonState.Disabled : selected ? FlatButtonState.Selected : FlatButtonState.Unselected;
+        });
+        optionButton.Button.interactable = enabled;
+        //optionButton.Button..CurrentState = !enabled ? FlatButtonState.Disabled : selected ? FlatButtonState.Selected : FlatButtonState.Unselected;
         _options.Add(optionButton.gameObject);
     }
 

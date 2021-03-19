@@ -1,14 +1,22 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using MessagePack;
 using Newtonsoft.Json;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 [InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class SensorData : BehaviorData
 {
     [InspectableField, JsonProperty("sensitivity"), Key(3), RuntimeInspectable]  
     public PerformanceStat Sensitivity = new PerformanceStat();
+
+    [InspectableAnimationCurve, JsonProperty("sensitivityCurve"), Key(4), RuntimeInspectable]  
+    public float4[] SensitivityCurve;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Sensor(context, this, entity, item);
     }
@@ -19,12 +27,12 @@ public class Sensor : IBehavior
     private SensorData _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public Sensor(GameContext context, SensorData data, Entity entity, Gear item)
+    public Sensor(ItemManager context, SensorData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -32,9 +40,33 @@ public class Sensor : IBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
         // TODO: Handle Active Detection / Visibility From Reflected Radiance
+        var hardpoint = Entity.Hardpoints[Item.Position.x, Item.Position.y];
+        var forward = hardpoint != null && Entity.HardpointTransforms.ContainsKey(hardpoint) ? 
+            normalize(Entity.HardpointTransforms[hardpoint].direction.xz) : 
+            Entity.Direction;
+        foreach (var entity in Entity.Zone.Entities)
+        {
+            if(entity != Entity)
+            {
+                var diff = entity.Position.xz - Entity.Position.xz;
+                var angle = acos(dot(forward, normalize(diff)));
+                var dist = length(diff);
+                float previous;
+                Entity.EntityInfoGathered.TryGetValue(entity, out previous);
+                var next = saturate(
+                    previous +
+                    entity.Visibility *
+                    Item.Evaluate(_data.Sensitivity) *
+                    _data.SensitivityCurve.Evaluate(angle / PI) *
+                    delta / dist);
+                next *= 1 - Context.GameplaySettings.TargetInfoDecay * delta;
+                //Context.Log($"{entity.Name} visibility {(int)(previous * 100)}% -> {(int)(next * 100)}%");
+                Entity.EntityInfoGathered[entity] = next;
+            }
+        }
         return true;
         // var ship = Hardpoint.Ship.Ship.transform;
         // var contacts =

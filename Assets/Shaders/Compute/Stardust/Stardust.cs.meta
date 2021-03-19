@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 1d9e94d9c84cb6d46a2811d6a0e5e32e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ParticleCalculation: {fileID: 7200000, guid: f53a4ba56f0db2a49ad9f68150bf298a,
+      type: 3}
+  - ParticleMaterial: {fileID: 2100000, guid: fc00c35c3c370774c88d55240b6538ce, type: 2}
+  - ParticleDepthMaterial: {fileID: 2100000, guid: a4224fd7c4119ae4aa2ceb468dd05e44,
+      type: 2}
+  - HueTexture: {instanceID: 0}
+  - Heightmap: {fileID: 8400000, guid: 55786e8a3fda620489070358940e3c04, type: 2}
+  - Target: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

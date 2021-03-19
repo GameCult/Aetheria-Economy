@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -16,11 +20,11 @@ public class PropertiesPanel : MonoBehaviour
 {
 	public DropdownMenu Dropdown;
     public TextMeshProUGUI Title;
-    public RectTransform SectionPrefab;
-    public PropertiesList ListPrefab;
-    public PropertyButton PropertyPrefab;
-    public PropertyLabel PropertyLabelPrefab;
-    public AttributeProperty AttributePrefab;
+    public RectTransform Section;
+    public PropertiesList List;
+    public Property Property;
+    public PropertyLabel PropertyLabel;
+    public AttributeProperty Attribute;
     public InputField InputField;
     public RangedFloatField RangedFloatField;
     public RangedFloatField ProgressField;
@@ -29,8 +33,9 @@ public class PropertiesPanel : MonoBehaviour
     public PropertyButton PropertyButton;
     public ButtonField ButtonField;
     public IncrementField IncrementField;
+    public RectTransform Content;
     [HideInInspector] public FlatFlatButton SelectedChild;
-    [HideInInspector] public GameContext Context;
+    [HideInInspector] public ItemManager Context;
 
     protected List<GameObject> Properties = new List<GameObject>();
     protected List<FlatFlatButton> Buttons = new List<FlatFlatButton>();
@@ -38,7 +43,6 @@ public class PropertiesPanel : MonoBehaviour
     protected bool RadioSelection = false;
 
     protected event Action<GameObject> OnPropertyAdded;
-    protected IChangeSource ChangeSource;
     protected Action OnPropertiesChanged;
 
     public int Children => Properties.Count + Buttons.Count;
@@ -55,7 +59,6 @@ public class PropertiesPanel : MonoBehaviour
 
     private void OnDestroy()
     {
-	    RemoveListener();
     }
 
     // private void OnDisable()
@@ -68,6 +71,7 @@ public class PropertiesPanel : MonoBehaviour
 	    //RemoveListener();
         foreach(var property in Properties)
             Destroy(property);
+        Title.text = "Properties";
         Properties.Clear();
         Buttons.Clear();
         SelectedChild = null;
@@ -84,38 +88,34 @@ public class PropertiesPanel : MonoBehaviour
 
     public RectTransform AddSection(string name)
     {
-        var section = Instantiate(SectionPrefab, transform);
+        var section = Instantiate(Section, Content ?? transform);
         section.GetComponentInChildren<TextMeshProUGUI>().text = name;
         Properties.Add(section.gameObject);
         OnPropertyAdded?.Invoke(section.gameObject);
         return section;
     }
 
-    public PropertyButton AddProperty(string name, Func<string> read = null, Action<PointerEventData> onClick = null, bool radio = false)
+    public Property AddProperty(Func<string> read)
     {
-	    PropertyButton property;
+	    if (read == null) throw new ArgumentException("Attempted to add property with null read function!");
+	    
+	    var property = Instantiate(Property, Content ?? transform);
+	    property.Label.text = read();
+
+		RefreshPropertyValues += () => property.Label.text = read();
+	    Properties.Add(property.gameObject);
+	    OnPropertyAdded?.Invoke(property.gameObject);
+	    return property;
+    }
+
+    public Property AddProperty(string name, Func<string> read = null)
+    {
+	    Property property;
 	    if(read != null)
-			property = Instantiate(PropertyLabelPrefab, transform);
+			property = Instantiate(PropertyLabel, Content ?? transform);
 	    else
-		    property = Instantiate(PropertyPrefab, transform);
+		    property = Instantiate(Property, Content ?? transform);
         property.Label.text = name;
-        if (radio)
-        {
-	        RadioSelection = true;
-            Buttons.Add(property.Button);
-            property.Button.OnClick += data =>
-            {
-	            if (data.button == PointerEventData.InputButton.Left)
-	            {
-		            if (SelectedChild != null)
-			            SelectedChild.CurrentState = FlatButtonState.Unselected;
-		            SelectedChild = property.Button;
-		            SelectedChild.CurrentState = FlatButtonState.Selected;
-	            }
-                onClick?.Invoke(data);
-            };
-        }
-        else if(onClick!=null) property.Button.OnClick += onClick;
 
         if (read != null)
 	        RefreshPropertyValues += () => ((PropertyLabel) property).Value.text = read.Invoke();
@@ -126,7 +126,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public PropertiesList AddList(string name) //, IEnumerable<(string, Func<string>)> elements)
     {
-        var list = Instantiate(ListPrefab, transform);
+        var list = Instantiate(List, Content ?? transform);
         list.Context = Context;
         list.Dropdown = Dropdown;
         list.Title.text = name;
@@ -146,7 +146,7 @@ public class PropertiesPanel : MonoBehaviour
 
     public AttributeProperty AddPersonalityProperty(PersonalityAttribute attribute, Func<float> read)
     {
-        var attributeInstance = Instantiate(AttributePrefab, transform);
+        var attributeInstance = Instantiate(Attribute, Content ?? transform);
         attributeInstance.Title.text = attribute.Name;
         attributeInstance.HighLabel.text = attribute.HighName;
         attributeInstance.LowLabel.text = attribute.LowName;
@@ -156,29 +156,31 @@ public class PropertiesPanel : MonoBehaviour
         return attributeInstance;
     }
 
-    public virtual PropertyButton AddButton(string name, Action<PointerEventData> onClick)
+    public virtual PropertyButton AddButton(string name, Action onClick)
     {
-	    var button = Instantiate(PropertyButton, transform);
+	    var button = Instantiate(PropertyButton, Content ?? transform);
 	    button.Label.text = name;
-	    button.Button.OnClick += onClick;
+	    button.Button.interactable = onClick != null;
+	    button.Button.onClick.AddListener(() => onClick());
 	    Properties.Add(button.gameObject);
 	    OnPropertyAdded?.Invoke(button.gameObject);
 	    return button;
     }
 
-    public void AddButton(string name, string label, Action<PointerEventData> onClick)
+    public void AddButton(string name, string label, Action onClick)
     {
-	    var button = Instantiate(ButtonField, transform);
+	    var button = Instantiate(ButtonField, Content ?? transform);
 	    button.Label.text = name;
 	    button.ButtonLabel.text = label;
-	    button.Button.OnClick += onClick;
+	    button.Button.interactable = onClick != null;
+	    button.Button.onClick.AddListener(() => onClick());
 	    Properties.Add(button.gameObject);
 	    OnPropertyAdded?.Invoke(button.gameObject);
     }
 	
 	public void AddField(string name, Func<string> read, Action<string> write)
 	{
-		var field = Instantiate(InputField, transform);
+		var field = Instantiate(InputField, Content ?? transform);
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.Standard;
 		field.Field.onValueChanged.AddListener(val => write(val));
@@ -203,7 +205,7 @@ public class PropertiesPanel : MonoBehaviour
 
 	public void AddField(string name, Func<float> read, Action<float> write)
 	{
-		var field = Instantiate(InputField, transform);
+		var field = Instantiate(InputField, Content ?? transform);
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.DecimalNumber;
 		field.Field.onValueChanged.AddListener(val => write(float.Parse(val)));
@@ -223,7 +225,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<int> read, Action<int> write)
 	{
-		var field = Instantiate(InputField, transform);
+		var field = Instantiate(InputField, Content ?? transform);
 		field.Label.text = name;
 		field.Field.contentType = TMP_InputField.ContentType.IntegerNumber;
 		field.Field.onValueChanged.AddListener(val => write(int.Parse(val)));
@@ -243,10 +245,10 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddIncrementField(string name, Func<int> read, Action<int> write, Func<int> min, Func<int> max)
 	{
-		var field = Instantiate(IncrementField, transform);
+		var field = Instantiate(IncrementField, Content ?? transform);
 		field.Label.text = name;
-		field.Increment.OnClick += data => write(read() + 1);
-		field.Decrement.OnClick += data => write(read() - 1);
+		field.Increment.onClick.AddListener(() => write(read() + 1));
+		field.Decrement.onClick.AddListener(() => write(read() - 1));
 		RefreshPropertyValues += () =>
 		{
 			var val = read();
@@ -255,8 +257,8 @@ public class PropertiesPanel : MonoBehaviour
 			if (val < minval || val > maxval)
 				write(val = clamp(val, minval, maxval));
 			field.Value.text = val.ToString(CultureInfo.InvariantCulture);
-			field.Increment.CurrentState = val == maxval ? FlatButtonState.Disabled : FlatButtonState.Unselected;
-			field.Decrement.CurrentState = val == minval ? FlatButtonState.Disabled : FlatButtonState.Unselected;
+			field.Increment.interactable = val == maxval;
+			field.Decrement.interactable = val == minval;
 		};
 		Properties.Add(field.gameObject);
 		OnPropertyAdded?.Invoke(field.gameObject);
@@ -264,7 +266,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<float> read, Action<float> write, float min, float max)
 	{
-		var field = Instantiate(RangedFloatField, transform);
+		var field = Instantiate(RangedFloatField, Content ?? transform);
 		field.Label.text = name;
 		field.Slider.wholeNumbers = false;
 		field.Slider.minValue = min;
@@ -277,7 +279,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddProgressField(string name, Func<float> read)
 	{
-		var field = Instantiate(ProgressField, transform);
+		var field = Instantiate(ProgressField, Content ?? transform);
 		field.Label.text = name;
 		field.Slider.wholeNumbers = false;
 		field.Slider.minValue = 0;
@@ -290,7 +292,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<int> read, Action<int> write, int min, int max)
 	{
-		var field = Instantiate(RangedFloatField, transform);
+		var field = Instantiate(RangedFloatField, Content ?? transform);
 		field.Label.text = name;
 		field.Slider.wholeNumbers = true;
 		field.Slider.minValue = min;
@@ -303,7 +305,7 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<bool> read, Action<bool> write)
 	{
-		var field = Instantiate(BoolField, transform);
+		var field = Instantiate(BoolField, Content ?? transform);
 		field.Label.text = name;
 		field.Toggle.onValueChanged.AddListener(val => write(val));
 		RefreshPropertyValues += () => field.Toggle.isOn = read();
@@ -313,9 +315,9 @@ public class PropertiesPanel : MonoBehaviour
 	
 	public void AddField(string name, Func<int> read, Action<int> write, string[] enumOptions)
 	{
-		var field = Instantiate(EnumField, transform);
+		var field = Instantiate(EnumField, Content ?? transform);
 		field.Label.text = name;
-		field.Dropdown.OnClick += data =>
+		field.Dropdown.onClick.AddListener(() =>
 		{
 			var selected = read();
 			Dropdown.gameObject.SetActive(true);
@@ -327,28 +329,17 @@ public class PropertiesPanel : MonoBehaviour
 			}
 
 			Dropdown.Show((RectTransform) field.Dropdown.transform);
-		};
-		RefreshPropertyValues += () => field.Dropdown.Label.text = enumOptions[read()];
+		});
+		RefreshPropertyValues += () => field.DropdownLabel.text = enumOptions[read()];
 		Properties.Add(field.gameObject);
 		OnPropertyAdded?.Invoke(field.gameObject);
-	}
-
-	public void RemoveListener()
-	{
-		if (ChangeSource != null)
-		{
-			ChangeSource.OnChanged -= OnPropertiesChanged;
-			ChangeSource = null;
-			OnPropertiesChanged = null;
-		}
 	}
 	
 	public void Inspect(Entity entity)
 	{
         Clear();
         Title.text = entity.Name;
-        var hull = Context.Cache.Get<Gear>(entity.Hull);
-        var hullData = Context.Cache.Get<HullData>(hull.Data);
+        var hullData = Context.GetData(entity.Hull) as HullData;
         AddSection(
             hullData.HullType == HullType.Ship ? "Ship" :
             hullData.HullType == HullType.Station ? "Station" :
@@ -356,162 +347,42 @@ public class PropertiesPanel : MonoBehaviour
         //AddList(hullData.Name).Inspect(hull, entity);
         //PropertiesPanel.AddProperty("Hull", () => $"{hullData.Name}");
         AddEntityProperties(entity);
-
-        var hardpointList = AddList("Gear");
-        hardpointList.InspectHardpoints(entity);
-        //hardpointList.SetExpanded(false,true);
-        
-        var cargoList = AddList("Cargo");
-	    cargoList.InspectCargo(entity);
         //cargoList.SetExpanded(false,true);
         
         RefreshValues();
 	}
 
-	public void InspectHardpoints(Entity entity)
-	{
-		RemoveListener();
-
-		ChangeSource = entity.GearEvent;
-		OnPropertiesChanged = InspectGearInternal;
-		ChangeSource.OnChanged += OnPropertiesChanged;
-		if (this is PropertiesList list)
-		{
-			if (list.Expanded)
-				InspectGearInternal();
-			else
-				list.OnExpand += b =>
-				{
-					if (b) InspectGearInternal();
-				};
-		}
-		else
-			InspectGearInternal();
-
-		void InspectGearInternal()
-		{
-			Clear();
-			var equippedItems = entity.Hardpoints.Where(hp => hp.Gear != null);
-			foreach (var hardpoint in equippedItems)
-			{
-				var propertyList = AddList(hardpoint.Gear.Name);
-				propertyList.Inspect(entity, hardpoint);
-				//propertyList.SetExpanded(false,true);
-			}
-			RefreshValues();
-		}
-	}
-
-	public void InspectCargo(Entity entity)
-	{
-		RemoveListener();
-
-		ChangeSource = entity.CargoEvent;
-		OnPropertiesChanged = InspectCargoInternal;
-		ChangeSource.OnChanged += OnPropertiesChanged;
-		if (this is PropertiesList list)
-		{
-			if (list.Expanded)
-				InspectCargoInternal();
-			else
-				list.OnExpand += b =>
-				{
-					if (b) InspectCargoInternal();
-				};
-		}
-		else
-			InspectCargoInternal();
-		
-		void InspectCargoInternal()
-		{
-			Clear();
-			foreach (var itemID in entity.Cargo.Where(id => Context.Cache.Get<ItemInstance>(id) is SimpleCommodity))
-			{
-				var simpleCommodity = Context.Cache.Get<SimpleCommodity>(itemID);
-				var data = simpleCommodity.ItemData;
-				var propertiesList = AddList($"{simpleCommodity.Quantity.ToString()} {data.Name}");
-				propertiesList.AddItemProperties(entity, simpleCommodity);
-				propertiesList.RefreshValues();
-				//propertiesList.SetExpanded(false, true);
-			}
-
-			foreach (var group in entity.Cargo
-				.Select(id => Context.Cache.Get<ItemInstance>(id))
-				.Where(item => item is CraftedItemInstance)
-				.Cast<CraftedItemInstance>()
-				.GroupBy(craftedItem => 
-				{
-					var corp = "GameCult";
-					if (craftedItem.SourceEntity != Guid.Empty)
-						corp = Context.Cache.Get<Corporation>(Context.Cache.Get<Entity>(craftedItem.SourceEntity).Corporation).Name;
-					return (craftedItem.Data, craftedItem.Name, corp);
-				}))
-			{
-				if (group.Count() == 1)
-				{
-					var item = group.First();
-					var propertiesList = AddList(item.Name);
-					propertiesList.AddItemProperties(entity, item);
-					propertiesList.RefreshValues();
-					//propertiesList.SetExpanded(false, true);
-				}
-				else
-				{
-					var instanceList = AddList($"{group.Count().ToString()} {group.Key.Name}");
-					instanceList.OnExpand += b =>
-					{
-						if (!b || instanceList.Children > 0) return;
-						foreach (var item in group)
-						{
-							var propertiesList = instanceList.AddList(item.Name);
-							propertiesList.AddItemProperties(entity, item);
-							propertiesList.RefreshValues();
-						}
-					};
-				}
-			}
-
-			RefreshValues();
-		}
-	}
-
 	public void AddEntityProperties(Entity entity)
 	{
 		AddField("Name", () => entity.Name, name => entity.Name = name);
-		AddProperty("Capacity", () => $"{entity.OccupiedCapacity}/{entity.Capacity:0}");
-		AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GlobalData.SignificantDigits)}");
-		AddProperty("Temperature", () => $"{entity.Temperature:0}°K");
-		AddProperty("Energy", () => $"{entity.Energy:0}/{entity.GetBehavior<Reactor>()?.Capacitance??0:0}");
+		AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
 	}
 
 	public void AddItemProperties(Entity entity, ItemInstance item)
 	{
-		var data = Context.Cache.Get<ItemData>(item.Data);
-		AddProperty("Type", () => data.Name);
-		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
-		if (item is CraftedItemInstance craftedItemInstance)
+		var data = Context.ItemData.Get<ItemData>(item.Data);
+		AddProperty(data.Description);//.Label.fontStyle = FontStyles.Normal;
+		var manufacturer = Context.ItemData.Get<MegaCorporation>(data.Manufacturer);
+		if (manufacturer != null)
 		{
-			var sourceEntity = Context.Cache.Get<Entity>(craftedItemInstance.SourceEntity);
-			if (sourceEntity != null)
-			{
-				var corporation = Context.Cache.Get<Corporation>(sourceEntity.Corporation);
-				AddProperty("Manufacturer", () => corporation.Name);
-			}
-			else
-			{
-				AddProperty("Manufacturer", () => "GameCult");
-			}
+			AddProperty("Manufacturer", () => manufacturer.Name);
+		}
+		else
+		{
+			AddProperty("Manufacturer", () => "GameCult");
 		}
 		if (item is SimpleCommodity simpleCommodity)
 			AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
-		AddProperty("Mass", () => item.Mass.SignificantDigits(Context.GlobalData.SignificantDigits));
-		AddProperty("Thermal Mass", () => item.ThermalMass.SignificantDigits(Context.GlobalData.SignificantDigits));
-		AddProperty("Size", () => item.Size.SignificantDigits(Context.GlobalData.SignificantDigits));
-		if (item is Gear gear)
+		AddProperty("Mass", () => Context.GetMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+		if (item is EquippableItem gear)
 		{
-			var gearData = gear.ItemData;
+			var tier = entity.ItemManager.GetTier(gear);
+			Title.text =
+				$"<color=#{ColorUtility.ToHtmlStringRGB(tier.tier.Color.ToColor())}>{gear.Name}</color><smallcaps><size=60%> ({tier.tier.Name}{new string('+', tier.upgrades)})";
+			var gearData = Context.GetData(gear);
 			AddProperty("Durability", () =>
-				$"{gear.Durability.SignificantDigits(Context.GlobalData.SignificantDigits)}/{Context.Evaluate(gearData.Durability, gear).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
 			foreach (var behavior in gearData.Behaviors)
 			{
 				var type = behavior.GetType();
@@ -521,13 +392,13 @@ public class PropertiesPanel : MonoBehaviour
 					{
 						var fieldType = field.FieldType;
 						if (fieldType == typeof(float))
-							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
 						else if (fieldType == typeof(int))
 							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
 						else if (fieldType == typeof(PerformanceStat))
 						{
 							var stat = (PerformanceStat) field.GetValue(behavior);
-							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear, entity).SignificantDigits(Context.GlobalData.SignificantDigits)}");
+							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
 						}
 					}
 				}
@@ -535,35 +406,78 @@ public class PropertiesPanel : MonoBehaviour
 		}
 	}
 
-	public void InspectChildren(Entity entity, Action<Entity> onSelect)
+	public void AddItemDataProperties(ItemData data)
 	{
-		RemoveListener();
-
-		ChangeSource = entity.ChildEvent;
-		OnPropertiesChanged = InspectChildrenInternal;
-		ChangeSource.OnChanged += OnPropertiesChanged;
-		InspectChildrenInternal();
-
-		void InspectChildrenInternal()
+		AddProperty("Type", () => data.Name);
+		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
+		if (data is EquippableItemData gearData)
 		{
-			Clear();
-			foreach (var child in entity.Children)
+			AddProperty("Durability", () => gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits));
+			foreach (var behavior in gearData.Behaviors)
 			{
-				var childEntity = Context.Cache.Get<Entity>(child);
-				AddProperty(childEntity.Name, null, data => onSelect(childEntity), true);
+				if (behavior is StatModifierData statMod)
+				{
+					if(Math.Abs(statMod.Modifier.Min - statMod.Modifier.Max) < .001f)
+						AddProperty("Stat Mod", () => $"{statMod.Stat.Target}:{statMod.Stat.Stat}{(statMod.Type == StatModifierType.Constant ? "+" : "x")}{statMod.Modifier.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+					else
+						AddProperty("Stat Mod", () => $"{statMod.Stat.Target}:{statMod.Stat.Stat}{(statMod.Type == StatModifierType.Constant ? "+" : "x")}{statMod.Modifier.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}-{statMod.Modifier.Max.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+				}
+				var type = behavior.GetType();
+				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
+				{
+					foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
+					{
+						var fieldType = field.FieldType;
+						if (fieldType == typeof(float))
+							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+						else if (fieldType == typeof(int))
+							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
+						else if (fieldType == typeof(PerformanceStat))
+						{
+							var stat = (PerformanceStat) field.GetValue(behavior);
+							if(Math.Abs(stat.Min - stat.Max) < .001f)
+								AddProperty(field.Name, () => $"{stat.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+							else
+								AddProperty(field.Name, () => $"{stat.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}-{stat.Max.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+						}
+					}
+				}
 			}
 		}
 	}
 
-	public void Inspect(Entity entity, Hardpoint hardpoint)
+	public void AddItemProperties(ItemInstance item)
 	{
-		RemoveListener();
+		var data = Context.ItemData.Get<ItemData>(item.Data);
+		AddItemDataProperties(data);
+		// if (item is CraftedItemInstance craftedItemInstance)
+		// {
+		// 	var sourceEntity = Context.ItemData.Get<Entity>(craftedItemInstance.SourceEntity);
+		// 	if (sourceEntity != null)
+		// 	{
+		// 		var corporation = Context.ItemData.Get<Corporation>(sourceEntity.Corporation);
+		// 		AddProperty("Manufacturer", () => corporation.Name);
+		// 	}
+		// 	else
+		// 	{
+		// 		AddProperty("Manufacturer", () => "GameCult");
+		// 	}
+		// }
+		// if (item is SimpleCommodity simpleCommodity)
+		// 	AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
+		AddProperty("Mass", () => Context.GetMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+		if (item is EquippableItem gear)
+		{
+			var gearData = Context.GetData(gear);
+			AddProperty("Durability", () =>
+				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
 
-		ChangeSource = hardpoint.Gear;
-		if (ChangeSource == null)
-			return;
-		OnPropertiesChanged = InspectGearInternal;
-		ChangeSource.OnChanged += OnPropertiesChanged;
+		}
+	}
+
+	public void Inspect(Entity entity, EquippedItem item)
+	{
 		if (this is PropertiesList list)
 		{
 			if (list.Expanded)
@@ -581,10 +495,12 @@ public class PropertiesPanel : MonoBehaviour
 		{
 			//Debug.Log($"Refreshing {hardpoint.Gear.Name} properties");
 			Clear();
-			if (hardpoint.Gear != null)
+			if (item.EquippableItem != null)
 			{
-				AddItemProperties(entity, hardpoint.Gear);
-		        foreach (var behavior in hardpoint.Behaviors)
+				AddField("Override Shutdown", () => item.EquippableItem.OverrideShutdown, b => item.EquippableItem.OverrideShutdown = b);
+				AddProperty("Temperature", () => (item.Temperature - 273.15f).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+				AddItemProperties(entity, item.EquippableItem);
+		        foreach (var behavior in item.Behaviors)
 		        {
 			        if(behavior is IPopulationAssignment populationAssignment)
 				        AddIncrementField("Assigned Population", 
@@ -593,53 +509,6 @@ public class PropertiesPanel : MonoBehaviour
 					        () => 0, () => entity.Population - entity.AssignedPopulation + populationAssignment.AssignedPopulation);
 			        if (behavior is Thermotoggle thermotoggle)
 				        AddField("Target Temperature", () => thermotoggle.TargetTemperature, temp => thermotoggle.TargetTemperature = temp);
-		            if (behavior is Factory factory)
-		            {
-		                AddField("Production Quality", () => factory.ProductionQuality, f => factory.ProductionQuality = f, 0, 1);
-		                var corporation = Context.Cache.Get<Corporation>(entity.Corporation);
-		                var compatibleBlueprints = corporation.UnlockedBlueprints
-		                    .Select(id => Context.Cache.Get<BlueprintData>(id))
-		                    .Where(bp => bp.FactoryItem == hardpoint.ItemData.ID).ToList();
-		                if (factory.RetoolingTime > 0)
-		                {
-		                    AddProgressField("Retooling", () => (factory.ToolingTime - (float) factory.RetoolingTime) / factory.ToolingTime);
-		                }
-		                else
-		                {
-		                    AddField("Item", 
-		                        () => compatibleBlueprints.FindIndex(bp=>bp.ID== factory.Blueprint) + 1, 
-		                        i => factory.Blueprint = i == 0 ? Guid.Empty : compatibleBlueprints[i - 1].ID,
-		                        new []{"None"}.Concat(compatibleBlueprints.Select(bp=>bp.Name)).ToArray());
-		                    AddField("Active", () => factory.Active, active => factory.Active = active);
-		                    if (factory.Blueprint != Guid.Empty)
-		                    {
-		                        if (factory.Active && factory.ItemUnderConstruction != Guid.Empty)
-		                        {
-		                            AddProgressField("Production", () =>
-		                            {
-			                            if (factory.ItemUnderConstruction == Guid.Empty) return 1;
-			                            var itemInstance = Context.Cache.Get<CraftedItemInstance>(factory.ItemUnderConstruction);
-			                            var blueprintData = Context.Cache.Get<BlueprintData>(itemInstance.Blueprint);
-			                            return (blueprintData.ProductionTime - (float) entity.IncompleteCargo[factory.ItemUnderConstruction]) / blueprintData.ProductionTime;
-		                            });
-		                        }
-		                        else
-		                        {
-			                        //AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
-			                        AddField("Product Name", () => factory.ItemName, name => factory.ItemName = name);
-		                            var ingredientsList = AddList("Ingredients Needed");
-		                            var blueprintData = Context.Cache.Get<BlueprintData>(factory.Blueprint);
-		                            foreach (var ingredient in blueprintData.Ingredients)
-		                            {
-		                                var itemData = Context.Cache.Get<ItemData>(ingredient.Key);
-		                                ingredientsList.AddProperty(itemData.Name, () => ingredient.Value.ToString());
-		                            }
-		                            // ingredientsList.SetExpanded(false, true);
-		                            ingredientsList.RefreshValues();
-		                        }
-		                    }
-		                }
-		            }
 		        }
 			}
 			RefreshValues();

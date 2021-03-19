@@ -1,4 +1,7 @@
-﻿// TODO: USE THIS EVERYWHERE
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,6 +17,14 @@ public class DatabaseListView : EditorWindow
 {
     // Singleton to avoid multiple instances of window. 
     private static DatabaseListView _instance;
+    public static DatabaseListView Instance => _instance ? _instance : GetWindow<DatabaseListView>();
+    [MenuItem("Window/Aetheria Database Tools")]
+    static void Init() => Instance.Show();
+    private void Awake()
+    {
+        _instance = this;
+    }
+    
     public Guid SelectedItem;
     public GUIStyle SelectedStyle;
 
@@ -40,46 +51,19 @@ public class DatabaseListView : EditorWindow
     private Dictionary<Guid, HashSet<Guid>> _itemBlueprints = new Dictionary<Guid, HashSet<Guid>>();
     private HashSet<Guid> _itemBlueprintFoldouts = new HashSet<Guid>();
     private HashSet<string> _itemGroupFoldouts = new HashSet<string>();
+    private string _filePath => Path.Combine(ActionGameManager.GameDataDirectory.FullName, _fileName);
+    private string _fileName = "AetherDB.msgpack";
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
-    // Set instance on reloading the window, else it gets lost after script reload (due to PlayMode changes, ...).
-    public DatabaseListView()
-    {
-        _instance = this;
-    }
-
-    public static DatabaseListView ShowWindow()
-    {
-        if (_instance == null)
-        {
-            // "Get existing open window or if none, make a new one:" says documentation.
-            // But if called after script reloads a second instance will be opened! => Custom singleton required.
-            DatabaseListView window = GetWindow<DatabaseListView>();
-            window.titleContent = new GUIContent("DB List");
-            _instance = window;
-            _instance.InitStyles();
-            window.Show();
-        }
-        else
-            _instance.Focus();
-
-        return _instance;
-    }
-
     public GUIStyle ListItemStyle =>
         (_listItemStyle = !_listItemStyle) ? _listStyleEven : _listStyleOdd;
-
-    [MenuItem("Window/Aetheria Database Tools")]
-    static void Init()
-    {
-        ShowWindow();
-    }
-
+    
     void OnEnable()
     {
+        //_filePath = ;
         // Create database cache
-        _databaseCache = new DatabaseCache();
+        _databaseCache = new DatabaseCache(_filePath);
         
         var onInsert = new Action<DatabaseEntry>(entry =>
         {
@@ -114,7 +98,8 @@ public class DatabaseListView : EditorWindow
         _databaseCache.OnDataDeleteRemote += _ => EditorDispatcher.Dispatch(Repaint);
 
         DatabaseInspector.DatabaseCache = _databaseCache;
-        _inspector = DatabaseInspector.ShowWindow();
+        _inspector = DatabaseInspector.Instance;
+        _inspector.Show();
         
         _itemTypes = typeof(ItemData).GetAllChildClasses()
             .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null).ToArray();
@@ -156,16 +141,6 @@ public class DatabaseListView : EditorWindow
     {
         Event currentEvent = Event.current;
         EventType currentEventType = currentEvent.type;
-        
-        _view = BeginScrollView(
-            _view, 
-            false,
-            false,
-            GUIStyle.none,
-            GUI.skin.verticalScrollbar,
-            GUI.skin.scrollView,
-            GUILayout.Width(EditorGUIUtility.currentViewWidth),
-            GUILayout.ExpandHeight(true));
 
         if (currentEventType == EventType.DragUpdated)
             // Indicate that we don't accept drags ourselves
@@ -179,18 +154,25 @@ public class DatabaseListView : EditorWindow
                 EditorPrefs.SetString("RethinkDB.URL", _connectionString);
                 _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString);
             }
+            // if (GUILayout.Button("Connect All"))
+            // {
+            //     EditorPrefs.SetString("RethinkDB.URL", _connectionString);
+            //     _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString, true, false);
+            // }
         }
         using (var h = new HorizontalScope())
         {
-            if (GUILayout.Button("Connect All"))
-            {
-                EditorPrefs.SetString("RethinkDB.URL", _connectionString);
-                _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString, true, false);
-            }
-
+            //_fileName = TextField(_fileName);
             if (GUILayout.Button("Save"))
             {
-                _databaseCache.Save(new DirectoryInfo(Application.dataPath).Parent.FullName);
+                _databaseCache.Save();
+                Debug.Log("Local DB Cache Saved!");
+            }
+
+            if (GUILayout.Button("Load"))
+            {
+                _databaseCache.Load();
+                Debug.Log("Loaded DB From Local Cache!");
             }
         }
 
@@ -216,17 +198,17 @@ public class DatabaseListView : EditorWindow
             var progressRect = GetControlRect(false, 20);
             EditorGUI.ProgressBar(progressRect, (float)_queryStatus.RetrievedItems/(_queryStatus.GalaxyEntries + _queryStatus.ItemsEntries), "Sync Progress");
         }
-        // else
-        // {
-        //     if(_itemBlueprints == null)
-        //         _itemBlueprints = _databaseCache.GetAll<ItemData>()
-        //             .Select(itemData => new {itemData, blueprints = _databaseCache.GetAll<BlueprintData>()
-        //                 .Where(blueprintData => blueprintData.Item == itemData.ID)
-        //                 .Select(bp => bp.ID)
-        //                 .ToList()})
-        //             .ToDictionary(x => x.itemData.ID, x => x.blueprints);
-        // }
         GUILayout.Space(5);
+        
+        _view = BeginScrollView(
+            _view, 
+            false,
+            false,
+            GUIStyle.none,
+            GUI.skin.verticalScrollbar,
+            GUI.skin.scrollView,
+            GUILayout.Width(EditorGUIUtility.currentViewWidth),
+            GUILayout.ExpandHeight(true));
         
         // if(GUILayout.Button("Log Cache Count"))
         //     Debug.Log($"Cache contains {_databaseCache.AllEntries.Count()} elements");
@@ -256,9 +238,16 @@ public class DatabaseListView : EditorWindow
                     else if(_itemTypes[i] == typeof(CompoundCommodityData))
                         itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(CompoundCommodityCategory), (item as CompoundCommodityData).Category));
                     else if(_itemTypes[i] == typeof(GearData))
-                        itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(HardpointType), (item as GearData).Hardpoint));
-                    else if(_itemTypes[i] == typeof(HullData))
+                        itemGroups = typedItems.GroupBy(item =>
+                        {
+                            var hp = Enum.GetName(typeof(HardpointType), (item as GearData).Hardpoint);
+                            if (hp == null)
+                                hp = "Invalid Hardpoint";
+                            return hp;
+                        });
+                    else if (_itemTypes[i] == typeof(HullData))
                         itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(HullType), (item as HullData).HullType));
+                    else itemGroups = typedItems.GroupBy(item => "All");
 
                     foreach (var itemGroup in itemGroups)
                     {
@@ -422,7 +411,7 @@ public class DatabaseListView : EditorWindow
             }
         }
         
-        var entries = _databaseCache.AllEntries.Where(item => !(item is ItemData)).ToArray();
+        //var entries = _databaseCache.AllEntries.Where(item => !(item is ItemData)).ToArray();
         for (var i = 0; i < _entryTypes.Length; i++)
         {
             using (var h = new HorizontalScope(ListItemStyle))
@@ -435,7 +424,7 @@ public class DatabaseListView : EditorWindow
             if (_entryFoldouts[i])
             {
                 int index = 0;
-                foreach (var entry in entries.Where(e=>e.GetType()==_entryTypes[i]).OrderBy(entry=>entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString()))
+                foreach (var entry in _databaseCache.GetAll(_entryTypes[i]).OrderBy(entry=>entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString()))
                 {
                     index++;
                     var style = ListItemStyle;

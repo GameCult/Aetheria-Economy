@@ -1,9 +1,13 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
-using UnityEngine;
+using Unity.Mathematics;
 
 
 [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -37,28 +41,54 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("name"), Key(1)]
     public string Name;
     
-    [InspectableText, JsonProperty("description"), Key(2)]
+    [InspectableField, JsonProperty("shortName"), Key(2)]
+    public string ShortName;
+    
+    [InspectableText, JsonProperty("description"), Key(3)]
     public string Description;
     
-    [InspectableTexture, JsonProperty("logo"), Key(3)]
+    [InspectableTexture, JsonProperty("logo"), Key(4)]
     public string Logo;
     
-    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(4)]  
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(5)]  
     public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
-    
-    [InspectableDatabaseLink(typeof(LoadoutData)), JsonProperty("initialFleet"), Key(5)]  
-    public Dictionary<Guid, int> InitialFleet = new Dictionary<Guid, int>();
-    
-    [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("initialTechs"), Key(6)]  
-    public List<Guid> InitialTechnologies = new List<Guid>();
 
-    [JsonProperty("parent"), Key(7)]
-    public Guid HomeZone;
+    [InspectableField, JsonProperty("hostile"), Key(6)]
+    public bool PlayerHostile;
+
+    [InspectableColor, JsonProperty("primaryColor"), Key(7)]
+    public float3 PrimaryColor;
     
-    [InspectableField, JsonProperty("placement"), Key(8)]
-    public MegaPlacementType PlacementType;
+    [InspectableColor, JsonProperty("secondaryColor"), Key(8)]
+    public float3 SecondaryColor;
+
+    [InspectableDatabaseLink(typeof(NameFile)), JsonProperty("nameFile"), Key(9)]  
+    public Guid GeonameFile;
+
+    [InspectableDatabaseLink(typeof(HullData)), JsonProperty("bossHull"), Key(10)]  
+    public Guid BossHull;
+
+    [InspectableField, JsonProperty("influence"), Key(11)]
+    public int InfluenceDistance = 4;
+    
+    [InspectableDatabaseLink(typeof(MegaCorporation)), RangedFloat(0, 1), JsonProperty("allegiance"), Key(12)]  
+    public Dictionary<Guid, float> Allegiance = new Dictionary<Guid, float>();
     
     [IgnoreMember] public string EntryName
+    {
+        get => Name;
+        set => Name = value;
+    }
+}
+
+[Inspectable, MessagePackObject, ExternalEntry]
+public class NameFile : DatabaseEntry, INamedEntry
+{
+    [Key(1)] public string Name;
+    [Key(2)] public string[] Names;
+
+    [IgnoreMember]
+    public string EntryName
     {
         get => Name;
         set => Name = value;

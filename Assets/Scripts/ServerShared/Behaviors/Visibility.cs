@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
@@ -12,7 +16,7 @@ public class VisibilityData : BehaviorData
     [InspectableField, JsonProperty("visibilityDecay"), Key(2)]  
     public PerformanceStat VisibilityDecay = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
     {
         return new Visibility(context, this, entity, item);
     }
@@ -23,14 +27,14 @@ public class Visibility : IBehavior, IAlwaysUpdatedBehavior
     private VisibilityData _data;
 
     private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    private EquippedItem Item { get; }
+    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
     private float _cooldown; // Normalized
 
-    public Visibility(GameContext context, VisibilityData data, Entity entity, Gear item)
+    public Visibility(ItemManager context, VisibilityData data, Entity entity, EquippedItem item)
     {
         _data = data;
         Entity = entity;
@@ -38,17 +42,18 @@ public class Visibility : IBehavior, IAlwaysUpdatedBehavior
         Context = context;
     }
 
-    public bool Update(float delta)
+    public bool Execute(float delta)
     {
-        Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item, Entity);
+        Entity.VisibilitySources[this] = Item.Evaluate(_data.Visibility);
         return true;
     }
 
-    public void AlwaysUpdate(float delta)
+    public void Update(float delta)
     {
         // TODO: Time independent decay?
-        Entity.VisibilitySources[this] *= Context.Evaluate(_data.VisibilityDecay, Item, Entity);
-        
-        if (Entity.VisibilitySources[this] < 0.01f) Entity.VisibilitySources.Remove(this);
+        if(Entity.VisibilitySources.ContainsKey(this))
+        {
+            Entity.VisibilitySources[this] *= Item.Evaluate(_data.VisibilityDecay);
+        }
     }
 }

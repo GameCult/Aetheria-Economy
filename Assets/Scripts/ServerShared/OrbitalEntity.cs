@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -9,7 +13,7 @@ public class OrbitalEntity : Entity
 {
     public Guid OrbitData;
     
-    public OrbitalEntity(GameContext context, Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Guid orbit, Guid zone, Guid corporation) : base(context, hull, gear, cargo, zone, corporation)
+    public OrbitalEntity(ItemManager itemManager, Zone zone, EquippableItem hull, Guid orbit, EntitySettings settings) : base(itemManager, zone, hull, settings)
     {
         OrbitData = orbit;
     }
@@ -18,8 +22,8 @@ public class OrbitalEntity : Entity
     {
         if (OrbitData != Guid.Empty)
         {
-            Position = Context.GetOrbitPosition(OrbitData);
-            Velocity = Context.GetOrbitVelocity(OrbitData);
+            Position.xz = Zone.GetOrbitPosition(OrbitData);
+            Velocity = Zone.GetOrbitVelocity(OrbitData);
         }
         
         base.Update(delta);

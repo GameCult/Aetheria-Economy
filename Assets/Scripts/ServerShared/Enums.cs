@@ -1,4 +1,24 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 using System;
+
+public enum ItemRotation
+{
+    None = 0,
+    CounterClockwise = 1,
+    Reversed = 2,
+    Clockwise = 3
+}
+
+public enum HitType
+{
+    Armor,
+    Hardpoint,
+    Gear,
+    Thermal
+}
 
 public enum LauncherCaliber
 {
@@ -10,18 +30,17 @@ public enum LauncherCaliber
 public enum HardpointType
 {
     Hull,
+    Tool,
+    Thermal,
     Thruster,
     WarpThruster,
     Reactor,
     Radiator,
     Shield,
-    Cooler,
     Sensors,
-    Tool,
     Energy,
     Ballistic,
     Launcher,
-    Infrastructure,
     ControlModule
 }
 
@@ -64,19 +83,21 @@ public enum MegaPlacementType
 
 public enum SimpleCommodityCategory
 {
-    Minerals,
-    Metals,
-    Alloys,
-    Compounds,
-    Organics
+    Minerals = 0,
+    Metals = 1,
+    Alloys = 2,
+    Compounds = 3,
+    Organics = 4,
+    Ammo = 5,
+    Consumer = 6
 }
 
 public enum CompoundCommodityCategory
 {
-    Wearables,
-    Consumables,
-    Luxuries,
-    Tools,
-    Manufacturing,
-    Assemblies
+    Wearables = 0,
+    Consumables = 1,
+    Luxuries = 2,
+    Tools = 3,
+    Manufacturing = 4,
+    Assemblies = 5
 }
