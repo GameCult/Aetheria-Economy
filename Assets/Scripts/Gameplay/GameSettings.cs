@@ -21,6 +21,7 @@ public class GameSettings : ScriptableObject
     public int AsteroidMeshCount = 5;
     public float MinimapAsteroidSize = 3;
     public float PlanetRotationSpeed = 1;
+    public SectorGenerationSettings SectorGenerationSettings;
     public BodySettingsCollection[] BodySettingsCollections;
     public PlanetSettings PlanetSettings;
     public ZoneGenerationSettings ZoneSettings;
@@ -32,6 +33,37 @@ public class GameSettings : ScriptableObject
     public Gradient ArmorGradient;
     public Gradient DurabilityGradient;
     [HideInInspector] public Sprite[] ItemIcons;
+    [HideInInspector] public Sprite[] WeaponTypeIcons;
+    [HideInInspector] public Sprite[] WeaponCaliberIcons;
+    [HideInInspector] public Sprite[] WeaponRangeIcons;
+    [HideInInspector] public Sprite[] WeaponFireTypeIcons;
+    [HideInInspector] public Sprite[] WeaponModifierIcons;
+
+    public Sprite GetIcon(WeaponType type) => WeaponTypeIcons[(int) type];
+    public Sprite GetIcon(WeaponRange range) => WeaponRangeIcons[(int) range];
+    public Sprite GetIcon(WeaponCaliber caliber) => WeaponCaliberIcons[(int) caliber];
+
+    public IEnumerable<Sprite> GetIcons(WeaponFireType type)
+    {
+        var count = Enum.GetValues(typeof(WeaponFireType)).Length;
+        var t = (int) type;
+        for (int i = 0; i < count - 1; i++)
+        {
+            if (1 << i == (1 << i & t))
+                yield return WeaponFireTypeIcons[i + 1];
+        }
+    }
+
+    public IEnumerable<Sprite> GetIcons(WeaponModifiers type)
+    {
+        var count = Enum.GetValues(typeof(WeaponModifiers)).Length;
+        var t = (int) type;
+        for (int i = 0; i < count - 1; i++)
+        {
+            if (1 << i == (1 << i & t))
+                yield return WeaponModifierIcons[i + 1];
+        }
+    }
 }
 
 [Serializable]

@@ -304,6 +304,27 @@ public class DatabaseInspector : EditorWindow
         else if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
         {
             var listType = field.FieldType.GenericTypeArguments[0];
+            // if (listType.IsEnum)
+            // {
+            //     Space();
+            //     using (new VerticalScope(GUI.skin.box))
+            //     {
+            //         var list = (IList) field.GetValue(obj);
+            //         if (list == null)
+            //         {
+            //             list = (IList) Activator.CreateInstance(type);
+            //             field.SetValue(obj, list);
+            //             GUI.changed = true;
+            //         }
+            //         var isflags = type.GetCustomAttributes<FlagsAttribute>().Any();
+            //         var names = Enum.GetNames(field.FieldType);
+            //
+            //         for (var i = 0; i < list.Count; i++)
+            //         {
+            //             list[i] = Inspect(field.Name.SplitCamelCase(), (int) list[i], isflags ? names.Skip(1).ToArray() : names, isflags);
+            //         }
+            //     }
+            // }
             if (listType.GetCustomAttribute<InspectableFieldAttribute>() != null)
             {
                 Space();
@@ -365,23 +386,6 @@ public class DatabaseInspector : EditorWindow
                                     _listItemFoldouts.Add(o.GetHashCode());
                                 else
                                     _listItemFoldouts.Remove(o.GetHashCode());
-                                // using (var h = new HorizontalScope())
-                                // {
-                                    // if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-                                    // {
-                                    //     if(_listItemFoldouts.Contains(o.GetHashCode()))
-                                    //         _listItemFoldouts.Remove(o.GetHashCode());
-                                    //     else
-                                    //         _listItemFoldouts.Add(o.GetHashCode());
-                                    // }
-                                    // var foldoutRect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                                    // if (Event.current.type == EventType.Repaint)
-                                    // {
-                                    //     var controlId = GUIUtility.GetControlID(1337, FocusType.Keyboard, position);
-                                    //     EditorStyles.foldout.Draw(foldoutRect, GUIContent.none, controlId, !_listItemFoldouts.Contains(o.GetHashCode()));
-                                    // }
-                                    // GUILayout.Label(o.ToString(), EditorStyles.boldLabel, GUILayout.Height(EditorGUIUtility.singleLineHeight), GUILayout.ExpandWidth(true));
-                                // }
 
                                 var rect = GetControlRect(false,
                                     GUILayout.Width(EditorGUIUtility.singleLineHeight));

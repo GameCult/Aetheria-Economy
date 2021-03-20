@@ -36,7 +36,7 @@ public class Corporation : DatabaseEntry, INamedEntry
 }
 
 [RethinkTable("Galaxy"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class MegaCorporation : DatabaseEntry, INamedEntry
+public class Faction : DatabaseEntry, INamedEntry
 {
     [InspectableField, JsonProperty("name"), Key(1)]
     public string Name;
@@ -71,7 +71,7 @@ public class MegaCorporation : DatabaseEntry, INamedEntry
     [InspectableField, JsonProperty("influence"), Key(11)]
     public int InfluenceDistance = 4;
     
-    [InspectableDatabaseLink(typeof(MegaCorporation)), RangedFloat(0, 1), JsonProperty("allegiance"), Key(12)]  
+    [InspectableDatabaseLink(typeof(Faction)), RangedFloat(0, 1), JsonProperty("allegiance"), Key(12)]  
     public Dictionary<Guid, float> Allegiance = new Dictionary<Guid, float>();
     
     [IgnoreMember] public string EntryName

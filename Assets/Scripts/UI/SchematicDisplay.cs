@@ -142,8 +142,9 @@ public class SchematicDisplay : MonoBehaviour
             .ToArray();
         foreach (var x in _schematicItems)
         {
-            x.ListElement.Icon.sprite = Settings.ItemIcons[(int) (entity.Hardpoints[x.Item.Position.x, x.Item.Position.y]?.Type ?? HardpointType.Tool)];
-            x.ListElement.Label.text = x.Item.EquippableItem.Name;
+            if(x.Item.Data is WeaponItemData weaponItemData)
+                x.ListElement.ShowWeapon(weaponItemData);
+            //x.ListElement.Label.text = x.Item.EquippableItem.Name;
             if (!_enemy)
             {
                 x.ListElement.InfiniteAmmoIcon.gameObject.SetActive(x.Weapon.WeaponData.AmmoType == Guid.Empty);

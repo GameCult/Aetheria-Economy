@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-public class TradeMenu : MonoBehaviour
+public class TradeMenuDebug : MonoBehaviour
 {
     public ActionGameManager GameManager;
     public ContextMenu ContextMenu;
@@ -30,26 +30,15 @@ public class TradeMenu : MonoBehaviour
     private (ItemFilter filter, CompoundCommodityCategory type) _compoundCommodityFilter;
     private List<(ItemFilter filter, Type type)> _behaviorFilters = new List<(ItemFilter filter, Type type)>();
     
-    public EquippedCargoBay Inventory { get; set; }
-    
     private void OnEnable()
     {
         _targetCargo = GameManager.DockingBay;
         TargetCargoLabel.text = "Docking Bay";
         Properties.Context = GameManager.ItemManager;
-        
-        MinimumSizeFilter.Width.onEndEdit.RemoveAllListeners();
         MinimumSizeFilter.Width.onEndEdit.AddListener(_ => Populate());
-        
-        MinimumSizeFilter.Height.onEndEdit.RemoveAllListeners();
         MinimumSizeFilter.Height.onEndEdit.AddListener(_ => Populate());
-        
-        MaximumSizeFilter.Width.onEndEdit.RemoveAllListeners();
         MaximumSizeFilter.Width.onEndEdit.AddListener(_ => Populate());
-        
-        MaximumSizeFilter.Height.onEndEdit.RemoveAllListeners();
         MaximumSizeFilter.Height.onEndEdit.AddListener(_ => Populate());
-        
         NewFilterButton.onClick.AddListener(() =>
         {
             ContextMenu.Clear();
@@ -183,20 +172,18 @@ public class TradeMenu : MonoBehaviour
 
     void Populate()
     {
-        var columns = new List<(string name, int size, Func<(ItemInstance item, ItemData data), Func<string>> output, Func<ItemData, IComparable> sortKey)>();
+        var columns = new List<(string name, int size, Func<ItemData, Func<string>> output, Func<ItemData, IComparable> sortKey)>();
         
         columns.Add(("Name", 3,
-            x => () => x.item is CraftedItemInstance craftedItemInstance ? 
-                $"<color=#{ColorUtility.ToHtmlStringRGB(GameManager.ItemManager.GetTier(craftedItemInstance).tier.Color.ToColor())}>{x.data.Name}" : 
-                x.data.Name, 
+            data => () => data.Name, 
             data => data.Name));
         if(_hardpointFilter.filter==null)
             columns.Add(("Type", 2,
-                x => () =>
+                data => () =>
                 {
-                    if (x.data is SimpleCommodityData s) return Enum.GetName(typeof(SimpleCommodityCategory), s.Category);
-                    if(x.data is CompoundCommodityData c) return Enum.GetName(typeof(CompoundCommodityCategory), c.Category);
-                    if(x.data is EquippableItemData e) return Enum.GetName(typeof(HardpointType), e.HardpointType);
+                    if (data is SimpleCommodityData s) return Enum.GetName(typeof(SimpleCommodityCategory), s.Category);
+                    if(data is CompoundCommodityData c) return Enum.GetName(typeof(CompoundCommodityCategory), c.Category);
+                    if(data is EquippableItemData e) return Enum.GetName(typeof(HardpointType), e.HardpointType);
                     return "None";
                 }, 
                 data => 
@@ -209,48 +196,47 @@ public class TradeMenu : MonoBehaviour
                     return 0;
                 }));
         columns.Add(("Mass", 1,
-            x => () => x.data.Mass.SignificantDigits(3), 
+            data => () => data.Mass.SignificantDigits(3), 
             data => data.Mass));
         columns.Add(("Price", 1,
-            x => () => (x.item is CraftedItemInstance craftedItemInstance ? GameManager.ItemManager.GetPrice(craftedItemInstance) : x.data.Price).ToString("N0"),
+            data => () => data.Price.ToString("N0"),
             data => data.Price));
         columns.Add(("Size", 1,
-            x => () => $"{x.data.Shape.Width}x{x.data.Shape.Height}", 
+            data => () => $"{data.Shape.Width}x{data.Shape.Height}", 
             data => data.Shape.Width*data.Shape.Height));
         
-        var items = Inventory.Cargo.Keys
-            .Select<ItemInstance, (ItemInstance item, ItemData data)>(ii=>(ii, GameManager.ItemManager.GetData(ii)));
+        var items = GameManager.ItemManager.ItemData.GetAll<ItemData>().Where(i=>i.Price!=0);
         
         if (MinimumSizeFilter.gameObject.activeSelf)
             items = items.Where(i =>
-                !(MinimumSizeFilter.Width.text.Length > 0 && i.data.Shape.Width < int.Parse(MinimumSizeFilter.Width.text) ||
-                 MinimumSizeFilter.Height.text.Length > 0 && i.data.Shape.Height < int.Parse(MinimumSizeFilter.Height.text)));
+                !(MinimumSizeFilter.Width.text.Length > 0 && i.Shape.Width < int.Parse(MinimumSizeFilter.Width.text) ||
+                 MinimumSizeFilter.Height.text.Length > 0 && i.Shape.Height < int.Parse(MinimumSizeFilter.Height.text)));
         
         if (MaximumSizeFilter.gameObject.activeSelf)
             items = items.Where(i =>
-                !(MaximumSizeFilter.Width.text.Length > 0 && i.data.Shape.Width > int.Parse(MaximumSizeFilter.Width.text) ||
-                 MaximumSizeFilter.Height.text.Length > 0 && i.data.Shape.Height > int.Parse(MaximumSizeFilter.Height.text)));
+                !(MaximumSizeFilter.Width.text.Length > 0 && i.Shape.Width > int.Parse(MaximumSizeFilter.Width.text) ||
+                 MaximumSizeFilter.Height.text.Length > 0 && i.Shape.Height > int.Parse(MaximumSizeFilter.Height.text)));
         
         if(_commodityFilter.filter != null)
-            items = items.Where(i => i.data is SimpleCommodityData s && s.Category == _commodityFilter.type);
+            items = items.Where(i => i is SimpleCommodityData s && s.Category == _commodityFilter.type);
         
         if(_compoundCommodityFilter.filter != null)
-            items = items.Where(i => i.data is CompoundCommodityData c && c.Category == _compoundCommodityFilter.type);
+            items = items.Where(i => i is CompoundCommodityData c && c.Category == _compoundCommodityFilter.type);
         
         if (_hardpointFilter.filter != null)
-            items = items.Where(i => i.data is EquippableItemData e && e.HardpointType == _hardpointFilter.type);
+            items = items.Where(i => i is EquippableItemData e && e.HardpointType == _hardpointFilter.type);
         
         foreach (var (_, type) in _behaviorFilters)
         {
-            items = items.Where(i => i.data is EquippableItemData e && e.Behaviors.Any(b => type.IsInstanceOfType(b)));
+            items = items.Where(i => i is EquippableItemData e && e.Behaviors.Any(b => type.IsInstanceOfType(b)));
             
 			foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
 			{
 				var fieldType = field.FieldType;
 				if (fieldType == typeof(float))
-                    columns.Add((field.Name, 1, x =>
+                    columns.Add((field.Name, 1, data =>
                     {
-                        var behavior = ((EquippableItemData) x.data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
+                        var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
                         return () => ((float) field.GetValue(behavior)).SignificantDigits(3);
                     }, data =>
                     {
@@ -258,9 +244,9 @@ public class TradeMenu : MonoBehaviour
                         return (float) field.GetValue(behavior);
                     }));
 				else if (fieldType == typeof(int))
-                    columns.Add((field.Name, 1, x =>
+                    columns.Add((field.Name, 1, data =>
                     {
-                        var behavior = ((EquippableItemData) x.data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
+                        var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
                         return () => ((int) field.GetValue(behavior)).ToString();
                     }, data =>
                     {
@@ -269,9 +255,9 @@ public class TradeMenu : MonoBehaviour
                     }));
 				else if (fieldType == typeof(PerformanceStat))
 				{
-                    columns.Add((field.Name, 1, x =>
+                    columns.Add((field.Name, 1, data =>
                     {
-                        var behavior = ((EquippableItemData) x.data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
+                        var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
                         return () => ((PerformanceStat) field.GetValue(behavior)).Max.SignificantDigits(3);
                     }, data =>
                     {
@@ -283,13 +269,13 @@ public class TradeMenu : MonoBehaviour
         }
         
         columns.Add(("Owned", 1,
-            x => () =>
+            data => () =>
             {
-                if (x.data is HullData)
-                    return GameManager.DockedEntity.Children.Count(s => s.Hull.Data == x.data.ID && s is Ship {IsPlayerShip: true}).ToString();
-                if(x.data is SimpleCommodityData)
-                    return (_targetCargo.ItemsOfType.ContainsKey(x.data.ID) ? _targetCargo.ItemsOfType[x.data.ID].Cast<SimpleCommodity>().Sum(s=>s.Quantity) : 0).ToString();
-                return (_targetCargo.ItemsOfType.ContainsKey(x.data.ID) ? _targetCargo.ItemsOfType[x.data.ID].Count : 0).ToString();
+                if (data is HullData)
+                    return GameManager.DockedEntity.Children.Count(s => s.Hull.Data == data.ID && s is Ship {IsPlayerShip: true}).ToString();
+                if(data is SimpleCommodityData)
+                    return (_targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Cast<SimpleCommodity>().Sum(s=>s.Quantity) : 0).ToString();
+                return (_targetCargo.ItemsOfType.ContainsKey(data.ID) ? _targetCargo.ItemsOfType[data.ID].Count : 0).ToString();
             }, 
             data =>
             {
@@ -308,21 +294,24 @@ public class TradeMenu : MonoBehaviour
                 Columns = columns.Select(x => new SpreadsheetEntryColumn
                 {
                     Output = x.output(i),
-                    SortKey = x.sortKey(i.data)
+                    SortKey = x.sortKey(i)
                 }).ToArray(),
                 OnClick = () =>
                 {
                     Properties.Clear();
-                    Properties.AddItemProperties(i.item);
+                    Properties.AddItemDataProperties(i);
                 },
                 OnDoubleClick = () =>
                 {
-                    switch (i.item)
+                    switch (i)
                     {
-                        case CraftedItemInstance c:
-                            Buy(c);
+                        case HullData h:
+                            Buy(h);
                             break;
-                        case SimpleCommodity s:
+                        case CraftedItemData c:
+                            Buy(c,1);
+                            break;
+                        case SimpleCommodityData s:
                             Buy(s, 1);
                             break;
                     }
@@ -331,7 +320,7 @@ public class TradeMenu : MonoBehaviour
                 },
                 OnRightClick = () =>
                 {
-                    if (i.item is SimpleCommodity s)
+                    if (!(i is HullData))
                     {
                         ContextMenu.Clear();
                         ContextMenu.AddOption("Buy Quantity",
@@ -339,13 +328,19 @@ public class TradeMenu : MonoBehaviour
                             {
                                 int quantity = 1;
                                 Dialog.Clear();
-                                Dialog.Title.text = $"Buying {i.data.Name}";
-                                Dialog.AddField("Quantity", 
-                                    () => quantity, 
-                                    q => quantity = min(min(q, GameManager.Credits / i.data.Price), s.Quantity));
+                                Dialog.Title.text = $"Buying {i.Name}";
+                                Dialog.AddField("Quantity", () => quantity, q => quantity = min(q, GameManager.Credits/i.Price));
                                 Dialog.Show(() =>
                                 {
-                                    Buy(s,quantity);
+                                    switch (i)
+                                    {
+                                        case CraftedItemData c:
+                                            Buy(c,quantity);
+                                            break;
+                                        case SimpleCommodityData s:
+                                            Buy(s, quantity);
+                                            break;
+                                    }
 
                                     Populate();
                                 });
@@ -357,33 +352,18 @@ public class TradeMenu : MonoBehaviour
             }));
     }
 
-    private void Buy(CraftedItemInstance item)
+    private void Buy(HullData data)
     {
-        var data = GameManager.ItemManager.GetData(item);
-        var price = GameManager.ItemManager.GetPrice(item);
-        if (price < GameManager.Credits)
+        if (data.Price < GameManager.Credits)
         {
-            if (data is HullData hullData)
-            {
-                if (hullData.HullType != HullType.Ship) throw new ArgumentException("Attempted to buy non-ship hull from station, WTF are you doing?!");
-                
-                var ship = new Ship(GameManager.ItemManager, GameManager.Zone, item as EquippableItem, GameManager.NewEntitySettings) {IsPlayerShip = true};
-                ship.SetParent(GameManager.DockedEntity);
+            var hull = GameManager.ItemManager.CreateInstance(data) as EquippableItem;
+            Entity entity;
+            if(data.HullType==HullType.Ship)
+                entity = new Ship(GameManager.ItemManager, GameManager.Zone, hull, GameManager.Settings.GameplaySettings.DefaultEntitySettings) {IsPlayerShip = true};
+            else entity = new OrbitalEntity(GameManager.ItemManager, GameManager.Zone, hull, Guid.Empty, GameManager.Settings.GameplaySettings.DefaultEntitySettings);
+            entity.SetParent(GameManager.DockedEntity);
             
-                GameManager.Credits -= data.Price;
-            }
-            else if (Inventory.TryTransferItem(_targetCargo, item))
-            {
-                GameManager.Credits -= price;
-            }
-            else
-            {
-                Dialog.Clear();
-                Dialog.Title.text = "Unable to buy: Insufficient Cargo Space!";
-                Dialog.Show();
-                Dialog.MoveToCursor();
-                return;
-            }
+            GameManager.Credits -= data.Price;
         }
         else
         {
@@ -391,13 +371,41 @@ public class TradeMenu : MonoBehaviour
             Dialog.Title.text = "Unable to buy: Insufficient Credits!";
             Dialog.Show();
             Dialog.MoveToCursor();
-            return;
         }
     }
 
-    private void Buy(SimpleCommodity simpleCommodity, int quantity)
+    private void Buy(CraftedItemData data, int quantity)
     {
-        var data = GameManager.ItemManager.GetData(simpleCommodity);
+        for (int i = 0; i < quantity; i++)
+        {
+            if (data.Price < GameManager.Credits)
+            {
+                if (_targetCargo.TryStore(GameManager.ItemManager.CreateInstance(data)))
+                {
+                    GameManager.Credits -= data.Price;
+                }
+                else
+                {
+                    Dialog.Clear();
+                    Dialog.Title.text = "Unable to buy: Insufficient Cargo Space!";
+                    Dialog.Show();
+                    Dialog.MoveToCursor();
+                    return;
+                }
+            }
+            else
+            {
+                Dialog.Clear();
+                Dialog.Title.text = "Unable to buy: Insufficient Credits!";
+                Dialog.Show();
+                Dialog.MoveToCursor();
+                return;
+            }
+        }
+    }
+
+    private void Buy(SimpleCommodityData data, int quantity)
+    {
         // Up-rounded integer division from https://stackoverflow.com/a/503201
         int lots = (quantity - 1) / data.MaxStack + 1;
         int remaining = quantity;
@@ -406,7 +414,7 @@ public class TradeMenu : MonoBehaviour
             int q = min(remaining, data.MaxStack);
             if (q * data.Price < GameManager.Credits)
             {
-                if (Inventory.TryTransferItem(_targetCargo, simpleCommodity, quantity))
+                if (_targetCargo.TryStore(GameManager.ItemManager.CreateInstance(data, q)))
                 {
                     GameManager.Credits -= q * data.Price;
                     remaining -= q;
