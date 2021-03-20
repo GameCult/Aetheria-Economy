@@ -37,6 +37,61 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="railgun_fire" ID="{E0F70C0D-8DDA-4811-A87A-462972871E1A}">
+					<ChildrenList>
+						<Action Name="" ID="{F3243C4C-A386-4DA9-9E38-E613BBF00731}" ShortID="951890922">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_fire" ID="{94518B9E-4670-4FC3-BD4C-3B2A441FDCEF}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_hit" ID="{749865F9-EFBD-41B5-9874-3A48F535F28F}">
+					<ChildrenList>
+						<Action Name="" ID="{310E03FD-01A5-48D4-9C23-A52C9C17A82D}" ShortID="772809758">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_hit" ID="{93EF9892-3F74-40AD-AE79-E4B95B32482D}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_charging" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}">
+					<ChildrenList>
+						<Action Name="" ID="{3B675650-DA3A-482C-ADBD-053E55526F80}" ShortID="629614386">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_charging" ID="{A2A46B8E-0D70-4BF5-AF46-53F109E083DB}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_muzzle" ID="{E9B80512-0184-48FB-A298-BE9C088B6CC9}">
+					<ChildrenList>
+						<Action Name="" ID="{991B21A4-91AD-4292-BC01-B5F257E7BB8D}" ShortID="545309114">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_muzzle" ID="{81ECC4C2-C03A-4FD5-8241-82E31D3ED818}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_overcharge_fail" ID="{4CFC4DF9-2C65-4EE8-950D-C61EDBA90E64}">
+					<ChildrenList>
+						<Action Name="" ID="{A47AEA46-8CED-479A-8DFD-F387EF172D9C}" ShortID="693741291">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_overcharge_fail" ID="{8FC2369E-1556-41CD-B764-A26E63D9BFF4}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

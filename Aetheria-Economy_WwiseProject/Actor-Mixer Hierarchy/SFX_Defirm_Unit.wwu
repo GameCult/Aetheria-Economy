@@ -2711,7 +2711,7 @@
 									<ChildrenList>
 										<Folder Name="railgun" ID="{1E90060B-FDA0-48BE-B641-585C3E7255D0}" ShortID="56215779">
 											<ChildrenList>
-												<Sound Name="fire" ID="{94518B9E-4670-4FC3-BD4C-3B2A441FDCEF}" ShortID="534909062">
+												<Sound Name="railgun_fire" ID="{94518B9E-4670-4FC3-BD4C-3B2A441FDCEF}" ShortID="534909062">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
@@ -2733,7 +2733,7 @@
 														<ActiveSource Name="SFX__railgun_fire" ID="{4D1C368C-FD56-4800-A2A7-CF0452AABC09}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="charging" ID="{A2A46B8E-0D70-4BF5-AF46-53F109E083DB}" ShortID="1039905836">
+												<Sound Name="railgun_charging" ID="{A2A46B8E-0D70-4BF5-AF46-53F109E083DB}" ShortID="1039905836">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
@@ -2870,7 +2870,7 @@
 														<ActiveSource Name="SoundSeed Grain" ID="{F8B14520-9762-4776-A30B-AA91F5521B9D}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="overcharge_fail" ID="{8FC2369E-1556-41CD-B764-A26E63D9BFF4}" ShortID="38747321">
+												<Sound Name="railgun_overcharge_fail" ID="{8FC2369E-1556-41CD-B764-A26E63D9BFF4}" ShortID="38747321">
 													<ReferenceList>
 														<Reference Name="Conversion">
 															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
@@ -2897,7 +2897,7 @@
 														<ActiveSource Name="SFX__railgun_charginf_failure" ID="{2942276E-5D61-4B3E-95A8-7947055021F3}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
-												<Sound Name="muzzle" ID="{81ECC4C2-C03A-4FD5-8241-82E31D3ED818}" ShortID="667739001">
+												<Sound Name="railgun_muzzle" ID="{81ECC4C2-C03A-4FD5-8241-82E31D3ED818}" ShortID="667739001">
 													<PropertyList>
 														<Property Name="3DSpatialization" Type="int16" Value="2"/>
 													</PropertyList>
@@ -2930,6 +2930,28 @@
 													</ChildrenList>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX__railgun_charginf_failure" ID="{E7CEFDD6-EDF9-4695-80E6-CD24038DB947}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="railgun_hit" ID="{93EF9892-3F74-40AD-AE79-E4B95B32482D}" ShortID="617306300">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SFX_railgun_hit2" ID="{801D0602-6CCB-4EED-B585-2988D813DDEA}">
+															<Language>SFX</Language>
+															<AudioFile>SFX_railgun_hit2.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="1019087312"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SFX_railgun_hit2" ID="{801D0602-6CCB-4EED-B585-2988D813DDEA}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>
