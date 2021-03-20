@@ -2733,6 +2733,205 @@
 														<ActiveSource Name="SFX__railgun_fire" ID="{4D1C368C-FD56-4800-A2A7-CF0452AABC09}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
+												<Sound Name="charging" ID="{A2A46B8E-0D70-4BF5-AF46-53F109E083DB}" ShortID="1039905836">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<SourcePlugin Name="SoundSeed Grain" ID="{F8B14520-9762-4776-A30B-AA91F5521B9D}" ShortID="751401652" PluginName="SoundSeed Grain" CompanyID="0" PluginID="183">
+															<PropertyList>
+																<Property Name="Amplitude" Type="Real32">
+																	<RTPCList>
+																		<RTPC Name="" ID="{1CBE1BA8-70F2-4EAA-89D1-3464D3BCED69}" ShortID="169753255">
+																			<ReferenceList>
+																				<Reference Name="ControlInput">
+																					<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}"/>
+																				</Reference>
+																			</ReferenceList>
+																			<Curve Name="" ID="{411B590A-665D-4E4D-8094-E4B9D5EF2606}">
+																				<PropertyList>
+																					<Property Name="Flags" Type="int32" Value="1"/>
+																				</PropertyList>
+																				<PointList>
+																					<Point>
+																						<XPos>0</XPos>
+																						<YPos>0</YPos>
+																						<Flags>5</Flags>
+																					</Point>
+																					<Point>
+																						<XPos>0.10095</XPos>
+																						<YPos>-32.41752</YPos>
+																						<Flags>0</Flags>
+																					</Point>
+																					<Point>
+																						<XPos>1</XPos>
+																						<YPos>-55.73771</YPos>
+																						<Flags>37</Flags>
+																					</Point>
+																				</PointList>
+																			</Curve>
+																		</RTPC>
+																	</RTPCList>
+																</Property>
+																<Property Name="Attack" Type="Real32" Value="181"/>
+																<Property Name="Duration" Type="Real32" Value="172.2"/>
+																<Property Name="DurationLink" Type="int32" Value="1"/>
+																<Property Name="EnvelopeType" Type="int32" Value="3"/>
+																<Property Name="GrainRate" Type="Real32" Value="11.145"/>
+																<Property Name="MarkerSelect" Type="Real32" Value="7.51762">
+																	<RTPCList>
+																		<RTPC Name="" ID="{1F818A35-2562-4362-A81C-97B0A2206521}" ShortID="928018942">
+																			<ReferenceList>
+																				<Reference Name="ControlInput">
+																					<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}"/>
+																				</Reference>
+																			</ReferenceList>
+																			<Curve Name="" ID="{60B356AC-E04B-4E07-B011-A7793C4B2BE4}">
+																				<PropertyList>
+																					<Property Name="Flags" Type="int32" Value="1"/>
+																				</PropertyList>
+																				<PointList>
+																					<Point>
+																						<XPos>0</XPos>
+																						<YPos>0</YPos>
+																						<Flags>5</Flags>
+																					</Point>
+																					<Point>
+																						<XPos>1</XPos>
+																						<YPos>79.6253</YPos>
+																						<Flags>37</Flags>
+																					</Point>
+																				</PointList>
+																			</Curve>
+																		</RTPC>
+																	</RTPCList>
+																</Property>
+																<Property Name="OutputLevel" Type="Real32">
+																	<RTPCList>
+																		<RTPC Name="" ID="{5CFC2714-8F9B-45FB-B2A7-042CF6ADD28C}" ShortID="1071782681">
+																			<ReferenceList>
+																				<Reference Name="ControlInput">
+																					<Custom>
+																						<ModulatorEnvelope Name="Modulator Envelope (Custom)" ID="{12A8245E-80FC-4BFF-A8AF-7D3CCDE02DE8}" ShortID="547067345">
+																							<PropertyList>
+																								<Property Name="EnvelopeAttackTime" Type="Real64" Value="0.01"/>
+																							</PropertyList>
+																						</ModulatorEnvelope>
+																					</Custom>
+																				</Reference>
+																			</ReferenceList>
+																			<Curve Name="" ID="{D90DDB71-542F-4FA0-BF20-C311B822F6D4}">
+																				<PropertyList>
+																					<Property Name="Flags" Type="int32" Value="3"/>
+																				</PropertyList>
+																				<PointList>
+																					<Point>
+																						<XPos>0</XPos>
+																						<YPos>-96</YPos>
+																						<Flags>21</Flags>
+																					</Point>
+																					<Point>
+																						<XPos>1</XPos>
+																						<YPos>0</YPos>
+																						<Flags>53</Flags>
+																					</Point>
+																				</PointList>
+																			</Curve>
+																		</RTPC>
+																	</RTPCList>
+																</Property>
+																<Property Name="SelectFreqTimeGrain" Type="int32" Value="1"/>
+															</PropertyList>
+															<ChildrenList>
+																<AudioFileSource Name="SFX__railgun_charging" ID="{39341B86-2B68-4032-B9BE-939D6D100150}">
+																	<PropertyList>
+																		<Property Name="FadeInDuration" Type="Real64" Value="0.0164406019007392"/>
+																		<Property Name="FadeOutDuration" Type="Real64" Value="0.0123304514255547"/>
+																		<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+																		<Property Name="TrimBegin" Type="Real64" Value="0.295930834213305"/>
+																		<Property Name="TrimEnd" Type="Real64" Value="3.68680497624076"/>
+																	</PropertyList>
+																	<Language>SoundSeed Grain</Language>
+																	<AudioFile>SFX__railgun_charging.wav</AudioFile>
+																	<MediaIDList>
+																		<MediaID ID="12545598"/>
+																	</MediaIDList>
+																</AudioFileSource>
+															</ChildrenList>
+															<Language>SFX</Language>
+														</SourcePlugin>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SoundSeed Grain" ID="{F8B14520-9762-4776-A30B-AA91F5521B9D}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="overcharge_fail" ID="{8FC2369E-1556-41CD-B764-A26E63D9BFF4}" ShortID="38747321">
+													<ReferenceList>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SFX__railgun_charginf_failure" ID="{2942276E-5D61-4B3E-95A8-7947055021F3}">
+															<PropertyList>
+																<Property Name="FadeInDuration" Type="Real64" Value="0.00494315555091296"/>
+																<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+																<Property Name="TrimBegin" Type="Real64" Value="0.341595441705709"/>
+															</PropertyList>
+															<Language>SFX</Language>
+															<AudioFile>SFX__railgun_charginf_failure.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="85569245"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SFX__railgun_charginf_failure" ID="{2942276E-5D61-4B3E-95A8-7947055021F3}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
+												<Sound Name="muzzle" ID="{81ECC4C2-C03A-4FD5-8241-82E31D3ED818}" ShortID="667739001">
+													<PropertyList>
+														<Property Name="3DSpatialization" Type="int16" Value="2"/>
+													</PropertyList>
+													<ReferenceList>
+														<Reference Name="Attenuation">
+															<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+														</Reference>
+														<Reference Name="Conversion">
+															<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+														</Reference>
+														<Reference Name="OutputBus">
+															<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+														</Reference>
+													</ReferenceList>
+													<ChildrenList>
+														<AudioFileSource Name="SFX__railgun_charginf_failure" ID="{E7CEFDD6-EDF9-4695-80E6-CD24038DB947}">
+															<PropertyList>
+																<Property Name="FadeInDuration" Type="Real64" Value="0.00494315555091296"/>
+																<Property Name="FadeOutDuration" Type="Real64" Value="0.0635765575501584"/>
+																<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+																<Property Name="TrimBegin" Type="Real64" Value="0.0121098204857445"/>
+																<Property Name="TrimEnd" Type="Real64" Value="0.342102428722281"/>
+															</PropertyList>
+															<Language>SFX</Language>
+															<AudioFile>SFX__railgun_charginf_failure.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="516968389"/>
+															</MediaIDList>
+														</AudioFileSource>
+													</ChildrenList>
+													<ActiveSourceList>
+														<ActiveSource Name="SFX__railgun_charginf_failure" ID="{E7CEFDD6-EDF9-4695-80E6-CD24038DB947}" Platform="Linked"/>
+													</ActiveSourceList>
+												</Sound>
 											</ChildrenList>
 										</Folder>
 									</ChildrenList>
