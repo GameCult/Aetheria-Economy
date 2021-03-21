@@ -1,6 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{22D7F8DC-6842-4B60-B448-518725B20237}" SchemaVersion="97">
 	<SoundcasterSessions>
-		<WorkUnit Name="Default Work Unit" ID="{22D7F8DC-6842-4B60-B448-518725B20237}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{22D7F8DC-6842-4B60-B448-518725B20237}" PersistMode="Standalone">
+			<ChildrenList>
+				<SoundcasterSession Name="spaceship_sounds" ID="{8CD02381-704A-4881-9445-9A309D9B5B9E}">
+					<ModuleList>
+						<Module>
+							<ObjectRef Name="reactor_type01_stop" ID="{ACD01933-582E-4049-B99E-8A202B5324F7}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="0" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="reactor_type1" ID="{3AA3BAA8-A42D-4EAE-B9BD-BC64D22B2753}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="0" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_charging" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="0" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_charging" ID="{A2A46B8E-0D70-4BF5-AF46-53F109E083DB}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="0" Y="4"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="thruster_large" ID="{99504764-B63E-48E8-A9A0-717489DD3466}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="1" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="thruster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="1" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_fire" ID="{E0F70C0D-8DDA-4811-A87A-462972871E1A}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="1" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_fire" ID="{94518B9E-4670-4FC3-BD4C-3B2A441FDCEF}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="1" Y="4"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="thruster_medium" ID="{0F30DB3D-6A97-4659-BA04-13A267DC19EC}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="2" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="thruster_medium" ID="{4261D6D4-BDC3-4423-BA6B-A92DE2181A21}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="2" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_muzzle" ID="{E9B80512-0184-48FB-A298-BE9C088B6CC9}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="2" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_muzzle" ID="{81ECC4C2-C03A-4FD5-8241-82E31D3ED818}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="2" Y="4"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="thruster_small" ID="{63E66AEC-CFE1-4362-B99D-280AC043C538}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="3" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="thruster_small" ID="{D355F5AE-732C-4638-988F-F1E01D1FC547}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="3" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_overcharge_fail" ID="{4CFC4DF9-2C65-4EE8-950D-C61EDBA90E64}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="3" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_overcharge_fail" ID="{8FC2369E-1556-41CD-B764-A26E63D9BFF4}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="3" Y="4"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="sensor_ping" ID="{03AFFAC6-3402-48FC-B54D-7FF80212161A}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="4" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="sensor_ping" ID="{D524108B-6B52-457A-95BF-27A269C72198}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="4" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_hit" ID="{749865F9-EFBD-41B5-9874-3A48F535F28F}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="4" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_hit" ID="{93EF9892-3F74-40AD-AE79-E4B95B32482D}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+							<Position X="4" Y="4"/>
+						</Module>
+					</ModuleList>
+					<RTPCValueList ShowAll="true">
+						<RTPCValue>
+							<GameParameterRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}"/>
+							<Value>0.98</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}"/>
+							<Value>1</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}"/>
+							<Value>42</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="thruster_throttle" ID="{2A6D7A97-7D45-4B6C-96EE-CCD56FA83773}"/>
+							<Value>0.52</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="performance_quality" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}"/>
+							<Value>0.99</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="reactor_load" ID="{FC156F43-A577-4DCB-B6E8-84E4072A38C9}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}"/>
+							<Value>1</Value>
+						</RTPCValue>
+					</RTPCValueList>
+					<CurrentStateList ShowAll="true"/>
+					<CurrentSwitchList ShowAll="true"/>
+				</SoundcasterSession>
+			</ChildrenList>
+		</WorkUnit>
 	</SoundcasterSessions>
 </WwiseDocument>
