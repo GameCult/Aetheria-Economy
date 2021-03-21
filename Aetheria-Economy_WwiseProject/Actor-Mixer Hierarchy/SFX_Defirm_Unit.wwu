@@ -2390,7 +2390,7 @@
 																			</Point>
 																			<Point>
 																				<XPos>10</XPos>
-																				<YPos>0</YPos>
+																				<YPos>-2.80358</YPos>
 																				<Flags>37</Flags>
 																			</Point>
 																		</PointList>
@@ -2916,7 +2916,7 @@
 														<AudioFileSource Name="SFX__railgun_charginf_failure" ID="{E7CEFDD6-EDF9-4695-80E6-CD24038DB947}">
 															<PropertyList>
 																<Property Name="FadeInDuration" Type="Real64" Value="0.00494315555091296"/>
-																<Property Name="FadeOutDuration" Type="Real64" Value="0.0635765575501584"/>
+																<Property Name="FadeOutDuration" Type="Real64" Value="0.236141499472017"/>
 																<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
 																<Property Name="TrimBegin" Type="Real64" Value="0.0121098204857445"/>
 																<Property Name="TrimEnd" Type="Real64" Value="0.342102428722281"/>
@@ -2949,15 +2949,56 @@
 																<MediaID ID="1019087312"/>
 															</MediaIDList>
 														</AudioFileSource>
+														<AudioFileSource Name="SFX_railgun_hit3" ID="{386AC49C-9749-4148-AFB8-8D4332C3BBD3}">
+															<Language>SFX</Language>
+															<AudioFile>SFX_railgun_hit3.wav</AudioFile>
+															<MediaIDList>
+																<MediaID ID="859983065"/>
+															</MediaIDList>
+														</AudioFileSource>
 													</ChildrenList>
 													<ActiveSourceList>
-														<ActiveSource Name="SFX_railgun_hit2" ID="{801D0602-6CCB-4EED-B585-2988D813DDEA}" Platform="Linked"/>
+														<ActiveSource Name="SFX_railgun_hit3" ID="{386AC49C-9749-4148-AFB8-8D4332C3BBD3}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>
 										</Folder>
 									</ChildrenList>
 								</Folder>
+								<Sound Name="sensor_ping" ID="{D524108B-6B52-457A-95BF-27A269C72198}" ShortID="472459232">
+									<PropertyList>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-2.3</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX__ship_sensor_ping" ID="{E62C5216-1DF6-4D35-BFD4-A8707ACA0194}">
+											<PropertyList>
+												<Property Name="FadeOutDuration" Type="Real64" Value="0.448791446673706"/>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimEnd" Type="Real64" Value="1.34637434002112"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>SFX__ship_sensor_ping.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="235994019"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX__ship_sensor_ping" ID="{E62C5216-1DF6-4D35-BFD4-A8707ACA0194}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
 							</ChildrenList>
 						</ActorMixer>
 					</ChildrenList>
