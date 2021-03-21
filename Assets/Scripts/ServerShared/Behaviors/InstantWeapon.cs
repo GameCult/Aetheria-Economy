@@ -27,7 +27,7 @@ public class InstantWeaponData : WeaponData
     }
 }
 
-public class InstantWeapon : Weapon, IProgressBehavior
+public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
 {
     private InstantWeaponData _data;
 
@@ -63,7 +63,7 @@ public class InstantWeapon : Weapon, IProgressBehavior
     public event Action OnCooldownComplete;
     public event Action OnFire;
 
-    public override void ResetEvents()
+    public virtual void ResetEvents()
     {
         OnReloadBegin = null;
         OnReloadComplete = null;

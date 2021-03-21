@@ -180,6 +180,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Ping",
+                    "type": "Button",
+                    "id": "cfc95f69-9b8a-41d5-a071-003b4e292524",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -538,10 +546,10 @@
                 {
                     "name": "",
                     "id": "6e13d87d-e5bb-4363-b153-1e0c1e21e4eb",
-                    "path": "<Keyboard>/t",
+                    "path": "<Keyboard>/#(Y)",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard&Mouse",
                     "action": "Target Previous",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -549,10 +557,10 @@
                 {
                     "name": "",
                     "id": "e6e3164c-1b59-4eab-99d9-5a3bc294af0b",
-                    "path": "<Keyboard>/y",
+                    "path": "<Keyboard>/#(U)",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard&Mouse",
                     "action": "Target Next",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -560,7 +568,7 @@
                 {
                     "name": "",
                     "id": "b55dd143-367d-4842-82c8-593c301bcd69",
-                    "path": "<Keyboard>/u",
+                    "path": "<Keyboard>/#(T)",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
@@ -574,7 +582,7 @@
                     "path": "<Keyboard>/#(H)",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "Keyboard&Mouse",
                     "action": "Toggle Heatsinks",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -609,6 +617,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Override Shutdown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "baa67cdf-3c91-46dd-965c-12370a897414",
+                    "path": "<Keyboard>/#(X)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Ping",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

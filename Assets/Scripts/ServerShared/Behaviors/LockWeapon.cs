@@ -81,7 +81,7 @@ public class LockWeapon : InstantWeapon
             if (degrees < LockAngle)
             {
                 var lerp = 1 - unlerp(0, 90, degrees);
-                _lock = saturate(_lock + pow(lerp, DirectionImpact) * delta * LockSpeed);
+                _lock = saturate(_lock + pow(lerp, DirectionImpact) * delta * LockSpeed * pow(Entity.EntityInfoGathered[Entity.Target.Value], SensorImpact));
             }
             else _lock = saturate(_lock - delta * Decay);
         }

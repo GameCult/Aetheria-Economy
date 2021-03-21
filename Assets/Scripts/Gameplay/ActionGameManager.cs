@@ -283,6 +283,11 @@ public class ActionGameManager : MonoBehaviour
             CurrentEntity.OverrideShutdown = !CurrentEntity.OverrideShutdown;
         };
 
+        _input.Player.Ping.performed += context =>
+        {
+            CurrentEntity.Sensor?.Ping();
+        };
+
         _input.Player.ToggleHeatsinks.performed += context =>
         {
             CurrentEntity.HeatsinksEnabled = !CurrentEntity.HeatsinksEnabled;
@@ -639,6 +644,9 @@ public class ActionGameManager : MonoBehaviour
         DockingBay = null;
         DockCamera.enabled = false;
         FollowCamera.enabled = true;
+
+        if (length(CurrentEntity.Direction) > .1f)
+            _viewDirection = float3(CurrentEntity.Direction.x,0,CurrentEntity.Direction.y);
         
         Cursor.lockState = CursorLockMode.Locked;
         GameplayUI.SetActive(true);

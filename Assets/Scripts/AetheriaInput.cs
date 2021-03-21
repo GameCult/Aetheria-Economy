@@ -193,6 +193,14 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Ping"",
+                    ""type"": ""Button"",
+                    ""id"": ""cfc95f69-9b8a-41d5-a071-003b4e292524"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -551,10 +559,10 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""6e13d87d-e5bb-4363-b153-1e0c1e21e4eb"",
-                    ""path"": ""<Keyboard>/t"",
+                    ""path"": ""<Keyboard>/#(Y)"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Target Previous"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -562,10 +570,10 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""e6e3164c-1b59-4eab-99d9-5a3bc294af0b"",
-                    ""path"": ""<Keyboard>/y"",
+                    ""path"": ""<Keyboard>/#(U)"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Target Next"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -573,7 +581,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b55dd143-367d-4842-82c8-593c301bcd69"",
-                    ""path"": ""<Keyboard>/u"",
+                    ""path"": ""<Keyboard>/#(T)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -587,7 +595,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""path"": ""<Keyboard>/#(H)"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Toggle Heatsinks"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -622,6 +630,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Override Shutdown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""baa67cdf-3c91-46dd-965c-12370a897414"",
+                    ""path"": ""<Keyboard>/#(X)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Ping"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1212,6 +1231,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player_EnterWormhole = m_Player.FindAction("EnterWormhole", throwIfNotFound: true);
         m_Player_ToggleShield = m_Player.FindAction("Toggle Shield", throwIfNotFound: true);
         m_Player_OverrideShutdown = m_Player.FindAction("Override Shutdown", throwIfNotFound: true);
+        m_Player_Ping = m_Player.FindAction("Ping", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1299,6 +1319,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_EnterWormhole;
     private readonly InputAction m_Player_ToggleShield;
     private readonly InputAction m_Player_OverrideShutdown;
+    private readonly InputAction m_Player_Ping;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1325,6 +1346,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @EnterWormhole => m_Wrapper.m_Player_EnterWormhole;
         public InputAction @ToggleShield => m_Wrapper.m_Player_ToggleShield;
         public InputAction @OverrideShutdown => m_Wrapper.m_Player_OverrideShutdown;
+        public InputAction @Ping => m_Wrapper.m_Player_Ping;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1400,6 +1422,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @OverrideShutdown.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOverrideShutdown;
                 @OverrideShutdown.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOverrideShutdown;
                 @OverrideShutdown.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOverrideShutdown;
+                @Ping.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPing;
+                @Ping.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPing;
+                @Ping.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPing;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1470,6 +1495,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @OverrideShutdown.started += instance.OnOverrideShutdown;
                 @OverrideShutdown.performed += instance.OnOverrideShutdown;
                 @OverrideShutdown.canceled += instance.OnOverrideShutdown;
+                @Ping.started += instance.OnPing;
+                @Ping.performed += instance.OnPing;
+                @Ping.canceled += instance.OnPing;
             }
         }
     }
@@ -1671,6 +1699,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnEnterWormhole(InputAction.CallbackContext context);
         void OnToggleShield(InputAction.CallbackContext context);
         void OnOverrideShutdown(InputAction.CallbackContext context);
+        void OnPing(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

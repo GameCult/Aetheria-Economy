@@ -109,8 +109,6 @@ public abstract class Weapon : IActivatedBehavior
         _itemData = context.GetData(item.EquippableItem);
     }
 
-    public virtual void ResetEvents(){}
-
     protected virtual void UpdateStats()
     {
         Damage = Item.Evaluate(_data.Damage);

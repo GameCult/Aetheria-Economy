@@ -32,6 +32,7 @@ public class SchematicDisplay : MonoBehaviour
     public TextMeshProUGUI HullDurabilityLabel;
     public TextMeshProUGUI DistanceLabel;
 
+    public RectTransform SensorCooldownFill;
     public RectTransform EnergyFill;
     public RectTransform HullDurabilityFill;
     public RectTransform HeatstrokeMeterFill;
@@ -250,6 +251,8 @@ public class SchematicDisplay : MonoBehaviour
                     HeatstrokeMeterFill.anchorMax = new Vector2(_entity.Heatstroke, 1);
                     HeatstrokeLimitFill.anchorMax = new Vector2(_cockpit.Item.Temperature / Settings.GameplaySettings.HeatstrokeTemperature, 1);
                 }
+
+                SensorCooldownFill.anchorMax = new Vector2(_entity.Sensor?.Cooldown ?? 0, 1);
 
                 if (_capacitors.Length == 0)
                 {

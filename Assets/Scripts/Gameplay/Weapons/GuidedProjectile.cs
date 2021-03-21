@@ -104,7 +104,7 @@ public class GuidedProjectile : MonoBehaviour
                     var perpendicularRandom = randomDirection.x * right + randomDirection.y * up;
                     child.Velocity = normalize(lerp(perpendicularRandom, dir, SplitSeparationForwardness)) * length(Velocity) * SplitSeparationVelocity;
                     child.Range = Range;
-                    child.Damage = Damage;
+                    child.Damage = Damage / Children;
                     child.Penetration = Penetration;
                     child.Spread = Spread;
                     child.DamageType = DamageType;

@@ -35,6 +35,11 @@ public interface IDisposableBehavior
     void Dispose();
 }
 
+public interface IEventBehavior
+{
+    void ResetEvents();
+}
+
 public interface IInitializableBehavior
 {
     void Initialize();

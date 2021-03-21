@@ -288,8 +288,8 @@ public class ZoneRenderer : MonoBehaviour
         {
             foreach (var behavior in item.Behaviors)
             {
-                if(behavior is Weapon weapon)
-                    weapon.ResetEvents();
+                if(behavior is IEventBehavior eventBehavior)
+                    eventBehavior.ResetEvents();
             }
         }
         

@@ -96,6 +96,7 @@ public abstract class Entity
     
     public Shield Shield { get; private set; }
     public Cockpit Cockpit { get; private set; }
+    public Sensor Sensor { get; private set; }
     public float Heatstroke { get; private set; }
     
     public float TargetRange { get; private set; }
@@ -125,6 +126,7 @@ public abstract class Entity
 
     public virtual void Activate()
     {
+        //ItemManager.Log($"Entity {Name} is activating!");
         _active = true;
         Heatstroke = 0;
         foreach (var item in Equipment)
@@ -134,6 +136,7 @@ public abstract class Entity
                 initializableBehavior.Initialize();
         }
         //foreach(var entity in Zone.Entities) EntityInfoGathered.Add(entity, 0);
+        _subscriptions.Add(Zone.Entities.ObserveAdd().Subscribe(add => EntityInfoGathered.Add(add.Value, 0)));
         _subscriptions.Add(Zone.Entities.ObserveRemove().Subscribe(remove =>
         {
             if (Target.Value == remove.Value) Target.Value = null;
@@ -150,6 +153,7 @@ public abstract class Entity
 
     public virtual void Deactivate()
     {
+        //ItemManager.Log($"Entity {Name} is deactivating!");
         foreach(var s in _subscriptions) s.Dispose();
         _subscriptions.Clear();
         _active = false;
@@ -379,6 +383,8 @@ public abstract class Entity
                 Shield = null;
             if (b is Cockpit)
                 Cockpit = null;
+            if (b is Sensor)
+                Sensor = null;
         }
 
         return item.EquippableItem;
@@ -559,6 +565,8 @@ public abstract class Entity
                 Shield = shield;
             if (b is Cockpit cockpit)
                 Cockpit = cockpit;
+            if (b is Sensor sensor)
+                Sensor = sensor;
         }
 
         // equippedItem.OnOnline += () => ItemOnline.OnNext(equippedItem);
@@ -585,7 +593,7 @@ public abstract class Entity
             bay.DockedShip = ship;
             ship.SetParent(this);
             Zone.Entities.Remove(ship);
-            Deactivate();
+            ship.Deactivate();
             ship.Docked.OnNext(this);
         }
 

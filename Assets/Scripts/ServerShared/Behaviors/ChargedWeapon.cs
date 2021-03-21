@@ -51,7 +51,7 @@ public class ChargedWeaponData : InstantWeaponData
     }
 }
 
-public class ChargedWeapon : InstantWeapon
+public class ChargedWeapon : InstantWeapon, IEventBehavior
 {
     private ChargedWeaponData _data;
     private bool _charging;
@@ -79,6 +79,7 @@ public class ChargedWeapon : InstantWeapon
 
     public override void ResetEvents()
     {
+        base.ResetEvents();
         OnStartCharging = null;
         OnStopCharging = null;
         OnCharged = null;

@@ -20,7 +20,7 @@ public class ConstantWeaponData : WeaponData
     }
 }
 
-public class ConstantWeapon : Weapon, IProgressBehavior
+public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
 {
     private ConstantWeaponData _data;
     private int _ammo = 1;
@@ -49,7 +49,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior
     public event Action OnStartFiring;
     public event Action OnStopFiring;
     
-    public override void ResetEvents()
+    public void ResetEvents()
     {
         OnReloadBegin = null;
         OnReloadComplete = null;

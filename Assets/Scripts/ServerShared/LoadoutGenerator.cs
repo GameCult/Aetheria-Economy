@@ -58,7 +58,7 @@ public class LoadoutGenerator
         
         var emptyShape = entity.UnoccupiedSpace;
         
-        var dockingBayData = RandomItem<DockingBayData>(item => item.Shape.FitsWithin(emptyShape, out _, out _));
+        var dockingBayData = RandomItem<DockingBayData>(2, item => item.Shape.FitsWithin(emptyShape, out _, out _));
         if (dockingBayData == null) throw new InvalidLoadoutException("No compatible docking bay found for station!");
 
         dockingBayData.Shape.FitsWithin(emptyShape, out var cargoRotation, out var cargoPosition);
@@ -70,7 +70,9 @@ public class LoadoutGenerator
         }
 
         var cargo = entity.CargoBays.First();
-        var inventory = RandomItems<EquippableItemData>(16, data => !(data is CargoBayData));
+        var inventory = RandomItems<EquippableItemData>(16, 1, 
+            data => !(data is HullData hull && hull.HullType != HullType.Ship) && !(data is CargoBayData))
+            .OrderByDescending(item=>item.Shape.Coordinates.Length);
         foreach (var item in inventory)
         {
             var instance = ItemManager.CreateInstance(item);
@@ -93,7 +95,7 @@ public class LoadoutGenerator
             ).FirstOrDefault();
     }
     
-    public T[] RandomItems<T>(int count, Predicate<T> filter = null) where T : EquippableItemData
+    public T[] RandomItems<T>(int count, float sizeExponent, Predicate<T> filter = null) where T : EquippableItemData
     {
         return ItemManager.ItemData.GetAll<T>()
             .Where(item => Sector.ContainsFaction(item.Manufacturer) &&
@@ -101,21 +103,21 @@ public class LoadoutGenerator
                            (filter?.Invoke(item) ?? true))
             .WeightedRandomElements(ref Random, item =>
                     (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) * // Prioritize items from allied manufacturers
-                    item.Shape.Coordinates.Length * item.Shape.Coordinates.Length / // Prioritize larger items
+                    pow(item.Shape.Coordinates.Length, sizeExponent) / // Prioritize larger items
                     Zone.Distance[Sector.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] / // Penalize distance to manufacturer headquarters
                     pow(item.Price, PriceExponent), // Penalize item price to a controllable degree
                 count
             );
     }
 
-    public T RandomItem<T>(Predicate<T> filter = null) where T : EquippableItemData
+    public T RandomItem<T>(float sizeExponent, Predicate<T> filter = null) where T : EquippableItemData
     {
-        return RandomItems(1, filter).FirstOrDefault();
+        return RandomItems(1, sizeExponent, filter).FirstOrDefault();
     }
     
-    public T RandomItem<T>(HardpointData hardpoint, Predicate<T> filter = null) where T : EquippableItemData
+    public T RandomItem<T>(HardpointData hardpoint, float sizeExponent, Predicate<T> filter = null) where T : EquippableItemData
     {
-        return RandomItem<T>(item => item.HardpointType == hardpoint.Type &&
+        return RandomItem<T>(sizeExponent, item => item.HardpointType == hardpoint.Type &&
                                   (filter?.Invoke(item) ?? true) && 
                                   item.Shape.FitsWithin(hardpoint.Shape, hardpoint.Rotation, out _));
     }
@@ -129,7 +131,7 @@ public class LoadoutGenerator
         {
             if (hardpoint.Type == HardpointType.ControlModule)
             {
-                var controllerData = RandomItem<GearData>(hardpoint,
+                var controllerData = RandomItem<GearData>(hardpoint, 2,
                     item => item.Behaviors.Any(b => entity is Ship && b is CockpitData || entity is OrbitalEntity && b is TurretControllerData));
                 if (controllerData == null) throw new InvalidLoadoutException("No compatible controller found for entity!");
                 var controller = ItemManager.CreateInstance(controllerData) as EquippableItem;
@@ -143,7 +145,7 @@ public class LoadoutGenerator
                 // If a previously selected item fits, use that one (this is why we must process larger hardpoints first)
                 var itemData = previousItems
                     .FirstOrDefault(i => i.HardpointType == hardpoint.Type && i.Shape.FitsWithin(hardpoint.Shape, hardpoint.Rotation, out _));
-                itemData ??= RandomItem<GearData>(hardpoint);
+                itemData ??= RandomItem<GearData>(hardpoint, 2);
                 if (itemData == null) ItemManager.Log($"No compatible item found for entity {Enum.GetName(typeof(HardpointType), hardpoint.Type)} hardpoint!");
                 else
                 {
@@ -160,7 +162,7 @@ public class LoadoutGenerator
 
         var emptyShape = entity.UnoccupiedSpace;
         
-        var cargoData = RandomItem<CargoBayData>(item =>
+        var cargoData = RandomItem<CargoBayData>(3, item =>
             !(item is DockingBayData) &&
             item.Shape.FitsWithin(emptyShape, out _, out _));
         if (cargoData == null) throw new InvalidLoadoutException("No compatible cargo bay found for entity!");
@@ -173,7 +175,7 @@ public class LoadoutGenerator
 
         emptyShape = entity.UnoccupiedSpace;
 
-        var capacitorData = RandomItem<GearData>(item =>
+        var capacitorData = RandomItem<GearData>(2, item =>
             item.Behaviors.Any(b => b is CapacitorData) &&
             item.Shape.FitsWithin(emptyShape, out _, out _));
         if (capacitorData == null) throw new InvalidLoadoutException("No compatible capacitor found for entity!");

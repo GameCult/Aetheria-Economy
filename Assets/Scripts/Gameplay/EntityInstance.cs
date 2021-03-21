@@ -10,6 +10,7 @@ using float2 = Unity.Mathematics.float2;
 
 public class EntityInstance : MonoBehaviour
 {
+    public Transform PingPrefab;
     public Material InvisibleMaterial;
     public static Transform EffectManagerParent;
     public ShieldManager Shield;
@@ -37,6 +38,9 @@ public class EntityInstance : MonoBehaviour
     private bool _unfadedElementsVisible = false;
     private float _fadeTime;
     private bool _destroyed;
+    private (Transform transform, MeshRenderer meshRenderer) _currentPing;
+    private float _pingBrightness;
+    private Sensor _sensor;
     
     private (Reactor reactor, GameObject sfxSource) _reactor;
     private Dictionary<Radiator, GameObject> _radiatorSfx = new Dictionary<Radiator, GameObject>();
@@ -152,6 +156,20 @@ public class EntityInstance : MonoBehaviour
         {
             foreach (var behavior in item.Behaviors)
             {
+                if (behavior is Sensor sensor)
+                {
+                    _sensor = sensor;
+                    sensor.OnPingStart += () =>
+                    {
+                        var pingInstance = Instantiate(PingPrefab);
+                        var pingMesh = pingInstance.GetComponent<MeshRenderer>();
+                        pingInstance.position = entity.Position;
+                        _pingBrightness = pingMesh.material.GetFloat("_Depth");
+                        _currentPing = (pingInstance, pingMesh);
+                    };
+                    sensor.OnPingEnd += () => Destroy(_currentPing.transform.gameObject);
+                }
+                
                 if (behavior is InstantWeapon instantWeapon)
                 {
                     var data = (InstantWeaponData) instantWeapon.Data;
@@ -427,6 +445,11 @@ public class EntityInstance : MonoBehaviour
 
     public virtual void Update()
     {
+        if (_currentPing.transform)
+        {
+            _currentPing.transform.localScale = _sensor.PingRadius * Vector3.one;
+            _currentPing.meshRenderer.material.SetFloat("_Depth", _pingBrightness * _sensor.PingBrightness);
+        }
         if (_fading)
         {
             if (_fadingIn)

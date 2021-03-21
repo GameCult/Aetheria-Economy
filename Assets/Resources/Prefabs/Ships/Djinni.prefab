@@ -6928,6 +6928,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1306f57022ae47ceba7441145a065cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PingPrefab: {fileID: 3496685214803260728, guid: bfcaa66e173f6a44cb640aabbcb5e429,
+    type: 3}
   InvisibleMaterial: {fileID: 2100000, guid: c94a225de88e5ce42af01c34df3521e6, type: 2}
   Shield: {fileID: 1053924711515204557}
   HullColliders:

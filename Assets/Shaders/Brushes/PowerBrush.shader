@@ -50,13 +50,14 @@ Category {
 
 			float powerPulse( float x, float power )
 			{
-				x = saturate(abs(x));
+				x = saturate(abs(x))-.001;
 				return pow((x + 1.0f) * (1.0f - x), power);
 			}
 
 			fixed4 frag (v2f i) : SV_Target
 			{
-				return _Depth * powerPulse(length(i.texcoord-float2(.5,.5))*2,_Power) * _Color;
+				float dist = length(i.texcoord-float2(.5,.5))*2;
+				return _Depth * powerPulse(dist,_Power) * _Color * smoothstep(1, .95, dist);
 			}
 			ENDCG 
 		}
