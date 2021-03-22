@@ -74,13 +74,14 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
     public InstantWeapon(ItemManager context, InstantWeaponData data, Entity entity, EquippedItem item) : base(context,data,entity,item)
     {
         _data = data;
+        _ammo = data.MagazineSize;
     }
 
     protected void Trigger()
     {
-        // If 1 ammo is consumed per burst, perform ammo consumption here
+        // If 1 ammo is consumed per burst, perform ammo and energy consumption here
         // UseAmmo returns false when triggering reload; cancel firing if that is the case
-        if(_data.SingleAmmoBurst && !UseAmmo()) return;
+        if(_data.SingleAmmoBurst && (!Entity.TryConsumeEnergy(Energy) || !UseAmmo())) return;
         
         _burstRemaining = (int) BurstCount;
         _burstInterval = BurstTime / _burstRemaining;
@@ -105,33 +106,34 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
     {
         if (_data.MagazineSize <= 1) return true;
         
-        if (_ammo > 0) _ammo--;
-        else
+        if (_ammo > 0)
         {
-            var hasAmmo = true;
-            if (_data.AmmoType != Guid.Empty)
-            {
-                var cargo = Entity.FindItemInCargo(_data.AmmoType);
-                if (cargo != null)
-                {
-                    var item = cargo.ItemsOfType[_data.AmmoType][0];
-                    if (item is SimpleCommodity simpleCommodity)
-                        cargo.Remove(simpleCommodity, 1);
-                }
-                else hasAmmo = false;
-            }
-            if(hasAmmo)
-            {
-                OnReloadBegin?.Invoke();
-                _cooldown = 1;
-                _coolingDown = true;
-                _firing = false;
-            }
-            _burstRemaining = 0;
-            return false;
+            _ammo--;
+            return true;
         }
+        
+        var hasAmmo = true;
+        if (_data.AmmoType != Guid.Empty)
+        {
+            var cargo = Entity.FindItemInCargo(_data.AmmoType);
+            if (cargo != null)
+            {
+                var item = cargo.ItemsOfType[_data.AmmoType][0];
+                if (item is SimpleCommodity simpleCommodity)
+                    cargo.Remove(simpleCommodity, 1);
+            }
+            else hasAmmo = false;
+        }
+        if(hasAmmo)
+        {
+            OnReloadBegin?.Invoke();
+            _cooldown = 1;
+            _coolingDown = true;
+            _firing = false;
+        }
+        _burstRemaining = 0;
+        return false;
 
-        return true;
     }
 
     public override bool Execute(float delta)
@@ -139,11 +141,11 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
         base.Execute(delta);
         if (_coolingDown)
         {
-            _cooldown -= delta / (_data.AmmoType != Guid.Empty && _ammo == 0 ? _data.ReloadTime : Cooldown);
+            _cooldown -= delta / (_data.MagazineSize > 0 && _ammo == 0 ? _data.ReloadTime : Cooldown);
             if (_cooldown < 0)
             {
                 _coolingDown = false;
-                if (_data.AmmoType != Guid.Empty && _ammo == 0)
+                if (_data.MagazineSize > 0 && _ammo == 0)
                 {
                     _ammo = _data.MagazineSize;
                     OnReloadComplete?.Invoke();
@@ -156,14 +158,13 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
         _burstTimer += delta;
         while (_burstRemaining > 0 && _burstTimer > 0)
         {
-            if (!Entity.TryConsumeEnergy(Energy))
+            // If multiple ammo is consumed per burst, perform ammo and energy consumption here
+            // UseAmmo returns false when triggering reload; cancel firing if that is the case
+            if (!_data.SingleAmmoBurst && (!Entity.TryConsumeEnergy(Energy) || !UseAmmo()))
             {
                 _burstRemaining = 0;
                 return false;
             }
-            // If 1 ammo is consumed per shot in the burst, perform ammo consumption here
-            // UseAmmo returns false when triggering reload; cancel firing if that is the case
-            if (!_data.SingleAmmoBurst && !UseAmmo()) return false;
             
             _burstRemaining--;
             _burstTimer -= _burstInterval;

@@ -10,9 +10,9 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
 
     public override void Fire(InstantWeapon weapon, EquippedItem item, EntityInstance source, EntityInstance target)
     {
-        if (target == null) return;
         if(weapon.Data is LauncherData launcher)
         {
+            if (target == null) return;
             var p = ProjectilePrototype.Instantiate<GuidedProjectile>();
             p.Source = source.transform;
             p.SourceEntity = source.Entity;
@@ -38,7 +38,6 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
             var p = ProjectilePrototype.Instantiate<GuidedProjectile>();
             p.Source = source.transform;
             p.SourceEntity = source.Entity;
-            p.Target = target.transform;
             p.Frequency = guidance.DodgeFrequency;
             var hp = source.Entity.Hardpoints[item.Position.x, item.Position.y];
             var barrel = source.GetBarrel(hp);
