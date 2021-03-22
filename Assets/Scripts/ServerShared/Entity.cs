@@ -169,7 +169,7 @@ public abstract class Entity
         Zone = zone;
         Hull = hull;
         HullData = itemManager.GetData(hull) as HullData;
-        Name = hull.Name;
+        Name = HullData.Name;
         MapEntity();
         TriggerGroups = new (List<Weapon> triggers, List<EquippedItem> items)[itemManager.GameplaySettings.TriggerGroupCount];
         for(int i=0; i<itemManager.GameplaySettings.TriggerGroupCount; i++)
@@ -955,8 +955,14 @@ public class EquippedItem
         EquippableItem = item;
         Position = position;
         Conductivity = Data.Conductivity;
-        ThermalExponent = ItemManager.Evaluate(Data.HeatExponent, EquippableItem);
-        DurabilityExponent = ItemManager.Evaluate(Data.DurabilityExponent, EquippableItem);
+        ThermalExponent = lerp(
+            ItemManager.GameplaySettings.ThermalQualityMin,
+            ItemManager.GameplaySettings.ThermalQualityMax,
+            pow(item.Quality, ItemManager.GameplaySettings.ThermalQualityExponent));
+        DurabilityExponent = lerp(
+            ItemManager.GameplaySettings.DurabilityQualityMin,
+            ItemManager.GameplaySettings.DurabilityQualityMax,
+            pow(item.Quality, ItemManager.GameplaySettings.DurabilityQualityExponent));
         var hullData = itemManager.GetData(entity.Hull);
         InsetShape = hullData.Shape.Inset(Data.Shape, position, item.Rotation);
 
@@ -989,13 +995,9 @@ public class EquippedItem
 
     public float Evaluate(PerformanceStat stat)
     {
-        var heat = 1f;
-        if(stat.HeatDependent)
-            heat = pow(ThermalPerformance, ThermalExponent * stat.HeatExponentMultiplier);
-        var durability = 1f;
-        if(stat.DurabilityDependent)
-            durability = pow(DurabilityPerformance, DurabilityExponent);
-        var quality = pow(ItemManager.Quality(stat, EquippableItem), stat.QualityExponent);
+        var heat = pow(ThermalPerformance, ThermalExponent * stat.HeatExponentMultiplier);
+        var durability = pow(DurabilityPerformance, DurabilityExponent * stat.DurabilityExponentMultiplier);
+        var quality = pow(EquippableItem.Quality, stat.QualityExponent);
 
         var scaleModifier = 1.0f;
         foreach (var value in stat.GetScaleModifiers(Entity).Values) scaleModifier = scaleModifier * value;
@@ -1025,7 +1027,7 @@ public class EquippedItem
         DurabilityPerformance = EquippableItem.Durability / Data.Durability;
         var performanceThreshold = Entity.Settings.ShutdownPerformance;
         Wear = (1 - pow(Data.Performance(temp),
-                (1 - pow(ItemManager.CompoundQuality(EquippableItem), ItemManager.GameplaySettings.QualityWearExponent)) *
+                (1 - pow(EquippableItem.Quality, ItemManager.GameplaySettings.QualityWearExponent)) *
                 ItemManager.GameplaySettings.ThermalWearExponent)
             ) * Data.Durability / Data.ThermalResilience;
         ThermalOnline.Value = ThermalPerformance > performanceThreshold || Entity.OverrideShutdown && EquippableItem.OverrideShutdown;

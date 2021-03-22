@@ -493,7 +493,7 @@ public class EntityInstance : MonoBehaviour
             AkSoundEngine.SetObjectPosition(r.Value, r.Value.transform);
             AkSoundEngine.SetRTPCValue("performance_durability", r.Key.Item.DurabilityPerformance, r.Value);
             AkSoundEngine.SetRTPCValue("performance_thermal", r.Key.Item.ThermalPerformance, r.Value);
-            AkSoundEngine.SetRTPCValue("performance_quality", r.Key.Item.ItemManager.CompoundQuality(r.Key.Item.EquippableItem), r.Value);
+            AkSoundEngine.SetRTPCValue("performance_quality", r.Key.Item.EquippableItem.Quality, r.Value);
         }
 
         if (_reactor.reactor != null)
@@ -503,7 +503,7 @@ public class EntityInstance : MonoBehaviour
             AkSoundEngine.SetRTPCValue("reactor_load", _reactor.reactor.CurrentLoadRatio, _reactor.sfxSource);
             AkSoundEngine.SetRTPCValue("performance_durability", _reactor.reactor.Item.DurabilityPerformance, _reactor.sfxSource);
             AkSoundEngine.SetRTPCValue("performance_thermal", _reactor.reactor.Item.ThermalPerformance, _reactor.sfxSource);
-            AkSoundEngine.SetRTPCValue("performance_quality", _reactor.reactor.Item.ItemManager.CompoundQuality(_reactor.reactor.Item.EquippableItem), _reactor.sfxSource);
+            AkSoundEngine.SetRTPCValue("performance_quality", _reactor.reactor.Item.EquippableItem.Quality, _reactor.sfxSource);
         }
         
         foreach (var x in RadiatorMeshes)

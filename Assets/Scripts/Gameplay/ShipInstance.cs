@@ -96,8 +96,7 @@ public class ShipInstance : EntityInstance
                 AkSoundEngine.SetRTPCValue("thruster_throttle", throttle, thrusterInstance.SfxSource);
                 AkSoundEngine.SetRTPCValue("performance_durability", thrusterInstance.Thruster.Item.DurabilityPerformance, thrusterInstance.SfxSource);
                 AkSoundEngine.SetRTPCValue("performance_thermal", thrusterInstance.Thruster.Item.ThermalPerformance, thrusterInstance.SfxSource);
-                AkSoundEngine.SetRTPCValue("performance_quality",
-                    thrusterInstance.Thruster.Item.ItemManager.CompoundQuality(thrusterInstance.Thruster.Item.EquippableItem), thrusterInstance.SfxSource);
+                AkSoundEngine.SetRTPCValue("performance_quality", thrusterInstance.Thruster.Item.EquippableItem.Quality, thrusterInstance.SfxSource);
             }
         }
 

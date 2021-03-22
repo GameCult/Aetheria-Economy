@@ -77,7 +77,6 @@ public interface IPopulationAssignment
 }
 
 [MessagePackObject,
- Union(0, typeof(FactoryPersistence)),
  JsonObject(MemberSerialization.OptIn),
  JsonConverter(typeof(JsonKnownTypesConverter<PersistentBehaviorData>))]
 public abstract class PersistentBehaviorData
@@ -97,7 +96,6 @@ public abstract class PersistentBehaviorData
  Union(9, typeof(WearData)),
  Union(10, typeof(VelocityConversionData)),
  Union(11, typeof(VelocityLimitData)),
- Union(12, typeof(FactoryData)),
  // Union(13, typeof(PatrolControllerData)),
  // Union(14, typeof(TowingControllerData)),
  Union(15, typeof(CooldownData)),

@@ -19,7 +19,10 @@ public class ThrusterData : BehaviorData
     [InspectableField, JsonProperty("heat"), Key(3), RuntimeInspectable]  
     public PerformanceStat Heat = new PerformanceStat();
 
-    [InspectablePrefab, JsonProperty("Particles"), Key(4)]
+    [InspectableField, JsonProperty("energy"), Key(4), RuntimeInspectable]  
+    public PerformanceStat EnergyUsage = new PerformanceStat();
+
+    [InspectablePrefab, JsonProperty("Particles"), Key(5)]
     public string ParticlesPrefab;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
@@ -66,13 +69,18 @@ public class Thruster : IAnalogBehavior
 
     public bool Execute(float delta)
     {
-        Thrust = Item.Evaluate(_data.Thrust);
-        Entity.Velocity -= Entity.Direction.Rotate(Item.EquippableItem.Rotation) * _input * Thrust / Entity.Mass * delta;
-        Entity.Direction = mul(Entity.Direction, Unity.Mathematics.float2x2.Rotate(_input * Torque * Thrust * Context.GameplaySettings.TorqueMultiplier / Entity.Mass * delta));
-        Item.AddHeat(_input * Item.Evaluate(_data.Heat) * delta);
-        var vis = _input * Item.Evaluate(_data.Visibility);
-        if(!Entity.VisibilitySources.ContainsKey(this) || vis > Entity.VisibilitySources[this])
-            Entity.VisibilitySources[this] = vis;
-        return _input > .01f;
+        if(_input > .01f && Item.Entity.TryConsumeEnergy(_input * Item.Evaluate(_data.EnergyUsage)))
+        {
+            Thrust = Item.Evaluate(_data.Thrust);
+            Entity.Velocity -= Entity.Direction.Rotate(Item.EquippableItem.Rotation) * _input * Thrust / Entity.Mass * delta;
+            Entity.Direction = mul(Entity.Direction,
+                Unity.Mathematics.float2x2.Rotate(_input * Torque * Thrust * Context.GameplaySettings.TorqueMultiplier / Entity.Mass * delta));
+            Item.AddHeat(_input * Item.Evaluate(_data.Heat) * delta);
+            var vis = _input * Item.Evaluate(_data.Visibility);
+            if (!Entity.VisibilitySources.ContainsKey(this) || vis > Entity.VisibilitySources[this])
+                Entity.VisibilitySources[this] = vis;
+            return true;
+        }
+        return false;
     }
 }

@@ -316,11 +316,11 @@ public abstract class EquippableItemData : CraftedItemData
     [InspectableTemperature, JsonProperty("maxTemp"), Key(14)]
     public float MaximumTemperature;
 
-    [InspectableField, JsonProperty("durabilityExponent"), Key(15), SimplePerformanceStat]
-    public PerformanceStat DurabilityExponent = new PerformanceStat();
-
-    [InspectableField, JsonProperty("heatExponent"), Key(16), SimplePerformanceStat]
-    public PerformanceStat HeatExponent = new PerformanceStat();
+    // [InspectableField, JsonProperty("durabilityExponent"), Key(15), SimplePerformanceStat]
+    // public PerformanceStat DurabilityExponent = new PerformanceStat();
+    //
+    // [InspectableField, JsonProperty("heatExponent"), Key(16), SimplePerformanceStat]
+    // public PerformanceStat HeatExponent = new PerformanceStat();
     
     [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(17)]
     public float4[] HeatPerformanceCurve;
@@ -495,17 +495,14 @@ public class PerformanceStat
 
     [JsonProperty("max"), Key(1)]  public float Max;
 
-    [JsonProperty("durabilityDependent"), Key(2)] 
-    public bool DurabilityDependent;
+    [JsonProperty("heatExponentMultiplier"), Key(2)] 
+    public float HeatExponentMultiplier;
 
-    [JsonProperty("qualityExponent"), Key(3)] 
+    [JsonProperty("durabilityExponentMultiplier"), Key(3)] 
+    public float DurabilityExponentMultiplier;
+
+    [JsonProperty("qualityExponent"), Key(4)] 
     public float QualityExponent;
-
-    [JsonProperty("heatDependent"), Key(4)] 
-    public bool HeatDependent;
-
-    [JsonProperty("heatExponentMultiplier"), Key(5)] 
-    public float HeatExponentMultiplier = 1;
     
     //[JsonProperty("id"), Key(5)]  public Guid ID = Guid.NewGuid();
 

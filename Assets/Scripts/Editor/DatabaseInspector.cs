@@ -204,78 +204,6 @@ public class DatabaseInspector : EditorWindow
                 Inspect(field.Name.SplitCamelCase(), ref dict, link.EntryType, ranged.Min, ranged.Max);
             else Inspect(field.Name.SplitCamelCase(), ref dict, link.EntryType);
         }
-        else if (type == typeof(List<BlueprintStatEffect>))
-        {
-            var list = (List<BlueprintStatEffect>) field.GetValue(obj);
-            if(list==null) field.SetValue(obj, list = new List<BlueprintStatEffect>());
-            
-            var blueprint = obj as BlueprintData;
-            var blueprintItem = DatabaseCache.Get(blueprint.Item);
-            if (blueprintItem is EquippableItemData equippableBlueprintItem)
-            {
-                Space();
-                LabelField(field.Name.SplitCamelCase(), EditorStyles.boldLabel);
-
-                using (var v = new VerticalScope(GUI.skin.box))
-                {
-                    var ingredients = blueprint.Ingredients.Keys
-                        .Select(i => DatabaseCache.Get(i))
-                        .Where(i => i is CraftedItemData)
-                        .Cast<CraftedItemData>().ToArray();
-                    var ingredientNames = ingredients.Select(i => i.Name).ToArray();
-                    foreach (var effect in list)
-                    {
-                        using (var v2 = new VerticalScope(_list.ListItemStyle))
-                        {
-                            using (var h = new HorizontalScope())
-                            {
-                                GUILayout.Label("Ingredient", GUILayout.Width(width));
-                                if(ingredients.Length==0)
-                                    GUILayout.Label("No Ingredients!");
-                                else
-                                {
-                                    var selectedIngredientIndex =
-                                        Array.FindIndex(ingredients, item => item.ID == effect.Ingredient);
-                                    if (selectedIngredientIndex == -1)
-                                    {
-                                        selectedIngredientIndex = 0;
-                                        GUI.changed = true;
-                                    }
-                                    var newSelection = Popup(selectedIngredientIndex, ingredientNames);
-                                    if (newSelection != selectedIngredientIndex)
-                                        GUI.changed = true;
-                                    effect.Ingredient = ingredients[newSelection].ID;
-                                }
-                                
-                                var rect = GetControlRect(false,
-                                    GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                                GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
-                                    LabelColor, 0, 0);
-                                if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
-                                {
-                                    list.Remove(effect);
-                                    break;
-                                }
-                            }
-                            
-                            Inspect(ref effect.StatReference, equippableBlueprintItem);
-                        }
-                        
-                    }
-
-                    using (var h = new HorizontalScope(_list.ListItemStyle))
-                    {
-                        GUILayout.Label("Add new Stat Effect", GUILayout.ExpandWidth(true));
-                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
-                        if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
-                        {
-                            list.Add(new BlueprintStatEffect());
-                        }
-                    }
-                }
-            }
-        }
         else if (type == typeof(List<Guid>) && link != null)
         {
             var list = (List<Guid>) field.GetValue(obj);
@@ -735,6 +663,14 @@ public class DatabaseInspector : EditorWindow
                     }
                 }
             }
+            var rect = GetControlRect(false,
+                GUILayout.Width(EditorGUIUtility.singleLineHeight));
+            GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
+                LabelColor, 0, 0);
+            if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+            {
+                return Guid.Empty;
+            }
         }
 
         return value;
@@ -974,103 +910,6 @@ public class DatabaseInspector : EditorWindow
             }
         }
     }
-    
-    public void Inspect(string label, ref StatReference effect)
-    {
-        using (new HorizontalScope())
-        {
-            GUILayout.Label(label, GUILayout.Width(width));
-            
-            using (new VerticalScope())
-            {
-                var targetObjects = typeof(BehaviorData).GetAllChildClasses()
-                    .Concat(typeof(EquippableItemData).GetAllChildClasses()).ToArray();
-                var objectNames = targetObjects.Select(b => b.Name).ToArray();
-                var selectedIndex = Array.IndexOf(objectNames, effect.Target);
-                if (selectedIndex == -1)
-                {
-                    selectedIndex = 0;
-                    GUI.changed = true;
-                }
-                using (new HorizontalScope())
-                {
-                    GUILayout.Label("Target", GUILayout.Width(width));
-                    var newSelection = Popup(selectedIndex, objectNames);
-                    if (newSelection != selectedIndex)
-                        GUI.changed = true;
-                    effect.Target = objectNames[newSelection];
-                }
-
-                using (new HorizontalScope())
-                {
-                    GUILayout.Label("Stat", GUILayout.Width(width));
-                    var stats = targetObjects[selectedIndex].GetFields()
-                        .Where(f => f.FieldType == typeof(PerformanceStat)).ToArray();
-                    if(stats.Length==0)
-                        GUILayout.Label("No Stats!");
-                    else
-                    {
-                        var statNames = stats.Select(s => s.Name).ToArray();
-                        var selectedStatIndex = Array.IndexOf(statNames, effect.Stat);
-                        if (selectedStatIndex == -1)
-                        {
-                            selectedStatIndex = 0;
-                            GUI.changed = true;
-                        }
-                        var newSelection = Popup(selectedStatIndex, statNames);
-                        if (newSelection != selectedStatIndex)
-                            GUI.changed = true;
-                        effect.Stat = statNames[newSelection];
-                    }
-                }
-            }
-        }
-    }
-
-    public void Inspect(ref StatReference effect, EquippableItemData item)
-    {
-        using (new VerticalScope())
-        {
-            var behaviorNames = new []{item.Name}.Concat(item.Behaviors.Select(b => b.GetType().Name)).ToArray();
-            var selectedBehaviorIndex = Array.IndexOf(behaviorNames, effect.Target);
-            if (selectedBehaviorIndex == -1)
-            {
-                selectedBehaviorIndex = 0;
-                GUI.changed = true;
-            }
-            using (new HorizontalScope())
-            {
-                GUILayout.Label("Behavior", GUILayout.Width(width));
-                var newSelection = Popup(selectedBehaviorIndex, behaviorNames);
-                if (newSelection != selectedBehaviorIndex)
-                    GUI.changed = true;
-                effect.Target = behaviorNames[newSelection];
-            }
-
-            using (new HorizontalScope())
-            {
-                GUILayout.Label("Stat", GUILayout.Width(width));
-                var stats = (selectedBehaviorIndex == 0 ? item.GetType() : item.Behaviors[selectedBehaviorIndex-1].GetType()).GetFields()
-                    .Where(f => f.FieldType == typeof(PerformanceStat)).ToArray();
-                if(stats.Length==0)
-                    GUILayout.Label("No Stats!");
-                else
-                {
-                    var statNames = stats.Select(s => s.Name).ToArray();
-                    var selectedStatIndex = Array.IndexOf(statNames, effect.Stat);
-                    if (selectedStatIndex == -1)
-                    {
-                        selectedStatIndex = 0;
-                        GUI.changed = true;
-                    }
-                    var newSelection = Popup(selectedStatIndex, statNames);
-                    if (newSelection != selectedStatIndex)
-                        GUI.changed = true;
-                    effect.Stat = statNames[newSelection];
-                }
-            }
-        }
-    }
 
     public Shape Inspect(string label, Shape value, HullData hull = null)
     {
@@ -1144,6 +983,58 @@ public class DatabaseInspector : EditorWindow
         return value;
     }
     
+    public void Inspect(string label, ref StatReference effect)
+    {
+        using (new HorizontalScope())
+        {
+            GUILayout.Label(label, GUILayout.Width(width));
+            
+            using (new VerticalScope())
+            {
+                var targetObjects = typeof(BehaviorData).GetAllChildClasses()
+                    .Concat(typeof(EquippableItemData).GetAllChildClasses()).ToArray();
+                var objectNames = targetObjects.Select(b => b.Name).ToArray();
+                var selectedIndex = Array.IndexOf(objectNames, effect.Target);
+                if (selectedIndex == -1)
+                {
+                    selectedIndex = 0;
+                    GUI.changed = true;
+                }
+                using (new HorizontalScope())
+                {
+                    GUILayout.Label("Target", GUILayout.Width(width));
+                    var newSelection = Popup(selectedIndex, objectNames);
+                    if (newSelection != selectedIndex)
+                        GUI.changed = true;
+                    effect.Target = objectNames[newSelection];
+                }
+
+                using (new HorizontalScope())
+                {
+                    GUILayout.Label("Stat", GUILayout.Width(width));
+                    var stats = targetObjects[selectedIndex].GetFields()
+                        .Where(f => f.FieldType == typeof(PerformanceStat)).ToArray();
+                    if(stats.Length==0)
+                        GUILayout.Label("No Stats!");
+                    else
+                    {
+                        var statNames = stats.Select(s => s.Name).ToArray();
+                        var selectedStatIndex = Array.IndexOf(statNames, effect.Stat);
+                        if (selectedStatIndex == -1)
+                        {
+                            selectedStatIndex = 0;
+                            GUI.changed = true;
+                        }
+                        var newSelection = Popup(selectedStatIndex, statNames);
+                        if (newSelection != selectedStatIndex)
+                            GUI.changed = true;
+                        effect.Stat = statNames[newSelection];
+                    }
+                }
+            }
+        }
+    }
+    
     public PerformanceStat Inspect(string label, PerformanceStat value, bool isSimple = false)
     {
         if(value == null)
@@ -1167,13 +1058,13 @@ public class DatabaseInspector : EditorWindow
                     GUILayout.Label("", GUILayout.Width(width));
                     if (!isSimple)
                     {
-                        GUILayout.Label("H", _labelStyle);
-                        value.HeatDependent = Toggle(value.HeatDependent);
-                        GUILayout.Label("HEx", _labelStyle, GUILayout.Width(labelWidth + 5));
+                        GUILayout.Label("H", _labelStyle, GUILayout.Width(labelWidth));
                         value.HeatExponentMultiplier = DelayedFloatField(value.HeatExponentMultiplier);
-                        GUILayout.Label("D", _labelStyle);
-                        value.DurabilityDependent = Toggle(value.DurabilityDependent);
-                        GUILayout.Label("QEx", _labelStyle, GUILayout.Width(labelWidth + 5));
+                        
+                        GUILayout.Label("D", _labelStyle, GUILayout.Width(labelWidth));
+                        value.DurabilityExponentMultiplier = DelayedFloatField(value.DurabilityExponentMultiplier);
+                        
+                        GUILayout.Label("Q", _labelStyle, GUILayout.Width(labelWidth));
                         value.QualityExponent = DelayedFloatField(value.QualityExponent);
                     }
                     else
@@ -1221,6 +1112,9 @@ public class DatabaseInspector : EditorWindow
             LabelField($"{(_list.SelectedItem==Guid.Empty?"No Entry Selected":"Selected Entry Not Found in Database")}\n{_list.SelectedItem}");
             return;
         }
+        
+        if(entry is INamedEntry namedEntry)
+            GUILayout.Label(namedEntry.EntryName, EditorStyles.boldLabel);
         
         _view = BeginScrollView(
             _view, 
@@ -1282,86 +1176,6 @@ public class DatabaseInspector : EditorWindow
         }
         #endregion
 
-        #region Loadout
-        var loadout = entry as LoadoutData;
-        if (loadout != null)
-        {
-            Space();
-            LabelField("Loadout Hull", EditorStyles.boldLabel);
-
-            if (DatabaseCache.Get(loadout.Hull) is HullData loadoutHull)
-            {
-                // Reserve slots in the loadout for all equippable (non-hull) hardpoints
-                var hardpoints = loadoutHull.Hardpoints.Where(h => h.Type != HardpointType.Hull).ToArray();
-                if (loadout.Gear.Count < hardpoints.Length)
-                    loadout.Gear.AddRange(Enumerable.Repeat(Guid.Empty, hardpoints.Length - loadout.Gear.Count));
-        
-                Space();
-                using (var h = new HorizontalScope())
-                {
-                    // GUILayout.Label($"Equipped Items: {loadout.Gear.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Size ?? 0)}/{loadoutHull.Capacity.Min}", EditorStyles.boldLabel);
-                    GUILayout.Label($"Mass: {loadout.Gear.Sum(i=>((ItemData) DatabaseCache.Get(i))?.Mass ?? 0)}", EditorStyles.boldLabel, GUILayout.ExpandWidth(false));
-                }
-        
-                int itemIndex = 0;
-                using (var v = new VerticalScope(GUI.skin.box))
-                {
-                    for (; itemIndex < hardpoints.Length; itemIndex++)
-                    {
-                        var hp = hardpoints[itemIndex];
-                        
-                        var loadoutItem = DatabaseCache.Get(loadout.Gear[itemIndex]) as EquippableItemData;
-        
-                        if (loadoutItem != null && loadoutItem.HardpointType != hp.Type)
-                        {
-                            loadout.Gear[itemIndex] = Guid.Empty;
-                            Debug.Log($"Invalid Item \"{loadoutItem.Name}\" in {Enum.GetName(typeof(HardpointType),hp.Type)} hardpoint for loadout \"{loadout.Name}\"");
-                            GUI.changed = true;
-                        }
-                        
-                        using (var h = new HorizontalScope(_list.ListItemStyle))
-                        {
-                            if (h.rect.Contains(current.mousePosition) &&
-                                (currentEventType == EventType.DragUpdated || currentEventType == EventType.DragPerform))
-                            {
-                                var guid = (Guid) DragAndDrop.GetGenericData("Item");
-                                var draggedEquippable = DatabaseCache.Get(guid) as EquippableItemData;
-                                var good = draggedEquippable != null && draggedEquippable.HardpointType == hp.Type;
-                                if (currentEventType == EventType.DragUpdated)
-                                    DragAndDrop.visualMode = good ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
-                                else if (currentEventType == EventType.DragPerform && good)
-                                {
-                                    DragAndDrop.AcceptDrag();
-                                    loadout.Gear[itemIndex] = guid;
-        
-                                    GUI.changed = true;
-                                }
-                            }
-        
-                            GUILayout.Label(Enum.GetName(typeof(HardpointType), hp.Type));
-                            if (loadoutItem == null || loadoutItem.HardpointType != hp.Type)
-                                GUILayout.Label("Empty Hardpoint", GUILayout.ExpandWidth(false));
-                            else
-                            {
-                                GUILayout.Label(loadoutItem.Name, GUILayout.ExpandWidth(false));
-                                var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                                GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, Color.black, 0, 0);
-                                if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
-                                    loadout.Gear[itemIndex] = Guid.Empty;
-                            }
-                        }
-                    }
-                }
-                
-                for (; itemIndex < loadout.Gear.Count; itemIndex++)
-                {
-                    loadout.Gear.RemoveAt(itemIndex--);
-                    GUI.changed = true;
-                }
-            }
-        }
-        #endregion
-        
         if (EditorGUI.EndChangeCheck())
         {
             if(!previousBytes.ByteEquals(MessagePackSerializer.Serialize(entry)))

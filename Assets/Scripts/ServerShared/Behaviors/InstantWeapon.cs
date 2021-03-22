@@ -103,10 +103,13 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
 
     private bool UseAmmo()
     {
-        if (_data.AmmoType != Guid.Empty)
+        if (_data.MagazineSize <= 1) return true;
+        
+        if (_ammo > 0) _ammo--;
+        else
         {
-            if (_data.MagazineSize > 1 && _ammo > 0) _ammo--;
-            else
+            var hasAmmo = true;
+            if (_data.AmmoType != Guid.Empty)
             {
                 var cargo = Entity.FindItemInCargo(_data.AmmoType);
                 if (cargo != null)
@@ -114,18 +117,18 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
                     var item = cargo.ItemsOfType[_data.AmmoType][0];
                     if (item is SimpleCommodity simpleCommodity)
                         cargo.Remove(simpleCommodity, 1);
-                        
-                    if(_data.MagazineSize > 1)
-                    {
-                        OnReloadBegin?.Invoke();
-                        _cooldown = 1;
-                        _coolingDown = true;
-                        _firing = false;
-                    }
                 }
-                _burstRemaining = 0;
-                return false;
+                else hasAmmo = false;
             }
+            if(hasAmmo)
+            {
+                OnReloadBegin?.Invoke();
+                _cooldown = 1;
+                _coolingDown = true;
+                _firing = false;
+            }
+            _burstRemaining = 0;
+            return false;
         }
 
         return true;

@@ -300,7 +300,7 @@ public class Ship : Entity
                 {
                     var exitLerp = (_wormholeAnimationProgress - ItemManager.GameplaySettings.WormholeExitCurveStart) /
                                    (1 - ItemManager.GameplaySettings.WormholeExitCurveStart);
-                    exitLerp = AetheriaMath.Smoothstep(exitLerp); // Square the interpolation variable to produce curve with zero slope at start
+                    exitLerp = AetheriaMath.Smootherstep(exitLerp); // Square the interpolation variable to produce curve with zero slope at start
                     Position.xz = _wormholePosition + normalize(_wormholeExitVelocity) * exitLerp * ItemManager.GameplaySettings.WormholeExitRadius;
                     Rotation = quaternion.LookRotation(
                         lerp(float3(0, 1, 0), forward, exitLerp),
@@ -326,7 +326,7 @@ public class Ship : Entity
                 if (_wormholeAnimationProgress < 1 - ItemManager.GameplaySettings.WormholeExitCurveStart)
                 {
                     var enterLerp = _wormholeAnimationProgress / (1 - ItemManager.GameplaySettings.WormholeExitCurveStart);
-                    enterLerp = AetheriaMath.Smoothstep(enterLerp); // Square the interpolation variable to produce curve with zero slope at vertical
+                    enterLerp = AetheriaMath.Smootherstep(enterLerp); // Square the interpolation variable to produce curve with zero slope at vertical
                     Position.xz = lerp(_wormholeEntryPosition, _wormholePosition, enterLerp);
                     Rotation = quaternion.LookRotation(
                         lerp(forward, float3(0, -1, 0), enterLerp),

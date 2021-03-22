@@ -189,4 +189,10 @@ public static class AetheriaMath
         x = saturate(x);
         return x * x * (3 - 2 * x);
     }
+
+    public static float Smootherstep(float x)
+    {
+        x = saturate(x);
+        return x * x * x * (x * (x * 6 - 15) + 10);
+    }
 }

@@ -379,7 +379,7 @@ public class PropertiesPanel : MonoBehaviour
 		{
 			var tier = entity.ItemManager.GetTier(gear);
 			Title.text =
-				$"<color=#{ColorUtility.ToHtmlStringRGB(tier.tier.Color.ToColor())}>{gear.Name}</color><smallcaps><size=60%> ({tier.tier.Name}{new string('+', tier.upgrades)})";
+				$"<color=#{ColorUtility.ToHtmlStringRGB(tier.tier.Color.ToColor())}>{data.Name}</color><smallcaps><size=60%> ({tier.tier.Name}{new string('+', tier.upgrades)})";
 			var gearData = Context.GetData(gear);
 			AddProperty("Durability", () =>
 				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");

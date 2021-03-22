@@ -34,13 +34,13 @@ public abstract class CraftedItemInstance : ItemInstance
 {
     [JsonProperty("quality"), Key(2)]  public float Quality;
 
-    [JsonProperty("ingredients"), Key(3)]  public List<ItemInstance> Ingredients = new List<ItemInstance>();
+    //[JsonProperty("ingredients"), Key(3)]  public List<ItemInstance> Ingredients = new List<ItemInstance>();
     
-    [JsonProperty("blueprint"), Key(4)]  public Guid Blueprint;
+    //[JsonProperty("blueprint"), Key(4)]  public Guid Blueprint;
     
-    [JsonProperty("name"), Key(5)]  public string Name;
+    //[JsonProperty("name"), Key(3)]  public string Name;
     
-    [JsonProperty("sourceEntity"), Key(6)]  public Guid SourceEntity;
+    //[JsonProperty("sourceEntity"), Key(4)]  public Guid SourceEntity;
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]

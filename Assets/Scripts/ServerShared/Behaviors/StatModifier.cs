@@ -102,3 +102,13 @@ public enum StatModifierType
     Constant,
     Multiplier
 }
+
+[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class StatReference
+{
+    [InspectableType(typeof(BehaviorData)), JsonProperty("behavior"), Key(1)]
+    public string Target;
+    
+    [InspectableField, JsonProperty("stat"), Key(2)]
+    public string Stat;
+}
