@@ -68,12 +68,6 @@ public class ActionGameManager : MonoBehaviour
     public float TargetSpottedBlinkFrequency = 20;
     public float TargetSpottedBlinkOffset = -.25f;
     
-    [Header("Name Generation")]
-    public TextAsset NameFile;
-    public int NameGeneratorMinLength = 5;
-    public int NameGeneratorMaxLength = 10;
-    public int NameGeneratorOrder = 4;
-    
     [Header("Postprocessing")]
     public float DeathPPTransitionTime;
     public PostProcessVolume DeathPP;
@@ -81,6 +75,7 @@ public class ActionGameManager : MonoBehaviour
     public PostProcessVolume SevereHeatstrokePP;
 
     [Header("Scene Links")]
+    public Transform EffectManagerParent;
     public TradeMenu TradeMenu;
     public Prototype HostileTargetIndicator;
     public PlaceUIElementWorldspace ViewDot;
@@ -91,7 +86,8 @@ public class ActionGameManager : MonoBehaviour
     [FormerlySerializedAs("SectorRenderer")] public ZoneRenderer ZoneRenderer;
     public CinemachineVirtualCamera DockCamera;
     public CinemachineVirtualCamera FollowCamera;
-    public GameObject GameplayUI;
+    public CinemachineVirtualCamera WormholeCamera;
+    public CanvasGroup GameplayUI;
     public MenuPanel Menu;
     public MapRenderer MenuMap;
     //public SectorRenderer SectorRenderer;
@@ -101,7 +97,9 @@ public class ActionGameManager : MonoBehaviour
     public InventoryMenu Inventory;
     public InventoryPanel ShipPanel;
     public InventoryPanel TargetShipPanel;
-    [FormerlySerializedAs("ConfirmationDialog")] public ConfirmationDialog Dialog;
+    public ConfirmationDialog Dialog;
+
+    public float IntroDuration;
     
     //public PlayerInput Input;
     
@@ -111,7 +109,6 @@ public class ActionGameManager : MonoBehaviour
     private DirectoryInfo _loadoutPath;
     private bool _editMode;
     private float _time;
-    private AetheriaInput _input;
     private int _zoomLevelIndex;
     private Entity _currentEntity;
 
@@ -123,7 +120,9 @@ public class ActionGameManager : MonoBehaviour
     private Dictionary<Entity, VisibleHostileIndicator> _visibleHostileIndicators = new Dictionary<Entity, VisibleHostileIndicator>();
     private List<IDisposable> _shipSubscriptions = new List<IDisposable>();
     private float _severeHeatstrokePhase;
+    private bool _uiHidden;
     
+    public AetheriaInput Input { get; private set; }
     public EquippedDockingBay DockingBay { get; private set; }
     public Entity DockedEntity { get; private set; }
 
@@ -164,12 +163,13 @@ public class ActionGameManager : MonoBehaviour
 
     public void SaveState()
     {
-        PlayerSettings.CurrentRun = new SavedGame(CurrentSector, Zone, CurrentEntity);
+        PlayerSettings.CurrentRun = new SavedGame(CurrentSector, Zone, DockedEntity??CurrentEntity);
         SavePlayerSettings();
     }
 
     void Start()
     {
+        EntityInstance.EffectManagerParent = EffectManagerParent;
         AkSoundEngine.RegisterGameObj(gameObject);
         ConsoleController.MessageReceiver = this;
         
@@ -182,18 +182,18 @@ public class ActionGameManager : MonoBehaviour
 
         #region Input Handling
 
-        _input = new AetheriaInput();
-        _input.Global.Enable();
-        _input.UI.Enable();
+        Input = new AetheriaInput();
+        Input.Global.Enable();
+        Input.UI.Enable();
 
         _zoomLevelIndex = Settings.DefaultMinimapZoom;
-        _input.Player.MinimapZoom.performed += context =>
+        Input.Player.MinimapZoom.performed += context =>
         {
             _zoomLevelIndex = (_zoomLevelIndex + 1) % Settings.MinimapZoomLevels.Length;
             ZoneRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
         };
 
-        _input.Global.MapToggle.performed += context =>
+        Input.Global.MapToggle.performed += context =>
         {
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Map)
             {
@@ -201,8 +201,8 @@ public class ActionGameManager : MonoBehaviour
                 Menu.gameObject.SetActive(false);
                 if (CurrentEntity != null && CurrentEntity.Parent == null)
                 {
-                    _input.Player.Enable();
-                    GameplayUI.SetActive(true);
+                    Input.Player.Enable();
+                    GameplayUI.gameObject.SetActive(true);
                     
                     SchematicDisplay.ShowShip(CurrentEntity);
                     ShipPanel.Display(CurrentEntity, true);
@@ -212,13 +212,13 @@ public class ActionGameManager : MonoBehaviour
             }
             
             Cursor.lockState = CursorLockMode.None;
-            _input.Player.Disable();
-            GameplayUI.SetActive(false);
+            Input.Player.Disable();
+            GameplayUI.gameObject.SetActive(false);
             Menu.ShowTab(MenuTab.Map);
             MenuMap.Position = CurrentEntity.Position.xz;
         };
 
-        _input.Global.Inventory.performed += context =>
+        Input.Global.Inventory.performed += context =>
         {
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Inventory)
             {
@@ -226,8 +226,8 @@ public class ActionGameManager : MonoBehaviour
                 Menu.gameObject.SetActive(false);
                 if (CurrentEntity != null && CurrentEntity.Parent == null)
                 {
-                    _input.Player.Enable();
-                    GameplayUI.SetActive(true);
+                    Input.Player.Enable();
+                    GameplayUI.gameObject.SetActive(true);
                     
                     SchematicDisplay.ShowShip(CurrentEntity);
                     ShipPanel.Display(CurrentEntity, true);
@@ -236,12 +236,12 @@ public class ActionGameManager : MonoBehaviour
             }
 
             Cursor.lockState = CursorLockMode.None;
-            _input.Player.Disable();
+            Input.Player.Disable();
             Menu.ShowTab(MenuTab.Inventory);
-            GameplayUI.SetActive(false);
+            GameplayUI.gameObject.SetActive(false);
         };
 
-        _input.Global.Dock.performed += context =>
+        Input.Global.Dock.performed += context =>
         {
             if (CurrentEntity == null)
             {
@@ -255,7 +255,7 @@ public class ActionGameManager : MonoBehaviour
             else Undock();
         };
 
-        _input.Player.EnterWormhole.performed += context =>
+        Input.Player.EnterWormhole.performed += context =>
         {
             if(CurrentEntity is Ship ship)
             {
@@ -264,10 +264,17 @@ public class ActionGameManager : MonoBehaviour
                     if (length(wormhole.Position - CurrentEntity.Position.xz) < Settings.GameplaySettings.WormholeExitRadius)
                     {
                         var oldZone = Zone;
+                        // var wormholeCameraFollow = new GameObject("Wormhole Camera Follow").transform;
+                        // wormholeCameraFollow.position = new Vector3(wormhole.Position.x, -50, wormhole.Position.y);
+                        // wormholeCameraFollow.rotation = Quaternion.LookRotation(Vector3.down, ship.LookDirection);
+                        // WormholeCamera.enabled = true;
+                        // WormholeCamera.Follow = wormholeCameraFollow;
+                        // FollowCamera.enabled = false;
                         ship.EnterWormhole(wormhole.Position);
                         ship.OnEnteredWormhole += () =>
                         {
-                            GenerateLevel(wormhole.Target);
+                            PopulateLevel(wormhole.Target);
+                            SectorMap.QueueZoneReveal(wormhole.Target.AdjacentZones);
                             ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w=>w.Target==oldZone.SectorZone).Position,
                                 Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
                             CurrentEntity.Zone = Zone;
@@ -278,23 +285,29 @@ public class ActionGameManager : MonoBehaviour
             }
         };
 
-        _input.Player.OverrideShutdown.performed += context =>
+        Input.Player.HideUI.performed += context =>
+        {
+            _uiHidden = !_uiHidden;
+            GameplayUI.alpha = _uiHidden ? 0 : 1;
+        };
+
+        Input.Player.OverrideShutdown.performed += context =>
         {
             CurrentEntity.OverrideShutdown = !CurrentEntity.OverrideShutdown;
         };
 
-        _input.Player.Ping.performed += context =>
+        Input.Player.Ping.performed += context =>
         {
             CurrentEntity.Sensor?.Ping();
         };
 
-        _input.Player.ToggleHeatsinks.performed += context =>
+        Input.Player.ToggleHeatsinks.performed += context =>
         {
             CurrentEntity.HeatsinksEnabled = !CurrentEntity.HeatsinksEnabled;
             AkSoundEngine.PostEvent(CurrentEntity.HeatsinksEnabled ? "UI_Success" : "UI_Fail", gameObject);
         };
 
-        _input.Player.ToggleShield.performed += context =>
+        Input.Player.ToggleShield.performed += context =>
         {
             if (CurrentEntity.Shield != null)
             {
@@ -305,27 +318,27 @@ public class ActionGameManager : MonoBehaviour
 
         #region Targeting
 
-        _input.Player.TargetReticle.performed += context =>
+        Input.Player.TargetReticle.performed += context =>
         {
             var underReticle = Zone.Entities.Where(x => x != CurrentEntity)
                 .MaxBy(x => dot(normalize(x.Position - CurrentEntity.Position), CurrentEntity.LookDirection));
             CurrentEntity.Target.Value = CurrentEntity.Target.Value == underReticle ? null : underReticle;
         };
 
-        _input.Player.TargetNearest.performed += context =>
+        Input.Player.TargetNearest.performed += context =>
         {
             CurrentEntity.Target.Value = Zone.Entities.Where(x=>x!=CurrentEntity)
                 .MaxBy(x => length(x.Position - CurrentEntity.Position));
         };
 
-        _input.Player.TargetNext.performed += context =>
+        Input.Player.TargetNext.performed += context =>
         {
             var targets = Zone.Entities.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
             var currentTargetIndex = Array.IndexOf(targets, CurrentEntity.Target.Value);
             CurrentEntity.Target.Value = targets[(currentTargetIndex + 1) % targets.Length];
         };
 
-        _input.Player.TargetPrevious.performed += context =>
+        Input.Player.TargetPrevious.performed += context =>
         {
             var targets = Zone.Entities.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
             var currentTargetIndex = Array.IndexOf(targets, CurrentEntity.Target.Value);
@@ -337,31 +350,31 @@ public class ActionGameManager : MonoBehaviour
 
         #region Trigger Groups
 
-        _input.Player.PreviousWeaponGroup.performed += context =>
+        Input.Player.PreviousWeaponGroup.performed += context =>
         {
             if (CurrentEntity.Parent != null) return;
             SchematicDisplay.SelectedGroupIndex--;
         };
 
-        _input.Player.NextWeaponGroup.performed += context =>
+        Input.Player.NextWeaponGroup.performed += context =>
         {
             if (CurrentEntity.Parent != null) return;
             SchematicDisplay.SelectedGroupIndex++;
         };
 
-        _input.Player.PreviousWeapon.performed += context =>
+        Input.Player.PreviousWeapon.performed += context =>
         {
             if (CurrentEntity.Parent != null) return;
             SchematicDisplay.SelectedItemIndex--;
         };
 
-        _input.Player.NextWeapon.performed += context =>
+        Input.Player.NextWeapon.performed += context =>
         {
             if (CurrentEntity.Parent != null) return;
             SchematicDisplay.SelectedItemIndex++;
         };
 
-        _input.Player.ToggleWeaponGroup.performed += context =>
+        Input.Player.ToggleWeaponGroup.performed += context =>
         {
             if (CurrentEntity.Parent != null) return;
             var item = SchematicDisplay.SchematicItems[SchematicDisplay.SelectedItemIndex];
@@ -381,73 +394,73 @@ public class ActionGameManager : MonoBehaviour
             SchematicDisplay.UpdateTriggerGroups();
         };
         
-        _input.Player.FireGroup1.started += context =>
+        Input.Player.FireGroup1.started += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[0].weapons) s.Activate();
         };
 
-        _input.Player.FireGroup1.canceled += context =>
+        Input.Player.FireGroup1.canceled += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[0].weapons) s.Deactivate();
         };
 
-        _input.Player.FireGroup2.started += context =>
+        Input.Player.FireGroup2.started += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[1].weapons) s.Activate();
         };
 
-        _input.Player.FireGroup2.canceled += context =>
+        Input.Player.FireGroup2.canceled += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[1].weapons) s.Deactivate();
         };
 
-        _input.Player.FireGroup3.started += context =>
+        Input.Player.FireGroup3.started += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[2].weapons) s.Activate();
         };
 
-        _input.Player.FireGroup3.canceled += context =>
+        Input.Player.FireGroup3.canceled += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[2].weapons) s.Deactivate();
         };
 
-        _input.Player.FireGroup4.started += context =>
+        Input.Player.FireGroup4.started += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[3].weapons) s.Activate();
         };
 
-        _input.Player.FireGroup4.canceled += context =>
+        Input.Player.FireGroup4.canceled += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[3].weapons) s.Deactivate();
         };
 
-        _input.Player.FireGroup5.started += context =>
+        Input.Player.FireGroup5.started += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[4].weapons) s.Activate();
         };
 
-        _input.Player.FireGroup5.canceled += context =>
+        Input.Player.FireGroup5.canceled += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[4].weapons) s.Deactivate();
         };
 
-        _input.Player.FireGroup6.started += context =>
+        Input.Player.FireGroup6.started += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[5].weapons) s.Activate();
         };
 
-        _input.Player.FireGroup6.canceled += context =>
+        Input.Player.FireGroup6.canceled += context =>
         {
             if (CurrentEntity.Parent != null) return;
             foreach (var s in CurrentEntity.TriggerGroups[5].weapons) s.Deactivate();
@@ -458,9 +471,81 @@ public class ActionGameManager : MonoBehaviour
         #endregion
         
         StartGame();
+        
+        ConsoleController.AddCommand("give",
+            args =>
+            {
+                var itemName = string.Join(" ", args);
+                var item = ItemManager.ItemData.GetAll<EquippableItemData>()
+                    .FirstOrDefault(itemData => string.Equals(itemData.Name, itemName, StringComparison.InvariantCultureIgnoreCase));
+                if (item != null)
+                {
+                    _currentEntity.CargoBays.First().TryStore(ItemManager.CreateInstance(item, .95f));
+                }
+            });
+        
+        ConsoleController.AddCommand("trackmissile",
+            _ =>
+            {
+                foreach (var missileManager in FindObjectsOfType<GuidedProjectileManager>())
+                {
+                    missileManager.OnFireGuided.Where(x => x.source == _currentEntity).Take(1).Subscribe(x =>
+                    {
+                        FollowCamera.Follow = x.missile.transform;
+                        FollowCamera.LookAt = x.target;
+                        x.missile.OnKill += () =>
+                        {
+                            FollowCamera.LookAt = ZoneRenderer.EntityInstances[CurrentEntity].LookAtPoint;
+                            FollowCamera.Follow = ZoneRenderer.EntityInstances[CurrentEntity].transform;
+                        };
+                    });
+                }
+            });
+        
+        ConsoleController.AddCommand("pingscene",
+            _ =>
+            {
+                var startTime = Time.time;
+                Observable.EveryUpdate().TakeWhile(_ => Time.time - startTime < 5).Subscribe(
+                    _ => Debug.Log($"{(int) (Time.time - startTime)}"),
+                    () =>
+                    {
+                        var nearestFaction = CurrentSector.Factions.MinBy(f => CurrentSector.HomeZones[f].Distance[Zone.SectorZone]);
+                        var nearestFactionHomeZone = CurrentSector.HomeZones[nearestFaction];
+                        var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[Zone.SectorZone] + 1;
+
+                        var loadoutGenerator = new LoadoutGenerator(
+                            ref ItemManager.Random,
+                            ItemManager,
+                            CurrentSector,
+                            Zone.SectorZone,
+                            nearestFaction,
+                            .5f);
+
+                        for (int i = 0; i < 8; i++)
+                        {
+                            var ship = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateShipLoadout(), true);
+                            ship.Position.xz = _currentEntity.Position.xz +
+                                               ItemManager.Random.NextFloat2Direction() * ItemManager.Random.NextFloat(50, 500);
+                            ship.Zone = Zone;
+                            Zone.Entities.Add(ship);
+                            ship.Activate();
+                        }
+
+                        for (int i = 0; i < 8; i++)
+                        {
+                            var turret = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateTurretLoadout(), true);
+                            turret.Position.xz = _currentEntity.Position.xz +
+                                                 ItemManager.Random.NextFloat2Direction() * ItemManager.Random.NextFloat(50, 500);
+                            turret.Zone = Zone;
+                            Zone.Entities.Add(turret);
+                            turret.Activate();
+                        }
+                    });
+            });
     }
 
-    public void GenerateLevel(SectorZone sectorZone)
+    public void PopulateLevel(SectorZone sectorZone)
     {
         if (sectorZone == null) throw new ArgumentNullException(nameof(sectorZone));
         
@@ -502,7 +587,8 @@ public class ActionGameManager : MonoBehaviour
         {
             if (PlayerSettings.CurrentRun == null)
             {
-                GenerateLevel(CurrentSector.Entrance);
+                SectorMap.QueueZoneReveal(CurrentSector.Entrance.AdjacentZones.Prepend(CurrentSector.Entrance));
+                PopulateLevel(CurrentSector.Entrance);
                 var loadoutGenerator = new LoadoutGenerator(ref ItemManager.Random, ItemManager, CurrentSector, Zone.SectorZone, null, 2);
                 var ship = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateShipLoadout(), true);
                 // EntitySerializer.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
@@ -515,14 +601,46 @@ public class ActionGameManager : MonoBehaviour
             }
             else
             {
-                GenerateLevel(CurrentSector.Zones[PlayerSettings.CurrentRun.CurrentZone]);
+                PopulateLevel(CurrentSector.Zones[PlayerSettings.CurrentRun.CurrentZone]);
                 var targetEntity = Zone.Entities[PlayerSettings.CurrentRun.CurrentZoneEntity];
                 if (targetEntity is OrbitalEntity orbitalEntity)
                     DoDock(orbitalEntity, orbitalEntity.DockingBays.First());
                 else
+                {
+                    //StartCoroutine(IntroCutscene(targetEntity as Ship));
                     BindToEntity(targetEntity);
+                }
             }
         }
+    }
+
+    private IEnumerator IntroCutscene(Ship ship)
+    {
+        ZoneRenderer.PerspectiveEntity = ship;
+        var entityPosition = ship.Position.xz;
+        var followOrbit = Zone.Orbits.Keys.MinBy(o => lengthsq(Zone.GetOrbitPosition(o) - entityPosition));
+        var followPlanet = ZoneRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == followOrbit).Key];
+        DockCamera.Follow = followPlanet.Body.transform;
+        var rootOrbit = followOrbit;
+        while (Zone.Orbits[rootOrbit].Data.Parent != Guid.Empty)
+            rootOrbit = Zone.Orbits[rootOrbit].Data.Parent;
+        var rootPlanet = ZoneRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == rootOrbit).Key];
+        DockCamera.LookAt = rootPlanet.Body.transform;
+
+        var shipVelocity = ship.GetBehavior<VelocityLimit>().Limit;
+        var followOrbitPosition = Zone.GetOrbitPosition(followOrbit);
+        var shipDirection = normalize(Zone.GetOrbitPosition(rootOrbit) - followOrbitPosition);
+        ship.Position.xz = followOrbitPosition - shipDirection * shipVelocity * IntroDuration;
+
+        var startTime = Time.time;
+        while (Time.time - startTime < IntroDuration)
+        {
+            ship.Direction = shipDirection;
+            ship.Velocity = shipDirection * shipVelocity;
+            yield return null;
+        }
+        
+        BindToEntity(ship);
     }
 
     public void Dock()
@@ -560,8 +678,10 @@ public class ActionGameManager : MonoBehaviour
         var orbital = (OrbitalEntity) entity;
         DockCamera.Follow = ZoneRenderer.EntityInstances[orbital].transform;
         var parentOrbit = Zone.Orbits[orbital.OrbitData].Data.Parent;
-        var parentPlanet = ZoneRenderer.Planets[Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key];
-        DockCamera.LookAt = parentPlanet.Body.transform;
+        var parentOrbitPlanet = Zone.Planets.FirstOrDefault(p => p.Value.Orbit == parentOrbit).Key;
+        if (ZoneRenderer.Planets.ContainsKey(parentOrbitPlanet))
+            DockCamera.LookAt = ZoneRenderer.Planets[parentOrbitPlanet].Body.transform;
+        else DockCamera.LookAt = ZoneRenderer.ZoneRoot;
         Menu.ShowTab(MenuTab.Inventory);
     }
 
@@ -619,9 +739,9 @@ public class ActionGameManager : MonoBehaviour
         _visibleHostileIndicators.Clear();
         if(_lockingIndicators!=null) foreach(var (_, indicator, _) in _lockingIndicators)
             indicator.GetComponent<Prototype>().ReturnToPool();
-        _input.Player.Disable();
+        Input.Player.Disable();
         Cursor.lockState = CursorLockMode.None;
-        GameplayUI.SetActive(false);
+        GameplayUI.gameObject.SetActive(false);
         
         foreach(var subscription in _shipSubscriptions) subscription.Dispose();
         _shipSubscriptions.Clear();
@@ -649,8 +769,8 @@ public class ActionGameManager : MonoBehaviour
             _viewDirection = float3(CurrentEntity.Direction.x,0,CurrentEntity.Direction.y);
         
         Cursor.lockState = CursorLockMode.Locked;
-        GameplayUI.SetActive(true);
-        _input.Player.Enable();
+        Input.Player.Enable();
+        GameplayUI.gameObject.SetActive(true);
         ShipPanel.Display(CurrentEntity, true);
         SchematicDisplay.ShowShip(CurrentEntity);
         
@@ -706,24 +826,25 @@ public class ActionGameManager : MonoBehaviour
             var deathTime = Time.time;
             UnbindEntity();
             CurrentEntity = null;
-            Dialog.Clear();
-            Dialog.Title.text = "You have died!";
-            Dialog.Show(() =>
-            {
-                PlayerSettings.CurrentRun = null;
-                StartGame();
-            }, null, "Try again!");
-            Dialog.transform.position = new Vector3(Screen.width / 2, Screen.height / 2);
+            // Dialog.Clear();
+            // Dialog.Title.text = "You have died!";
+            // Dialog.Show(() =>
+            // {
+            //     PlayerSettings.CurrentRun = null;
+            //     StartGame();
+            // }, null, "Try again!");
+            // Dialog.transform.position = new Vector3(Screen.width / 2, Screen.height / 2);
             //Dialog.MoveToCursor();
             Observable.EveryUpdate()
-                .Select(_ => (Time.time - deathTime) / DeathPPTransitionTime)
-                .Where(t => t < 1)
-                .Subscribe(t =>
+                .Where(_ => Time.time - deathTime < DeathPPTransitionTime)
+                .Subscribe(_ =>
                     {
+                        var t = (Time.time - deathTime) / DeathPPTransitionTime;
                         HeatstrokePP.weight = 1 - t;
                         SevereHeatstrokePP.weight = 1 - t;
                         DeathPP.weight = t;
-                    }, () =>
+                    },
+                    () =>
                     {
                         HeatstrokePP.weight = 0;
                         SevereHeatstrokePP.weight = 0;
@@ -789,7 +910,7 @@ public class ActionGameManager : MonoBehaviour
                         !(indicator.Key.EntityInfoGathered[CurrentEntity] > Settings.GameplaySettings.TargetDetectionInfoThreshold) ||
                         sin(TargetSpottedBlinkFrequency * Time.time) + TargetSpottedBlinkOffset > 0;
                 }
-                var look = _input.Player.Look.ReadValue<Vector2>();
+                var look = Input.Player.Look.ReadValue<Vector2>();
                 _entityYawPitch = float2(_entityYawPitch.x + look.x * Sensitivity.x, clamp(_entityYawPitch.y + look.y * Sensitivity.y, -.45f * PI, .45f * PI));
                 _viewDirection = mul(float3(0, 0, 1), Unity.Mathematics.float3x3.Euler(float3(_entityYawPitch.yx, 0), RotationOrder.YXZ));
                 CurrentEntity.LookDirection = _viewDirection;
@@ -801,12 +922,11 @@ public class ActionGameManager : MonoBehaviour
                 
                 if(CurrentEntity is Ship ship)
                 {
-                    ship.MovementDirection = _input.Player.Move.ReadValue<Vector2>();
+                    ship.MovementDirection = Input.Player.Move.ReadValue<Vector2>();
                 }
             }
         }
-        Zone.Update(_time, Time.deltaTime);
-        ZoneRenderer.GameTime = _time;
+        Zone.Update(Time.deltaTime);
     }
 
     private void LateUpdate()

@@ -13,13 +13,13 @@ RWStructuredBuffer<Particle> particles;
 
 // Use this texture to spawn particles over terrain
 Texture2D Heightmap;
-SamplerState samplerHeightmap; 
+SamplerState samplerHeightmap;
 
 // Use this texture to choose the color of the particle
 Texture2D HueTexture;
 SamplerState samplerHueTexture; 
 
-uniform float4x4 noiseOffsetMatrix;
+//uniform float4x4 noiseOffsetMatrix;
 
 float time;
 float3 transform;

@@ -20,7 +20,6 @@ public class ZoneRenderer : MonoBehaviour
 {
     public Transform WormholePrefab;
     public float EntityFadeTime;
-    public Transform EffectManagerParent;
     public Transform FogCameraParent;
     public GameSettings Settings;
     public Transform ZoneRoot;
@@ -36,6 +35,8 @@ public class ZoneRenderer : MonoBehaviour
     public int AsteroidSpritesheetWidth = 4;
     public int AsteroidSpritesheetHeight = 4;
     public LODHandler LODHandler;
+    public Slime SlimeRenderer;
+    public Camera SlimeGravityCamera;
     
     [Header("Tour")]
     public bool Tour;
@@ -88,6 +89,7 @@ public class ZoneRenderer : MonoBehaviour
         get => _perspectiveEntity;
         set
         {
+            //if (_perspectiveEntity == value) return;
             _perspectiveEntity = value;
             _perspectiveSubscriptions[0]?.Dispose();
             _perspectiveSubscriptions[1]?.Dispose();
@@ -111,8 +113,6 @@ public class ZoneRenderer : MonoBehaviour
             }
         }
     }
-
-    public float GameTime { get; set; }
 
     public float ViewDistance
     {
@@ -139,7 +139,6 @@ public class ZoneRenderer : MonoBehaviour
 
     void Start()
     {
-        EntityInstance.EffectManagerParent = EffectManagerParent;
         ViewDistance = Settings.DefaultViewDistance;
         MinimapDistance = Settings.MinimapZoomLevels[Settings.DefaultMinimapZoom];
         
@@ -153,6 +152,8 @@ public class ZoneRenderer : MonoBehaviour
         _maxDepth = 0;
         Zone = zone;
         SectorBrushes.localScale = zone.Pack.Radius * 2 * Vector3.one;
+        SlimeGravityCamera.orthographicSize = zone.Pack.Radius;
+        SlimeRenderer.ZoneRadius = zone.Pack.Radius;
         foreach(var p in zone.Planets.Values)
             LoadPlanet(p);
         
@@ -440,7 +441,7 @@ public class ZoneRenderer : MonoBehaviour
             planet.Value.Body.transform.localPosition = new Vector3(0, Zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
             if(planet.Value is GasGiantObject gasGiantObject)
             {
-                gasGiantObject.GravityWaves.material.SetFloat("_Phase", GameTime * ((GasGiant) Zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
+                gasGiantObject.GravityWaves.material.SetFloat("_Phase", Zone.Time * ((GasGiant) Zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
                 if(!(planet.Value is SunObject))
                 {
                     var toParent = normalize(Zone.GetOrbitPosition(Zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);

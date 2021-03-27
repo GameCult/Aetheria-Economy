@@ -30,17 +30,22 @@ public class Zone
     private HashSet<Guid> _updatedOrbits = new HashSet<Guid>();
 
     private ItemManager _itemManager;
-    private float _time;
+    private double _time;
     private Random _random;
     public List<Agent> Agents = new List<Agent>();
 
     private List<Task> BeltUpdates = new List<Task>();
     
+    public float Time
+    {
+        get => (float) _time;
+    }
     public ZonePack Pack { get; }
     public SectorZone SectorZone { get; }
 
     public Zone(ItemManager itemManager, PlanetSettings settings, ZonePack pack, SectorZone sectorZone)
     {
+        _time = pack.Time;
         SectorZone = sectorZone;
         Pack = pack;
         _itemManager = itemManager;
@@ -102,7 +107,8 @@ public class Zone
             Mass = Pack.Mass,
             Entities = Entities.Select(EntitySerializer.Pack).ToList(),
             Orbits = Orbits.Values.Select(o=>o.Data).ToList(),
-            Planets = Planets.Values.ToList()
+            Planets = Planets.Values.ToList(),
+            Time = _time
         };
     }
 
@@ -111,9 +117,9 @@ public class Zone
         Orbits.Add(orbit.ID, new Orbit(Settings, orbit));
     }
 
-    public void Update(float time, float deltaTime)
+    public void Update(float deltaTime)
     {
-        _time = time;
+        _time += deltaTime;
         _updatedOrbits.Clear();
         foreach (var t in BeltUpdates)
             t.Wait();
@@ -228,10 +234,10 @@ public class Zone
             }
             else size = Settings.AsteroidSize.Evaluate(beltData.Asteroids[i].Size);
 
-            belt.NewRotations[i] = _time * beltData.Asteroids[i].RotationSpeed % (PI * 2);
+            belt.NewRotations[i] = (float) (_time * beltData.Asteroids[i].RotationSpeed % (PI * 2));
             belt.NewScales[i] = size;
-            var pos = OrbitData.Evaluate(frac(_time / Settings.OrbitPeriod.Evaluate(beltData.Asteroids[i].Distance) +
-                                              beltData.Asteroids[i].Phase)) * beltData.Asteroids[i].Distance + orbitPosition;
+            var pos = OrbitData.Evaluate((float) frac(_time / Settings.OrbitPeriod.Evaluate(beltData.Asteroids[i].Distance) +
+                                                      beltData.Asteroids[i].Phase)) * beltData.Asteroids[i].Distance + orbitPosition;
             belt.NewVelocities[i] = pos - belt.Positions[i].xz;
             belt.NewPositions[i] = float3(pos.x, GetHeight(pos), pos.y);
         }
@@ -319,7 +325,7 @@ public class Zone
                     var depth = gas.GravityWavesDepth.Value;
                     var frequency = Settings.WaveFrequency.Evaluate(body.BodyData.Mass.Value);
                     var speed = gas.GravityWavesSpeed.Value;
-                    result -= RadialWaves(sqrt(distSqr) / waveRadius, 8, 1.25f, frequency, _time * speed) * depth;
+                    result -= RadialWaves(sqrt(distSqr) / waveRadius, 8, 1.25f, frequency, (float) (_time * speed)) * depth;
                 }
             }
         }

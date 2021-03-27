@@ -41,7 +41,7 @@ public class VolumeSampling : MonoBehaviour
         
         // Shader needs to know the position and scale of cameras used to render input textures
         if(GridTransform != null)
-            _volMaterial.SetVector("_GridTransform", new Vector4(GridTransform.position.x,GridTransform.position.z,GridTransform.localScale.x*4));
+            _volMaterial.SetVector("_GridTransform", new Vector4(GridTransform.position.x,GridTransform.position.z,GridTransform.localScale.x));
         
         Graphics.Blit( source, destination, _volMaterial, 0 );
     }

@@ -236,20 +236,20 @@ public class EntityInstance : MonoBehaviour
                         }
                     }
                 }
-                if(hp.Type == HardpointType.Reactor)
-                {
-                    var reactorHardpoint = EquipmentHardpoints.FirstOrDefault(x => x.name == hp.Transform);
-                    if (reactorHardpoint)
-                    {
-                        var reactor = item.GetBehavior<Reactor>();
-                        if( reactor != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger) )
-                        {
-                            AkSoundEngine.RegisterGameObj(reactorHardpoint.gameObject);
-                            AkSoundEngine.PostEvent(item.Data.SoundEffectTrigger, reactorHardpoint.gameObject);
-                            _reactor = (reactor, reactorHardpoint.gameObject);
-                        }
-                    }
-                }
+                // if(hp.Type == HardpointType.Reactor)
+                // {
+                //     var reactorHardpoint = EquipmentHardpoints.FirstOrDefault(x => x.name == hp.Transform);
+                //     if (reactorHardpoint)
+                //     {
+                //         var reactor = item.GetBehavior<Reactor>();
+                //         if( reactor != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger) )
+                //         {
+                //             AkSoundEngine.RegisterGameObj(reactorHardpoint.gameObject);
+                //             AkSoundEngine.PostEvent(item.Data.SoundEffectTrigger, reactorHardpoint.gameObject);
+                //             _reactor = (reactor, reactorHardpoint.gameObject);
+                //         }
+                //     }
+                // }
             }
         }
         RadiatorMeshes = new Dictionary<Radiator, MeshRenderer>();
@@ -356,6 +356,7 @@ public class EntityInstance : MonoBehaviour
                         {
                             distance = cellDist;
                             hitCell = v;
+                            hitPos = v + float2(.5f);
                         }
                     }
 
@@ -383,14 +384,15 @@ public class EntityInstance : MonoBehaviour
                     // Find the local 2D vector corresponding to the direction of the incoming hit
                     var localHitDirection = transform.InverseTransformDirection(hit.Direction);
                     var penetrationVector = normalize(float2(localHitDirection.x, localHitDirection.z));
-
+                    // TODO: Bresenham's line algorithm
                     // March a ray through the ship from the hit position
                     var penetrationPoint = hitPos;
-                    var penetrationDistance = 0;
-                    while (penetrationDistance < hit.Penetration)
+                    var penetrationDistance = 0f;
+                    while (penetrationDistance < hit.Penetration && hullData.Shape[int2(penetrationPoint)])
                     {
-                        penetrationPoint += penetrationVector * .5f;
+                        penetrationDistance += .5f;
                         hitShape[int2(penetrationPoint)] = true;
+                        penetrationPoint += penetrationVector * .5f;
                     }
                 }
                 
@@ -496,15 +498,15 @@ public class EntityInstance : MonoBehaviour
             AkSoundEngine.SetRTPCValue("performance_quality", r.Key.Item.EquippableItem.Quality, r.Value);
         }
 
-        if (_reactor.reactor != null)
-        {
-            _reactor.sfxSource.SetActive(_reactor.reactor.Item.Online.Value);
-            AkSoundEngine.SetObjectPosition(_reactor.sfxSource, _reactor.sfxSource.transform);
-            AkSoundEngine.SetRTPCValue("reactor_load", _reactor.reactor.CurrentLoadRatio, _reactor.sfxSource);
-            AkSoundEngine.SetRTPCValue("performance_durability", _reactor.reactor.Item.DurabilityPerformance, _reactor.sfxSource);
-            AkSoundEngine.SetRTPCValue("performance_thermal", _reactor.reactor.Item.ThermalPerformance, _reactor.sfxSource);
-            AkSoundEngine.SetRTPCValue("performance_quality", _reactor.reactor.Item.EquippableItem.Quality, _reactor.sfxSource);
-        }
+        // if (_reactor.reactor != null)
+        // {
+        //     _reactor.sfxSource.SetActive(_reactor.reactor.Item.Online.Value);
+        //     AkSoundEngine.SetObjectPosition(_reactor.sfxSource, _reactor.sfxSource.transform);
+        //     AkSoundEngine.SetRTPCValue("reactor_load", _reactor.reactor.CurrentLoadRatio, _reactor.sfxSource);
+        //     AkSoundEngine.SetRTPCValue("performance_durability", _reactor.reactor.Item.DurabilityPerformance, _reactor.sfxSource);
+        //     AkSoundEngine.SetRTPCValue("performance_thermal", _reactor.reactor.Item.ThermalPerformance, _reactor.sfxSource);
+        //     AkSoundEngine.SetRTPCValue("performance_quality", _reactor.reactor.Item.EquippableItem.Quality, _reactor.sfxSource);
+        // }
         
         foreach (var x in RadiatorMeshes)
         {

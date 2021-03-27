@@ -99,7 +99,7 @@ public class LoadoutGenerator
     {
         return ItemManager.ItemData.GetAll<T>()
             .Where(item => Sector.ContainsFaction(item.Manufacturer) &&
-                           (Faction == null || item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)) &&
+                           (Faction == null || Faction.Allegiance.ContainsKey(item.Manufacturer)) &&
                            (filter?.Invoke(item) ?? true))
             .WeightedRandomElements(ref Random, item =>
                     (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) * // Prioritize items from allied manufacturers
@@ -133,7 +133,8 @@ public class LoadoutGenerator
             {
                 var controllerData = RandomItem<GearData>(hardpoint, 2,
                     item => item.Behaviors.Any(b => entity is Ship && b is CockpitData || entity is OrbitalEntity && b is TurretControllerData));
-                if (controllerData == null) throw new InvalidLoadoutException("No compatible controller found for entity!");
+                if (controllerData == null) 
+                    throw new InvalidLoadoutException("No compatible controller found for entity!");
                 var controller = ItemManager.CreateInstance(controllerData) as EquippableItem;
                 if (!entity.TryEquip(controller))
                 {
@@ -145,12 +146,16 @@ public class LoadoutGenerator
                 // If a previously selected item fits, use that one (this is why we must process larger hardpoints first)
                 var itemData = previousItems
                     .FirstOrDefault(i => i.HardpointType == hardpoint.Type && i.Shape.FitsWithin(hardpoint.Shape, hardpoint.Rotation, out _));
+                var previousItem = entity.Equipment.FirstOrDefault(item => item.Data == itemData);
                 itemData ??= RandomItem<GearData>(hardpoint, 2);
                 if (itemData == null) ItemManager.Log($"No compatible item found for entity {Enum.GetName(typeof(HardpointType), hardpoint.Type)} hardpoint!");
                 else
                 {
                     //throw new InvalidLoadoutException($"No compatible item found for entity {Enum.GetName(typeof(HardpointType), hardpoint.Type)} hardpoint!");
-                    var item = ItemManager.CreateInstance(itemData) as EquippableItem;
+                    EquippableItem item;
+                    if(previousItem!=null)
+                        item = ItemManager.CreateInstance(itemData, previousItem.EquippableItem.Quality) as EquippableItem;
+                    else item = ItemManager.CreateInstance(itemData) as EquippableItem;
                     if (!entity.TryEquip(item))
                     {
                         throw new InvalidLoadoutException($"Failed to equip selected {Enum.GetName(typeof(HardpointType), hardpoint.Type)}!");

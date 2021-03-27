@@ -1,0 +1,301 @@
+#include "SlimeVertex.cginc"
+#include "UnityCG.cginc"
+#define NUM_THREAD_X 64
+
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel UpdateAgents
+#pragma kernel Diffuse
+#pragma kernel CreateAgentParticles
+#pragma kernel CreateParticleGeometry
+
+// Struct for storing the current state of each simulated slime agent
+struct Agent
+{
+    float2 position;
+    float angle;
+};
+
+struct Particle
+{
+    float3 start;
+    float3 middle;
+    float3 end;
+};
+
+// Accumulation Buffer
+RWTexture2D<float> accumulation;
+
+// Output of the diffusion kernel
+RWTexture2D<float> diffusedAccumulation;
+
+// Agent data buffer
+RWStructuredBuffer<Agent> agents;
+
+// Use this texture to sample level terrain shape for shenanigans
+Texture2D Heightmap;
+SamplerState samplerHeightmap;
+
+int randomOffset;
+int numAgents;
+float speed;
+//float deltaTime;
+int textureWidth;
+float zoneRadius;
+float deposition;
+float diffusion;
+float decay;
+float sensorDistance;
+float sensorSpread;
+int sensorSize;
+float randomSteering;
+float turnSpeed;
+float drive;
+
+// Hash function from H. Schechter & R. Bridson, goo.gl/RXiKaH
+inline uint hash(uint s)
+{
+    s ^= 2747636419u;
+    s *= 2654435769u;
+    s ^= s >> 16;
+    s *= 2654435769u;
+    s ^= s >> 16;
+    s *= 2654435769u;
+    return s;
+}
+
+inline float random(uint seed)
+{
+    return float(hash(seed)) / 4294967295.0; // 2^32-1
+}
+
+inline float2 uvToPos(float2 uv)
+{
+    return (uv - float2(.5, .5)) * (zoneRadius * 2);
+}
+
+inline float2 posToUv(float2 pos)
+{
+    return pos / (zoneRadius * 2) + float2(.5, .5);
+}
+
+float sense(float2 position, float angle, float directionSign)
+{
+    float sensorAngle = angle + directionSign * sensorSpread;
+    float2 sensorDir = float2(cos(sensorAngle), sin(sensorAngle));
+    int2 sensorCenter = position + sensorDir * sensorDistance;
+
+    float sum = 0;
+    for(int x = -sensorSize; x <= sensorSize; x++)
+    {
+        for(int y = -sensorSize; y <= sensorSize; y++)
+        {
+            int2 sample = sensorCenter + int2(x, y);
+            if(sample.x >= 0 && sample.x < textureWidth && sample.y >= 0 && sample.y < textureWidth)
+            {
+                sum += accumulation[sample];
+            }
+        }
+    }
+    return sum;
+}
+
+inline float unlerp(float x, float min, float max)
+{
+    return (x - min) / (max - min);
+}
+
+[numthreads(NUM_THREAD_X,1,1)]
+void UpdateAgents (uint3 id : SV_DispatchThreadID)
+{
+    if (id.x >= numAgents) return;
+
+    Agent agent = agents[id.x];
+
+    // Move Agents based on direction and speed
+    float2 direction = float2(cos(agent.angle), sin(agent.angle));
+    agent.position += direction * speed;
+    
+    float r = random(id.x + randomOffset);
+
+    // Clamp position within bounds and randomize direction
+    if(dot(agent.position, agent.position) > zoneRadius * zoneRadius || isnan(agent.position.x))
+    {
+        agent.position = normalize(agent.position) * zoneRadius;
+        //agent.position = float2(0,0);
+        agent.angle = r * UNITY_TWO_PI;
+    }
+
+    // if(isnan(agent.position.x))
+    // {
+    //     agent.position = float2(0,0);
+    //     agent.angle = r * UNITY_TWO_PI;
+    // }
+
+    float2 texPos = posToUv(agent.position) * textureWidth;
+    
+    // Acquire sensory data
+    float forwardSensor = sense(texPos, agent.angle, 0);
+    float leftSensor = sense(texPos, agent.angle, -1);
+    float rightSensor = sense(texPos, agent.angle, 1);
+    
+    // Determine the range of the sensor inputs
+    float minSensor = min(min(leftSensor, rightSensor), forwardSensor);
+    float maxSensor = max(max(max(leftSensor, rightSensor), forwardSensor), .01);
+    float range = min(maxSensor - minSensor, .01);
+    
+    // Normalize sensor inputs
+    forwardSensor = unlerp(forwardSensor, minSensor, maxSensor);
+    leftSensor = unlerp(leftSensor, minSensor, maxSensor);
+    rightSensor = unlerp(rightSensor, minSensor, maxSensor);
+    
+    // Which direction it wants to turn in
+    float desire = leftSensor - rightSensor;
+    
+    // Strength of its directional preference
+    float motivation = pow(range / maxSensor, 1 / drive);
+    
+    agent.angle += turnSpeed * lerp(r * 2 - 1, desire, motivation);
+
+    agents[id.x] = agent;
+    accumulation[int2(texPos)] += deposition;
+}
+
+[numthreads(8,8,1)]
+void Diffuse (uint3 id : SV_DispatchThreadID)
+{
+    if(id.x >= textureWidth || id.y >= textureWidth) return;
+
+    float previous = accumulation[id.xy];
+
+    float sum = 0;
+    for(int x = -1; x <= 1; x++)
+    {
+        for(int y=-1; y <= 1; y++)
+        {
+            int2 sample = int2(id.x+x, id.y+y);
+            if(sample.x >= 0 && sample.x < textureWidth && sample.y >= 0 && sample.y < textureWidth)
+            {
+                sum += accumulation[sample];
+            }
+        }
+    }
+    float average = sum / 9;
+
+    diffusedAccumulation[id.xy] = lerp(previous, average, diffusion) * decay;
+}
+
+// Buffer containing the leading position of the agent particle
+RWStructuredBuffer<Particle> particles;
+
+// Output buffer for particle trail geometry
+RWStructuredBuffer<Vertex> vertexBuffer;
+
+// Perlin noise parameters
+float noiseAmplitude;
+float time;
+float heightRange;
+float heightOffset;
+float trailDamping;
+int particleCount;
+
+#define HASHSCALE 0.1031
+float hashp(float p)
+{
+    float3 p3  = frac(p.xxx * HASHSCALE);
+    p3 += dot(p3, p3.yzx + 19.19);
+    return frac((p3.x + p3.y) * p3.z);
+}
+
+float fade(float t) { return t*t*t*(t*(6.*t-15.)+10.); }
+
+float grad(float hash, float p)
+{
+    int i = int(1e4*hash);
+    return (i & 1) == 0 ? p : -p;
+}
+
+float perlinNoise1D(float p)
+{
+    float pi = floor(p), pf = p - pi, w = fade(pf);
+    return lerp(grad(hashp(pi), pf), grad(hashp(pi + 1.0), pf - 1.0), w) * 2.0;
+}
+
+[numthreads(NUM_THREAD_X,1,1)]
+void CreateAgentParticles (uint3 id : SV_DispatchThreadID)
+{
+    Agent agent = agents[id.x];
+    float sequence = (float)id.x/particleCount;
+    float height = Heightmap.SampleLevel(samplerHeightmap, posToUv(agent.position), 0);
+    float particleHeight = -height + random(id.x) * heightRange + heightOffset;
+    Particle particle = particles[id.x];
+    particle.end = lerp(particle.end, particle.middle, trailDamping);
+    particle.middle = lerp(particle.middle, particle.start, trailDamping);
+    particle.start = lerp(particle.start, float3(
+        agent.position.x + perlinNoise1D(id.x*3 + time + sequence) * noiseAmplitude,
+        particleHeight + perlinNoise1D(id.x*3 + 1 + time + sequence) * noiseAmplitude,
+        agent.position.y + perlinNoise1D(id.x*3 + 2 + time + sequence) * noiseAmplitude), trailDamping);
+    particles[id.x] = particle;
+}
+    
+// https://catlikecoding.com/unity/tutorials/curves-and-splines/
+inline float3 QuadraticSplinePosition(float3 p0, float3 p1, float3 p2, float t)
+{
+    //return lerp(lerp(p0,p1,t),lerp(p1,p2,t),t);
+    float oneMinusT = 1 - t;
+    return
+        oneMinusT * oneMinusT * p0 +
+        2 * oneMinusT * t * p1 +
+        t * t * p2;
+}
+
+inline float3 QuadraticSplineDerivative (float3 p0, float3 p1, float3 p2, float t) {
+    return
+        2 * (1 - t) * (p1 - p0) +
+        2 * t * (p2 - p1);
+}
+
+int trailPoints;
+float trailStartWidth;
+float trailEndWidth;
+float3 cameraPos;
+
+inline float3 calcToCameraDir(float3 pos)
+{
+    return normalize(cameraPos - pos);
+}
+
+[numthreads(NUM_THREAD_X,1,1)]
+void CreateParticleGeometry (uint3 id : SV_DispatchThreadID)
+{
+    Vertex v0 = GetDefaultVertex();
+    Vertex v1 = GetDefaultVertex();
+    
+    int idx = id.x;
+    int particleIndex = id.x / trailPoints;
+    int trailIndex = id.x % trailPoints;
+    float trailLerp = (float) trailIndex / trailPoints;
+
+    Particle particle = particles[particleIndex];
+
+    //float3 pos = float3(particle, 0, trailIndex);
+    //float3 dir = float3(0,0,1);
+    //float3 pos = lerp(particle.start, particle.end, trailLerp);
+    //float3 dir = normalize(particle.end-particle.start);
+    float3 pos = QuadraticSplinePosition(particle.start, particle.middle, particle.end, trailLerp);
+    float3 dir = QuadraticSplineDerivative(particle.start, particle.middle, particle.end, trailLerp);
+
+    float width = lerp(trailStartWidth, trailEndWidth, trailLerp);
+    
+    float3 toCameraDir = calcToCameraDir(pos);
+    float3 right = normalize(cross(dir, toCameraDir)) * width * 0.5f;
+    
+    v0.pos = pos - right;
+    v0.uv = float2(trailLerp, 0);
+
+    v1.pos = pos + right;
+    v1.uv = float2(trailLerp, 1);
+
+    uint vId = idx * 2;
+    vertexBuffer[vId] = v0;
+    vertexBuffer[vId+1] = v1;
+}

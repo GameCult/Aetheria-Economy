@@ -377,28 +377,35 @@ public class PropertiesPanel : MonoBehaviour
 		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
 		if (item is EquippableItem gear)
 		{
-			var tier = entity.ItemManager.GetTier(gear);
+			var (tier, upgrades) = entity.ItemManager.GetTier(gear);
 			Title.text =
-				$"<color=#{ColorUtility.ToHtmlStringRGB(tier.tier.Color.ToColor())}>{data.Name}</color><smallcaps><size=60%> ({tier.tier.Name}{new string('+', tier.upgrades)})";
-			var gearData = Context.GetData(gear);
-			AddProperty("Durability", () =>
-				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-			foreach (var behavior in gearData.Behaviors)
+				$"<color=#{ColorUtility.ToHtmlStringRGB(tier.Color.ToColor())}>{data.Name}</color><smallcaps><size=60%> ({tier.Name}{new string('+', upgrades)})";
+			if (gear.Durability < .01f)
 			{
-				var type = behavior.GetType();
-				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
+				AddProperty("Item destroyed!");
+			}
+			else
+			{
+				var gearData = Context.GetData(gear);
+				AddProperty("Durability", () =>
+					$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+				foreach (var behavior in gearData.Behaviors)
 				{
-					foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
+					var type = behavior.GetType();
+					if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
 					{
-						var fieldType = field.FieldType;
-						if (fieldType == typeof(float))
-							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-						else if (fieldType == typeof(int))
-							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
-						else if (fieldType == typeof(PerformanceStat))
+						foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
 						{
-							var stat = (PerformanceStat) field.GetValue(behavior);
-							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+							var fieldType = field.FieldType;
+							if (fieldType == typeof(float))
+								AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+							else if (fieldType == typeof(int))
+								AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
+							else if (fieldType == typeof(PerformanceStat))
+							{
+								var stat = (PerformanceStat) field.GetValue(behavior);
+								AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+							}
 						}
 					}
 				}

@@ -201,6 +201,14 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Hide UI"",
+                    ""type"": ""Button"",
+                    ""id"": ""1cdb2515-91e1-4895-879d-8a7347e60b21"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -641,6 +649,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Ping"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f898572-d165-4e29-93c3-95c3efce5df9"",
+                    ""path"": ""<Keyboard>/f2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Hide UI"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1232,6 +1251,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player_ToggleShield = m_Player.FindAction("Toggle Shield", throwIfNotFound: true);
         m_Player_OverrideShutdown = m_Player.FindAction("Override Shutdown", throwIfNotFound: true);
         m_Player_Ping = m_Player.FindAction("Ping", throwIfNotFound: true);
+        m_Player_HideUI = m_Player.FindAction("Hide UI", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1320,6 +1340,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_ToggleShield;
     private readonly InputAction m_Player_OverrideShutdown;
     private readonly InputAction m_Player_Ping;
+    private readonly InputAction m_Player_HideUI;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1347,6 +1368,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @ToggleShield => m_Wrapper.m_Player_ToggleShield;
         public InputAction @OverrideShutdown => m_Wrapper.m_Player_OverrideShutdown;
         public InputAction @Ping => m_Wrapper.m_Player_Ping;
+        public InputAction @HideUI => m_Wrapper.m_Player_HideUI;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1425,6 +1447,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @Ping.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPing;
                 @Ping.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPing;
                 @Ping.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPing;
+                @HideUI.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideUI;
+                @HideUI.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideUI;
+                @HideUI.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideUI;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1498,6 +1523,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @Ping.started += instance.OnPing;
                 @Ping.performed += instance.OnPing;
                 @Ping.canceled += instance.OnPing;
+                @HideUI.started += instance.OnHideUI;
+                @HideUI.performed += instance.OnHideUI;
+                @HideUI.canceled += instance.OnHideUI;
             }
         }
     }
@@ -1700,6 +1728,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnToggleShield(InputAction.CallbackContext context);
         void OnOverrideShutdown(InputAction.CallbackContext context);
         void OnPing(InputAction.CallbackContext context);
+        void OnHideUI(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

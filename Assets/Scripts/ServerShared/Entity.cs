@@ -135,8 +135,8 @@ public abstract class Entity
             if(behavior is IInitializableBehavior initializableBehavior)
                 initializableBehavior.Initialize();
         }
-        //foreach(var entity in Zone.Entities) EntityInfoGathered.Add(entity, 0);
-        _subscriptions.Add(Zone.Entities.ObserveAdd().Subscribe(add => EntityInfoGathered.Add(add.Value, 0)));
+        foreach(var entity in Zone.Entities) EntityInfoGathered[entity] = 0;
+        _subscriptions.Add(Zone.Entities.ObserveAdd().Subscribe(add => EntityInfoGathered[add.Value] = 0));
         _subscriptions.Add(Zone.Entities.ObserveRemove().Subscribe(remove =>
         {
             if (Target.Value == remove.Value) Target.Value = null;

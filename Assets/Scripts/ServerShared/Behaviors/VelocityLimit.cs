@@ -38,6 +38,7 @@ public class VelocityLimit : IBehavior
         _data = data;
         Entity = entity;
         Item = item;
+        Limit = Item.Evaluate(_data.TopSpeed);
     }
 
     public void Initialize()

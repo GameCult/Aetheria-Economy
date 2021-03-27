@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,12 +10,22 @@ using float2 = Unity.Mathematics.float2;
 
 public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IScrollHandler
 {
+    public Canvas Canvas;
+    public SectorMap Map;
     public ActionGameManager GameManager;
+    public Camera MainCamera;
     public Camera SectorCamera;
     public MeshRenderer SectorBackgroundRenderer;
     public float ZoomSpeed;
     public float MinViewSize = .1f;
     public float MaxViewSize = 2;
+    public Button PathAnimationButton;
+    public float PathAnimationDamping;
+    public float PathAnimationDuration;
+    public float PathAnimationDurationPadding = 1.1f;
+    public GameObject LegendPanel;
+    public float LinkAnimationDuration;
+    public float IconAnimationDuration;
 
     private float2 _startMousePosition;
     private float2 _startMapPosition;
@@ -40,6 +51,45 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
         _sectorBackgroundDepth = _sectorBackgroundTransform.position.z;
         _sectorCameraTransform = SectorCamera.transform;
         _sectorCameraDepth = _sectorCameraTransform.position.z;
+        PathAnimationButton.onClick.AddListener(() =>
+        {
+            Map.StartCoroutine(AnimatePath());
+        });
+    }
+
+    private IEnumerator AnimatePath()
+    {
+        var pathZones = ActionGameManager.CurrentSector.ExitPath;
+        LegendPanel.SetActive(false);
+        PathAnimationButton.gameObject.SetActive(false);
+        foreach (var zones in ActionGameManager.CurrentSector.Zones
+            .GroupBy(z=>z.Distance[ActionGameManager.CurrentSector.Entrance])
+            .OrderBy(g=>g.Key))
+        {
+            Map.QueueZoneReveal(zones);
+        }
+
+        var revealCount = ActionGameManager.CurrentSector.Entrance.Distance[ActionGameManager.CurrentSector.Exit];
+        Map.StartReveal(
+            PathAnimationDuration / revealCount * (LinkAnimationDuration / (IconAnimationDuration + LinkAnimationDuration)),
+            PathAnimationDuration / revealCount * (IconAnimationDuration / (IconAnimationDuration + LinkAnimationDuration)));
+        MainCamera.enabled = false;
+        SectorCamera.targetTexture = null;
+        Canvas.gameObject.SetActive(false);
+        SectorCamera.gameObject.SetActive(true);
+            
+        var pathAnimationLerp = 0f;
+        while (pathAnimationLerp < 1)
+        {
+            var currentTargetZone = pathZones[(int) (pathZones.Length * pathAnimationLerp)];
+            _position = lerp(_position, currentTargetZone.Position, PathAnimationDamping);
+            pathAnimationLerp += Time.deltaTime / (PathAnimationDuration * PathAnimationDurationPadding);
+            UpdateCamera();
+            yield return null;
+        }
+        
+        LegendPanel.SetActive(true);
+        PathAnimationButton.gameObject.SetActive(true);
     }
     
     private void OnEnable()
@@ -48,6 +98,8 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
         SectorCamera.gameObject.SetActive(true);
         _position = GameManager.Zone.SectorZone.Position;
         _viewSize = .25f;
+        
+        Map.StartReveal(LinkAnimationDuration, IconAnimationDuration);
     }
 
     private void OnDisable()
@@ -76,6 +128,11 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
             _outputImage.material.SetTexture("_DetailTex", _outputTexture);
         }
 
+        UpdateCamera();
+    }
+
+    void UpdateCamera()
+    {
         var halfSize = _viewSize / 2;
         var bounds = float4(
             _position.x - _aspectRatio * halfSize, 

@@ -166,7 +166,8 @@ public class ItemManager
             pow(item.Quality, GameplaySettings.DurabilityQualityExponent));
         var durability = pow(item.Durability / data.Durability, durabilityExponent * stat.DurabilityExponentMultiplier);
         var result = lerp(stat.Min, stat.Max, quality * durability);
-        if (float.IsNaN(result)) throw new InvalidOperationException("Performance Stat evaluating as NaN: input data is invalid!");
+        if (float.IsNaN(result)) 
+            throw new InvalidOperationException($"Performance Stat on {data.Name} evaluating as NaN: input data is invalid! Durability: {item.Durability} / {data.Durability}");
         return result;
 
     }
@@ -211,6 +212,27 @@ public class ItemManager
         }
         return null;
     }
+
+    public CraftedItemInstance CreateInstance(CraftedItemData item, float quality)
+    {
+        if (item is EquippableItemData equippableItemData)
+        {
+            var newGear = new EquippableItem
+            {
+                Data = item.ID,
+                Quality = quality
+            };
+            newGear.Durability = equippableItemData.Durability;
+            return newGear;
+        }
+
+        var newCommodity = new CompoundCommodity
+        {
+            Data = item.ID,
+            Quality = quality
+        };
+        return newCommodity;
+    }
     
     public CraftedItemInstance CreateInstance(CraftedItemData item)
     {
@@ -227,24 +249,8 @@ public class ItemManager
             if (t.Rarity > quality)
                 tier = t;
         }
-        
-        if (item is EquippableItemData equippableItemData)
-        {
-            var newGear = new EquippableItem
-            {
-                Data = item.ID,
-                Quality = tier.Quality
-            };
-            newGear.Durability = equippableItemData.Durability;
-            return newGear;
-        }
 
-        var newCommodity = new CompoundCommodity
-        {
-            Data = item.ID,
-            Quality = tier.Quality
-        };
-        return newCommodity;
+        return CreateInstance(item, tier.Quality);
     }
 
     public (RarityTier tier, int upgrades) GetTier(CraftedItemInstance item)

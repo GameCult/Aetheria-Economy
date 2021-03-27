@@ -13,12 +13,14 @@ using UnityEngine.InputSystem;
 public class ConsoleView : MonoBehaviour {
 	bool _didShow = false;
 
+	public ActionGameManager GameManager;
 	public GameObject ViewContainer; //Container for console view, should be a child of this GameObject
 	public TextMeshProUGUI LogTextArea;
 	public TextMeshProUGUI InputArea;
     public ScrollRect Scroll;
 
     private string _inputString = "";
+    private CursorLockMode _previousCursorLockMode;
 
     public string InputString
     {
@@ -110,7 +112,20 @@ public class ConsoleView : MonoBehaviour {
 		ViewContainer.SetActive(visible);
 	    Visible = visible;
 		if(visible)
+		{
+			GameManager.Input.Global.Disable();
+			GameManager.Input.Player.Disable();
+			GameManager.Input.UI.Disable();
+			_previousCursorLockMode = Cursor.lockState;
 			Cursor.lockState = CursorLockMode.None;
+		}
+		else
+		{
+			GameManager.Input.Global.Enable();
+			GameManager.Input.Player.Enable();
+			GameManager.Input.UI.Enable();
+			Cursor.lockState = _previousCursorLockMode;
+		}
 	}
 
     void OnVisibilityChanged(bool visible) {

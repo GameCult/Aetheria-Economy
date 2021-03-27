@@ -34,6 +34,7 @@ public class TradeMenu : MonoBehaviour
     
     private void OnEnable()
     {
+        if (GameManager.DockedEntity == null) return;
         _targetCargo = GameManager.DockingBay;
         TargetCargoLabel.text = "Docking Bay";
         Properties.Context = GameManager.ItemManager;

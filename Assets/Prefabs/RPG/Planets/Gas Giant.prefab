@@ -404,10 +404,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c2eb8fe081f14940a7208cbdc3d97f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpeedMultiplier: 0.0025
+  SpeedMultiplier: 0.005
   FirstOffsetDomainRotationSpeed: 5
-  FirstOffsetRotationSpeed: 0
+  FirstOffsetRotationSpeed: 20
   SecondOffsetDomainRotationSpeed: 10
-  SecondOffsetRotationSpeed: -25
-  AlbedoRotationSpeed: -3
+  SecondOffsetRotationSpeed: -50
+  AlbedoRotationSpeed: 15
   LightingDirection: {x: 1, y: 0, z: 1}

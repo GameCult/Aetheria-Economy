@@ -188,6 +188,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Hide UI",
+                    "type": "Button",
+                    "id": "1cdb2515-91e1-4895-879d-8a7347e60b21",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -628,6 +636,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Ping",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f898572-d165-4e29-93c3-95c3efce5df9",
+                    "path": "<Keyboard>/f2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Hide UI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

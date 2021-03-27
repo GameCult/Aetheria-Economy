@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using Unity.Mathematics;
 using UnityEngine;
 using static Unity.Mathematics.math;
@@ -7,6 +9,8 @@ using static Unity.Mathematics.math;
 public class GuidedProjectileManager : InstantWeaponEffectManager
 {
     public Prototype ProjectilePrototype;
+
+    public Subject<(Entity source, Transform target, GuidedProjectile missile)> OnFireGuided = new Subject<(Entity source, Transform target, GuidedProjectile missile)>();
 
     public override void Fire(InstantWeapon weapon, EquippedItem item, EntityInstance source, EntityInstance target)
     {
@@ -32,6 +36,7 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
             p.Velocity = barrel.forward * weapon.Velocity;
             p.Thrust = item.Evaluate(launcher.Thrust);
             p.TopSpeed = item.Evaluate(launcher.MissileVelocity);
+            OnFireGuided.OnNext((source.Entity, target.transform, p));
         }
         else if(weapon.Data is GuidedWeaponData guidance)
         {

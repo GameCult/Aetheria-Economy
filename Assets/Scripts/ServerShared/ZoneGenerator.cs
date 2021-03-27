@@ -223,9 +223,9 @@ public static class ZoneGenerator
 
         var nearestFaction = sector.Factions.MinBy(f => sector.HomeZones[f].Distance[sectorZone]);
         var nearestFactionHomeZone = sector.HomeZones[nearestFaction];
-        var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[sectorZone];
+        var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[sectorZone] + 1;
         
-        var loadoutGenerator = new LoadoutGenerator(ref random, itemManager, sector, sectorZone, nearestFaction, 1);
+        var loadoutGenerator = new LoadoutGenerator(ref random, itemManager, sector, sectorZone, nearestFaction, .5f);
         for (int i = 0; i < factionPresence; i++)
         {
 	        pack.Entities.Add(loadoutGenerator.GenerateShipLoadout());
