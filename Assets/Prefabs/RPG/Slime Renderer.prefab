@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 6977256487485077373}
   - component: {fileID: 6977256487485077374}
   - component: {fileID: 6977256487485077375}
-  - component: {fileID: 5262902644310250487}
-  m_Layer: 0
+  - component: {fileID: 2784739443721397315}
+  m_Layer: 13
   m_Name: Slime Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,7 +82,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5262902644310250487
+--- !u!114 &2784739443721397315
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,24 +95,103 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetCamera: {fileID: 0}
-  GravityCamera: {fileID: 0}
   SlimeCompute: {fileID: 7200000, guid: 33eea2339ec4dc143b0e192a0b7f0a33, type: 3}
   AccumulationMaterial: {fileID: 2100000, guid: 817815ac1f000054ab738bb243cd7dba,
     type: 2}
-  ParticleMaterial: {fileID: 0}
-  GravityTexture: {fileID: 0}
-  TextureSize: 2048
+  ParticleMaterial: {fileID: 2100000, guid: 3b53e1eb5d8a5d34f9bc8c1928ceba76, type: 2}
+  GravityTexture: {fileID: 8400000, guid: cc403ed0b6a104445b6534b1877c5556, type: 2}
+  TextureSize: 1024
   ZoneRadius: 512
-  AgentCount: 1048576
+  AgentCount: 262144
   ParticleCount: 65536
+  TrailPoints: 4
   SlimeSettings:
-    Deposition: 1
-    Diffusion: 0.5
-    Decay: 1
-    TurnSpeed: 12
-    RandomSteering: 1
-    Speed: 25
-    Drive: 16
-    SensorDistance: 8
-    SensorSpread: 0.64
-    SensorSize: 1
+    Deposition:
+      HeightSlopeLerp: 0
+      HeightThreshold: -150
+      HeightBlend: 50
+      SlopeThreshold: 0.3
+      SlopeBlend: 0.3
+      HighValue: 0
+      LowValue: 1
+    Diffusion:
+      HeightSlopeLerp: 1
+      HeightThreshold: 0
+      HeightBlend: 0.01
+      SlopeThreshold: 0.3
+      SlopeBlend: 0.3
+      HighValue: 0
+      LowValue: 2
+    Decay:
+      HeightSlopeLerp: 1
+      HeightThreshold: -125
+      HeightBlend: 50
+      SlopeThreshold: 0.5
+      SlopeBlend: 0.5
+      HighValue: 0
+      LowValue: 2
+    TurnSpeed:
+      HeightSlopeLerp: 1
+      HeightThreshold: 0
+      HeightBlend: 0.01
+      SlopeThreshold: 0.5
+      SlopeBlend: 0.5
+      HighValue: 64
+      LowValue: 0.5
+    Speed:
+      HeightSlopeLerp: 1
+      HeightThreshold: -100
+      HeightBlend: 0.01
+      SlopeThreshold: 0.5
+      SlopeBlend: 0.5
+      HighValue: 0
+      LowValue: 25
+    Drive:
+      HeightSlopeLerp: 1
+      HeightThreshold: -100
+      HeightBlend: 10
+      SlopeThreshold: 0.4
+      SlopeBlend: 0.4
+      HighValue: 0
+      LowValue: 128
+    SensorDistance:
+      HeightSlopeLerp: 1
+      HeightThreshold: -150
+      HeightBlend: 15
+      SlopeThreshold: 0.2
+      SlopeBlend: 0.1
+      HighValue: 8
+      LowValue: 64
+    SensorSpread:
+      HeightSlopeLerp: 1
+      HeightThreshold: 0
+      HeightBlend: 0.01
+      SlopeThreshold: 0.4
+      SlopeBlend: 0.4
+      HighValue: 0.1
+      LowValue: 2
+    TrailDamping:
+      HeightSlopeLerp: 1
+      HeightThreshold: 0
+      HeightBlend: 0.01
+      SlopeThreshold: 0.5
+      SlopeBlend: 0.5
+      HighValue: 0
+      LowValue: 2
+    Intensity:
+      HeightSlopeLerp: 0.5
+      HeightThreshold: -150
+      HeightBlend: 50
+      SlopeThreshold: 0.5
+      SlopeBlend: 0.5
+      HighValue: 110
+      LowValue: 10
+  ZoneCeiling: -50
+  ZoneFloor: -100
+  NoiseFrequency: 1
+  NoiseAmplitude: 5
+  ParticleHeightRange: 50
+  ParticleHeightOffset: 10
+  TrailStartWidth: 0.1
+  TrailEndWidth: 0
+  TrailDamping: 0.25
