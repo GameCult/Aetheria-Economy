@@ -37,6 +37,7 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<WorkUnit Name="enemy_ship" ID="{53C5BE27-4A0B-4FBD-AA11-4CD85ADB5D10}" PersistMode="Reference"/>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

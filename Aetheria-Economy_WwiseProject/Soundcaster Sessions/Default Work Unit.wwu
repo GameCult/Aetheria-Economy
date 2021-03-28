@@ -97,15 +97,15 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}"/>
-							<Value>42</Value>
+							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="thruster_throttle" ID="{2A6D7A97-7D45-4B6C-96EE-CCD56FA83773}"/>
-							<Value>0.52</Value>
+							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="performance_quality" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}"/>
-							<Value>0.99</Value>
+							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="reactor_load" ID="{FC156F43-A577-4DCB-B6E8-84E4072A38C9}"/>
@@ -113,7 +113,7 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}"/>
-							<Value>1</Value>
+							<Value>0.35</Value>
 						</RTPCValue>
 					</RTPCValueList>
 					<CurrentStateList ShowAll="true"/>
