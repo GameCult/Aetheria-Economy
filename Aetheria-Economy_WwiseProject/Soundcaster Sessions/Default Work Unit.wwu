@@ -89,7 +89,7 @@
 					<RTPCValueList ShowAll="true">
 						<RTPCValue>
 							<GameParameterRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}"/>
-							<Value>0.98</Value>
+							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}"/>
