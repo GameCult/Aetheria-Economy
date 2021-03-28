@@ -46,7 +46,7 @@ Pass{
 
 		Out.pos = UnityObjectToClipPos(float4(vtx.pos, 1.0));
 		Out.uv = vtx.uv;
-		Out.col = lerp(_StartColor, _EndColor, vtx.uv.x);
+		Out.col = float4(lerp(_StartColor, _EndColor, vtx.uv.x).xyz, vtx.intensity);
 		Out.screenPos = ComputeScreenPos(float4(vtx.pos, 1.0));
 
 		return Out;
@@ -57,7 +57,7 @@ Pass{
 		// Simple quadratic curve "texture"
 		float x = 1 - 2 * abs(In.uv.y - .5);
 		//return float4(x,In.uv.x, 0 ,1);
-		float i = x * x * smoothstep(0, _Roundedness, In.uv.x) * (1-In.uv.x) * _Intensity;
+		float i = x * x * smoothstep(0, _Roundedness, In.uv.x) * (1-In.uv.x) * _Intensity * In.col.a;
 		
 	    // Apply screen space dithering
 	    float2 screenUV = In.screenPos.xy / In.screenPos.w;
@@ -107,7 +107,7 @@ Pass{
 
 		Out.pos = UnityObjectToClipPos(float4(vtx.pos, 1.0));
 		Out.uv = vtx.uv;
-		Out.col = 1;
+		Out.col = vtx.intensity;
 		Out.screenPos = ComputeScreenPos(float4(vtx.pos, 1.0));
 
 		return Out;
@@ -117,7 +117,7 @@ Pass{
 	{
 		// Simple quadratic curve "texture"
 		float x = 1 - 2 * abs(In.uv.y - .5);
-		float i = x * x * smoothstep(0, _Roundedness, In.uv.x) * (1-In.uv.x) * _Intensity;
+		float i = x * x * smoothstep(0, _Roundedness, In.uv.x) * (1-In.uv.x) * _Intensity * In.col.a;
 		
 	    // Apply screen space dithering
 	    float2 screenUV = In.screenPos.xy / In.screenPos.w;

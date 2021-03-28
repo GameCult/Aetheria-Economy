@@ -24,6 +24,15 @@ public static class Extensions
     {
         return baseType.GetInterfaces().Any(interfaceType.Equals);
     }
+    
+    // https://stackoverflow.com/a/800469
+    public static string GetHashSHA1(this byte[] data)
+    {
+        using (var sha1 = new System.Security.Cryptography.SHA1CryptoServiceProvider())
+        {
+            return string.Concat(sha1.ComputeHash(data).Select(x => x.ToString("X2")));
+        }
+    }
 
     public static void Send<T>(this NetPeer peer, T message, DeliveryMethod method = DeliveryMethod.ReliableOrdered) where T : Message
     {

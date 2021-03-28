@@ -63,7 +63,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Intensity: 24.1
+    - _Intensity: 10
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -77,6 +77,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _EndColor: {r: 0.5849056, g: 0.19037023, b: 0.40103197, a: 1}
+    - _EndColor: {r: 0.90588236, g: 0.089682385, b: 0.5242822, a: 1}
     - _StartColor: {r: 0.9339623, g: 0.31624126, b: 0.13656995, a: 1}
   m_BuildTextureStacks: []

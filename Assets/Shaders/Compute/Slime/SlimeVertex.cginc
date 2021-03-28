@@ -5,6 +5,7 @@ struct Vertex
 {
     float3 pos;
     float2 uv;
+    float intensity;
 };
 
 inline Vertex GetDefaultVertex() {

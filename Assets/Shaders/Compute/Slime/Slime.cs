@@ -46,6 +46,7 @@ public class Slime : MonoBehaviour
     private int _diffuseKernel;
     private int _particleKernel;
     private int _geometryKernel;
+    private string _settingsHash;
 
     private int IndexBufferSize => ParticleCount * 6 * (TrailPoints - 1);
     
@@ -56,7 +57,8 @@ public class Slime : MonoBehaviour
     private ComputeBuffer _agentsBuffer;
     private RenderTexture _accumulationTexture;
     private RenderTexture _previousAccumulationTexture;
-    
+
+    private ComputeBuffer _parameterBuffer;
     private ComputeBuffer _particlesBuffer;
 
     private ComputeBuffer _indexBuffer;
@@ -77,12 +79,14 @@ public class Slime : MonoBehaviour
         public Vector3 Start;
         public Vector3 Middle;
         public Vector3 End;
+        public float Intensity;
     }
     
     struct Vertex
     {
         public Vector3 Position;
         public Vector2 UV;
+        public float Intensity;
     }
     
     #endregion
@@ -111,7 +115,9 @@ public class Slime : MonoBehaviour
             };
         }
         _agentsBuffer.SetData(agents);
-        
+
+        _parameterBuffer = new ComputeBuffer(1, Marshal.SizeOf(typeof(SlimeSettings)));
+
         _particlesBuffer = new ComputeBuffer(ParticleCount, Marshal.SizeOf(typeof(Particle)));
 
         _vertexBuffer = new ComputeBuffer(ParticleCount * 2 * TrailPoints, Marshal.SizeOf(typeof(Vertex)));
@@ -137,25 +143,30 @@ public class Slime : MonoBehaviour
         _indexBuffer.SetData(indexData);
     }
 
+    void UpdateSettings()
+    {
+        RegisterResolver.Register();
+        var hash = MessagePackSerializer.Serialize(SlimeSettings).GetHashSHA1();
+        if(hash != _settingsHash)
+        {
+            _settingsHash = hash;
+            _parameterBuffer.SetData(new[] {SlimeSettings});
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        UpdateSettings();
+        
         SlimeCompute.SetInt("randomOffset", Random.Range(0,65536));
         SlimeCompute.SetInt("textureWidth", TextureSize);
         SlimeCompute.SetInt("numAgents", AgentCount);
         SlimeCompute.SetFloat("zoneRadius", ZoneRadius);
-        SlimeCompute.SetFloat("deposition", SlimeSettings.Deposition * Time.deltaTime);
-        SlimeCompute.SetFloat("diffusion", SlimeSettings.Diffusion * Time.deltaTime);
-        SlimeCompute.SetFloat("decay", max(1 - SlimeSettings.Decay * Time.deltaTime, 0.01f));
-        SlimeCompute.SetFloat("speed", SlimeSettings.Speed * Time.deltaTime);
-        SlimeCompute.SetFloat("turnSpeed", SlimeSettings.TurnSpeed * Time.deltaTime);
-        SlimeCompute.SetFloat("randomSteering", SlimeSettings.RandomSteering);
-        SlimeCompute.SetFloat("sensorDistance", SlimeSettings.SensorDistance);
-        SlimeCompute.SetFloat("drive", SlimeSettings.Drive);
-        SlimeCompute.SetFloat("sensorSpread", SlimeSettings.SensorSpread * Mathf.PI / 2);
-        SlimeCompute.SetInt("sensorSize", SlimeSettings.SensorSize);
+        SlimeCompute.SetFloat("deltaTime", Time.deltaTime);
 
         SlimeCompute.SetBuffer(_updateAgentsKernel, "agents", _agentsBuffer);
+        SlimeCompute.SetBuffer(_updateAgentsKernel, "parameters", _parameterBuffer);
         SlimeCompute.SetTexture(_updateAgentsKernel, "accumulation", _accumulationTexture);
         SlimeCompute.SetTexture(_updateAgentsKernel, "Heightmap", GravityTexture);
         
@@ -163,11 +174,14 @@ public class Slime : MonoBehaviour
         SlimeCompute.Dispatch(_updateAgentsKernel, numberOfGroups, 1, 1);
 
         Graphics.Blit(_accumulationTexture, _previousAccumulationTexture);
+        SlimeCompute.SetBuffer(_diffuseKernel, "parameters", _parameterBuffer);
+        SlimeCompute.SetTexture(_diffuseKernel, "Heightmap", GravityTexture);
         SlimeCompute.SetTexture(_diffuseKernel, "accumulation", _previousAccumulationTexture);
         SlimeCompute.SetTexture(_diffuseKernel, "diffusedAccumulation", _accumulationTexture);
         numberOfGroups = Mathf.CeilToInt((float)TextureSize / 8);
         SlimeCompute.Dispatch(_diffuseKernel, numberOfGroups, numberOfGroups, 1);
         
+        SlimeCompute.SetBuffer(_particleKernel, "parameters", _parameterBuffer);
         SlimeCompute.SetTexture(_particleKernel, "Heightmap", GravityTexture);
         SlimeCompute.SetBuffer(_particleKernel, "agents", _agentsBuffer);
         SlimeCompute.SetBuffer(_particleKernel, "particles", _particlesBuffer);
@@ -214,16 +228,35 @@ public class Slime : MonoBehaviour
 }
 
 [Serializable, MessagePackObject(keyAsPropertyName:true)]
-public class SlimeSettings
+public struct SlimeSettings
 {
-    public float Deposition;
-    public float Diffusion;
-    public float Decay;
-    public float TurnSpeed;
-    public float RandomSteering;
-    public float Speed;
-    public float Drive;
-    public float SensorDistance;
-    public float SensorSpread;
-    public int SensorSize;
+    public SlimeParameter Deposition;
+    public SlimeParameter Diffusion;
+    public SlimeParameter Decay;
+    public SlimeParameter TurnSpeed;
+    public SlimeParameter Speed;
+    public SlimeParameter Drive;
+    public SlimeParameter SensorDistance;
+    public SlimeParameter SensorSpread;
+    public SlimeParameter TrailDamping;
+    public SlimeParameter Intensity;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName:true)]
+public struct SlimeParameter
+{
+    public float HeightSlopeLerp;
+    public float HeightThreshold;
+    public float HeightBlend;
+    public float SlopeThreshold;
+    public float SlopeBlend;
+    public float HighValue;
+    public float LowValue;
+
+    public float Evaluate(float height, float slope)
+    {
+        var heightValue = lerp(LowValue, HighValue, smoothstep(HeightThreshold - HeightBlend, HeightThreshold + HeightBlend, height));
+        var slopeValue = lerp(LowValue, HighValue, smoothstep(SlopeThreshold - SlopeBlend, SlopeThreshold + SlopeBlend, slope));
+        return lerp(heightValue, slopeValue, HeightSlopeLerp);
+    }
 }

@@ -20,7 +20,43 @@ struct Particle
     float3 start;
     float3 middle;
     float3 end;
+    float intensity;
 };
+
+struct SlimeParameter
+{
+    float HeightSlopeLerp;
+    float HeightThreshold;
+    float HeightBlend;
+    float SlopeThreshold;
+    float SlopeBlend;
+    float HighValue;
+    float LowValue;
+};
+
+struct SlimeSettings
+{
+    SlimeParameter Deposition;
+    SlimeParameter Diffusion;
+    SlimeParameter Decay;
+    SlimeParameter TurnSpeed;
+    SlimeParameter Speed;
+    SlimeParameter Drive;
+    SlimeParameter SensorDistance;
+    SlimeParameter SensorSpread;
+    SlimeParameter TrailDamping;
+    SlimeParameter Intensity;
+};
+
+float evaluate(SlimeParameter param, float height, float slope)
+{
+    return lerp(
+        lerp(param.LowValue, param.HighValue, smoothstep(param.HeightThreshold - param.HeightBlend, param.HeightThreshold + param.HeightBlend, height)),
+        lerp(param.LowValue, param.HighValue, smoothstep(param.SlopeThreshold - param.SlopeBlend, param.SlopeThreshold + param.SlopeBlend, slope)), param.HeightSlopeLerp);
+}
+
+// Parameter buffer
+RWStructuredBuffer<SlimeSettings> parameters;
 
 // Accumulation Buffer
 RWTexture2D<float> accumulation;
@@ -37,19 +73,9 @@ SamplerState samplerHeightmap;
 
 int randomOffset;
 int numAgents;
-float speed;
-//float deltaTime;
+float deltaTime;
 int textureWidth;
 float zoneRadius;
-float deposition;
-float diffusion;
-float decay;
-float sensorDistance;
-float sensorSpread;
-int sensorSize;
-float randomSteering;
-float turnSpeed;
-float drive;
 
 // Hash function from H. Schechter & R. Bridson, goo.gl/RXiKaH
 inline uint hash(uint s)
@@ -78,16 +104,16 @@ inline float2 posToUv(float2 pos)
     return pos / (zoneRadius * 2) + float2(.5, .5);
 }
 
-float sense(float2 position, float angle, float directionSign)
+float sense(int2 position, float angle, float directionSign, float spread, float distance)
 {
-    float sensorAngle = angle + directionSign * sensorSpread;
+    float sensorAngle = angle + directionSign * spread;
     float2 sensorDir = float2(cos(sensorAngle), sin(sensorAngle));
-    int2 sensorCenter = position + sensorDir * sensorDistance;
+    int2 sensorCenter = position + sensorDir * distance;
 
     float sum = 0;
-    for(int x = -sensorSize; x <= sensorSize; x++)
+    for(int x = -1; x <= 1; x++)
     {
-        for(int y = -sensorSize; y <= sensorSize; y++)
+        for(int y = -1; y <= 1; y++)
         {
             int2 sample = sensorCenter + int2(x, y);
             if(sample.x >= 0 && sample.x < textureWidth && sample.y >= 0 && sample.y < textureWidth)
@@ -104,39 +130,62 @@ inline float unlerp(float x, float min, float max)
     return (x - min) / (max - min);
 }
 
+// Z-up normal of the heightmap
+float3 GetNormal(int2 pos)
+{
+    if(pos.x >= textureWidth || pos.y >= textureWidth) return float3(0, 0, 1);
+    
+    float e = -Heightmap[pos + int2(1, 0)];
+    float n = -Heightmap[pos + int2(0, 1)];
+    float me = -Heightmap[pos];
+
+    // Deduce terrain normal
+    float3 normal = float3(e - me, n - me, 1.0 / textureWidth * zoneRadius * 2);
+    return normalize(normal);
+}
+
 [numthreads(NUM_THREAD_X,1,1)]
 void UpdateAgents (uint3 id : SV_DispatchThreadID)
 {
     if (id.x >= numAgents) return;
 
     Agent agent = agents[id.x];
+    SlimeSettings settings = parameters[0];
+
+    float2 uv = posToUv(agent.position);
+    int2 texPos = int2(uv * textureWidth);
+
+    float height = -Heightmap[texPos];//.SampleLevel(samplerHeightmap, uv, 0);
+    float3 normal = GetNormal(texPos);
+    float slope = acos(dot(normal, float3(0,0,1))) / UNITY_HALF_PI;
 
     // Move Agents based on direction and speed
     float2 direction = float2(cos(agent.angle), sin(agent.angle));
-    agent.position += direction * speed;
+    agent.position += direction * evaluate(settings.Speed, height, slope) * deltaTime;
     
     float r = random(id.x + randomOffset);
 
     // Clamp position within bounds and randomize direction
-    if(dot(agent.position, agent.position) > zoneRadius * zoneRadius || isnan(agent.position.x))
+    if(dot(agent.position, agent.position) > zoneRadius * zoneRadius)
     {
         agent.position = normalize(agent.position) * zoneRadius;
         //agent.position = float2(0,0);
         agent.angle = r * UNITY_TWO_PI;
     }
 
-    // if(isnan(agent.position.x))
-    // {
-    //     agent.position = float2(0,0);
-    //     agent.angle = r * UNITY_TWO_PI;
-    // }
+    if(isnan(agent.position.x))
+    {
+        agent.position = float2(0,0);
+        agent.angle = r * UNITY_TWO_PI;
+    }
 
-    float2 texPos = posToUv(agent.position) * textureWidth;
+    float spread = evaluate(settings.SensorSpread, height, slope);
+    float distance = evaluate(settings.SensorDistance, height, slope);
     
     // Acquire sensory data
-    float forwardSensor = sense(texPos, agent.angle, 0);
-    float leftSensor = sense(texPos, agent.angle, -1);
-    float rightSensor = sense(texPos, agent.angle, 1);
+    float forwardSensor = sense(texPos, agent.angle, 0, spread, distance);
+    float leftSensor = sense(texPos, agent.angle, -1, spread, distance);
+    float rightSensor = sense(texPos, agent.angle, 1, spread, distance);
     
     // Determine the range of the sensor inputs
     float minSensor = min(min(leftSensor, rightSensor), forwardSensor);
@@ -144,7 +193,7 @@ void UpdateAgents (uint3 id : SV_DispatchThreadID)
     float range = min(maxSensor - minSensor, .01);
     
     // Normalize sensor inputs
-    forwardSensor = unlerp(forwardSensor, minSensor, maxSensor);
+    //forwardSensor = unlerp(forwardSensor, minSensor, maxSensor);
     leftSensor = unlerp(leftSensor, minSensor, maxSensor);
     rightSensor = unlerp(rightSensor, minSensor, maxSensor);
     
@@ -152,12 +201,12 @@ void UpdateAgents (uint3 id : SV_DispatchThreadID)
     float desire = leftSensor - rightSensor;
     
     // Strength of its directional preference
-    float motivation = pow(range / maxSensor, 1 / drive);
+    float motivation = pow(range / maxSensor, 1 / evaluate(settings.Drive, height, slope));
     
-    agent.angle += turnSpeed * lerp(r * 2 - 1, desire, motivation);
+    agent.angle += evaluate(settings.TurnSpeed, height, slope) * lerp(r * 2 - 1, desire, motivation) * deltaTime;
 
     agents[id.x] = agent;
-    accumulation[int2(texPos)] += deposition;
+    accumulation[texPos] += evaluate(settings.Deposition, height, slope) * deltaTime;
 }
 
 [numthreads(8,8,1)]
@@ -166,6 +215,11 @@ void Diffuse (uint3 id : SV_DispatchThreadID)
     if(id.x >= textureWidth || id.y >= textureWidth) return;
 
     float previous = accumulation[id.xy];
+
+    SlimeSettings settings = parameters[0];
+    float height = -Heightmap[id.xy];
+    float3 normal = GetNormal(id.xy);
+    float slope = acos(dot(normal, float3(0,0,1))) / UNITY_HALF_PI;
 
     float sum = 0;
     for(int x = -1; x <= 1; x++)
@@ -181,7 +235,7 @@ void Diffuse (uint3 id : SV_DispatchThreadID)
     }
     float average = sum / 9;
 
-    diffusedAccumulation[id.xy] = lerp(previous, average, diffusion) * decay;
+    diffusedAccumulation[id.xy] = lerp(previous, average, saturate(evaluate(settings.Diffusion, height, slope) * deltaTime)) * saturate(1-evaluate(settings.Decay, height, slope) * deltaTime);
 }
 
 // Buffer containing the leading position of the agent particle
@@ -195,7 +249,6 @@ float noiseAmplitude;
 float time;
 float heightRange;
 float heightOffset;
-float trailDamping;
 int particleCount;
 
 #define HASHSCALE 0.1031
@@ -224,16 +277,37 @@ float perlinNoise1D(float p)
 void CreateAgentParticles (uint3 id : SV_DispatchThreadID)
 {
     Agent agent = agents[id.x];
+
+    float2 uv = posToUv(agent.position);
+    int2 texPos = int2(uv * textureWidth);
+    
+    SlimeSettings settings = parameters[0];
+    float height = -Heightmap[texPos];
+    float3 normal = GetNormal(texPos);
+    float slope = acos(dot(normal, float3(0,0,1))) / UNITY_HALF_PI;
+    
     float sequence = (float)id.x/particleCount;
-    float height = Heightmap.SampleLevel(samplerHeightmap, posToUv(agent.position), 0);
-    float particleHeight = -height + random(id.x) * heightRange + heightOffset;
+    //float height = -Heightmap.SampleLevel(samplerHeightmap, posToUv(agent.position), 0);
+    float particleHeight = height + pow(random(id.x)-.5, 3) * heightRange + heightOffset;
     Particle particle = particles[id.x];
-    particle.end = lerp(particle.end, particle.middle, trailDamping);
-    particle.middle = lerp(particle.middle, particle.start, trailDamping);
-    particle.start = lerp(particle.start, float3(
+    float damping = evaluate(settings.TrailDamping, height, pow(slope, .25));
+    float3 targetPosition = float3(
         agent.position.x + perlinNoise1D(id.x*3 + time + sequence) * noiseAmplitude,
         particleHeight + perlinNoise1D(id.x*3 + 1 + time + sequence) * noiseAmplitude,
-        agent.position.y + perlinNoise1D(id.x*3 + 2 + time + sequence) * noiseAmplitude), trailDamping);
+        agent.position.y + perlinNoise1D(id.x*3 + 2 + time + sequence) * noiseAmplitude);
+    if(length(particle.start-targetPosition) > 256)
+    {
+        particle.end = targetPosition;
+        particle.middle = targetPosition;
+        particle.start = targetPosition;
+    }
+    else
+    {
+        particle.end = lerp(particle.end, particle.middle, damping/4);
+        particle.middle = lerp(particle.middle, particle.start, damping/2);
+        particle.start = lerp(particle.start, targetPosition, damping);
+    }
+    particle.intensity = evaluate(settings.Intensity, height, slope);
     particles[id.x] = particle;
 }
     
@@ -291,9 +365,11 @@ void CreateParticleGeometry (uint3 id : SV_DispatchThreadID)
     
     v0.pos = pos - right;
     v0.uv = float2(trailLerp, 0);
+    v0.intensity = particle.intensity;
 
     v1.pos = pos + right;
     v1.uv = float2(trailLerp, 1);
+    v1.intensity = particle.intensity;
 
     uint vId = idx * 2;
     vertexBuffer[vId] = v0;
