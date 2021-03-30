@@ -4,8 +4,8 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "Economy.Shared.Unity",
-        "Unity.Mathematics"
+        "Unity.Mathematics",
+        "Aetheria.Shared.Unity"
     ],
     "includePlatforms": [
         "Editor"

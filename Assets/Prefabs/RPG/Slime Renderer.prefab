@@ -100,98 +100,81 @@ MonoBehaviour:
     type: 2}
   ParticleMaterial: {fileID: 2100000, guid: 3b53e1eb5d8a5d34f9bc8c1928ceba76, type: 2}
   GravityTexture: {fileID: 8400000, guid: cc403ed0b6a104445b6534b1877c5556, type: 2}
-  TextureSize: 1024
+  TextureSize: 512
   ZoneRadius: 512
-  AgentCount: 262144
-  ParticleCount: 65536
-  TrailPoints: 4
+  AgentCount: 524288
+  ParticleCount: 131072
+  TrailPoints: 5
   SlimeSettings:
     Deposition:
-      HeightSlopeLerp: 0
-      HeightThreshold: -150
-      HeightBlend: 50
       SlopeThreshold: 0.3
       SlopeBlend: 0.3
-      HighValue: 0
-      LowValue: 1
+      HighValue: 2
+      LowValue: 0
+      Exponent: 0.8
     Diffusion:
-      HeightSlopeLerp: 1
-      HeightThreshold: 0
-      HeightBlend: 0.01
       SlopeThreshold: 0.3
       SlopeBlend: 0.3
-      HighValue: 0
-      LowValue: 2
-    Decay:
-      HeightSlopeLerp: 1
-      HeightThreshold: -125
-      HeightBlend: 50
-      SlopeThreshold: 0.5
-      SlopeBlend: 0.5
-      HighValue: 0
-      LowValue: 2
-    TurnSpeed:
-      HeightSlopeLerp: 1
-      HeightThreshold: 0
-      HeightBlend: 0.01
-      SlopeThreshold: 0.5
-      SlopeBlend: 0.5
-      HighValue: 64
+      HighValue: 1
       LowValue: 0.5
+      Exponent: 1
+    Decay:
+      SlopeThreshold: 0.5
+      SlopeBlend: 0.5
+      HighValue: 20
+      LowValue: 0.5
+      Exponent: 1
+    TurnSpeed:
+      SlopeThreshold: 0.5
+      SlopeBlend: 0.5
+      HighValue: 128
+      LowValue: 4
+      Exponent: 2
     Speed:
-      HeightSlopeLerp: 1
-      HeightThreshold: -100
-      HeightBlend: 0.01
       SlopeThreshold: 0.5
       SlopeBlend: 0.5
       HighValue: 0
-      LowValue: 25
+      LowValue: 20
+      Exponent: 1
     Drive:
-      HeightSlopeLerp: 1
-      HeightThreshold: -100
-      HeightBlend: 10
-      SlopeThreshold: 0.4
+      SlopeThreshold: 0.5
       SlopeBlend: 0.4
-      HighValue: 0
-      LowValue: 128
+      HighValue: 64
+      LowValue: 4
+      Exponent: 1
     SensorDistance:
-      HeightSlopeLerp: 1
-      HeightThreshold: -150
-      HeightBlend: 15
-      SlopeThreshold: 0.2
-      SlopeBlend: 0.1
+      SlopeThreshold: 0.5
+      SlopeBlend: 0.5
       HighValue: 8
       LowValue: 64
+      Exponent: 0.125
     SensorSpread:
-      HeightSlopeLerp: 1
-      HeightThreshold: 0
-      HeightBlend: 0.01
       SlopeThreshold: 0.4
       SlopeBlend: 0.4
       HighValue: 0.1
       LowValue: 2
+      Exponent: 0.5
     TrailDamping:
-      HeightSlopeLerp: 1
-      HeightThreshold: 0
-      HeightBlend: 0.01
       SlopeThreshold: 0.5
       SlopeBlend: 0.5
-      HighValue: 0
-      LowValue: 2
+      HighValue: 2
+      LowValue: 0
+      Exponent: 0.25
     Intensity:
-      HeightSlopeLerp: 0.5
-      HeightThreshold: -150
-      HeightBlend: 50
       SlopeThreshold: 0.5
-      SlopeBlend: 0.5
-      HighValue: 110
-      LowValue: 10
+      SlopeBlend: 0.4
+      HighValue: 54.5
+      LowValue: 0
+      Exponent: 0.25
   ZoneCeiling: -50
   ZoneFloor: -100
-  NoiseFrequency: 1
-  NoiseAmplitude: 5
+  NoiseFrequency: 2
+  NoiseAmplitude: 1
   ParticleHeightRange: 50
-  ParticleHeightOffset: 10
+  ParticleHeightOffset: 0
   TrailStartWidth: 0.1
   TrailEndWidth: 0
-  TrailDamping: 0.25
+  TrailDamping: 0.82
+  SpawnPositions:
+  - {x: -250, y: 0}
+  - {x: 250, y: 0}

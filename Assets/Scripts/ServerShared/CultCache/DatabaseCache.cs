@@ -84,7 +84,6 @@ public class DatabaseCache
         {
             if (entry != null)
             {
-                entry.Database = this;
                 var exists = _entries.ContainsKey(entry.ID);
                 
                 // If an external entry is added, store it separately
@@ -148,7 +147,6 @@ public class DatabaseCache
             {
                 var bytes = File.ReadAllBytes(_externalEntries[guid].FilePath);
                 var e = MessagePackSerializer.Deserialize<DatabaseEntry>(bytes);
-                e.Database = this;
                 _externalEntries[guid].Entry = e;
             }
 
@@ -198,7 +196,6 @@ public class DatabaseCache
     {
         var bytes = File.ReadAllBytes(_filePath);
         var entries = MessagePackSerializer.Deserialize<DatabaseEntry[]>(bytes);
-        foreach (var entry in entries) entry.Database = this;
         AddAll(entries);
     }
 

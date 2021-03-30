@@ -76,7 +76,7 @@ Category {
 			    float2 uv2 = i.texcoord - float2(.5,.5);
 				float dist = length(uv2);
 				float ang = atan2(uv2.y,uv2.x);
-				return _Depth * powerPulse(dist * 2,_Power) * (cos(ang*_Frequency+dist*_FrequencyDist+_Time.x*_Speed)+1);
+				return _Depth * powerPulse(dist * 2,_Power) * (cos(ang*_Frequency+pow(dist, _SinePower)*_FrequencyDist+_Time.x*_Speed)+1);
 			}
 			ENDCG 
 		}

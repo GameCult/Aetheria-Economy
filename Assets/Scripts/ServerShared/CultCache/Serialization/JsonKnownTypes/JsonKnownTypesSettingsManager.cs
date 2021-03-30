@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using JsonKnownTypes.Exceptions;
 using JsonKnownTypes.Utils;
 
@@ -8,6 +10,13 @@ namespace JsonKnownTypes
     public static class JsonKnownTypesSettingsManager
     {
         public static JsonDiscriminatorSettings DefaultDiscriminatorSettings { get; set; } = new JsonDiscriminatorSettings();
+
+        private static HashSet<Assembly> RegisteredAssemblies = new HashSet<Assembly>();
+        public static void RegisterTypeAssembly<T>()
+        {
+            var type = typeof(T);
+            RegisteredAssemblies.Add(type.Assembly);
+        }
         
         public static JsonKnownTypesSettings GetSettings<T>()
         {
@@ -41,9 +50,9 @@ namespace JsonKnownTypes
 
         private static Type[] GetAllInheritance<T>()
         {
+            RegisterTypeAssembly<T>();
             var type = typeof(T);
-            return type.Assembly
-                .GetTypes()
+            return RegisteredAssemblies.SelectMany(a=>a.GetTypes())
                 .Where(x => type.IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
                 .ToArray();
         }

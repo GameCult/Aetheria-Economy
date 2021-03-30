@@ -61,6 +61,7 @@ public class DatabaseInspector : EditorWindow
         _white = Color.white.ToTexture();
         _warning = new GUIStyle(EditorStyles.boldLabel);
         _warning.normal.textColor = Color.red;
+        
     }
     
     public void Inspect(object obj, bool inspectablesOnly = false)
@@ -315,11 +316,12 @@ public class DatabaseInspector : EditorWindow
                                 else
                                     _listItemFoldouts.Remove(o.GetHashCode());
 
-                                var rect = GetControlRect(false,
-                                    GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                                GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
-                                    LabelColor, 0, 0);
-                                if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                                
+                                // var rect = GetControlRect(false,
+                                //     GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                                // GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
+                                //     LabelColor, 0, 0);
+                                if (GUILayout.Button("-"))
                                 {
                                     list.Remove(o);
                                     break;
@@ -339,9 +341,9 @@ public class DatabaseInspector : EditorWindow
                     using (new HorizontalScope(_list.ListItemStyle))
                     {
                         GUILayout.Label($"Add new {listType.Name}", GUILayout.ExpandWidth(true));
-                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
-                        if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                        // var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                        // GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                        if (GUILayout.Button("+"))
                         {
                             if (listType.IsInterface)
                             {
@@ -400,11 +402,11 @@ public class DatabaseInspector : EditorWindow
                         {
                             GUILayout.Label(o.name.SplitCamelCase(), EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
 
-                            var rect = GetControlRect(false,
-                                GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                            GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
-                                LabelColor, 0, 0);
-                            if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                            // var rect = GetControlRect(false,
+                            //     GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                            // GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
+                            //     LabelColor, 0, 0);
+                            if (GUILayout.Button("-"))
                             {
                                 list.Remove(o);
                                 break;
@@ -663,11 +665,11 @@ public class DatabaseInspector : EditorWindow
                     }
                 }
             }
-            var rect = GetControlRect(false,
-                GUILayout.Width(EditorGUIUtility.singleLineHeight));
-            GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
-                LabelColor, 0, 0);
-            if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+            // var rect = GetControlRect(false,
+            //     GUILayout.Width(EditorGUIUtility.singleLineHeight));
+            // GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1,
+            //     LabelColor, 0, 0);
+            if (GUILayout.Button("-"))
             {
                 return Guid.Empty;
             }
@@ -707,9 +709,9 @@ public class DatabaseInspector : EditorWindow
                     
                     value[ingredient.Key] = DelayedIntField(value[ingredient.Key], GUILayout.Width(50));
                     
-                    var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
-                    if (GUI.Button(rect, GUIContent.none, GUIStyle.none) || value[ingredient.Key]==0)
+                    // var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                    // GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                    if (GUILayout.Button("-") || value[ingredient.Key]==0)
                         value.Remove(ingredient.Key);
                 }
             }
@@ -766,9 +768,9 @@ public class DatabaseInspector : EditorWindow
                     else GUILayout.Label(entry.ID.ToString());
                     value[ingredient.Key] = DelayedFloatField(value[ingredient.Key], GUILayout.Width(50));
                     
-                    var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
-                    if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                    // var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                    // GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                    if (GUILayout.Button("-"))
                         value.Remove(ingredient.Key);
                 }
             }
@@ -825,9 +827,9 @@ public class DatabaseInspector : EditorWindow
                     else GUILayout.Label(entry.ID.ToString());
                     value[ingredient.Key] = Slider(value[ingredient.Key], min, max);
                     
-                    var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
-                    if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                    // var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                    // GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                    if (GUILayout.Button("-"))
                         value.Remove(ingredient.Key);
                 }
             }
@@ -881,9 +883,9 @@ public class DatabaseInspector : EditorWindow
                     {
                         GUILayout.Label((entry as INamedEntry)?.EntryName ?? entry.ID.ToString());
                     
-                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                        GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
-                        if (GUI.Button(rect, GUIContent.none, GUIStyle.none))
+                        // var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                        // GUI.DrawTexture(rect, Icons.Instance.minus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                        if (GUILayout.Button("-"))
                         {
                             value.Remove(guid);
                         }
@@ -1136,8 +1138,8 @@ public class DatabaseInspector : EditorWindow
         
         using (new HorizontalScope())
         {
-            if(GUILayout.Button("Print JSON"))
-                Debug.Log(entry.ToJson());
+            // if(GUILayout.Button("Print JSON"))
+            //     Debug.Log(entry.ToJson());
             // if (GUILayout.Button("Duplicate"))
             // {
             //     DatabaseCache.Duplicate(entry);

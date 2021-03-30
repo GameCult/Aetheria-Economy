@@ -78,6 +78,7 @@ public class ZoneRenderer : MonoBehaviour
     private Entity _perspectiveEntity;
     private IDisposable[] _perspectiveSubscriptions = new IDisposable[2];
     private List<IDisposable> _zoneSubscriptions = new List<IDisposable>();
+    private PlanetObject[] _suns;
 
     public Dictionary<Wormhole, GameObject> WormholeInstances = new Dictionary<Wormhole, GameObject>();
 
@@ -156,32 +157,14 @@ public class ZoneRenderer : MonoBehaviour
         SlimeRenderer.ZoneRadius = zone.Pack.Radius;
         foreach(var p in zone.Planets.Values)
             LoadPlanet(p);
+
+        _suns = Planets.Values.Where(p => p is SunObject).ToArray();
         
         foreach (var x in Planets)
         {
             if (!(zone.Planets[x.Key] is GasGiantData))
             {
-                var parentOrbit = Zone.Orbits[Zone.Planets[x.Key].Orbit].Data.Parent;
-                PlanetObject parent;
-                if (parentOrbit == Guid.Empty)
-                    parent = _root;
-                else
-                {
-                    var parentPlanetData = Zone.Planets.Values.FirstOrDefault(p => p.Orbit == parentOrbit);
-                    if(parentPlanetData == null)
-                    {
-                        parentOrbit = Zone.Orbits[parentOrbit].Data.Parent;
-                        parentPlanetData = Zone.Planets.Values.FirstOrDefault(p => p.Orbit == parentOrbit);
-                    }
-
-                    if (parentPlanetData == null)
-                        parent = _root;
-                    else if (!Planets.TryGetValue(parentPlanetData.ID, out parent))
-                    {
-                        Debug.Log("WTF!");
-                    }
-                }
-                //_tourPlanets.Add((x.Value.Body.transform, parent.Body.transform));
+                
             }
         }
         
@@ -411,6 +394,12 @@ public class ZoneRenderer : MonoBehaviour
 
     void Update()
     {
+        if (SlimeRenderer.SpawnPositions.Length != _suns.Length)
+            SlimeRenderer.SpawnPositions = new Vector2[_suns.Length];
+        for (var i = 0; i < _suns.Length; i++)
+        {
+            SlimeRenderer.SpawnPositions[i] = _suns[i].Body.transform.position.Flatland();
+        }
         foreach(var belt in Zone.AsteroidBelts)
         {
             var meshes = _beltMeshes[belt.Key];

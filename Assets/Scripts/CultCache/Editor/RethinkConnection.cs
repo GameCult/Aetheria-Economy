@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Net;
-using UniRx;
 using UnityEngine;
 
 public static class RethinkConnection
@@ -97,7 +96,7 @@ public static class RethinkConnection
                 cache.Add(entry, true);
                 status.RetrievedItems++;
             }
-        }).WrapErrors();
+        }).WrapAwait();
 
         // Get globaldata and all galaxy map layer data from RethinkDB
         Task.Run(async () =>
@@ -116,7 +115,7 @@ public static class RethinkConnection
                 cache.Add(entry, true);
                 status.RetrievedItems++;
             }
-        }).WrapErrors();
+        }).WrapAwait();
 
         // Subscribe to changes from RethinkDB
         Task.Run(async () =>
@@ -137,7 +136,7 @@ public static class RethinkConnection
                     Debug.Log($"Received change from RethinkDB: {change.NewValue.ID}");
                 cache.Add(change.NewValue, true);
             }
-        }).WrapErrors();
+        }).WrapAwait();
 
         // Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).Subscribe(_ =>
         // {

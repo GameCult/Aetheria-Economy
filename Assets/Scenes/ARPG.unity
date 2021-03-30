@@ -362,7 +362,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1037490739}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23420359
 MeshRenderer:
@@ -15433,11 +15433,11 @@ Transform:
   m_LocalPosition: {x: 0, y: -5, z: 0}
   m_LocalScale: {x: 3000, y: 3000, z: 3000}
   m_Children:
-  - {fileID: 1254851255}
   - {fileID: 1476765548}
   - {fileID: 23420357}
   - {fileID: 1108843909}
   - {fileID: 1647230682}
+  - {fileID: 1254851255}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
@@ -15772,7 +15772,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1536
+    m_Bits: 512
   m_RenderingPath: 1
   m_TargetTexture: {fileID: 8400000, guid: cc403ed0b6a104445b6534b1877c5556, type: 2}
   m_TargetDisplay: 0
@@ -16247,7 +16247,7 @@ Transform:
   - {fileID: 945347192}
   - {fileID: 195655951}
   m_Father: {fileID: 1037490739}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1115239398
 GameObject:
@@ -17585,6 +17585,21 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
         type: 3}
+      propertyPath: AgentCount
+      value: 262144
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: ZoneRadius
+      value: 2513.2258
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: TextureSize
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
       propertyPath: TrailPoints
       value: 5
       objectReference: {fileID: 0}
@@ -17593,6 +17608,286 @@ PrefabInstance:
       propertyPath: TargetCamera
       value: 
       objectReference: {fileID: 2115559089}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: ParticleCount
+      value: 131072
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: NoiseAmplitude
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: NoiseFrequency
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: TrailStartWidth
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: ParticleHeightRange
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: ParticleHeightOffset
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Decay.Exponent
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Decay.LowValue
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Drive.Exponent
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Drive.LowValue
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Speed.Exponent
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Speed.LowValue
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Decay.HighValue
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Drive.HighValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Speed.HighValue
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Decay.SlopeBlend
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Drive.SlopeBlend
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Speed.SlopeBlend
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SpawnPositions.Array.data[0].x
+      value: -940.1045
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SpawnPositions.Array.data[0].y
+      value: 57.288723
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SpawnPositions.Array.data[1].x
+      value: 1791.8752
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SpawnPositions.Array.data[1].y
+      value: 384.05713
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Diffusion.Exponent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Diffusion.LowValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Intensity.Exponent
+      value: 0.2123
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Intensity.LowValue
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TurnSpeed.Exponent
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TurnSpeed.LowValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Deposition.Exponent
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Deposition.LowValue
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Diffusion.HighValue
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Intensity.HighValue
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TurnSpeed.HighValue
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Decay.SlopeThreshold
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Deposition.HighValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Drive.SlopeThreshold
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Intensity.SlopeBlend
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Speed.SlopeThreshold
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TurnSpeed.SlopeBlend
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Deposition.SlopeBlend
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.SensorSpread.Exponent
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.SensorSpread.LowValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TrailDamping.Exponent
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TrailDamping.LowValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.SensorSpread.HighValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TrailDamping.HighValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.SensorDistance.Exponent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.SensorDistance.LowValue
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TrailDamping.SlopeBlend
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Intensity.SlopeThreshold
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.SensorDistance.HighValue
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TurnSpeed.SlopeThreshold
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.Deposition.SlopeThreshold
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.SensorDistance.SlopeBlend
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.TrailDamping.SlopeThreshold
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2784739443721397315, guid: efd1f097ce29ffa48bb0045d6502f55d,
+        type: 3}
+      propertyPath: SlimeSettings.SensorDistance.SlopeThreshold
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 6977256487485077368, guid: efd1f097ce29ffa48bb0045d6502f55d,
         type: 3}
       propertyPath: m_Name
@@ -17606,7 +17901,7 @@ PrefabInstance:
     - target: {fileID: 6977256487485077373, guid: efd1f097ce29ffa48bb0045d6502f55d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6977256487485077373, guid: efd1f097ce29ffa48bb0045d6502f55d,
         type: 3}
@@ -20485,7 +20780,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1037490739}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1476765550
 MeshRenderer:
@@ -21344,12 +21639,12 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -21369,7 +21664,7 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 1713457305180270767, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -22513,12 +22808,12 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -22538,7 +22833,7 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 1713457305180270767, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -23203,7 +23498,7 @@ Transform:
   - {fileID: 1713745165}
   - {fileID: 1390575963}
   m_Father: {fileID: 1037490739}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1665127615
 GameObject:

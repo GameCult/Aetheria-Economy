@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using JsonKnownTypes;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Net;
 using UnityEditor;
@@ -18,7 +19,7 @@ public class DatabaseListView : EditorWindow
     // Singleton to avoid multiple instances of window. 
     private static DatabaseListView _instance;
     public static DatabaseListView Instance => _instance ? _instance : GetWindow<DatabaseListView>();
-    [MenuItem("Window/Aetheria Database Tools")]
+    [MenuItem("Window/GameCult/Database Tools")]
     static void Init() => Instance.Show();
     private void Awake()
     {
@@ -51,7 +52,7 @@ public class DatabaseListView : EditorWindow
     private HashSet<string> _itemGroupFoldouts = new HashSet<string>();
     private HashSet<Guid> _itemManufacturerFoldouts = new HashSet<Guid>();
     private HashSet<(Guid, HardpointType)> _itemManufacturerTypeFoldouts = new HashSet<(Guid, HardpointType)>();
-    private string _filePath => Path.Combine(ActionGameManager.GameDataDirectory.FullName, _fileName);
+    private string _filePath => Path.Combine(new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData").FullName, _fileName);
     private string _fileName = "AetherDB.msgpack";
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
@@ -61,6 +62,7 @@ public class DatabaseListView : EditorWindow
     
     void OnEnable()
     {
+        
         //_filePath = ;
         // Create database cache
         _databaseCache = new DatabaseCache(_filePath);
@@ -139,6 +141,7 @@ public class DatabaseListView : EditorWindow
             if (GUILayout.Button("Connect"))
             {
                 EditorPrefs.SetString("RethinkDB.URL", _connectionString);
+                JsonKnownTypesSettingsManager.RegisterTypeAssembly<ItemData>();
                 _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString);
             }
             // if (GUILayout.Button("Connect All"))
@@ -362,8 +365,8 @@ public class DatabaseListView : EditorWindow
                             CreateItem(_itemTypes[i]);
                         GUILayout.Space(20);
                         GUILayout.Label("New " + FormatTypeName(_itemTypes[i].Name));
-                        var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                        GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                        // var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                        // GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                     }
                 }
             }
@@ -411,8 +414,8 @@ public class DatabaseListView : EditorWindow
                         CreateItem(_entryTypes[i]);
                     GUILayout.Space(10);
                     GUILayout.Label("New " + _entryTypes[i].Name);
-                    var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                    // var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
+                    // GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
                 }
             }
         }

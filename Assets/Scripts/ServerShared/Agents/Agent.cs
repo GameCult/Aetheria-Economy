@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using RethinkDb.Driver.Ast;
 using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;

@@ -17,8 +17,6 @@ public static class Extensions
 {
     //public static IDatabaseEntry Get(this Guid entry) => Database.Get(entry);
     //public static T Get<T>(this Guid entry) where T : class, IDatabaseEntry => Database.Get(entry) as T;
-    public static string ToJson(this DatabaseEntry entry) => MessagePackSerializer.SerializeToJson(entry);
-    public static byte[] Serialize(this DatabaseEntry entry) => MessagePackSerializer.Serialize(entry);
 
     public static bool IsImplementationOf(this Type baseType, Type interfaceType)
     {
@@ -166,59 +164,7 @@ public static class Extensions
         pow((pow(max, exp + 1) - pow(min, exp + 1)) * pow(random.NextFloat(), randexp) + pow(min, exp + 1), 1 / (exp + 1));
     public static float NextUnbounded(this ref Random random) => 1 / (1 - random.NextFloat()) - 1;
     public static float NextUnbounded(this ref Random random, float bias, float power, float ceiling) => 1 / (1 - pow(min(random.NextFloat(), ceiling), 1 - pow(clamp(bias,0,.99f), 1 / power))) - 1;
-	
-    private static Dictionary<Type,Type[]> InterfaceClasses = new Dictionary<Type, Type[]>();
-    public static Type[] GetAllInterfaceClasses(this Type type)
-    {
-        if (InterfaceClasses.ContainsKey(type))
-            return InterfaceClasses[type];
-        return InterfaceClasses[type] = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(ass => ass.GetTypes()).Where(t => t.IsClass && t.GetInterfaces().Contains(type)).ToArray();
-    }
-    
-    private static Dictionary<Type,Type[]> ParentTypes = new Dictionary<Type, Type[]>();
 
-    public static Type[] GetParentTypes(this Type type)
-    {
-        if (ParentTypes.ContainsKey(type))
-            return ParentTypes[type];
-        return ParentTypes[type] = type.GetParents().ToArray();
-    }
-    
-    private static IEnumerable<Type> GetParents(this Type type)
-    {
-        // is there any base type?
-        if (type == null)
-        {
-            yield break;
-        }
-
-        yield return type;
-
-        // return all implemented or inherited interfaces
-        foreach (var i in type.GetInterfaces())
-        {
-            yield return i;
-        }
-
-        // return all inherited types
-        var currentBaseType = type.BaseType;
-        while (currentBaseType != null)
-        {
-            yield return currentBaseType;
-            currentBaseType= currentBaseType.BaseType;
-        }
-    }
-	
-    private static Dictionary<Type,Type[]> ChildClasses = new Dictionary<Type, Type[]>();
-    public static Type[] GetAllChildClasses(this Type type)
-    {
-        if (ChildClasses.ContainsKey(type))
-            return ChildClasses[type];
-        return ChildClasses[type] = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(ass => ass.GetTypes()).Where(type.IsAssignableFrom).ToArray();
-    }
-	
     public static bool IsDefault<T>(this T value) where T : struct
     {
         bool isDefault = value.Equals(default(T));

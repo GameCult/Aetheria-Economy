@@ -647,9 +647,9 @@
  </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Economy.Shared.Unity.csproj">
-      <Project>{c2362ba6-dee9-92b9-0779-f5fcf5968986}</Project>
-      <Name>Economy.Shared.Unity</Name>
+    <ProjectReference Include="Aetheria.Shared.Unity.csproj">
+      <Project>{d790d414-9064-abda-7ad3-d72285c3faba}</Project>
+      <Name>Aetheria.Shared.Unity</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

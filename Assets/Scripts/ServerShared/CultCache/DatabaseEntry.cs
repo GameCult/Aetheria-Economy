@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using JsonKnownTypes;
 using MessagePack;
+using MessagePack.Formatters;
 using Newtonsoft.Json;
 // TODO: USE THIS EVERYWHERE
 using Unity.Mathematics;
@@ -17,7 +18,10 @@ public interface INamedEntry
 }
 
 [InspectableField, 
- MessagePackObject, 
+ MessagePackObject,
+ //MessagePackFormatter(typeof(TypelessFormatter)),
+ JsonObject(MemberSerialization.OptIn), 
+ JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>)),
  Union(0, typeof(SimpleCommodityData)), 
  Union(1, typeof(CompoundCommodityData)),
  Union(2, typeof(GearData)), 
@@ -48,15 +52,11 @@ public interface INamedEntry
  Union(28, typeof(PlanetData)), 
  Union(29, typeof(CargoBayData)), 
  Union(30, typeof(DockingBayData)), 
- Union(31, typeof(WeaponItemData)), 
- JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
-//[Union(21, typeof(ContractData))]
-//[Union(22, typeof(Station))]
+ Union(31, typeof(WeaponItemData))]
 public abstract class DatabaseEntry
 {
     [JsonProperty("id"), Key(0)]
     public Guid ID = Guid.NewGuid();
-
-    [IgnoreMember]
-    public DatabaseCache Database;
+    
+    public DatabaseEntry(){}
 }

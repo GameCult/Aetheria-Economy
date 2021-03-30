@@ -14,7 +14,6 @@
         _GridFloorOffset("Floor Offset", float) = 1
         _GridFloorBlend("Floor Blend", float) = 1
         _GridPatchBlend("Patch Blend", float) = 1
-		_AlphaFloor("Alpha Floor", float) = .01
 		_Gamma("Gamma", float) = .5
 		_TintExponent("Tint Exponent", float) = .5
 		_DepthCeiling("Depth Ceiling", float) = 1000
@@ -39,7 +38,7 @@
 	#include "UnityCG.cginc"
 	
 	// the number of volume samples to take
-	#define SAMPLE_COUNT 256
+	#define SAMPLE_COUNT 128
 
 	// spacing between samples
 	//#define SAMPLE_PERIOD 16
@@ -65,7 +64,6 @@
 		        _GridFloorOffset,
 		        _GridFloorBlend,
 		        _GridPatchBlend,
-                _AlphaFloor,
 				_Gamma,
 				_TintExponent,
 				_DepthCeiling,
@@ -112,22 +110,23 @@
 	    float2 uv = -(pos.xz-_GridTransform.xy)/_GridTransform.z + float2(.5,.5);
 		
 	    float surface = tex2Dlod(_Surface, half4(uv, 0, 0)).r;
-			float4 lightTint = tex2Dlod(_TintTexture, half4(uv, 0, 0));
+		float dist = pos.y + surface - _GridFloorOffset;
+			float4 lightTint = tex2Dlod(_TintTexture, half4(uv, 0, dist/30));
 			float fillDensity = saturate(-pos.y * _GridFillDensity);
 
-		if(pos.y + surface - _GridFloorOffset < _SafetyDistance)
+		if(dist < _SafetyDistance)
 		{
 			float patch = tex2Dlod(_Patch, half4(uv, 0, 0)).r;
 			float displacement = tex2Dlod(_Displacement, half4(uv, 0, 0)).r;
 
 			//float noise = tex3D(_NoiseTex, pos*_NoiseFrequency);
-			float noise = pow(triNoise3d(pos*_NoiseFrequency),2);// + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
-			pos.y += noise * _NoiseStrength;
+			float noise = pow(triNoise3d(pos*_NoiseFrequency),2)* _NoiseStrength;// + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
+			pos.y += noise;
 			float patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
 			float floorDist = -pos.y-surface+_GridFloorOffset;
 			float floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
 			float fogDensity = patchDensity + max(0,floorDensity);
-			float alpha = min(max(max(fogDensity, 0) + fillDensity, _AlphaFloor), .99);
+			float alpha = min(max(fogDensity, 0) + fillDensity, .99);
 			float albedo = pow(1-alpha, _TintExponent) * smoothstep(0,-250,pos.y);
 			return float4((albedo*_Tint*lightTint).rgb, alpha);
 		}

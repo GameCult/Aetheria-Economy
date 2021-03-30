@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using MessagePack;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using UnityEngine.Rendering;
@@ -40,6 +41,7 @@ public class Slime : MonoBehaviour
     public float TrailStartWidth = .5f;
     public float TrailEndWidth = .1f;
     public float TrailDamping = .05f;
+    public Vector2[] SpawnPositions;
 
     private const int GROUP_SIZE = 64;
     private int _updateAgentsKernel;
@@ -47,6 +49,7 @@ public class Slime : MonoBehaviour
     private int _particleKernel;
     private int _geometryKernel;
     private string _settingsHash;
+    private int _spawnBufferSize = 1;
 
     private int IndexBufferSize => ParticleCount * 6 * (TrailPoints - 1);
     
@@ -58,6 +61,7 @@ public class Slime : MonoBehaviour
     private RenderTexture _accumulationTexture;
     private RenderTexture _previousAccumulationTexture;
 
+    private ComputeBuffer _spawnBuffer;
     private ComputeBuffer _parameterBuffer;
     private ComputeBuffer _particlesBuffer;
 
@@ -117,6 +121,8 @@ public class Slime : MonoBehaviour
         _agentsBuffer.SetData(agents);
 
         _parameterBuffer = new ComputeBuffer(1, Marshal.SizeOf(typeof(SlimeSettings)));
+        _spawnBuffer = new ComputeBuffer(1, Marshal.SizeOf(typeof(Vector2)));
+        _spawnBuffer.SetData(new [] {Vector2.zero});
 
         _particlesBuffer = new ComputeBuffer(ParticleCount, Marshal.SizeOf(typeof(Particle)));
 
@@ -158,14 +164,28 @@ public class Slime : MonoBehaviour
     void Update()
     {
         UpdateSettings();
+
+        if (SpawnPositions != null && SpawnPositions.Length > 0)
+        {
+            if (SpawnPositions.Length != _spawnBufferSize)
+            {
+                _spawnBuffer.Release();
+                _spawnBuffer = new ComputeBuffer(SpawnPositions.Length, Marshal.SizeOf(typeof(Vector2)));
+                _spawnBufferSize = SpawnPositions.Length;
+            }
+            _spawnBuffer.SetData(SpawnPositions);
+        }
         
         SlimeCompute.SetInt("randomOffset", Random.Range(0,65536));
-        SlimeCompute.SetInt("textureWidth", TextureSize);
+        SlimeCompute.SetInt("textureSize", TextureSize);
+        SlimeCompute.SetInt("gravityTextureSize", GravityTexture.width);
         SlimeCompute.SetInt("numAgents", AgentCount);
         SlimeCompute.SetFloat("zoneRadius", ZoneRadius);
         SlimeCompute.SetFloat("deltaTime", Time.deltaTime);
+        SlimeCompute.SetInt("spawnPositionCount", _spawnBufferSize);
 
         SlimeCompute.SetBuffer(_updateAgentsKernel, "agents", _agentsBuffer);
+        SlimeCompute.SetBuffer(_updateAgentsKernel, "spawnPositions", _spawnBuffer);
         SlimeCompute.SetBuffer(_updateAgentsKernel, "parameters", _parameterBuffer);
         SlimeCompute.SetTexture(_updateAgentsKernel, "accumulation", _accumulationTexture);
         SlimeCompute.SetTexture(_updateAgentsKernel, "Heightmap", GravityTexture);
@@ -209,7 +229,7 @@ public class Slime : MonoBehaviour
         ParticleMaterial.SetBuffer("_VertexBuffer", _vertexBuffer);
         Graphics.DrawProcedural(
             ParticleMaterial, 
-            new Bounds(Vector3.zero, ZoneRadius * Vector3.one), 
+            new Bounds(Vector3.zero, ZoneRadius * 2 * Vector3.one), 
             MeshTopology.Triangles, 
             IndexBufferSize, 
             1, 
@@ -245,18 +265,14 @@ public struct SlimeSettings
 [Serializable, MessagePackObject(keyAsPropertyName:true)]
 public struct SlimeParameter
 {
-    public float HeightSlopeLerp;
-    public float HeightThreshold;
-    public float HeightBlend;
     public float SlopeThreshold;
     public float SlopeBlend;
     public float HighValue;
     public float LowValue;
+    public float Exponent;
 
-    public float Evaluate(float height, float slope)
+    public float Evaluate(float slope)
     {
-        var heightValue = lerp(LowValue, HighValue, smoothstep(HeightThreshold - HeightBlend, HeightThreshold + HeightBlend, height));
-        var slopeValue = lerp(LowValue, HighValue, smoothstep(SlopeThreshold - SlopeBlend, SlopeThreshold + SlopeBlend, slope));
-        return lerp(heightValue, slopeValue, HeightSlopeLerp);
+        return lerp(LowValue, HighValue, pow(smoothstep(SlopeThreshold - SlopeBlend, SlopeThreshold + SlopeBlend, slope), Exponent));
     }
 }

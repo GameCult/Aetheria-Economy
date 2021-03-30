@@ -48,16 +48,16 @@ Material:
     - _GridCeilingDensity: 0.01
     - _GridCeilingFollow: 0
     - _GridCeilingOffset: 0
-    - _GridFillDensity: 0
-    - _GridFloorBlend: 93.3
+    - _GridFillDensity: 0.000025
+    - _GridFloorBlend: 100
     - _GridFloorDensity: 4
-    - _GridFloorOffset: 25
-    - _GridPatchBlend: 22.7
+    - _GridFloorOffset: 0
+    - _GridPatchBlend: 5
     - _GridPatchDensity: 0.1
     - _NoiseFrequency: 0.01
     - _NoiseSpeed: 0.02
-    - _NoiseStrength: 75
-    - _SafetyDistance: 50
+    - _NoiseStrength: 50
+    - _SafetyDistance: 0
     - _StepExponent: 2
     - _TintExponent: 8
     m_Colors:

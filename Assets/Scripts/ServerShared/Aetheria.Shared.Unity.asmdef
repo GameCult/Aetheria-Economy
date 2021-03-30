@@ -1,9 +1,11 @@
 {
-    "name": "Economy.Shared.Unity",
+    "name": "Aetheria.Shared.Unity",
+    "rootNamespace": "",
     "references": [
         "MessagePack",
         "Unity.Mathematics",
-        "UniRx"
+        "UniRx",
+        "CultCache"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

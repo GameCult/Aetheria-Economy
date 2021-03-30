@@ -8,7 +8,6 @@ using MessagePack.Internal;
 
 namespace MessagePack.Resolvers
 {
-#if !UNITY_2018_3_OR_NEWER
 
     /// <summary>
     /// Used for `object` fields/collections, ex: var arr = new object[] { 1, "a", new Model() };
@@ -138,5 +137,4 @@ namespace MessagePack.Resolvers
         }
     }
 
-#endif
 }
