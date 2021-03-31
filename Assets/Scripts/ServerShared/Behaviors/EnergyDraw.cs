@@ -7,13 +7,13 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20), RuntimeInspectable]
 public class EnergyDrawData : BehaviorData
 {
-    [InspectableField, JsonProperty("draw"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("draw"), Key(1), RuntimeInspectable]
     public PerformanceStat EnergyDraw = new PerformanceStat();
     
-    [InspectableField, JsonProperty("perSecond"), Key(2)]
+    [Inspectable, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

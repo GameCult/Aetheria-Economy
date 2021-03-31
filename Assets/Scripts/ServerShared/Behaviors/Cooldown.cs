@@ -9,10 +9,10 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-10), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-10), RuntimeInspectable]
 public class CooldownData : BehaviorData
 {
-    [InspectableField, JsonProperty("cooldown"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("cooldown"), Key(1), RuntimeInspectable]
     public PerformanceStat Cooldown = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

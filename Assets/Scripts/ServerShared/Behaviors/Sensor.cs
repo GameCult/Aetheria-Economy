@@ -9,34 +9,34 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class SensorData : BehaviorData
 {
-    [InspectableField, JsonProperty("sensitivity"), Key(3), RuntimeInspectable]
+    [Inspectable, JsonProperty("sensitivity"), Key(3), RuntimeInspectable]
     public PerformanceStat Sensitivity = new PerformanceStat();
 
     [InspectableAnimationCurve, JsonProperty("sensitivityCurve"), Key(4), RuntimeInspectable]
     public float4[] SensitivityCurve;
 
-    [InspectableField, JsonProperty("pingBoost"), Key(5), RuntimeInspectable]
+    [Inspectable, JsonProperty("pingBoost"), Key(5), RuntimeInspectable]
     public PerformanceStat PingBoost;
 
-    [InspectableField, JsonProperty("pingEnergy"), Key(6), RuntimeInspectable]
+    [Inspectable, JsonProperty("pingEnergy"), Key(6), RuntimeInspectable]
     public PerformanceStat PingEnergy;
 
-    [InspectableField, JsonProperty("pingVisibility"), Key(7), RuntimeInspectable]
+    [Inspectable, JsonProperty("pingVisibility"), Key(7), RuntimeInspectable]
     public PerformanceStat PingVisibility;
 
-    [InspectableField, JsonProperty("pingRange"), Key(8), RuntimeInspectable]
+    [Inspectable, JsonProperty("pingRange"), Key(8), RuntimeInspectable]
     public PerformanceStat PingRange;
 
-    [InspectableField, JsonProperty("pingCooldown"), Key(9), RuntimeInspectable]
+    [Inspectable, JsonProperty("pingCooldown"), Key(9), RuntimeInspectable]
     public PerformanceStat PingCooldown;
 
-    [InspectableField, JsonProperty("pingDuration"), Key(10)]
+    [Inspectable, JsonProperty("pingDuration"), Key(10)]
     public float PingDuration = 2;
 
-    [InspectableField, JsonProperty("pingRadiusExponent"), Key(11)]
+    [Inspectable, JsonProperty("pingRadiusExponent"), Key(11)]
     public float PingRadiusExponent = .5f;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

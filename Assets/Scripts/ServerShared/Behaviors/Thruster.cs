@@ -10,16 +10,16 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), EntityTypeRestriction(HullType.Ship), RuntimeInspectable]
 public class ThrusterData : BehaviorData
 {
-    [InspectableField, JsonProperty("thrust"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("thrust"), Key(1), RuntimeInspectable]  
     public PerformanceStat Thrust = new PerformanceStat();
 
-    [InspectableField, JsonProperty("visibility"), Key(2), RuntimeInspectable]  
+    [Inspectable, JsonProperty("visibility"), Key(2), RuntimeInspectable]  
     public PerformanceStat Visibility = new PerformanceStat();
 
-    [InspectableField, JsonProperty("heat"), Key(3), RuntimeInspectable]  
+    [Inspectable, JsonProperty("heat"), Key(3), RuntimeInspectable]  
     public PerformanceStat Heat = new PerformanceStat();
 
-    [InspectableField, JsonProperty("energy"), Key(4), RuntimeInspectable]  
+    [Inspectable, JsonProperty("energy"), Key(4), RuntimeInspectable]  
     public PerformanceStat EnergyUsage = new PerformanceStat();
 
     [InspectablePrefab, JsonProperty("Particles"), Key(5)]

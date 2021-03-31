@@ -7,16 +7,16 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class StatModifierData : BehaviorData
 {
-    [InspectableField, JsonProperty("stat"), Key(1)]  
+    [Inspectable, JsonProperty("stat"), Key(1)]  
     public StatReference Stat = new StatReference();
     
-    [InspectableField, JsonProperty("modifier"), Key(2)]  
+    [Inspectable, JsonProperty("modifier"), Key(2)]  
     public PerformanceStat Modifier = new PerformanceStat();
     
-    [InspectableField, JsonProperty("type"), Key(3)]  
+    [Inspectable, JsonProperty("type"), Key(3)]  
     public StatModifierType Type;
 
     [InspectableType(typeof(BehaviorData)), JsonProperty("requireBehavior"), Key(4)]
@@ -103,12 +103,12 @@ public enum StatModifierType
     Multiplier
 }
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class StatReference
 {
     [InspectableType(typeof(BehaviorData)), JsonProperty("behavior"), Key(1)]
     public string Target;
     
-    [InspectableField, JsonProperty("stat"), Key(2)]
+    [Inspectable, JsonProperty("stat"), Key(2)]
     public string Stat;
 }

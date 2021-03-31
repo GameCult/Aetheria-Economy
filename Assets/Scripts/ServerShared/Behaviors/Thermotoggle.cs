@@ -7,13 +7,13 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-22)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-22)]
 public class ThermotoggleData : BehaviorData
 {
     [InspectableTemperature, JsonProperty("targetTemp"), Key(1)]
     public float TargetTemperature;
     
-    [InspectableField, JsonProperty("highPass"), Key(2)]
+    [Inspectable, JsonProperty("highPass"), Key(2)]
     public bool HighPass;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

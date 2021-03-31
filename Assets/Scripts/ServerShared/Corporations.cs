@@ -9,39 +9,13 @@ using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 
-
-[RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class Corporation : DatabaseEntry, INamedEntry
-{
-    [JsonProperty("name"), Key(1)]
-    public string Name;
-
-    [JsonProperty("parent"), Key(2)]
-    public Guid Parent;
-    
-    [JsonProperty("tasks"), Key(3)]
-    public List<Guid> Tasks = new List<Guid>();
-    
-    [JsonProperty("planetSurveyFloor"), Key(4)]  
-    public Dictionary<Guid, float> PlanetSurveyFloor = new Dictionary<Guid, float>();
-
-    [JsonProperty("unlockedBlueprints"), Key(5)]  
-    public List<Guid> UnlockedBlueprints = new List<Guid>();
-
-    [IgnoreMember] public string EntryName
-    {
-        get => Name;
-        set => Name = value;
-    }
-}
-
 [RethinkTable("Galaxy"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class Faction : DatabaseEntry, INamedEntry
 {
-    [InspectableField, JsonProperty("name"), Key(1)]
+    [Inspectable, JsonProperty("name"), Key(1)]
     public string Name;
     
-    [InspectableField, JsonProperty("shortName"), Key(2)]
+    [Inspectable, JsonProperty("shortName"), Key(2)]
     public string ShortName;
     
     [InspectableText, JsonProperty("description"), Key(3)]
@@ -53,7 +27,7 @@ public class Faction : DatabaseEntry, INamedEntry
     [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(5)]  
     public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
 
-    [InspectableField, JsonProperty("hostile"), Key(6)]
+    [Inspectable, JsonProperty("hostile"), Key(6)]
     public bool PlayerHostile;
 
     [InspectableColor, JsonProperty("primaryColor"), Key(7)]
@@ -68,7 +42,7 @@ public class Faction : DatabaseEntry, INamedEntry
     [InspectableDatabaseLink(typeof(HullData)), JsonProperty("bossHull"), Key(10)]  
     public Guid BossHull;
 
-    [InspectableField, JsonProperty("influence"), Key(11)]
+    [Inspectable, JsonProperty("influence"), Key(11)]
     public int InfluenceDistance = 4;
     
     [InspectableDatabaseLink(typeof(Faction)), RangedFloat(0, 1), JsonProperty("allegiance"), Key(12)]  

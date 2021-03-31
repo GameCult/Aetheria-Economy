@@ -170,7 +170,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Aggregate.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\ConvexFace.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NatPunchModule.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\DatabaseCache.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\CultCache\CultCache.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\AgentTask.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ColorMath.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Radiator.cs" />

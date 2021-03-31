@@ -31,7 +31,7 @@ public class ItemManager
     // private Guid _forceLoadZone;
     
     // public GlobalData GlobalData => _globalData ?? (_globalData = ItemData.GetAll<GlobalData>().FirstOrDefault());
-    public DatabaseCache ItemData { get; }
+    public CultCache ItemData { get; }
     public GameplaySettings GameplaySettings { get; }
 
     public double Time
@@ -47,7 +47,7 @@ public class ItemManager
 
     // private readonly Dictionary<CraftedItemData, int> Tier = new Dictionary<CraftedItemData, int>();
 
-    public ItemManager(DatabaseCache itemData, GameplaySettings settings, Action<string> logger)
+    public ItemManager(CultCache itemData, GameplaySettings settings, Action<string> logger)
     {
         ItemData = itemData;
         GameplaySettings = settings;

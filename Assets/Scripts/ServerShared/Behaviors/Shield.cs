@@ -10,10 +10,10 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ShieldData : BehaviorData
 {
-    [InspectableField, JsonProperty("efficiency"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("efficiency"), Key(1), RuntimeInspectable]  
     public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("energy"), Key(2), RuntimeInspectable]  
+    [Inspectable, JsonProperty("energy"), Key(2), RuntimeInspectable]  
     public PerformanceStat EnergyUsage = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

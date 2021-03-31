@@ -83,7 +83,7 @@ public abstract class PersistentBehaviorData
 {
 }
 
-[InspectableField, 
+[Inspectable, 
  Union(0, typeof(GuidedWeaponData)),
  Union(1, typeof(LauncherData)),
  Union(2, typeof(ReactorData)), 
@@ -125,7 +125,7 @@ public abstract class PersistentBehaviorData
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {
-    [InspectableField, JsonProperty("group"), Key(0)]
+    [Inspectable, JsonProperty("group"), Key(0)]
     public int Group;
     
     public abstract IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item);

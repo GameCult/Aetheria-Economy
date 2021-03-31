@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using MessagePack;
 
-public class DatabaseCache
+public class CultCache
 {
     public event Action<DatabaseEntry> OnDataInsertLocal;
     public event Action<DatabaseEntry> OnDataUpdateLocal;
@@ -42,10 +42,11 @@ public class DatabaseCache
         }
     }
     private readonly Dictionary<Guid, ExternalEntry> _externalEntries = new Dictionary<Guid, ExternalEntry>();
+    private readonly Dictionary<Type, FieldInfo[]> _linkFields = new Dictionary<Type, FieldInfo[]>();
 
     public IEnumerable<DatabaseEntry> AllEntries => _entries.Values;
 
-    public DatabaseCache(string filePath)
+    public CultCache(string filePath)
     {
         RegisterResolver.Register();
         _filePath = filePath;
@@ -57,6 +58,9 @@ public class DatabaseCache
         // This is mainly to accomodate large files like datasets
         foreach (var type in typeof(DatabaseEntry).GetAllChildClasses())
         {
+            var linkFields = type.GetFields().Where(f => f.FieldType.IsAssignableToGenericType(typeof(DatabaseLink<>))).ToArray();
+            if(linkFields.Length > 0)
+                _linkFields[type] = linkFields;
             if (type.GetCustomAttribute<ExternalEntryAttribute>() != null)
             {
                 var typeDirectory = dataDirectory.CreateSubdirectory(type.Name);
@@ -88,6 +92,17 @@ public class DatabaseCache
                 
                 // If an external entry is added, store it separately
                 var type = entry.GetType();
+                if (_linkFields.ContainsKey(type))
+                {
+                    foreach (var linkField in _linkFields[type])
+                    {
+                        var link = (DatabaseLinkBase) linkField.GetValue(entry);
+                        if (link != null)
+                        {
+                            link.Cache = this;
+                        }
+                    }
+                }
                 if (_externalTypes.ContainsKey(type))
                 {
                     if (_externalEntries.ContainsKey(entry.ID))

@@ -7,13 +7,13 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10), Inspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
 public class HeatData : BehaviorData
 {
-    [InspectableField, JsonProperty("heat"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("heat"), Key(1), RuntimeInspectable]
     public PerformanceStat Heat = new PerformanceStat();
     
-    [InspectableField, JsonProperty("perSecond"), Key(2)]
+    [Inspectable, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

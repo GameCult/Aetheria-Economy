@@ -10,19 +10,19 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class RadiatorData : BehaviorData
 {
-    [InspectableField, JsonProperty("emissivity"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("emissivity"), Key(1), RuntimeInspectable]  
     public PerformanceStat Emissivity = new PerformanceStat();
     
-    [InspectableField, JsonProperty("pumpedHeat"), Key(2), RuntimeInspectable]  
+    [Inspectable, JsonProperty("pumpedHeat"), Key(2), RuntimeInspectable]  
     public PerformanceStat PumpedHeat = new PerformanceStat();
     
     [InspectableTemperature, JsonProperty("temperatureFloor"), Key(3), RuntimeInspectable]  
     public float TemperatureFloor;
     
-    [InspectableField, JsonProperty("wasteHeat"), Key(4), RuntimeInspectable]  
+    [Inspectable, JsonProperty("wasteHeat"), Key(4), RuntimeInspectable]  
     public PerformanceStat WasteHeat = new PerformanceStat();
     
-    [InspectableField, JsonProperty("energyUsage"), Key(5), RuntimeInspectable]  
+    [Inspectable, JsonProperty("energyUsage"), Key(5), RuntimeInspectable]  
     public PerformanceStat EnergyUsage = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

@@ -11,10 +11,10 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class CapacitorData : BehaviorData
 {
-    [InspectableField, JsonProperty("capacity"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("capacity"), Key(1), RuntimeInspectable]  
     public PerformanceStat Capacity = new PerformanceStat();
     
-    [InspectableField, JsonProperty("efficiency"), Key(2), RuntimeInspectable]  
+    [Inspectable, JsonProperty("efficiency"), Key(2), RuntimeInspectable]  
     public PerformanceStat Efficiency = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

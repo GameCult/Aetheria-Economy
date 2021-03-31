@@ -9,19 +9,19 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
 public class MiningToolData : BehaviorData
 {
-    [InspectableField, JsonProperty("dps"), Key(1)]
+    [Inspectable, JsonProperty("dps"), Key(1)]
     public PerformanceStat DamagePerSecond = new PerformanceStat();
     
-    [InspectableField, JsonProperty("efficiency"), Key(2)]
+    [Inspectable, JsonProperty("efficiency"), Key(2)]
     public PerformanceStat Efficiency = new PerformanceStat();
     
-    [InspectableField, JsonProperty("penetration"), Key(3)]
+    [Inspectable, JsonProperty("penetration"), Key(3)]
     public PerformanceStat Penetration = new PerformanceStat();
     
-    [InspectableField, JsonProperty("range"), Key(4)]
+    [Inspectable, JsonProperty("range"), Key(4)]
     public PerformanceStat Range = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

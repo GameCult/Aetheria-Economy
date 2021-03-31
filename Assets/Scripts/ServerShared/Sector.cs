@@ -33,10 +33,10 @@ public class Sector
         }
     }
 
-    public Sector(DatabaseCache database, SavedGame savedGame)
+    public Sector(CultCache cultCache, SavedGame savedGame)
     {
         Settings = savedGame.Settings;
-        Factions = savedGame.Factions.Select(database.Get<Faction>).ToArray();
+        Factions = savedGame.Factions.Select(cultCache.Get<Faction>).ToArray();
         Zones = savedGame.Zones.Select(zone =>
         {
             return new SectorZone
@@ -67,10 +67,10 @@ public class Sector
         CalculateDistanceMatrix();
     }
 
-    public Sector(SectorGenerationSettings settings, DatabaseCache database, uint seed = 0, Action<string> progressCallback = null, float minLineSeparation = .01f)
+    public Sector(SectorGenerationSettings settings, CultCache cultCache, uint seed = 0, Action<string> progressCallback = null, float minLineSeparation = .01f)
     {
         Settings = settings;
-        var megas = database.GetAll<Faction>();
+        var megas = cultCache.GetAll<Faction>();
         var random = new Random(seed == 0 ? (uint) (DateTime.Now.Ticks % uint.MaxValue) : seed);
         Factions = megas.OrderBy(x => random.NextFloat()).Take(settings.MegaCount).ToArray();
 
@@ -229,7 +229,7 @@ public class Sector
             progressCallback?.Invoke($"Feeding Markov Chains: {i+1} / {Factions.Length}");
             //if(progressCallback!=null) Thread.Sleep(250); // Inserting Delay to make it seem like it's doing more work lmao
             var faction = Factions[i];
-            _nameGenerators[faction] = new MarkovNameGenerator(ref random, database.Get<NameFile>(faction.GeonameFile).Names, settings);
+            _nameGenerators[faction] = new MarkovNameGenerator(ref random, cultCache.Get<NameFile>(faction.GeonameFile).Names, settings);
         }
 
         // Generate zone name using the owner's name generator, otherwise assign catalogue ID

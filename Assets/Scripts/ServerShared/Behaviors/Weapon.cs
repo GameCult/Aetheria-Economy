@@ -17,10 +17,10 @@ using static Unity.Mathematics.math;
  RuntimeInspectable]
 public abstract class WeaponData : BehaviorData
 {
-    [InspectableField, JsonProperty("damageType"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("damageType"), Key(1), RuntimeInspectable]
     public DamageType DamageType;
 
-    [InspectableField, JsonProperty("damage"), Key(2), RuntimeInspectable]
+    [Inspectable, JsonProperty("damage"), Key(2), RuntimeInspectable]
     public PerformanceStat Damage = new PerformanceStat();
 
     [RangedFloatInspectable(0,1), JsonProperty("penetration"), Key(3), RuntimeInspectable]
@@ -29,10 +29,10 @@ public abstract class WeaponData : BehaviorData
     [RangedFloatInspectable(0,1), JsonProperty("damageSpread"), Key(4)]
     public PerformanceStat DamageSpread = new PerformanceStat();
 
-    [InspectableField, JsonProperty("minRange"), Key(5), RuntimeInspectable]
+    [Inspectable, JsonProperty("minRange"), Key(5), RuntimeInspectable]
     public PerformanceStat MinRange = new PerformanceStat();
 
-    [InspectableField, JsonProperty("range"), Key(6), RuntimeInspectable]
+    [Inspectable, JsonProperty("range"), Key(6), RuntimeInspectable]
     public PerformanceStat Range = new PerformanceStat();
 
     [InspectableAnimationCurve, JsonProperty("damageRange"), Key(7), RuntimeInspectable]
@@ -62,7 +62,7 @@ public abstract class WeaponData : BehaviorData
     [InspectablePrefab, JsonProperty("spread"), Key(15)]  
     public PerformanceStat Spread = new PerformanceStat();
 
-    [InspectableField, JsonProperty("velocity"), Key(16)]
+    [Inspectable, JsonProperty("velocity"), Key(16)]
     public PerformanceStat Velocity = new PerformanceStat();
 }
 

@@ -13,16 +13,16 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ReactorData : BehaviorData
 {
-    [InspectableField, JsonProperty("charge"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("charge"), Key(1), RuntimeInspectable]  
     public PerformanceStat Charge = new PerformanceStat();
 
-    [InspectableField, JsonProperty("efficiency"), Key(2), RuntimeInspectable]  
+    [Inspectable, JsonProperty("efficiency"), Key(2), RuntimeInspectable]  
     public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("overload"), Key(3), RuntimeInspectable]  
+    [Inspectable, JsonProperty("overload"), Key(3), RuntimeInspectable]  
     public PerformanceStat OverloadEfficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("underload"), Key(4), RuntimeInspectable]  
+    [Inspectable, JsonProperty("underload"), Key(4), RuntimeInspectable]  
     public PerformanceStat ThrottlingFactor = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

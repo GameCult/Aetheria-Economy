@@ -7,7 +7,7 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-25)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-25)]
 public class SwitchData : BehaviorData
 {
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

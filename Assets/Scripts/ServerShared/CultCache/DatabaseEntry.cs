@@ -17,9 +17,7 @@ public interface INamedEntry
     string EntryName { get; set; }
 }
 
-[InspectableField, 
- MessagePackObject,
- //MessagePackFormatter(typeof(TypelessFormatter)),
+[MessagePackObject,
  JsonObject(MemberSerialization.OptIn), 
  JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>)),
  Union(0, typeof(SimpleCommodityData)), 
@@ -33,7 +31,7 @@ public interface INamedEntry
  Union(9, typeof(NameFile)), 
  //Union(10, typeof(ZoneData)), 
  Union(11, typeof(PlayerData)), 
- Union(12, typeof(Corporation)),
+ // Union(12, typeof(Corporation)),
  Union(13, typeof(Faction)),
  Union(14, typeof(OrbitalEntity)), 
  Union(15, typeof(OrbitData)), 
@@ -41,8 +39,8 @@ public interface INamedEntry
  Union(17, typeof(PersonalityAttribute)),
  Union(18, typeof(AgentTask)),
  // Union(19, typeof(LoadoutData)),
- Union(20, typeof(Ship)), 
- Union(21, typeof(Mining)), 
+ Union(20, typeof(Ship)),
+ Union(21, typeof(Mining)),
  Union(22, typeof(StationTowing)), 
  Union(23, typeof(Survey)), 
  Union(24, typeof(HaulingTask)), 
@@ -57,6 +55,21 @@ public abstract class DatabaseEntry
 {
     [JsonProperty("id"), Key(0)]
     public Guid ID = Guid.NewGuid();
+}
+
+[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class DatabaseLink<T> : DatabaseLinkBase where T : DatabaseEntry
+{
+    [IgnoreMember]
+    public T Value => Cache.Get<T>(LinkID);
+}
+
+[MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class DatabaseLinkBase
+{
+    [Key(0), JsonProperty("linkID")]
+    public Guid LinkID;
     
-    public DatabaseEntry(){}
+    [IgnoreMember]
+    public CultCache Cache;
 }

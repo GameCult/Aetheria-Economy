@@ -10,7 +10,7 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VelocityConversionData : BehaviorData
 {
-    [InspectableField, JsonProperty("traction"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("traction"), Key(1), RuntimeInspectable]  
     public PerformanceStat Traction = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

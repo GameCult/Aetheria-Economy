@@ -96,7 +96,7 @@ public class MainMenu : MonoBehaviour
                 _nextMenu.panel.AddButton("Continue",
                     () =>
                     {
-                        ActionGameManager.CurrentSector = new Sector(ActionGameManager.Database, ActionGameManager.PlayerSettings.CurrentRun);
+                        ActionGameManager.CurrentSector = new Sector(ActionGameManager.CultCache, ActionGameManager.PlayerSettings.CurrentRun);
                         SceneManager.LoadScene("ARPG");
                     });
             else
@@ -116,7 +116,7 @@ public class MainMenu : MonoBehaviour
                 Dialog.Show();
                 Settings.SectorGenerationSettings.NoisePosition = Random.value * 100;
                 
-                var task = Task.Run(() => new Sector(Settings.SectorGenerationSettings, ActionGameManager.Database, 0, setState));
+                var task = Task.Run(() => new Sector(Settings.SectorGenerationSettings, ActionGameManager.CultCache, 0, setState));
                 task.ContinueWith(task => Observable.NextFrame().Subscribe(_ =>
                 {
                     ActionGameManager.PlayerSettings.CurrentRun = null;

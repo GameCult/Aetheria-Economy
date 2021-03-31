@@ -14,89 +14,119 @@ using UnityEditor;
 using UnityEngine;
 using static UnityEditor.EditorGUILayout;
 
-public class DatabaseListView : EditorWindow
+public abstract class DatabaseListView : EditorWindow
 {
-    // Singleton to avoid multiple instances of window. 
-    private static DatabaseListView _instance;
-    public static DatabaseListView Instance => _instance ? _instance : GetWindow<DatabaseListView>();
-    [MenuItem("Window/GameCult/Database Tools")]
-    static void Init() => Instance.Show();
-    private void Awake()
-    {
-        _instance = this;
-    }
+    public static GUIStyle ListStyleOdd;
+    public static GUIStyle ListStyleEven;
     
     public Guid SelectedItem;
     public GUIStyle SelectedStyle;
 
     public static RethinkDB R = RethinkDB.R;
     
-    private DatabaseCache _databaseCache;
-    private bool[] _itemTypeFoldouts;
-    private bool _itemsFoldout;
-    private bool _compoundFoldout;
-    private bool _simpleFoldout;
-    private bool _commoditiesFoldout;
-    //private bool _consumablesFoldout;
-    private Type[] _itemTypes;
-    private bool _listItemStyle;
-    private GUIStyle _listStyleOdd;
-    private GUIStyle _listStyleEven;
+    protected CultCache cultCache;
     private static DatabaseInspector _inspector;
     private Type[] _entryTypes;
-    private bool[] _entryFoldouts;
+    private bool[] _typeFoldouts;
     private string _connectionString;
-    private const float LineHeight = 20;
     private Vector2 _view;
     private RethinkQueryStatus _queryStatus;
-    private HashSet<string> _itemGroupFoldouts = new HashSet<string>();
-    private HashSet<Guid> _itemManufacturerFoldouts = new HashSet<Guid>();
-    private HashSet<(Guid, HardpointType)> _itemManufacturerTypeFoldouts = new HashSet<(Guid, HardpointType)>();
-    private string _filePath => Path.Combine(new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData").FullName, _fileName);
-    private string _fileName = "AetherDB.msgpack";
+
+    private HashSet<int> _groupFoldouts = new HashSet<int>(); 
+    
+    protected abstract string DatabaseName { get; }
+    protected abstract string FilePath { get; }
+    protected virtual DatabaseEntryGroup[] Groupers => new DatabaseEntryGroup[] { };
+
+    protected class DatabaseEntryGroup<T, K> : DatabaseEntryGroup where T : DatabaseEntry
+    {
+        public Func<T,K> GroupSelector { get; }
+        public Func<K,string> GroupLabel { get; }
+        public Action<T, K> Activator { get; }
+        
+        public DatabaseEntryGroup(Func<T, K> groupSelector, Func<K, string> groupLabel, Action<T, K> activator)
+        {
+            GroupSelector = groupSelector;
+            GroupLabel = groupLabel;
+            Activator = activator;
+        }
+
+        public override bool CanGroup(Type type)
+        {
+            return typeof(T) == type;
+        }
+
+        public override object SelectGroup(DatabaseEntry o)
+        {
+            if (o is T t) return GroupSelector(t);
+            return null;
+        }
+
+        public override string GetGroupName(object o)
+        {
+            if (o is K k) return GroupLabel(k);
+            return "ERROR";
+        }
+
+        public override int HashGroup(object o)
+        {
+            if (o is K k) return k.GetHashCode();
+            return 0;
+        }
+
+        public override void Activate(DatabaseEntry o, object g)
+        {
+            if(o is T t && g is K k) Activator(t, k);
+            throw new ArgumentException(
+                $"Entry group activation failed! Expected: object type {typeof(T)}, group type {typeof(K)}; received: object type {o.GetType()}, group type {g.GetType()}");
+        }
+    }
+
+    protected abstract class DatabaseEntryGroup
+    {
+        public abstract bool CanGroup(Type type);
+        public abstract object SelectGroup(DatabaseEntry o);
+        public abstract string GetGroupName(object o);
+        public abstract int HashGroup(object o);
+        public abstract void Activate(DatabaseEntry o, object g);
+    }
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
+    private bool _listItemStyle;
     public GUIStyle ListItemStyle =>
-        (_listItemStyle = !_listItemStyle) ? _listStyleEven : _listStyleOdd;
+        (_listItemStyle = !_listItemStyle) ? ListStyleEven : ListStyleOdd;
     
     void OnEnable()
     {
+        ListStyleOdd = new GUIStyle
+        {
+            normal = {background = EditorGUIUtility.isProSkin ? XKCDColors.DarkGrey.ToTexture() : XKCDColors.LightGrey.ToTexture()},
+            margin = new RectOffset(0, 0, 0, 0)
+        };
+        ListStyleEven = new GUIStyle
+        {
+            normal = {background = EditorGUIUtility.isProSkin ? Color.Lerp(XKCDColors.DarkGrey,Color.black,.5f).ToTexture() : Color.Lerp(XKCDColors.LightGrey,Color.white,.5f).ToTexture()},
+            margin = new RectOffset(0, 0, 0, 0)
+        };
         
-        //_filePath = ;
-        // Create database cache
-        _databaseCache = new DatabaseCache(_filePath);
+        cultCache = new CultCache(FilePath);
         
-        // var onInsert = new Action<DatabaseEntry>(entry =>
-        // {
-        // });
-        // _databaseCache.OnDataInsertLocal += onInsert;
-        // _databaseCache.OnDataInsertRemote += onInsert;
+        cultCache.OnDataUpdateLocal += _ => Repaint();
+        cultCache.OnDataInsertLocal += _ => Repaint();
+        cultCache.OnDataDeleteLocal += _ => Repaint();
+        cultCache.OnDataUpdateRemote += _ => EditorDispatcher.Dispatch(Repaint);
+        cultCache.OnDataInsertRemote += _ => EditorDispatcher.Dispatch(Repaint);
+        cultCache.OnDataDeleteRemote += _ => EditorDispatcher.Dispatch(Repaint);
 
-        // var onDelete = new Action<DatabaseEntry>(entry =>
-        // {
-        // });
-        // _databaseCache.OnDataDeleteLocal += onDelete;
-        // _databaseCache.OnDataDeleteRemote += onDelete;
-        
-        _databaseCache.OnDataUpdateLocal += _ => Repaint();
-        _databaseCache.OnDataInsertLocal += _ => Repaint();
-        _databaseCache.OnDataDeleteLocal += _ => Repaint();
-        _databaseCache.OnDataUpdateRemote += _ => EditorDispatcher.Dispatch(Repaint);
-        _databaseCache.OnDataInsertRemote += _ => EditorDispatcher.Dispatch(Repaint);
-        _databaseCache.OnDataDeleteRemote += _ => EditorDispatcher.Dispatch(Repaint);
-
-        DatabaseInspector.DatabaseCache = _databaseCache;
+        DatabaseInspector.CultCache = cultCache;
         _inspector = DatabaseInspector.Instance;
         _inspector.Show();
         
-        _itemTypes = typeof(ItemData).GetAllChildClasses()
-            .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null).ToArray();
         _entryTypes = typeof(DatabaseEntry).GetAllChildClasses()
-            .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null && !typeof(ItemData).IsAssignableFrom(t)).ToArray();
+            .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null).ToArray();
         
-        _itemTypeFoldouts = new bool[_itemTypes.Length];
-        _entryFoldouts = new bool[_entryTypes.Length];
+        _typeFoldouts = new bool[_entryTypes.Length];
 
         if (EditorPrefs.HasKey("RethinkDB.URL"))
             _connectionString = EditorPrefs.GetString("RethinkDB.URL");
@@ -108,20 +138,9 @@ public class DatabaseListView : EditorWindow
 
     private void InitStyles()
     {
-        var isDark = EditorGUIUtility.isProSkin;
-        _listStyleOdd = new GUIStyle
-        {
-            normal = {background = isDark ? XKCDColors.DarkGrey.ToTexture() : XKCDColors.LightGrey.ToTexture()},
-            margin = new RectOffset(0, 0, 0, 0)
-        };
-        _listStyleEven = new GUIStyle
-        {
-            normal = {background = isDark ? Color.Lerp(XKCDColors.DarkGrey,Color.black,.5f).ToTexture() : Color.Lerp(XKCDColors.LightGrey,Color.white,.5f).ToTexture()},
-            margin = new RectOffset(0, 0, 0, 0)
-        };
         SelectedStyle = new GUIStyle
         {
-            normal = {background = isDark ? XKCDColors.DarkGreyBlue.ToTexture() : XKCDColors.Greyblue.ToTexture()},
+            normal = {background = EditorGUIUtility.isProSkin ? XKCDColors.DarkGreyBlue.ToTexture() : XKCDColors.Greyblue.ToTexture()},
             margin = new RectOffset(0, 0, 0, 0)
         };
     }
@@ -142,7 +161,7 @@ public class DatabaseListView : EditorWindow
             {
                 EditorPrefs.SetString("RethinkDB.URL", _connectionString);
                 JsonKnownTypesSettingsManager.RegisterTypeAssembly<ItemData>();
-                _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString);
+                _queryStatus = RethinkConnection.RethinkConnect(cultCache, _connectionString, DatabaseName);
             }
             // if (GUILayout.Button("Connect All"))
             // {
@@ -155,21 +174,21 @@ public class DatabaseListView : EditorWindow
             //_fileName = TextField(_fileName);
             if (GUILayout.Button("Save"))
             {
-                _databaseCache.Save();
+                cultCache.Save();
                 Debug.Log("Local DB Cache Saved!");
             }
 
             if (GUILayout.Button("Load"))
             {
-                _databaseCache.Load();
+                cultCache.Load();
                 Debug.Log("Loaded DB From Local Cache!");
             }
         }
 
-        if (_queryStatus != null && _queryStatus.RetrievedItems < _queryStatus.GalaxyEntries + _queryStatus.ItemsEntries)
+        if (_queryStatus != null && _queryStatus.RetrievedEntries < _queryStatus.TotalEntries)
         {
             var progressRect = GetControlRect(false, 20);
-            EditorGUI.ProgressBar(progressRect, (float)_queryStatus.RetrievedItems/(_queryStatus.GalaxyEntries + _queryStatus.ItemsEntries), "Sync Progress");
+            EditorGUI.ProgressBar(progressRect, (float)_queryStatus.RetrievedEntries/_queryStatus.TotalEntries, "Sync Progress");
         }
         GUILayout.Space(5);
         
@@ -183,228 +202,100 @@ public class DatabaseListView : EditorWindow
             GUILayout.Width(EditorGUIUtility.currentViewWidth),
             GUILayout.ExpandHeight(true));
         
-        // if(GUILayout.Button("Log Cache Count"))
-        //     Debug.Log($"Cache contains {_databaseCache.AllEntries.Count()} elements");
-
-        using (var h = new HorizontalScope(ListItemStyle))
-        {
-            _itemsFoldout = Foldout(_itemsFoldout, "Items", true);
-        }
-        if (_itemsFoldout)
-        {
-            var items = _databaseCache.AllEntries.Where(item => item is ItemData).Cast<ItemData>().ToArray();
-            for (var i = 0; i < _itemTypes.Length; i++)
-            {
-                using (var h = new HorizontalScope(ListItemStyle))
-                {
-                    GUILayout.Space(10);
-                    _itemTypeFoldouts[i] = Foldout(_itemTypeFoldouts[i],
-                        ((NameAttribute) _itemTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? FormatTypeName(_itemTypes[i].Name),
-                        true);
-                }
-                if (_itemTypeFoldouts[i])
-                {
-                    if (_itemTypes[i] == typeof(SimpleCommodityData) ||
-                        _itemTypes[i] == typeof(CompoundCommodityData) ||
-                        _itemTypes[i] == typeof(HullData))
-                    {
-                        var typedItems = items
-                            .Where(e => e.GetType() == _itemTypes[i])
-                            .OrderBy(item => item.Name);
-                        IEnumerable<IGrouping<string, ItemData>> itemGroups = new List<IGrouping<string, ItemData>>();
-                        if(_itemTypes[i] == typeof(SimpleCommodityData))
-                            itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(SimpleCommodityCategory), (item as SimpleCommodityData).Category));
-                        else if(_itemTypes[i] == typeof(CompoundCommodityData))
-                            itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(CompoundCommodityCategory), (item as CompoundCommodityData).Category));
-                        else if (_itemTypes[i] == typeof(HullData))
-                            itemGroups = typedItems.GroupBy(item => Enum.GetName(typeof(HullType), (item as HullData).HullType));
-                        else itemGroups = typedItems.GroupBy(item => "All");
-
-                        foreach (var itemGroup in itemGroups)
-                        {
-                            using (var h = new HorizontalScope(ListItemStyle))
-                            {
-                                GUILayout.Space(20);
-                                if (Foldout(_itemGroupFoldouts.Contains(itemGroup.Key), FormatTypeName(itemGroup.Key), true))
-                                    _itemGroupFoldouts.Add(itemGroup.Key);
-                                else _itemGroupFoldouts.Remove(itemGroup.Key);
-                            }
-
-                            if (_itemGroupFoldouts.Contains(itemGroup.Key))
-                            {
-                                foreach (var item in itemGroup)
-                                {
-                                    var style = ListItemStyle;
-                                    var selected = SelectedItem == item.ID;
-                                    using (new HorizontalScope(selected?SelectedStyle:style))
-                                    {
-                                        using (var h = new HorizontalScope())
-                                        {
-                                            if (h.rect.Contains(currentEvent.mousePosition))
-                                            {
-                                                if (currentEventType == EventType.MouseDrag)
-                                                {
-                                                    DragAndDrop.PrepareStartDrag();
-                                                    DragAndDrop.SetGenericData("Item", item.ID);
-                                                    DragAndDrop.StartDrag("Database Item");
-                                                }
-                                                else if (currentEventType == EventType.MouseUp)
-                                                    Select(item);
-                                            }
-
-                                            GUILayout.Space(30);
-                                            GUILayout.Label(item.Name, selected ? EditorStyles.whiteLabel : GUI.skin.label);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (!typeof(EquippableItemData).IsAssignableFrom(_itemTypes[i]))
-                            throw new InvalidCastException($"Type {_itemTypes[i].Name} is invalid! Expected equippable item.");
-                        var typedItems = items
-                            .Where(e => e.GetType() == _itemTypes[i])
-                            .Cast<EquippableItemData>()
-                            .OrderBy(item => item.Name);
-                        var manufacturerGroups = typedItems.GroupBy(item => item.Manufacturer);
-                        foreach (var manufacturerGroup in manufacturerGroups)
-                        {
-                            var manufacturer = _databaseCache.Get<Faction>(manufacturerGroup.Key);
-                            var manufacturerName = manufacturer?.Name ??  "None";
-                            using (var h = new HorizontalScope(ListItemStyle))
-                            {
-                                GUILayout.Space(20);
-                                if (Foldout(_itemManufacturerFoldouts.Contains(manufacturerGroup.Key), manufacturerName, true))
-                                    _itemManufacturerFoldouts.Add(manufacturerGroup.Key);
-                                else _itemManufacturerFoldouts.Remove(manufacturerGroup.Key);
-                            }
-
-                            if (_itemManufacturerFoldouts.Contains(manufacturerGroup.Key))
-                            {
-                                if (_itemTypes[i] == typeof(GearData) || _itemTypes[i] == typeof(WeaponItemData))
-                                {
-                                    var itemGroups = manufacturerGroup.GroupBy(item => item.HardpointType);
-                                    
-                                    foreach (var itemGroup in itemGroups)
-                                    {
-                                        using (var h = new HorizontalScope(ListItemStyle))
-                                        {
-                                            GUILayout.Space(30);
-                                            if (Foldout(_itemManufacturerTypeFoldouts.Contains((manufacturerGroup.Key, itemGroup.Key)), Enum.GetName(typeof(HardpointType), itemGroup.Key), true))
-                                                _itemManufacturerTypeFoldouts.Add((manufacturerGroup.Key, itemGroup.Key));
-                                            else _itemManufacturerTypeFoldouts.Remove((manufacturerGroup.Key, itemGroup.Key));
-                                        }
-
-                                        if (_itemManufacturerTypeFoldouts.Contains((manufacturerGroup.Key, itemGroup.Key)))
-                                        {
-                                            foreach (var item in itemGroup)
-                                            {
-                                                var style = ListItemStyle;
-                                                var selected = SelectedItem == item.ID;
-                                                using (new HorizontalScope(selected?SelectedStyle:style))
-                                                {
-                                                    using (var h = new HorizontalScope())
-                                                    {
-                                                        if (h.rect.Contains(currentEvent.mousePosition))
-                                                        {
-                                                            if (currentEventType == EventType.MouseDrag)
-                                                            {
-                                                                DragAndDrop.PrepareStartDrag();
-                                                                DragAndDrop.SetGenericData("Item", item.ID);
-                                                                DragAndDrop.StartDrag("Database Item");
-                                                            }
-                                                            else if (currentEventType == EventType.MouseUp)
-                                                                Select(item);
-                                                        }
-
-                                                        GUILayout.Space(40);
-                                                        GUILayout.Label(item.Name, selected ? EditorStyles.whiteLabel : GUI.skin.label);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (var item in manufacturerGroup)
-                                    {
-                                        var style = ListItemStyle;
-                                        var selected = SelectedItem == item.ID;
-                                        using (new HorizontalScope(selected?SelectedStyle:style))
-                                        {
-                                            using (var h = new HorizontalScope())
-                                            {
-                                                if (h.rect.Contains(currentEvent.mousePosition))
-                                                {
-                                                    if (currentEventType == EventType.MouseDrag)
-                                                    {
-                                                        DragAndDrop.PrepareStartDrag();
-                                                        DragAndDrop.SetGenericData("Item", item.ID);
-                                                        DragAndDrop.StartDrag("Database Item");
-                                                    }
-                                                    else if (currentEventType == EventType.MouseUp)
-                                                        Select(item);
-                                                }
-
-                                                GUILayout.Space(30);
-                                                GUILayout.Label(item.Name, selected ? EditorStyles.whiteLabel : GUI.skin.label);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    using (var h = new HorizontalScope(ListItemStyle))
-                    {
-                        if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-                            CreateItem(_itemTypes[i]);
-                        GUILayout.Space(20);
-                        GUILayout.Label("New " + FormatTypeName(_itemTypes[i].Name));
-                        // var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                        // GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
-                    }
-                }
-            }
-        }
-        
-        //var entries = _databaseCache.AllEntries.Where(item => !(item is ItemData)).ToArray();
         for (var i = 0; i < _entryTypes.Length; i++)
         {
             using (var h = new HorizontalScope(ListItemStyle))
             {
-                _entryFoldouts[i] = Foldout(_entryFoldouts[i],
+                _typeFoldouts[i] = Foldout(_typeFoldouts[i],
                     ((NameAttribute) _entryTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? FormatTypeName(_entryTypes[i].Name),
                     true);
             }
 
-            if (_entryFoldouts[i])
+            if (_typeFoldouts[i])
             {
-                int index = 0;
-                foreach (var entry in _databaseCache.GetAll(_entryTypes[i]).OrderBy(entry=>entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString()))
+                // TODO: NESTED GROUPS!
+                var entries = cultCache.GetAll(_entryTypes[i])
+                    .OrderBy(entry => entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString());
+                var grouper = Groupers.FirstOrDefault(g => g.CanGroup(_entryTypes[i]));
+                if (grouper != null)
                 {
-                    index++;
-                    var style = ListItemStyle;
-                    var selected = SelectedItem == entry.ID;
-                    using (var h = new HorizontalScope(selected?SelectedStyle:style))
+                    var groups = entries.GroupBy(o => grouper.SelectGroup(o));
+                    foreach (var group in groups)
                     {
-                        if (h.rect.Contains(currentEvent.mousePosition))
+                        var groupHash = grouper.HashGroup(group.Key);
+                        var groupName = grouper.GetGroupName(group.Key);
+                        using (var h = new HorizontalScope(ListItemStyle))
                         {
-                            if (currentEventType == EventType.MouseDrag)
-                            {
-                                DragAndDrop.PrepareStartDrag();
-                                DragAndDrop.SetGenericData("Item", entry.ID);
-                                DragAndDrop.StartDrag("Database Item");
-                            }
-                            else if (currentEventType == EventType.MouseUp)
-                                Select(entry);
+                            GUILayout.Space(10);
+                            if (Foldout(_groupFoldouts.Contains(groupHash), FormatTypeName(groupName), true))
+                                _groupFoldouts.Add(groupHash);
+                            else _groupFoldouts.Remove(groupHash);
                         }
-                        GUILayout.Space(10);
-                        GUILayout.Label((entry as INamedEntry)?.EntryName ?? index.ToString(), selected ? EditorStyles.whiteLabel : GUI.skin.label);
+
+                        if (_groupFoldouts.Contains(groupHash))
+                        {
+                            int index = 0;
+                            foreach (var entry in group)
+                            {
+                                index++;
+                                var style = ListItemStyle;
+                                var selected = SelectedItem == entry.ID;
+                                using (new HorizontalScope(selected?SelectedStyle:style))
+                                {
+                                    using (var h = new HorizontalScope())
+                                    {
+                                        if (h.rect.Contains(currentEvent.mousePosition))
+                                        {
+                                            if (currentEventType == EventType.MouseDrag)
+                                            {
+                                                DragAndDrop.PrepareStartDrag();
+                                                DragAndDrop.SetGenericData("Item", entry.ID);
+                                                DragAndDrop.StartDrag("Database Item");
+                                            }
+                                            else if (currentEventType == EventType.MouseUp)
+                                                Select(entry);
+                                        }
+
+                                        GUILayout.Space(20);
+                                        GUILayout.Label((entry as INamedEntry)?.EntryName ?? index.ToString(), selected ? EditorStyles.whiteLabel : GUI.skin.label);
+                                    }
+                                }
+                            }
+                    
+                            using (var h = new HorizontalScope(ListItemStyle))
+                            {
+                                if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
+                                    CreateItem(_entryTypes[i], entry => grouper.Activate(entry, group.Key));
+                                GUILayout.Space(20);
+                                GUILayout.Label($"New {groupName}");
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    int index = 0;
+                    foreach (var entry in entries)
+                    {
+                        index++;
+                        var style = ListItemStyle;
+                        var selected = SelectedItem == entry.ID;
+                        using (var h = new HorizontalScope(selected?SelectedStyle:style))
+                        {
+                            if (h.rect.Contains(currentEvent.mousePosition))
+                            {
+                                if (currentEventType == EventType.MouseDrag)
+                                {
+                                    DragAndDrop.PrepareStartDrag();
+                                    DragAndDrop.SetGenericData("Item", entry.ID);
+                                    DragAndDrop.StartDrag("Database Item");
+                                }
+                                else if (currentEventType == EventType.MouseUp)
+                                    Select(entry);
+                            }
+                            GUILayout.Space(10);
+                            GUILayout.Label((entry as INamedEntry)?.EntryName ?? index.ToString(), selected ? EditorStyles.whiteLabel : GUI.skin.label);
+                        }
                     }
                 }
                     
@@ -413,9 +304,7 @@ public class DatabaseListView : EditorWindow
                     if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
                         CreateItem(_entryTypes[i]);
                     GUILayout.Space(10);
-                    GUILayout.Label("New " + _entryTypes[i].Name);
-                    // var rect = GetControlRect(false, GUILayout.Width(EditorGUIUtility.singleLineHeight));
-                    // GUI.DrawTexture(rect, Icons.Instance.plus, ScaleMode.StretchToFill, true, 1, LabelColor, 0, 0);
+                    GUILayout.Label($"New {_entryTypes[i].Name}");
                 }
             }
         }
@@ -434,7 +323,7 @@ public class DatabaseListView : EditorWindow
     {
         SelectedItem = item.ID;
         Repaint();
-        _inspector.entry = _databaseCache.Get(SelectedItem);
+        _inspector.entry = cultCache.Get(SelectedItem);
         _inspector.Repaint();
     }
 
@@ -444,7 +333,7 @@ public class DatabaseListView : EditorWindow
         if(newEntry is INamedEntry entry)
             entry.EntryName = $"New {FormatTypeName(type.Name)}";
         onCreate?.Invoke(newEntry);
-        _databaseCache.Add(newEntry);
+        cultCache.Add(newEntry);
         Select(newEntry);
         return newEntry;
     }

@@ -31,18 +31,18 @@ public class ActionGameManager : MonoBehaviour
         get => _gameDataDirectory ??= new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
     }
 
-    private static DatabaseCache _database;
+    private static CultCache _cultCache;
 
-    public static DatabaseCache Database
+    public static CultCache CultCache
     {
         get
         {
-            if (_database != null) return _database;
+            if (_cultCache != null) return _cultCache;
 
-            _database = new DatabaseCache(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack"));
-            _database.Load();
+            _cultCache = new CultCache(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack"));
+            _cultCache.Load();
             
-            return _database;
+            return _cultCache;
         }
     }
 
@@ -173,7 +173,7 @@ public class ActionGameManager : MonoBehaviour
         AkSoundEngine.RegisterGameObj(gameObject);
         ConsoleController.MessageReceiver = this;
         
-        ItemManager = new ItemManager(Database, Settings.GameplaySettings, Debug.Log);
+        ItemManager = new ItemManager(CultCache, Settings.GameplaySettings, Debug.Log);
         ZoneRenderer.ItemManager = ItemManager;
 
         // _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");

@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ConstantWeaponData : WeaponData
 {
     [InspectablePrefab, JsonProperty("ammoInterval"), Key(17)]  

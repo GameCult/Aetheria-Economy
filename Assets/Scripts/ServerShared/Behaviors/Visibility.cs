@@ -7,13 +7,13 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VisibilityData : BehaviorData
 {
-    [InspectableField, JsonProperty("visibility"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("visibility"), Key(1), RuntimeInspectable]  
     public PerformanceStat Visibility = new PerformanceStat();
 
-    [InspectableField, JsonProperty("visibilityDecay"), Key(2)]  
+    [Inspectable, JsonProperty("visibilityDecay"), Key(2)]  
     public PerformanceStat VisibilityDecay = new PerformanceStat();
     
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -17,10 +18,9 @@ public static class RethinkConnection
 {
     public static RethinkDB R = RethinkDB.R;
     
-    public static RethinkQueryStatus RethinkConnect(DatabaseCache cache, string connectionString, bool syncLocalChanges = true)
+    public static RethinkQueryStatus RethinkConnect(CultCache cache, string connectionString, string dbName, bool syncLocalChanges = true)
     {
         // Add Unity.Mathematics serialization support to RethinkDB Driver
-        //Converter.Serializer.Converters.Add(new MathJsonConverter());
         JsonConvert.DefaultSettings = () => new JsonSerializerSettings
         {
             Converters = new List<JsonConverter>
@@ -32,9 +32,27 @@ public static class RethinkConnection
                 Converter.PocoExprConverter
             }
         };
+
+        var syncTables = typeof(DatabaseEntry).GetAllChildClasses()
+            .Select(t => t.GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Default").Distinct();
+
+        var connectionStringDomainLength = connectionString.IndexOf(':');
+        if (connectionStringDomainLength < 1)
+            throw new ArgumentException("Illegal Connection String: must include port!");
         
-        var connection = R.Connection().Hostname(connectionString).Port(RethinkDBConstants.DefaultPort+1).Timeout(60).Connect();
+        var portString = connectionString.Substring(connectionStringDomainLength + 1);
+        if (!int.TryParse(portString, out var port))
+            throw new ArgumentException($"Illegal connection string! \"{portString}\" is not a valid port number!");
+        
+        var connection = R.Connection()
+            .Hostname(connectionString.Substring(0,connectionStringDomainLength))
+            .Port(port).Timeout(60).Connect();
         Debug.Log("Connected to RethinkDB");
+
+        var tables = R.Db(dbName).TableList().RunAtom<string[]>(connection);
+
+        foreach (var st in syncTables.Where(st => !tables.Contains(st)))
+            R.Db(dbName).TableCreate(st).RunNoReply(connection);
 
         if (syncLocalChanges)
         {
@@ -77,66 +95,51 @@ public static class RethinkConnection
 
         var status = new RethinkQueryStatus();
 
-        // Get all item data from RethinkDB
-        Task.Run(async () =>
+        foreach (var table in syncTables)
         {
-            status.ItemsEntries = R
-                .Db("Aetheria")
-                .Table("Items")
-                .Count().RunAtom<int>(connection);
+            // Get entries from RethinkDB
+            Task.Run(async () =>
+            {
+                status.TotalEntries += R
+                    .Db("Aetheria")
+                    .Table(table)
+                    .Count().RunAtom<int>(connection);
             
-            var result = await R
-                .Db("Aetheria")
-                .Table("Items")
-                .RunCursorAsync<DatabaseEntry>(connection);
-            while (await result.MoveNextAsync())
-            {
-                var entry = result.Current;
-                //Debug.Log($"Received Items entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
-                cache.Add(entry, true);
-                status.RetrievedItems++;
-            }
-        }).WrapAwait();
-
-        // Get globaldata and all galaxy map layer data from RethinkDB
-        Task.Run(async () =>
-        {
-            ReqlAst operation = R
-                .Db("Aetheria")
-                .Table("Galaxy");
-            status.GalaxyEntries = ((Table) operation).Count().RunAtom<int>(connection);
+                var result = await R
+                    .Db("Aetheria")
+                    .Table(table)
+                    .RunCursorAsync<DatabaseEntry>(connection);
+                while (await result.MoveNextAsync())
+                {
+                    var entry = result.Current;
+                    //Debug.Log($"Received Items entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
+                    cache.Add(entry, true);
+                    status.RetrievedEntries++;
+                }
+            }).WrapAwait();
             
-            var result = await operation
-                .RunCursorAsync<DatabaseEntry>(connection);
-            while (await result.MoveNextAsync())
+            // Subscribe to changes from RethinkDB
+            Task.Run(async () =>
             {
-                var entry = result.Current;
-                //Debug.Log($"Received Galaxy entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
-                cache.Add(entry, true);
-                status.RetrievedItems++;
-            }
-        }).WrapAwait();
+                var result = await R
+                    .Db("Aetheria")
+                    .Table(table)
+                    .Changes()
+                    .RunChangesAsync<DatabaseEntry>(connection);
+                while (await result.MoveNextAsync())
+                {
+                    var change = result.Current;
+                    if(change.OldValue == null)
+                        Debug.Log($"Received change from RethinkDB (Entry Created): {change.NewValue.ID}");
+                    else if(change.NewValue == null)
+                        Debug.Log($"Received change from RethinkDB (Entry Deleted): {change.OldValue.ID}");
+                    else
+                        Debug.Log($"Received change from RethinkDB: {change.NewValue.ID}");
+                    cache.Add(change.NewValue, true);
+                }
+            }).WrapAwait();
+        }
 
-        // Subscribe to changes from RethinkDB
-        Task.Run(async () =>
-        {
-            var result = await R
-                .Db("Aetheria")
-                .Table("Items")
-                .Changes()
-                .RunChangesAsync<DatabaseEntry>(connection);
-            while (await result.MoveNextAsync())
-            {
-                var change = result.Current;
-                if(change.OldValue == null)
-                    Debug.Log($"Received change from RethinkDB (Entry Created): {change.NewValue.ID}");
-                else if(change.NewValue == null)
-                    Debug.Log($"Received change from RethinkDB (Entry Deleted): {change.OldValue.ID}");
-                else
-                    Debug.Log($"Received change from RethinkDB: {change.NewValue.ID}");
-                cache.Add(change.NewValue, true);
-            }
-        }).WrapAwait();
 
         // Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).Subscribe(_ =>
         // {
@@ -149,7 +152,6 @@ public static class RethinkConnection
 
 public class RethinkQueryStatus
 {
-    public int RetrievedItems;
-    public int GalaxyEntries;
-    public int ItemsEntries;
+    public int RetrievedEntries;
+    public int TotalEntries;
 }

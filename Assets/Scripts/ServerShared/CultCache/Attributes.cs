@@ -1,28 +1,14 @@
 using System;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class InspectableAttribute : Attribute { }
-
-public abstract class PreferredInspectorAttribute : InspectableAttribute
-{
-    public Type TargetType;
-    
-    public PreferredInspectorAttribute(Type targetType)
-    {
-        TargetType = targetType;
-    }
-}
-
-[AttributeUsage(AttributeTargets.Class)]
 public class ExternalEntryAttribute : Attribute { }
 
-public class InspectableFieldAttribute : Attribute { }
+public class InspectableAttribute : Attribute { }
 
 [AttributeUsage(AttributeTargets.Field)]
-public class InspectableTextAttribute : InspectableFieldAttribute { }
+public abstract class PreferredInspectorAttribute : InspectableAttribute { }
 
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectableUnityObjectAttribute : InspectableFieldAttribute
+public class InspectableUnityObjectAttribute : PreferredInspectorAttribute
 {
     public Type ObjectType;
 
@@ -31,27 +17,15 @@ public class InspectableUnityObjectAttribute : InspectableFieldAttribute
         ObjectType = type;
     }
 }
+public class InspectableTextAttribute : PreferredInspectorAttribute { }
+public class InspectablePrefabAttribute : PreferredInspectorAttribute { }
+public class InspectableTextureAttribute : PreferredInspectorAttribute { }
+public class InspectableTextAssetAttribute : PreferredInspectorAttribute { }
+public class InspectableTemperatureAttribute : PreferredInspectorAttribute { }
+public class InspectableAnimationCurveAttribute : PreferredInspectorAttribute { }
+public class InspectableColorAttribute : PreferredInspectorAttribute { }
 
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectablePrefabAttribute : InspectableFieldAttribute { }
-
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectableTextureAttribute : InspectableFieldAttribute { }
-
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectableTextAssetAttribute : InspectableFieldAttribute { }
-
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectableTemperatureAttribute : InspectableFieldAttribute { }
-
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectableAnimationCurveAttribute : InspectableFieldAttribute { }
-
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectableColorAttribute : InspectableFieldAttribute { }
-
-[AttributeUsage(AttributeTargets.Field)]
-public class InspectableDatabaseLinkAttribute : InspectableFieldAttribute
+public class InspectableDatabaseLinkAttribute : PreferredInspectorAttribute
 {
     public readonly Type EntryType;
 
@@ -61,8 +35,7 @@ public class InspectableDatabaseLinkAttribute : InspectableFieldAttribute
     }
 }
 
-[AttributeUsage(AttributeTargets.Field)]
-public class RangedFloatInspectableAttribute : InspectableFieldAttribute
+public class RangedFloatInspectableAttribute : PreferredInspectorAttribute
 {
     public readonly float Min, Max;
 
@@ -70,6 +43,27 @@ public class RangedFloatInspectableAttribute : InspectableFieldAttribute
     {
         Min = min;
         Max = max;
+    }
+}
+
+public class RangedIntInspectableAttribute : PreferredInspectorAttribute
+{
+    public readonly int Min, Max;
+
+    public RangedIntInspectableAttribute(int min, int max)
+    {
+        Min = min;
+        Max = max;
+    }
+}
+
+public class InspectableTypeAttribute : PreferredInspectorAttribute
+{
+    public readonly Type Type;
+
+    public InspectableTypeAttribute(Type type)
+    {
+        Type = type;
     }
 }
 
@@ -85,30 +79,6 @@ public class RangedFloatAttribute : Attribute
     }
 }
 
-[AttributeUsage(AttributeTargets.Field)]
-public class RangedIntInspectableAttribute : InspectableFieldAttribute
-{
-    public readonly int Min, Max;
-
-    public RangedIntInspectableAttribute(int min, int max)
-    {
-        Min = min;
-        Max = max;
-    }
-}
-
-public class InspectableTypeAttribute : InspectableFieldAttribute
-{
-    public readonly Type Type;
-
-    public InspectableTypeAttribute(Type type)
-    {
-        Type = type;
-    }
-}
-
-[AttributeUsage(AttributeTargets.Field)]
-public class SimplePerformanceStatAttribute : Attribute { }
 
 /// <summary>
 ///   <para>Specify a tooltip for a field in the Inspector window.</para>
