@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-public static class CultCacheExtensions
+public static class ReflectionExtensions
 {
     private static Dictionary<Type,Type[]> InterfaceClasses = new Dictionary<Type, Type[]>();
     public static Type[] GetAllInterfaceClasses(this Type type)
@@ -85,9 +87,34 @@ public static class CultCacheExtensions
 
         return IsAssignableToGenericType(baseType, genericType);
     }
-
-    public static async void WrapAwait(this Task task)
+	
+    public static string SplitCamelCase( this string str )
     {
-        await task;
+        return Regex.Replace( 
+            Regex.Replace( 
+                str, 
+                @"(\P{Ll})(\P{Ll}\p{Ll})", 
+                "$1 $2" 
+            ), 
+            @"(\p{Ll})(\P{Ll})", 
+            "$1 $2" 
+        );
+    }
+    
+    public static string FormatTypeName(this string typeName)
+    {
+        return (typeName.EndsWith("Data")
+            ? typeName.Substring(0, typeName.Length - 4)
+            : typeName).SplitCamelCase();
+    }
+    
+    public static string GetFullName(this Type t)
+    {
+        if (!t.IsGenericType)
+            return t.Name.FormatTypeName();
+
+        var name = t.Name.FormatTypeName();
+        return
+            $"{name.Substring(0, name.LastIndexOf("`"))}{t.GetGenericArguments().Aggregate("<", (aggregate, type) => $"{aggregate}{(aggregate == "<" ? "" : ",")}{GetFullName(type)}")}>";
     }
 }

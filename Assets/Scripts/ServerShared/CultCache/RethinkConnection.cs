@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 using RethinkDb.Driver;
 using RethinkDb.Driver.Ast;
 using RethinkDb.Driver.Net;
-using UnityEngine;
 
 public static class RethinkConnection
 {
@@ -47,7 +46,6 @@ public static class RethinkConnection
         var connection = R.Connection()
             .Hostname(connectionString.Substring(0,connectionStringDomainLength))
             .Port(port).Timeout(60).Connect();
-        Debug.Log("Connected to RethinkDB");
 
         var tables = R.Db(dbName).TableList().RunAtom<string[]>(connection);
 
@@ -61,35 +59,32 @@ public static class RethinkConnection
             {
                 var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
                 var result = await R
-                    .Db("Aetheria")
+                    .Db(dbName)
                     .Table(table)
                     .Get(entry.ID)
                     .Replace(entry)
                     .RunAsync(connection);
-                Debug.Log($"Uploaded entry to RethinkDB: {entry.ID} result: {result}");
             };
         
             cache.OnDataInsertLocal += async entry =>
             {
                 var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
                 var result = await R
-                    .Db("Aetheria")
+                    .Db(dbName)
                     .Table(table)
                     .Insert(entry)
                     .RunAsync(connection);
-                Debug.Log($"Inserted entry to RethinkDB: {entry.ID} result: {result}");
             };
 
-            cache.OnDataDeleteLocal += async entry =>
+            cache.OnDataRemoveLocal += async entry =>
             {
                 var table = entry.GetType().GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Other";
                 var result = await R
-                    .Db("Aetheria")
+                    .Db(dbName)
                     .Table(table)
                     .Get(entry.ID)
                     .Delete()
                     .RunAsync(connection);
-                Debug.Log($"Deleted entry from RethinkDB: {entry.ID} result: {result}");
             };
         }
 
@@ -101,18 +96,17 @@ public static class RethinkConnection
             Task.Run(async () =>
             {
                 status.TotalEntries += R
-                    .Db("Aetheria")
+                    .Db(dbName)
                     .Table(table)
                     .Count().RunAtom<int>(connection);
             
                 var result = await R
-                    .Db("Aetheria")
+                    .Db(dbName)
                     .Table(table)
                     .RunCursorAsync<DatabaseEntry>(connection);
                 while (await result.MoveNextAsync())
                 {
                     var entry = result.Current;
-                    //Debug.Log($"Received Items entry from RethinkDB: {entry.GetType()} {(entry as INamedEntry)?.EntryName ?? ""}:{entry.ID}");
                     cache.Add(entry, true);
                     status.RetrievedEntries++;
                 }
@@ -122,31 +116,27 @@ public static class RethinkConnection
             Task.Run(async () =>
             {
                 var result = await R
-                    .Db("Aetheria")
+                    .Db(dbName)
                     .Table(table)
                     .Changes()
                     .RunChangesAsync<DatabaseEntry>(connection);
                 while (await result.MoveNextAsync())
                 {
                     var change = result.Current;
-                    if(change.OldValue == null)
-                        Debug.Log($"Received change from RethinkDB (Entry Created): {change.NewValue.ID}");
-                    else if(change.NewValue == null)
-                        Debug.Log($"Received change from RethinkDB (Entry Deleted): {change.OldValue.ID}");
-                    else
-                        Debug.Log($"Received change from RethinkDB: {change.NewValue.ID}");
                     cache.Add(change.NewValue, true);
                 }
             }).WrapAwait();
         }
 
-
-        // Observable.Timer(DateTimeOffset.Now, TimeSpan.FromSeconds(60)).Subscribe(_ =>
-        // {
-        //     Debug.Log(R.Now().Run<DateTime>(connection).ToString() as string);
-        // });
-        
         return status;
+    }
+}
+
+public static class AsyncAwaitExtensions
+{
+    public static async void WrapAwait(this Task task)
+    {
+        await task;
     }
 }
 

@@ -1,6 +1,9 @@
 using System;
 
 [AttributeUsage(AttributeTargets.Class)]
+public class GlobalSettingsAttribute : Attribute { }
+
+[AttributeUsage(AttributeTargets.Class)]
 public class ExternalEntryAttribute : Attribute { }
 
 public class InspectableAttribute : Attribute { }
@@ -8,15 +11,6 @@ public class InspectableAttribute : Attribute { }
 [AttributeUsage(AttributeTargets.Field)]
 public abstract class PreferredInspectorAttribute : InspectableAttribute { }
 
-public class InspectableUnityObjectAttribute : PreferredInspectorAttribute
-{
-    public Type ObjectType;
-
-    public InspectableUnityObjectAttribute(Type type)
-    {
-        ObjectType = type;
-    }
-}
 public class InspectableTextAttribute : PreferredInspectorAttribute { }
 public class InspectablePrefabAttribute : PreferredInspectorAttribute { }
 public class InspectableTextureAttribute : PreferredInspectorAttribute { }
@@ -24,6 +18,16 @@ public class InspectableTextAssetAttribute : PreferredInspectorAttribute { }
 public class InspectableTemperatureAttribute : PreferredInspectorAttribute { }
 public class InspectableAnimationCurveAttribute : PreferredInspectorAttribute { }
 public class InspectableColorAttribute : PreferredInspectorAttribute { }
+
+public class InspectableEnumValuesAttribute : PreferredInspectorAttribute
+{
+    public Type EnumType;
+
+    public InspectableEnumValuesAttribute(Type enumType)
+    {
+        EnumType = enumType;
+    }
+}
 
 public class InspectableDatabaseLinkAttribute : PreferredInspectorAttribute
 {
@@ -35,22 +39,22 @@ public class InspectableDatabaseLinkAttribute : PreferredInspectorAttribute
     }
 }
 
-public class RangedFloatInspectableAttribute : PreferredInspectorAttribute
+public class InspectableRangedFloatAttribute : PreferredInspectorAttribute
 {
     public readonly float Min, Max;
 
-    public RangedFloatInspectableAttribute(float min, float max)
+    public InspectableRangedFloatAttribute(float min, float max)
     {
         Min = min;
         Max = max;
     }
 }
 
-public class RangedIntInspectableAttribute : PreferredInspectorAttribute
+public class InspectableRangedIntAttribute : PreferredInspectorAttribute
 {
     public readonly int Min, Max;
 
-    public RangedIntInspectableAttribute(int min, int max)
+    public InspectableRangedIntAttribute(int min, int max)
     {
         Min = min;
         Max = max;
@@ -106,5 +110,25 @@ public class RethinkTableAttribute : Attribute
     public RethinkTableAttribute(string tableName)
     {
         TableName = tableName;
+    }
+}
+
+public class NameAttribute : Attribute
+{
+    public string Name;
+
+    public NameAttribute(string name)
+    {
+        Name = name;
+    }
+}
+
+public class OrderAttribute : Attribute
+{
+    public int Order;
+
+    public OrderAttribute(int order)
+    {
+        Order = order;
     }
 }

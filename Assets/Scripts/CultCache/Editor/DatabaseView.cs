@@ -26,8 +26,9 @@ public abstract class DatabaseListView : EditorWindow
     
     protected CultCache cultCache;
     private static DatabaseInspector _inspector;
-    private Type[] _entryTypes;
-    private bool[] _typeFoldouts;
+    private Dictionary<string, (bool foldout, (Type entryType, bool foldout)[] types)> _tables;
+    //private Type[] _entryTypes;
+    private Type[] _globalTypes;
     private string _connectionString;
     private Vector2 _view;
     private RethinkQueryStatus _queryStatus;
@@ -70,6 +71,7 @@ public abstract class DatabaseListView : EditorWindow
 
         public override int HashGroup(object o)
         {
+            return o.GetHashCode();
             if (o is K k) return k.GetHashCode();
             return 0;
         }
@@ -94,8 +96,7 @@ public abstract class DatabaseListView : EditorWindow
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
     private bool _listItemStyle;
-    public GUIStyle ListItemStyle =>
-        (_listItemStyle = !_listItemStyle) ? ListStyleEven : ListStyleOdd;
+    public GUIStyle ListItemStyle => (_listItemStyle = !_listItemStyle) ? ListStyleEven : ListStyleOdd;
     
     void OnEnable()
     {
@@ -114,19 +115,22 @@ public abstract class DatabaseListView : EditorWindow
         
         cultCache.OnDataUpdateLocal += _ => Repaint();
         cultCache.OnDataInsertLocal += _ => Repaint();
-        cultCache.OnDataDeleteLocal += _ => Repaint();
+        cultCache.OnDataRemoveLocal += _ => Repaint();
         cultCache.OnDataUpdateRemote += _ => EditorDispatcher.Dispatch(Repaint);
         cultCache.OnDataInsertRemote += _ => EditorDispatcher.Dispatch(Repaint);
-        cultCache.OnDataDeleteRemote += _ => EditorDispatcher.Dispatch(Repaint);
+        cultCache.OnDataRemoveRemote += _ => EditorDispatcher.Dispatch(Repaint);
 
         DatabaseInspector.CultCache = cultCache;
         _inspector = DatabaseInspector.Instance;
         _inspector.Show();
         
-        _entryTypes = typeof(DatabaseEntry).GetAllChildClasses()
-            .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null).ToArray();
-        
-        _typeFoldouts = new bool[_entryTypes.Length];
+        _globalTypes = typeof(DatabaseEntry).GetAllChildClasses()
+            .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null && t.GetCustomAttribute<GlobalSettingsAttribute>() != null).ToArray();
+        _tables = typeof(DatabaseEntry).GetAllChildClasses()
+            .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null && t.GetCustomAttribute<GlobalSettingsAttribute>() == null)
+            .GroupBy(t=>t.GetCustomAttribute<RethinkTableAttribute>()?.TableName ??
+                        (t.GetCustomAttribute<ExternalEntryAttribute>() != null ? "External" : "Default"))
+            .ToDictionary(group=>group.Key, group=> (false, group.Select(t=>(t, false)).ToArray()));
 
         if (EditorPrefs.HasKey("RethinkDB.URL"))
             _connectionString = EditorPrefs.GetString("RethinkDB.URL");
@@ -154,7 +158,7 @@ public abstract class DatabaseListView : EditorWindow
             // Indicate that we don't accept drags ourselves
             DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
 
-        using (var h = new HorizontalScope())
+        using (new HorizontalScope())
         {
             _connectionString = TextField(_connectionString);
             if (GUILayout.Button("Connect"))
@@ -163,13 +167,8 @@ public abstract class DatabaseListView : EditorWindow
                 JsonKnownTypesSettingsManager.RegisterTypeAssembly<ItemData>();
                 _queryStatus = RethinkConnection.RethinkConnect(cultCache, _connectionString, DatabaseName);
             }
-            // if (GUILayout.Button("Connect All"))
-            // {
-            //     EditorPrefs.SetString("RethinkDB.URL", _connectionString);
-            //     _queryStatus = RethinkConnection.RethinkConnect(_databaseCache, _connectionString, true, false);
-            // }
         }
-        using (var h = new HorizontalScope())
+        using (new HorizontalScope())
         {
             //_fileName = TextField(_fileName);
             if (GUILayout.Button("Save"))
@@ -201,110 +200,132 @@ public abstract class DatabaseListView : EditorWindow
             GUI.skin.scrollView,
             GUILayout.Width(EditorGUIUtility.currentViewWidth),
             GUILayout.ExpandHeight(true));
-        
-        for (var i = 0; i < _entryTypes.Length; i++)
-        {
-            using (var h = new HorizontalScope(ListItemStyle))
-            {
-                _typeFoldouts[i] = Foldout(_typeFoldouts[i],
-                    ((NameAttribute) _entryTypes[i].GetCustomAttribute(typeof(NameAttribute)))?.Name ?? FormatTypeName(_entryTypes[i].Name),
-                    true);
-            }
 
-            if (_typeFoldouts[i])
+        foreach (var globalType in _globalTypes)
+        {
+            var globalEntry = cultCache.GetGlobal(globalType);
+            var style = ListItemStyle;
+            var selected = SelectedItem == globalEntry.ID;
+            using (new HorizontalScope(selected?SelectedStyle:style))
             {
-                // TODO: NESTED GROUPS!
-                var entries = cultCache.GetAll(_entryTypes[i])
-                    .OrderBy(entry => entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString());
-                var grouper = Groupers.FirstOrDefault(g => g.CanGroup(_entryTypes[i]));
-                if (grouper != null)
+                using (var h = new HorizontalScope())
                 {
-                    var groups = entries.GroupBy(o => grouper.SelectGroup(o));
-                    foreach (var group in groups)
+                    if (h.rect.Contains(currentEvent.mousePosition))
                     {
-                        var groupHash = grouper.HashGroup(group.Key);
-                        var groupName = grouper.GetGroupName(group.Key);
+                        if (currentEventType == EventType.MouseUp)
+                            Select(globalEntry);
+                    }
+
+                    GUILayout.Label(globalType.Name.SplitCamelCase(), selected ? EditorStyles.whiteLabel : GUI.skin.label);
+                }
+            }
+        }
+
+        void DisplayGroup(Type entryType, IEnumerable<DatabaseEntry> entries, IEnumerable<DatabaseEntryGroup> nestedGroups, int indent = 2, Action<DatabaseEntry> activatePreviousGroups = null, string previousGroupNames = "")
+        {
+            var grouper = nestedGroups.FirstOrDefault();
+            if (grouper != null)
+            {
+                var groups = entries.GroupBy(o => grouper.SelectGroup(o));
+                foreach (var group in groups)
+                {
+                    //var groupHash = grouper.HashGroup(group.Key);
+                    var groupName = grouper.GetGroupName(group.Key);
+                    var groupHash = groupName.GetHashCode();
+                    using (new HorizontalScope(ListItemStyle))
+                    {
+                        GUILayout.Space(indent*10);
+                        if (Foldout(_groupFoldouts.Contains(groupHash), FormatTypeName(groupName), true))
+                            _groupFoldouts.Add(groupHash);
+                        else _groupFoldouts.Remove(groupHash);
+                    }
+
+                    if (_groupFoldouts.Contains(groupHash))
+                    {
+                        Action<DatabaseEntry> activate = entry =>
+                        {
+                            activatePreviousGroups?.Invoke(entry);
+                            grouper.Activate(entry, group.Key);
+                        };
+                        
+                        DisplayGroup(entryType, group, nestedGroups.Skip(1), indent + 1, activate, $"{groupName} {previousGroupNames}");
+                        
                         using (var h = new HorizontalScope(ListItemStyle))
                         {
-                            GUILayout.Space(10);
-                            if (Foldout(_groupFoldouts.Contains(groupHash), FormatTypeName(groupName), true))
-                                _groupFoldouts.Add(groupHash);
-                            else _groupFoldouts.Remove(groupHash);
-                        }
-
-                        if (_groupFoldouts.Contains(groupHash))
-                        {
-                            int index = 0;
-                            foreach (var entry in group)
-                            {
-                                index++;
-                                var style = ListItemStyle;
-                                var selected = SelectedItem == entry.ID;
-                                using (new HorizontalScope(selected?SelectedStyle:style))
-                                {
-                                    using (var h = new HorizontalScope())
-                                    {
-                                        if (h.rect.Contains(currentEvent.mousePosition))
-                                        {
-                                            if (currentEventType == EventType.MouseDrag)
-                                            {
-                                                DragAndDrop.PrepareStartDrag();
-                                                DragAndDrop.SetGenericData("Item", entry.ID);
-                                                DragAndDrop.StartDrag("Database Item");
-                                            }
-                                            else if (currentEventType == EventType.MouseUp)
-                                                Select(entry);
-                                        }
-
-                                        GUILayout.Space(20);
-                                        GUILayout.Label((entry as INamedEntry)?.EntryName ?? index.ToString(), selected ? EditorStyles.whiteLabel : GUI.skin.label);
-                                    }
-                                }
-                            }
-                    
-                            using (var h = new HorizontalScope(ListItemStyle))
-                            {
-                                if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-                                    CreateItem(_entryTypes[i], entry => grouper.Activate(entry, group.Key));
-                                GUILayout.Space(20);
-                                GUILayout.Label($"New {groupName}");
-                            }
+                            if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
+                                CreateItem(entryType, activate);
+                            GUILayout.Space((indent+1)*10);
+                            GUILayout.Label($"Create {groupName} {previousGroupNames}");
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                int index = 0;
+                foreach (var entry in entries)
                 {
-                    int index = 0;
-                    foreach (var entry in entries)
+                    index++;
+                    var style = ListItemStyle;
+                    var selected = SelectedItem == entry.ID;
+                    using (var h = new HorizontalScope(selected ? SelectedStyle : style))
                     {
-                        index++;
-                        var style = ListItemStyle;
-                        var selected = SelectedItem == entry.ID;
-                        using (var h = new HorizontalScope(selected?SelectedStyle:style))
+                        if (h.rect.Contains(currentEvent.mousePosition))
                         {
-                            if (h.rect.Contains(currentEvent.mousePosition))
+                            if (currentEventType == EventType.MouseDrag)
                             {
-                                if (currentEventType == EventType.MouseDrag)
-                                {
-                                    DragAndDrop.PrepareStartDrag();
-                                    DragAndDrop.SetGenericData("Item", entry.ID);
-                                    DragAndDrop.StartDrag("Database Item");
-                                }
-                                else if (currentEventType == EventType.MouseUp)
-                                    Select(entry);
+                                DragAndDrop.PrepareStartDrag();
+                                DragAndDrop.SetGenericData("Item", entry.ID);
+                                DragAndDrop.StartDrag("Database Item");
                             }
-                            GUILayout.Space(10);
-                            GUILayout.Label((entry as INamedEntry)?.EntryName ?? index.ToString(), selected ? EditorStyles.whiteLabel : GUI.skin.label);
+                            else if (currentEventType == EventType.MouseUp)
+                                Select(entry);
                         }
+
+                        GUILayout.Space(indent*10);
+                        GUILayout.Label((entry as INamedEntry)?.EntryName ?? index.ToString(),
+                            selected ? EditorStyles.whiteLabel : GUI.skin.label);
                     }
                 }
-                    
-                using (var h = new HorizontalScope(ListItemStyle))
+            }
+        }
+
+        foreach (var table in _tables.Keys.ToArray())
+        {
+            var (tableFoldout, _) = _tables[table];
+            using (new HorizontalScope(ListItemStyle))
+            {
+                _tables[table] = (Foldout(tableFoldout = _tables[table].foldout, table, true), _tables[table].types);
+            }
+
+            if (tableFoldout)
+            {
+                for (var i = 0; i < _tables[table].types.Length; i++)
                 {
-                    if(GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
-                        CreateItem(_entryTypes[i]);
-                    GUILayout.Space(10);
-                    GUILayout.Label($"New {_entryTypes[i].Name}");
+                    var (entryType, typeFoldout) = _tables[table].types[i];
+                    using (new HorizontalScope(ListItemStyle))
+                    {
+                        GUILayout.Space(10);
+                        _tables[table].types[i] = (entryType, typeFoldout = Foldout(typeFoldout,
+                            ((NameAttribute) entryType.GetCustomAttribute(typeof(NameAttribute)))?.Name ?? FormatTypeName(entryType.Name),
+                            true));
+                    }
+
+                    if (typeFoldout)
+                    {
+                        var entries = cultCache.GetAll(entryType)
+                            .OrderBy(entry => entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString());
+                        var groupers = Groupers.Where(g => g.CanGroup(entryType));
+                        DisplayGroup(entryType, entries, groupers);
+                        
+                        using (var h = new HorizontalScope(ListItemStyle))
+                        {
+                            if (GUI.Button(h.rect, GUIContent.none, GUIStyle.none))
+                                CreateItem(entryType);
+                            GUILayout.Space(20);
+                            GUILayout.Label($"Create {FormatTypeName(entryType.Name)}");
+                        }
+                    }
                 }
             }
         }
@@ -312,7 +333,7 @@ public abstract class DatabaseListView : EditorWindow
         EndScrollView();
     }
 
-    private string FormatTypeName(string typeName)
+    public static string FormatTypeName(string typeName)
     {
         return (typeName.EndsWith("Data")
             ? typeName.Substring(0, typeName.Length - 4)

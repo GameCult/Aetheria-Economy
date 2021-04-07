@@ -14,10 +14,10 @@ public class CultCache
 {
     public event Action<DatabaseEntry> OnDataInsertLocal;
     public event Action<DatabaseEntry> OnDataUpdateLocal;
-    public event Action<DatabaseEntry> OnDataDeleteLocal;
+    public event Action<DatabaseEntry> OnDataRemoveLocal;
     public event Action<DatabaseEntry> OnDataInsertRemote;
     public event Action<DatabaseEntry> OnDataUpdateRemote;
-    public event Action<DatabaseEntry> OnDataDeleteRemote;
+    public event Action<DatabaseEntry> OnDataRemoveRemote;
 
     private readonly object addLock = new object();
 
@@ -26,6 +26,7 @@ public class CultCache
 
     private readonly Dictionary<Guid, DatabaseEntry> _entries = new Dictionary<Guid, DatabaseEntry>();
 
+    private readonly Dictionary<Type, DatabaseEntry> _globals = new Dictionary<Type, DatabaseEntry>();
     private readonly Dictionary<Type, HashSet<DatabaseEntry>> _types = new Dictionary<Type, HashSet<DatabaseEntry>>();
 
     private readonly Dictionary<Type, (DirectoryInfo directory, List<Guid> entries)> _externalTypes = new Dictionary<Type, (DirectoryInfo directory, List<Guid> entries)>();
@@ -48,6 +49,7 @@ public class CultCache
 
     public CultCache(string filePath)
     {
+        DatabaseLinkBase.Cache = this;
         RegisterResolver.Register();
         _filePath = filePath;
         var fileInfo = new FileInfo(filePath);
@@ -61,6 +63,7 @@ public class CultCache
             var linkFields = type.GetFields().Where(f => f.FieldType.IsAssignableToGenericType(typeof(DatabaseLink<>))).ToArray();
             if(linkFields.Length > 0)
                 _linkFields[type] = linkFields;
+            
             if (type.GetCustomAttribute<ExternalEntryAttribute>() != null)
             {
                 var typeDirectory = dataDirectory.CreateSubdirectory(type.Name);
@@ -79,6 +82,12 @@ public class CultCache
                 }
             }
             else _types[type] = new HashSet<DatabaseEntry>();
+            
+            if (type.GetCustomAttribute<GlobalSettingsAttribute>() != null)
+            {
+                _globals[type] = null;
+                Add(Activator.CreateInstance(type) as DatabaseEntry);
+            }
         }
     }
 
@@ -90,19 +99,9 @@ public class CultCache
             {
                 var exists = _entries.ContainsKey(entry.ID);
                 
-                // If an external entry is added, store it separately
                 var type = entry.GetType();
-                if (_linkFields.ContainsKey(type))
-                {
-                    foreach (var linkField in _linkFields[type])
-                    {
-                        var link = (DatabaseLinkBase) linkField.GetValue(entry);
-                        if (link != null)
-                        {
-                            link.Cache = this;
-                        }
-                    }
-                }
+
+                // If an external entry is added, store it separately
                 if (_externalTypes.ContainsKey(type))
                 {
                     if (_externalEntries.ContainsKey(entry.ID))
@@ -119,6 +118,16 @@ public class CultCache
                 }
                 else
                 {
+                    if (_globals.ContainsKey(type))
+                    {
+                        if(_globals[type]!=null)
+                        {
+                            Remove(_globals[type], remote);
+                            exists = true;
+                        }
+                        _globals[type] = entry;
+                    }
+                    
                     _entries[entry.ID] = entry;
                     _types[type].Add(entry);
                     foreach (var parentType in type.GetParentTypes())
@@ -145,6 +154,9 @@ public class CultCache
             }
         }
     }
+
+    public bool IsExternal(DatabaseEntry entry) => _externalTypes.ContainsKey(entry.GetType());
+    public bool IsGlobal(DatabaseEntry entry) => _globals.ContainsKey(entry.GetType());
 
     public void AddAll(IEnumerable<DatabaseEntry> entries, bool remote = false)
     {
@@ -178,6 +190,17 @@ public class CultCache
         return Get(guid) as T;
     }
 
+    public DatabaseEntry GetGlobal(Type type)
+    {
+        if (_globals.ContainsKey(type)) return _globals[type];
+        return null;
+    }
+
+    public T GetGlobal<T>() where T : DatabaseEntry
+    {
+        return GetGlobal(typeof(T)) as T;
+    }
+
     public IEnumerable<DatabaseEntry> GetAll(Type type)
     {
         if (_externalTypes.ContainsKey(type))
@@ -197,14 +220,19 @@ public class CultCache
         return !_types.ContainsKey(type) ? Enumerable.Empty<T>() : _types[type].Cast<T>();
     }
 
-    public void Delete(DatabaseEntry entry, bool remote = false)
+    public void Remove(DatabaseEntry entry, bool remote = false)
     {
         _entries.Remove(entry.ID);
+        foreach (var parentType in entry.GetType().GetParentTypes())
+        {
+            if(_types.ContainsKey(parentType))
+                _types[parentType].Remove(entry);
+        }
 
         if (remote)
-            OnDataDeleteRemote?.Invoke(entry);
+            OnDataRemoveRemote?.Invoke(entry);
         else
-            OnDataDeleteLocal?.Invoke(entry);
+            OnDataRemoveLocal?.Invoke(entry);
     }
 
     public void Load()

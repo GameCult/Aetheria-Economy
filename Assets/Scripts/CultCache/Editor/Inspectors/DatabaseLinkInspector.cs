@@ -8,32 +8,35 @@ public class DatabaseLinkInspector : BaseInspector<Guid, InspectableDatabaseLink
 {
     public override Guid Inspect(string label, Guid value, object parent, DatabaseInspector inspectorWindow, InspectableDatabaseLinkAttribute link)
     {
-        LabelField(label, EditorStyles.boldLabel);
-        var valueEntry = DatabaseInspector.CultCache.Get(value);
-        using (var h = new HorizontalScope(GUI.skin.box))
+        using (new HorizontalScope())
         {
-            GUILayout.Label((valueEntry as INamedEntry)?.EntryName ?? valueEntry?.ID.ToString() ?? $"Assign a {link.EntryType.Name} by dragging from the list panel.");
-                
-            if (h.rect.Contains(Event.current.mousePosition) && (Event.current.type == EventType.DragUpdated || Event.current.type == EventType.DragPerform))
+            GUILayout.Label(label, GUILayout.Width(width));
+            var valueEntry = DatabaseInspector.CultCache.Get(value);
+            using (var h = new HorizontalScope(GUI.skin.box))
             {
-                var guid = (Guid) DragAndDrop.GetGenericData("Item");
-                var dragEntry = DatabaseInspector.CultCache.Get(guid);
-                var dragValid = dragEntry != null && link.EntryType.IsInstanceOfType(dragEntry) && dragEntry != valueEntry;
-                if(Event.current.type == EventType.DragUpdated)
-                    DragAndDrop.visualMode = dragValid ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
-                else if(Event.current.type == EventType.DragPerform)
+                GUILayout.Label((valueEntry as INamedEntry)?.EntryName ?? valueEntry?.ID.ToString() ?? $"Drag and drop: {DatabaseListView.FormatTypeName(link.EntryType.Name)}");
+                
+                if (h.rect.Contains(Event.current.mousePosition) && (Event.current.type == EventType.DragUpdated || Event.current.type == EventType.DragPerform))
                 {
-                    if (dragValid)
+                    var guid = (Guid) DragAndDrop.GetGenericData("Item");
+                    var dragEntry = DatabaseInspector.CultCache.Get(guid);
+                    var dragValid = dragEntry != null && link.EntryType.IsInstanceOfType(dragEntry) && dragEntry != valueEntry;
+                    if(Event.current.type == EventType.DragUpdated)
+                        DragAndDrop.visualMode = dragValid ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
+                    else if(Event.current.type == EventType.DragPerform)
                     {
-                        DragAndDrop.AcceptDrag();
-                        GUI.changed = true;
-                        return guid;
+                        if (dragValid)
+                        {
+                            DragAndDrop.AcceptDrag();
+                            GUI.changed = true;
+                            return guid;
+                        }
                     }
                 }
-            }
-            if (GUILayout.Button("-", GUILayout.Width((EditorGUIUtility.singleLineHeight - 3)*2), GUILayout.Height(EditorGUIUtility.singleLineHeight-3)))
-            {
-                return Guid.Empty;
+                if (GUILayout.Button("-", GUILayout.Width((EditorGUIUtility.singleLineHeight - 3)*2), GUILayout.Height(EditorGUIUtility.singleLineHeight-3)))
+                {
+                    return Guid.Empty;
+                }
             }
         }
 
@@ -46,13 +49,19 @@ public class DatabaseLinkObjectInspector<T> : BaseInspector<DatabaseLink<T>> whe
     public override DatabaseLink<T> Inspect(string label, DatabaseLink<T> value, object parent, DatabaseInspector inspectorWindow)
     {
         if (value == null)
-            value = new DatabaseLink<T>{Cache = DatabaseInspector.CultCache};
-        LabelField(label, EditorStyles.boldLabel);
-        var valueEntry = value.Value;
-        using (var h = new HorizontalScope(GUI.skin.box))
+            value = new DatabaseLink<T>();
+
+        if(!string.IsNullOrEmpty(label))
         {
-            GUILayout.Label((valueEntry as INamedEntry)?.EntryName ?? valueEntry?.ID.ToString() ?? $"Assign a {typeof(T).Name} by dragging from the list panel.");
-                
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(label, GUILayout.Width(width));
+        }
+        
+        var valueEntry = value.Value;
+        using (var h = string.IsNullOrEmpty(label) ? new HorizontalScope() : new HorizontalScope(GUI.skin.box))
+        {
+            GUILayout.Label((valueEntry as INamedEntry)?.EntryName ?? valueEntry?.ID.ToString() ?? $"Drag and drop: {DatabaseListView.FormatTypeName(typeof(T).Name)}");
+            
             if (h.rect.Contains(Event.current.mousePosition) && (Event.current.type == EventType.DragUpdated || Event.current.type == EventType.DragPerform))
             {
                 var guid = (Guid) DragAndDrop.GetGenericData("Item");
@@ -70,10 +79,20 @@ public class DatabaseLinkObjectInspector<T> : BaseInspector<DatabaseLink<T>> whe
                     }
                 }
             }
-            if (GUILayout.Button("-", GUILayout.Width((EditorGUIUtility.singleLineHeight - 3)*2), GUILayout.Height(EditorGUIUtility.singleLineHeight-3)))
+            if(value.LinkID != Guid.Empty)
             {
-                value.LinkID = Guid.Empty;
+                if (GUILayout.Button("-",
+                    GUILayout.Width((EditorGUIUtility.singleLineHeight - 3) * 2),
+                    GUILayout.Height(EditorGUIUtility.singleLineHeight - 3)))
+                {
+                    value.LinkID = Guid.Empty;
+                }
             }
+        }
+        
+        if(!string.IsNullOrEmpty(label))
+        {
+            GUILayout.EndHorizontal();
         }
 
         return value;
@@ -92,11 +111,9 @@ public class DatabaseLinkListInspector : BaseInspector<List<Guid>, InspectableDa
         DatabaseInspector inspectorWindow,
         InspectableDatabaseLinkAttribute link)
     {
-        Space();
-        LabelField(label, EditorStyles.boldLabel);
-
         using (var v = new VerticalScope(GUI.skin.box))
         {
+            GUILayout.Label(label, EditorStyles.boldLabel);
             if (value.Count == 0)
             {
                 using (new HorizontalScope(ListItemStyle))

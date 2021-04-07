@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
-using MessagePack.ReactivePropertyExtension;
 using MessagePack.Resolvers;
 
 public static class RegisterResolver
@@ -16,8 +15,7 @@ public static class RegisterResolver
             MathResolver.Instance,
             TypeResolver.Instance,
             NativeGuidResolver.Instance,
-            StandardResolver.Instance,
-            ReactivePropertyResolver.Instance
+            StandardResolver.Instance
         );
         var options = MessagePackSerializerOptions.Standard.WithResolver(resolver);
         MessagePackSerializer.DefaultOptions = options;

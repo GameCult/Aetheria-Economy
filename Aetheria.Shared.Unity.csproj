@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\HaulingController.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Reverse.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Cooldown.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\CultCache\RethinkConnection.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NtpPacket.cs" />
      <Compile Include="Assets\Scripts\ServerShared\OrbitalEntity.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ActionCollection.cs" />
@@ -140,7 +141,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\ComparerMagic.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\VelocityLimit.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Heat.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Extensions.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\CultCache\ReflectionExtensions.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\InstantWeapon.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Visibility.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Repeat.cs" />
@@ -195,7 +196,6 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Where.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Min.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\ParticleEffect.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\MathExtensions.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\Mining.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Vertex2.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Sector.cs" />
@@ -250,6 +250,9 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\BezierCurve.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\CultCache\CollectionExtensions.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\EnumDictionary.cs" />
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Aetheria.Shared.Unity.asmdef" />
  <Reference Include="System.Threading.Tasks.Extensions">
@@ -645,6 +648,10 @@
     <ProjectReference Include="UniRx.csproj">
       <Project>{4d885cb7-1f9e-abb3-b070-7265b432ecda}</Project>
       <Name>UniRx</Name>
+    </ProjectReference>
+    <ProjectReference Include="RethinkDB.csproj">
+      <Project>{f2483ebc-e82f-a58f-b987-c7502f9ab5d9}</Project>
+      <Name>RethinkDB</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

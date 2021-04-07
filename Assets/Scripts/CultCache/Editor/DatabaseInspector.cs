@@ -25,16 +25,19 @@ public class DatabaseInspector : EditorWindow
     // Singleton to avoid multiple instances of window.
     private static DatabaseInspector _instance;
     public static DatabaseInspector Instance => _instance ? _instance : GetWindow<DatabaseInspector>();
-    
-    private Vector2 _view;
-    private const int width = 150;
-    private GUIStyle _warning;
-    private HashSet<int> _listItemFoldouts = new HashSet<int>();
-    private Material _schematicMat;
-    private Dictionary<(Type targetType, HashSet<Type> attributes), (object instance, Type type)> _inspectors = 
-        new Dictionary<(Type targetType, HashSet<Type> attributes), (object instance, Type type)>();
+    private static bool _listItemStyle;
+    public static GUIStyle ListItemStyle => (_listItemStyle = !_listItemStyle) ? DatabaseListView.ListStyleEven : DatabaseListView.ListStyleOdd;
 
-    private Dictionary<Type, Type> _genericInspectors = new Dictionary<Type, Type>();
+    public const int Width = 150;
+
+    private Vector2 _view;
+    private GUIStyle _warning;
+    private List<(Type targetType, HashSet<Type> attributes, Type inspectorType, object instance)> _inspectors = 
+        new List<(Type targetType, HashSet<Type> attributes, Type inspectorType, object instance)>();
+
+    private List<(Type targetType, HashSet<Type> attributes, Type inspectorType, Dictionary<Type, object> instances)> _genericInspectors = 
+        new List<(Type targetType, HashSet<Type> attributes, Type inspectorType, Dictionary<Type, object> instances)>();
+    private HashSet<object> _foldouts = new HashSet<object>();
 
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
@@ -57,105 +60,138 @@ public class DatabaseInspector : EditorWindow
             {
                 if (genericArguments[0].ContainsGenericParameters)
                 {
-                    _genericInspectors.Add(genericArguments[0].GetGenericTypeDefinition(), type);
+                    _genericInspectors.Add((
+                        genericArguments[0].GetGenericTypeDefinition(), 
+                        new HashSet<Type>(genericArguments.Skip(1)), 
+                        type,
+                        new Dictionary<Type, object>()
+                        ));
                 }
                 else
                 {
-                    _inspectors.Add((genericArguments[0], new HashSet<Type>(genericArguments.Skip(1))), (Activator.CreateInstance(type), type));
+                    _inspectors.Add((
+                        genericArguments[0], 
+                        new HashSet<Type>(genericArguments.Skip(1)), 
+                        type, 
+                        Activator.CreateInstance(type)
+                        ));
                 }
             }
         }
     }
     
-    public void Inspect(object obj, bool inspectablesOnly = false)
+    public void Inspect(object obj, bool inspectablesOnly = true)
     {
         foreach (var field in obj.GetType().GetFields().OrderBy(f=>f.GetCustomAttribute<KeyAttribute>()?.IntKey ?? 0))
         {
             Inspect(obj, field, inspectablesOnly);
         }
-
-        // if (obj is EquippableItemData equippableItemData)
-        // {
-        //     var restricted = false;
-        //     var doubleRestricted = false;
-        //     HullType type = HullType.Ship;
-        //     foreach (var behavior in equippableItemData.Behaviors)
-        //     {
-        //         var restriction = behavior.GetType().GetCustomAttribute<EntityTypeRestrictionAttribute>();
-        //         if (restriction != null)
-        //         {
-        //             if (restricted && restriction.Type != type)
-        //                 doubleRestricted = true;
-        //             restricted = true;
-        //             type = restriction.Type;
-        //         }
-        //     }
-        //     if(doubleRestricted)
-        //         GUILayout.Label("ITEM UNEQUIPPABLE: BEHAVIOR HULL TYPE CONFLICT", _warning);
-        //     else if (restricted)
-        //         GUILayout.Label($"Item restricted by behavior to hull type {Enum.GetName(typeof(HullType), type)}", EditorStyles.boldLabel);
-        // }
     }
     
-    public void Inspect(object obj, FieldInfo field, bool inspectablesOnly = false)
+    public void Inspect(object obj, FieldInfo field, bool inspectablesOnly = true)
     {
         var inspectable = field.GetCustomAttribute<InspectableAttribute>();
         if (inspectable == null && inspectablesOnly) return;
 
+        var attributes = field.GetCustomAttributes(false);
+
         var type = field.FieldType;
         var value = field.GetValue(obj);
+        
+        field.SetValue(obj, InspectMember(field.Name.SplitCamelCase(), value, obj, type, false, attributes));
+    }
 
-        if (type.IsGenericType)
+    public object InspectMember(string label, object value, object parent, Type type, bool suppressContainer = false, params object[] attributes)
+    {
+        var style = _listItemStyle;
+        object GetAttribute(Type attributeType)
         {
-            var genericTypeDefinition = type.GetGenericTypeDefinition();
-            if(_genericInspectors.ContainsKey(genericTypeDefinition))
-            {
-                var genericInspectorGenericType = _genericInspectors[genericTypeDefinition];
-                var genericInspectorType = genericInspectorGenericType.MakeGenericType(type.GenericTypeArguments[0]);
-                var genericInspector = Activator.CreateInstance(genericInspectorType);
-                var parameters = new[] {field.Name.SplitCamelCase(), field.GetValue(obj), obj, this};
-                field.SetValue(obj, genericInspectorType.GetMethod("Inspect").Invoke(genericInspector, parameters));
-                return;
-            }
+            return attributes.FirstOrDefault(attributeType.IsInstanceOfType);
         }
-        var potentialInspectors = _inspectors.Keys
+
+        if (value == null && type != typeof(string) && !(type.IsInterface || type.IsAbstract)) value = Activator.CreateInstance(type);
+
+        var potentialInspectors = _inspectors
             .Where(pi =>
                 pi.targetType == type &&
-                pi.attributes.All(attributeType => field.GetCustomAttribute(attributeType) != null));
+                pi.attributes.All(attributeType => GetAttribute(attributeType) != null));
         if (potentialInspectors.Any())
         {
             var preferredInspector = potentialInspectors.MaxBy(i => i.attributes.Count);
-            var parameters = new[] {field.Name.SplitCamelCase(), field.GetValue(obj), obj, this}
-                .Concat(preferredInspector.attributes.Select<Type, object>(attributeType => field.GetCustomAttribute(attributeType)))
+            var parameters = new[] {label, value, parent, this}
+                .Concat(preferredInspector.attributes.Select(GetAttribute))
                 .ToArray();
-            field.SetValue(obj, _inspectors[preferredInspector].type.GetMethod("Inspect").Invoke(_inspectors[preferredInspector].instance, parameters));
+            value = preferredInspector.inspectorType.GetMethod("Inspect").Invoke(preferredInspector.instance, parameters);
+            _listItemStyle = style;
+            return value;
         }
-        else if (type.IsEnum)
+        
+        if (type.IsEnum)
         {
             var isflags = type.GetCustomAttributes<FlagsAttribute>().Any();
-            var names = Enum.GetNames(field.FieldType);
-            field.SetValue(obj,
-                InspectEnum(field.Name.SplitCamelCase(), (int) field.GetValue(obj), isflags ? names.Skip(1).ToArray() : names, isflags));
+            var names = Enum.GetNames(type);
+            value = InspectEnum(label, (int) value, isflags ? names.Skip(1).ToArray() : names, isflags);
+            _listItemStyle = style;
+            return value;
         }
-        else if (type.GetCustomAttribute<InspectableAttribute>() != null)
+        
+        if (type.GetCustomAttribute<InspectableAttribute>() != null)
         {
-            Space();
+            if(!suppressContainer)
+                GUILayout.BeginVertical(GUI.skin.box);
             using (new HorizontalScope())
             {
-                LabelField(field.Name.SplitCamelCase(), EditorStyles.boldLabel);
-                if (type.IsInterface)
+                if(!suppressContainer)
                 {
-                    var subTypes = type.GetAllInterfaceClasses();
+                    if (Foldout(_foldouts.Contains(value), label, true, EditorStyles.boldLabel))
+                        _foldouts.Add(value);
+                    else _foldouts.Remove(value);
+                }
+                if (type.IsInterface || type.IsAbstract)
+                {
+                    var subTypes = type.GetAllChildClasses().Where(t=>!(t.IsInterface || t.IsAbstract)).ToArray();
                     var selected = value != null ? Array.IndexOf(subTypes, value.GetType()) + 1 : 0;
                     var newSelection = Popup(selected,
                         subTypes.Select(t => t.Name.SplitCamelCase()).Prepend("None").ToArray());
-                    if(newSelection != selected)
-                        field.SetValue(obj, value = newSelection==0?null:Activator.CreateInstance(subTypes[newSelection-1]));
-                } else if(value == null) field.SetValue(obj, value = Activator.CreateInstance(type));
+                    if (newSelection != selected)
+                        value = newSelection == 0 ? null : Activator.CreateInstance(subTypes[newSelection - 1]);
+                }
+                else if (value == null) value = Activator.CreateInstance(type);
             }
-            if(value != null) Inspect(field.GetValue(obj), inspectablesOnly);
+
+            if (value != null && (_foldouts.Contains(value) || suppressContainer)) Inspect(value);
+            if(!suppressContainer)
+                GUILayout.EndVertical();
+            _listItemStyle = style;
+            return value;
         }
-        else Debug.Log($"Field \"{field.Name}\" has unknown type {field.FieldType.Name}. No inspector was generated.");
+        
+        if (type.IsGenericType)
+        {
+            var genericTypeDefinition = type.GetGenericTypeDefinition();
+            var potentialGenericInspectors = _genericInspectors
+                .Where(pi =>
+                    pi.targetType == genericTypeDefinition &&
+                    pi.attributes.All(attributeType => GetAttribute(attributeType) != null));
+            if (potentialGenericInspectors.Any())
+            {
+                var genericTypeArguments = type.GenericTypeArguments;
+                var preferredInspector = potentialGenericInspectors.MaxBy(i => i.attributes.Count);
+                var genericInspectorType = preferredInspector.inspectorType.MakeGenericType(genericTypeArguments);
+                if (!preferredInspector.instances.ContainsKey(genericInspectorType))
+                    preferredInspector.instances[genericInspectorType] =
+                        Activator.CreateInstance(genericInspectorType);
+                var parameters = new[] {label, value, parent, this};
+                value = genericInspectorType.GetMethod("Inspect").Invoke(preferredInspector.instances[genericInspectorType], parameters);
+                _listItemStyle = style;
+                return value;
+            }
+        }
+        
+        Debug.Log($"Field \"{label}\" has unknown type {type.Name}. No inspector was generated.");
+
+        _listItemStyle = style;
+        return value;
     }
 
     public int InspectEnum(string label, int value, string[] enumOptions, bool flags)
@@ -164,13 +200,13 @@ public class DatabaseInspector : EditorWindow
         {
             Space();
             LabelField(label, EditorStyles.boldLabel);
-            using (var v = new VerticalScope(GUI.skin.box))
+            using (new VerticalScope(GUI.skin.box))
             {
                 for (var i = 0; i < enumOptions.Length; i++)
                 {
                     using (var h = new HorizontalScope())
                     {
-                        GUILayout.Label(enumOptions[i], GUILayout.Width(width));
+                        GUILayout.Label(enumOptions[i], GUILayout.Width(Width));
                         var set = Toggle(1 << i == (1 << i & value));
                         if (set)
                             value |= 1 << i;
@@ -184,7 +220,7 @@ public class DatabaseInspector : EditorWindow
 
         using (var h = new HorizontalScope())
         {
-            GUILayout.Label(label, GUILayout.Width(width));
+            GUILayout.Label(label, GUILayout.Width(Width));
             return Popup(value, enumOptions);
         }
     }
@@ -212,7 +248,8 @@ public class DatabaseInspector : EditorWindow
 
         // Serialize inspected object so we can check whether it has actually changed
         RegisterResolver.Register();
-        var previousBytes = MessagePackSerializer.Serialize(entry);
+        var previousBytes = MessagePackSerializer.Serialize<DatabaseEntry>(entry);
+        var previousHash = previousBytes.GetHashSHA1();
         
         EditorGUI.BeginChangeCheck();
 
@@ -224,7 +261,7 @@ public class DatabaseInspector : EditorWindow
             //     Debug.Log(entry.ToJson());
             if (GUILayout.Button("Delete Entry"))
             {
-                CultCache.Delete(entry);
+                CultCache.Remove(entry);
                 entry = null;
                 return;
             }
@@ -243,11 +280,12 @@ public class DatabaseInspector : EditorWindow
             LabelField(dataEntry.ID.ToString());
         }
 
-        Inspect(entry, true);
+        _listItemStyle = false;
+        Inspect(entry);
 
         if (EditorGUI.EndChangeCheck())
         {
-            if(!previousBytes.ByteEquals(MessagePackSerializer.Serialize(entry)))
+            if(previousHash != MessagePackSerializer.Serialize(entry).GetHashSHA1())
                 CultCache.Add(entry);
         }
             

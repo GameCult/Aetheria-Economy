@@ -14,13 +14,13 @@ public class FloatInspector : BaseInspector<float>
     }
 }
 
-public class RangedFloatInspector : BaseInspector<float, RangedFloatInspectableAttribute>
+public class RangedFloatInspector : BaseInspector<float, InspectableRangedFloatAttribute>
 {
     public override float Inspect(string label,
         float value,
         object parent,
         DatabaseInspector inspectorWindow,
-        RangedFloatInspectableAttribute attribute)
+        InspectableRangedFloatAttribute attribute)
     {
         using (new HorizontalScope())
         {

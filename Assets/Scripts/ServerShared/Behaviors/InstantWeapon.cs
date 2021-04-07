@@ -178,8 +178,8 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
 
     public override void Activate()
     {
-        // if(CanFire)
-        //     Trigger();
-        // base.Activate();
+        if(CanFire)
+            Trigger();
+        base.Activate();
     }
 }

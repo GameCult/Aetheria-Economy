@@ -4,26 +4,6 @@
 
 using System;
 
-public class NameAttribute : Attribute
-{
-    public string Name;
-
-    public NameAttribute(string name)
-    {
-        Name = name;
-    }
-}
-
-public class OrderAttribute : Attribute
-{
-    public int Order;
-
-    public OrderAttribute(int order)
-    {
-        Order = order;
-    }
-}
-
 [AttributeUsage(AttributeTargets.Class)]
 public class EntityTypeRestrictionAttribute : Attribute
 {

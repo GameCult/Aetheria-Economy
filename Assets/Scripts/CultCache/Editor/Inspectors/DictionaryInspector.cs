@@ -7,10 +7,6 @@ using static UnityEditor.EditorGUILayout;
 
 public class FloatDictionaryInspector : BaseInspector<Dictionary<Guid, float>, InspectableDatabaseLinkAttribute>
 {
-    private bool _listItemStyle;
-    public GUIStyle ListItemStyle =>
-        (_listItemStyle = !_listItemStyle) ? DatabaseListView.ListStyleEven : DatabaseListView.ListStyleOdd;
-    
     public override Dictionary<Guid, float> Inspect(string label,
         Dictionary<Guid, float> value,
         object parent,
@@ -24,14 +20,14 @@ public class FloatDictionaryInspector : BaseInspector<Dictionary<Guid, float>, I
         {
             if (value.Count == 0)
             {
-                using (new HorizontalScope(ListItemStyle))
+                using (new HorizontalScope(DatabaseInspector.ListItemStyle))
                 {
                     GUILayout.Label("Drag from list to add item");
                 }
             }
             foreach (var ingredient in value.ToArray())
             {
-                using (new HorizontalScope(ListItemStyle))
+                using (new HorizontalScope(DatabaseInspector.ListItemStyle))
                 {
                     var entry = DatabaseInspector.CultCache.Get(ingredient.Key);
                     if (entry == null)
@@ -79,10 +75,6 @@ public class FloatDictionaryInspector : BaseInspector<Dictionary<Guid, float>, I
 
 public class RangedFloatDictionaryInspector : BaseInspector<Dictionary<Guid, float>, InspectableDatabaseLinkAttribute, RangedFloatAttribute>
 {
-    private bool _listItemStyle;
-    public GUIStyle ListItemStyle =>
-        (_listItemStyle = !_listItemStyle) ? DatabaseListView.ListStyleEven : DatabaseListView.ListStyleOdd;
-    
     public override Dictionary<Guid, float> Inspect(string label,
         Dictionary<Guid, float> value,
         object parent,
@@ -97,14 +89,14 @@ public class RangedFloatDictionaryInspector : BaseInspector<Dictionary<Guid, flo
         {
             if (value.Count == 0)
             {
-                using (new HorizontalScope(ListItemStyle))
+                using (new HorizontalScope(DatabaseInspector.ListItemStyle))
                 {
                     GUILayout.Label("Drag from list to add item");
                 }
             }
             foreach (var ingredient in value.ToArray())
             {
-                using (new HorizontalScope(ListItemStyle))
+                using (new HorizontalScope(DatabaseInspector.ListItemStyle))
                 {
                     var entry = DatabaseInspector.CultCache.Get(ingredient.Key);
                     if (entry == null)
@@ -152,10 +144,6 @@ public class RangedFloatDictionaryInspector : BaseInspector<Dictionary<Guid, flo
 
 public class IntDictionaryInspector : BaseInspector<Dictionary<Guid, int>, InspectableDatabaseLinkAttribute>
 {
-    private bool _listItemStyle;
-    public GUIStyle ListItemStyle =>
-        (_listItemStyle = !_listItemStyle) ? DatabaseListView.ListStyleEven : DatabaseListView.ListStyleOdd;
-    
     public override Dictionary<Guid, int> Inspect(string label,
         Dictionary<Guid, int> value,
         object parent,
@@ -169,14 +157,14 @@ public class IntDictionaryInspector : BaseInspector<Dictionary<Guid, int>, Inspe
         {
             if (value.Count == 0)
             {
-                using (var h = new HorizontalScope(ListItemStyle))
+                using (var h = new HorizontalScope(DatabaseInspector.ListItemStyle))
                 {
                     GUILayout.Label("Drag from list to add item");
                 }
             }
             foreach (var ingredient in value.ToArray())
             {
-                using (var h = new HorizontalScope(ListItemStyle))
+                using (var h = new HorizontalScope(DatabaseInspector.ListItemStyle))
                 {
                     var entry = DatabaseInspector.CultCache.Get(ingredient.Key);
                     if (entry == null)

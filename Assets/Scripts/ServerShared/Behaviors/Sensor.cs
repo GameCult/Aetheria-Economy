@@ -15,8 +15,8 @@ public class SensorData : BehaviorData
     [Inspectable, JsonProperty("sensitivity"), Key(3), RuntimeInspectable]
     public PerformanceStat Sensitivity = new PerformanceStat();
 
-    [InspectableAnimationCurve, JsonProperty("sensitivityCurve"), Key(4), RuntimeInspectable]
-    public float4[] SensitivityCurve;
+    [InspectableAnimationCurve, JsonProperty("sensCurve"), Key(4), RuntimeInspectable]
+    public BezierCurve SensitivityCurve;
 
     [Inspectable, JsonProperty("pingBoost"), Key(5), RuntimeInspectable]
     public PerformanceStat PingBoost;

@@ -322,8 +322,8 @@ public abstract class EquippableItemData : CraftedItemData
     // [InspectableField, JsonProperty("heatExponent"), Key(16), SimplePerformanceStat]
     // public PerformanceStat HeatExponent = new PerformanceStat();
     
-    [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(17)]
-    public float4[] HeatPerformanceCurve;
+    [InspectableAnimationCurve, JsonProperty("heatCurve"), Key(17)]
+    public BezierCurve HeatPerformanceCurve;
 
     [Inspectable, JsonProperty("resilience"), Key(18)]
     public float ThermalResilience = 1;
@@ -553,9 +553,4 @@ public class PersonalityAttribute : DatabaseEntry, INamedEntry
         get => Name;
         set => Name = value;
     }
-}
-
-public interface ITintInspector
-{
-    float3 TintColor { get; }
 }

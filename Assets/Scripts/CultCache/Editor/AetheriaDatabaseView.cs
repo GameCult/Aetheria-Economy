@@ -34,10 +34,10 @@ public class AetheriaDatabaseView : DatabaseListView
             data => data.HardpointType,
             type => Enum.GetName(typeof(HardpointType), type),
             (data, type) => data.Hardpoint = type),
-        // new DatabaseEntryGroup<GearData, Guid>(
-        //     data => data.Manufacturer,
-        //     factionID => cultCache.Get<Faction>(factionID).ShortName,
-        //     (data, faction) => data.Manufacturer = faction),
+        new DatabaseEntryGroup<GearData, Guid>(
+            data => data.Manufacturer,
+            factionID => factionID == Guid.Empty ? "Default" : cultCache.Get<Faction>(factionID).ShortName,
+            (data, faction) => data.Manufacturer = faction),
         new DatabaseEntryGroup<HullData, HullType>(
             data => data.HullType,
             type => Enum.GetName(typeof(HullType), type),

@@ -55,6 +55,17 @@ public abstract class DatabaseEntry
 {
     [JsonProperty("id"), Key(0)]
     public Guid ID = Guid.NewGuid();
+
+    public override int GetHashCode()
+    {
+        return ID.GetHashCode();
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is DatabaseEntry entry) return entry.ID == ID;
+        return false;
+    }
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -71,5 +82,10 @@ public class DatabaseLinkBase
     public Guid LinkID;
     
     [IgnoreMember]
-    public CultCache Cache;
+    public static CultCache Cache;
+}
+
+public interface ITintInspector
+{
+    float3 TintColor { get; }
 }

@@ -14,9 +14,9 @@ public class IntInspector : BaseInspector<int>
     }
 }
 
-public class RangedIntInspector : BaseInspector<int, RangedIntInspectableAttribute>
+public class RangedIntInspector : BaseInspector<int, InspectableRangedIntAttribute>
 {
-    public override int Inspect(string label, int value, object parent, DatabaseInspector inspectorWindow, RangedIntInspectableAttribute attribute)
+    public override int Inspect(string label, int value, object parent, DatabaseInspector inspectorWindow, InspectableRangedIntAttribute attribute)
     {
         using (new HorizontalScope())
         {
