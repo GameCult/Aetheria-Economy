@@ -393,7 +393,7 @@ public class DockingBayData : CargoBayData
     public int2 MaxSize;
 }
 
-[RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[RethinkTable("Items"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class WeaponItemData : GearData
 {
     [Inspectable, JsonProperty("range"), Key(21)]

@@ -239,7 +239,7 @@ public class Zone
             var pos = OrbitData.Evaluate((float) frac(_time / Settings.OrbitPeriod.Evaluate(beltData.Asteroids[i].Distance) +
                                                       beltData.Asteroids[i].Phase)) * beltData.Asteroids[i].Distance + orbitPosition;
             belt.NewVelocities[i] = pos - belt.Positions[i].xz;
-            belt.NewPositions[i] = float3(pos.x, GetHeight(pos), pos.y);
+            belt.NewPositions[i] = float3(pos.x, GetHeight(pos) + Settings.AsteroidVerticalOffset, pos.y);
         }
     }
 

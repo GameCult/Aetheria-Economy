@@ -26,6 +26,7 @@ public class PlanetSettings
     public ExponentialCurve FogTintRadius;
     public ExponentialCurve LightRadius;
     public ExponentialCurve BodyRadius;
+    public float AsteroidVerticalOffset = -5f;
     public ExponentialLerp AsteroidSize;
     public ExponentialLerp AsteroidHitpoints;
     public ExponentialLerp AsteroidRespawnTime;

@@ -48,7 +48,7 @@ Material:
     - _GridCeilingDensity: 0.01
     - _GridCeilingFollow: 0
     - _GridCeilingOffset: 0
-    - _GridFillDensity: 0.00002
+    - _GridFillDensity: 0.00001
     - _GridFloorBlend: 39.6
     - _GridFloorDensity: 1
     - _GridFloorOffset: 27.55
@@ -58,8 +58,12 @@ Material:
     - _NoiseSpeed: 0.01
     - _NoiseStrength: 150
     - _SafetyDistance: 50
+    - _Scattering: 50
+    - _ScatteringDensityExponent: 8
+    - _ScatteringDistExponent: 0.5
+    - _ScatteringMinDist: 1
     - _StepExponent: 2
-    - _TintExponent: 8
+    - _TintExponent: 12
     m_Colors:
-    - _Tint: {r: 0.447, g: 0.447, b: 0.447, a: 1}
+    - _Tint: {r: 0.3932651, g: 0.3932651, b: 0.3932651, a: 1}
   m_BuildTextureStacks: []

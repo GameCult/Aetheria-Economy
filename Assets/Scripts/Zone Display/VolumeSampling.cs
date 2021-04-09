@@ -18,11 +18,21 @@ public class VolumeSampling : MonoBehaviour
 {
     public Material _volMaterial;
     public Transform GridTransform;
+    //public int DownsampleBlurMask = 2;
     private Camera _camera;
+    private RenderBuffer[] _mrt;
+    private RenderTexture _blurMask;
+    private Texture2D _disabledBlurMask;
+
+    public bool EnableDepth { get; set; } = true;
 
     private void Start()
     {
+        //Debug.Log($"Supported MRT count: {SystemInfo.supportedRenderTargetCount}");
         _camera = GetComponent<Camera>();
+        _mrt = new RenderBuffer[2];
+        _blurMask = new RenderTexture(Screen.width, Screen.height, 0, GraphicsFormat.R8_UNorm);
+        _disabledBlurMask = Color.black.ToTexture();
     }
 
     [ImageEffectOpaque]
@@ -43,6 +53,19 @@ public class VolumeSampling : MonoBehaviour
         if(GridTransform != null)
             _volMaterial.SetVector("_GridTransform", new Vector4(GridTransform.position.x,GridTransform.position.z,GridTransform.localScale.x));
         
-        Graphics.Blit( source, destination, _volMaterial, 0 );
+        _mrt[0] = destination.colorBuffer;
+        _mrt[1] = _blurMask.colorBuffer;
+
+        // Blit with a MRT.
+        Graphics.SetRenderTarget(_mrt, source.depthBuffer);
+        
+        Graphics.Blit( source, _volMaterial, 0 );
+        
+        //Graphics.Blit(rt1, destination);
+        
+        if(EnableDepth)
+            Shader.SetGlobalTexture("_DoFBlurTex", _blurMask);
+        else
+            Shader.SetGlobalTexture("_DoFBlurTex", _disabledBlurMask);
     }
 }

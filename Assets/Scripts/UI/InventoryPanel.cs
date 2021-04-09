@@ -42,12 +42,12 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     public Texture2D TemperatureColor;
     public ExponentialLerp TemperatureColorCurve;
     public ExponentialLerp TemperatureAlphaCurve;
-    public float MaxTemperature;
     public bool FitToContent;
     public float CellHitPulseTime;
     public Color ToggleEnabledColor;
     public Color ToggleDisabledColor;
     public Color CellBackgroundColor = new Color(0, 0, 0, .75f);
+    public float MinTempRange;
     
     Subject<InventoryEventData> _onBeginDrag;
     Subject<InventoryEventData> _onDrag;

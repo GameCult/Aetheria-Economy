@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class CapacitorData : BehaviorData
 {
     [Inspectable, JsonProperty("capacity"), Key(1), RuntimeInspectable]  

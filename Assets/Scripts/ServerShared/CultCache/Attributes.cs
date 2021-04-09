@@ -6,6 +6,7 @@ public class GlobalSettingsAttribute : Attribute { }
 [AttributeUsage(AttributeTargets.Class)]
 public class ExternalEntryAttribute : Attribute { }
 
+[AttributeUsage(AttributeTargets.All, Inherited = false)]
 public class InspectableAttribute : Attribute { }
 
 [AttributeUsage(AttributeTargets.Field)]

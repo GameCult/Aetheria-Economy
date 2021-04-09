@@ -10,7 +10,7 @@ using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ReactorData : BehaviorData
 {
     [Inspectable, JsonProperty("charge"), Key(1), RuntimeInspectable]  

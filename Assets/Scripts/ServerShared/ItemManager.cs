@@ -34,16 +34,16 @@ public class ItemManager
     public CultCache ItemData { get; }
     public GameplaySettings GameplaySettings { get; }
 
-    public double Time
-    {
-        get => _time;
-        set
-        {
-            _deltaTime = (float) (value - _time);
-            _time = value;
-            //Log($"GameContext delta time: {_deltaTime}");
-        }
-    }
+    // public double Time
+    // {
+    //     get => _time;
+    //     set
+    //     {
+    //         _deltaTime = (float) (value - _time);
+    //         _time = value;
+    //         //Log($"GameContext delta time: {_deltaTime}");
+    //     }
+    // }
 
     // private readonly Dictionary<CraftedItemData, int> Tier = new Dictionary<CraftedItemData, int>();
 

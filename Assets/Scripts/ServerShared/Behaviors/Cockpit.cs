@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class CockpitData : BehaviorData
 {
     public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)

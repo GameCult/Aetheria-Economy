@@ -83,15 +83,17 @@ public class ActionGameManager : MonoBehaviour
     public Prototype LockIndicator;
     public PlaceUIElementWorldspace[] Crosshairs;
     public EventLog EventLog;
-    [FormerlySerializedAs("SectorRenderer")] public ZoneRenderer ZoneRenderer;
+    public ZoneRenderer ZoneRenderer;
     public CinemachineVirtualCamera DockCamera;
     public CinemachineVirtualCamera FollowCamera;
     public CinemachineVirtualCamera WormholeCamera;
     public CanvasGroup GameplayUI;
+    public MainMenu MainMenu;
     public MenuPanel Menu;
     public MapRenderer MenuMap;
     //public SectorRenderer SectorRenderer;
     public SectorMap SectorMap;
+    public VolumeSampling VolumeRenderer;
     public SchematicDisplay SchematicDisplay;
     public SchematicDisplay TargetSchematicDisplay;
     public InventoryMenu Inventory;
@@ -107,7 +109,7 @@ public class ActionGameManager : MonoBehaviour
     // private CinemachineComposer _composer;
     
     private DirectoryInfo _loadoutPath;
-    private bool _editMode;
+    private bool _paused;
     private float _time;
     private int _zoomLevelIndex;
     private Entity _currentEntity;
@@ -121,6 +123,7 @@ public class ActionGameManager : MonoBehaviour
     private List<IDisposable> _shipSubscriptions = new List<IDisposable>();
     private float _severeHeatstrokePhase;
     private bool _uiHidden;
+    private bool _menuShown;
     
     public AetheriaInput Input { get; private set; }
     public EquippedDockingBay DockingBay { get; private set; }
@@ -167,6 +170,11 @@ public class ActionGameManager : MonoBehaviour
         SavePlayerSettings();
     }
 
+    private void OnDisable()
+    {
+        Input.Dispose();
+    }
+
     void Start()
     {
         EntityInstance.EffectManagerParent = EffectManagerParent;
@@ -195,6 +203,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.MapToggle.performed += context =>
         {
+            if (MainMenu.gameObject.activeSelf) return;
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Map)
             {
                 Cursor.lockState = CursorLockMode.Locked;
@@ -220,6 +229,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.Inventory.performed += context =>
         {
+            if (MainMenu.gameObject.activeSelf) return;
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Inventory)
             {
                 Cursor.lockState = CursorLockMode.Locked;
@@ -243,6 +253,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.Dock.performed += context =>
         {
+            if (MainMenu.gameObject.activeSelf) return;
             if (CurrentEntity == null)
             {
                 AkSoundEngine.PostEvent("UI_Fail", gameObject);
@@ -253,6 +264,44 @@ public class ActionGameManager : MonoBehaviour
             }
             else if (CurrentEntity.Parent == null) Dock();
             else Undock();
+        };
+
+        Input.Global.MainMenu.performed += context =>
+        {
+            if (CurrentEntity == null) return;
+            if (MainMenu.gameObject.activeSelf)
+            {
+                _paused = false;
+                VolumeRenderer.EnableDepth = true;
+                MainMenu.gameObject.SetActive(false);
+                if (_menuShown)
+                {
+                    Menu.gameObject.SetActive(true);
+                }
+                else
+                {
+                    GameplayUI.gameObject.SetActive(true);
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Input.Player.Enable();
+                }
+            }
+            else
+            {
+                _paused = true;
+                VolumeRenderer.EnableDepth = false;
+                MainMenu.gameObject.SetActive(true);
+                _menuShown = Menu.gameObject.activeSelf;
+                if (_menuShown)
+                {
+                    Menu.gameObject.SetActive(false);
+                }
+                else
+                {
+                    GameplayUI.gameObject.SetActive(false);
+                    Cursor.lockState = CursorLockMode.None;
+                    Input.Player.Disable();
+                }
+            }
         };
 
         Input.Player.EnterWormhole.performed += context =>
@@ -274,6 +323,8 @@ public class ActionGameManager : MonoBehaviour
                         ship.OnEnteredWormhole += () =>
                         {
                             PopulateLevel(wormhole.Target);
+                            foreach(var zone in wormhole.Target.AdjacentZones)
+                                CurrentSector.DiscoveredZones.Add(zone);
                             SectorMap.QueueZoneReveal(wormhole.Target.AdjacentZones);
                             ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w=>w.Target==oldZone.SectorZone).Position,
                                 Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
@@ -320,27 +371,33 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Player.TargetReticle.performed += context =>
         {
-            var underReticle = Zone.Entities.Where(x => x != CurrentEntity)
+            if (!CurrentEntity.VisibleHostiles.Any()) return;
+            var underReticle = CurrentEntity.VisibleHostiles.Where(x => x != CurrentEntity)
                 .MaxBy(x => dot(normalize(x.Position - CurrentEntity.Position), CurrentEntity.LookDirection));
             CurrentEntity.Target.Value = CurrentEntity.Target.Value == underReticle ? null : underReticle;
         };
 
         Input.Player.TargetNearest.performed += context =>
         {
-            CurrentEntity.Target.Value = Zone.Entities.Where(x=>x!=CurrentEntity)
-                .MaxBy(x => length(x.Position - CurrentEntity.Position));
+            if(CurrentEntity.VisibleHostiles.Any())
+            {
+                CurrentEntity.Target.Value = CurrentEntity.VisibleHostiles.Where(x => x != CurrentEntity)
+                    .MaxBy(x => length(x.Position - CurrentEntity.Position));
+            }
         };
 
         Input.Player.TargetNext.performed += context =>
         {
-            var targets = Zone.Entities.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
+            if (!CurrentEntity.VisibleHostiles.Any()) return;
+            var targets = CurrentEntity.VisibleHostiles.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
             var currentTargetIndex = Array.IndexOf(targets, CurrentEntity.Target.Value);
             CurrentEntity.Target.Value = targets[(currentTargetIndex + 1) % targets.Length];
         };
 
         Input.Player.TargetPrevious.performed += context =>
         {
-            var targets = Zone.Entities.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
+            if (!CurrentEntity.VisibleHostiles.Any()) return;
+            var targets = CurrentEntity.VisibleHostiles.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
             var currentTargetIndex = Array.IndexOf(targets, CurrentEntity.Target.Value);
             CurrentEntity.Target.Value = targets[(currentTargetIndex + targets.Length - 1) % targets.Length];
         };
@@ -472,6 +529,18 @@ public class ActionGameManager : MonoBehaviour
         
         StartGame();
         
+        ConsoleController.AddCommand("revealzones",
+            _ =>
+            {
+                foreach (var zones in CurrentSector.Zones
+                    .Where(z=>!CurrentSector.DiscoveredZones.Contains(z))
+                    .GroupBy(z=>z.Distance[CurrentSector.Entrance])
+                    .OrderBy(g=>g.Key))
+                {
+                    SectorMap.QueueZoneReveal(zones);
+                }
+            });
+        
         ConsoleController.AddCommand("give",
             args =>
             {
@@ -601,6 +670,9 @@ public class ActionGameManager : MonoBehaviour
             }
             else
             {
+                foreach(var group in CurrentSector.DiscoveredZones
+                    .GroupBy(dz=>dz.Distance[CurrentSector.Entrance]))
+                    SectorMap.QueueZoneReveal(group);
                 PopulateLevel(CurrentSector.Zones[PlayerSettings.CurrentRun.CurrentZone]);
                 var targetEntity = Zone.Entities[PlayerSettings.CurrentRun.CurrentZoneEntity];
                 if (targetEntity is OrbitalEntity orbitalEntity)
@@ -826,15 +898,12 @@ public class ActionGameManager : MonoBehaviour
             var deathTime = Time.time;
             UnbindEntity();
             CurrentEntity = null;
-            // Dialog.Clear();
-            // Dialog.Title.text = "You have died!";
-            // Dialog.Show(() =>
-            // {
-            //     PlayerSettings.CurrentRun = null;
-            //     StartGame();
-            // }, null, "Try again!");
-            // Dialog.transform.position = new Vector3(Screen.width / 2, Screen.height / 2);
-            //Dialog.MoveToCursor();
+            VolumeRenderer.EnableDepth = false;
+            MainMenu.gameObject.SetActive(true);
+            Menu.gameObject.SetActive(false);
+            PlayerSettings.CurrentRun = null;
+            SavePlayerSettings();
+            SaveState();
             Observable.EveryUpdate()
                 .Where(_ => Time.time - deathTime < DeathPPTransitionTime)
                 .Subscribe(_ =>
@@ -894,10 +963,10 @@ public class ActionGameManager : MonoBehaviour
 
     void Update()
     {
-        if(!_editMode)
+        if(!_paused)
         {
             _time += Time.deltaTime;
-            ItemManager.Time = Time.time;
+            // ItemManager.Time = _time;
             if(CurrentEntity !=null && CurrentEntity.Parent==null)
             {
                 foreach (var indicator in _visibleHostileIndicators)
@@ -925,8 +994,8 @@ public class ActionGameManager : MonoBehaviour
                     ship.MovementDirection = Input.Player.Move.ReadValue<Vector2>();
                 }
             }
+            Zone.Update(Time.deltaTime);
         }
-        Zone.Update(Time.deltaTime);
     }
 
     private void LateUpdate()

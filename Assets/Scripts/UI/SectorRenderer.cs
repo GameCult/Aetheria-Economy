@@ -19,10 +19,9 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
     public float ZoomSpeed;
     public float MinViewSize = .1f;
     public float MaxViewSize = 2;
-    public Button PathAnimationButton;
-    public float PathAnimationDamping;
-    public float PathAnimationDuration;
-    public float PathAnimationDurationPadding = 1.1f;
+    // public float PathAnimationDamping = .01f;
+    // public float PathAnimationDuration = 30;
+    // public float PathAnimationDurationPadding = 1.1f;
     public GameObject LegendPanel;
     public float LinkAnimationDuration;
     public float IconAnimationDuration;
@@ -34,7 +33,6 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
     private Transform _sectorCameraTransform;
     private Image _outputImage;
     private RenderTexture _outputTexture;
-    private Vector3[] _imageCorners = new Vector3[4];
     private int2 _size;
     private bool _init;
     private float _aspectRatio;
@@ -51,46 +49,40 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
         _sectorBackgroundDepth = _sectorBackgroundTransform.position.z;
         _sectorCameraTransform = SectorCamera.transform;
         _sectorCameraDepth = _sectorCameraTransform.position.z;
-        PathAnimationButton.onClick.AddListener(() =>
-        {
-            Map.StartCoroutine(AnimatePath());
-        });
+        // PathAnimationButton.onClick.AddListener(() =>
+        // {
+        //     Map.StartCoroutine(AnimatePath());
+        // });
     }
 
-    private IEnumerator AnimatePath()
-    {
-        var pathZones = ActionGameManager.CurrentSector.ExitPath;
-        LegendPanel.SetActive(false);
-        PathAnimationButton.gameObject.SetActive(false);
-        foreach (var zones in ActionGameManager.CurrentSector.Zones
-            .GroupBy(z=>z.Distance[ActionGameManager.CurrentSector.Entrance])
-            .OrderBy(g=>g.Key))
-        {
-            Map.QueueZoneReveal(zones);
-        }
-
-        var revealCount = ActionGameManager.CurrentSector.Entrance.Distance[ActionGameManager.CurrentSector.Exit];
-        Map.StartReveal(
-            PathAnimationDuration / revealCount * (LinkAnimationDuration / (IconAnimationDuration + LinkAnimationDuration)),
-            PathAnimationDuration / revealCount * (IconAnimationDuration / (IconAnimationDuration + LinkAnimationDuration)));
-        MainCamera.enabled = false;
-        SectorCamera.targetTexture = null;
-        Canvas.gameObject.SetActive(false);
-        SectorCamera.gameObject.SetActive(true);
-            
-        var pathAnimationLerp = 0f;
-        while (pathAnimationLerp < 1)
-        {
-            var currentTargetZone = pathZones[(int) (pathZones.Length * pathAnimationLerp)];
-            _position = lerp(_position, currentTargetZone.Position, PathAnimationDamping);
-            pathAnimationLerp += Time.deltaTime / (PathAnimationDuration * PathAnimationDurationPadding);
-            UpdateCamera();
-            yield return null;
-        }
-        
-        LegendPanel.SetActive(true);
-        PathAnimationButton.gameObject.SetActive(true);
-    }
+    // private IEnumerator AnimatePath()
+    // {
+    //     var pathZones = ActionGameManager.CurrentSector.ExitPath;
+    //     LegendPanel.SetActive(false);
+    //     PathAnimationButton.gameObject.SetActive(false);
+    //
+    //     var revealCount = ActionGameManager.CurrentSector.Entrance.Distance[ActionGameManager.CurrentSector.Exit];
+    //     Map.StartReveal(
+    //         PathAnimationDuration / revealCount * (LinkAnimationDuration / (IconAnimationDuration + LinkAnimationDuration)),
+    //         PathAnimationDuration / revealCount * (IconAnimationDuration / (IconAnimationDuration + LinkAnimationDuration)));
+    //     MainCamera.enabled = false;
+    //     SectorCamera.targetTexture = null;
+    //     Canvas.gameObject.SetActive(false);
+    //     SectorCamera.gameObject.SetActive(true);
+    //         
+    //     var pathAnimationLerp = 0f;
+    //     while (pathAnimationLerp < 1)
+    //     {
+    //         var currentTargetZone = pathZones[(int) (pathZones.Length * pathAnimationLerp)];
+    //         _position = lerp(_position, currentTargetZone.Position, PathAnimationDamping);
+    //         pathAnimationLerp += Time.deltaTime / (PathAnimationDuration * PathAnimationDurationPadding);
+    //         UpdateCamera();
+    //         yield return null;
+    //     }
+    //     
+    //     LegendPanel.SetActive(true);
+    //     PathAnimationButton.gameObject.SetActive(true);
+    // }
     
     private void OnEnable()
     {

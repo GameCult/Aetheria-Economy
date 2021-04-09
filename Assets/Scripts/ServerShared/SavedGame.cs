@@ -34,11 +34,15 @@ public class SavedGame
 
     [Key(8)]
     public SectorGenerationSettings Settings;
+
+    [Key(9)]
+    public int[] DiscoveredZones;
     
     public SavedGame() { }
 
     public SavedGame(Sector sector, Zone currentZone, Entity currentEntity)
     {
+        DiscoveredZones = sector.DiscoveredZones.Select(dz => Array.IndexOf(sector.Zones, dz)).ToArray();
         Settings = sector.Settings;
         Factions = sector.HomeZones.Keys.Select(f => f.ID).ToArray();
         

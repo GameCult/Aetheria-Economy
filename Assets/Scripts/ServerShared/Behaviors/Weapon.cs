@@ -10,7 +10,8 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[Union(0, typeof(InstantWeaponData)),
+[Inspectable, 
+ Union(0, typeof(InstantWeaponData)),
  Union(1, typeof(LauncherData)),
  Union(2, typeof(ConstantWeaponData)), 
  Union(3, typeof(ChargedWeaponData)), 

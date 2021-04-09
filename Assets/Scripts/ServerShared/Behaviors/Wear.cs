@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(1000), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(1000), RuntimeInspectable]
 public class WearData : BehaviorData
 {
     [InspectableTemperature, JsonProperty("perSecond"), Key(1)]

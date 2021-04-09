@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ShieldData : BehaviorData
 {
     [Inspectable, JsonProperty("efficiency"), Key(1), RuntimeInspectable]  

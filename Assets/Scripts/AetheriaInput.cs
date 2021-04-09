@@ -1146,13 +1146,21 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MainMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""a626132e-6205-4abb-9a45-4cce6446958b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""7eadec25-7b3f-4d69-92b7-c756f5f9b0dd"",
-                    ""path"": ""<Keyboard>/m"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -1179,6 +1187,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Dock"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7de0bb82-5492-49aa-aa56-8562b58ba8a8"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""MainMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1268,6 +1287,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Global_MapToggle = m_Global.FindAction("Map Toggle", throwIfNotFound: true);
         m_Global_Inventory = m_Global.FindAction("Inventory", throwIfNotFound: true);
         m_Global_Dock = m_Global.FindAction("Dock", throwIfNotFound: true);
+        m_Global_MainMenu = m_Global.FindAction("MainMenu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1634,6 +1654,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Global_MapToggle;
     private readonly InputAction m_Global_Inventory;
     private readonly InputAction m_Global_Dock;
+    private readonly InputAction m_Global_MainMenu;
     public struct GlobalActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1641,6 +1662,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @MapToggle => m_Wrapper.m_Global_MapToggle;
         public InputAction @Inventory => m_Wrapper.m_Global_Inventory;
         public InputAction @Dock => m_Wrapper.m_Global_Dock;
+        public InputAction @MainMenu => m_Wrapper.m_Global_MainMenu;
         public InputActionMap Get() { return m_Wrapper.m_Global; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1659,6 +1681,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @Dock.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnDock;
                 @Dock.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnDock;
                 @Dock.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnDock;
+                @MainMenu.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMainMenu;
+                @MainMenu.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMainMenu;
+                @MainMenu.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMainMenu;
             }
             m_Wrapper.m_GlobalActionsCallbackInterface = instance;
             if (instance != null)
@@ -1672,6 +1697,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @Dock.started += instance.OnDock;
                 @Dock.performed += instance.OnDock;
                 @Dock.canceled += instance.OnDock;
+                @MainMenu.started += instance.OnMainMenu;
+                @MainMenu.performed += instance.OnMainMenu;
+                @MainMenu.canceled += instance.OnMainMenu;
             }
         }
     }
@@ -1747,5 +1775,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnMapToggle(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
         void OnDock(InputAction.CallbackContext context);
+        void OnMainMenu(InputAction.CallbackContext context);
     }
 }

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class RadiatorData : BehaviorData
 {
     [Inspectable, JsonProperty("emissivity"), Key(1), RuntimeInspectable]  

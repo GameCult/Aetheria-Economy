@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DataStructures.ViliWonka.Heap;
 using MIConvexHull;
 using JM.LinqFaster;
+using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using Random = Unity.Mathematics.Random;
@@ -14,6 +15,7 @@ public class Sector
 {
     public Dictionary<Faction, SectorZone> HomeZones = new Dictionary<Faction, SectorZone>();
     public Dictionary<Faction, SectorZone> BossZones = new Dictionary<Faction, SectorZone>();
+    public HashSet<SectorZone> DiscoveredZones = new HashSet<SectorZone>();
     
     public SectorGenerationSettings Settings { get; }
     public Faction[] Factions { get; }
@@ -46,6 +48,7 @@ public class Sector
                 PackedContents = zone.Contents
             };
         }).ToArray();
+        foreach (var i in savedGame.DiscoveredZones) DiscoveredZones.Add(Zones[i]);
         for (var i = 0; i < Zones.Length; i++)
         {
             Zones[i].AdjacentZones = savedGame.Zones[i].AdjacentZones.Select(azi => Zones[azi]).ToList();
@@ -164,6 +167,9 @@ public class Sector
         
         // Entrance is the zone furthest from the exit
         Entrance = Zones.MaxBy(z => Exit.Distance[z]);
+        
+        DiscoveredZones.Add(Entrance);
+        foreach(var z in Entrance.AdjacentZones) DiscoveredZones.Add(z);
         
         // Find all zones on the exit path where removing that zone would disconnect the entrance from the exit
         // Disregard "corridor" zones with only two adjacent zones
