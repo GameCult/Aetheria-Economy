@@ -234,9 +234,9 @@ public class Ship : Entity
 
     public override void Update(float delta)
     {
-        foreach (var thruster in _allThrusters) thruster.Axis = 0;
         if (_active && !_exitingWormhole && !_enteringWormhole)
         {
+            foreach (var thruster in _allThrusters) thruster.Axis = 0;
             var rightThrusterTorqueCompensation = abs(RightStrafeTotalTorque) / RightStrafeTorqueThrusters.Length;
             foreach (var thruster in _rightThrusters)
             {

@@ -48,6 +48,12 @@ public class EntityInstance : MonoBehaviour
     private static Dictionary<InstantWeaponData, InstantWeaponEffectManager> _instantWeaponManagers = new Dictionary<InstantWeaponData, InstantWeaponEffectManager>();
     private static Dictionary<ConstantWeaponData, ConstantWeaponEffectManager> _constantWeaponManagers = new Dictionary<ConstantWeaponData, ConstantWeaponEffectManager>();
 
+    public static void ClearWeaponManagers()
+    {
+        _instantWeaponManagers.Clear();
+        _constantWeaponManagers.Clear();
+    }
+
     public Dictionary<HardpointData, Transform[]> Barrels { get; private set; }
     public Dictionary<HardpointData, int> BarrelIndices { get; private set; }
     public Dictionary<Radiator, MeshRenderer> RadiatorMeshes { get; private set; }

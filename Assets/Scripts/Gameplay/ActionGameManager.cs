@@ -72,7 +72,9 @@ public class ActionGameManager : MonoBehaviour
     public float DeathPPTransitionTime;
     public PostProcessVolume DeathPP;
     public PostProcessVolume HeatstrokePP;
+    public PostProcessVolume HypothermiaPP;
     public PostProcessVolume SevereHeatstrokePP;
+    public PostProcessVolume SevereHypothermiaPP;
 
     [Header("Scene Links")]
     public Transform EffectManagerParent;
@@ -173,6 +175,8 @@ public class ActionGameManager : MonoBehaviour
     private void OnDisable()
     {
         Input.Dispose();
+        ConsoleController.ClearCommands();
+        EntityInstance.ClearWeaponManagers();
     }
 
     void Start()
@@ -676,7 +680,10 @@ public class ActionGameManager : MonoBehaviour
                 PopulateLevel(CurrentSector.Zones[PlayerSettings.CurrentRun.CurrentZone]);
                 var targetEntity = Zone.Entities[PlayerSettings.CurrentRun.CurrentZoneEntity];
                 if (targetEntity is OrbitalEntity orbitalEntity)
+                {
+                    CurrentEntity = targetEntity.Children.First(c => c is Ship {IsPlayerShip: true});
                     DoDock(orbitalEntity, orbitalEntity.DockingBays.First());
+                }
                 else
                 {
                     //StartCoroutine(IntroCutscene(targetEntity as Ship));
@@ -730,7 +737,6 @@ public class ActionGameManager : MonoBehaviour
                     {
                         UnbindEntity();
                         DoDock(entity, bay);
-                        TradeMenu.Inventory = entity.CargoBays.First();
                         AkSoundEngine.PostEvent("Dock", gameObject);
                         return;
                     }
@@ -742,6 +748,7 @@ public class ActionGameManager : MonoBehaviour
 
     private void DoDock(Entity entity, EquippedDockingBay dockingBay)
     {
+        TradeMenu.Inventory = entity.CargoBays.First();
         DockedEntity = entity;
         ZoneRenderer.PerspectiveEntity = DockedEntity;
         DockingBay = dockingBay;
@@ -882,18 +889,20 @@ public class ActionGameManager : MonoBehaviour
             var indicator = HostileTargetIndicator.Instantiate<VisibleHostileIndicator>();
             _visibleHostileIndicators.Add(hostile, indicator);
         }
+        
         _shipSubscriptions.Add(CurrentEntity.VisibleHostiles.ObserveAdd().Subscribe(addEvent =>
         {
             var indicator = HostileTargetIndicator.Instantiate<VisibleHostileIndicator>();
             _visibleHostileIndicators.Add(addEvent.Value, indicator);
         }));
+        
         _shipSubscriptions.Add(CurrentEntity.VisibleHostiles.ObserveRemove().Subscribe(removeEvent =>
         {
             _visibleHostileIndicators[removeEvent.Value].GetComponent<Prototype>().ReturnToPool();
             _visibleHostileIndicators.Remove(removeEvent.Value);
         }));
         
-        _shipSubscriptions.Add(CurrentEntity.Death.Subscribe(_ =>
+        _shipSubscriptions.Add(CurrentEntity.Death.Subscribe(cause =>
         {
             var deathTime = Time.time;
             UnbindEntity();
@@ -903,20 +912,29 @@ public class ActionGameManager : MonoBehaviour
             Menu.gameObject.SetActive(false);
             PlayerSettings.CurrentRun = null;
             SavePlayerSettings();
-            SaveState();
             Observable.EveryUpdate()
                 .Where(_ => Time.time - deathTime < DeathPPTransitionTime)
                 .Subscribe(_ =>
                     {
                         var t = (Time.time - deathTime) / DeathPPTransitionTime;
-                        HeatstrokePP.weight = 1 - t;
-                        SevereHeatstrokePP.weight = 1 - t;
+                        if(cause==CauseOfDeath.Heatstroke)
+                        {
+                            HeatstrokePP.weight = 1 - t;
+                            SevereHeatstrokePP.weight = 1 - t;
+                        }
+                        else if (cause == CauseOfDeath.Hypothermia)
+                        {
+                            HypothermiaPP.weight = 1 - t;
+                            SevereHypothermiaPP.weight = 1 - t;
+                        }
                         DeathPP.weight = t;
                     },
                     () =>
                     {
                         HeatstrokePP.weight = 0;
                         SevereHeatstrokePP.weight = 0;
+                        HypothermiaPP.weight = 0;
+                        SevereHypothermiaPP.weight = 0;
                         DeathPP.weight = 1;
                     });
         }));

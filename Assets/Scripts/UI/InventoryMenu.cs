@@ -62,6 +62,7 @@ public class InventoryMenu : MonoBehaviour
         var cargo = GameManager.DockingBay ?? GameManager.CurrentEntity.CargoBays.FirstOrDefault();
         if (cargo!=null)
             InventoryPanels[0].Display(cargo);
+        else InventoryPanels[0].Clear();
         if(GameManager.CurrentEntity != null)
             InventoryPanels[1].Display(GameManager.CurrentEntity);
         else InventoryPanels[1].Clear();
@@ -285,14 +286,14 @@ public class InventoryMenu : MonoBehaviour
                 }
             });
 
-            panel.OnClickAsObservable().Subscribe(data =>
+            panel.OnClickAsObservable().Subscribe(e =>
             {
-                if (data is InventoryCargoEventData cargoEvent)
+                if (e.data is InventoryCargoEventData cargoEvent)
                 {
                     var item = cargoEvent.CargoBay.Occupancy[cargoEvent.Position.x, cargoEvent.Position.y];
                     if(item!=null)
                     {
-                        if (Mouse.current.clickCount.ReadValue() == 2)
+                        if (e.clickCount == 2)
                         {
                             var otherPanel = panel == InventoryPanels[0] ? InventoryPanels[1] : InventoryPanels[0];
                             if (otherPanel.CanDropItem(item))
@@ -335,12 +336,12 @@ public class InventoryMenu : MonoBehaviour
                         }
                     }
                 }
-                else if (data is InventoryEntityEventData entityEvent)
+                else if (e.data is InventoryEntityEventData entityEvent)
                 {
                     var item = entityEvent.Entity.GearOccupancy[entityEvent.Position.x, entityEvent.Position.y];
                     if (item != null)
                     {
-                        if (Mouse.current.clickCount.ReadValue() == 2)
+                        if (e.clickCount == 2)
                         {
                             var otherPanel = panel == InventoryPanels[0] ? InventoryPanels[1] : InventoryPanels[0];
                             if (otherPanel.CanDropItem(item.EquippableItem))

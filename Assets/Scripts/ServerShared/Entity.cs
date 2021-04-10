@@ -98,6 +98,7 @@ public abstract class Entity
     public Cockpit Cockpit { get; private set; }
     public Sensor Sensor { get; private set; }
     public float Heatstroke { get; private set; }
+    public float Hypothermia { get; private set; }
     
     public float TargetRange { get; private set; }
     public float MaxTemp { get; private set; }
@@ -115,12 +116,14 @@ public abstract class Entity
     public Subject<Entity> Docked = new Subject<Entity>();
     public Subject<Unit> HeatstrokeRisk = new Subject<Unit>();
     public Subject<Unit> HeatstrokeDeath = new Subject<Unit>();
+    public Subject<Unit> HypothermiaRisk = new Subject<Unit>();
+    public Subject<Unit> HypothermiaDeath = new Subject<Unit>();
     
     public UniRx.IObservable<EquippedItem> ItemDestroyed;
     public UniRx.IObservable<int2> HullArmorDepleted;
     public UniRx.IObservable<HardpointData> HardpointArmorDepleted;
     public UniRx.IObservable<Weapon> WeaponDestroyed;
-    public UniRx.IObservable<Unit> Death;
+    public UniRx.IObservable<CauseOfDeath> Death;
 
     private List<IDisposable> _subscriptions = new List<IDisposable>();
 
@@ -178,7 +181,10 @@ public abstract class Entity
         ItemDestroyed = ItemDamage.Where(x => x.item.EquippableItem.Durability < .01f).Select(x=>x.item);
         WeaponDestroyed = ItemDestroyed.Select(x => x.Behaviors.FirstOrDefault(b => b is Weapon) as Weapon).Where(x => x != null);
         HullArmorDepleted = ArmorDamage.Where(x => Armor[x.pos.x, x.pos.y] < .01f).Select(x => x.pos);
-        Death = HullDamage.Select(_ => Unit.Default).Where(_ => Hull.Durability < .01f).Merge(HeatstrokeDeath);
+        Death = HullDamage.Where(_ => Hull.Durability < .01f).Select(_ => CauseOfDeath.HullDestroyed)
+            .Merge(HeatstrokeDeath.Select(_ => CauseOfDeath.Heatstroke))
+            .Merge(HypothermiaDeath.Select(_ => CauseOfDeath.Hypothermia))
+            .Merge(ItemDestroyed.Where(i=>i.GetBehavior<Cockpit>()!=null).Select(_ => CauseOfDeath.CockpitDestroyed));
 
         EntityInfoGathered.ObserveReplace().Subscribe(replace =>
         {
@@ -779,7 +785,7 @@ public abstract class Entity
                         ItemManager.GameplaySettings.HeatstrokeMultiplier * delta);
                     if(previous < ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold && Heatstroke > ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold)
                         HeatstrokeRisk.OnNext(Unit.Default);
-                    if(Heatstroke > 1)
+                    if(Heatstroke > .99)
                     {
                         HeatstrokeDeath.OnNext(Unit.Default);
                         Deactivate();
@@ -788,6 +794,25 @@ public abstract class Entity
                 else
                 {
                     Heatstroke = saturate(Heatstroke - ItemManager.GameplaySettings.HeatstrokeRecoverySpeed * delta);
+                }
+                if (Cockpit.Item.Temperature < ItemManager.GameplaySettings.HypothermiaTemperature)
+                {
+                    var previous = Hypothermia;
+                    Hypothermia = saturate(
+                        Hypothermia +
+                        pow(ItemManager.GameplaySettings.HypothermiaTemperature - Cockpit.Item.Temperature, ItemManager.GameplaySettings.HypothermiaExponent) *
+                        ItemManager.GameplaySettings.HypothermiaMultiplier * delta);
+                    if(previous < ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold && Heatstroke > ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold)
+                        HypothermiaRisk.OnNext(Unit.Default);
+                    if(Hypothermia > .99)
+                    {
+                        HypothermiaDeath.OnNext(Unit.Default);
+                        Deactivate();
+                    }
+                }
+                else
+                {
+                    Hypothermia = saturate(Hypothermia - ItemManager.GameplaySettings.HypothermiaRecoverySpeed * delta);
                 }
             }
             

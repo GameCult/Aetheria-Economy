@@ -168,6 +168,11 @@ public class GameplaySettings
     public float HeatstrokeExponent = 2;
     public float HeatstrokeRecoverySpeed = .2f;
     public float HeatstrokeControlLimit = .75f;
+    public float HypothermiaTemperature = 273;
+    public float HypothermiaMultiplier = .00001f;
+    public float HypothermiaExponent = 2;
+    public float HypothermiaRecoverySpeed = .2f;
+    public float HypothermiaControlLimit = .75f;
     public float LockIndicatorNoiseAmplitude = 50f;
     public ExponentialLerp LockIndicatorFrequency;
     public ExponentialLerp LockSpinSpeed;

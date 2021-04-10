@@ -20,7 +20,7 @@ using int2 = Unity.Mathematics.int2;
 
 public class InventoryPanel : MonoBehaviour, IPointerClickHandler
 {
-    [FormerlySerializedAs("ConfirmationDialog")] public ConfirmationDialog Dialog;
+    public ConfirmationDialog Dialog;
     public bool Flip;
     public GameSettings Settings;
     public ActionGameManager GameManager;
@@ -30,6 +30,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     public TextMeshProUGUI MaxTempLabel;
     public GameObject TemperatureRange;
     public Button Dropdown;
+    public Button EditName;
     public Button Current;
     public Button Thermal;
     public GridLayoutGroup Grid;
@@ -47,12 +48,13 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     public Color ToggleEnabledColor;
     public Color ToggleDisabledColor;
     public Color CellBackgroundColor = new Color(0, 0, 0, .75f);
-    public float MinTempRange;
+    public float MinTempRange = 1;
+    public float DoubleClickTime = .5f;
     
     Subject<InventoryEventData> _onBeginDrag;
     Subject<InventoryEventData> _onDrag;
     Subject<InventoryEventData> _onEndDrag;
-    Subject<InventoryEventData> _onClick;
+    Subject<(InventoryEventData data, int clickCount)> _onClick;
     Subject<InventoryEventData> _onPointerEnter;
     Subject<InventoryEventData> _onPointerExit;
 
@@ -72,6 +74,9 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     private Dictionary<int2, int> _cellAnimationSequence = new Dictionary<int2, int>();
     private int _hitSequence = 0;
     private bool _thermal = false;
+    private int _clickCount;
+    private InventoryCell _clickCell;
+    private float _clickTime;
 
     private bool _hud;
     
@@ -122,6 +127,23 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                 }
             });
         }
+
+        if (EditName)
+        {
+            EditName.onClick.AddListener(() =>
+            {
+                Dialog.Clear();
+                var entityName = _displayedEntity.Name;
+                Dialog.AddField("Name", () => entityName, s => entityName = s);
+                Dialog.Show(() =>
+                {
+                    _displayedEntity.Name = entityName;
+                    Title.text = _displayedEntity.Name;
+                });
+                Dialog.MoveToCursor();
+            });
+        }
+        
         if(Dropdown)
         {
             Dropdown.onClick.AddListener(() =>
@@ -134,7 +156,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                         var options = entity.CargoBays
                             .Where(bay => bay != _displayedCargo)
                             .Select<EquippedCargoBay, (string text, Action action, bool enabled)>((bay, index) =>
-                                ($"Bay {index}", () => Display(bay), true));
+                                ($"Bay {index+1}", () => Display(bay), true));
                         if(entity != _displayedEntity) options = options.Prepend(("Equipment", () => Display(entity), true));
                         ContextMenu.AddDropdown(entity.Name, options);
                     }
@@ -180,6 +202,8 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     {
         if (_displayedEntity != null && TemperatureDisplay)
         {
+            var tempRange = _displayedEntity.MaxTemp - _displayedEntity.MinTemp;
+            var opacity = smoothstep(0, MinTempRange, tempRange);
             if(MinTempLabel)
             {
                 MinTempLabel.text = $"{((int) (_displayedEntity.MinTemp - 273.15f)).ToString()}°C";
@@ -194,7 +218,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                     {
                         var temp = (_displayedEntity.Temperature[x - 1, y - 1] - _displayedEntity.MinTemp) / (_displayedEntity.MaxTemp-_displayedEntity.MinTemp);
                         var color = TemperatureColor.GetPixelBilinear(TemperatureColorCurve.Evaluate(temp), 0);
-                        color.a = TemperatureAlphaCurve.Evaluate(temp);
+                        color.a = TemperatureAlphaCurve.Evaluate(temp) * opacity;
                         _temperatureTexture.SetPixel(x,y,color);
                     }
                     else
@@ -230,17 +254,12 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
         
         _subscriptions.Clear();
         
-        if (Current)
-            Current.gameObject.SetActive(false);
-        if (Thermal)
-            Thermal.gameObject.SetActive(false);
+        if (Current) Current.gameObject.SetActive(false);
+        if (Thermal) Thermal.gameObject.SetActive(false);
+        if (TemperatureRange) TemperatureRange.SetActive(false);
+        if(TemperatureDisplay) TemperatureDisplay.gameObject.SetActive(false);
+        if (EditName) EditName.gameObject.SetActive(false);
 
-        if (TemperatureRange)
-            TemperatureRange.SetActive(false);
-        
-        if(TemperatureDisplay)
-            TemperatureDisplay.gameObject.SetActive(false);
-        
         if(Title)
             Title.text = "None";
     }
@@ -260,6 +279,11 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
 
         if(Title)
             Title.text = entity.Name;
+
+        if (EditName)
+        {
+            EditName.gameObject.SetActive(true);
+        }
 
         var hullData = GameManager.ItemManager.GetData(entity.Hull) as HullData;
         
@@ -317,7 +341,15 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                     if(cell.PointerClickTrigger)
                     {
                         cell.PointerClickTrigger.OnPointerClickAsObservable()
-                            .Subscribe(data => _onClick?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                            .Subscribe(data =>
+                            {
+                                if (cell != _clickCell || Time.time - _clickTime > DoubleClickTime) 
+                                    _clickCount = 0;
+                                _clickCell = cell;
+                                _clickTime = Time.time;
+                                _clickCount++;
+                                _onClick?.OnNext((new InventoryEntityEventData(data, v, entity), _clickCount));
+                            });
                         cell.BeginDragTrigger.OnBeginDragAsObservable()
                             .Subscribe(data => _onBeginDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
                         cell.DragTrigger.OnDragAsObservable()
@@ -436,7 +468,15 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
             {
                 var cell = NodePrototype.Instantiate<InventoryCell>();
                 cell.PointerClickTrigger.OnPointerClickAsObservable()
-                    .Subscribe(data => _onClick?.OnNext(new InventoryCargoEventData(data, v, cargo)));
+                    .Subscribe(data =>
+                    {
+                        if (cell != _clickCell || Time.time - _clickTime > DoubleClickTime) 
+                            _clickCount = 0;
+                        _clickCell = cell;
+                        _clickTime = Time.time;
+                        _clickCount++;
+                        _onClick?.OnNext((new InventoryCargoEventData(data, v, cargo), _clickCount));
+                    });
                 cell.BeginDragTrigger.OnBeginDragAsObservable()
                     .Subscribe(data => _onBeginDrag?.OnNext(new InventoryCargoEventData(data, v, cargo)));
                 cell.DragTrigger.OnDragAsObservable()
@@ -676,7 +716,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     }
 
     public Subject<PointerEventData> OnBackgroundClick = new Subject<PointerEventData>();
-    public UniRx.IObservable<InventoryEventData> OnClickAsObservable() => _onClick ?? (_onClick = new Subject<InventoryEventData>());
+    public Subject<(InventoryEventData data, int clickCount)> OnClickAsObservable() => _onClick ?? (_onClick = new Subject<(InventoryEventData data, int clickCount)>());
     public UniRx.IObservable<InventoryEventData> OnBeginDragAsObservable() => _onBeginDrag ?? (_onBeginDrag = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnDragAsObservable() => _onDrag ?? (_onDrag = new Subject<InventoryEventData>());
     public UniRx.IObservable<InventoryEventData> OnEndDragAsObservable() => _onEndDrag ?? (_onEndDrag = new Subject<InventoryEventData>());

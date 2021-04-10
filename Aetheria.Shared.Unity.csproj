@@ -99,6 +99,7 @@
      <Compile Include="Assets\Scripts\ServerShared\EntitySerializer.cs" />
      <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\MathResolver.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Cell2Object.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\BezierCurve.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Corporations.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ItemInstance.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\TurretController.cs" />
@@ -195,6 +196,7 @@
      <Compile Include="Assets\Scripts\ServerShared\MarkovNameGenerator.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Where.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Min.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\CultCache\CollectionExtensions.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\ParticleEffect.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\Mining.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Vertex2.cs" />
@@ -205,6 +207,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDQuery\QueryKNearest.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Agents\States\BaseState.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetExceptions.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\EnumDictionary.cs" />
      <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\Exceptions\JsonKnownTypesException.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\Error.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />
@@ -250,9 +253,6 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\BezierCurve.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\CollectionExtensions.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\EnumDictionary.cs" />
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Aetheria.Shared.Unity.asmdef" />
  <Reference Include="System.Threading.Tasks.Extensions">

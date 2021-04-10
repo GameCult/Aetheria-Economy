@@ -29,6 +29,11 @@ public class ConsoleController
         get => _instance ?? (_instance = new ConsoleController());
     }
 
+    public static void ClearCommands()
+    {
+	    _commands.Clear();
+    }
+
     public static void AddCommand(string command, Action<string[]> action)
     {
 	    var lower = command.ToLowerInvariant();

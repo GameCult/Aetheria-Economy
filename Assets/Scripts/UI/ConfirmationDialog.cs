@@ -27,7 +27,7 @@ public class ConfirmationDialog : PropertiesPanel
     private void Start()
     {
         Cancel.onClick.AddListener(() => End());
-        Confirm.onClick.AddListener(() => End());
+        Confirm.onClick.AddListener(() => End(true));
         if (CancelClickCatcher != null)
             CancelClickCatcher.OnClick += data =>
             {

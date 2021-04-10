@@ -69,7 +69,7 @@ public class TradeMenu : MonoBehaviour
             ContextMenu.AddDropdown("Gear Type", hardpointTypes
                 .Select<HardpointType, (string, Action, bool)>(x => (Enum.GetName(typeof(HardpointType), x), () =>
                 {
-                    if (_hardpointFilter.filter == null)
+                    if (!_hardpointFilter.filter)
                     {
                         _hardpointFilter.filter = FilterPrototype.Instantiate<ItemFilter>();
                         _hardpointFilter.filter.OnDisable += () =>
@@ -78,12 +78,12 @@ public class TradeMenu : MonoBehaviour
                             Populate();
                         };
                     }
-                    if(_commodityFilter.filter != null)
+                    if(_commodityFilter.filter)
                     {
                         _commodityFilter.filter.GetComponent<Prototype>().ReturnToPool();
                         _commodityFilter.filter = null;
                     }
-                    if(_compoundCommodityFilter.filter != null)
+                    if(_compoundCommodityFilter.filter)
                     {
                         _compoundCommodityFilter.filter.GetComponent<Prototype>().ReturnToPool();
                         _compoundCommodityFilter.filter = null;
@@ -96,7 +96,7 @@ public class TradeMenu : MonoBehaviour
             ContextMenu.AddDropdown("Simple Commodity", commodityTypes
                 .Select<SimpleCommodityCategory, (string, Action, bool)>(x => (Enum.GetName(typeof(SimpleCommodityCategory), x), () =>
                 {
-                    if (_commodityFilter.filter == null)
+                    if (!_commodityFilter.filter)
                     {
                         _commodityFilter.filter = FilterPrototype.Instantiate<ItemFilter>();
                         _commodityFilter.filter.OnDisable += () =>
@@ -105,12 +105,12 @@ public class TradeMenu : MonoBehaviour
                             Populate();
                         };
                     }
-                    if(_hardpointFilter.filter != null)
+                    if(_hardpointFilter.filter)
                     {
                         _hardpointFilter.filter.GetComponent<Prototype>().ReturnToPool();
                         _hardpointFilter.filter = null;
                     }
-                    if(_compoundCommodityFilter.filter != null)
+                    if(_compoundCommodityFilter.filter)
                     {
                         _compoundCommodityFilter.filter.GetComponent<Prototype>().ReturnToPool();
                         _compoundCommodityFilter.filter = null;
@@ -123,7 +123,7 @@ public class TradeMenu : MonoBehaviour
             ContextMenu.AddDropdown("Compound Commodity", compoundCommodityTypes
                 .Select<CompoundCommodityCategory, (string, Action, bool)>(x => (Enum.GetName(typeof(CompoundCommodityCategory), x), () =>
                 {
-                    if (_compoundCommodityFilter.filter == null)
+                    if (!_compoundCommodityFilter.filter)
                     {
                         _compoundCommodityFilter.filter = FilterPrototype.Instantiate<ItemFilter>();
                         _compoundCommodityFilter.filter.OnDisable += () =>
@@ -132,12 +132,12 @@ public class TradeMenu : MonoBehaviour
                             Populate();
                         };
                     }
-                    if(_hardpointFilter.filter != null)
+                    if(_hardpointFilter.filter)
                     {
                         _hardpointFilter.filter.GetComponent<Prototype>().ReturnToPool();
                         _hardpointFilter.filter = null;
                     }
-                    if(_commodityFilter.filter != null)
+                    if(_commodityFilter.filter)
                     {
                         _commodityFilter.filter.GetComponent<Prototype>().ReturnToPool();
                         _commodityFilter.filter = null;
@@ -449,13 +449,19 @@ public class TradeMenu : MonoBehaviour
             foreach (var ship in GameManager.CurrentEntity.Parent.Children.Where(e => e is Ship {IsPlayerShip: true}))
             {
                 foreach (var bay in ship.CargoBays.Select((bay, index) => (bay, index)))
-                    ContextMenu.AddOption($"{ship.Name} Bay {bay.index}",
-                        () =>
-                        {
-                            _targetCargo = bay.bay;
-                            TargetCargoLabel.text = $"{ship.Name} Bay {bay.index}";
-                        });
+                {
+                    if(_targetCargo != bay.bay)
+                    {
+                        ContextMenu.AddOption($"{ship.Name} Bay {bay.index+1}",
+                            () =>
+                            {
+                                _targetCargo = bay.bay;
+                                TargetCargoLabel.text = $"{ship.Name} Bay {bay.index+1}";
+                            });
+                    }
+                }
             }
+            ContextMenu.Show();
         });
     }
 

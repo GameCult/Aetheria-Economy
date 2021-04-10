@@ -12,6 +12,14 @@ public enum ItemRotation
     Clockwise = 3
 }
 
+public enum CauseOfDeath
+{
+    HullDestroyed,
+    CockpitDestroyed,
+    Heatstroke,
+    Hypothermia
+}
+
 public enum HitType
 {
     Armor,

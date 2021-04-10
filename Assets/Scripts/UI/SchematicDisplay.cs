@@ -36,6 +36,7 @@ public class SchematicDisplay : MonoBehaviour
     public RectTransform EnergyFill;
     public RectTransform HullDurabilityFill;
     public RectTransform HeatstrokeMeterFill;
+    public RectTransform HypothermiaMeterFill;
     public RectTransform HeatstrokeLimitFill;
 
     public CanvasGroup TriggerGroups;
@@ -249,7 +250,8 @@ public class SchematicDisplay : MonoBehaviour
                     CockpitTemperatureLabel.text = $"{((int) (_cockpit.Item.Temperature - 273.15f)).ToString()}°C";
 
                     HeatstrokeMeterFill.anchorMax = new Vector2(_entity.Heatstroke, 1);
-                    HeatstrokeLimitFill.anchorMax = new Vector2(_cockpit.Item.Temperature / Settings.GameplaySettings.HeatstrokeTemperature, 1);
+                    HypothermiaMeterFill.anchorMax = new Vector2(_entity.Hypothermia, 1);
+                    HeatstrokeLimitFill.anchorMax = new Vector2(unlerp(Settings.GameplaySettings.HypothermiaTemperature, Settings.GameplaySettings.HeatstrokeTemperature, _cockpit.Item.Temperature), 1);
                 }
 
                 SensorCooldownFill.anchorMax = new Vector2(_entity.Sensor?.Cooldown ?? 0, 1);
