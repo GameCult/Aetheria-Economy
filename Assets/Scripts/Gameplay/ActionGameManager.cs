@@ -17,6 +17,7 @@ using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Unity.Mathematics;
+using UnityEngine.EventSystems;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using float3 = Unity.Mathematics.float3;
@@ -207,6 +208,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.MapToggle.performed += context =>
         {
+            if (EventSystem.current.currentSelectedGameObject != null) return;
             if (MainMenu.gameObject.activeSelf) return;
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Map)
             {
@@ -233,6 +235,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.Inventory.performed += context =>
         {
+            if (EventSystem.current.currentSelectedGameObject != null) return;
             if (MainMenu.gameObject.activeSelf) return;
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Inventory)
             {
@@ -257,6 +260,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.Dock.performed += context =>
         {
+            if (EventSystem.current.currentSelectedGameObject != null) return;
             if (MainMenu.gameObject.activeSelf) return;
             if (CurrentEntity == null)
             {
@@ -272,6 +276,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.MainMenu.performed += context =>
         {
+            if (EventSystem.current.currentSelectedGameObject != null) return;
             if (CurrentEntity == null) return;
             if (MainMenu.gameObject.activeSelf)
             {
