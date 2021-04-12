@@ -108,7 +108,8 @@ Shader "Aetheria/Volume Sun"
         	
 			float3 rayPos = IN.worldNormal;
 			float3 rayStep = normalize(IN.viewDir)*_RayStepSize*(2-rim);
-			float dither = tex2D(_DitheringTex, (screenPos + .5) * _DitheringCoords.xy + _DitheringCoords.zw).r * 2;
+			half dither = frac(tex2D(_DitheringTex, (screenPos + .5) * _DitheringCoords.xy).r + _FrameNumber * 1.61803398875);
+			//float dither = tex2D(_DitheringTex, (screenPos + .5) * _DitheringCoords.xy + _DitheringCoords.zw).r * 2;
 			rayPos += rayStep * dither;
         	
 			float3 accum = 0;

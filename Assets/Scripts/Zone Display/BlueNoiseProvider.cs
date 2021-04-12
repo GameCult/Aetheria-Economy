@@ -26,9 +26,10 @@ public class BlueNoiseProvider : MonoBehaviour
     {
         Shader.SetGlobalVector("_DitheringCoords", new Vector4(
             (float)_camera.scaledPixelWidth / (float)NoiseTexture.width,
-            (float)_camera.scaledPixelWidth / (float)NoiseTexture.height,
+            (float)_camera.scaledPixelHeight / (float)NoiseTexture.height,
             Random.value,
             Random.value
         ));
+        Shader.SetGlobalInt("_FrameNumber", Time.frameCount);
     }
 }

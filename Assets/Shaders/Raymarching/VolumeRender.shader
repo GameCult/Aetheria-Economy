@@ -44,9 +44,6 @@
 	// the number of volume samples to take
 	#define SAMPLE_COUNT 128
 
-	// spacing between samples
-	//#define SAMPLE_PERIOD 16
-
 	// Shared shader code for pixel view rays, given screen pos and camera frame vectors.
 	// Camera vectors are passed in as this shader is run from a post proc camera, so the unity built-in values are not useful.
 	uniform float4x4 _CamProj;
@@ -55,6 +52,7 @@
 	uniform float3 _CamForward;
 	uniform float3 _CamRight;
 	uniform float  _HalfFov;
+	uniform int _FrameNumber;
 	
 	uniform float  _StepExponent;
 	
@@ -157,8 +155,8 @@
 	
 	float4 RayMarch( in float3 origin, in float3 direction, in float zbuf, in float2 screenUV, out float scatterSum )
 	{
-        //half rand = tex2D(_DitheringTex, screenUV * _DitheringCoords.xy + _DitheringCoords.zw).r*2;
-		half rand = nrand(screenUV + frac(_Time.x)) * 2;
+        half rand = frac(tex2D(_DitheringTex, screenUV * _DitheringCoords.xy).r + _FrameNumber * 1.61803398875);
+		//half rand = nrand(screenUV + frac(_Time.x)) * 2;
 		float4 sum = (float4)0.;
 		scatterSum = 0.;
 
