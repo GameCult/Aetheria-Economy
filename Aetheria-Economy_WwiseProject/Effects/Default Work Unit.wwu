@@ -15,11 +15,165 @@
 				</Effect>
 				<Effect Name="New_Wwise_Parametric_EQ_reactor_low" ID="{AC0ED82A-51E5-48E0-B537-EE39864BAC5F}" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
 					<PropertyList>
-						<Property Name="FrequencyBand1" Type="Real32" Value="169"/>
-						<Property Name="FrequencyBand3" Type="Real32" Value="2507"/>
+						<Property Name="FrequencyBand1" Type="Real32" Value="4515"/>
+						<Property Name="FrequencyBand3" Type="Real32" Value="6538"/>
 						<Property Name="GainBand1" Type="Real32" Value="-9.2"/>
-						<Property Name="GainBand3" Type="Real32" Value="-3"/>
 					</PropertyList>
+				</Effect>
+				<Effect Name="New_iZotope_Trash_Filters_electric" ID="{20089E13-EA9C-4D51-A5E9-58D8E34C2788}" PluginName="iZotope Trash Filters" CompanyID="259" PluginID="6" PluginType="3">
+					<PropertyList>
+						<Property Name="Filter1Frequency" Type="Real32" Value="20"/>
+						<Property Name="Filter1Gain" Type="Real32" Value="-30"/>
+						<Property Name="Filter1Q" Type="Real32" Value="5.4"/>
+						<Property Name="Filter1Type" Type="int32" Value="12"/>
+					</PropertyList>
+				</Effect>
+				<Effect Name="New_Wwise_Parametric_EQ_lowP" ID="{7F8ADFFD-738C-4EBF-850F-7717826FCA18}" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+					<PropertyList>
+						<Property Name="FrequencyBand1" Type="Real32" Value="103"/>
+						<Property Name="GainBand1" Type="Real32" Value="-24"/>
+					</PropertyList>
+				</Effect>
+				<Effect Name="New_Wwise_Parametric_EQhiP" ID="{E3BA261D-8463-43A5-BE7E-7F8BEA10EFFA}" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+					<PropertyList>
+						<Property Name="FrequencyBand1" Type="Real32" Value="6383"/>
+						<Property Name="FrequencyBand3" Type="Real32" Value="20000"/>
+						<Property Name="GainBand1" Type="Real32" Value="-6"/>
+						<Property Name="GainBand3" Type="Real32" Value="-24"/>
+					</PropertyList>
+				</Effect>
+				<Effect Name="EQ_NueclearDrive" ID="{B886B6D8-78DF-4727-A605-5B5A868168CE}" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+					<PropertyList>
+						<Property Name="FrequencyBand1" Type="Real32" Value="117"/>
+						<Property Name="GainBand1" Type="Real32" Value="-6.9"/>
+					</PropertyList>
+				</Effect>
+				<Effect Name="New_McDSP_FutzBox" ID="{79691508-2007-47C2-A0AF-B57150F8EC56}" PluginName="McDSP FutzBox" CompanyID="256" PluginID="110" PluginType="3">
+					<PropertyList>
+						<Property Name="Balance" Type="Real32">
+							<RTPCList>
+								<RTPC Name="" ID="{B24C11FF-D920-4B2A-B11A-B074DCEC561C}" ShortID="536604729">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{7CD9C53D-64E9-47EF-B622-693D7ABD22A1}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{A643025C-5BC7-4831-9C76-1978512F2AB3}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="1"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>0</YPos>
+												<Flags>5</Flags>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>100</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+						<Property Name="DistortionAmount" Type="Real32" Value="42.4"/>
+						<Property Name="DistortionMode" Type="int32" Value="2"/>
+						<Property Name="DistortionRectify" Type="Real32" Value="59.6"/>
+						<Property Name="EQFreq" Type="Real32" Value="376.7038"/>
+						<Property Name="FiltersHPFFreq" Type="Real32" Value="1230.439">
+							<RTPCList>
+								<RTPC Name="" ID="{B9EFAEEF-B415-413C-9386-57FA0A797391}" ShortID="727769987">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{7CD9C53D-64E9-47EF-B622-693D7ABD22A1}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{63759D02-776C-4B44-A57D-E224B0E071C5}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="5"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>20</YPos>
+												<Flags>5</Flags>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>654.11216</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+						<Property Name="FiltersLPFFreq" Type="Real32" Value="4521.396">
+							<RTPCList>
+								<RTPC Name="" ID="{5BE13058-9621-4CB9-A150-D8E6351E8B16}" ShortID="232884332">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{7CD9C53D-64E9-47EF-B622-693D7ABD22A1}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{0BF40038-01E0-4774-877D-A9D7B8BE60E9}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="5"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>20000</YPos>
+												<Flags>5</Flags>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>2338.78964</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+						<Property Name="FiltersLPFQ" Type="Real32" Value="34"/>
+						<Property Name="GateEnable" Type="bool" Value="False"/>
+						<Property Name="GateRange" Type="Real32" Value="-12.8"/>
+						<Property Name="GateThreshold" Type="Real32" Value="-63.68"/>
+						<Property Name="SIMType" Type="int32" Value="22"/>
+					</PropertyList>
+				</Effect>
+				<Effect Name="FiltersReactor" ID="{B9327DC1-3D6F-4BE0-9126-1ED727449F16}" PluginName="iZotope Trash Filters" CompanyID="259" PluginID="6" PluginType="3">
+					<PropertyList>
+						<Property Name="Filter1Frequency" Type="Real32" Value="790"/>
+						<Property Name="Filter1Gain" Type="Real32" Value="-27"/>
+						<Property Name="Filter1Q" Type="Real32" Value="3.2"/>
+						<Property Name="Filter1Resonance" Type="Real32" Value="0.5"/>
+						<Property Name="Filter2Frequency" Type="Real32" Value="6810"/>
+						<Property Name="Filter2LFOPeriod" Type="Real32" Value="8000"/>
+						<Property Name="Filter2LFOTargetRes" Type="Real32" Value="0"/>
+						<Property Name="Filter2Q" Type="Real32" Value="7.5"/>
+						<Property Name="Filter2Res" Type="Real32" Value="0.4"/>
+						<Property Name="Filter2TargetFreq" Type="Real32" Value="100"/>
+						<Property Name="Filter2TargetQ" Type="Real32" Value="0.3"/>
+						<Property Name="Filter2Type" Type="int32" Value="13"/>
+					</PropertyList>
+				</Effect>
+				<Effect Name="New_iZotope_Trash_Box_Modeler01" ID="{4CA5C296-2673-426F-ADC6-0B7C29E937B7}" PluginName="iZotope Trash Box Modeler" CompanyID="259" PluginID="7" PluginType="3">
+					<PropertyList>
+						<Property Name="BoxModel" Type="int32" Value="47"/>
+						<Property Name="MicType" Type="int32" Value="2"/>
+					</PropertyList>
+					<ChildrenList>
+						<PluginMediaSource Name="" ID="{F2FE757D-959A-42B0-BC09-90A592EED75C}">
+							<ParentPluginID>462899</ParentPluginID>
+							<MediaIDList>
+								<MediaID ID="435959294"/>
+							</MediaIDList>
+						</PluginMediaSource>
+					</ChildrenList>
 				</Effect>
 			</ChildrenList>
 		</WorkUnit>

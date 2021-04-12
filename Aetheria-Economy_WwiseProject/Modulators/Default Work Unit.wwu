@@ -124,6 +124,12 @@
 						<Property Name="LfoWaveform" Type="int32" Value="5"/>
 					</PropertyList>
 				</ModulatorLfo>
+				<ModulatorLfo Name="random_position_reader" ID="{504E6106-5CA5-45B5-B378-93CC664AC435}" ShortID="677602712">
+					<PropertyList>
+						<Property Name="LfoFrequency" Type="Real64" Value="0.84"/>
+						<Property Name="LfoWaveform" Type="int32" Value="5"/>
+					</PropertyList>
+				</ModulatorLfo>
 			</ChildrenList>
 		</WorkUnit>
 	</Modulators>

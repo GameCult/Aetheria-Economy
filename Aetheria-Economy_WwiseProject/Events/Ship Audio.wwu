@@ -3,31 +3,6 @@
 	<Events>
 		<WorkUnit Name="Ship Audio" ID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" OwnerID="{4FA02AD0-1AB3-4ADB-86E9-A5543490085E}" PersistMode="Nested">
 			<ChildrenList>
-				<Event Name="test_spaship_full_unit" ID="{5E7D0CDC-6E2B-49AE-89E9-B39335CE8CAF}">
-					<ChildrenList>
-						<Action Name="" ID="{D6F2996A-8361-4D78-88C6-D60D15DD2F0E}" ShortID="692204141">
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="thruster_large" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-						<Action Name="" ID="{B3F56B03-9140-4EF5-899C-4752BAFA8ADC}" ShortID="26652537">
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="reactor_type1" ID="{3AA3BAA8-A42D-4EAE-B9BD-BC64D22B2753}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-						<Action Name="" ID="{F165B595-D783-4B56-A5AF-5DD85C00DEF8}" ShortID="97635930">
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="spaceship_reactor_overheat_alarm" ID="{C9F5C84F-7414-4607-B8F0-8734CCB51061}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-					</ChildrenList>
-				</Event>
 				<Event Name="thruster_medium" ID="{0F30DB3D-6A97-4659-BA04-13A267DC19EC}">
 					<ChildrenList>
 						<Action Name="" ID="{9A7AD34B-FB31-46CE-8C31-D47E3DEF198A}" ShortID="644831442">
@@ -135,13 +110,12 @@
 						</Action>
 					</ChildrenList>
 				</Event>
-				<Event Name="shield" ID="{349CD880-DC70-43BF-9D4A-FA695E40CA2B}"/>
 				<Event Name="railgun_fire" ID="{E0F70C0D-8DDA-4811-A87A-462972871E1A}">
 					<ChildrenList>
-						<Action Name="" ID="{F3243C4C-A386-4DA9-9E38-E613BBF00731}" ShortID="951890922">
+						<Action Name="" ID="{55143A11-1236-49CB-B044-BEDF7680CB37}" ShortID="115662961">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="railgun_fire" ID="{94518B9E-4670-4FC3-BD4C-3B2A441FDCEF}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+									<ObjectRef Name="railgun_fire" ID="{A1395B69-32F8-46CE-9DB6-FF255F8AC1A0}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -149,10 +123,10 @@
 				</Event>
 				<Event Name="railgun_hit" ID="{749865F9-EFBD-41B5-9874-3A48F535F28F}">
 					<ChildrenList>
-						<Action Name="" ID="{310E03FD-01A5-48D4-9C23-A52C9C17A82D}" ShortID="772809758">
+						<Action Name="" ID="{376FED9D-0A17-421D-A3DC-8E43CECCEB46}" ShortID="419146100">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="railgun_hit" ID="{93EF9892-3F74-40AD-AE79-E4B95B32482D}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+									<ObjectRef Name="railgun_hit" ID="{81702202-C261-419A-A886-C3432FBDB910}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -171,10 +145,10 @@
 				</Event>
 				<Event Name="railgun_muzzle" ID="{E9B80512-0184-48FB-A298-BE9C088B6CC9}">
 					<ChildrenList>
-						<Action Name="" ID="{991B21A4-91AD-4292-BC01-B5F257E7BB8D}" ShortID="545309114">
+						<Action Name="" ID="{31EE7DEE-9F4D-470B-8198-C4FED84260C2}" ShortID="255093623">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="railgun_muzzle" ID="{81ECC4C2-C03A-4FD5-8241-82E31D3ED818}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+									<ObjectRef Name="railgun_muzzle" ID="{C362465E-F003-4D17-AA04-6E9202875CA5}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -182,10 +156,10 @@
 				</Event>
 				<Event Name="railgun_overcharge_fail" ID="{4CFC4DF9-2C65-4EE8-950D-C61EDBA90E64}">
 					<ChildrenList>
-						<Action Name="" ID="{A47AEA46-8CED-479A-8DFD-F387EF172D9C}" ShortID="693741291">
+						<Action Name="" ID="{D87B5548-28E3-4FFB-8BFD-FF5D082D33EF}" ShortID="120278333">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="railgun_overcharge_fail" ID="{8FC2369E-1556-41CD-B764-A26E63D9BFF4}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+									<ObjectRef Name="railgun_overcharge_fail" ID="{F23B6623-3CA0-4D0D-BA3A-3FE02C552DC6}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -197,6 +171,28 @@
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="sensor_ping" ID="{D524108B-6B52-457A-95BF-27A269C72198}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_hit_ship_destroyed" ID="{19757E9C-B4DE-4B8C-82C4-47E306DE3E7D}">
+					<ChildrenList>
+						<Action Name="" ID="{A94C704C-FBEF-41E4-B162-D8C85AB099A6}" ShortID="1039535959">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="ship_destroyed" ID="{DF2A7795-9583-455A-B783-184EF701B70B}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_miss" ID="{EB924EA5-6CC2-4D4D-B6B6-893A2998A1BB}">
+					<ChildrenList>
+						<Action Name="" ID="{339251B8-5C30-48BB-A7C5-FD1C01007C50}" ShortID="1071339755">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_miss" ID="{0BE1DA02-C0C9-4C8D-8B8C-A0CCF9D43879}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

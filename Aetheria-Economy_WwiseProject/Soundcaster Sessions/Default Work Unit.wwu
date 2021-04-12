@@ -92,6 +92,14 @@
 							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_electric_speed" ID="{9D610C30-BA07-43EF-B2E3-6CEB72857C03}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_rotor_plates_grain_filter" ID="{054DD684-3F0A-4629-BB94-1E5A662EED8A}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
 							<GameParameterRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}"/>
 							<Value>1</Value>
 						</RTPCValue>
@@ -101,11 +109,11 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="thruster_throttle" ID="{2A6D7A97-7D45-4B6C-96EE-CCD56FA83773}"/>
-							<Value>1</Value>
+							<Value>0.74</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="performance_quality" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}"/>
-							<Value>1</Value>
+							<Value>0.99</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="reactor_load" ID="{FC156F43-A577-4DCB-B6E8-84E4072A38C9}"/>
@@ -113,7 +121,171 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}"/>
-							<Value>0.35</Value>
+							<Value>0.99</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_drive_nuclear_grain_speed_mod" ID="{73534BF8-0FC9-4F33-92A9-D9E445654891}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_drive_nuclear_filterDuration" ID="{B54383F3-A1EF-4FCA-94D5-24A7E4AC228C}"/>
+							<Value>0</Value>
+						</RTPCValue>
+					</RTPCValueList>
+					<CurrentStateList ShowAll="true"/>
+					<CurrentSwitchList ShowAll="true"/>
+				</SoundcasterSession>
+				<SoundcasterSession Name="spaceship02" ID="{901A806C-BACF-44C7-A74C-C5AB11105856}">
+					<ModuleList>
+						<Module>
+							<ObjectRef Name="electric_drive_play" ID="{C231C587-6292-47DD-BD73-AD4D8D14F12B}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<Position X="0" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="Aetheric_driver" ID="{03FB1F9D-D99F-4F30-B3B8-1F1B742D2C55}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+							<Position X="0" Y="4"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="electric_drive_stop" ID="{1098DC5B-9284-4AE8-A4AA-5795A99C565A}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<Position X="1" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_charging" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="1" Y="2"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_charging" ID="{E695BB29-9F35-4C3C-B523-FADF305750DC}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+							<Position X="1" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="nuclear_drive_play" ID="{B92BC8AD-BEE8-4171-BDBF-AE18AEAEFF80}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<Position X="2" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_fire" ID="{E0F70C0D-8DDA-4811-A87A-462972871E1A}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="2" Y="2"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_fire" ID="{A1395B69-32F8-46CE-9DB6-FF255F8AC1A0}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+							<Position X="2" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="nuclear_drive_stop" ID="{73F86CF2-764E-4EE6-83F3-A385BE96CCD1}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<Position X="3" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_hit" ID="{749865F9-EFBD-41B5-9874-3A48F535F28F}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="3" Y="2"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_hit" ID="{81702202-C261-419A-A886-C3432FBDB910}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+							<Position X="3" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="reactor_play" ID="{024B1FD8-BEA0-4265-A083-F7583D4883BC}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<Position X="4" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="reactor" ID="{8D0ED9E5-D9D6-41E5-A093-CF203E6F2F95}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+							<Position X="4" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_overcharge_fail" ID="{4CFC4DF9-2C65-4EE8-950D-C61EDBA90E64}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="4" Y="2"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="sensor_ping" ID="{03AFFAC6-3402-48FC-B54D-7FF80212161A}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="5" Y="0"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="sensor_ping_01" ID="{B035E54B-17CE-4195-B946-F8017BD764A4}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+							<Position X="5" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_muzzle" ID="{E9B80512-0184-48FB-A298-BE9C088B6CC9}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<Position X="5" Y="2"/>
+						</Module>
+					</ModuleList>
+					<RTPCValueList ShowAll="true">
+						<RTPCValue>
+							<GameParameterRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="target_locking" ID="{215424C5-9F3E-438A-AE24-4314B540C243}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_electric_speed" ID="{9D610C30-BA07-43EF-B2E3-6CEB72857C03}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_weapon_lighting_grain_filter" ID="{441AD5D1-8E39-451F-8505-8AF4C9DA76B0}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_rotor_plates_grain_filter" ID="{054DD684-3F0A-4629-BB94-1E5A662EED8A}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}"/>
+							<Value>1</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_reactor_distortion2_DryWet" ID="{72651D5D-22E1-4AEE-87FA-9F706D12B1DC}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="thruster_throttle" ID="{2A6D7A97-7D45-4B6C-96EE-CCD56FA83773}"/>
+							<Value>0.78</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="performance_quality" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}"/>
+							<Value>1</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_reactor_grain_speed" ID="{D962E3DD-1F06-4C09-B49B-B4158D76A581}"/>
+							<Value>0.01</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_weapon_light_disHi_pitch" ID="{56E17E0E-C53E-4CA0-875D-CBA566D80021}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="reactor_load" ID="{FC156F43-A577-4DCB-B6E8-84E4072A38C9}"/>
+							<Value>2</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_weapon_lighting_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}"/>
+							<Value>1</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_reactor_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_drive_nuclear_grain_speed_mod" ID="{73534BF8-0FC9-4F33-92A9-D9E445654891}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
+							<GameParameterRef Name="sfx_ship_drive_nuclear_filterDuration" ID="{B54383F3-A1EF-4FCA-94D5-24A7E4AC228C}"/>
+							<Value>0</Value>
 						</RTPCValue>
 					</RTPCValueList>
 					<CurrentStateList ShowAll="true"/>
