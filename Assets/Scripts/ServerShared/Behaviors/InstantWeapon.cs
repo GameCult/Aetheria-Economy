@@ -21,9 +21,9 @@ public class InstantWeaponData : WeaponData
     [InspectablePrefab, JsonProperty("ammoInterval"), Key(20)]  
     public bool SingleAmmoBurst;
 
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new InstantWeapon(context, this, entity, item);
+        return new InstantWeapon(this, item);
     }
 }
 
@@ -71,7 +71,7 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
         OnFire = null;
     }
 
-    public InstantWeapon(ItemManager context, InstantWeaponData data, Entity entity, EquippedItem item) : base(context,data,entity,item)
+    public InstantWeapon(InstantWeaponData data, EquippedItem item) : base(data, item)
     {
         _data = data;
         _ammo = data.MagazineSize;
@@ -81,7 +81,7 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
     {
         // If 1 ammo is consumed per burst, perform ammo and energy consumption here
         // UseAmmo returns false when triggering reload; cancel firing if that is the case
-        if(_data.SingleAmmoBurst && (!Entity.TryConsumeEnergy(Energy) || !UseAmmo())) return;
+        if(_data.SingleAmmoBurst && (!Item.Entity.TryConsumeEnergy(Energy) || !UseAmmo())) return;
         
         _burstRemaining = (int) BurstCount;
         _burstInterval = BurstTime / _burstRemaining;
@@ -115,7 +115,7 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
         var hasAmmo = true;
         if (_data.AmmoType != Guid.Empty)
         {
-            var cargo = Entity.FindItemInCargo(_data.AmmoType);
+            var cargo = Item.Entity.FindItemInCargo(_data.AmmoType);
             if (cargo != null)
             {
                 var item = cargo.ItemsOfType[_data.AmmoType][0];
@@ -160,7 +160,7 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
         {
             // If multiple ammo is consumed per burst, perform ammo and energy consumption here
             // UseAmmo returns false when triggering reload; cancel firing if that is the case
-            if (!_data.SingleAmmoBurst && (!Entity.TryConsumeEnergy(Energy) || !UseAmmo()))
+            if (!_data.SingleAmmoBurst && (!Item.Entity.TryConsumeEnergy(Energy) || !UseAmmo()))
             {
                 _burstRemaining = 0;
                 return false;
@@ -171,7 +171,7 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
             OnFire?.Invoke();
             Item.EquippableItem.Durability -= Item.Wear;
             Item.AddHeat(Heat);
-            Entity.VisibilitySources[this] = Visibility;
+            Item.Entity.VisibilitySources[this] = Visibility;
         }
         return true;
     }

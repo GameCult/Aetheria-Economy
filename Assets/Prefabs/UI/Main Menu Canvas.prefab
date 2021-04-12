@@ -564,6 +564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83488dc4b5e58cd40b4d1c4ee98207b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Spacer: {fileID: 0}
   Dropdown: {fileID: 0}
   Title: {fileID: 4533226043829246278}
   Section: {fileID: 1026668114703092140, guid: 3a149ea40b43fbf47b51ec165cb04e5f, type: 3}
@@ -1126,6 +1127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c2bf4a7080061d42a87046c37bf0c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Spacer: {fileID: 7041706416206723741, guid: 4638d28139b15b34fac8dae056f7d5fd, type: 3}
   Dropdown: {fileID: 0}
   Title: {fileID: 7329274283166941237}
   Section: {fileID: 1026668114703092140, guid: 3a149ea40b43fbf47b51ec165cb04e5f, type: 3}

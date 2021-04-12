@@ -14,9 +14,9 @@ public class ConstantWeaponData : WeaponData
     [InspectablePrefab, JsonProperty("ammoInterval"), Key(17)]  
     public float AmmoInterval = 1;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new ConstantWeapon(context, this, entity, item);
+        return new ConstantWeapon(this, item);
     }
 }
 
@@ -57,7 +57,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
         OnStopFiring = null;
     }
 
-    public ConstantWeapon(ItemManager context, ConstantWeaponData data, Entity entity, EquippedItem item) : base(context, data, entity, item)
+    public ConstantWeapon(ConstantWeaponData data, EquippedItem item) : base(data, item)
     {
         _data = data;
     }
@@ -67,7 +67,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
         base.Execute(delta);
         if (_firing)
         {
-            if (!Entity.TryConsumeEnergy(Item.Evaluate(_data.Energy) * delta))
+            if (!Item.Entity.TryConsumeEnergy(Item.Evaluate(_data.Energy) * delta))
             {
                 _firing = false;
                 OnStopFiring?.Invoke();
@@ -93,7 +93,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
                     if (_data.MagazineSize > 1 && _ammo > 0) _ammo--;
                     else
                     {
-                        var cargo = Entity.FindItemInCargo(_data.AmmoType);
+                        var cargo = Item.Entity.FindItemInCargo(_data.AmmoType);
                         if (cargo != null)
                         {
                             var item = cargo.ItemsOfType[_data.AmmoType][0];
@@ -117,7 +117,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
 
             Item.EquippableItem.Durability -= Item.Wear * delta;
             Item.AddHeat(Item.Evaluate(_data.Heat) * delta);
-            Entity.VisibilitySources[this] = Item.Evaluate(_data.Visibility);
+            Item.Entity.VisibilitySources[this] = Item.Evaluate(_data.Visibility);
         }
         return true;
     }

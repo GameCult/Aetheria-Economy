@@ -10,9 +10,9 @@ using Newtonsoft.Json;
 [Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-25)]
 public class SwitchData : BehaviorData
 {
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Switch(context, this, entity, item);
+        return new Switch(this, item);
     }
 }
 
@@ -20,20 +20,16 @@ public class Switch : IBehavior
 {
     private SwitchData _data;
 
-    private Entity Entity { get; }
     private EquippedItem Item { get; }
-    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
     public bool Activated { get; set; }
 
-    public Switch(ItemManager context, SwitchData data, Entity entity, EquippedItem item)
+    public Switch(SwitchData data, EquippedItem item)
     {
         _data = data;
-        Entity = entity;
         Item = item;
-        Context = context;
     }
 
     public bool Execute(float delta)

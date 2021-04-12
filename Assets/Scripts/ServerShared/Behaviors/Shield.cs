@@ -16,17 +16,15 @@ public class ShieldData : BehaviorData
     [Inspectable, JsonProperty("energy"), Key(2), RuntimeInspectable]  
     public PerformanceStat EnergyUsage = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Shield(context, this, entity, item);
+        return new Shield(this, item);
     }
 }
 
 public class Shield : IBehavior
 {
-    public Entity Entity { get; }
     public EquippedItem Item { get; }
-    public ItemManager Context { get; }
     
     public float Efficiency { get; private set; }
     public float EnergyUsage { get; private set; }
@@ -35,11 +33,9 @@ public class Shield : IBehavior
     
     private ShieldData _data;
 
-    public Shield(ItemManager context, ShieldData data, Entity entity, EquippedItem item)
+    public Shield(ShieldData data, EquippedItem item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
         Item = item;
     }
 
@@ -52,12 +48,12 @@ public class Shield : IBehavior
 
     public bool CanTakeHit(DamageType type, float damage)
     {
-        return Entity.CanConsumeEnergy(damage * EnergyUsage);
+        return Item.Entity.CanConsumeEnergy(damage * EnergyUsage);
     }
 
     public void TakeHit(DamageType type, float damage)
     {
-        Entity.TryConsumeEnergy(damage * EnergyUsage);
+        Item.Entity.TryConsumeEnergy(damage * EnergyUsage);
         Item.AddHeat(damage / Efficiency);
     }
 }

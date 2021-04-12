@@ -18,6 +18,7 @@ using static Unity.Mathematics.math;
 
 public class PropertiesPanel : MonoBehaviour
 {
+	public RectTransform Spacer;
 	public DropdownMenu Dropdown;
     public TextMeshProUGUI Title;
     public RectTransform Section;
@@ -84,6 +85,14 @@ public class PropertiesPanel : MonoBehaviour
 	    if (SelectedChild != null)
 		    SelectedChild.CurrentState = FlatButtonState.Unselected;
 	    SelectedChild = null;
+    }
+
+    public RectTransform AddSpacer()
+    {
+	    var spacer = Instantiate(Spacer, Content ?? transform);
+	    Properties.Add(spacer.gameObject);
+	    OnPropertyAdded?.Invoke(spacer.gameObject);
+	    return spacer;
     }
 
     public RectTransform AddSection(string name)
@@ -352,68 +361,116 @@ public class PropertiesPanel : MonoBehaviour
         RefreshValues();
 	}
 
-	public void AddEntityProperties(Entity entity)
+	private void AddEntityProperties(Entity entity)
 	{
 		AddField("Name", () => entity.Name, name => entity.Name = name);
 		AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
 	}
 
-	public void AddItemProperties(Entity entity, ItemInstance item)
+	private void AddItemProperties(ItemInstance item)
 	{
 		var data = Context.ItemData.Get<ItemData>(item.Data);
-		AddProperty(data.Description);//.Label.fontStyle = FontStyles.Normal;
+		
+		AddProperty(data.Description);
+		
 		var manufacturer = Context.ItemData.Get<Faction>(data.Manufacturer);
-		if (manufacturer != null)
-		{
-			AddProperty("Manufacturer", () => manufacturer.Name);
-		}
-		else
-		{
-			AddProperty("Manufacturer", () => "GameCult");
-		}
+		AddProperty("Manufacturer", () => manufacturer?.Name ?? "GameCult");
+		
 		if (item is SimpleCommodity simpleCommodity)
 			AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
+		
 		AddProperty("Mass", () => Context.GetMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-		if (item is EquippableItem gear)
+		//AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+	}
+
+	private void AddEquippableItemProperties(EquippableItem item, Func<PerformanceStat, float> statValueFunction)
+	{
+		if (item.Durability < .01f)
 		{
-			var (tier, upgrades) = entity.ItemManager.GetTier(gear);
-			Title.text =
-				$"<color=#{ColorUtility.ToHtmlStringRGB(tier.Color.ToColor())}>{data.Name}</color><smallcaps><size=60%> ({tier.Name}{new string('+', upgrades)})";
-			if (gear.Durability < .01f)
+			AddProperty("Item destroyed!");
+			return;
+		}
+
+		var gearData = Context.GetData(item);
+		AddProperty("Durability", () => $"{(int)(item.Durability / gearData.Durability * 100)}%");
+		foreach (var behavior in gearData.Behaviors)
+		{
+			var type = behavior.GetType();
+			if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
 			{
-				AddProperty("Item destroyed!");
-			}
-			else
-			{
-				var gearData = Context.GetData(gear);
-				AddProperty("Durability", () =>
-					$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-				foreach (var behavior in gearData.Behaviors)
+				foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
 				{
-					var type = behavior.GetType();
-					if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
+					var fieldType = field.FieldType;
+					if (fieldType == typeof(float))
+						AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+					else if (fieldType == typeof(int))
+						AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
+					else if (fieldType == typeof(PerformanceStat))
 					{
-						foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
-						{
-							var fieldType = field.FieldType;
-							if (fieldType == typeof(float))
-								AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-							else if (fieldType == typeof(int))
-								AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
-							else if (fieldType == typeof(PerformanceStat))
-							{
-								var stat = (PerformanceStat) field.GetValue(behavior);
-								AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-							}
-						}
+						var stat = (PerformanceStat) field.GetValue(behavior);
+						AddProperty(field.Name, () => $"{statValueFunction(stat).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
 					}
 				}
 			}
 		}
 	}
 
-	public void AddItemDataProperties(ItemData data)
+	private string GetTitle(EquippableItem item)
+	{
+		var data = Context.ItemData.Get<ItemData>(item.Data);
+		var (tier, upgrades) = Context.GetTier(item);
+		return
+			$"<color=#{ColorUtility.ToHtmlStringRGB(tier.Color.ToColor())}>{data.Name}</color><smallcaps><size=60%> ({tier.Name}{new string('+', upgrades)})";
+	}
+
+	public void Inspect(EquippedItem item)
+	{
+		Clear();
+		if (item?.EquippableItem == null) return;
+		
+		Title.text = GetTitle(item.EquippableItem);
+		
+		AddItemProperties(item.EquippableItem);
+		AddSpacer();
+		
+		AddEquippableItemProperties(item.EquippableItem, item.Evaluate);
+		AddSpacer();
+		
+		AddField("Override Shutdown", () => item.EquippableItem.OverrideShutdown, b => item.EquippableItem.OverrideShutdown = b);
+		AddProperty("Temperature", () => (item.Temperature - 273.15f).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+		
+		foreach (var behavior in item.Behaviors)
+		{
+			switch (behavior)
+			{
+				case Thermotoggle thermotoggle when thermotoggle.ThermotoggleData.Adjustable:
+					AddField("Target Temperature",
+						() => thermotoggle.TargetTemperature,
+						temp => thermotoggle.TargetTemperature = temp);
+					break;
+			}
+		}
+
+		RefreshValues();
+	}
+
+	public void Inspect(ItemInstance item)
+	{
+		Clear();
+		
+		AddItemProperties(item);
+		
+		if (item is EquippableItem gear)
+		{
+			Title.text = GetTitle(gear);
+			AddSpacer();
+			AddEquippableItemProperties(gear, stat => Context.Evaluate(stat, gear));
+		}
+		
+		RefreshValues();
+	}
+
+	public void Inspect(ItemData data)
 	{
 		AddProperty("Type", () => data.Name);
 		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
@@ -450,60 +507,6 @@ public class PropertiesPanel : MonoBehaviour
 					}
 				}
 			}
-		}
-	}
-
-	public void AddItemProperties(ItemInstance item)
-	{
-		var data = Context.ItemData.Get<ItemData>(item.Data);
-		AddItemDataProperties(data);
-		AddProperty("Mass", () => Context.GetMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-		if (item is EquippableItem gear)
-		{
-			var gearData = Context.GetData(gear);
-			AddProperty("Durability", () =>
-				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-
-		}
-	}
-
-	public void Inspect(Entity entity, EquippedItem item)
-	{
-		if (this is PropertiesList list)
-		{
-			if (list.Expanded)
-				InspectGearInternal();
-			else
-				list.OnExpand += b =>
-				{
-					if (b) InspectGearInternal();
-				};
-		}
-		else
-			InspectGearInternal();
-
-		void InspectGearInternal()
-		{
-			//Debug.Log($"Refreshing {hardpoint.Gear.Name} properties");
-			Clear();
-			if (item.EquippableItem != null)
-			{
-				AddField("Override Shutdown", () => item.EquippableItem.OverrideShutdown, b => item.EquippableItem.OverrideShutdown = b);
-				AddProperty("Temperature", () => (item.Temperature - 273.15f).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-				AddItemProperties(entity, item.EquippableItem);
-		        foreach (var behavior in item.Behaviors)
-		        {
-			        if(behavior is IPopulationAssignment populationAssignment)
-				        AddIncrementField("Assigned Population", 
-					        () => populationAssignment.AssignedPopulation, 
-					        p => populationAssignment.AssignedPopulation = p,
-					        () => 0, () => entity.Population - entity.AssignedPopulation + populationAssignment.AssignedPopulation);
-			        if (behavior is Thermotoggle thermotoggle)
-				        AddField("Target Temperature", () => thermotoggle.TargetTemperature, temp => thermotoggle.TargetTemperature = temp);
-		        }
-			}
-			RefreshValues();
 		}
 	}
 

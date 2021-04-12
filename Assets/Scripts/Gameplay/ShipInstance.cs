@@ -33,7 +33,7 @@ public class ShipInstance : EntityInstance
                 var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(effectData.ParticlesPrefab), transform, false);
                 var particlesShape = particles.shape;
                 var thrusterHardpoint = ThrusterHardpoints
-                    .FirstOrDefault(t => t.name == thruster.Entity.Hardpoints[thruster.Item.Position.x, thruster.Item.Position.y].Transform);
+                    .FirstOrDefault(t => t.name == ship.Hardpoints[thruster.Item.Position.x, thruster.Item.Position.y].Transform);
                 particlesShape.meshRenderer = thrusterHardpoint?.Emitter;
                 // if (!string.IsNullOrEmpty(thruster.Item.Data.SoundEffectTrigger) && thrusterHardpoint != null)
                 // {

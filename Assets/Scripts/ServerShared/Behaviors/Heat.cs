@@ -16,9 +16,9 @@ public class HeatData : BehaviorData
     [Inspectable, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Heat(context, this, entity, item);
+        return new Heat(this, item);
     }
 }
 
@@ -26,18 +26,14 @@ public class Heat : IBehavior
 {
     private HeatData _data;
 
-    private Entity Entity { get; }
     private EquippedItem Item { get; }
-    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public Heat(ItemManager context, HeatData data, Entity entity, EquippedItem item)
+    public Heat(HeatData data, EquippedItem item)
     {
         _data = data;
-        Entity = entity;
         Item = item;
-        Context = context;
     }
 
     public bool Execute(float delta)

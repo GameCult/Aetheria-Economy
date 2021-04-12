@@ -764,9 +764,9 @@ public abstract class Entity
 
         foreach (var v in VisibilitySources.Keys.ToArray())
         {
-            VisibilitySources[v] *= max(1 - ItemManager.GameplaySettings.VisibilityDecay * delta, 0);
+            VisibilitySources[v] = AetheriaMath.Decay(VisibilitySources[v], ItemManager.GameplaySettings.VisibilityDecay, delta);
 
-            if (VisibilitySources[v] < 0.01f) VisibilitySources.Remove(v);
+            if (VisibilitySources[v] < 0.1f) VisibilitySources.Remove(v);
         }
 
         UpdateTemperature(delta);
@@ -998,7 +998,7 @@ public class EquippedItem
         
 
         Behaviors = Data.Behaviors
-            .Select(bd => bd.CreateInstance(itemManager, entity, this))
+            .Select(bd => bd.CreateInstance(this))
             .ToArray();
 
         BehaviorGroups = Behaviors

@@ -26,6 +26,7 @@ using Random = UnityEngine.Random;
 
 public class ActionGameManager : MonoBehaviour
 {
+    public static ActionGameManager Instance { get; private set; }
     private static DirectoryInfo _gameDataDirectory;
     public static DirectoryInfo GameDataDirectory
     {
@@ -182,6 +183,7 @@ public class ActionGameManager : MonoBehaviour
 
     void Start()
     {
+        Instance = this;
         EntityInstance.EffectManagerParent = EffectManagerParent;
         AkSoundEngine.RegisterGameObj(gameObject);
         ConsoleController.MessageReceiver = this;
@@ -996,11 +998,16 @@ public class ActionGameManager : MonoBehaviour
                 {
                     indicator.Value.gameObject.SetActive(indicator.Key!=CurrentEntity.Target.Value);
                     indicator.Value.Place.Target = indicator.Key.Position;
-                    indicator.Value.Fill.fillAmount =
-                        saturate(indicator.Key.EntityInfoGathered[CurrentEntity] / Settings.GameplaySettings.TargetDetectionInfoThreshold);
-                    indicator.Value.Fill.enabled =
-                        !(indicator.Key.EntityInfoGathered[CurrentEntity] > Settings.GameplaySettings.TargetDetectionInfoThreshold) ||
-                        sin(TargetSpottedBlinkFrequency * Time.time) + TargetSpottedBlinkOffset > 0;
+                    if (!indicator.Key.Active)
+                        indicator.Value.Fill.enabled = false;
+                    else
+                    {
+                        indicator.Value.Fill.fillAmount =
+                            saturate(indicator.Key.EntityInfoGathered[CurrentEntity] / Settings.GameplaySettings.TargetDetectionInfoThreshold);
+                        indicator.Value.Fill.enabled =
+                            !(indicator.Key.EntityInfoGathered[CurrentEntity] > Settings.GameplaySettings.TargetDetectionInfoThreshold) ||
+                            sin(TargetSpottedBlinkFrequency * Time.time) + TargetSpottedBlinkOffset > 0;
+                    }
                 }
                 var look = Input.Player.Look.ReadValue<Vector2>();
                 _entityYawPitch = float2(_entityYawPitch.x + look.x * Sensitivity.x, clamp(_entityYawPitch.y + look.y * Sensitivity.y, -.45f * PI, .45f * PI));

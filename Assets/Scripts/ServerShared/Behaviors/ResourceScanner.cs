@@ -21,9 +21,9 @@ public class ResourceScannerData : BehaviorData
     [Inspectable, JsonProperty("scanDuration"), Key(3), RuntimeInspectable]
     public PerformanceStat ScanDuration = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new ResourceScanner(context, this, entity, item);
+        return new ResourceScanner(this, item);
     }
 }
 
@@ -35,9 +35,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
     private float _scanTime;
     private Guid _scanTarget;
 
-    private Entity Entity { get; }
     private EquippedItem Item { get; }
-    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     public float Range { get; private set; }
@@ -57,24 +55,22 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
         }
     }
 
-    public ResourceScanner(ItemManager context, ResourceScannerData data, Entity entity, EquippedItem item)
+    public ResourceScanner(ResourceScannerData data, EquippedItem item)
     {
         _data = data;
-        Entity = entity;
         Item = item;
-        Context = context;
     }
 
     public bool Execute(float delta)
     {
-        var planetData = Context.ItemData.Get<BodyData>(ScanTarget);
+        var planetData = Item.Entity.Zone.Planets[ScanTarget];
         if (planetData != null)
         {
             if (planetData is AsteroidBeltData beltData)
             {
                 if(Asteroid > -1 &&
                    Asteroid < beltData.Asteroids.Length &&
-                   length(Entity.Position.xz - Entity.Zone.AsteroidBelts[ScanTarget].Positions[Asteroid].xz) < Range)
+                   length(Item.Entity.Position.xz - Item.Entity.Zone.AsteroidBelts[ScanTarget].Positions[Asteroid].xz) < Range)
                 {
                     _scanTime += delta;
                     if (_scanTime > ScanDuration)
@@ -88,7 +84,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
             }
             else
             {
-                if(length(Entity.Position.xz - Entity.Zone.GetOrbitPosition(planetData.Orbit)) < Range)
+                if(length(Item.Entity.Position.xz - Item.Entity.Zone.GetOrbitPosition(planetData.Orbit)) < Range)
                 {
                     _scanTime += delta;
                     if (_scanTime > ScanDuration)

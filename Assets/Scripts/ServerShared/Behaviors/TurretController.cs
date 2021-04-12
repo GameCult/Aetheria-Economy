@@ -14,9 +14,9 @@ using float3 = Unity.Mathematics.float3;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class TurretControllerData : BehaviorData
 {
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new TurretController(context, this, entity, item);
+        return new TurretController(this, item);
     }
 }
 
@@ -27,26 +27,22 @@ public class TurretController : IBehavior
     private float _shotSpeed;
     private bool _predictShots;
 
-    public Entity EquippedEntity { get; }
     public EquippedItem Item { get; }
-    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public TurretController(ItemManager context, TurretControllerData data, Entity equippedEntity, EquippedItem item)
+    public TurretController(TurretControllerData data, EquippedItem item)
     {
-        Context = context;
         _data = data;
-        EquippedEntity = equippedEntity;
         Item = item;
-        var weapons = equippedEntity.Equipment.Where(e => e.Behaviors.Any(b => b.Data is WeaponData));
+        var weapons = Item.Entity.Equipment.Where(e => e.Behaviors.Any(b => b.Data is WeaponData));
         foreach (var weapon in weapons)
         {
             CheckWeapon(weapon);
         }
 
-        equippedEntity.Equipment.ObserveAdd().Subscribe(add => CheckWeapon(add.Value));
-        equippedEntity.Equipment.ObserveRemove().Subscribe(remove =>
+        Item.Entity.Equipment.ObserveAdd().Subscribe(add => CheckWeapon(add.Value));
+        Item.Entity.Equipment.ObserveRemove().Subscribe(remove =>
         {
             foreach (var b in remove.Value.Behaviors)
                 if (b is Weapon weapon)
@@ -71,30 +67,30 @@ public class TurretController : IBehavior
 
     public bool Execute(float delta)
     {
-        if (EquippedEntity.Target.Value != null)
+        if (Item.Entity.Target.Value != null)
         {
-            var diff = EquippedEntity.Target.Value.Position - EquippedEntity.Position;
+            var diff = Item.Entity.Target.Value.Position - Item.Entity.Position;
             if (_predictShots)
             {
-                var targetHullData = EquippedEntity.ItemManager.GetData(EquippedEntity.Target.Value.Hull) as HullData;
-                var targetVelocity = float3(EquippedEntity.Target.Value.Velocity.x, 0, EquippedEntity.Target.Value.Velocity.y);
+                var targetHullData = Item.Entity.ItemManager.GetData(Item.Entity.Target.Value.Hull) as HullData;
+                var targetVelocity = float3(Item.Entity.Target.Value.Velocity.x, 0, Item.Entity.Target.Value.Velocity.y);
                 var predictedPosition = AetheriaMath.FirstOrderIntercept(
-                    EquippedEntity.Position, float3.zero, _shotSpeed,
-                    EquippedEntity.Target.Value.Position, targetVelocity
+                    Item.Entity.Position, float3.zero, _shotSpeed,
+                    Item.Entity.Target.Value.Position, targetVelocity
                 );
-                predictedPosition.y = EquippedEntity.Zone.GetHeight(predictedPosition.xz) + targetHullData.GridOffset;
-                EquippedEntity.LookDirection = normalize(predictedPosition - EquippedEntity.Position);
+                predictedPosition.y = Item.Entity.Zone.GetHeight(predictedPosition.xz) + targetHullData.GridOffset;
+                Item.Entity.LookDirection = normalize(predictedPosition - Item.Entity.Position);
             }
             else
-                EquippedEntity.LookDirection = normalize(diff);
+                Item.Entity.LookDirection = normalize(diff);
             var dist = length(diff);
 
             foreach (var x in _weapons)
             {
                 var data = x.Data as WeaponData;
                 var fire = dot(
-                    EquippedEntity.HardpointTransforms[EquippedEntity.Hardpoints[x.Item.Position.x, x.Item.Position.y]].direction,
-                    EquippedEntity.LookDirection) > .99f;
+                    Item.Entity.HardpointTransforms[Item.Entity.Hardpoints[x.Item.Position.x, x.Item.Position.y]].direction,
+                    Item.Entity.LookDirection) > .99f;
                 if (x.Item.Evaluate(data.Range) > dist && fire)
                 {
                     x.Activate();
@@ -110,7 +106,7 @@ public class TurretController : IBehavior
                 if (x.Firing)
                     x.Deactivate();
             }
-            EquippedEntity.Target.Value = EquippedEntity.VisibleHostiles.FirstOrDefault(e => e is Ship);
+            Item.Entity.Target.Value = Item.Entity.VisibleHostiles.FirstOrDefault(e => e is Ship);
         }
         return true;
     }

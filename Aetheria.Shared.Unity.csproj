@@ -126,7 +126,6 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Vertex3.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NtpRequest.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\ConstantWeapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Radiance.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull.cs" />
      <Compile Include="Assets\Scripts\ServerShared\CultCache\Attributes.cs" />
      <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\TypeFormatterResolver.cs" />

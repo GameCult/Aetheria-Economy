@@ -25,9 +25,9 @@ public class ReactorData : BehaviorData
     [Inspectable, JsonProperty("underload"), Key(4), RuntimeInspectable]  
     public PerformanceStat ThrottlingFactor = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Reactor(context, this, entity, item);
+        return new Reactor(this, item);
     }
 }
 
@@ -49,19 +49,17 @@ public class Reactor : IBehavior, IOrderedBehavior
 
     private List<Capacitor> _capacitors;
 
-    public Reactor(ItemManager context, ReactorData data, Entity entity, EquippedItem item)
+    public Reactor(ReactorData data, EquippedItem item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
         Item = item;
-        _capacitors = entity.GetBehaviors<Capacitor>().ToList();
-        entity.Equipment.ObserveAdd().Subscribe(onAdd =>
+        _capacitors = Item.Entity.GetBehaviors<Capacitor>().ToList();
+        Item.Entity.Equipment.ObserveAdd().Subscribe(onAdd =>
         {
             var capacitor = onAdd.Value.GetBehavior<Capacitor>();
             if (capacitor != null) _capacitors.Add(capacitor);
         });
-        entity.Equipment.ObserveRemove().Subscribe(onRemove =>
+        Item.Entity.Equipment.ObserveRemove().Subscribe(onRemove =>
         {
             var capacitor = onRemove.Value.GetBehavior<Capacitor>();
             if (capacitor != null) _capacitors.Remove(capacitor);

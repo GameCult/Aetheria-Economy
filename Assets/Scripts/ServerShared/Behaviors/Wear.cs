@@ -14,30 +14,24 @@ public class WearData : BehaviorData
     [InspectableTemperature, JsonProperty("perSecond"), Key(1)]
     public bool PerSecond = true;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Wear(context, this, entity, item);
+        return new Wear(this, item);
     }
 }
 
 public class Wear : IBehavior
 {
     private WearData _data;
-    private EquippableItemData _itemData;
 
-    public Entity Entity { get; }
     public EquippedItem Item { get; }
-    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public Wear(ItemManager context, WearData data, Entity entity, EquippedItem item)
+    public Wear(WearData data, EquippedItem item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
         Item = item;
-        _itemData = context.GetData(item.EquippableItem);
     }
 
     public bool Execute(float delta)

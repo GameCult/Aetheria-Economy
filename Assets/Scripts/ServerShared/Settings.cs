@@ -23,7 +23,6 @@ public class PlanetSettings
     public ExponentialCurve WaveRadius;
     public ExponentialCurve WaveFrequency;
     public ExponentialCurve WaveSpeed;
-    public ExponentialCurve FogTintRadius;
     public ExponentialCurve LightRadius;
     public ExponentialCurve BodyRadius;
     public float AsteroidVerticalOffset = -5f;

@@ -25,17 +25,15 @@ public class ThrusterData : BehaviorData
     [InspectablePrefab, JsonProperty("Particles"), Key(5)]
     public string ParticlesPrefab;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Thruster(context, this, entity, item);
+        return new Thruster(this, item);
     }
 }
 
 public class Thruster : IAnalogBehavior
 {
-    public Entity Entity { get; }
     public EquippedItem Item { get; }
-    public ItemManager Context { get; }
     
     public float Thrust { get; private set; }
     public float Torque { get; }
@@ -52,15 +50,13 @@ public class Thruster : IAnalogBehavior
     
     private float _input;
 
-    public Thruster(ItemManager context, ThrusterData data, Entity entity, EquippedItem item)
+    public Thruster(ThrusterData data, EquippedItem item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
         Item = item;
-        var hullData = context.GetData(entity.Hull) as HullData;
+        var hullData = Item.ItemManager.GetData(Item.Entity.Hull) as HullData;
         var hullCenter = hullData.Shape.CenterOfMass;
-        var itemData = context.GetData(item.EquippableItem);
+        var itemData = Item.ItemManager.GetData(item.EquippableItem);
         var itemCenter = hullData.Shape.Inset(itemData.Shape, item.Position, item.EquippableItem.Rotation).CenterOfMass;
         var toCenter = hullCenter - itemCenter;
         Torque = -dot(normalize(toCenter), float2(1, 0).Rotate(item.EquippableItem.Rotation));
@@ -72,13 +68,13 @@ public class Thruster : IAnalogBehavior
         if(_input > .01f && Item.Entity.TryConsumeEnergy(_input * Item.Evaluate(_data.EnergyUsage)))
         {
             Thrust = Item.Evaluate(_data.Thrust);
-            Entity.Velocity -= Entity.Direction.Rotate(Item.EquippableItem.Rotation) * _input * Thrust / Entity.Mass * delta;
-            Entity.Direction = mul(Entity.Direction,
-                Unity.Mathematics.float2x2.Rotate(_input * Torque * Thrust * Context.GameplaySettings.TorqueMultiplier / Entity.Mass * delta));
+            Item.Entity.Velocity -= Item.Entity.Direction.Rotate(Item.EquippableItem.Rotation) * _input * Thrust / Item.Entity.Mass * delta;
+            Item.Entity.Direction = mul(Item.Entity.Direction,
+                Unity.Mathematics.float2x2.Rotate(_input * Torque * Thrust * Item.ItemManager.GameplaySettings.TorqueMultiplier / Item.Entity.Mass * delta));
             Item.AddHeat(_input * Item.Evaluate(_data.Heat) * delta);
             var vis = _input * Item.Evaluate(_data.Visibility);
-            if (!Entity.VisibilitySources.ContainsKey(this) || vis > Entity.VisibilitySources[this])
-                Entity.VisibilitySources[this] = vis;
+            if (!Item.Entity.VisibilitySources.ContainsKey(this) || vis > Item.Entity.VisibilitySources[this])
+                Item.Entity.VisibilitySources[this] = vis;
             return true;
         }
         return false;

@@ -7,24 +7,22 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VelocityLimitData : BehaviorData
 {
     [Inspectable, JsonProperty("topSpeed"), Key(1), RuntimeInspectable]  
     public PerformanceStat TopSpeed = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new VelocityLimit(context, this, entity, item);
+        return new VelocityLimit(this, item);
     }
 }
 
 [Order(100)]
 public class VelocityLimit : IBehavior
 {
-    public Entity Entity { get; }
     public EquippedItem Item { get; }
-    public ItemManager Context { get; }
     
     public float Limit { get; private set; }
 
@@ -32,28 +30,18 @@ public class VelocityLimit : IBehavior
     
     private VelocityLimitData _data;
 
-    public VelocityLimit(ItemManager context, VelocityLimitData data, Entity entity, EquippedItem item)
+    public VelocityLimit(VelocityLimitData data, EquippedItem item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
         Item = item;
         Limit = Item.Evaluate(_data.TopSpeed);
-    }
-
-    public void Initialize()
-    {
     }
 
     public bool Execute(float delta)
     {
         Limit = Item.Evaluate(_data.TopSpeed);
-        if (length(Entity.Velocity) > Limit)
-            Entity.Velocity = normalize(Entity.Velocity) * Limit;
+        if (length(Item.Entity.Velocity) > Limit)
+            Item.Entity.Velocity = normalize(Item.Entity.Velocity) * Limit;
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

@@ -70,11 +70,8 @@ public abstract class WeaponData : BehaviorData
 public abstract class Weapon : IActivatedBehavior
 {
     private WeaponData _data;
-    private EquippableItemData _itemData;
     
-    public Entity Entity { get; }
     public EquippedItem Item { get; }
-    public ItemManager Context { get; }
 
     public abstract float DamagePerSecond { get; }
     public abstract float RangeDamagePerSecond(float range);
@@ -101,13 +98,10 @@ public abstract class Weapon : IActivatedBehavior
     }
 
 
-    public Weapon(ItemManager context, WeaponData data, Entity entity, EquippedItem item)
+    public Weapon(WeaponData data, EquippedItem item)
     {
-        Context = context;
-        Entity = entity;
         Item = item;
         _data = data;
-        _itemData = context.GetData(item.EquippableItem);
     }
 
     protected virtual void UpdateStats()

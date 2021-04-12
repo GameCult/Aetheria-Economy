@@ -298,8 +298,7 @@ public class TradeMenuDebug : MonoBehaviour
                 }).ToArray(),
                 OnClick = () =>
                 {
-                    Properties.Clear();
-                    Properties.AddItemDataProperties(i);
+                    Properties.Inspect(i);
                 },
                 OnDoubleClick = () =>
                 {

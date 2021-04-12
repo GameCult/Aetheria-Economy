@@ -11,9 +11,9 @@ using static Unity.Mathematics.math;
 [Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class CockpitData : BehaviorData
 {
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Cockpit(context, this, entity, item);
+        return new Cockpit(this, item);
     }
 }
 
@@ -21,18 +21,14 @@ public class Cockpit : IBehavior
 {
     private CockpitData _data;
 
-    public Entity Entity { get; }
     public EquippedItem Item { get; }
-    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     
 
-    public Cockpit(ItemManager context, CockpitData data, Entity entity, EquippedItem item)
+    public Cockpit(CockpitData data, EquippedItem item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
         Item = item;
     }
 

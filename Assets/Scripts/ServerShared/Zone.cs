@@ -65,6 +65,9 @@ public class Zone
                 case AsteroidBeltData belt:
                     AsteroidBelts[belt.ID] = new AsteroidBelt(belt);
                     break;
+                case SunData sun:
+                    PlanetInstances.Add(sun.ID, new Sun(settings, sun, Orbits[planet.Orbit]));
+                    break;
                 case GasGiantData gas:
                     PlanetInstances.Add(gas.ID, new GasGiant(settings, gas, Orbits[planet.Orbit]));
                     break;
@@ -305,7 +308,7 @@ public class Zone
     }
     public float GetHeight(float2 position)
     {
-        float result = -PowerPulse(length(position)/(Pack.Radius*2), Settings.ZoneDepthExponent) * Settings.ZoneDepth;
+        var result = -PowerPulse(length(position)/(Pack.Radius*2), Settings.ZoneDepthExponent) * Settings.ZoneDepth;
         foreach (var body in PlanetInstances.Values)
         {
             var p = position - body.Orbit.Position; //GetOrbitPosition(body.BodyData.Orbit)
@@ -331,6 +334,26 @@ public class Zone
         }
 
         return result;
+    }
+
+    public float GetLight(float2 position)
+    {
+        var light = 0f;
+        foreach (var body in PlanetInstances.Values)
+        {
+            if (body is Sun sun)
+            {
+                var p = position - body.Orbit.Position;
+                var distSqr = lengthsq(p);
+                var lightRadius = sun.LightRadius.Value;
+                if (distSqr < lightRadius * lightRadius)
+                {
+                    light += PowerPulse(sqrt(distSqr) / lightRadius, 8);
+                }
+            }
+        }
+
+        return light;
     }
 
     public float2 GetForce(float2 position)
@@ -412,10 +435,17 @@ public class GasGiant : Planet
     }
 }
 
-// public class Sun : GasGiant
-// {
-//     
-// }
+public class Sun : GasGiant
+{
+    public ReadOnlyReactiveProperty<float> LightRadius;
+    
+    public Sun(PlanetSettings settings, SunData data, Orbit orbit) : base(settings, data, orbit)
+    {
+        LightRadius = new ReadOnlyReactiveProperty<float>(
+            data.Mass.CombineLatest(data.LightRadiusMultiplier,
+                (mass, radius) => settings.LightRadius.Evaluate(mass) * radius));
+    }
+}
 
 public class AsteroidBelt
 {

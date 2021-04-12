@@ -15,9 +15,9 @@ public class CooldownData : BehaviorData
     [Inspectable, JsonProperty("cooldown"), Key(1), RuntimeInspectable]
     public PerformanceStat Cooldown = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Cooldown(context, this, entity, item);
+        return new Cooldown(this, item);
     }
 }
 
@@ -26,20 +26,16 @@ public class Cooldown : IBehavior, IAlwaysUpdatedBehavior, IProgressBehavior
     private CooldownData _data;
     public BehaviorData Data => _data;
 
-    private Entity Entity { get; }
     private EquippedItem Item { get; }
-    private ItemManager Context { get; }
 
     private float _cooldown; // Normalized
 
     public float Progress => saturate(_cooldown);
 
-    public Cooldown(ItemManager context, CooldownData data, Entity entity, EquippedItem item)
+    public Cooldown(CooldownData data, EquippedItem item)
     {
         _data = data;
-        Entity = entity;
         Item = item;
-        Context = context;
     }
 
     public bool Execute(float delta)

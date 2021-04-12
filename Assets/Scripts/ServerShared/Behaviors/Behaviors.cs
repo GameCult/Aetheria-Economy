@@ -102,7 +102,7 @@ public abstract class PersistentBehaviorData
  Union(16, typeof(HeatData)),
  // Union(17, typeof(HitscanData)),
  Union(18, typeof(ItemUsageData)),
- Union(19, typeof(RadianceData)),
+ //Union(19, typeof(RadianceData)),
  Union(20, typeof(SwitchData)),
  Union(21, typeof(TriggerData)),
  Union(22, typeof(VisibilityData)),
@@ -128,7 +128,7 @@ public abstract class BehaviorData
     [Inspectable, JsonProperty("group"), Key(0)]
     public int Group;
     
-    public abstract IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item);
+    public abstract IBehavior CreateInstance(EquippedItem item);
 
     public override string ToString()
     {

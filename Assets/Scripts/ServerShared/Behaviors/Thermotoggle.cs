@@ -15,10 +15,13 @@ public class ThermotoggleData : BehaviorData
     
     [Inspectable, JsonProperty("highPass"), Key(2)]
     public bool HighPass;
+
+    [Inspectable, JsonProperty("adjustable"), Key(3)]
+    public bool Adjustable;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Thermotoggle(context, this, entity, item);
+        return new Thermotoggle(this, item);
     }
 }
 
@@ -27,18 +30,15 @@ public class Thermotoggle : IBehavior
     public float TargetTemperature;
     private ThermotoggleData _data;
 
-    private Entity Entity { get; }
     private EquippedItem Item { get; }
-    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
+    public ThermotoggleData ThermotoggleData => _data;
 
-    public Thermotoggle(ItemManager context, ThermotoggleData data, Entity entity, EquippedItem item)
+    public Thermotoggle(ThermotoggleData data, EquippedItem item)
     {
         _data = data;
-        Entity = entity;
         Item = item;
-        Context = context;
         TargetTemperature = data.TargetTemperature;
     }
 

@@ -256,6 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2544c9c8b6358c54ea58c5fb33bb48b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Spacer: {fileID: 7041706416206723741, guid: 4638d28139b15b34fac8dae056f7d5fd, type: 3}
   Dropdown: {fileID: 0}
   Title: {fileID: 2088721703192714100}
   Section: {fileID: 1026668114703092140, guid: 3a149ea40b43fbf47b51ec165cb04e5f, type: 3}
@@ -282,6 +283,7 @@ MonoBehaviour:
     type: 3}
   IncrementField: {fileID: 5486709585343280439, guid: 9c14c92a1a08b0a4fb4f6aa6f8504082,
     type: 3}
+  Content: {fileID: 0}
   SelectedChild: {fileID: 0}
   FoldoutIcon: {fileID: 6485458701090981364}
   FoldoutRotationDamping: 10
@@ -303,6 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}

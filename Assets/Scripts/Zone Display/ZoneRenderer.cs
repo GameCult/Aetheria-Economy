@@ -310,11 +310,15 @@ public class ZoneRenderer : MonoBehaviour
                 if (planetData is SunData sunData)
                 {
                     planet = Instantiate(Sun, ZoneRoot);
-                    var sun = (SunObject) planet;
-                    sunData.LightColor.Subscribe(c => sun.Light.color = c.ToColor());
-                    sunData.Mass.Subscribe(m => sun.Light.range = Settings.PlanetSettings.LightRadius.Evaluate(m));
-                    sunData.FogTintColor.Subscribe(c => sun.FogTint.material.SetColor("_Color", c.ToColor()));
-                    sunData.Mass.Subscribe(m => sun.FogTint.transform.localScale = Settings.PlanetSettings.FogTintRadius.Evaluate(m) * Vector3.one);
+                    var sunObject = (SunObject) planet;
+                    var sun = Zone.PlanetInstances[planetData.ID] as Sun;
+                    sunData.LightColor.Subscribe(c => sunObject.Light.color = c.ToColor());
+                    sun.LightRadius.Subscribe(r =>
+                    {
+                        sunObject.Light.range = r;
+                        sunObject.FogTint.transform.localScale = r * Vector3.one;
+                    });
+                    sunData.FogTintColor.Subscribe(c => sunObject.FogTint.material.SetColor("_Color", c.ToColor()));
                 }
                 else planet = Instantiate(GasGiant, ZoneRoot);
 

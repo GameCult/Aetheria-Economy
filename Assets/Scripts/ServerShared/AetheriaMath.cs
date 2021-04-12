@@ -7,6 +7,16 @@ public static class AetheriaMath
 {
     public const float Deg2Rad = 0.01745329f;
     public const float Rad2Deg = 57.29578f;
+
+    public static float Decay(float source, float lambda, float dt)
+    {
+        return source * exp(-lambda * dt);
+    }
+    
+    public static float Damp(float a, float b, float lambda, float dt)
+    {
+        return lerp(a, b, 1 - exp(-lambda * dt));
+    }
     
     //first-order intercept using absolute target position
     public static float3 FirstOrderIntercept

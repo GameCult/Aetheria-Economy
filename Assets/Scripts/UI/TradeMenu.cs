@@ -311,11 +311,7 @@ public class TradeMenu : MonoBehaviour
                     Output = x.output(i),
                     SortKey = x.sortKey(i.data)
                 }).ToArray(),
-                OnClick = () =>
-                {
-                    Properties.Clear();
-                    Properties.AddItemProperties(i.item);
-                },
+                OnClick = () => Properties.Inspect(i.item),
                 OnDoubleClick = () =>
                 {
                     switch (i.item)

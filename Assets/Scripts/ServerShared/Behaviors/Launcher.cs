@@ -27,9 +27,9 @@ public class LauncherData : LockWeaponData
     [Inspectable, JsonProperty("missileSpeed"), Key(31), RuntimeInspectable]
     public PerformanceStat MissileVelocity = new PerformanceStat();
 
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new LockWeapon(context, this, entity, item);
+        return new LockWeapon(this, item);
     }
 }
 
@@ -54,8 +54,8 @@ public class GuidedWeaponData : InstantWeaponData
     [Inspectable, JsonProperty("missileSpeed"), Key(26), RuntimeInspectable]
     public PerformanceStat MissileVelocity = new PerformanceStat();
 
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new InstantWeapon(context, this, entity, item);
+        return new InstantWeapon(this, item);
     }
 }

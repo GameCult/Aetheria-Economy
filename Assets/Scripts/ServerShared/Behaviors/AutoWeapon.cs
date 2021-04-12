@@ -9,16 +9,16 @@ using static Unity.Mathematics.math;
 [Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class AutoWeaponData : InstantWeaponData
 {
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new AutoWeapon(context, this, entity, item);
+        return new AutoWeapon(this, item);
     }
 }
 
 public class AutoWeapon : InstantWeapon
 {
     
-    public AutoWeapon(ItemManager context, InstantWeaponData data, Entity entity, EquippedItem item) : base(context, data, entity, item)
+    public AutoWeapon(InstantWeaponData data, EquippedItem item) : base(data, item)
     {
     }
 

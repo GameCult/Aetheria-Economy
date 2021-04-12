@@ -39,9 +39,9 @@ public class SensorData : BehaviorData
     [Inspectable, JsonProperty("pingRadiusExponent"), Key(11)]
     public float PingRadiusExponent = .5f;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Sensor(context, this, entity, item);
+        return new Sensor(this, item);
     }
 }
 
@@ -54,9 +54,7 @@ public class Sensor : IBehavior, IEventBehavior
     private float _pingRadius;
     private HashSet<Entity> _pingedEntities = new HashSet<Entity>();
 
-    private Entity Entity { get; }
     private EquippedItem Item { get; }
-    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     
@@ -95,12 +93,10 @@ public class Sensor : IBehavior, IEventBehavior
         }
     }
 
-    public Sensor(ItemManager context, SensorData data, Entity entity, EquippedItem item)
+    public Sensor(SensorData data, EquippedItem item)
     {
         _data = data;
-        Entity = entity;
         Item = item;
-        Context = context;
     }
 
     public bool Execute(float delta)
@@ -119,42 +115,41 @@ public class Sensor : IBehavior, IEventBehavior
         _pingCooldown -= delta / Item.Evaluate(_data.PingCooldown);
         
         // TODO: Handle Active Detection / Visibility From Reflected Radiance
-        var hardpoint = Entity.Hardpoints[Item.Position.x, Item.Position.y];
-        var forward = hardpoint != null && Entity.HardpointTransforms.ContainsKey(hardpoint) ? 
-            normalize(Entity.HardpointTransforms[hardpoint].direction.xz) : 
-            Entity.Direction;
-        foreach (var entity in Entity.Zone.Entities)
+        var hardpoint = Item.Entity.Hardpoints[Item.Position.x, Item.Position.y];
+        var forward = hardpoint != null && Item.Entity.HardpointTransforms.ContainsKey(hardpoint) ? 
+            normalize(Item.Entity.HardpointTransforms[hardpoint].direction.xz) : 
+            Item.Entity.Direction;
+        foreach (var entity in Item.Entity.Zone.Entities)
         {
-            if(entity != Entity)
+            if (entity == Item.Entity) continue;
+            
+            var diff = entity.Position.xz - Item.Entity.Position.xz;
+            var angle = acos(dot(forward, normalize(diff)));
+            var dist = length(diff);
+            float previous, next;
+            Item.Entity.EntityInfoGathered.TryGetValue(entity, out previous);
+            if (!_pingedEntities.Contains(entity) && dist < _pingRadius)
             {
-                var diff = entity.Position.xz - Entity.Position.xz;
-                var angle = acos(dot(forward, normalize(diff)));
-                var dist = length(diff);
-                float previous, next;
-                Entity.EntityInfoGathered.TryGetValue(entity, out previous);
-                if (!_pingedEntities.Contains(entity) && dist < _pingRadius)
-                {
-                    _pingedEntities.Add(entity);
-                    next = saturate(
-                        previous +
-                        entity.Visibility *
-                        Item.Evaluate(_data.Sensitivity) *
-                        Item.Evaluate(_data.PingBoost) *
-                        dist);
-                }
-                else
-                {
-                    next = saturate(
-                        previous +
-                        entity.Visibility *
-                        Item.Evaluate(_data.Sensitivity) *
-                        _data.SensitivityCurve.Evaluate(angle / PI) *
-                        delta / dist);
-                }
-                next *= 1 - Context.GameplaySettings.TargetInfoDecay * delta;
-                //Context.Log($"{entity.Name} visibility {(int)(previous * 100)}% -> {(int)(next * 100)}%");
-                Entity.EntityInfoGathered[entity] = next;
+                _pingedEntities.Add(entity);
+                next = saturate(
+                    previous +
+                    entity.Visibility *
+                    Item.Evaluate(_data.Sensitivity) *
+                    Item.Evaluate(_data.PingBoost) *
+                    dist);
             }
+            else
+            {
+                next = saturate(
+                    previous +
+                    entity.Visibility *
+                    Item.Evaluate(_data.Sensitivity) *
+                    _data.SensitivityCurve.Evaluate(angle / PI) *
+                    delta / dist);
+            }
+            next *= 1 - Item.ItemManager.GameplaySettings.TargetInfoDecay * delta;
+            //Context.Log($"{entity.Name} visibility {(int)(previous * 100)}% -> {(int)(next * 100)}%");
+            Item.Entity.EntityInfoGathered[entity] = next;
         }
         return true;
     }

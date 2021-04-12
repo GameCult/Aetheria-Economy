@@ -11,9 +11,9 @@ using static Unity.Mathematics.math;
 [Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class HeatStorageData : BehaviorData
 {
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new HeatStorage(context, this, entity, item);
+        return new HeatStorage(this, item);
     }
 }
 
@@ -21,17 +21,13 @@ public class HeatStorage : IBehavior
 {
     private HeatStorageData _data;
 
-    public Entity Entity { get; }
     public EquippedItem Item { get; }
-    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
 
-    public HeatStorage(ItemManager context, HeatStorageData data, Entity entity, EquippedItem item)
+    public HeatStorage(HeatStorageData data, EquippedItem item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
         Item = item;
     }
 

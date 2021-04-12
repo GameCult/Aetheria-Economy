@@ -321,8 +321,7 @@ public class InventoryMenu : MonoBehaviour
                             }
                             _selectedPanel = panel;
                             _selectedPosition = cargoEvent.Position;
-                            PropertiesPanel.Clear();
-                            PropertiesPanel.AddItemProperties(item);
+                            PropertiesPanel.Inspect(item);
                             _selectedPanel = panel;
                             _selectedPosition = cargoEvent.CargoBay.Cargo[item];
                             _selectedItem = item;
@@ -374,7 +373,7 @@ public class InventoryMenu : MonoBehaviour
                                 }
                             }
 
-                            PropertiesPanel.Inspect(entityEvent.Entity, item);
+                            PropertiesPanel.Inspect(item);
                             _selectedPanel = panel;
                             _selectedPosition = item.Position;
                             _selectedItem = item.EquippableItem;

@@ -24,9 +24,9 @@ public class MiningToolData : BehaviorData
     [Inspectable, JsonProperty("range"), Key(4)]
     public PerformanceStat Range = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new MiningTool(context, this, entity, item);
+        return new MiningTool(this, item);
     }
 }
 
@@ -37,31 +37,27 @@ public class MiningTool : IBehavior
     
     private MiningToolData _data;
 
-    private Entity Entity { get; }
     private EquippedItem Item { get; }
-    private ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     public float Range { get; private set; }
 
-    public MiningTool(ItemManager context, MiningToolData data, Entity entity, EquippedItem item)
+    public MiningTool(MiningToolData data, EquippedItem item)
     {
         _data = data;
-        Entity = entity;
         Item = item;
-        Context = context;
     }
 
     public bool Execute(float delta)
     {
         Range = Item.Evaluate(_data.Range);
-        var belt = Entity.Zone.AsteroidBelts[AsteroidBelt];
+        var belt = Item.Entity.Zone.AsteroidBelts[AsteroidBelt];
         if (AsteroidBelt != Guid.Empty && 
-            Entity.Zone.AsteroidExists(AsteroidBelt, Asteroid) && 
-            length(Entity.Position.xz - belt.Positions[Asteroid].xz) - belt.Scales[Asteroid] < Range)
+            Item.Entity.Zone.AsteroidExists(AsteroidBelt, Asteroid) && 
+            length(Item.Entity.Position.xz - belt.Positions[Asteroid].xz) - belt.Scales[Asteroid] < Range)
         {
-            Entity.Zone.MineAsteroid(
-                Entity,
+            Item.Entity.Zone.MineAsteroid(
+                Item.Entity,
                 AsteroidBelt,
                 Asteroid,
                 Item.Evaluate(_data.DamagePerSecond) * delta,

@@ -45,9 +45,9 @@ public class ChargedWeaponData : InstantWeaponData
     [Inspectable, JsonProperty("chargeHeatMul"), Key(32)]
     public float ChargeFiringHeatMultiplier = 1;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new ChargedWeapon(context, this, entity, item);
+        return new ChargedWeapon(this, item);
     }
 }
 
@@ -93,7 +93,7 @@ public class ChargedWeapon : InstantWeapon, IEventBehavior
         get => _charge;
     }
     
-    public ChargedWeapon(ItemManager context, ChargedWeaponData data, Entity entity, EquippedItem item) : base(context, data, entity, item)
+    public ChargedWeapon(ChargedWeaponData data, EquippedItem item) : base(data, item)
     {
         _data = data;
     }

@@ -17,9 +17,9 @@ public class CapacitorData : BehaviorData
     [Inspectable, JsonProperty("efficiency"), Key(2), RuntimeInspectable]  
     public PerformanceStat Efficiency = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override IBehavior CreateInstance(EquippedItem item)
     {
-        return new Capacitor(context, this, entity, item);
+        return new Capacitor(this, item);
     }
 }
 
@@ -27,9 +27,7 @@ public class Capacitor : IBehavior
 {
     private CapacitorData _data;
 
-    public Entity Entity { get; }
     public EquippedItem Item { get; }
-    public ItemManager Context { get; }
 
     public BehaviorData Data => _data;
     
@@ -43,11 +41,9 @@ public class Capacitor : IBehavior
         Item.AddHeat(abs(charge) * (1-Efficiency));
     }
 
-    public Capacitor(ItemManager context, CapacitorData data, Entity entity, EquippedItem item)
+    public Capacitor(CapacitorData data, EquippedItem item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
         Item = item;
     }
 
