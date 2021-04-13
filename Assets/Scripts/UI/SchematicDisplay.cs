@@ -259,7 +259,7 @@ public class SchematicDisplay : MonoBehaviour
                 if (_capacitors.Length == 0)
                 {
                     EnergyFill.anchorMax = Vector2.up;
-                    EnergyLabel.text = _reactor.Draw.SignificantDigits(3);
+                    EnergyLabel.text = ActionGameManager.PlayerSettings.Format(_reactor.Draw);
                 }
                 else
                 {
@@ -280,7 +280,7 @@ public class SchematicDisplay : MonoBehaviour
             var hullData = _entity.ItemManager.GetData(_hull);
             var dur = _hull.Durability / hullData.Durability;
             HullDurabilityFill.anchorMax = new Vector2(dur, 1);
-            HullDurabilityLabel.text = $"{(dur*100).SignificantDigits(3)}%";
+            HullDurabilityLabel.text = $"{ActionGameManager.PlayerSettings.Format(dur*100)}%";
 
             foreach (var x in _schematicItems)
             {

@@ -38,7 +38,10 @@ public class SectorMap : MonoBehaviour
     public float LinkWidth;
     public float CriticalLinkWidth;
     public AnimationCurve IconScaleAnimation;
+    public Color PlayerLocationLabelColor;
+    public float PlayerLocationIconSize = 1.25f;
 
+    private SectorZone _currentPlayerLocation;
     private HashSet<SectorZone> _revealedZones = new HashSet<SectorZone>();
     private HashSet<(SectorZone, SectorZone)> _revealedLinks = new HashSet<(SectorZone, SectorZone)>();
 
@@ -47,6 +50,29 @@ public class SectorMap : MonoBehaviour
 
     private Dictionary<SectorZone, SectorZoneUI> _zoneInstances = new Dictionary<SectorZone, SectorZoneUI>();
     private Queue<IEnumerable<SectorZone>> _queuedZoneReveals = new Queue<IEnumerable<SectorZone>>();
+
+    public void MarkPlayerLocation(SectorZone zone)
+    {
+        if (_currentPlayerLocation != null)
+        {
+            _zoneInstances[_currentPlayerLocation].Label.color = Color.white;
+            _zoneInstances[_currentPlayerLocation].Label.fontStyle = FontStyles.Normal;
+            _zoneInstances[_currentPlayerLocation].IconContainer.localScale = Vector3.one;
+        }
+
+        _currentPlayerLocation = zone;
+        if(_zoneInstances.ContainsKey(_currentPlayerLocation))
+        {
+            MarkPlayerLocation(_zoneInstances[_currentPlayerLocation]);
+        }
+    }
+
+    private void MarkPlayerLocation(SectorZoneUI zoneUI)
+    {
+        zoneUI.Label.color = PlayerLocationLabelColor;
+        zoneUI.Label.fontStyle = FontStyles.Bold;
+        zoneUI.IconContainer.localScale = new Vector3(PlayerLocationIconSize, PlayerLocationIconSize, 1);
+    }
 
     public void QueueZoneReveal(IEnumerable<SectorZone> zones)
     {
@@ -72,6 +98,8 @@ public class SectorMap : MonoBehaviour
             if (!_revealedZones.Contains(zone))
             {
                 var zoneInstance = ZonePrototype.Instantiate<SectorZoneUI>();
+                if(zone == _currentPlayerLocation)
+                    MarkPlayerLocation(zoneInstance);
                 _zoneInstances[zone] = zoneInstance;
                 var zoneInstanceTransform = zoneInstance.transform;
                 zoneTransforms.Add(zoneInstanceTransform);

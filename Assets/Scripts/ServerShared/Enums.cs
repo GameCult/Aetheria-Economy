@@ -163,3 +163,10 @@ public enum CompoundCommodityCategory
     Manufacturing = 4,
     Assemblies = 5
 }
+
+public enum TemperatureUnit
+{
+    Kelvin,
+    Celsius,
+    Fahrenheit
+}

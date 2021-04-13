@@ -210,7 +210,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.MapToggle.performed += context =>
         {
-            if (EventSystem.current.currentSelectedGameObject != null) return;
+            if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
             if (MainMenu.gameObject.activeSelf) return;
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Map)
             {
@@ -237,7 +237,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.Inventory.performed += context =>
         {
-            if (EventSystem.current.currentSelectedGameObject != null) return;
+            if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
             if (MainMenu.gameObject.activeSelf) return;
             if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Inventory)
             {
@@ -262,7 +262,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.Dock.performed += context =>
         {
-            if (EventSystem.current.currentSelectedGameObject != null) return;
+            if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
             if (MainMenu.gameObject.activeSelf) return;
             if (CurrentEntity == null)
             {
@@ -278,7 +278,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.MainMenu.performed += context =>
         {
-            if (EventSystem.current.currentSelectedGameObject != null) return;
+            if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
             if (CurrentEntity == null) return;
             if (MainMenu.gameObject.activeSelf)
             {
@@ -670,7 +670,11 @@ public class ActionGameManager : MonoBehaviour
                 SectorMap.QueueZoneReveal(CurrentSector.Entrance.AdjacentZones.Prepend(CurrentSector.Entrance));
                 PopulateLevel(CurrentSector.Entrance);
                 var loadoutGenerator = new LoadoutGenerator(ref ItemManager.Random, ItemManager, CurrentSector, Zone.SectorZone, null, 2);
-                var ship = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateShipLoadout(), true);
+                var ship = EntitySerializer.Unpack(
+                    ItemManager, 
+                    Zone, 
+                    loadoutGenerator.GenerateShipLoadout(data => string.IsNullOrEmpty(Settings.StartingHullName) || data.Name==Settings.StartingHullName ), 
+                    true);
                 // EntitySerializer.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
                 ((Ship) ship).IsPlayerShip = true;
                 ship.Position = float3.zero;

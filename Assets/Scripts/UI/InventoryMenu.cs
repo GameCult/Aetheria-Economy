@@ -76,7 +76,7 @@ public class InventoryMenu : MonoBehaviour
 
     void Start()
     {
-        PropertiesPanel.Context = GameManager.ItemManager;
+        PropertiesPanel.GameManager = GameManager;
         foreach (var panel in InventoryPanels)
         {
             panel.OnBeginDragAsObservable().Subscribe(data =>

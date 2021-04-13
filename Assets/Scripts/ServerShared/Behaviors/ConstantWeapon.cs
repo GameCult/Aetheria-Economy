@@ -115,7 +115,9 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
                 }
             }
 
-            Item.EquippableItem.Durability -= Item.Wear * delta;
+            var dmg = Item.Wear * delta;
+            Item.EquippableItem.Durability -= dmg;
+            Item.Entity.ItemDamage.OnNext((Item, dmg));
             Item.AddHeat(Item.Evaluate(_data.Heat) * delta);
             Item.Entity.VisibilitySources[this] = Item.Evaluate(_data.Visibility);
         }

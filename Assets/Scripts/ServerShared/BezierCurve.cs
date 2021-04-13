@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
@@ -10,6 +11,33 @@ public class BezierCurve
     [JsonProperty("keys"), Key(0)] public float4[] Keys;
     
     [IgnoreMember] private int2 _cachedIndices;
+    
+    [IgnoreMember] private const int STEPS = 64;
+
+    [IgnoreMember] private float? _maximum;
+    
+    [IgnoreMember]
+    public float Maximum
+    {
+        get
+        {
+            if (_maximum != null) return _maximum ?? 0;
+            var samples = Enumerable.Range(0, STEPS).Select(i => (float) i / STEPS).ToArray();
+            float max = 0;
+            _maximum = 0;
+            foreach (var f in samples)
+            {
+                var p = Evaluate(f);
+                if (p > max)
+                {
+                    max = p;
+                    _maximum = f;
+                }
+            }
+
+            return _maximum??0;
+        }
+    }
     
     // Integrate area under curve between start and end time
     public float IntegrateCurve(float startTime, float endTime, int steps)

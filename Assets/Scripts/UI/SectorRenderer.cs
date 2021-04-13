@@ -92,6 +92,7 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
         _viewSize = .25f;
         
         Map.StartReveal(LinkAnimationDuration, IconAnimationDuration);
+        Map.MarkPlayerLocation(GameManager.CurrentEntity.Zone.SectorZone);
     }
 
     private void OnDisable()

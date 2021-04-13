@@ -37,7 +37,7 @@ public class TradeMenu : MonoBehaviour
         if (GameManager.DockedEntity == null) return;
         _targetCargo = GameManager.DockingBay;
         TargetCargoLabel.text = "Docking Bay";
-        Properties.Context = GameManager.ItemManager;
+        Properties.GameManager = GameManager;
         
         MinimumSizeFilter.Width.onEndEdit.RemoveAllListeners();
         MinimumSizeFilter.Width.onEndEdit.AddListener(_ => Populate());
@@ -210,7 +210,7 @@ public class TradeMenu : MonoBehaviour
                     return 0;
                 }));
         columns.Add(("Mass", 1,
-            x => () => x.data.Mass.SignificantDigits(3), 
+            x => () => ActionGameManager.PlayerSettings.Format(x.data.Mass), 
             data => data.Mass));
         columns.Add(("Price", 1,
             x => () => (x.item is CraftedItemInstance craftedItemInstance ? GameManager.ItemManager.GetPrice(craftedItemInstance) : x.data.Price).ToString("N0"),
@@ -252,7 +252,7 @@ public class TradeMenu : MonoBehaviour
                     columns.Add((field.Name, 1, x =>
                     {
                         var behavior = ((EquippableItemData) x.data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
-                        return () => ((float) field.GetValue(behavior)).SignificantDigits(3);
+                        return () => ActionGameManager.PlayerSettings.Format((float) field.GetValue(behavior));
                     }, data =>
                     {
                         var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
@@ -273,7 +273,7 @@ public class TradeMenu : MonoBehaviour
                     columns.Add((field.Name, 1, x =>
                     {
                         var behavior = ((EquippableItemData) x.data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
-                        return () => ((PerformanceStat) field.GetValue(behavior)).Max.SignificantDigits(3);
+                        return () => ActionGameManager.PlayerSettings.Format(((PerformanceStat) field.GetValue(behavior)).Max);
                     }, data =>
                     {
                         var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));

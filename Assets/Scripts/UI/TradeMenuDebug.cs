@@ -34,7 +34,7 @@ public class TradeMenuDebug : MonoBehaviour
     {
         _targetCargo = GameManager.DockingBay;
         TargetCargoLabel.text = "Docking Bay";
-        Properties.Context = GameManager.ItemManager;
+        Properties.GameManager = GameManager;
         MinimumSizeFilter.Width.onEndEdit.AddListener(_ => Populate());
         MinimumSizeFilter.Height.onEndEdit.AddListener(_ => Populate());
         MaximumSizeFilter.Width.onEndEdit.AddListener(_ => Populate());
@@ -196,7 +196,7 @@ public class TradeMenuDebug : MonoBehaviour
                     return 0;
                 }));
         columns.Add(("Mass", 1,
-            data => () => data.Mass.SignificantDigits(3), 
+            data => () => ActionGameManager.PlayerSettings.Format(data.Mass), 
             data => data.Mass));
         columns.Add(("Price", 1,
             data => () => data.Price.ToString("N0"),
@@ -237,7 +237,7 @@ public class TradeMenuDebug : MonoBehaviour
                     columns.Add((field.Name, 1, data =>
                     {
                         var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
-                        return () => ((float) field.GetValue(behavior)).SignificantDigits(3);
+                        return () => ActionGameManager.PlayerSettings.Format((float) field.GetValue(behavior));
                     }, data =>
                     {
                         var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
@@ -258,7 +258,7 @@ public class TradeMenuDebug : MonoBehaviour
                     columns.Add((field.Name, 1, data =>
                     {
                         var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));
-                        return () => ((PerformanceStat) field.GetValue(behavior)).Max.SignificantDigits(3);
+                        return () => ActionGameManager.PlayerSettings.Format(((PerformanceStat) field.GetValue(behavior)).Max);
                     }, data =>
                     {
                         var behavior = ((EquippableItemData) data).Behaviors.FirstOrDefault(b => type.IsInstanceOfType(b));

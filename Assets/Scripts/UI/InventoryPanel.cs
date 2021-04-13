@@ -50,6 +50,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     public Color CellBackgroundColor = new Color(0, 0, 0, .75f);
     public float MinTempRange = 1;
     public float DoubleClickTime = .5f;
+    public float HitDamageThreshold = 1;
     
     Subject<InventoryEventData> _onBeginDrag;
     Subject<InventoryEventData> _onDrag;
@@ -206,8 +207,8 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
             var opacity = smoothstep(0, MinTempRange, tempRange);
             if(MinTempLabel)
             {
-                MinTempLabel.text = $"{((int) (_displayedEntity.MinTemp - 273.15f)).ToString()}°C";
-                MaxTempLabel.text = $"{((int) (_displayedEntity.MaxTemp - 273.15f)).ToString()}°C";
+                MinTempLabel.text = ActionGameManager.PlayerSettings.FormatTemperature(_displayedEntity.MinTemp);
+                MaxTempLabel.text = ActionGameManager.PlayerSettings.FormatTemperature(_displayedEntity.MaxTemp);
             }
             var hullData = GameManager.ItemManager.GetData(_displayedEntity.Hull) as HullData;
             for(var x = 0; x < _temperatureTexture.width; x++)
@@ -403,11 +404,11 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
             RefreshCells(hitCells);
         }));
         
-        _subscriptions.Add(entity.ItemDamage.Subscribe(hit =>
+        _subscriptions.Add(entity.ItemDamage.Where(hit=>hit.damage > HitDamageThreshold).Subscribe(hit =>
         {
-            var data = entity.ItemManager.GetData(hit.item.EquippableItem);
-            var hitCells = data.Shape.Coordinates.Select(v => v + hit.item.Position).ToArray();
-            StartCoroutine(Pulse(hitCells, HitType.Armor, _hitSequence++));
+            var hitCells = hit.item.InsetShape.Coordinates;
+            if(gameObject.activeInHierarchy)
+                StartCoroutine(Pulse(hitCells, HitType.Armor, _hitSequence++));
             RefreshCells(hitCells);
         }));
     }

@@ -176,6 +176,13 @@ public class MainMenu : MonoBehaviour
         _nextMenu.panel.AddField("Name", 
             () => ActionGameManager.PlayerSettings.Name,
             s => ActionGameManager.PlayerSettings.Name = s);
+        _nextMenu.panel.AddField("Temperature Unit", 
+            () => (int) ActionGameManager.PlayerSettings.TemperatureUnit,
+            i => ActionGameManager.PlayerSettings.TemperatureUnit = (TemperatureUnit) i,
+            Enum.GetNames(typeof(TemperatureUnit)));
+        _nextMenu.panel.AddField("Significant Digits", 
+            () => ActionGameManager.PlayerSettings.SignificantDigits,
+            i => ActionGameManager.PlayerSettings.SignificantDigits = i);
         _nextMenu.panel.AddButton("Back",
             () =>
             {

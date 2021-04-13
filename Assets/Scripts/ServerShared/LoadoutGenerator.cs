@@ -30,9 +30,9 @@ public class LoadoutGenerator
         PriceExponent = priceExponent;
     }
     
-    public EntityPack GenerateShipLoadout()
+    public EntityPack GenerateShipLoadout(Predicate<HullData> hullFilter = null)
     {
-        var hull = ItemManager.CreateInstance(RandomHull(HullType.Ship)) as EquippableItem;
+        var hull = ItemManager.CreateInstance(RandomHull(HullType.Ship, hullFilter)) as EquippableItem;
         var entity = new Ship(ItemManager, null, hull, ItemManager.GameplaySettings.DefaultEntitySettings);
         entity.Faction = Faction;
         OutfitEntity(entity);
@@ -82,10 +82,13 @@ public class LoadoutGenerator
         return EntitySerializer.Pack(entity);
     }
 
-    public HullData RandomHull(HullType type)
+    public HullData RandomHull(HullType type, Predicate<HullData> hullFilter = null)
     {
         return ItemManager.ItemData.GetAll<HullData>()
-            .Where(item => item.HullType == type && (Faction == null || item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)))
+            .Where(item =>
+                (hullFilter?.Invoke(item) ?? true) &&
+                item.HullType == type && 
+                (Faction == null || item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)))
             .WeightedRandomElements(ref Random,
                 item =>
                     (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) / // Prioritize items from allied manufacturers
@@ -119,7 +122,8 @@ public class LoadoutGenerator
     {
         return RandomItem<T>(sizeExponent, item => item.HardpointType == hardpoint.Type &&
                                   (filter?.Invoke(item) ?? true) && 
-                                  item.Shape.FitsWithin(hardpoint.Shape, hardpoint.Rotation, out _));
+                                  item.Shape.FitsWithin(hardpoint.Shape, hardpoint.Rotation, out _) &&
+                                  item.Shape.Coordinates.Length==hardpoint.Shape.Coordinates.Length);
     }
 
     private void OutfitEntity(Entity entity)

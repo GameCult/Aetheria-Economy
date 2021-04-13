@@ -125,13 +125,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: 8
     m_Right: 8
     m_Top: 8
     m_Bottom: 8
   m_ChildAlignment: 0
-  m_Spacing: 0
-  m_ChildForceExpandWidth: 0
+  m_Spacing: 4
+  m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
@@ -781,6 +781,10 @@ MonoBehaviour:
   ButtonField: {fileID: 6566784227922820057, guid: 6db1feb4cda7b8c419384cd42c85a5c4,
     type: 3}
   IncrementField: {fileID: 5486709585343280439, guid: 9c14c92a1a08b0a4fb4f6aa6f8504082,
+    type: 3}
+  StatSheet: {fileID: 3416329628306957711, guid: 4f75723ed178a084e813965e84825bd4,
+    type: 3}
+  CurveField: {fileID: 3018914896466881005, guid: 168887bbd3de8c74eb3f06d3d46dda4e,
     type: 3}
   Content: {fileID: 257019179596293679}
   SelectedChild: {fileID: 0}

@@ -10,6 +10,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Sector Display Properties", menuName = "Aetheria/Sector Display Properties")]
 public class GameSettings : ScriptableObject
 {
+    public string StartingHullName = "Longinus";
     public float HeatstrokePhasingFloor = 0;
     public float HeatstrokePhasingFrequency = 5;
     public float WormholeDistanceRatio;

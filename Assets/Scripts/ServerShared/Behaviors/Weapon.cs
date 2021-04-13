@@ -30,13 +30,13 @@ public abstract class WeaponData : BehaviorData
     [InspectableRangedFloat(0,1), JsonProperty("damageSpread"), Key(4)]
     public PerformanceStat DamageSpread = new PerformanceStat();
 
-    [Inspectable, JsonProperty("minRange"), Key(5), RuntimeInspectable]
+    [Inspectable, JsonProperty("minRange"), Key(5)]
     public PerformanceStat MinRange = new PerformanceStat();
 
-    [Inspectable, JsonProperty("range"), Key(6), RuntimeInspectable]
+    [Inspectable, JsonProperty("range"), Key(6)]
     public PerformanceStat Range = new PerformanceStat();
 
-    [InspectableAnimationCurve, JsonProperty("damageCurve"), Key(7), RuntimeInspectable]
+    [InspectableAnimationCurve, JsonProperty("damageCurve"), Key(7)]
     public BezierCurve DamageCurve;
     
     [InspectablePrefab, JsonProperty("effect"), Key(8)]  

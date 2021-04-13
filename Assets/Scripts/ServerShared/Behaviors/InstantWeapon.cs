@@ -170,6 +170,7 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
             _burstTimer -= _burstInterval;
             OnFire?.Invoke();
             Item.EquippableItem.Durability -= Item.Wear;
+            Item.Entity.ItemDamage.OnNext((Item, Item.Wear));
             Item.AddHeat(Heat);
             Item.Entity.VisibilitySources[this] = Visibility;
         }

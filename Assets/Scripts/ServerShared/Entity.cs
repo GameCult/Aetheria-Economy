@@ -770,8 +770,9 @@ public abstract class Entity
         }
 
         UpdateTemperature(delta);
-        
-        
+
+        foreach (var item in _orderedEquipment) item.UpdatePerformance();
+
         if (_active)
         {
             if(Cockpit != null)
@@ -1042,11 +1043,8 @@ public class EquippedItem
             Entity.AddHeat(hullCoord, heat / InsetShape.Coordinates.Length, ignoreThermalMass);
     }
 
-    public void Update(float delta)
+    public void UpdatePerformance()
     {
-        foreach (var behavior in Behaviors)
-            if(behavior is IAlwaysUpdatedBehavior alwaysUpdatedBehavior) alwaysUpdatedBehavior.Update(delta);
-
         var temp = Temperature;
         ThermalPerformance = Data.Performance(temp);
         DurabilityPerformance = EquippableItem.Durability / Data.Durability;
@@ -1057,6 +1055,12 @@ public class EquippedItem
             ) * Data.Durability / Data.ThermalResilience;
         ThermalOnline.Value = ThermalPerformance > performanceThreshold || Entity.OverrideShutdown && EquippableItem.OverrideShutdown;
         DurabilityOnline.Value = EquippableItem.Durability > .01f;
+    }
+
+    public void Update(float delta)
+    {
+        foreach (var behavior in Behaviors)
+            if(behavior is IAlwaysUpdatedBehavior alwaysUpdatedBehavior) alwaysUpdatedBehavior.Update(delta);
 
         if (Active.Value)
         {

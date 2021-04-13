@@ -37,8 +37,16 @@ public class Wear : IBehavior
     public bool Execute(float delta)
     {
         if (_data.PerSecond)
-            Item.EquippableItem.Durability -= Item.Wear * delta;
-        else Item.EquippableItem.Durability -= Item.Wear;
+        {
+            var dmg = Item.Wear * delta;
+            Item.EquippableItem.Durability -= dmg;
+            Item.Entity.ItemDamage.OnNext((Item, dmg));
+        }
+        else
+        {
+            Item.EquippableItem.Durability -= Item.Wear;
+            Item.Entity.ItemDamage.OnNext((Item, Item.Wear));
+        }
         return true;
     }
 }

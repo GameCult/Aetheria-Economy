@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -115,17 +116,6 @@ public static class Extensions
             default:
                 throw new ArgumentOutOfRangeException(nameof(rotation), rotation, null);
         }
-    }
-    
-    public static string SignificantDigits(this float d, int digits=10)
-    {
-        int magnitude = d == 0.0f ? 0 : (int)Math.Floor(Math.Log10(Math.Abs(d))) + 1;
-        digits -= magnitude;
-        if (digits < 0)
-            digits = 0;
-        string fmt = "f" + digits;
-        string strdec = d.ToString(fmt);
-        return strdec.Contains(".") ? strdec.TrimEnd('0').TrimEnd('.') : strdec;
     }
 
     private static Random? _random;
