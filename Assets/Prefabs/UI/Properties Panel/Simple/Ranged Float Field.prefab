@@ -487,8 +487,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Slider FieldSlider FieldSlider FieldSlider FieldSlider FieldSlider FieldSlider
-    FieldSlider Field
+  m_text: Slider Field
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 53555f7a2d5e745428813f1b1118734f, type: 2}
   m_sharedMaterial: {fileID: -2804126062856497447, guid: 53555f7a2d5e745428813f1b1118734f,

@@ -36,10 +36,11 @@ public class PlayerSettings
     public string Format(float d)
     {
         var magnitude = d == 0.0f ? 0 : (int)Math.Floor(Math.Log10(Math.Abs(d))) + 1;
-        SignificantDigits -= magnitude;
-        if (SignificantDigits < 0)
-            SignificantDigits = 0;
-        var strdec = d.ToString($"N{SignificantDigits}");
+        var digits = SignificantDigits;
+        digits -= magnitude;
+        if (digits < 0)
+            digits = 0;
+        var strdec = d.ToString($"N{digits}");
         var dec = Convert.ToChar(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);
         return strdec.Contains(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) ? strdec.TrimEnd('0').TrimEnd(dec) : strdec;
     }
