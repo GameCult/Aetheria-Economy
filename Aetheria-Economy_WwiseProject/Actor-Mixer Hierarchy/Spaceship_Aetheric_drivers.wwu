@@ -7,6 +7,7 @@
 					<ChildrenList>
 						<BlendContainer Name="Aetheric_driver" ID="{03FB1F9D-D99F-4F30-B3B8-1F1B742D2C55}" ShortID="450666755">
 							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="2"/>
 								<Property Name="MaxSoundPerInstance" Type="int16">
 									<ValueList>
 										<Value>7</Value>
@@ -1561,7 +1562,7 @@
 				</Folder>
 				<Folder Name="weapons" ID="{9F97461E-1B3D-4CB3-9014-2882638E0A0D}" ShortID="1002591149">
 					<ChildrenList>
-						<Folder Name="railgun" ID="{B4E48D54-A0B5-4172-8A61-013CCFB058F8}" ShortID="550753925">
+						<Folder Name="Rail_gun" ID="{B4E48D54-A0B5-4172-8A61-013CCFB058F8}" ShortID="550753925">
 							<ChildrenList>
 								<Sound Name="railgun_fire" ID="{A1395B69-32F8-46CE-9DB6-FF255F8AC1A0}" ShortID="161654359">
 									<PropertyList>
@@ -2167,7 +2168,7 @@
 						</Folder>
 						<Folder Name="Lighting_gun" ID="{0FC523CF-7DA8-4156-B37B-BB22BFC6034A}" ShortID="1045438151">
 							<ChildrenList>
-								<Sound Name="fire_lighting01" ID="{735F0673-92AA-40A1-BB47-574C90694862}" ShortID="398718725">
+								<Sound Name="lightingGun_fire_lighting01" ID="{735F0673-92AA-40A1-BB47-574C90694862}" ShortID="398718725">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 									</PropertyList>
@@ -2339,7 +2340,7 @@
 										<ActiveSource Name="SoundSeed Grain" ID="{67039B8A-C316-4911-AD10-CF38B4D9E37A}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<BlendContainer Name="fire_lighting_discharge" ID="{31E53399-4CCE-43E0-B5F0-3EDF9865739E}" ShortID="641391425">
+								<BlendContainer Name="lightingGun_fire_lighting_discharge" ID="{31E53399-4CCE-43E0-B5F0-3EDF9865739E}" ShortID="641391425">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="InitialDelay" Type="Real64">
@@ -2669,7 +2670,7 @@
 										</Sound>
 									</ChildrenList>
 								</BlendContainer>
-								<BlendContainer Name="Hit_target" ID="{BF6D0651-F4B3-42FF-8EB5-665213B88F13}" ShortID="1020634640">
+								<BlendContainer Name="lightingGun_Hit_target" ID="{BF6D0651-F4B3-42FF-8EB5-665213B88F13}" ShortID="1020634640">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="Volume" Type="Real64">
@@ -2964,9 +2965,22 @@
 										</RandomSequenceContainer>
 									</ChildrenList>
 								</BlendContainer>
-								<BlendContainer Name="ship_destryed" ID="{17DF7E58-2AB3-4956-937D-9B5580652C49}" ShortID="186696709">
+								<BlendContainer Name="lightingGun_ship_destryed" ID="{17DF7E58-2AB3-4956-937D-9B5580652C49}" ShortID="186696709">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{FFDD7B3F-7D98-402E-B57C-AA43E6BC5E63}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="151.8"/>
+															<Property Name="Min" Type="Real64" Value="-151.3"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
 												<Value>-4.6</Value>
@@ -3259,7 +3273,7 @@
 										</RandomSequenceContainer>
 									</ChildrenList>
 								</BlendContainer>
-								<RandomSequenceContainer Name="miss" ID="{3883E890-7748-4AFE-B096-ADCA4FFF8C9C}" ShortID="1030576627">
+								<RandomSequenceContainer Name="lightingGun_miss" ID="{3883E890-7748-4AFE-B096-ADCA4FFF8C9C}" ShortID="1030576627">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="Highpass" Type="int16">
@@ -3412,22 +3426,242 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
+								<Sound Name="lightingGun_charge" ID="{2B2952E6-A76F-491A-AD59-E3ACD131410D}" ShortID="152149811">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="OutputBusVolume" Type="Real64">
+											<ValueList>
+												<Value>4.1</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<SourcePlugin Name="SoundSeed Grain" ID="{232C1E77-A1E8-487E-A1B0-3CBABCAAA4F1}" ShortID="352513002" PluginName="SoundSeed Grain" CompanyID="0" PluginID="183">
+											<PropertyList>
+												<Property Name="Amplitude" Type="Real32" Value="62"/>
+												<Property Name="Attack" Type="Real32" Value="201.7"/>
+												<Property Name="Duration" Type="Real32" Value="251"/>
+												<Property Name="DurationLink" Type="int32" Value="1"/>
+												<Property Name="EnvelopeType" Type="int32" Value="2"/>
+												<Property Name="GrainRate" Type="Real32" Value="9.05">
+													<RTPCList>
+														<RTPC Name="" ID="{58C2904A-C46B-4F1E-B6C0-78996E41E25D}" ShortID="825793503">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{AEC45B9E-A323-4AA8-93B7-B4FC6F122E56}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="5"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>4</YPos>
+																		<Flags>5</Flags>
+																		<SegmentShape>Exp1</SegmentShape>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>7</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
+												</Property>
+												<Property Name="MarkerSelect" Type="Real32" Value="20.90838">
+													<RTPCList>
+														<RTPC Name="" ID="{622AD780-EF5E-4B81-858B-9A7897E226D8}" ShortID="116178123">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{7179E7EA-CA39-4BD6-BD89-A9723D0C8DE8}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="1"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>0</YPos>
+																		<Flags>5</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>0</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
+												</Property>
+												<Property Name="OutputLevel" Type="Real32">
+													<RTPCList>
+														<RTPC Name="" ID="{09B96A80-7A87-439B-908B-FC4ADBCCBEA7}" ShortID="697183937">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<Custom>
+																		<ModulatorEnvelope Name="Modulator Envelope (Custom)" ID="{1D82EED9-B8FE-4827-A58B-0E8F88F54230}" ShortID="150134583">
+																			<PropertyList>
+																				<Property Name="EnvelopeAttackTime" Type="Real64" Value="0.01"/>
+																			</PropertyList>
+																		</ModulatorEnvelope>
+																	</Custom>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{C40B3000-00CC-4259-90C7-B37AFF74A069}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="3"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>-96</YPos>
+																		<Flags>21</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>0</YPos>
+																		<Flags>53</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
+												</Property>
+												<Property Name="SelectFreqTimeGrain" Type="int32" Value="1"/>
+												<Property Name="Transpose" Type="Real32">
+													<RTPCList>
+														<RTPC Name="" ID="{7513F978-5E37-41E2-B234-351CC2CF1671}" ShortID="463235266">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{C0B357CE-AA69-4738-841F-27A5EAA74D40}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="1"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>0</YPos>
+																		<Flags>5</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>455.78635</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
+												</Property>
+											</PropertyList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_lightingGun_charge" ID="{35CCC9ED-D1DD-4588-9361-DE2A567C4D25}">
+													<Language>SoundSeed Grain</Language>
+													<AudioFile>SFX_weapon_lightingGun_charge.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="452265255"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<Language>SFX</Language>
+										</SourcePlugin>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SoundSeed Grain" ID="{232C1E77-A1E8-487E-A1B0-3CBABCAAA4F1}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="lightingGun_overcharge_fail" ID="{CBC3BFA5-58A1-4360-9902-3A55F49C8D15}" ShortID="354513148">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="OutputBusVolume" Type="Real64">
+											<ValueList>
+												<Value>-7.3</Value>
+											</ValueList>
+										</Property>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{2790E58B-ACDC-4B41-A341-DF32CE29C06C}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="100.6"/>
+															<Property Name="Min" Type="Real64" Value="-223.6"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="Volume" Type="Real64">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{65CC0325-35E8-416A-B4BE-62FC3551562B}"/>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_weapon_lightingGun_charge_fail" ID="{02BEC30B-9EA0-4D1C-B78D-F1D19A5E469A}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_weapon_lightingGun_charge_fail.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="556200855"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_weapon_lightingGun_charge_fail" ID="{02BEC30B-9EA0-4D1C-B78D-F1D19A5E469A}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
 							</ChildrenList>
 						</Folder>
-						<Sound Name="New Sound SFX" ID="{06CA3E10-B471-4138-A4AD-51AC1074B1A3}" ShortID="1062924123">
+						<Sound Name="target_locking" ID="{06CA3E10-B471-4138-A4AD-51AC1074B1A3}" ShortID="1062924123">
 							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="2"/>
 								<Property Name="Volume" Type="Real64">
 									<ValueList>
 										<Value>-4.6</Value>
 									</ValueList>
 									<RTPCList>
-										<RTPC Name="" ID="{EB409BE5-2748-4972-909F-A5847152C95B}" ShortID="1027701759">
-											<ReferenceList/>
-										</RTPC>
+										<RTPC Name="" ID="{EB409BE5-2748-4972-909F-A5847152C95B}" ShortID="1027701759"/>
 									</RTPCList>
 								</Property>
 							</PropertyList>
 							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+								</Reference>
 								<Reference Name="Conversion">
 									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
 								</Reference>
@@ -3550,6 +3784,1389 @@
 								<ActiveSource Name="SoundSeed Grain" ID="{E6F10DEF-3D78-4CBE-A632-8E051FD7B488}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
+						<Folder Name="Cannon_gun" ID="{E5DFDBF4-5721-4187-8D25-D90903700EE9}" ShortID="1060416587">
+							<ChildrenList>
+								<Sound Name="cannon_fire" ID="{CC8D2668-6F4F-4272-86B2-9674CAEE2FCF}" ShortID="512141866">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Highpass" Type="int16">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{8FFF2E9E-1073-4F34-A1B6-22A7012A9C87}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="7.7"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="Lowpass" Type="int16">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{F406A873-368A-4C3B-A1A6-F7EBDDA2E779}"/>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="OutputBusVolume" Type="Real64">
+											<ValueList>
+												<Value>4</Value>
+											</ValueList>
+										</Property>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{0CECE95D-ABD6-42DA-A2EC-D8754B7261F5}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="176.4"/>
+															<Property Name="Min" Type="Real64" Value="-204"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_weapon_cannon_fire" ID="{BC90198B-673F-4DA7-9EB4-67B4BC2453FB}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_weapon_cannon_fire.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="949780157"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_weapon_cannon_fire" ID="{BC90198B-673F-4DA7-9EB4-67B4BC2453FB}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="cannon_hit" ID="{99F85F09-7AA1-4CFA-BD79-7789B22C8A8E}" ShortID="1068647667">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Highpass" Type="int16">
+											<ValueList>
+												<Value>10</Value>
+											</ValueList>
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{396A7FB7-8CBD-427D-83B1-B7018FD9F0D7}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="19.8"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="OutputBusVolume" Type="Real64">
+											<ValueList>
+												<Value>-2.2</Value>
+											</ValueList>
+										</Property>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{AB92596E-6CA6-4A64-B67F-D44CF1D4F2B6}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="141.4"/>
+															<Property Name="Min" Type="Real64" Value="-145.2"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_weapon_cannon_hit" ID="{29DE1CA9-7843-4B8A-81B2-255288EA24F3}">
+											<PropertyList>
+												<Property Name="FadeOutDuration" Type="Real64" Value="0.245914972720873"/>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimEnd" Type="Real64" Value="0.526465857092574"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>SFX_weapon_cannon_hit.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="38040695"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_weapon_cannon_hit" ID="{29DE1CA9-7843-4B8A-81B2-255288EA24F3}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="cannon_ship_destroyed" ID="{A5A74A9F-967D-4624-AC4B-3AD0573FE1C9}" ShortID="371823711">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Highpass" Type="int16">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{91A1BE47-71D2-42C2-8EA9-8116D2317070}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="19.8"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="OutputBusVolume" Type="Real64">
+											<ValueList>
+												<Value>-2.2</Value>
+											</ValueList>
+										</Property>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{D3880ED7-F2B9-4220-AB94-62A9B968B2AF}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="141.4"/>
+															<Property Name="Min" Type="Real64" Value="-145.2"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_weapon_cannon_hit" ID="{4C561304-9CA6-4CA2-A3AC-7A280E1FC25C}">
+											<PropertyList>
+												<Property Name="FadeOutDuration" Type="Real64" Value="0.245914972720873"/>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>SFX_weapon_cannon_hit.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1015546478"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_weapon_cannon_hit" ID="{4C561304-9CA6-4CA2-A3AC-7A280E1FC25C}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<RandomSequenceContainer Name="cannon_miss" ID="{481DB8D8-3BA3-428A-B8B3-DECF5A568D60}" ShortID="977076854">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Highpass" Type="int16">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{65BFCBE4-5896-4467-A26B-1CBCA5B0C3F5}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="13.4"/>
+															<Property Name="Min" Type="Real64" Value="-8"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="Lowpass" Type="int16">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{8FCBFE5C-054B-43DF-A4B2-13F14EAF0E19}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="8"/>
+															<Property Name="Min" Type="Real64" Value="-23"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{D2F0AC31-078D-4BDF-A0FB-3323BD60A5E6}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="115.4"/>
+															<Property Name="Min" Type="Real64" Value="-176.6"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+										<Property Name="Volume" Type="Real64">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{08F625C3-2E91-45CD-B4ED-8548F0A919A9}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Min" Type="Real64" Value="-4.5"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="SFX_weapon_cannon_miss01" ID="{2D1F91D3-0356-4B4E-AFF0-FE153D25A038}" ShortID="500333610">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_cannon_miss01" ID="{5B2A53AF-2730-4DB4-8BAC-47C729407D1B}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_cannon_miss01.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="355170468"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_cannon_miss01" ID="{5B2A53AF-2730-4DB4-8BAC-47C729407D1B}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_cannon_miss02" ID="{60122CCA-A90A-479D-B3CF-BCDE1AB30299}" ShortID="251570963">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_cannon_miss02" ID="{34619D9F-FED5-4917-AA5F-5720B85AF455}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_cannon_miss02.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="119049071"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_cannon_miss02" ID="{34619D9F-FED5-4917-AA5F-5720B85AF455}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_cannon_miss03" ID="{9049FA54-8062-47E2-BEFC-D4D84537D3B7}" ShortID="13561835">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_cannon_miss03" ID="{6322A335-6B20-4C52-A0DA-BA9C651C9D22}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_cannon_miss03.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="827306136"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_cannon_miss03" ID="{6322A335-6B20-4C52-A0DA-BA9C651C9D22}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_cannon_miss04" ID="{94B001ED-F18B-448B-9734-287A412E6737}" ShortID="1004181881">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_cannon_miss04" ID="{1FFE6D20-E8C0-4B24-BFB7-45C331A342A2}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_cannon_miss04.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="379261614"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_cannon_miss04" ID="{1FFE6D20-E8C0-4B24-BFB7-45C331A342A2}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</RandomSequenceContainer>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="Machine_gun" ID="{4205255B-A77D-4F45-BA25-D66BF8239CD5}" ShortID="756777750">
+							<ChildrenList>
+								<RandomSequenceContainer Name="machinegun_fire" ID="{0908DEB2-749C-4F24-864B-8F5C80B9F2E7}" ShortID="163423793">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Highpass" Type="int16">
+											<ValueList>
+												<Value>8</Value>
+											</ValueList>
+										</Property>
+										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{7EA0FC08-D7CA-4C7F-B064-4D316884244F}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="101.2"/>
+															<Property Name="Min" Type="Real64" Value="-124.5"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="SFX_weapon_machinegun_fire01" ID="{FBC1A7C4-04C5-4DAB-A167-6E3E4FAB9AA7}" ShortID="115966288">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_fire01" ID="{625F32F2-AB8F-4930-A02C-BF950AD85B26}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_fire01.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="648642597"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_fire01" ID="{625F32F2-AB8F-4930-A02C-BF950AD85B26}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_machinegun_fire02" ID="{4E7A82BB-CA65-49E0-B9EE-6C15A9689D54}" ShortID="527491269">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_fire02" ID="{6B05D4BC-1B82-4295-9982-BCD170D798C8}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_fire02.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="126385052"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_fire02" ID="{6B05D4BC-1B82-4295-9982-BCD170D798C8}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_machinegun_fire03" ID="{98B914DE-D8A7-41D2-A34E-35E70A218236}" ShortID="226986940">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_fire03" ID="{40D1F20B-D6BB-434B-921C-F439CDAC2405}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_fire03.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="848481503"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_fire03" ID="{40D1F20B-D6BB-434B-921C-F439CDAC2405}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_machinegun_fire04" ID="{14B859EE-2375-4F9B-9FF7-13BA2D705ECA}" ShortID="758798568">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_fire04" ID="{3A4DFA4C-51C3-4AA8-8DB7-EB228D9E7869}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_fire04.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="1050433216"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_fire04" ID="{3A4DFA4C-51C3-4AA8-8DB7-EB228D9E7869}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</RandomSequenceContainer>
+								<RandomSequenceContainer Name="machinegun_hit" ID="{5BD210B1-419E-4ABD-A940-A27063C392E6}" ShortID="899144980">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{EF20043F-5E26-41D8-855B-FD9B370C52F0}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="132.7"/>
+															<Property Name="Min" Type="Real64" Value="-126.3"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="SFX_weapon_machinegun_hit" ID="{701A642E-6AA9-42CE-8136-79820C8DF94B}" ShortID="292911175">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_hit" ID="{666D6423-7481-4BE6-A456-DDE02C897871}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_hit.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="922975029"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_hit" ID="{666D6423-7481-4BE6-A456-DDE02C897871}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_machinegun_hit02" ID="{70AB412B-2A76-4597-B8B8-3BB7DEC27602}" ShortID="716767723">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_hit02" ID="{7BEC066F-D2AA-4C3C-8BE1-2CA59BEF7CE3}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_hit02.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="34047258"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_hit02" ID="{7BEC066F-D2AA-4C3C-8BE1-2CA59BEF7CE3}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_machinegun_hit03" ID="{D0633B2E-F054-414F-89E9-91500E9A552B}" ShortID="600376401">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_hit03" ID="{9C950B2E-F2E3-4FF4-981E-6090E6EEDB5D}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_hit03.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="293195126"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_hit03" ID="{9C950B2E-F2E3-4FF4-981E-6090E6EEDB5D}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_machinegun_hit04" ID="{8BC33F30-7A23-417F-AB1B-ACA165B7760C}" ShortID="603265449">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_hit04" ID="{F9425361-5F77-4B5A-BB13-444C59C141A1}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_hit04.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="932091236"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_hit04" ID="{F9425361-5F77-4B5A-BB13-444C59C141A1}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</RandomSequenceContainer>
+								<RandomSequenceContainer Name="machinegun_miss" ID="{6695AE2C-5F79-4857-91C2-B28A2F040A3B}" ShortID="573193494">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{A7B404D1-92E4-4F9C-87A5-884BD8F5B8FA}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="77.3"/>
+															<Property Name="Min" Type="Real64" Value="-152"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="SFX_weapon_machinegun_miss01" ID="{9C7E7444-5D90-484E-A602-B2E9643D75C1}" ShortID="827025740">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_miss01" ID="{1D3CF49A-2654-45ED-BD0B-ECC187C3CBC2}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_miss01.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="989114182"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_miss01" ID="{1D3CF49A-2654-45ED-BD0B-ECC187C3CBC2}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_machinegun_miss02" ID="{76E1D88E-A243-4A8D-9A05-A8F6AB193796}" ShortID="1013328567">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_miss02" ID="{65CC31F0-BADD-4226-911D-FFEDBF4E7690}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_miss02.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="187104294"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_miss02" ID="{65CC31F0-BADD-4226-911D-FFEDBF4E7690}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_machinegun_miss03" ID="{38C46D05-1D41-4B80-8203-A7135D390DCB}" ShortID="509105129">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_miss03" ID="{D16DFA1B-AD5F-44F6-AF73-853E18F2A321}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_miss03.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="391596661"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_miss03" ID="{D16DFA1B-AD5F-44F6-AF73-853E18F2A321}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_machinegun_miss04" ID="{3742662C-53BB-41DA-AF11-92380386707A}" ShortID="1013001871">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_machinegun_miss04" ID="{F260CF82-5170-494D-A34E-32E3223E9C49}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_machinegun_miss04.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="511340471"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_machinegun_miss04" ID="{F260CF82-5170-494D-A34E-32E3223E9C49}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</RandomSequenceContainer>
+								<Sound Name="machinegun_ship_destroyed" ID="{FEBF1A44-B6D0-4F6F-AF22-5BF5EFF47EBF}" ShortID="286744754">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{A4E68113-911E-43BB-BCC3-BD0DC8FCC5A6}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="202.6"/>
+															<Property Name="Min" Type="Real64" Value="-152"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_weapon_machinegun_ship_destroyed" ID="{9A0E022A-C196-45C9-A28D-B2B9AE13CC93}">
+											<PropertyList>
+												<Property Name="FadeOutDuration" Type="Real64" Value="1.29484688489968"/>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>SFX_weapon_machinegun_ship_destroyed.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="293289723"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_weapon_machinegun_ship_destroyed" ID="{9A0E022A-C196-45C9-A28D-B2B9AE13CC93}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+						</Folder>
+						<Folder Name="Ion_cannon" ID="{29C6B342-4A84-46E2-9311-46294D25A37E}" ShortID="487576856">
+							<ChildrenList>
+								<RandomSequenceContainer Name="IonCannon_fire" ID="{F342EF35-B9FB-43DF-AC49-9C25006D66F7}" ShortID="550015439">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{C0899C50-E137-4243-A8FF-5F60945E3818}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="110.4"/>
+															<Property Name="Min" Type="Real64" Value="-152.1"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="SFX_weapon_ioncannon_fire01" ID="{6507253C-8474-4133-8229-0E5AD3857AA9}" ShortID="23104500">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_fire01" ID="{5BC477A7-4ECA-48FC-8FE5-DA7E8451E048}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_fire01.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="55556354"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_fire01" ID="{5BC477A7-4ECA-48FC-8FE5-DA7E8451E048}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_ioncannon_fire02" ID="{C6695357-4023-473E-9FE6-97A7DCD7759D}" ShortID="1046825429">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_fire02" ID="{2A188299-E657-433F-9DEA-8EED922777B3}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_fire02.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="173556584"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_fire02" ID="{2A188299-E657-433F-9DEA-8EED922777B3}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_ioncannon_fire03" ID="{89F2F9DE-FAAC-4B7F-871B-9D52E552E9CB}" ShortID="1062993611">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_fire03" ID="{7BBAAC27-2608-49F0-BF26-45AE7EF9F9A6}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_fire03.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="122539643"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_fire03" ID="{7BBAAC27-2608-49F0-BF26-45AE7EF9F9A6}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_ioncannon_fire04" ID="{F3658B81-2621-451C-8426-ABFE001155E7}" ShortID="1045656892">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_fire04" ID="{1704B25D-0CB2-43EB-AE33-8A00CE26F699}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_fire04.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="389852191"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_fire04" ID="{1704B25D-0CB2-43EB-AE33-8A00CE26F699}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</RandomSequenceContainer>
+								<RandomSequenceContainer Name="IonCanon_miss" ID="{A1EE3BC5-E24E-42FD-BC32-0B42BF2CAF89}" ShortID="31284936">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Lowpass" Type="int16">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{9D199F36-C43D-43E3-8AB1-4117E277AED1}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Min" Type="Real64" Value="-15"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{DC1173FA-4A75-46DC-984F-FB92CC9AEA9D}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="172"/>
+															<Property Name="Min" Type="Real64" Value="-151.1"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="SFX_weapon_ioncannon_miss01" ID="{B08D1ED4-77E5-4550-AFEF-2D84CB46D6FD}" ShortID="196065547">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_miss01" ID="{25B338B1-D9AC-4F89-9F22-E6D164DC9965}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_miss01.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="601585599"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_miss01" ID="{25B338B1-D9AC-4F89-9F22-E6D164DC9965}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_ioncannon_miss02" ID="{A46AD126-CFAD-43A1-950E-8E90C2189D6A}" ShortID="688967959">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_miss02" ID="{E79BA013-5D4C-4C72-BF52-49C97CAD624D}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_miss02.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="65790649"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_miss02" ID="{E79BA013-5D4C-4C72-BF52-49C97CAD624D}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_ioncannon_miss03" ID="{935A2BF6-B102-45C9-BEE3-F23DFFF0D53D}" ShortID="806567617">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_miss03" ID="{06830504-407E-4B4A-9E71-8DA3A1504A82}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_miss03.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="526655495"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_miss03" ID="{06830504-407E-4B4A-9E71-8DA3A1504A82}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_ioncannon_miss04" ID="{6267D6A8-6A64-47B0-B1B4-73D923D432A7}" ShortID="499411161">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_miss04" ID="{ED42C1E6-E2A9-4CC5-BB0F-7EE365E71C87}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_miss04.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="714787993"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_miss04" ID="{ED42C1E6-E2A9-4CC5-BB0F-7EE365E71C87}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</RandomSequenceContainer>
+								<RandomSequenceContainer Name="IonCannon_hit" ID="{D1773018-EB65-45CB-857B-1158EFED37A3}" ShortID="727113654">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Highpass" Type="int16">
+											<ValueList>
+												<Value>9</Value>
+											</ValueList>
+										</Property>
+										<Property Name="OutputBusVolume" Type="Real64">
+											<ValueList>
+												<Value>-2</Value>
+											</ValueList>
+										</Property>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{CB706030-C9FB-453E-A94B-28B5488AAD2A}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="223.3"/>
+															<Property Name="Min" Type="Real64" Value="-103"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="SFX_weapon_ioncannon_hit01" ID="{D48CA12C-D995-464D-8C8D-B78537E6E577}" ShortID="679255311">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_hit01" ID="{9AAF5838-D664-4BD7-BE0F-8B34D9ECD8F7}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_hit01.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="375011128"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_hit01" ID="{9AAF5838-D664-4BD7-BE0F-8B34D9ECD8F7}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_ioncannon_hit02" ID="{780776C7-86B1-4D21-9FC9-0C1EF7D061D7}" ShortID="252927057">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_hit02" ID="{F233B707-5AE4-443E-9A43-C4A5B9946B43}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_hit02.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="183499727"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_hit02" ID="{F233B707-5AE4-443E-9A43-C4A5B9946B43}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_ioncannon_hit03" ID="{C70726A8-98D3-43A0-97A2-9DE8C786A7B5}" ShortID="190741767">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_hit03" ID="{562AE170-89A5-40F5-B3B1-E2F3DC5838DE}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_hit03.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="307678258"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_hit03" ID="{562AE170-89A5-40F5-B3B1-E2F3DC5838DE}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="SFX_weapon_ioncannon_hit04" ID="{7BE96A76-A014-41A5-B153-D00691AD7A60}" ShortID="983728029">
+											<ReferenceList>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_hit04" ID="{F6E893F0-8FD7-4D83-A0CA-A4C080C2090B}">
+													<Language>SFX</Language>
+													<AudioFile>SFX_weapon_ioncannon_hit04.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="772204157"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="SFX_weapon_ioncannon_hit04" ID="{F6E893F0-8FD7-4D83-A0CA-A4C080C2090B}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+								</RandomSequenceContainer>
+								<Sound Name="ionCannon_ship_destroyed" ID="{4410E0F9-FBD6-4B39-985B-CFA8D2385F93}" ShortID="885246363">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{6D820E0D-C25E-442D-88AA-993B5FB8EDE7}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="101"/>
+															<Property Name="Min" Type="Real64" Value="-118.9"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_weapon_ioncannon_ship_destroyed" ID="{06FC6DD8-E446-4481-8CC6-F6D06DE4D03C}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_weapon_ioncannon_ship_destroyed.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="329136905"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_weapon_ioncannon_ship_destroyed" ID="{06FC6DD8-E446-4481-8CC6-F6D06DE4D03C}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="ionCannon_charge" ID="{AB1CDB93-B4E8-426C-988D-76F8F0A57434}" ShortID="25665205">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<SourcePlugin Name="SoundSeed Grain" ID="{0B6801A8-8A69-4333-82C0-B9CC1C8C1BC9}" ShortID="775085812" PluginName="SoundSeed Grain" CompanyID="0" PluginID="183">
+											<PropertyList>
+												<Property Name="Attack" Type="Real32" Value="384"/>
+												<Property Name="Duration" Type="Real32" Value="700"/>
+												<Property Name="DurationLink" Type="int32" Value="1"/>
+												<Property Name="EnvelopeType" Type="int32" Value="1"/>
+												<Property Name="FilterFreq" Type="Real32" Value="20">
+													<RTPCList>
+														<RTPC Name="" ID="{A5BABDAC-B367-40F0-8F15-D519330DE290}" ShortID="72732069">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{64088E39-7B13-4602-801E-F8A798FF4ED8}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="5"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>20</YPos>
+																		<Flags>5</Flags>
+																		<SegmentShape>Exp1</SegmentShape>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>2055.41459</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
+												</Property>
+												<Property Name="FilterType" Type="int32" Value="2"/>
+												<Property Name="GrainRate" Type="Real32" Value="2.766"/>
+												<Property Name="MarkerSelectMod1Depth" Type="Real32" Value="100"/>
+												<Property Name="ModRate1" Type="Real32" Value="5368.42"/>
+												<Property Name="OutputLevel" Type="Real32">
+													<RTPCList>
+														<RTPC Name="" ID="{747E54FF-B760-4DC7-9B0D-D0F90A403831}" ShortID="121427045">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<Custom>
+																		<ModulatorEnvelope Name="Modulator Envelope (Custom)" ID="{CDFF147E-35F3-44B0-BE5C-4B4042E8B975}" ShortID="353275913">
+																			<PropertyList>
+																				<Property Name="EnvelopeAttackTime" Type="Real64" Value="0.01"/>
+																			</PropertyList>
+																		</ModulatorEnvelope>
+																	</Custom>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{1A74E96A-45B1-4702-BD31-C5558690CA27}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="3"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>-96</YPos>
+																		<Flags>21</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>0</YPos>
+																		<Flags>53</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
+												</Property>
+												<Property Name="SelectFreqTimeGrain" Type="int32" Value="1"/>
+												<Property Name="Transpose" Type="Real32">
+													<RTPCList>
+														<RTPC Name="" ID="{4A7E9340-B2C6-48B5-A7B6-A2736BCFC113}" ShortID="130556439">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{5FEBDE34-B852-4FD3-B24E-185878F115F2}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="1"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>0</YPos>
+																		<Flags>5</Flags>
+																		<SegmentShape>Exp1</SegmentShape>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>244.10433</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
+												</Property>
+											</PropertyList>
+											<ChildrenList>
+												<AudioFileSource Name="SFX_weapon_ioncannon_ship_charge" ID="{ED8EA336-8B3C-4D99-9BB4-1CB1A19A143D}">
+													<Language>SoundSeed Grain</Language>
+													<AudioFile>SFX_weapon_ioncannon_ship_charge.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="312774652"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<Language>SFX</Language>
+											<PluginInnerObjectList>
+												<List Name="ParameterModulatorAssociation">
+													<PluginInnerObject Name="" ID="{9796F57A-5CD9-4CC8-BE9C-9BDC944FB4DC}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
+														<PropertyList>
+															<Property Name="ModDisplayName" Type="string" Value="Mod 1"/>
+															<Property Name="ModID" Type="int32" Value="151"/>
+															<Property Name="ModName" Type="string" Value="MarkerSelectMod1Depth"/>
+															<Property Name="ParamDisplayName" Type="string" Value="Position"/>
+															<Property Name="ParamID" Type="int32" Value="150"/>
+															<Property Name="ParamName" Type="string" Value="MarkerSelect"/>
+														</PropertyList>
+													</PluginInnerObject>
+												</List>
+											</PluginInnerObjectList>
+										</SourcePlugin>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SoundSeed Grain" ID="{0B6801A8-8A69-4333-82C0-B9CC1C8C1BC9}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="ionCannon_overcharge_fail" ID="{C6965B65-65A8-498F-80B0-B85675AAFDFE}" ShortID="38274307">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="OutputBusVolume" Type="Real64">
+											<ValueList>
+												<Value>3</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_weapon_ioncannon_ship_overcharge_fail" ID="{69779B76-9891-4CA4-B6D0-9CF9E42BFF5C}">
+											<Language>SFX</Language>
+											<AudioFile>SFX_weapon_ioncannon_ship_overcharge_fail.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="220718141"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="SFX_weapon_ioncannon_ship_overcharge_fail" ID="{69779B76-9891-4CA4-B6D0-9CF9E42BFF5C}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+						</Folder>
 					</ChildrenList>
 				</Folder>
 				<Folder Name="reactor" ID="{9A336BE6-0931-408C-89BD-E8A650B73697}" ShortID="139419840">
@@ -3557,11 +5174,13 @@
 						<Sound Name="reactor" ID="{8D0ED9E5-D9D6-41E5-A093-CF203E6F2F95}" ShortID="634634476">
 							<PropertyList>
 								<Property Name="3DSpatialization" Type="int16" Value="2"/>
+								<Property Name="OutputBusVolume" Type="Real64">
+									<ValueList>
+										<Value>-0.9</Value>
+									</ValueList>
+								</Property>
 								<Property Name="OverrideEffect" Type="bool" Value="True"/>
 								<Property Name="Volume" Type="Real64">
-									<ValueList>
-										<Value>8.1</Value>
-									</ValueList>
 									<RTPCList>
 										<RTPC Name="" ID="{02C52FAF-B01E-49D0-BD07-CB0D07535C2F}" ShortID="241785150">
 											<ReferenceList>
@@ -3925,6 +5544,224 @@
 						<ActiveSource Name="SFX__ship_sensor_ping3" ID="{6169AE93-1BB2-45BD-ACCD-B37404E6AAF9}" Platform="Linked"/>
 					</ActiveSourceList>
 				</Sound>
+				<Folder Name="shield" ID="{346555E1-7858-4E2A-B9AC-CC1E4990759E}" ShortID="1016853411">
+					<ChildrenList>
+						<Sound Name="shield_active" ID="{AF9A908A-51D6-4FBD-9145-5869CB588F47}" ShortID="692552412">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="2"/>
+								<Property Name="OutputBusVolume" Type="Real64">
+									<ValueList>
+										<Value>3</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<SourcePlugin Name="SoundSeed Grain" ID="{FAB49A7B-7E70-4E55-B507-D48F5F1E4247}" ShortID="876293142" PluginName="SoundSeed Grain" CompanyID="0" PluginID="183">
+									<PropertyList>
+										<Property Name="Attack" Type="Real32" Value="321"/>
+										<Property Name="Duration" Type="Real32" Value="597.9"/>
+										<Property Name="DurationLink" Type="int32" Value="1"/>
+										<Property Name="EnvelopeType" Type="int32" Value="3"/>
+										<Property Name="FilterFreq" Type="Real32" Value="4948"/>
+										<Property Name="FilterFreqMod1Depth" Type="Real32" Value="1.9"/>
+										<Property Name="FilterQ" Type="Real32" Value="1.05"/>
+										<Property Name="GrainRate" Type="Real32" Value="3.195"/>
+										<Property Name="MarkerSelectMod2Depth" Type="Real32" Value="91"/>
+										<Property Name="ModAmount1" Type="Real32" Value="78.99"/>
+										<Property Name="ModAmount2" Type="Real32" Value="91.57"/>
+										<Property Name="ModRate1" Type="Real32" Value="1643.729"/>
+										<Property Name="ModRate2" Type="Real32" Value="1688.245"/>
+										<Property Name="OutputLevel" Type="Real32">
+											<RTPCList>
+												<RTPC Name="" ID="{C2E7E17D-84B7-405E-AFC3-2738785F60B7}" ShortID="620095999">
+													<ReferenceList>
+														<Reference Name="ControlInput">
+															<Custom>
+																<ModulatorEnvelope Name="Modulator Envelope (Custom)" ID="{6E5EC878-7CFF-4A3D-B153-565D5A8CAC99}" ShortID="688944458">
+																	<PropertyList>
+																		<Property Name="EnvelopeAttackTime" Type="Real64" Value="0.01"/>
+																	</PropertyList>
+																</ModulatorEnvelope>
+															</Custom>
+														</Reference>
+													</ReferenceList>
+													<Curve Name="" ID="{42F64504-5BC9-4311-BC7B-0F9A9D75963D}">
+														<PropertyList>
+															<Property Name="Flags" Type="int32" Value="3"/>
+														</PropertyList>
+														<PointList>
+															<Point>
+																<XPos>0</XPos>
+																<YPos>-96</YPos>
+																<Flags>21</Flags>
+															</Point>
+															<Point>
+																<XPos>1</XPos>
+																<YPos>0</YPos>
+																<Flags>53</Flags>
+															</Point>
+														</PointList>
+													</Curve>
+												</RTPC>
+											</RTPCList>
+										</Property>
+										<Property Name="SelectFreqTimeGrain" Type="int32" Value="1"/>
+									</PropertyList>
+									<ChildrenList>
+										<AudioFileSource Name="SFX_spcship_shield_active02" ID="{457E3BC1-46DA-4A77-8CA4-C58DB45E7C5E}">
+											<PropertyList>
+												<Property Name="FadeOutDuration" Type="Real64" Value="0.190915390707497"/>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.0592496040126716"/>
+												<Property Name="TrimEnd" Type="Real64" Value="5.98421000527983"/>
+											</PropertyList>
+											<Language>SoundSeed Grain</Language>
+											<AudioFile>SFX_spcship_shield_active02.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="424341655"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<Language>SFX</Language>
+									<PluginInnerObjectList>
+										<List Name="ParameterModulatorAssociation">
+											<PluginInnerObject Name="" ID="{E0048E1A-65F4-44A3-BFF7-FD43C8A03CE0}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
+												<PropertyList>
+													<Property Name="ModDisplayName" Type="string" Value="Mod 1"/>
+													<Property Name="ModID" Type="int32" Value="91"/>
+													<Property Name="ModName" Type="string" Value="FilterFreqMod1Depth"/>
+													<Property Name="ParamDisplayName" Type="string" Value="Filter Cutoff"/>
+													<Property Name="ParamID" Type="int32" Value="90"/>
+													<Property Name="ParamName" Type="string" Value="FilterFreq"/>
+												</PropertyList>
+											</PluginInnerObject>
+											<PluginInnerObject Name="" ID="{C15956A6-1946-4144-9D2C-971248C3A7FC}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
+												<PropertyList>
+													<Property Name="ModDisplayName" Type="string" Value="Mod 2"/>
+													<Property Name="ModID" Type="int32" Value="152"/>
+													<Property Name="ModName" Type="string" Value="MarkerSelectMod2Depth"/>
+													<Property Name="ParamDisplayName" Type="string" Value="Position"/>
+													<Property Name="ParamID" Type="int32" Value="150"/>
+													<Property Name="ParamName" Type="string" Value="MarkerSelect"/>
+												</PropertyList>
+											</PluginInnerObject>
+										</List>
+									</PluginInnerObjectList>
+								</SourcePlugin>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="SoundSeed Grain" ID="{FAB49A7B-7E70-4E55-B507-D48F5F1E4247}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="shield_up" ID="{2AE77E08-B637-406A-976B-A145E6B5393E}" ShortID="329666866">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="2"/>
+								<Property Name="Highpass" Type="int16">
+									<ValueList>
+										<Value>17</Value>
+									</ValueList>
+								</Property>
+								<Property Name="OutputBusVolume" Type="Real64">
+									<ValueList>
+										<Value>-5.6</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Pitch" Type="int32">
+									<ModifierList>
+										<ModifierInfo>
+											<Modifier Name="" ID="{8EC1AB0E-C2BA-4B6F-841C-E9CEF7A3481C}">
+												<PropertyList>
+													<Property Name="Enabled" Type="bool" Value="True"/>
+													<Property Name="Max" Type="Real64" Value="87.3"/>
+													<Property Name="Min" Type="Real64" Value="-82.2"/>
+												</PropertyList>
+											</Modifier>
+										</ModifierInfo>
+									</ModifierList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ModifierList>
+										<ModifierInfo>
+											<Modifier Name="" ID="{1D677B0A-0405-4D95-8282-F8280D7456F8}"/>
+										</ModifierInfo>
+									</ModifierList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="SFX_spcship_shield_up" ID="{D7C26471-46EF-4505-8B61-BF8F9283D8C7}">
+									<PropertyList>
+										<Property Name="FadeInDuration" Type="Real64" Value="0.21472439281943"/>
+										<Property Name="FadeOutDuration" Type="Real64" Value="0.00491446673706442"/>
+										<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+									</PropertyList>
+									<Language>SFX</Language>
+									<AudioFile>SFX_spcship_shield_up.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="618337745"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="SFX_spcship_shield_up" ID="{D7C26471-46EF-4505-8B61-BF8F9283D8C7}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="shield_down" ID="{320C6633-0220-4887-9614-EBA19702237B}" ShortID="906455013">
+							<PropertyList>
+								<Property Name="3DSpatialization" Type="int16" Value="2"/>
+								<Property Name="OutputBusVolume" Type="Real64">
+									<ValueList>
+										<Value>-5.1</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Attenuation">
+									<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+								</Reference>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="SFX_spcship_shield_down" ID="{04E9962C-30E3-4399-8DDA-FC29156DD0AF}">
+									<Language>SFX</Language>
+									<AudioFile>SFX_spcship_shield_down.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="873149715"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="SFX_spcship_shield_down" ID="{04E9962C-30E3-4399-8DDA-FC29156DD0AF}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</Folder>
 			</ChildrenList>
 		</WorkUnit>
 	</AudioObjects>

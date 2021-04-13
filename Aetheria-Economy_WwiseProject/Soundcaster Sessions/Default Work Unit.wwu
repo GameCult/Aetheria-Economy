@@ -14,7 +14,7 @@
 							<Position X="0" Y="1"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_charging" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="railgun_charging" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="0" Y="3"/>
 						</Module>
 						<Module>
@@ -30,7 +30,7 @@
 							<Position X="1" Y="1"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_fire" ID="{E0F70C0D-8DDA-4811-A87A-462972871E1A}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="railgun_fire" ID="{E0F70C0D-8DDA-4811-A87A-462972871E1A}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="1" Y="3"/>
 						</Module>
 						<Module>
@@ -46,7 +46,7 @@
 							<Position X="2" Y="1"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_muzzle" ID="{E9B80512-0184-48FB-A298-BE9C088B6CC9}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="railgun_muzzle" ID="{E9B80512-0184-48FB-A298-BE9C088B6CC9}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="2" Y="3"/>
 						</Module>
 						<Module>
@@ -62,7 +62,7 @@
 							<Position X="3" Y="1"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_overcharge_fail" ID="{4CFC4DF9-2C65-4EE8-950D-C61EDBA90E64}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="railgun_overcharge_fail" ID="{4CFC4DF9-2C65-4EE8-950D-C61EDBA90E64}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="3" Y="3"/>
 						</Module>
 						<Module>
@@ -78,7 +78,7 @@
 							<Position X="4" Y="1"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_hit" ID="{749865F9-EFBD-41B5-9874-3A48F535F28F}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="railgun_hit" ID="{749865F9-EFBD-41B5-9874-3A48F535F28F}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="4" Y="3"/>
 						</Module>
 						<Module>
@@ -146,6 +146,10 @@
 							<Position X="0" Y="0"/>
 						</Module>
 						<Module>
+							<ObjectRef Name="shield_up_active" ID="{B8A4C7FC-37F0-4E8C-9620-C29A6411B0EE}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<Position X="0" Y="1"/>
+						</Module>
+						<Module>
 							<ObjectRef Name="Aetheric_driver" ID="{03FB1F9D-D99F-4F30-B3B8-1F1B742D2C55}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 							<Position X="0" Y="4"/>
 						</Module>
@@ -154,7 +158,11 @@
 							<Position X="1" Y="0"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_charging" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="shield_down" ID="{43AC8002-C192-472E-B332-99B6453C54FA}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<Position X="1" Y="1"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="railgun_charging" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="1" Y="2"/>
 						</Module>
 						<Module>
@@ -166,7 +174,7 @@
 							<Position X="2" Y="0"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_fire" ID="{E0F70C0D-8DDA-4811-A87A-462972871E1A}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="railgun_fire" ID="{E0F70C0D-8DDA-4811-A87A-462972871E1A}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="2" Y="2"/>
 						</Module>
 						<Module>
@@ -174,16 +182,24 @@
 							<Position X="2" Y="3"/>
 						</Module>
 						<Module>
+							<ObjectRef Name="lightingGun_fire" ID="{28EC6948-265B-44F6-9478-679529D93615}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<Position X="2" Y="4"/>
+						</Module>
+						<Module>
 							<ObjectRef Name="nuclear_drive_stop" ID="{73F86CF2-764E-4EE6-83F3-A385BE96CCD1}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="3" Y="0"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_hit" ID="{749865F9-EFBD-41B5-9874-3A48F535F28F}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="railgun_hit" ID="{749865F9-EFBD-41B5-9874-3A48F535F28F}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="3" Y="2"/>
 						</Module>
 						<Module>
 							<ObjectRef Name="railgun_hit" ID="{81702202-C261-419A-A886-C3432FBDB910}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 							<Position X="3" Y="3"/>
+						</Module>
+						<Module>
+							<ObjectRef Name="lightingGun_hit" ID="{32B73DBC-3EDA-4794-99FC-FA5129F546BF}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<Position X="3" Y="4"/>
 						</Module>
 						<Module>
 							<ObjectRef Name="reactor_play" ID="{024B1FD8-BEA0-4265-A083-F7583D4883BC}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
@@ -194,7 +210,7 @@
 							<Position X="4" Y="1"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_overcharge_fail" ID="{4CFC4DF9-2C65-4EE8-950D-C61EDBA90E64}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="railgun_overcharge_fail" ID="{4CFC4DF9-2C65-4EE8-950D-C61EDBA90E64}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="4" Y="2"/>
 						</Module>
 						<Module>
@@ -206,7 +222,7 @@
 							<Position X="5" Y="1"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="railgun_muzzle" ID="{E9B80512-0184-48FB-A298-BE9C088B6CC9}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}"/>
+							<ObjectRef Name="railgun_muzzle" ID="{E9B80512-0184-48FB-A298-BE9C088B6CC9}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="5" Y="2"/>
 						</Module>
 					</ModuleList>
@@ -261,7 +277,7 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="reactor_load" ID="{FC156F43-A577-4DCB-B6E8-84E4072A38C9}"/>
-							<Value>2</Value>
+							<Value>10</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_ship_weapon_lighting_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}"/>

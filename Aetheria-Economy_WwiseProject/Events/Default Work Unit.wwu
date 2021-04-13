@@ -102,6 +102,28 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="buy_item" ID="{51B2C68C-CB7D-41AF-8ABA-FF2B233EFE6C}">
+					<ChildrenList>
+						<Action Name="" ID="{54203342-83FC-4357-A7A0-CA8DABC472D6}" ShortID="135634336">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="buy_item" ID="{066923EA-62A2-4B96-988C-CF8B7828BA57}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="sell_item" ID="{6A9ADCC7-20D2-4A81-8437-2D225560A7E7}">
+					<ChildrenList>
+						<Action Name="" ID="{521C325D-2BA5-42AB-B806-EF45C4C7632C}" ShortID="791285232">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="sell_item" ID="{350E44B0-456E-4090-A839-5F3B087ECFC6}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>
