@@ -118,7 +118,7 @@ public abstract class Weapon : IActivatedBehavior
         Velocity = Item.Evaluate(_data.Velocity);
     }
 
-    public virtual bool Execute(float delta)
+    public virtual bool Execute(float dt)
     {
         UpdateStats();
         return true;

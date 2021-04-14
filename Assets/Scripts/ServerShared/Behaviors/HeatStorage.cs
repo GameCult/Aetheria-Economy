@@ -31,7 +31,7 @@ public class HeatStorage : IBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         return true;
     }

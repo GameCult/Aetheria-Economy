@@ -34,11 +34,11 @@ public class Wear : IBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         if (_data.PerSecond)
         {
-            var dmg = Item.Wear * delta;
+            var dmg = Item.Wear * dt;
             Item.EquippableItem.Durability -= dmg;
             Item.Entity.ItemDamage.OnNext((Item, dmg));
         }

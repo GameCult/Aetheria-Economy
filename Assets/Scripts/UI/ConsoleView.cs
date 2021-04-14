@@ -136,7 +136,11 @@ public class ConsoleView : MonoBehaviour {
 		LogTextArea.text = string.Join("\n", newLog);
 		// if (AcceptingInput)
 		// 	LogTextArea.text += "\n\n> " + _inputString;
-		Observable.NextFrame().Subscribe(_ => Scroll.verticalNormalizedPosition = 0);
+		Observable.NextFrame().Subscribe(_ =>
+		{
+			if(Scroll)
+				Scroll.verticalNormalizedPosition = 0;
+		});
 	}
 
 }

@@ -62,12 +62,12 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
         _data = data;
     }
 
-    public override bool Execute(float delta)
+    public override bool Execute(float dt)
     {
-        base.Execute(delta);
+        base.Execute(dt);
         if (_firing)
         {
-            if (!Item.Entity.TryConsumeEnergy(Item.Evaluate(_data.Energy) * delta))
+            if (!Item.Entity.TryConsumeEnergy(Item.Evaluate(_data.Energy) * dt))
             {
                 _firing = false;
                 OnStopFiring?.Invoke();
@@ -77,7 +77,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
             {
                 if (_reloading)
                 {
-                    _reload -= delta / _data.ReloadTime;
+                    _reload -= dt / _data.ReloadTime;
                     if (_reload < 0)
                     {
                         _reloading = false;
@@ -86,7 +86,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
                     return false;
                 }
                 
-                _ammoInterval -= delta / _data.AmmoInterval;
+                _ammoInterval -= dt / _data.AmmoInterval;
                 if (_ammoInterval < 0)
                 {
                     _ammoInterval = 1;
@@ -115,10 +115,10 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
                 }
             }
 
-            var dmg = Item.Wear * delta;
+            var dmg = Item.Wear * dt;
             Item.EquippableItem.Durability -= dmg;
             Item.Entity.ItemDamage.OnNext((Item, dmg));
-            Item.AddHeat(Item.Evaluate(_data.Heat) * delta);
+            Item.AddHeat(Item.Evaluate(_data.Heat) * dt);
             Item.Entity.VisibilitySources[this] = Item.Evaluate(_data.Visibility);
         }
         return true;

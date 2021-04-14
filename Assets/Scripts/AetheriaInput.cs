@@ -1124,9 +1124,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
             ""id"": ""2e2023b8-ce3b-4cb3-a12a-ff4ac610f11b"",
             ""actions"": [
                 {
-                    ""name"": ""Map Toggle"",
+                    ""name"": ""Zone Map"",
                     ""type"": ""Button"",
                     ""id"": ""e43f020b-dec0-43d2-a83b-1390d45819be"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Galaxy Map"",
+                    ""type"": ""Button"",
+                    ""id"": ""d198f18c-8c55-4a31-a694-4959c763f664"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -1164,7 +1172,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Map Toggle"",
+                    ""action"": ""Zone Map"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1198,6 +1206,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""MainMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f90929d5-d8d1-40dc-acc7-7ae294971d12"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Galaxy Map"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1284,7 +1303,8 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_UI_Drag = m_UI.FindAction("Drag", throwIfNotFound: true);
         // Global
         m_Global = asset.FindActionMap("Global", throwIfNotFound: true);
-        m_Global_MapToggle = m_Global.FindAction("Map Toggle", throwIfNotFound: true);
+        m_Global_ZoneMap = m_Global.FindAction("Zone Map", throwIfNotFound: true);
+        m_Global_GalaxyMap = m_Global.FindAction("Galaxy Map", throwIfNotFound: true);
         m_Global_Inventory = m_Global.FindAction("Inventory", throwIfNotFound: true);
         m_Global_Dock = m_Global.FindAction("Dock", throwIfNotFound: true);
         m_Global_MainMenu = m_Global.FindAction("MainMenu", throwIfNotFound: true);
@@ -1651,7 +1671,8 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     // Global
     private readonly InputActionMap m_Global;
     private IGlobalActions m_GlobalActionsCallbackInterface;
-    private readonly InputAction m_Global_MapToggle;
+    private readonly InputAction m_Global_ZoneMap;
+    private readonly InputAction m_Global_GalaxyMap;
     private readonly InputAction m_Global_Inventory;
     private readonly InputAction m_Global_Dock;
     private readonly InputAction m_Global_MainMenu;
@@ -1659,7 +1680,8 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     {
         private @AetheriaInput m_Wrapper;
         public GlobalActions(@AetheriaInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @MapToggle => m_Wrapper.m_Global_MapToggle;
+        public InputAction @ZoneMap => m_Wrapper.m_Global_ZoneMap;
+        public InputAction @GalaxyMap => m_Wrapper.m_Global_GalaxyMap;
         public InputAction @Inventory => m_Wrapper.m_Global_Inventory;
         public InputAction @Dock => m_Wrapper.m_Global_Dock;
         public InputAction @MainMenu => m_Wrapper.m_Global_MainMenu;
@@ -1672,9 +1694,12 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_GlobalActionsCallbackInterface != null)
             {
-                @MapToggle.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMapToggle;
-                @MapToggle.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMapToggle;
-                @MapToggle.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMapToggle;
+                @ZoneMap.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnZoneMap;
+                @ZoneMap.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnZoneMap;
+                @ZoneMap.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnZoneMap;
+                @GalaxyMap.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnGalaxyMap;
+                @GalaxyMap.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnGalaxyMap;
+                @GalaxyMap.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnGalaxyMap;
                 @Inventory.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInventory;
                 @Inventory.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInventory;
                 @Inventory.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInventory;
@@ -1688,9 +1713,12 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
             m_Wrapper.m_GlobalActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @MapToggle.started += instance.OnMapToggle;
-                @MapToggle.performed += instance.OnMapToggle;
-                @MapToggle.canceled += instance.OnMapToggle;
+                @ZoneMap.started += instance.OnZoneMap;
+                @ZoneMap.performed += instance.OnZoneMap;
+                @ZoneMap.canceled += instance.OnZoneMap;
+                @GalaxyMap.started += instance.OnGalaxyMap;
+                @GalaxyMap.performed += instance.OnGalaxyMap;
+                @GalaxyMap.canceled += instance.OnGalaxyMap;
                 @Inventory.started += instance.OnInventory;
                 @Inventory.performed += instance.OnInventory;
                 @Inventory.canceled += instance.OnInventory;
@@ -1772,7 +1800,8 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     }
     public interface IGlobalActions
     {
-        void OnMapToggle(InputAction.CallbackContext context);
+        void OnZoneMap(InputAction.CallbackContext context);
+        void OnGalaxyMap(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
         void OnDock(InputAction.CallbackContext context);
         void OnMainMenu(InputAction.CallbackContext context);

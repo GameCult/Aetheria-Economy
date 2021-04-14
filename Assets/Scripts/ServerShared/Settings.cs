@@ -176,6 +176,8 @@ public class GameplaySettings
     public ExponentialLerp LockSpinSpeed;
     public float TorqueFloor;
     public float TorqueMultiplier;
+    public float AetherTorqueMultiplier;
+    public float AetherHeatMultiplier;
     public float VisibilityDecay;
     public float TargetInfoDecay;
     public float TargetDetectionInfoThreshold;

@@ -1111,9 +1111,17 @@
             "id": "2e2023b8-ce3b-4cb3-a12a-ff4ac610f11b",
             "actions": [
                 {
-                    "name": "Map Toggle",
+                    "name": "Zone Map",
                     "type": "Button",
                     "id": "e43f020b-dec0-43d2-a83b-1390d45819be",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Galaxy Map",
+                    "type": "Button",
+                    "id": "d198f18c-8c55-4a31-a694-4959c763f664",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -1151,7 +1159,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Map Toggle",
+                    "action": "Zone Map",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -1185,6 +1193,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "MainMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f90929d5-d8d1-40dc-acc7-7ae294971d12",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Galaxy Map",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

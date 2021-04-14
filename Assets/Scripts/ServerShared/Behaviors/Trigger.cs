@@ -32,7 +32,7 @@ public class Trigger : IBehavior, IActivatedBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         if (_pulled)
         {

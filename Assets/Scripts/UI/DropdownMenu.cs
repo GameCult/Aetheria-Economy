@@ -36,6 +36,7 @@ public class DropdownMenu : MonoBehaviour
     {
         CancelClickCatcher.gameObject.SetActive(false);
         gameObject.SetActive(false);
+        ActionGameManager.Instance?.Input.Global.Enable();
     }
 
     public void Clear()
@@ -74,5 +75,6 @@ public class DropdownMenu : MonoBehaviour
         rect.sizeDelta = parent.sizeDelta;
         rect.position = pivotTop ? corners[0] : corners[1];
         CancelClickCatcher.gameObject.SetActive(true);
+        ActionGameManager.Instance?.Input.Global.Disable();
     }
 }

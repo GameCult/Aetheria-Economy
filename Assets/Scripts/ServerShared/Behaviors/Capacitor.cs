@@ -47,7 +47,7 @@ public class Capacitor : IBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         Capacity = Item.Evaluate(_data.Capacity);
         Efficiency = Item.Evaluate(_data.Efficiency);

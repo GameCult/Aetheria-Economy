@@ -48,7 +48,7 @@ public class MiningTool : IBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         Range = Item.Evaluate(_data.Range);
         var belt = Item.Entity.Zone.AsteroidBelts[AsteroidBelt];
@@ -60,7 +60,7 @@ public class MiningTool : IBehavior
                 Item.Entity,
                 AsteroidBelt,
                 Asteroid,
-                Item.Evaluate(_data.DamagePerSecond) * delta,
+                Item.Evaluate(_data.DamagePerSecond) * dt,
                 Item.Evaluate(_data.Efficiency),
                 Item.Evaluate(_data.Penetration));
             return true;

@@ -36,7 +36,7 @@ public class Reflector : IBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         Item.Entity.VisibilitySources[this] = Item.Evaluate(_data.CrossSection) * Item.Entity.Zone.GetLight(Item.Entity.Position.xz);
         

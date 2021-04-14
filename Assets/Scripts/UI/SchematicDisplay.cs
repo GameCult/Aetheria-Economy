@@ -23,14 +23,20 @@ public class SchematicDisplay : MonoBehaviour
     public GameObject ShieldIcon;
     public Image HeatsinkBackground;
 
+    public GameObject AetherDriveUi;
+    public GameObject AetherDriveUiSpacer;
+
     public TextMeshProUGUI EnergyLabel;
     public TextMeshProUGUI CockpitTemperatureLabel;
     public TextMeshProUGUI RadiatorTemperatureLabel;
-    [FormerlySerializedAs("HeatsinkTemperatureLabel")] public TextMeshProUGUI HeatStorageTemperatureLabel;
+    public TextMeshProUGUI HeatStorageTemperatureLabel;
     public TextMeshProUGUI CargoTemperatureLabel;
     public TextMeshProUGUI VisibilityLabel;
     public TextMeshProUGUI HullDurabilityLabel;
     public TextMeshProUGUI DistanceLabel;
+    public TextMeshProUGUI ForwardRPMLabel;
+    public TextMeshProUGUI StrafeRPMLabel;
+    public TextMeshProUGUI TurnRPMLabel;
 
     public RectTransform SensorCooldownFill;
     public RectTransform EnergyFill;
@@ -38,6 +44,9 @@ public class SchematicDisplay : MonoBehaviour
     public RectTransform HeatstrokeMeterFill;
     public RectTransform HypothermiaMeterFill;
     public RectTransform HeatstrokeLimitFill;
+    public RectTransform ForwardRPMFill;
+    public RectTransform StrafeRPMFill;
+    public RectTransform TurnRPMFill;
 
     public CanvasGroup TriggerGroups;
     public float TriggerGroupsFadeDuration = .5f;
@@ -55,6 +64,7 @@ public class SchematicDisplay : MonoBehaviour
     private EquippedCargoBay[] _cargoBays;
     private SchematicDisplayItem[] _schematicItems;
     private Graphic[] _groupGraphics;
+    private AetherDrive _aetherDrive;
 
     private int _selectedGroupIndex;
     private int _selectedItemIndex;
@@ -116,6 +126,9 @@ public class SchematicDisplay : MonoBehaviour
             _cockpit = entity.GetBehavior<Cockpit>();
             _reactor = entity.GetBehavior<Reactor>();
             _capacitors = entity.GetBehaviors<Capacitor>().ToArray();
+            _aetherDrive = entity.GetBehavior<AetherDrive>();
+            AetherDriveUi.SetActive(_aetherDrive != null);
+            AetherDriveUiSpacer.SetActive(_aetherDrive != null);
 
             _radiators = entity.GetBehaviors<Radiator>().ToArray();
             if (_radiators.Length == 0)
@@ -267,6 +280,18 @@ public class SchematicDisplay : MonoBehaviour
                     var maxCharge = _capacitors.Sum(x => x.Capacity);
                     EnergyFill.anchorMax = new Vector2(charge / maxCharge, 1);
                     EnergyLabel.text = $"{((int)charge).ToString()}/{((int)maxCharge).ToString()} + ({((int)_reactor.Draw).ToString()})";
+                }
+
+                if (_aetherDrive != null)
+                {
+                    ForwardRPMLabel.text = ActionGameManager.PlayerSettings.Format(_aetherDrive.Rpm.x);
+                    ForwardRPMFill.anchorMax = new Vector2(_aetherDrive.Rpm.x / _aetherDrive.MaximumRpm, 1);
+                    
+                    StrafeRPMLabel.text = ActionGameManager.PlayerSettings.Format(_aetherDrive.Rpm.y);
+                    StrafeRPMFill.anchorMax = new Vector2(_aetherDrive.Rpm.y / _aetherDrive.MaximumRpm, 1);
+                    
+                    TurnRPMLabel.text = ActionGameManager.PlayerSettings.Format(_aetherDrive.Rpm.z);
+                    TurnRPMFill.anchorMax = new Vector2(_aetherDrive.Rpm.z / _aetherDrive.MaximumRpm, 1);
                 }
             }
             else

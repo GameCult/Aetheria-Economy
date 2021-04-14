@@ -51,7 +51,7 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         PumpedHeat = Item.Evaluate(_data.PumpedHeat);
         WasteHeat = Item.Evaluate(_data.WasteHeat);
@@ -63,7 +63,7 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
         // Temperature ratio would cause more waste heat than pump capacity, stop executing
         if (tempRatio > PumpedHeat / WasteHeat) return true;
 
-        if (!Item.Entity.TryConsumeEnergy(EnergyUsage * tempRatio * delta)) return false;
+        if (!Item.Entity.TryConsumeEnergy(EnergyUsage * tempRatio * dt)) return false;
         
         var pumpedHeat = PumpedHeat * max(itemTemperature - _data.TemperatureFloor, 0);
         
@@ -72,8 +72,8 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
         
         var wasteHeat = WasteHeat * tempRatio;
         
-        Item.AddHeat((wasteHeat - pumpedHeat) * delta);
-        Temperature += pumpedHeat / Item.ItemManager.GetThermalMass(Item.EquippableItem) * delta;
+        Item.AddHeat((wasteHeat - pumpedHeat) * dt);
+        Temperature += pumpedHeat / Item.ItemManager.GetThermalMass(Item.EquippableItem) * dt;
 
         return true;
     }

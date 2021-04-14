@@ -22,11 +22,11 @@ public class AutoWeapon : InstantWeapon
     {
     }
 
-    public override bool Execute(float delta)
+    public override bool Execute(float dt)
     {
         if(_firing && _burstRemaining == 0 && _cooldown < 0)
             Trigger();
-        return base.Execute(delta);
+        return base.Execute(dt);
     }
 }
 

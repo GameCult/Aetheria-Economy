@@ -430,6 +430,9 @@ public class HullData : EquippableItemData
     [Inspectable, JsonProperty("armor"), Key(24)]
     public float Armor;
 
+    [Inspectable, JsonProperty("drag"), Key(25)]
+    public float Drag;
+
     [IgnoreMember]
     public Shape InteriorCells
     {

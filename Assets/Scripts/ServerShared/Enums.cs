@@ -41,7 +41,7 @@ public enum HardpointType
     Tool,
     Thermal,
     Thruster,
-    WarpThruster,
+    WarpDrive,
     Reactor,
     Radiator,
     Shield,
@@ -49,7 +49,8 @@ public enum HardpointType
     Energy,
     Ballistic,
     Launcher,
-    ControlModule
+    ControlModule,
+    AetherDrive
 }
 
 public enum WeaponType

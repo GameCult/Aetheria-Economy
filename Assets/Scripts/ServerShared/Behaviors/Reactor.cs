@@ -71,9 +71,9 @@ public class Reactor : IBehavior, IOrderedBehavior
         Draw += energy;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
-        var charge = Item.Evaluate(_data.Charge) * delta;
+        var charge = Item.Evaluate(_data.Charge) * dt;
         var efficiency = Item.Evaluate(_data.Efficiency);
 
         // This behavior executes last, so any components drawing power have already done so

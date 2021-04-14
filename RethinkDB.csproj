@@ -249,8 +249,8 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Var.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Lt.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Model\Unit.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Model\Profile.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\IndexCreate.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Model\Profile.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Ast\Poco.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Delete.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Min.cs" />

@@ -38,7 +38,7 @@ public class Cooldown : IBehavior, IAlwaysUpdatedBehavior, IProgressBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         if (_cooldown < 0)
         {

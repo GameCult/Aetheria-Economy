@@ -112,14 +112,14 @@ public class ChargedWeapon : InstantWeapon, IEventBehavior
         Velocity *= lerp(1, _data.ChargeFiringVelocityMultiplier, saturate(_charge));
     }
 
-    public override bool Execute(float delta)
+    public override bool Execute(float dt)
     {
         if (_charging)
         {
-            _charge += delta / ChargeTime;
+            _charge += dt / ChargeTime;
             if (!_charged)
             {
-                Item.AddHeat(ChargeHeat * (delta / ChargeTime));
+                Item.AddHeat(ChargeHeat * (dt / ChargeTime));
                 if(_charge > 1)
                 {
                     _charged = true;
@@ -136,7 +136,7 @@ public class ChargedWeapon : InstantWeapon, IEventBehavior
                 Item.EquippableItem.Durability -= _data.FailureDamage;
             }
         }
-        return base.Execute(delta);
+        return base.Execute(dt);
     }
 
     public override void Activate()

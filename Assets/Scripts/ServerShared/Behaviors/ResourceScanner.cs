@@ -61,7 +61,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         var planetData = Item.Entity.Zone.Planets[ScanTarget];
         if (planetData != null)
@@ -72,7 +72,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
                    Asteroid < beltData.Asteroids.Length &&
                    length(Item.Entity.Position.xz - Item.Entity.Zone.AsteroidBelts[ScanTarget].Positions[Asteroid].xz) < Range)
                 {
-                    _scanTime += delta;
+                    _scanTime += dt;
                     if (_scanTime > ScanDuration)
                     {
                         // TODO: Implement Scanning!
@@ -86,7 +86,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
             {
                 if(length(Item.Entity.Position.xz - Item.Entity.Zone.GetOrbitPosition(planetData.Orbit)) < Range)
                 {
-                    _scanTime += delta;
+                    _scanTime += dt;
                     if (_scanTime > ScanDuration)
                     {
                         //Context.ItemData.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;

@@ -136,12 +136,12 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
 
     }
 
-    public override bool Execute(float delta)
+    public override bool Execute(float dt)
     {
-        base.Execute(delta);
+        base.Execute(dt);
         if (_coolingDown)
         {
-            _cooldown -= delta / (_data.MagazineSize > 0 && _ammo == 0 ? _data.ReloadTime : Cooldown);
+            _cooldown -= dt / (_data.MagazineSize > 0 && _ammo == 0 ? _data.ReloadTime : Cooldown);
             if (_cooldown < 0)
             {
                 _coolingDown = false;
@@ -155,7 +155,7 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
             }
         }
         
-        _burstTimer += delta;
+        _burstTimer += dt;
         while (_burstRemaining > 0 && _burstTimer > 0)
         {
             // If multiple ammo is consumed per burst, perform ammo and energy consumption here

@@ -39,7 +39,7 @@ public class Shield : IBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         Efficiency = Item.Evaluate(_data.Efficiency);
         EnergyUsage = Item.Evaluate(_data.EnergyUsage);

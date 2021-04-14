@@ -63,6 +63,8 @@ public class ActionGameManager : MonoBehaviour
 
     public static Sector CurrentSector;
     
+    
+    
     public GameSettings Settings;
     //public string StarterShipTemplate = "Longinus";
     public float2 Sensitivity;
@@ -104,6 +106,8 @@ public class ActionGameManager : MonoBehaviour
     public InventoryPanel ShipPanel;
     public InventoryPanel TargetShipPanel;
     public ConfirmationDialog Dialog;
+    public ContextMenu Context;
+    public DropdownMenu Dropdown;
 
     public float IntroDuration;
     
@@ -160,17 +164,11 @@ public class ActionGameManager : MonoBehaviour
         File.WriteAllBytes(Path.Combine(_loadoutPath.FullName, $"{pack.Name}.loadout"), MessagePackSerializer.Serialize(pack));
     }
 
-    private void OnApplicationQuit()
-    {
-        if(CurrentSector!=null)
-        {
-            SaveState();
-        }
-    }
+    private void OnApplicationQuit() => SaveState();
 
     public void SaveState()
     {
-        PlayerSettings.CurrentRun = new SavedGame(CurrentSector, Zone, DockedEntity??CurrentEntity);
+        PlayerSettings.SavedRun = CurrentSector == null ? null : new SavedGame(CurrentSector, Zone, DockedEntity ?? CurrentEntity);
         SavePlayerSettings();
     }
 
@@ -208,57 +206,15 @@ public class ActionGameManager : MonoBehaviour
             ZoneRenderer.MinimapDistance = Settings.MinimapZoomLevels[_zoomLevelIndex];
         };
 
-        Input.Global.MapToggle.performed += context =>
+        Input.Global.ZoneMap.performed += context =>
         {
-            if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
-            if (MainMenu.gameObject.activeSelf) return;
-            if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Map)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Menu.gameObject.SetActive(false);
-                if (CurrentEntity != null && CurrentEntity.Parent == null)
-                {
-                    Input.Player.Enable();
-                    GameplayUI.gameObject.SetActive(true);
-                    
-                    SchematicDisplay.ShowShip(CurrentEntity);
-                    ShipPanel.Display(CurrentEntity, true);
-                }
-                
-                return;
-            }
-            
-            Cursor.lockState = CursorLockMode.None;
-            Input.Player.Disable();
-            GameplayUI.gameObject.SetActive(false);
-            Menu.ShowTab(MenuTab.Map);
+            ToggleMenuTab(MenuTab.Map);
             MenuMap.Position = CurrentEntity.Position.xz;
         };
 
-        Input.Global.Inventory.performed += context =>
-        {
-            if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
-            if (MainMenu.gameObject.activeSelf) return;
-            if (Menu.gameObject.activeSelf && Menu.CurrentTab == MenuTab.Inventory)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Menu.gameObject.SetActive(false);
-                if (CurrentEntity != null && CurrentEntity.Parent == null)
-                {
-                    Input.Player.Enable();
-                    GameplayUI.gameObject.SetActive(true);
-                    
-                    SchematicDisplay.ShowShip(CurrentEntity);
-                    ShipPanel.Display(CurrentEntity, true);
-                }
-                return;
-            }
+        Input.Global.Inventory.performed += context => ToggleMenuTab(MenuTab.Inventory);
 
-            Cursor.lockState = CursorLockMode.None;
-            Input.Player.Disable();
-            Menu.ShowTab(MenuTab.Inventory);
-            GameplayUI.gameObject.SetActive(false);
-        };
+        Input.Global.GalaxyMap.performed += context => ToggleMenuTab(MenuTab.Galaxy);
 
         Input.Global.Dock.performed += context =>
         {
@@ -317,33 +273,10 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Player.EnterWormhole.performed += context =>
         {
-            if(CurrentEntity is Ship ship)
+            foreach (var wormhole in ZoneRenderer.WormholeInstances.Keys)
             {
-                foreach (var wormhole in ZoneRenderer.WormholeInstances.Keys)
-                {
-                    if (length(wormhole.Position - CurrentEntity.Position.xz) < Settings.GameplaySettings.WormholeExitRadius)
-                    {
-                        var oldZone = Zone;
-                        // var wormholeCameraFollow = new GameObject("Wormhole Camera Follow").transform;
-                        // wormholeCameraFollow.position = new Vector3(wormhole.Position.x, -50, wormhole.Position.y);
-                        // wormholeCameraFollow.rotation = Quaternion.LookRotation(Vector3.down, ship.LookDirection);
-                        // WormholeCamera.enabled = true;
-                        // WormholeCamera.Follow = wormholeCameraFollow;
-                        // FollowCamera.enabled = false;
-                        ship.EnterWormhole(wormhole.Position);
-                        ship.OnEnteredWormhole += () =>
-                        {
-                            PopulateLevel(wormhole.Target);
-                            foreach(var zone in wormhole.Target.AdjacentZones)
-                                CurrentSector.DiscoveredZones.Add(zone);
-                            SectorMap.QueueZoneReveal(wormhole.Target.AdjacentZones);
-                            ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w=>w.Target==oldZone.SectorZone).Position,
-                                Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
-                            CurrentEntity.Zone = Zone;
-                            SaveState();
-                        };
-                    }
-                }
+                if (!(length(wormhole.Position - CurrentEntity.Position.xz) < Settings.GameplaySettings.WormholeExitRadius)) continue;
+                EnterWormhole(wormhole);
             }
         };
 
@@ -625,6 +558,30 @@ public class ActionGameManager : MonoBehaviour
             });
     }
 
+    private void EnterWormhole(Wormhole wormhole)
+    {
+        if (!(CurrentEntity is Ship ship)) return;
+        // var wormholeCameraFollow = new GameObject("Wormhole Camera Follow").transform;
+        // wormholeCameraFollow.position = new Vector3(wormhole.Position.x, -50, wormhole.Position.y);
+        // wormholeCameraFollow.rotation = Quaternion.LookRotation(Vector3.down, ship.LookDirection);
+        // WormholeCamera.enabled = true;
+        // WormholeCamera.Follow = wormholeCameraFollow;
+        // FollowCamera.enabled = false;
+        ship.EnterWormhole(wormhole.Position);
+        ship.OnEnteredWormhole += () =>
+        {
+            var oldZone = Zone;
+            PopulateLevel(wormhole.Target);
+            foreach (var zone in wormhole.Target.AdjacentZones)
+                CurrentSector.DiscoveredZones.Add(zone);
+            SectorMap.QueueZoneReveal(wormhole.Target.AdjacentZones);
+            ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w => w.Target == oldZone.SectorZone).Position,
+                Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
+            CurrentEntity.Zone = Zone;
+            SaveState();
+        };
+    }
+
     public void PopulateLevel(SectorZone sectorZone)
     {
         if (sectorZone == null) throw new ArgumentNullException(nameof(sectorZone));
@@ -661,11 +618,36 @@ public class ActionGameManager : MonoBehaviour
         }
     }
 
+    private void ToggleMenuTab(MenuTab tab)
+    {
+        if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
+        if (MainMenu.gameObject.activeSelf) return;
+        if (Menu.gameObject.activeSelf && Menu.CurrentTab == tab)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Menu.gameObject.SetActive(false);
+            if (CurrentEntity != null && CurrentEntity.Parent == null)
+            {
+                Input.Player.Enable();
+                GameplayUI.gameObject.SetActive(true);
+                    
+                SchematicDisplay.ShowShip(CurrentEntity);
+                ShipPanel.Display(CurrentEntity, true);
+            }
+            return;
+        }
+
+        Cursor.lockState = CursorLockMode.None;
+        Input.Player.Disable();
+        Menu.ShowTab(tab);
+        GameplayUI.gameObject.SetActive(false);
+    }
+
     private void StartGame()
     {
         if (CurrentSector != null)
         {
-            if (PlayerSettings.CurrentRun == null)
+            if (PlayerSettings.SavedRun == null)
             {
                 SectorMap.QueueZoneReveal(CurrentSector.Entrance.AdjacentZones.Prepend(CurrentSector.Entrance));
                 PopulateLevel(CurrentSector.Entrance);
@@ -688,8 +670,8 @@ public class ActionGameManager : MonoBehaviour
                 foreach(var group in CurrentSector.DiscoveredZones
                     .GroupBy(dz=>dz.Distance[CurrentSector.Entrance]))
                     SectorMap.QueueZoneReveal(group);
-                PopulateLevel(CurrentSector.Zones[PlayerSettings.CurrentRun.CurrentZone]);
-                var targetEntity = Zone.Entities[PlayerSettings.CurrentRun.CurrentZoneEntity];
+                PopulateLevel(CurrentSector.Zones[PlayerSettings.SavedRun.CurrentZone]);
+                var targetEntity = Zone.Entities[PlayerSettings.SavedRun.CurrentZoneEntity];
                 if (targetEntity is OrbitalEntity orbitalEntity)
                 {
                     CurrentEntity = targetEntity.Children.First(c => c is Ship {IsPlayerShip: true});
@@ -913,42 +895,7 @@ public class ActionGameManager : MonoBehaviour
             _visibleHostileIndicators.Remove(removeEvent.Value);
         }));
         
-        _shipSubscriptions.Add(CurrentEntity.Death.Subscribe(cause =>
-        {
-            var deathTime = Time.time;
-            UnbindEntity();
-            CurrentEntity = null;
-            VolumeRenderer.EnableDepth = false;
-            MainMenu.gameObject.SetActive(true);
-            Menu.gameObject.SetActive(false);
-            PlayerSettings.CurrentRun = null;
-            SavePlayerSettings();
-            Observable.EveryUpdate()
-                .Where(_ => Time.time - deathTime < DeathPPTransitionTime)
-                .Subscribe(_ =>
-                    {
-                        var t = (Time.time - deathTime) / DeathPPTransitionTime;
-                        if(cause==CauseOfDeath.Heatstroke)
-                        {
-                            HeatstrokePP.weight = 1 - t;
-                            SevereHeatstrokePP.weight = 1 - t;
-                        }
-                        else if (cause == CauseOfDeath.Hypothermia)
-                        {
-                            HypothermiaPP.weight = 1 - t;
-                            SevereHypothermiaPP.weight = 1 - t;
-                        }
-                        DeathPP.weight = t;
-                    },
-                    () =>
-                    {
-                        HeatstrokePP.weight = 0;
-                        SevereHeatstrokePP.weight = 0;
-                        HypothermiaPP.weight = 0;
-                        SevereHypothermiaPP.weight = 0;
-                        DeathPP.weight = 1;
-                    });
-        }));
+        _shipSubscriptions.Add(CurrentEntity.Death.Subscribe(Die));
         
         _lockingIndicators = CurrentEntity.GetBehaviors<LockWeapon>()
             .Select(x =>
@@ -956,6 +903,43 @@ public class ActionGameManager : MonoBehaviour
                 var i = LockIndicator.Instantiate<PlaceUIElementWorldspace>();
                 return (x, i, i.GetComponent<Rotate>());
             }).ToArray();
+    }
+
+    private void Die(CauseOfDeath cause)
+    {
+        var deathTime = Time.time;
+        UnbindEntity();
+        CurrentEntity = null;
+        VolumeRenderer.EnableDepth = false;
+        MainMenu.gameObject.SetActive(true);
+        Menu.gameObject.SetActive(false);
+        CurrentSector = null;
+        SavePlayerSettings();
+        Observable.EveryUpdate()
+            .Where(_ => Time.time - deathTime < DeathPPTransitionTime)
+            .Subscribe(_ =>
+                {
+                    var t = (Time.time - deathTime) / DeathPPTransitionTime;
+                    if(cause==CauseOfDeath.Heatstroke)
+                    {
+                        HeatstrokePP.weight = 1 - t;
+                        SevereHeatstrokePP.weight = 1 - t;
+                    }
+                    else if (cause == CauseOfDeath.Hypothermia)
+                    {
+                        HypothermiaPP.weight = 1 - t;
+                        SevereHypothermiaPP.weight = 1 - t;
+                    }
+                    DeathPP.weight = t;
+                },
+                () =>
+                {
+                    HeatstrokePP.weight = 0;
+                    SevereHeatstrokePP.weight = 0;
+                    HypothermiaPP.weight = 0;
+                    SevereHypothermiaPP.weight = 0;
+                    DeathPP.weight = 1;
+                });
     }
 
     public void SaveZone(string name) => File.WriteAllBytes(

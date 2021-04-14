@@ -6,7 +6,7 @@ using MessagePack;
 public class PlayerSettings
 {
     [Key(0)] public string Name = "Anonymous";
-    [Key(1)] public SavedGame CurrentRun;
+    [Key(1)] public SavedGame SavedRun;
     [Key(2)] public TemperatureUnit TemperatureUnit = TemperatureUnit.Celsius;
     [Key(3)] public int SignificantDigits = 3;
 

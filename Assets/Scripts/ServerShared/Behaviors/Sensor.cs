@@ -99,11 +99,11 @@ public class Sensor : IBehavior, IEventBehavior
         Item = item;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         if (_pinging)
         {
-            _pingLerp += delta / _data.PingDuration;
+            _pingLerp += dt / _data.PingDuration;
             _pingRadius = lerp(0, Item.Evaluate(_data.PingRange), pow(_pingLerp, _data.PingRadiusExponent));
             if (_pingLerp > 1)
             {
@@ -112,7 +112,7 @@ public class Sensor : IBehavior, IEventBehavior
             }
         }
 
-        _pingCooldown -= delta / Item.Evaluate(_data.PingCooldown);
+        _pingCooldown -= dt / Item.Evaluate(_data.PingCooldown);
         
         // TODO: Handle Active Detection / Visibility From Reflected Radiance
         var hardpoint = Item.Entity.Hardpoints[Item.Position.x, Item.Position.y];
@@ -145,9 +145,9 @@ public class Sensor : IBehavior, IEventBehavior
                     entity.Visibility *
                     Item.Evaluate(_data.Sensitivity) *
                     _data.SensitivityCurve.Evaluate(angle / PI) *
-                    delta / dist);
+                    dt / dist);
             }
-            next *= 1 - Item.ItemManager.GameplaySettings.TargetInfoDecay * delta;
+            next *= 1 - Item.ItemManager.GameplaySettings.TargetInfoDecay * dt;
             //Context.Log($"{entity.Name} visibility {(int)(previous * 100)}% -> {(int)(next * 100)}%");
             Item.Entity.EntityInfoGathered[entity] = next;
         }

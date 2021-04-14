@@ -12,6 +12,16 @@ public static class AetheriaMath
     {
         return source * exp(-lambda * dt);
     }
+
+    public static float3 Decay(float3 source, float lambda, float dt)
+    {
+        return source * exp(-lambda * dt);
+    }
+
+    public static float3 Decay(float3 source, float3 lambda, float dt)
+    {
+        return source * exp(-lambda * dt);
+    }
     
     public static float Damp(float a, float b, float lambda, float dt)
     {

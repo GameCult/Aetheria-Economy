@@ -61,7 +61,7 @@ public class LockWeapon : InstantWeapon
         _data = data;
     }
 
-    public override bool Execute(float delta)
+    public override bool Execute(float dt)
     {
         if (_target != Item.Entity.Target.Value)
         {
@@ -81,12 +81,12 @@ public class LockWeapon : InstantWeapon
             if (degrees < LockAngle)
             {
                 var lerp = 1 - unlerp(0, 90, degrees);
-                _lock = saturate(_lock + pow(lerp, DirectionImpact) * delta * LockSpeed * pow(Item.Entity.EntityInfoGathered[Item.Entity.Target.Value], SensorImpact));
+                _lock = saturate(_lock + pow(lerp, DirectionImpact) * dt * LockSpeed * pow(Item.Entity.EntityInfoGathered[Item.Entity.Target.Value], SensorImpact));
             }
-            else _lock = saturate(_lock - delta * Decay);
+            else _lock = saturate(_lock - dt * Decay);
         }
 
-        return base.Execute(delta);
+        return base.Execute(dt);
     }
 }
 

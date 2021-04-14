@@ -42,7 +42,7 @@ public class Thermotoggle : IBehavior
         TargetTemperature = data.TargetTemperature;
     }
 
-    public bool Execute(float delta)
+    public bool Execute(float dt)
     {
         return Item.Temperature < TargetTemperature ^ _data.HighPass;
     }

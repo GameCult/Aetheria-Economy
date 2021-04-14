@@ -70,8 +70,9 @@ public class LoadoutGenerator
         }
 
         var cargo = entity.CargoBays.First();
-        var inventory = RandomItems<EquippableItemData>(16, 1, 
-            data => !(data is HullData hull && hull.HullType != HullType.Ship) && !(data is CargoBayData))
+        IEnumerable<EquippableItemData> inventory = RandomItems<EquippableItemData>(16, 1, 
+            data => !(data is HullData hull && hull.HullType != HullType.Ship) && !(data is CargoBayData));
+        inventory = inventory
             .OrderByDescending(item=>item.Shape.Coordinates.Length);
         foreach (var item in inventory)
         {
@@ -86,6 +87,7 @@ public class LoadoutGenerator
     {
         return ItemManager.ItemData.GetAll<HullData>()
             .Where(item =>
+                item.Price > 0 &&
                 (hullFilter?.Invoke(item) ?? true) &&
                 item.HullType == type && 
                 (Faction == null || item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)))
@@ -101,9 +103,11 @@ public class LoadoutGenerator
     public T[] RandomItems<T>(int count, float sizeExponent, Predicate<T> filter = null) where T : EquippableItemData
     {
         return ItemManager.ItemData.GetAll<T>()
-            .Where(item => Sector.ContainsFaction(item.Manufacturer) &&
-                           (Faction == null || Faction.Allegiance.ContainsKey(item.Manufacturer)) &&
-                           (filter?.Invoke(item) ?? true))
+            .Where(item => 
+                item.Price > 0 && 
+                Sector.ContainsFaction(item.Manufacturer) &&
+                (Faction == null || Faction.Allegiance.ContainsKey(item.Manufacturer)) &&
+                (filter?.Invoke(item) ?? true))
             .WeightedRandomElements(ref Random, item =>
                     (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) * // Prioritize items from allied manufacturers
                     pow(item.Shape.Coordinates.Length, sizeExponent) / // Prioritize larger items
