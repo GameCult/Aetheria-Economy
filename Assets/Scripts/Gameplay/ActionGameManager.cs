@@ -515,6 +515,27 @@ public class ActionGameManager : MonoBehaviour
                 }
             });
         
+        ConsoleController.AddCommand("spawnturret",
+            _ =>
+            {
+                var nearestFaction = CurrentSector.Factions.MinBy(f => CurrentSector.HomeZones[f].Distance[Zone.SectorZone]);
+
+                var loadoutGenerator = new LoadoutGenerator(
+                    ref ItemManager.Random,
+                    ItemManager,
+                    CurrentSector,
+                    Zone.SectorZone,
+                    nearestFaction,
+                    .5f);
+
+                var turret = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateTurretLoadout(), true);
+                turret.Position.xz = _currentEntity.Position.xz +
+                                     ItemManager.Random.NextFloat2Direction() * ItemManager.Random.NextFloat(50, 500);
+                turret.Zone = Zone;
+                Zone.Entities.Add(turret);
+                turret.Activate();
+            });
+        
         ConsoleController.AddCommand("pingscene",
             _ =>
             {
@@ -770,7 +791,7 @@ public class ActionGameManager : MonoBehaviour
                 Dialog.MoveToCursor();
                 AkSoundEngine.PostEvent("UI_Fail", gameObject);
             }
-            else if (CurrentEntity.GetBehavior<Thruster>() == null)
+            else if (CurrentEntity.GetBehavior<Thruster>() == null && CurrentEntity.GetBehavior<AetherDrive>() == null)
             {
                 Dialog.Clear();
                 Dialog.Title.text = "Can't undock. Missing thruster component!";
@@ -1011,6 +1032,10 @@ public class ActionGameManager : MonoBehaviour
                 {
                     ship.MovementDirection = Input.Player.Move.ReadValue<Vector2>();
                 }
+
+                var tractorPower = Input.Player.TractorBeam.ReadValue<float>();
+                CurrentEntity.TractorPower =
+                    saturate(CurrentEntity.TractorPower + sign(tractorPower - CurrentEntity.TractorPower) * Time.deltaTime * 2);
             }
             Zone.Update(Time.deltaTime);
         }

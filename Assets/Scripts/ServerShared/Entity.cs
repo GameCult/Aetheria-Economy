@@ -84,6 +84,8 @@ public abstract class Entity
     
     public bool OverrideShutdown { get; set; }
     
+    public float TractorPower { get; set; }
+    
     public bool Active
     {
         get => _active;

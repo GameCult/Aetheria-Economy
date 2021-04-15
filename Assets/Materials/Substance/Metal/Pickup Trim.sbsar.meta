@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 504c7bfe0d50ff64a88b8eac2ceb46f8
+guid: c00b5a4f1e4743a4ca59b8030251f900
 ScriptedImporter:
   internalIDToNameTable:
   - first:
@@ -64,11 +64,11 @@ ScriptedImporter:
       value=\"0.25\" />\n  <presetinput identifier=\"age\" uid=\"2038752334\" type=\"0\"
       value=\"1\" />\n  <presetinput identifier=\"flakes\" uid=\"20245147\" type=\"4\"
       value=\"1\" />\n  <presetinput identifier=\"flakes_scale\" uid=\"20192266\"
-      type=\"0\" value=\"1\" />\n  <presetinput identifier=\"paint_scratches\" uid=\"22509202\"
-      type=\"0\" value=\"1\" />\n  <presetinput identifier=\"paint_peeling\" uid=\"103560714\"
-      type=\"0\" value=\"0.246\" />\n  <presetinput identifier=\"metal_roughness\"
-      uid=\"22504787\" type=\"0\" value=\"0.39\" />\n  <presetinput identifier=\"paint_color\"
-      uid=\"105341618\" type=\"2\" value=\"1,0.15685,0\" />\n  <presetinput identifier=\"paint_roughness\"
+      type=\"0\" value=\"0.425\" />\n  <presetinput identifier=\"paint_scratches\"
+      uid=\"22509202\" type=\"0\" value=\"1\" />\n  <presetinput identifier=\"paint_peeling\"
+      uid=\"103560714\" type=\"0\" value=\"0.405\" />\n  <presetinput identifier=\"metal_roughness\"
+      uid=\"22504787\" type=\"0\" value=\"0.425\" />\n  <presetinput identifier=\"paint_color\"
+      uid=\"105341618\" type=\"2\" value=\"0,0.605881,1\" />\n  <presetinput identifier=\"paint_roughness\"
       uid=\"22504606\" type=\"0\" value=\"0\" />\n  <presetinput identifier=\"paint_metallic\"
       uid=\"22503567\" type=\"0\" value=\"1\" />\n </sbspreset>\n"
     shaderName: Standard
@@ -81,7 +81,7 @@ ScriptedImporter:
       customRenderQueue: -1
       texEnvs:
       - name: _BumpMap
-        texture: {fileID: 3068890721646206586, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8,
+        texture: {fileID: 3068890721646206586, guid: c00b5a4f1e4743a4ca59b8030251f900,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -99,25 +99,25 @@ ScriptedImporter:
         offset: {x: 0, y: 0}
       - name: _EmissionMap
         texture: {instanceID: 0}
-        scale: {x: 1, y: 1}
+        scale: {x: 0.5, y: 0.5}
         offset: {x: 0, y: 0}
       - name: _MainTex
-        texture: {fileID: 5917659159057834157, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8,
+        texture: {fileID: 5917659159057834157, guid: c00b5a4f1e4743a4ca59b8030251f900,
           type: 3}
-        scale: {x: 1, y: 1}
+        scale: {x: 0.5, y: 0.5}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
-        texture: {fileID: -3552914696322007609, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8,
+        texture: {fileID: -3552914696322007609, guid: c00b5a4f1e4743a4ca59b8030251f900,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _OcclusionMap
-        texture: {fileID: -1242281561028671816, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8,
+        texture: {fileID: -1242281561028671816, guid: c00b5a4f1e4743a4ca59b8030251f900,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _ParallaxMap
-        texture: {fileID: -1652887728991447519, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8,
+        texture: {fileID: -1652887728991447519, guid: c00b5a4f1e4743a4ca59b8030251f900,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -371,11 +371,11 @@ ScriptedImporter:
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1
-    material: {fileID: 3720744386649352057, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8,
+    material: {fileID: 3720744386649352057, guid: c00b5a4f1e4743a4ca59b8030251f900,
       type: 3}
     generatedTextures:
-    - {fileID: 5917659159057834157, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8, type: 3}
-    - {fileID: 3068890721646206586, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8, type: 3}
-    - {fileID: -3552914696322007609, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8, type: 3}
-    - {fileID: -1242281561028671816, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8, type: 3}
-    - {fileID: -1652887728991447519, guid: 504c7bfe0d50ff64a88b8eac2ceb46f8, type: 3}
+    - {fileID: 5917659159057834157, guid: c00b5a4f1e4743a4ca59b8030251f900, type: 3}
+    - {fileID: 3068890721646206586, guid: c00b5a4f1e4743a4ca59b8030251f900, type: 3}
+    - {fileID: -3552914696322007609, guid: c00b5a4f1e4743a4ca59b8030251f900, type: 3}
+    - {fileID: -1242281561028671816, guid: c00b5a4f1e4743a4ca59b8030251f900, type: 3}
+    - {fileID: -1652887728991447519, guid: c00b5a4f1e4743a4ca59b8030251f900, type: 3}

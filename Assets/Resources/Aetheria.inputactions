@@ -196,6 +196,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Tractor Beam",
+                    "type": "Value",
+                    "id": "e61d5d8e-eaf7-449d-8d54-624e15b6c964",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -647,6 +655,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Hide UI",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "37683a7e-02b1-4daa-a990-a51a30e7f8e9",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Tractor Beam",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

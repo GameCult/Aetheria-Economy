@@ -7,6 +7,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
+using Random = UnityEngine.Random;
 
 public class EntityInstance : MonoBehaviour
 {
@@ -60,6 +61,7 @@ public class EntityInstance : MonoBehaviour
     public Transform LookAtPoint { get; private set; }
     public Entity Entity { get; private set; }
     public ZoneRenderer ZoneRenderer { get; private set; }
+    public Transform LocalSpace { get; private set; }
     public bool Visible
     {
         get => _fade > 0.01f;
@@ -67,6 +69,7 @@ public class EntityInstance : MonoBehaviour
 
     private void Awake()
     {
+        LocalSpace = new GameObject().transform;
         var meshes = gameObject.GetComponentsInChildren<MeshRenderer>();
         var materials = new List<(Material material, List<(MeshRenderer renderer, int index)> submeshes)>();
         foreach (var mesh in meshes)
@@ -150,6 +153,8 @@ public class EntityInstance : MonoBehaviour
     public virtual void SetEntity(ZoneRenderer zoneRenderer, Entity entity)
     {
         gameObject.name = entity.Name;
+        LocalSpace.gameObject.name = $"{entity.Name} Sim Space";
+        LocalSpace.SetParent(transform.parent);
         Entity = entity;
         ZoneRenderer = zoneRenderer;
         var hullData = entity.ItemManager.GetData(entity.Hull) as HullData;
@@ -419,6 +424,27 @@ public class EntityInstance : MonoBehaviour
             {
                 if (!this) return;
                 _destroyed = true;
+                foreach (var gear in Entity.Equipment)
+                {
+                    if (Random.value < ZoneRenderer.Settings.LootDropProbability)
+                    {
+                        ZoneRenderer.DropItem(
+                            Entity.Position, 
+                            Random.onUnitSphere * ZoneRenderer.Settings.LootDropVelocity, 
+                            gear.EquippableItem);
+                    }
+                }
+
+                foreach (var cargo in Entity.CargoBays)
+                {
+                    foreach (var item in cargo.Cargo.Keys)
+                    {
+                        ZoneRenderer.DropItem(
+                            Entity.Position, 
+                            Random.onUnitSphere * ZoneRenderer.Settings.LootDropVelocity, 
+                            item);
+                    }
+                }
                 if (DestroyEffect != null)
                 {
                     var t = Instantiate(DestroyEffect).transform;
@@ -453,6 +479,7 @@ public class EntityInstance : MonoBehaviour
 
     public virtual void Update()
     {
+        LocalSpace.localPosition = transform.localPosition;
         if (_currentPing.transform)
         {
             _currentPing.transform.localScale = _sensor.PingRadius * Vector3.one;
@@ -531,15 +558,16 @@ public class EntityInstance : MonoBehaviour
 
     public virtual void OnDestroy()
     {
+        Destroy(LocalSpace.gameObject);
         foreach (var r in _radiatorSfx)
         {
-            AkSoundEngine.PostEvent(r.Key.Item.Data.SoundEffectTrigger + "_stop", r.Value);
+            AkSoundEngine.PostEvent($"{r.Key.Item.Data.SoundEffectTrigger}_stop", r.Value);
             AkSoundEngine.UnregisterGameObj(r.Value);
         }
 
         if (_reactor.reactor != null)
         {
-            AkSoundEngine.PostEvent(_reactor.reactor.Item.Data.SoundEffectTrigger + "_stop", _reactor.sfxSource);
+            AkSoundEngine.PostEvent($"{_reactor.reactor.Item.Data.SoundEffectTrigger}_stop", _reactor.sfxSource);
             AkSoundEngine.UnregisterGameObj(_reactor.sfxSource);
         }
         foreach(var x in _subscriptions)

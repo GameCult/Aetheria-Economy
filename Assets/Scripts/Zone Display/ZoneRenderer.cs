@@ -37,9 +37,12 @@ public class ZoneRenderer : MonoBehaviour
     public LODHandler LODHandler;
     public Slime SlimeRenderer;
     public Camera SlimeGravityCamera;
-    
-    [Header("Tour")]
-    public bool Tour;
+    public GridObject SimpleCommodityPickup;
+    public GridObject CompoundCommodityPickup;
+    public GridObject GearPickup;
+    public GridObject WeaponPickup;
+
+    [Header("Tour")] public bool Tour;
     public float TourSwitchTime = 5f;
     public float TourFollowDistance = 30f;
     public float TourHeightOffset = 15;
@@ -48,21 +51,17 @@ public class ZoneRenderer : MonoBehaviour
     // public Mesh[] AsteroidMeshes;
     // public Material AsteroidMaterial;
 
-    [Header("Prefabs")]
-    public MeshFilter AsteroidBeltUI;
+    [Header("Prefabs")] public MeshFilter AsteroidBeltUI;
     public PlanetObject Planet;
     public GasGiantObject GasGiant;
     public SunObject Sun;
-    
-    [Header("Icons")]
-    public Texture2D PlanetoidIcon;
+
+    [Header("Icons")] public Texture2D PlanetoidIcon;
     public Texture2D PlanetIcon;
-    
-    [HideInInspector]
-    public Dictionary<Entity, EntityInstance> EntityInstances = new Dictionary<Entity, EntityInstance>();
-    [HideInInspector]
-    public Dictionary<Guid, PlanetObject> Planets = new Dictionary<Guid, PlanetObject>();
-    
+
+    [HideInInspector] public Dictionary<Entity, EntityInstance> EntityInstances = new Dictionary<Entity, EntityInstance>();
+    [HideInInspector] public Dictionary<Guid, PlanetObject> Planets = new Dictionary<Guid, PlanetObject>();
+
     private Dictionary<Guid, AsteroidBeltUI> _beltObjects = new Dictionary<Guid, AsteroidBeltUI>();
     private Dictionary<Guid, InstancedMesh[]> _beltMeshes = new Dictionary<Guid, InstancedMesh[]>();
     private Dictionary<Guid, Matrix4x4[][]> _beltMatrices = new Dictionary<Guid, Matrix4x4[][]>();
@@ -81,6 +80,7 @@ public class ZoneRenderer : MonoBehaviour
     private PlanetObject[] _suns;
 
     public Dictionary<Wormhole, GameObject> WormholeInstances = new Dictionary<Wormhole, GameObject>();
+    private List<GridObject> _gridObjects = new List<GridObject>();
 
     public Zone Zone { get; private set; }
     public ItemManager ItemManager { get; set; }
@@ -101,9 +101,9 @@ public class ZoneRenderer : MonoBehaviour
             }
             else
             {
-                foreach(var entity in EntityInstances.Values)
+                foreach (var entity in EntityInstances.Values)
                     entity.FadeOut(EntityFadeTime);
-                foreach(var entity in value.VisibleEntities)
+                foreach (var entity in value.VisibleEntities)
                     EntityInstances[entity].FadeIn(EntityFadeTime);
                 EntityInstances[value].FadeIn(EntityFadeTime);
                 _perspectiveSubscriptions[0] = value.VisibleEntities.ObserveAdd()
@@ -132,7 +132,7 @@ public class ZoneRenderer : MonoBehaviour
     {
         set
         {
-            foreach(var camera in MinimapCameras)
+            foreach (var camera in MinimapCameras)
                 camera.orthographicSize = value;
             // MinimapGravityQuad.transform.localScale = value * 2 * Vector3.one;
         }
@@ -142,7 +142,7 @@ public class ZoneRenderer : MonoBehaviour
     {
         ViewDistance = Settings.DefaultViewDistance;
         MinimapDistance = Settings.MinimapZoomLevels[Settings.DefaultMinimapZoom];
-        
+
         _tourTimer = TourSwitchTime;
         _transposer = SceneCamera.GetCinemachineComponent<CinemachineTransposer>();
     }
@@ -155,24 +155,25 @@ public class ZoneRenderer : MonoBehaviour
         SectorBrushes.localScale = zone.Pack.Radius * 2 * Vector3.one;
         SlimeGravityCamera.orthographicSize = zone.Pack.Radius;
         SlimeRenderer.ZoneRadius = zone.Pack.Radius;
-        foreach(var p in zone.Planets.Values)
+        foreach (var p in zone.Planets.Values)
             LoadPlanet(p);
 
         _suns = Planets.Values.Where(p => p is SunObject).ToArray();
-        
-        foreach (var x in Planets)
-        {
-            if (!(zone.Planets[x.Key] is GasGiantData))
-            {
-                
-            }
-        }
-        
-        foreach(var entity in zone.Entities)
+
+        // foreach (var x in Planets)
+        // {
+        //     if (!(zone.Planets[x.Key] is GasGiantData))
+        //     {
+        //         
+        //     }
+        // }
+
+        foreach (var entity in zone.Entities)
         {
             Debug.Log($"Loading entity {entity.Name} from existing zone entity collection");
             LoadEntity(entity);
         }
+
         _zoneSubscriptions.Add(zone.Entities.ObserveAdd().Subscribe(e =>
         {
             //Debug.Log($"Loading entity {e.Value.Name} from zone add event");
@@ -183,8 +184,8 @@ public class ZoneRenderer : MonoBehaviour
             //Debug.Log($"Unloading entity {e.Value.Name} from zone remove event");
             UnloadEntity(e.Value);
         }));
-        
-        if(zone.SectorZone != null)
+
+        if (zone.SectorZone != null)
         {
             foreach (var adjacentZone in zone.SectorZone.AdjacentZones)
             {
@@ -210,28 +211,34 @@ public class ZoneRenderer : MonoBehaviour
         if (Zone == null) return;
         foreach (var wormhole in WormholeInstances.Values) Destroy(wormhole);
         WormholeInstances.Clear();
-        
-        foreach(var subscription in _zoneSubscriptions)
+
+        foreach (var subscription in _zoneSubscriptions)
             subscription.Dispose();
         _zoneSubscriptions.Clear();
+        
+        foreach(var gridObject in _gridObjects) 
+            if(gridObject) Destroy(gridObject.gameObject);
+        _gridObjects.Clear();
 
         foreach (var entity in Zone.Entities)
         {
             Debug.Log($"Unloading entity {entity.Name} from entities remaining during clear!");
             UnloadEntity(entity);
         }
-        
+
         if (Planets.Count > 0)
         {
             foreach (var planet in Planets.Values)
             {
                 DestroyImmediate(planet.gameObject);
             }
+
             Planets.Clear();
             foreach (var beltObject in _beltObjects.Values)
             {
                 Destroy(beltObject.Filter);
             }
+
             _beltObjects.Clear();
             _beltMeshes.Clear();
             _beltMatrices.Clear();
@@ -272,11 +279,11 @@ public class ZoneRenderer : MonoBehaviour
         {
             foreach (var behavior in item.Behaviors)
             {
-                if(behavior is IEventBehavior eventBehavior)
+                if (behavior is IEventBehavior eventBehavior)
                     eventBehavior.ResetEvents();
             }
         }
-        
+
         Destroy(EntityInstances[entity].gameObject);
         EntityInstances.Remove(entity);
     }
@@ -286,20 +293,26 @@ public class ZoneRenderer : MonoBehaviour
         if (planetData is AsteroidBeltData beltData)
         {
             var meshes = AsteroidMeshes.ToList();
-            while(meshes.Count > Settings.AsteroidMeshCount)
-                meshes.RemoveAt(Random.Range(0,meshes.Count));
+            while (meshes.Count > Settings.AsteroidMeshCount)
+                meshes.RemoveAt(Random.Range(0, meshes.Count));
             _beltMeshes[planetData.ID] = meshes.ToArray();
             _beltMatrices[planetData.ID] = new Matrix4x4[meshes.Count][];
             var count = beltData.Asteroids.Length / meshes.Count;
             var remainder = beltData.Asteroids.Length - count * meshes.Count;
             for (int i = 0; i < meshes.Count; i++)
             {
-                _beltMatrices[planetData.ID][i] = new Matrix4x4[i<meshes.Count-1 ? count : count+remainder];
+                _beltMatrices[planetData.ID][i] = new Matrix4x4[i < meshes.Count - 1 ? count : count + remainder];
             }
-            
+
             var beltObject = Instantiate(AsteroidBeltUI, ZoneRoot);
             var collider = beltObject.GetComponent<MeshCollider>();
-            var belt = new AsteroidBeltUI(Zone, Zone.AsteroidBelts[beltData.ID], beltObject, collider, AsteroidSpritesheetWidth, AsteroidSpritesheetHeight, Settings.MinimapAsteroidSize);
+            var belt = new AsteroidBeltUI(Zone,
+                Zone.AsteroidBelts[beltData.ID],
+                beltObject,
+                collider,
+                AsteroidSpritesheetWidth,
+                AsteroidSpritesheetHeight,
+                Settings.MinimapAsteroidSize);
             _beltObjects[beltData.ID] = belt;
         }
         else
@@ -333,7 +346,7 @@ public class ZoneRenderer : MonoBehaviour
                 gasGiant.GravityWavesRadius.Subscribe(f => gas.GravityWaves.transform.localScale = f * Vector3.one);
                 gasGiant.GravityWavesDepth.Subscribe(f => gas.GravityWaves.material.SetFloat("_Depth", f));
                 planetData.Mass.Subscribe(f => gas.GravityWaves.material.SetFloat("_Frequency", Settings.PlanetSettings.WaveFrequency.Evaluate(f)));
-                    //gas.WaveScroll.Speed = Properties.GravitySettings.WaveSpeed.Evaluate(f);
+                //gas.WaveScroll.Speed = Properties.GravitySettings.WaveSpeed.Evaluate(f);
             }
             else
             {
@@ -347,10 +360,7 @@ public class ZoneRenderer : MonoBehaviour
             }
 
             var planetInstance = Zone.PlanetInstances[planetData.ID];
-            planetInstance.BodyRadius.Subscribe(f =>
-            {
-                planet.Body.transform.localScale = f * Vector3.one;
-            });
+            planetInstance.BodyRadius.Subscribe(f => { planet.Body.transform.localScale = f * Vector3.one; });
             planetInstance.GravityWellRadius.Subscribe(f => planet.GravityWell.transform.localScale = f * Vector3.one);
             planetInstance.GravityWellDepth.Subscribe(f =>
             {
@@ -359,7 +369,7 @@ public class ZoneRenderer : MonoBehaviour
                 planet.Icon.transform.position = new Vector3(0, -f, 0);
             });
             planetInstance.BodyData.Mass.Subscribe(f => planet.Icon.transform.localScale = Settings.IconSize.Evaluate(f) * Vector3.one);
-            
+
 
             Planets[planetData.ID] = planet;
             if (!_rootFound)
@@ -368,6 +378,7 @@ public class ZoneRenderer : MonoBehaviour
                 _root = planet;
             }
         }
+
         LODHandler.FindPlanets();
     }
 
@@ -404,7 +415,8 @@ public class ZoneRenderer : MonoBehaviour
         {
             SlimeRenderer.SpawnPositions[i] = _suns[i].Body.transform.position.Flatland();
         }
-        foreach(var belt in Zone.AsteroidBelts)
+
+        foreach (var belt in Zone.AsteroidBelts)
         {
             var meshes = _beltMeshes[belt.Key];
             var count = belt.Value.Positions.Length / meshes.Length;
@@ -423,19 +435,21 @@ public class ZoneRenderer : MonoBehaviour
 
                 Graphics.DrawMeshInstanced(meshes[i].Mesh, 0, meshes[i].Material, _beltMatrices[belt.Key][i]);
             }
+
             _beltObjects[belt.Key].Update(belt.Value.Positions);
         }
-        
+
         foreach (var planet in Planets)
         {
             var planetInstance = Zone.PlanetInstances[planet.Key];
             var p = Zone.GetOrbitPosition(planetInstance.BodyData.Orbit);
             planet.Value.transform.position = new Vector3(p.x, 0, p.y);
             planet.Value.Body.transform.localPosition = new Vector3(0, Zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
-            if(planet.Value is GasGiantObject gasGiantObject)
+            if (planet.Value is GasGiantObject gasGiantObject)
             {
-                gasGiantObject.GravityWaves.material.SetFloat("_Phase", Zone.Time * ((GasGiant) Zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
-                if(!(planet.Value is SunObject))
+                gasGiantObject.GravityWaves.material.SetFloat("_Phase",
+                    Zone.Time * ((GasGiant) Zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
+                if (!(planet.Value is SunObject))
                 {
                     var toParent = normalize(Zone.GetOrbitPosition(Zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);
                     gasGiantObject.SunMaterial.LightingDirection = new Vector3(toParent.x, 0, toParent.y);
@@ -447,16 +461,36 @@ public class ZoneRenderer : MonoBehaviour
         var fogPos = FogCameraParent.position;
         SectorBoundaryBrush.material.SetFloat("_Power", Settings.PlanetSettings.ZoneDepthExponent);
         SectorBoundaryBrush.material.SetFloat("_Depth", Settings.PlanetSettings.ZoneDepth + Settings.PlanetSettings.ZoneBoundaryFog);
-        var startDepth = Zone.PowerPulse(Settings.MinimapZoneGravityRange, Settings.PlanetSettings.ZoneDepthExponent) * Settings.PlanetSettings.ZoneDepth;
+        var startDepth = Zone.PowerPulse(Settings.MinimapZoneGravityRange, Settings.PlanetSettings.ZoneDepthExponent) *
+                         Settings.PlanetSettings.ZoneDepth;
         var depthRange = Settings.PlanetSettings.ZoneDepth - startDepth + _maxDepth;
         // MinimapGravityQuad.material.SetFloat("_StartDepth", startDepth);
         // MinimapGravityQuad.material.SetFloat("_DepthRange", depthRange);
         FogMaterial.SetFloat("_GridOffset", Settings.PlanetSettings.ZoneBoundaryFog);
-        FogMaterial.SetVector("_GridTransform", new Vector4(fogPos.x,fogPos.z,_viewDistance*2));
+        FogMaterial.SetVector("_GridTransform", new Vector4(fogPos.x, fogPos.z, _viewDistance * 2));
         // var gravPos = MinimapGravityQuad.transform.position;
         // gravPos.y = -Settings.PlanetSettings.ZoneDepth - _maxDepth;
         // MinimapGravityQuad.transform.position = gravPos;
         // MinimapTintQuad.transform.position = gravPos - Vector3.up*10;
+    }
+
+    public void DropItem(Vector3 position, Vector3 velocity, ItemInstance item)
+    {
+        var gridObject = item switch
+        {
+            SimpleCommodity _ => Instantiate(SimpleCommodityPickup),
+            CompoundCommodity _ => Instantiate(CompoundCommodityPickup),
+            EquippableItem equippableItem when ItemManager.GetData(equippableItem) is WeaponItemData => Instantiate(WeaponPickup),
+            EquippableItem _ => Instantiate(GearPickup)
+        };
+        var t = gridObject.transform;
+        t.parent = ZoneRoot;
+        gridObject.Zone = Zone;
+        t.position = position;
+        gridObject.Velocity = velocity;
+        gridObject.gameObject.AddComponent<ItemPickup>().Item = item;
+        gridObject.gameObject.AddComponent<TimedDestroy>().Duration = Settings.PickupLifetime;
+        _gridObjects.Add(gridObject);
     }
 }
 
@@ -483,7 +517,13 @@ public class AsteroidBeltUI
     private AsteroidBelt _belt;
     private float _scale;
 
-    public AsteroidBeltUI(Zone zone, AsteroidBelt belt, MeshFilter meshFilter, MeshCollider collider, int spritesheetWidth, int spritesheetHeight, float scale)
+    public AsteroidBeltUI(Zone zone,
+        AsteroidBelt belt,
+        MeshFilter meshFilter,
+        MeshCollider collider,
+        int spritesheetWidth,
+        int spritesheetHeight,
+        float scale)
     {
         _belt = belt;
         _zone = zone;
@@ -491,10 +531,10 @@ public class AsteroidBeltUI
         _collider = collider;
         var orbit = zone.Orbits[belt.Data.Orbit];
         _orbitParent = orbit.Data.Parent;
-        _vertices = new Vector3[_belt.Data.Asteroids.Length*4];
-        _normals = new Vector3[_belt.Data.Asteroids.Length*4];
-        _uvs = new Vector2[_belt.Data.Asteroids.Length*4];
-        _indices = new int[_belt.Data.Asteroids.Length*6];
+        _vertices = new Vector3[_belt.Data.Asteroids.Length * 4];
+        _normals = new Vector3[_belt.Data.Asteroids.Length * 4];
+        _uvs = new Vector2[_belt.Data.Asteroids.Length * 4];
+        _indices = new int[_belt.Data.Asteroids.Length * 6];
         _scale = scale;
 
         var maxDist = 0f;
@@ -506,12 +546,12 @@ public class AsteroidBeltUI
                 maxDist = belt.Data.Asteroids[i].Distance;
             var spriteX = Random.Range(0, spritesheetWidth);
             var spriteY = Random.Range(0, spritesheetHeight);
-            
+
             _uvs[i * 4] = new Vector2(spriteX * spriteSize.x, spriteY * spriteSize.y);
             _uvs[i * 4 + 1] = new Vector2(spriteX * spriteSize.x, spriteY * spriteSize.y + spriteSize.y);
             _uvs[i * 4 + 2] = new Vector2(spriteX * spriteSize.x + spriteSize.x, spriteY * spriteSize.y + spriteSize.y);
             _uvs[i * 4 + 3] = new Vector2(spriteX * spriteSize.x + spriteSize.x, spriteY * spriteSize.y);
-            
+
             _indices[i * 6] = i * 4;
             _indices[i * 6 + 1] = i * 4 + 1;
             _indices[i * 6 + 2] = i * 4 + 3;
@@ -519,12 +559,12 @@ public class AsteroidBeltUI
             _indices[i * 6 + 4] = i * 4 + 1;
             _indices[i * 6 + 5] = i * 4 + 2;
         }
-        
+
         for (var i = 0; i < _normals.Length; i++)
         {
             _normals[i] = -Vector3.forward;
         }
-        
+
         _mesh = new Mesh();
         _mesh.vertices = _vertices;
         _mesh.uv = _uvs;
@@ -544,10 +584,10 @@ public class AsteroidBeltUI
         {
             var rotation = Quaternion.Euler(90, _belt.Rotations[i], 0);
             //var position = new Vector3(_belt.Transforms[i].x, _zone.GetHeight(parentPosition), _belt.Transforms[i].y);
-            _vertices[i * 4] = rotation * new Vector3(-_belt.Scales[i] * _scale,-_belt.Scales[i] * _scale,0) + (Vector3) positions[i];
-            _vertices[i * 4 + 1] = rotation * new Vector3(-_belt.Scales[i] * _scale,_belt.Scales[i] * _scale,0) + (Vector3) positions[i];
-            _vertices[i * 4 + 2] = rotation * new Vector3(_belt.Scales[i] * _scale,_belt.Scales[i] * _scale,0) + (Vector3) positions[i];
-            _vertices[i * 4 + 3] = rotation * new Vector3(_belt.Scales[i] * _scale,-_belt.Scales[i] * _scale,0) + (Vector3) positions[i];
+            _vertices[i * 4] = rotation * new Vector3(-_belt.Scales[i] * _scale, -_belt.Scales[i] * _scale, 0) + (Vector3) positions[i];
+            _vertices[i * 4 + 1] = rotation * new Vector3(-_belt.Scales[i] * _scale, _belt.Scales[i] * _scale, 0) + (Vector3) positions[i];
+            _vertices[i * 4 + 2] = rotation * new Vector3(_belt.Scales[i] * _scale, _belt.Scales[i] * _scale, 0) + (Vector3) positions[i];
+            _vertices[i * 4 + 3] = rotation * new Vector3(_belt.Scales[i] * _scale, -_belt.Scales[i] * _scale, 0) + (Vector3) positions[i];
         }
 
         _mesh.bounds = new Bounds(new Vector3(parentPosition.x, 0, parentPosition.y), Vector3.one * (_size * 2));

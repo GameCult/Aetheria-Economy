@@ -17,7 +17,6 @@ public class ConstantParticleWeapon : MonoBehaviour
     private float _emission;
     private List<ParticleSystem.Particle> _collisionParticles = new List<ParticleSystem.Particle>();
     private HullCollider _hull;
-    private Transform _simulationSpace;
 
     private void Start()
     {
@@ -33,12 +32,11 @@ public class ConstantParticleWeapon : MonoBehaviour
 
     public void Initialize()
     {
-        _simulationSpace = new GameObject($"{gameObject.name} Sim Space").transform;
         foreach(var p in Particles)
         {
             var main = p.main;
             main.simulationSpace = ParticleSystemSimulationSpace.Custom;
-            main.customSimulationSpace = _simulationSpace;
+            main.customSimulationSpace = Source.LocalSpace;
         }
         
         var trigger = Particles[0].trigger;
@@ -57,11 +55,9 @@ public class ConstantParticleWeapon : MonoBehaviour
     private void Update()
     {
         if (Source == null) return;
-        _simulationSpace.position = Source.transform.position;
         if (_stopping && Particles.All(p=>p.particleCount == 0))
         {
             GetComponent<Prototype>().ReturnToPool();
-            Destroy(_simulationSpace.gameObject);
             return;
         }
     }

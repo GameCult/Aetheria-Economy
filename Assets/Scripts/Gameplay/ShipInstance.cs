@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
 
 public class ShipInstance : EntityInstance
 {
+    private static int _shipIndex;
+    public TractorBeam TractorBeam;
     private class ThrusterInstance
     {
         public Thruster Thruster;
@@ -16,6 +19,12 @@ public class ShipInstance : EntityInstance
     private ThrusterInstance[] _thrusters;
     
     public Ship Ship { get; private set; }
+
+    private void Start()
+    {
+        var tractorBeamMain = TractorBeam.ParticleSystem.main;
+        tractorBeamMain.customSimulationSpace = LocalSpace;
+    }
 
     public override void SetEntity(ZoneRenderer zoneRenderer, Entity entity)
     {
@@ -79,6 +88,9 @@ public class ShipInstance : EntityInstance
     public override void Update()
     {
         base.Update();
+
+        TractorBeam.Power = Entity.TractorPower;
+        TractorBeam.Direction = Entity.LookDirection;
         
         foreach (var thrusterInstance in _thrusters)
         {

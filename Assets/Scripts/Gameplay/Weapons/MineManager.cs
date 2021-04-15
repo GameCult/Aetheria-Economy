@@ -18,17 +18,17 @@ public class MineManager : InstantWeaponEffectManager
         var angle = weapon.Spread / 2;
         p.Source = source;
         p.transform.position = barrel.position;
-        p.Velocity = Quaternion.Euler(
-                         Random.Range(-angle, angle),
-                         Random.Range(-angle, angle),
-                         Random.Range(-angle, angle)) *
-                     barrel.forward *
-                     weapon.Velocity;
+        p.GridObject.Velocity = Quaternion.Euler(
+                                   Random.Range(-angle, angle),
+                                   Random.Range(-angle, angle),
+                                   Random.Range(-angle, angle)) *
+                               barrel.forward *
+                               weapon.Velocity;
         if(InheritVelocity)
-            p.Velocity += new Vector3(source.Entity.Velocity.x, 0, source.Entity.Velocity.y);
+            p.GridObject.Velocity += new Vector3(source.Entity.Velocity.x, 0, source.Entity.Velocity.y);
         p.Damage = weapon.Damage;
         p.Range = weapon.Range;
         p.DamageType = weapon.WeaponData.DamageType;
-        p.Zone = source.Entity.Zone;
+        p.GridObject.Zone = source.Entity.Zone;
     }
 }

@@ -209,6 +209,14 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Tractor Beam"",
+                    ""type"": ""Value"",
+                    ""id"": ""e61d5d8e-eaf7-449d-8d54-624e15b6c964"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -660,6 +668,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Hide UI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""37683a7e-02b1-4daa-a990-a51a30e7f8e9"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Tractor Beam"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1290,6 +1309,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player_OverrideShutdown = m_Player.FindAction("Override Shutdown", throwIfNotFound: true);
         m_Player_Ping = m_Player.FindAction("Ping", throwIfNotFound: true);
         m_Player_HideUI = m_Player.FindAction("Hide UI", throwIfNotFound: true);
+        m_Player_TractorBeam = m_Player.FindAction("Tractor Beam", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1381,6 +1401,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_OverrideShutdown;
     private readonly InputAction m_Player_Ping;
     private readonly InputAction m_Player_HideUI;
+    private readonly InputAction m_Player_TractorBeam;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1409,6 +1430,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @OverrideShutdown => m_Wrapper.m_Player_OverrideShutdown;
         public InputAction @Ping => m_Wrapper.m_Player_Ping;
         public InputAction @HideUI => m_Wrapper.m_Player_HideUI;
+        public InputAction @TractorBeam => m_Wrapper.m_Player_TractorBeam;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1490,6 +1512,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @HideUI.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideUI;
                 @HideUI.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideUI;
                 @HideUI.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnHideUI;
+                @TractorBeam.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
+                @TractorBeam.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
+                @TractorBeam.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1566,6 +1591,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @HideUI.started += instance.OnHideUI;
                 @HideUI.performed += instance.OnHideUI;
                 @HideUI.canceled += instance.OnHideUI;
+                @TractorBeam.started += instance.OnTractorBeam;
+                @TractorBeam.performed += instance.OnTractorBeam;
+                @TractorBeam.canceled += instance.OnTractorBeam;
             }
         }
     }
@@ -1785,6 +1813,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnOverrideShutdown(InputAction.CallbackContext context);
         void OnPing(InputAction.CallbackContext context);
         void OnHideUI(InputAction.CallbackContext context);
+        void OnTractorBeam(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
