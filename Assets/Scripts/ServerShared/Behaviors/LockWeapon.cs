@@ -24,7 +24,11 @@ public class LockWeaponData : InstantWeaponData
     [Inspectable, JsonProperty("decay"), Key(25)]
     public PerformanceStat Decay = new PerformanceStat();
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new LockWeapon(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new LockWeapon(this, item);
     }
@@ -49,7 +53,7 @@ public class LockWeapon : InstantWeapon
 
     public override float Progress => saturate(_cooldown > 0 ? _cooldown : _lock);
 
-    public override bool CanFire => base.CanFire && _lock > .99f && Item.Entity.TargetRange > MinRange && Item.Entity.TargetRange < Range;
+    public override bool CanFire => base.CanFire && _lock > .99f && Entity.TargetRange > MinRange && Entity.TargetRange < Range;
 
     public float Lock
     {
@@ -60,28 +64,32 @@ public class LockWeapon : InstantWeapon
     {
         _data = data;
     }
+    public LockWeapon(LockWeaponData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+    }
 
     public override bool Execute(float dt)
     {
-        if (_target != Item.Entity.Target.Value)
+        if (_target != Entity.Target.Value)
         {
             _lock = 0;
-            _target = Item.Entity.Target.Value;
+            _target = Entity.Target.Value;
         }
 
-        if (Item.Entity.Target.Value != null && Item.Entity.Target.Value.IsHostileTo(Item.Entity))
+        if (Entity.Target.Value != null && Entity.Target.Value.IsHostileTo(Entity))
         {
-            LockSpeed = Item.Evaluate(_data.LockSpeed);
-            SensorImpact = Item.Evaluate(_data.SensorImpact);
-            LockAngle = Item.Evaluate(_data.LockAngle);
-            DirectionImpact = Item.Evaluate(_data.DirectionImpact);
-            Decay = Item.Evaluate(_data.Decay);
+            LockSpeed = Evaluate(_data.LockSpeed);
+            SensorImpact = Evaluate(_data.SensorImpact);
+            LockAngle = Evaluate(_data.LockAngle);
+            DirectionImpact = Evaluate(_data.DirectionImpact);
+            Decay = Evaluate(_data.Decay);
 
-            var degrees = acos(dot(normalize(Item.Entity.Target.Value.Position - Item.Entity.Position), normalize(Item.Entity.LookDirection))) * 57.2958f;
+            var degrees = acos(dot(normalize(Entity.Target.Value.Position - Entity.Position), normalize(Entity.LookDirection))) * 57.2958f;
             if (degrees < LockAngle)
             {
                 var lerp = 1 - unlerp(0, 90, degrees);
-                _lock = saturate(_lock + pow(lerp, DirectionImpact) * dt * LockSpeed * pow(Item.Entity.EntityInfoGathered[Item.Entity.Target.Value], SensorImpact));
+                _lock = saturate(_lock + pow(lerp, DirectionImpact) * dt * LockSpeed * pow(Entity.EntityInfoGathered[Entity.Target.Value], SensorImpact));
             }
             else _lock = saturate(_lock - dt * Decay);
         }

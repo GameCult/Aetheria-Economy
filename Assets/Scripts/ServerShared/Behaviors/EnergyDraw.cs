@@ -16,28 +16,33 @@ public class EnergyDrawData : BehaviorData
     [Inspectable, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new EnergyDraw(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new EnergyDraw(this, item);
     }
 }
 
-public class EnergyDraw : IBehavior
+public class EnergyDraw : Behavior
 {
     private EnergyDrawData _data;
 
-    private EquippedItem Item { get; }
-
-    public BehaviorData Data => _data;
-
-    public EnergyDraw(EnergyDrawData data, EquippedItem item)
+    public EnergyDraw(EnergyDrawData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
     }
 
-    public bool Execute(float dt)
+    public EnergyDraw(EnergyDrawData data, ConsumableItemEffect item) : base(data, item)
     {
-        return Item.Entity.TryConsumeEnergy(Item.Evaluate(_data.EnergyDraw) * (_data.PerSecond ? dt : 1));
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        return Entity.TryConsumeEnergy(Evaluate(_data.EnergyDraw) * (_data.PerSecond ? dt : 1));
     }
 }

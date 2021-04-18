@@ -387,7 +387,7 @@ public class PropertiesPanel : MonoBehaviour
 
 	private void AddItemProperties(ItemInstance item)
 	{
-		var data = ActionGameManager.CultCache.Get<ItemData>(item.Data);
+		var data = item.Data.Value;
 		
 		AddProperty(data.Description);
 		
@@ -447,7 +447,7 @@ public class PropertiesPanel : MonoBehaviour
 
 	private string GetTitle(EquippableItem item)
 	{
-		var data = ActionGameManager.CultCache.Get<ItemData>(item.Data);
+		var data = item.Data.Value;
 		var (tier, upgrades) = GameManager.ItemManager.GetTier(item);
 		return
 			$"<color=#{ColorUtility.ToHtmlStringRGB(tier.Color.ToColor())}>{data.Name}</color><smallcaps><size=60%> ({tier.Name}{new string('+', upgrades)})";

@@ -80,7 +80,7 @@ public class ZoneRenderer : MonoBehaviour
     private PlanetObject[] _suns;
 
     public Dictionary<Wormhole, GameObject> WormholeInstances = new Dictionary<Wormhole, GameObject>();
-    private List<GridObject> _gridObjects = new List<GridObject>();
+    private List<ItemPickup> _loot = new List<ItemPickup>();
 
     public Zone Zone { get; private set; }
     public ItemManager ItemManager { get; set; }
@@ -216,9 +216,9 @@ public class ZoneRenderer : MonoBehaviour
             subscription.Dispose();
         _zoneSubscriptions.Clear();
         
-        foreach(var gridObject in _gridObjects) 
+        foreach(var gridObject in _loot) 
             if(gridObject) Destroy(gridObject.gameObject);
-        _gridObjects.Clear();
+        _loot.Clear();
 
         foreach (var entity in Zone.Entities)
         {
@@ -409,6 +409,12 @@ public class ZoneRenderer : MonoBehaviour
 
     void Update()
     {
+        foreach (var loot in _loot)
+        {
+            loot.ViewOrigin = PerspectiveEntity.Position;
+            loot.ViewDirection = PerspectiveEntity.LookDirection;
+        }
+        
         if (SlimeRenderer.SpawnPositions.Length != _suns.Length)
             SlimeRenderer.SpawnPositions = new Vector2[_suns.Length];
         for (var i = 0; i < _suns.Length; i++)
@@ -474,6 +480,11 @@ public class ZoneRenderer : MonoBehaviour
         // MinimapTintQuad.transform.position = gravPos - Vector3.up*10;
     }
 
+    public void DestroyLoot(ItemPickup loot)
+    {
+        _loot.Remove(loot);
+    }
+
     public void DropItem(Vector3 position, Vector3 velocity, ItemInstance item)
     {
         var gridObject = item switch
@@ -488,9 +499,19 @@ public class ZoneRenderer : MonoBehaviour
         gridObject.Zone = Zone;
         t.position = position;
         gridObject.Velocity = velocity;
-        gridObject.gameObject.AddComponent<ItemPickup>().Item = item;
+        var itemPickup = gridObject.gameObject.GetComponent<ItemPickup>();
+        itemPickup.Item = item;
+        itemPickup.ZoneRenderer = this;
+        itemPickup.ScanLabel.text = item.Data.Value.Name;
+        if (item is CraftedItemInstance craftedItemInstance)
+        {
+            var c = ItemManager.GetTier(craftedItemInstance).tier.Color.ToColor();
+            c.a = 0;
+            itemPickup.ScanLabel.color = c;
+        }
+        else itemPickup.ScanLabel.color = new Color(.75f, .75f, .75f, 0);
         gridObject.gameObject.AddComponent<TimedDestroy>().Duration = Settings.PickupLifetime;
-        _gridObjects.Add(gridObject);
+        _loot.Add(itemPickup);
     }
 }
 

@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MessagePack;
@@ -25,45 +26,55 @@ public class ReactorData : BehaviorData
     [Inspectable, JsonProperty("underload"), Key(4), RuntimeInspectable]  
     public PerformanceStat ThrottlingFactor = new PerformanceStat();
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new Reactor(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new Reactor(this, item);
     }
 }
 
-public class Reactor : IBehavior, IOrderedBehavior
+public class Reactor : Behavior, IOrderedBehavior, IDisposable
 {
     private ReactorData _data;
 
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-    
     public float Draw { get; private set; }
     
     public float CurrentLoadRatio { get; private set; }
 
     public int Order => 100;
 
-    public BehaviorData Data => _data;
-
     private List<Capacitor> _capacitors;
 
-    public Reactor(ReactorData data, EquippedItem item)
+    private List<IDisposable> _subscriptions = new List<IDisposable>();
+
+    public Reactor(ReactorData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
-        _capacitors = Item.Entity.GetBehaviors<Capacitor>().ToList();
-        Item.Entity.Equipment.ObserveAdd().Subscribe(onAdd =>
+        FindCapacitors();
+    }
+    public Reactor(ReactorData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+        FindCapacitors();
+    }
+
+    private void FindCapacitors()
+    {
+        _capacitors = Entity.GetBehaviors<Capacitor>().ToList();
+        _subscriptions.Add(Entity.Equipment.ObserveAdd().Subscribe(onAdd =>
         {
             var capacitor = onAdd.Value.GetBehavior<Capacitor>();
             if (capacitor != null) _capacitors.Add(capacitor);
-        });
-        Item.Entity.Equipment.ObserveRemove().Subscribe(onRemove =>
+        }));
+        _subscriptions.Add(Entity.Equipment.ObserveRemove().Subscribe(onRemove =>
         {
             var capacitor = onRemove.Value.GetBehavior<Capacitor>();
             if (capacitor != null) _capacitors.Remove(capacitor);
-        });
+        }));
     }
 
     public void ConsumeEnergy(float energy)
@@ -71,10 +82,10 @@ public class Reactor : IBehavior, IOrderedBehavior
         Draw += energy;
     }
 
-    public bool Execute(float dt)
+    public override bool Execute(float dt)
     {
-        var charge = Item.Evaluate(_data.Charge) * dt;
-        var efficiency = Item.Evaluate(_data.Efficiency);
+        var charge = Evaluate(_data.Charge) * dt;
+        var efficiency = Evaluate(_data.Efficiency);
 
         // This behavior executes last, so any components drawing power have already done so
 
@@ -88,7 +99,7 @@ public class Reactor : IBehavior, IOrderedBehavior
         if (Draw > .01f)
         {
             CurrentLoadRatio = (Draw + charge) / max(charge, .01f);
-            var overloadEfficiency = Item.Evaluate(_data.OverloadEfficiency);
+            var overloadEfficiency = Evaluate(_data.OverloadEfficiency);
             
             // Generate heat using overload efficiency, usually much less efficient!
             heat += Draw / overloadEfficiency;
@@ -121,7 +132,7 @@ public class Reactor : IBehavior, IOrderedBehavior
         if (Draw < -.01f)
         {
             CurrentLoadRatio = (Draw + charge) / max(charge, .01f);
-            heat -= Draw / efficiency * (1 - 1 / Item.Evaluate(_data.ThrottlingFactor));
+            heat -= Draw / efficiency * (1 - 1 / Evaluate(_data.ThrottlingFactor));
             Draw = 0;
         }
         else
@@ -129,7 +140,13 @@ public class Reactor : IBehavior, IOrderedBehavior
             CurrentLoadRatio = 1;
         }
         
-        Item.AddHeat(heat);
+        AddHeat(heat);
         return true;
+    }
+
+    public void Dispose()
+    {
+        foreach(var sub in _subscriptions)
+            sub.Dispose();
     }
 }

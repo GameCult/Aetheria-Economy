@@ -11,29 +11,27 @@ using static Unity.Mathematics.math;
 [Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class CockpitData : BehaviorData
 {
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new Cockpit(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new Cockpit(this, item);
     }
 }
 
-public class Cockpit : IBehavior
+public class Cockpit : Behavior
 {
     private CockpitData _data;
-
-    public EquippedItem Item { get; }
-
-    public BehaviorData Data => _data;
     
-
-    public Cockpit(CockpitData data, EquippedItem item)
+    public Cockpit(CockpitData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
     }
-
-    public bool Execute(float dt)
+    
+    public Cockpit(CockpitData data, ConsumableItemEffect item) : base(data, item)
     {
-        return true;
+        _data = data;
     }
 }

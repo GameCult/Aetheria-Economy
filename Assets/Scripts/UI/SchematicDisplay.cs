@@ -13,7 +13,6 @@ public class SchematicDisplay : MonoBehaviour
 {
     public GameSettings Settings;
     public Prototype ListElementPrototype;
-    public Prototype TriggerGroupPrototype;
 
     public Color HeaderElementEnabledColor;
     public Color HeaderElementDisabledColor;
@@ -24,7 +23,6 @@ public class SchematicDisplay : MonoBehaviour
     public Image HeatsinkBackground;
 
     public GameObject AetherDriveUi;
-    public GameObject AetherDriveUiSpacer;
 
     public TextMeshProUGUI EnergyLabel;
     public TextMeshProUGUI CockpitTemperatureLabel;
@@ -48,12 +46,6 @@ public class SchematicDisplay : MonoBehaviour
     public RectTransform StrafeRPMFill;
     public RectTransform TurnRPMFill;
 
-    public CanvasGroup TriggerGroups;
-    public float TriggerGroupsFadeDuration = .5f;
-    public float TriggerGroupsPersistDuration = 5f;
-
-    public Color TriggerGroupColor;
-
     private Entity _entity;
     private EquippableItem _hull;
     private Radiator[] _radiators;
@@ -63,13 +55,7 @@ public class SchematicDisplay : MonoBehaviour
     private HeatStorage[] _heatStorages;
     private EquippedCargoBay[] _cargoBays;
     private SchematicDisplayItem[] _schematicItems;
-    private Graphic[] _groupGraphics;
     private AetherDrive _aetherDrive;
-
-    private int _selectedGroupIndex;
-    private int _selectedItemIndex;
-    private bool _triggerGroupsVisible;
-    private float _triggerGroupsFadeOutTime;
 
     private bool _enemy;
     private Entity _player;
@@ -79,31 +65,10 @@ public class SchematicDisplay : MonoBehaviour
         get { return _schematicItems; }
     }
 
-    public int SelectedItemIndex
-    {
-        get => _selectedItemIndex;
-        set
-        {
-            _selectedItemIndex = (value + _schematicItems.Length) % _schematicItems.Length;
-            UpdateTriggerGroups();
-        }
-    }
-
-    public int SelectedGroupIndex
-    {
-        get => _selectedGroupIndex;
-        set
-        {
-            _selectedGroupIndex = (value + Settings.GameplaySettings.TriggerGroupCount) % Settings.GameplaySettings.TriggerGroupCount;
-            UpdateTriggerGroups();
-        }
-    }
-
     public class SchematicDisplayItem
     {
         public EquippedItem Item;
         public SchematicListElement ListElement;
-        public SchematicTriggerGroupElement TriggerGroupElement;
         public IProgressBehavior Cooldown;
         // public ItemUsage ItemUsage;
         public Weapon Weapon;
@@ -117,7 +82,6 @@ public class SchematicDisplay : MonoBehaviour
             foreach (var item in _schematicItems)
             {
                 item.ListElement.GetComponent<Prototype>().ReturnToPool();
-                item.TriggerGroupElement?.GetComponent<Prototype>().ReturnToPool();
             }
 
         _entity = entity;
@@ -128,7 +92,6 @@ public class SchematicDisplay : MonoBehaviour
             _capacitors = entity.GetBehaviors<Capacitor>().ToArray();
             _aetherDrive = entity.GetBehavior<AetherDrive>();
             AetherDriveUi.SetActive(_aetherDrive != null);
-            AetherDriveUiSpacer.SetActive(_aetherDrive != null);
 
             _radiators = entity.GetBehaviors<Radiator>().ToArray();
             if (_radiators.Length == 0)
@@ -149,7 +112,6 @@ public class SchematicDisplay : MonoBehaviour
             {
                 Item = x, 
                 ListElement = ListElementPrototype.Instantiate<SchematicListElement>(),
-                TriggerGroupElement = _enemy ? null : TriggerGroupPrototype.Instantiate<SchematicTriggerGroupElement>(),
                 Cooldown = _enemy ? null : (IProgressBehavior) x.Behaviors.FirstOrDefault(b=> b is IProgressBehavior),
                 // ItemUsage = _enemy ? null : (ItemUsage) x.Behaviors.FirstOrDefault(b=> b is ItemUsage),
                 Weapon = (Weapon) x.Behaviors.FirstOrDefault(b=>b is Weapon)
@@ -164,72 +126,12 @@ public class SchematicDisplay : MonoBehaviour
             {
                 x.ListElement.InfiniteAmmoIcon.gameObject.SetActive(x.Weapon.WeaponData.AmmoType == Guid.Empty);
                 x.ListElement.AmmoLabel.gameObject.SetActive(x.Weapon.WeaponData.AmmoType != Guid.Empty);
-                foreach (var group in x.TriggerGroupElement.GroupBackgrounds)
-                    group.color = TriggerGroupColor;
-            }
-        }
-        if (!_enemy)
-            UpdateTriggerGroups();
-    }
-
-    public void UpdateTriggerGroups()
-    {
-        if (!_triggerGroupsVisible)
-        {
-            StartCoroutine(FadeInTriggerGroups());
-            _triggerGroupsVisible = true;
-        }
-        _triggerGroupsFadeOutTime = Time.time + TriggerGroupsPersistDuration;
-        for (var itemIndex = 0; itemIndex < _schematicItems.Length; itemIndex++)
-        {
-            var item = _schematicItems[itemIndex];
-            for (var groupIndex = 0; groupIndex < item.TriggerGroupElement.GroupBackgrounds.Length; groupIndex++)
-            {
-                var backgroundColor = TriggerGroupColor;
-                if (_selectedGroupIndex == groupIndex)
-                    backgroundColor.a *= 2;
-                if (_selectedItemIndex == itemIndex)
-                    backgroundColor.a *= 2;
-                item.TriggerGroupElement.GroupBackgrounds[groupIndex].color = backgroundColor;
-                item.TriggerGroupElement.GroupLabel[groupIndex].color =
-                    _entity.TriggerGroups[groupIndex].items.Contains(item.Item) ? Color.white : Color.gray;
             }
         }
     }
 
-    IEnumerator FadeInTriggerGroups()
-    {
-        var startTime = Time.time;
-        while (Time.time - startTime < TriggerGroupsFadeDuration)
-        {
-            var lerp = (Time.time - startTime) / TriggerGroupsFadeDuration;
-            TriggerGroups.alpha = lerp;
-            yield return null;
-        }
-
-        TriggerGroups.alpha = 1;
-    }
-
-    IEnumerator FadeOutTriggerGroups()
-    {
-        var startTime = Time.time;
-        while (Time.time - startTime < TriggerGroupsFadeDuration)
-        {
-            var lerp = (Time.time - startTime) / TriggerGroupsFadeDuration;
-            TriggerGroups.alpha = 1-lerp;
-            yield return null;
-        }
-
-        TriggerGroups.alpha = 0;
-    }
-    
     void Update()
     {
-        if (_triggerGroupsVisible && _triggerGroupsFadeOutTime < Time.time)
-        {
-            _triggerGroupsVisible = false;
-            StartCoroutine(FadeOutTriggerGroups());
-        }
         if (_entity != null)
         {
             if (!_enemy)
@@ -237,11 +139,11 @@ public class SchematicDisplay : MonoBehaviour
                 OverrideIcon.SetActive(_entity.OverrideShutdown && cos(Time.time * OverrideIconBlinkSpeed) > 0);
                 ShieldIcon.SetActive(_entity.Shield!=null && _entity.Shield.Item.Active.Value);
                 if (_radiators.Length == 1)
-                    RadiatorTemperatureLabel.text = $"{((int)(_radiators[0].Temperature - 273.15f)).ToString()}°C";
+                    RadiatorTemperatureLabel.text = $"{((int)(_radiators[0].RadiatorTemperature - 273.15f)).ToString()}°C";
                 else if (_radiators.Length > 1)
                     RadiatorTemperatureLabel.text =
-                        $"{((int)(_radiators.Min(r => r.Temperature) - 273.15f)).ToString()}-" +
-                        $"{((int)(_radiators.Max(r => r.Temperature) - 273.15f)).ToString()}°C";
+                        $"{((int)(_radiators.Min(r => r.RadiatorTemperature) - 273.15f)).ToString()}-" +
+                        $"{((int)(_radiators.Max(r => r.RadiatorTemperature) - 273.15f)).ToString()}°C";
                 HeatsinkBackground.color = _entity.HeatsinksEnabled ? HeaderElementEnabledColor : HeaderElementDisabledColor;
 
                 if (_heatStorages.Length == 1)

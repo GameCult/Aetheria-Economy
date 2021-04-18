@@ -16,29 +16,34 @@ public class ReflectorData : BehaviorData
     // [InspectableAnimationCurve, JsonProperty("visibility"), Key(1)]  
     // public float4[] VisibilityCurve;
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new Reflector(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new Reflector(this, item);
     }
 }
 
-public class Reflector : IBehavior
+public class Reflector : Behavior
 {
-    public EquippedItem Item { get; }
-
-    public BehaviorData Data => _data;
-    
     private ReflectorData _data;
 
-    public Reflector(ReflectorData data, EquippedItem item)
+    public Reflector(ReflectorData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
     }
 
-    public bool Execute(float dt)
+    public Reflector(ReflectorData data, ConsumableItemEffect item) : base(data, item)
     {
-        Item.Entity.VisibilitySources[this] = Item.Evaluate(_data.CrossSection) * Item.Entity.Zone.GetLight(Item.Entity.Position.xz);
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        Entity.VisibilitySources[this] = Evaluate(_data.CrossSection) * Entity.Zone.GetLight(Entity.Position.xz);
         
         return true;
     }

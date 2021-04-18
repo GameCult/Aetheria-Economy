@@ -45,13 +45,18 @@ public class ChargedWeaponData : InstantWeaponData
     [Inspectable, JsonProperty("chargeHeatMul"), Key(32)]
     public float ChargeFiringHeatMultiplier = 1;
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new ChargedWeapon(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new ChargedWeapon(this, item);
     }
 }
 
-public class ChargedWeapon : InstantWeapon, IEventBehavior
+public class ChargedWeapon : InstantWeapon
 {
     private ChargedWeaponData _data;
     private bool _charging;
@@ -97,13 +102,18 @@ public class ChargedWeapon : InstantWeapon, IEventBehavior
     {
         _data = data;
     }
+    
+    public ChargedWeapon(ChargedWeaponData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+    }
 
     protected override void UpdateStats()
     {
         base.UpdateStats();
-        ChargeTime = Item.Evaluate(_data.ChargeTime);
-        ChargeEnergy = Item.Evaluate(_data.ChargeEnergy);
-        ChargeHeat = Item.Evaluate(_data.ChargeHeat);
+        ChargeTime = Evaluate(_data.ChargeTime);
+        ChargeEnergy = Evaluate(_data.ChargeEnergy);
+        ChargeHeat = Evaluate(_data.ChargeHeat);
         Damage *= lerp(1, _data.ChargeFiringDamageMultiplier, saturate(_charge));
         Heat *= lerp(1, _data.ChargeFiringHeatMultiplier, saturate(_charge));
         Spread *= lerp(1, _data.ChargeFiringSpreadMultiplier, saturate(_charge));
@@ -119,7 +129,7 @@ public class ChargedWeapon : InstantWeapon, IEventBehavior
             _charge += dt / ChargeTime;
             if (!_charged)
             {
-                Item.AddHeat(ChargeHeat * (dt / ChargeTime));
+                AddHeat(ChargeHeat * (dt / ChargeTime));
                 if(_charge > 1)
                 {
                     _charged = true;
@@ -133,7 +143,7 @@ public class ChargedWeapon : InstantWeapon, IEventBehavior
                 _coolingDown = true;
                 _charge = 0;
                 OnFailed?.Invoke();
-                Item.EquippableItem.Durability -= _data.FailureDamage;
+                CauseDamage(_data.FailureDamage);
             }
         }
         return base.Execute(dt);

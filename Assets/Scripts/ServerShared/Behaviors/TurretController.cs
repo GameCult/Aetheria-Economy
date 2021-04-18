@@ -14,84 +14,74 @@ using float3 = Unity.Mathematics.float3;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class TurretControllerData : BehaviorData
 {
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new TurretController(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new TurretController(this, item);
     }
 }
 
-public class TurretController : IBehavior
+public class TurretController : Behavior, IInitializableBehavior
 {
     private TurretControllerData _data;
     private List<Weapon> _weapons = new List<Weapon>();
     private float _shotSpeed;
     private bool _predictShots;
 
-    public EquippedItem Item { get; }
-
-    public BehaviorData Data => _data;
-
-    public TurretController(TurretControllerData data, EquippedItem item)
+    public TurretController(TurretControllerData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
-        var weapons = Item.Entity.Equipment.Where(e => e.Behaviors.Any(b => b.Data is WeaponData));
-        foreach (var weapon in weapons)
-        {
-            CheckWeapon(weapon);
-        }
-
-        Item.Entity.Equipment.ObserveAdd().Subscribe(add => CheckWeapon(add.Value));
-        Item.Entity.Equipment.ObserveRemove().Subscribe(remove =>
-        {
-            foreach (var b in remove.Value.Behaviors)
-                if (b is Weapon weapon)
-                    _weapons.Remove(weapon);
-        });
     }
 
-    private void CheckWeapon(EquippedItem item)
+    public TurretController(TurretControllerData data, ConsumableItemEffect item) : base(data, item)
     {
-        foreach (var b in item.Behaviors)
-            if (b is Weapon weapon)
+        _data = data;
+    }
+
+    public void Initialize()
+    {
+        foreach (var weapon in Entity.GetBehaviors<Weapon>())
+        {
+            _weapons.Add(weapon);
+            var vel = weapon.Evaluate(weapon.WeaponData.Velocity);
+            if (vel > .1f)
             {
-                _weapons.Add(weapon);
-                var vel = weapon.Item.Evaluate(weapon.WeaponData.Velocity);
-                if (vel > .1f)
-                {
-                    _predictShots = true;
-                    _shotSpeed = vel;
-                }
+                _predictShots = true;
+                _shotSpeed = vel;
             }
+        }
     }
 
-    public bool Execute(float dt)
+    public override bool Execute(float dt)
     {
-        if (Item.Entity.Target.Value != null)
+        if (Entity.Target.Value != null)
         {
-            var diff = Item.Entity.Target.Value.Position - Item.Entity.Position;
+            var diff = Entity.Target.Value.Position - Entity.Position;
             if (_predictShots)
             {
-                var targetHullData = Item.Entity.ItemManager.GetData(Item.Entity.Target.Value.Hull) as HullData;
-                var targetVelocity = float3(Item.Entity.Target.Value.Velocity.x, 0, Item.Entity.Target.Value.Velocity.y);
+                var targetHullData = Entity.ItemManager.GetData(Entity.Target.Value.Hull) as HullData;
+                var targetVelocity = float3(Entity.Target.Value.Velocity.x, 0, Entity.Target.Value.Velocity.y);
                 var predictedPosition = AetheriaMath.FirstOrderIntercept(
-                    Item.Entity.Position, float3.zero, _shotSpeed,
-                    Item.Entity.Target.Value.Position, targetVelocity
+                    Entity.Position, float3.zero, _shotSpeed,
+                    Entity.Target.Value.Position, targetVelocity
                 );
-                predictedPosition.y = Item.Entity.Zone.GetHeight(predictedPosition.xz) + targetHullData.GridOffset;
-                Item.Entity.LookDirection = normalize(predictedPosition - Item.Entity.Position);
+                predictedPosition.y = Entity.Zone.GetHeight(predictedPosition.xz) + targetHullData.GridOffset;
+                Entity.LookDirection = normalize(predictedPosition - Entity.Position);
             }
             else
-                Item.Entity.LookDirection = normalize(diff);
+                Entity.LookDirection = normalize(diff);
             var dist = length(diff);
 
             foreach (var x in _weapons)
             {
                 var data = x.Data as WeaponData;
                 var fire = dot(
-                    Item.Entity.HardpointTransforms[Item.Entity.Hardpoints[x.Item.Position.x, x.Item.Position.y]].direction,
-                    Item.Entity.LookDirection) > .99f;
-                if (x.Item.Evaluate(data.Range) > dist && fire)
+                    x.Direction,
+                    Entity.LookDirection) > .99f;
+                if (x.Evaluate(data.Range) > dist && fire)
                 {
                     x.Activate();
                 }
@@ -106,7 +96,7 @@ public class TurretController : IBehavior
                 if (x.Firing)
                     x.Deactivate();
             }
-            Item.Entity.Target.Value = Item.Entity.VisibleHostiles.FirstOrDefault(e => e is Ship);
+            Entity.Target.Value = Entity.VisibleHostiles.FirstOrDefault(e => e is Ship);
         }
         return true;
     }

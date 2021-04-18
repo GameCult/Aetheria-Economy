@@ -13,29 +13,34 @@ public class ItemUsageData : BehaviorData
     [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("item"), Key(1), RuntimeInspectable]  
     public Guid Item;
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new ItemUsage(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new ItemUsage(this, item);
     }
 }
 
-public class ItemUsage : IBehavior
+public class ItemUsage : Behavior
 {
     private ItemUsageData _data;
 
-    private EquippedItem Item { get; }
-
-    public BehaviorData Data => _data;
-
-    public ItemUsage(ItemUsageData data, EquippedItem item)
+    public ItemUsage(ItemUsageData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
     }
 
-    public bool Execute(float dt)
+    public ItemUsage(ItemUsageData data, ConsumableItemEffect item) : base(data, item)
     {
-        var cargo = Item.Entity.FindItemInCargo(_data.Item);
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        var cargo = Entity.FindItemInCargo(_data.Item);
         if (cargo == null) return false;
 
         var item = cargo.ItemsOfType[_data.Item][0];

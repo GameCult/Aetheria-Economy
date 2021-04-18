@@ -67,17 +67,14 @@ public abstract class WeaponData : BehaviorData
     public PerformanceStat Velocity = new PerformanceStat();
 }
 
-public abstract class Weapon : IActivatedBehavior
+public abstract class Weapon : Behavior, IActivatedBehavior
 {
     private WeaponData _data;
-    
-    public EquippedItem Item { get; }
 
     public abstract float DamagePerSecond { get; }
     public abstract float RangeDamagePerSecond(float range);
     public abstract int Ammo { get; }
     public WeaponData WeaponData => _data;
-    public BehaviorData Data => _data;
     
     public float Damage { get; protected set; }
     public float Penetration { get; protected set; }
@@ -96,29 +93,32 @@ public abstract class Weapon : IActivatedBehavior
     {
         get => _firing;
     }
-
-
-    public Weapon(WeaponData data, EquippedItem item)
+    
+    public Weapon(WeaponData data, EquippedItem item) : base(data, item)
     {
-        Item = item;
+        _data = data;
+    }
+    
+    public Weapon(WeaponData data, ConsumableItemEffect item) : base(data, item)
+    {
         _data = data;
     }
 
     protected virtual void UpdateStats()
     {
-        Damage = Item.Evaluate(_data.Damage);
-        Penetration = Item.Evaluate(_data.Penetration);
-        DamageSpread = Item.Evaluate(_data.DamageSpread);
-        MinRange = Item.Evaluate(_data.MinRange);
-        Range = Item.Evaluate(_data.Range);
-        Energy = Item.Evaluate(_data.Energy);
-        Heat = Item.Evaluate(_data.Heat);
-        Visibility = Item.Evaluate(_data.Visibility);
-        Spread = Item.Evaluate(_data.Spread);
-        Velocity = Item.Evaluate(_data.Velocity);
+        Damage = Evaluate(_data.Damage);
+        Penetration = Evaluate(_data.Penetration);
+        DamageSpread = Evaluate(_data.DamageSpread);
+        MinRange = Evaluate(_data.MinRange);
+        Range = Evaluate(_data.Range);
+        Energy = Evaluate(_data.Energy);
+        Heat = Evaluate(_data.Heat);
+        Visibility = Evaluate(_data.Visibility);
+        Spread = Evaluate(_data.Spread);
+        Velocity = Evaluate(_data.Velocity);
     }
 
-    public virtual bool Execute(float dt)
+    public override bool Execute(float dt)
     {
         UpdateStats();
         return true;

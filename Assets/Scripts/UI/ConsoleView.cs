@@ -21,6 +21,7 @@ public class ConsoleView : MonoBehaviour {
 
     private string _inputString = "";
     private CursorLockMode _previousCursorLockMode;
+    private bool _playerInputPreviouslyEnabled;
 
     public string InputString
     {
@@ -113,17 +114,19 @@ public class ConsoleView : MonoBehaviour {
 	    Visible = visible;
 		if(visible)
 		{
+			_playerInputPreviouslyEnabled = GameManager.Input.Player.enabled;
 			GameManager.Input.Global.Disable();
-			GameManager.Input.Player.Disable();
+			GameManager.DisablePlayerInput();
 			GameManager.Input.UI.Disable();
 			_previousCursorLockMode = Cursor.lockState;
 			Cursor.lockState = CursorLockMode.None;
 		}
 		else
 		{
+			if(_playerInputPreviouslyEnabled)
+				GameManager.EnablePlayerInput();
+			else GameManager.Input.UI.Enable();
 			GameManager.Input.Global.Enable();
-			GameManager.Input.Player.Enable();
-			GameManager.Input.UI.Enable();
 			Cursor.lockState = _previousCursorLockMode;
 		}
 	}

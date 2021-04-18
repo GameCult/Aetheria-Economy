@@ -37,23 +37,26 @@ public class AetherDriveData : BehaviorData
     [Inspectable, JsonProperty("passiveCoupling"), Key(9), RuntimeInspectable]
     public PerformanceStat PassiveCoupling;
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new AetherDrive(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new AetherDrive(this, item);
     }
 }
 
-public class AetherDrive : IBehavior
+public class AetherDrive : Behavior
 {
     private AetherDriveData _data;
     private float3 _axis;
 
-    public EquippedItem Item { get; }
     public float3 Thrust { get; private set; }
     public float3 Rpm { get; private set; }
     public float MaximumRpm { get; private set; }
 
-    public BehaviorData Data => _data;
     public AetherDriveData DriveData => _data;
 
     public float3 Axis
@@ -62,54 +65,58 @@ public class AetherDrive : IBehavior
         set => _axis = clamp(value, -1, 1);
     }
 
-    public AetherDrive(AetherDriveData data, EquippedItem item)
+    public AetherDrive(AetherDriveData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
     }
 
-    public bool Execute(float dt)
+    public AetherDrive(AetherDriveData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
     {
         var rotorSpeed = Rpm * _data.RotorDiameter / 100;
         
-        var forward = normalize(Item.Entity.Direction);
+        var forward = normalize(Entity.Direction);
         var right = forward.Rotate(ItemRotation.Clockwise);
             
-        var speed = float2(dot(Item.Entity.Velocity, forward), dot(Item.Entity.Velocity, right));
-        var couplingEfficiency = Item.Evaluate(_data.CouplingEfficiency);
+        var speed = float2(dot(Entity.Velocity, forward), dot(Entity.Velocity, right));
+        var couplingEfficiency = Evaluate(_data.CouplingEfficiency);
         var efficiency = float3(saturate(1 - speed / max(rotorSpeed.xy, 1) * sign(_axis.xy)) * couplingEfficiency, 1);
 
         Thrust = (Rpm - AetheriaMath.Decay(Rpm, _data.CouplingLambda, dt)) * _data.RotorMass * efficiency;
 
-        var couplingLambda = _data.CouplingLambda * max(abs(_axis), Item.Evaluate(_data.PassiveCoupling));
+        var couplingLambda = _data.CouplingLambda * max(abs(_axis), Evaluate(_data.PassiveCoupling));
         var previousRpm = Rpm;
         Rpm = AetheriaMath.Decay(Rpm, couplingLambda, dt);
         var rpmLoss = previousRpm - Rpm;
         var force = rpmLoss * _data.RotorMass * efficiency;
 
         var heat = rpmLoss * _data.RotorMass * (1 - couplingEfficiency);
-        Item.AddHeat((heat.x + heat.y + heat.z)*Item.ItemManager.GameplaySettings.AetherHeatMultiplier);
+        AddHeat((heat.x + heat.y + heat.z)*ItemManager.GameplaySettings.AetherHeatMultiplier);
         
-        Item.Entity.Velocity += forward * (_axis.x * force.x / Item.Entity.Mass);
-        Item.Entity.Velocity += right * (_axis.y * force.y / Item.Entity.Mass);
-        Item.Entity.Direction = mul(Item.Entity.Direction,
-            Unity.Mathematics.float2x2.Rotate(force.z * _axis.z * Item.ItemManager.GameplaySettings.AetherTorqueMultiplier / Item.Entity.Mass));
+        Entity.Velocity += forward * (_axis.x * force.x / Entity.Mass);
+        Entity.Velocity += right * (_axis.y * force.y / Entity.Mass);
+        Entity.Direction = mul(Entity.Direction,
+            Unity.Mathematics.float2x2.Rotate(force.z * _axis.z * ItemManager.GameplaySettings.AetherTorqueMultiplier / Entity.Mass));
 
-        if(float.IsNaN(Item.Entity.Velocity.x))
-            Item.ItemManager.Log("FUCK FUCK FUCK FUCK");
+        if(float.IsNaN(Entity.Velocity.x))
+            ItemManager.Log("FUCK FUCK FUCK FUCK");
         
-        MaximumRpm = Item.Evaluate(_data.MaximumRpm);
+        MaximumRpm = Evaluate(_data.MaximumRpm);
         var torqueProfile = float3(
             _data.TorqueProfile.Evaluate(Rpm.x / MaximumRpm),
             _data.TorqueProfile.Evaluate(Rpm.y / MaximumRpm),
             _data.TorqueProfile.Evaluate(Rpm.z / MaximumRpm));
-        var potentialTorque = Item.Evaluate(_data.Torque) * torqueProfile;
+        var potentialTorque = Evaluate(_data.Torque) * torqueProfile;
         var potentialRpmDelta = potentialTorque / length(_data.RotorMass) * dt;
         var actualRpmDelta = min(MaximumRpm - Rpm, potentialRpmDelta);
         var torqueRatio = actualRpmDelta / potentialRpmDelta;
-        var draw = torqueRatio * Item.Evaluate(_data.EnergyDraw) / 3;
+        var draw = torqueRatio * Evaluate(_data.EnergyDraw) / 3;
         
-        if (Item.Entity.TryConsumeEnergy((draw.x + draw.y + draw.z)*dt))
+        if (Entity.TryConsumeEnergy((draw.x + draw.y + draw.z)*dt))
         {
             Rpm += actualRpmDelta;
             return true;

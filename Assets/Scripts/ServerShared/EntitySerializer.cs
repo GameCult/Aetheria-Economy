@@ -230,7 +230,7 @@ public abstract class EntityPack
         {
             foreach (var (_, item) in t)
             {
-                var itemData = itemManager.GetData(item);
+                var itemData = item.Data.Value;
                 if (item is SimpleCommodity s)
                     _price += itemData.Price * s.Quantity;
                 else
@@ -242,7 +242,7 @@ public abstract class EntityPack
         {
             foreach (var (_, item) in t)
             {
-                var itemData = itemManager.GetData(item);
+                var itemData = item.Data.Value;
                 if (item is SimpleCommodity s)
                     _price += itemData.Price * s.Quantity;
                 else

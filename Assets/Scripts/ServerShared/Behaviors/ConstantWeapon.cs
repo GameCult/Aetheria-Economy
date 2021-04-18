@@ -14,7 +14,12 @@ public class ConstantWeaponData : WeaponData
     [InspectablePrefab, JsonProperty("ammoInterval"), Key(17)]  
     public float AmmoInterval = 1;
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new ConstantWeapon(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new ConstantWeapon(this, item);
     }
@@ -62,12 +67,17 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
         _data = data;
     }
 
+    public ConstantWeapon(ConstantWeaponData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+    }
+
     public override bool Execute(float dt)
     {
         base.Execute(dt);
         if (_firing)
         {
-            if (!Item.Entity.TryConsumeEnergy(Item.Evaluate(_data.Energy) * dt))
+            if (!Entity.TryConsumeEnergy(Evaluate(_data.Energy) * dt))
             {
                 _firing = false;
                 OnStopFiring?.Invoke();
@@ -93,7 +103,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
                     if (_data.MagazineSize > 1 && _ammo > 0) _ammo--;
                     else
                     {
-                        var cargo = Item.Entity.FindItemInCargo(_data.AmmoType);
+                        var cargo = Entity.FindItemInCargo(_data.AmmoType);
                         if (cargo != null)
                         {
                             var item = cargo.ItemsOfType[_data.AmmoType][0];
@@ -115,11 +125,9 @@ public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
                 }
             }
 
-            var dmg = Item.Wear * dt;
-            Item.EquippableItem.Durability -= dmg;
-            Item.Entity.ItemDamage.OnNext((Item, dmg));
-            Item.AddHeat(Item.Evaluate(_data.Heat) * dt);
-            Item.Entity.VisibilitySources[this] = Item.Evaluate(_data.Visibility);
+            CauseWearDamage(dt);
+            AddHeat(Evaluate(_data.Heat) * dt);
+            Entity.VisibilitySources[this] = Evaluate(_data.Visibility);
         }
         return true;
     }

@@ -37,6 +37,9 @@ public class SavedGame
 
     [Key(9)]
     public int[] DiscoveredZones;
+
+    [Key(10)]
+    public SavedActionBarBinding[] ActionBarBindings;
     
     public SavedGame() { }
 
@@ -91,4 +94,32 @@ public class SavedZone
     
     [Key(5)]
     public ZonePack Contents;
+}
+
+[MessagePackObject,
+ Union(0, typeof(SavedActionBarConsumableBinding)),
+ Union(1, typeof(SavedActionBarGearBinding)),
+ Union(2, typeof(SavedActionBarWeaponGroupBinding))
+]
+public abstract class SavedActionBarBinding
+{
+}
+
+[MessagePackObject]
+public class SavedActionBarConsumableBinding : SavedActionBarBinding
+{
+    [Key(0)] public DatabaseLink<ConsumableItemData> Target;
+}
+
+[MessagePackObject]
+public class SavedActionBarGearBinding : SavedActionBarBinding
+{
+    [Key(0)] public int EquipmentIndex;
+    [Key(1)] public int BehaviorIndex;
+}
+
+[MessagePackObject]
+public class SavedActionBarWeaponGroupBinding : SavedActionBarBinding
+{
+    [Key(0)] public int Group;
 }

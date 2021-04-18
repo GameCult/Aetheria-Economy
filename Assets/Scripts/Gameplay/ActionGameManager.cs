@@ -62,9 +62,7 @@ public class ActionGameManager : MonoBehaviour
     }
 
     public static Sector CurrentSector;
-    
-    
-    
+
     public GameSettings Settings;
     //public string StarterShipTemplate = "Longinus";
     public float2 Sensitivity;
@@ -80,7 +78,14 @@ public class ActionGameManager : MonoBehaviour
     public PostProcessVolume SevereHeatstrokePP;
     public PostProcessVolume SevereHypothermiaPP;
 
+    [Header("Input Icons")]
+    public Sprite ShiftIcon;
+    public Sprite MouseLeftIcon;
+    public Sprite MouseMiddleIcon;
+
     [Header("Scene Links")]
+    public Transform ActionBar;
+    public ActionBarSlot ActionBarSlot;
     public Transform EffectManagerParent;
     public TradeMenu TradeMenu;
     public Prototype HostileTargetIndicator;
@@ -132,6 +137,8 @@ public class ActionGameManager : MonoBehaviour
     private float _severeHeatstrokePhase;
     private bool _uiHidden;
     private bool _menuShown;
+    private List<ActionBarSlot> _actionBarSlots = new List<ActionBarSlot>();
+    private List<InputAction> _actionBarActions = new List<InputAction>();
     
     public AetheriaInput Input { get; private set; }
     public EquippedDockingBay DockingBay { get; private set; }
@@ -197,7 +204,6 @@ public class ActionGameManager : MonoBehaviour
 
         Input = new AetheriaInput();
         Input.Global.Enable();
-        Input.UI.Enable();
 
         _zoomLevelIndex = Settings.DefaultMinimapZoom;
         Input.Player.MinimapZoom.performed += context =>
@@ -232,44 +238,7 @@ public class ActionGameManager : MonoBehaviour
             else Undock();
         };
 
-        Input.Global.MainMenu.performed += context =>
-        {
-            if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
-            if (CurrentEntity == null) return;
-            if (MainMenu.gameObject.activeSelf)
-            {
-                _paused = false;
-                VolumeRenderer.EnableDepth = true;
-                MainMenu.gameObject.SetActive(false);
-                if (_menuShown)
-                {
-                    Menu.gameObject.SetActive(true);
-                }
-                else
-                {
-                    GameplayUI.gameObject.SetActive(true);
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Input.Player.Enable();
-                }
-            }
-            else
-            {
-                _paused = true;
-                VolumeRenderer.EnableDepth = false;
-                MainMenu.gameObject.SetActive(true);
-                _menuShown = Menu.gameObject.activeSelf;
-                if (_menuShown)
-                {
-                    Menu.gameObject.SetActive(false);
-                }
-                else
-                {
-                    GameplayUI.gameObject.SetActive(false);
-                    Cursor.lockState = CursorLockMode.None;
-                    Input.Player.Disable();
-                }
-            }
-        };
+        Input.Global.MainMenu.performed += context => ToggleMainMenu();
 
         Input.Player.EnterWormhole.performed += context =>
         {
@@ -349,123 +318,42 @@ public class ActionGameManager : MonoBehaviour
         #endregion
 
 
-        #region Trigger Groups
+        #region Action Bar
 
-        Input.Player.PreviousWeaponGroup.performed += context =>
+        ActionBarSlot createBinding(string controlPath)
         {
-            if (CurrentEntity.Parent != null) return;
-            SchematicDisplay.SelectedGroupIndex--;
-        };
+            var action = new InputAction(binding: controlPath);
+            _actionBarActions.Add(action);
+            var slot = Instantiate(ActionBarSlot, ActionBar);
+            _actionBarSlots.Add(slot);
+            action.started += context => slot.Binding?.Activate();
+            action.canceled += context => slot.Binding?.Deactivate();
+            return slot;
+        }
 
-        Input.Player.NextWeaponGroup.performed += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            SchematicDisplay.SelectedGroupIndex++;
-        };
-
-        Input.Player.PreviousWeapon.performed += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            SchematicDisplay.SelectedItemIndex--;
-        };
-
-        Input.Player.NextWeapon.performed += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            SchematicDisplay.SelectedItemIndex++;
-        };
-
-        Input.Player.ToggleWeaponGroup.performed += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            var item = SchematicDisplay.SchematicItems[SchematicDisplay.SelectedItemIndex];
-            if (CurrentEntity.TriggerGroups[SchematicDisplay.SelectedGroupIndex].items.Contains(item.Item))
-                CurrentEntity.TriggerGroups[SchematicDisplay.SelectedGroupIndex].items.Remove(item.Item);
-            else CurrentEntity.TriggerGroups[SchematicDisplay.SelectedGroupIndex].items.Add(item.Item);
-            foreach (var group in item.Item.BehaviorGroups.Values)
-            {
-                var weapon = group.GetBehavior<Weapon>();
-                if(weapon != null)
-                {
-                    if (CurrentEntity.TriggerGroups[SchematicDisplay.SelectedGroupIndex].weapons.Contains(weapon))
-                        CurrentEntity.TriggerGroups[SchematicDisplay.SelectedGroupIndex].weapons.Remove(weapon);
-                    else CurrentEntity.TriggerGroups[SchematicDisplay.SelectedGroupIndex].weapons.Add(weapon);
-                }
-            }
-            SchematicDisplay.UpdateTriggerGroups();
-        };
+        var shift = createBinding("<Keyboard>/leftShift");
+        shift.InputIcon.sprite = ShiftIcon;
+        shift.InputLabel.gameObject.SetActive(false);
         
-        Input.Player.FireGroup1.started += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[0].weapons) s.Activate();
-        };
+        var left = createBinding("<Mouse>/leftButton");
+        left.InputIcon.sprite = MouseLeftIcon;
+        left.InputLabel.gameObject.SetActive(false);
+        
+        var right = createBinding("<Mouse>/rightButton");
+        right.InputIcon.sprite = MouseLeftIcon;
+        right.InputIcon.transform.localScale = new Vector3(-1, 1, 1);
+        right.InputLabel.gameObject.SetActive(false);
+        
+        var middle = createBinding("<Mouse>/middleButton");
+        middle.InputIcon.sprite = MouseMiddleIcon;
+        middle.InputLabel.gameObject.SetActive(false);
 
-        Input.Player.FireGroup1.canceled += context =>
+        for (int i = 1; i < 6; i++)
         {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[0].weapons) s.Deactivate();
-        };
-
-        Input.Player.FireGroup2.started += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[1].weapons) s.Activate();
-        };
-
-        Input.Player.FireGroup2.canceled += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[1].weapons) s.Deactivate();
-        };
-
-        Input.Player.FireGroup3.started += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[2].weapons) s.Activate();
-        };
-
-        Input.Player.FireGroup3.canceled += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[2].weapons) s.Deactivate();
-        };
-
-        Input.Player.FireGroup4.started += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[3].weapons) s.Activate();
-        };
-
-        Input.Player.FireGroup4.canceled += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[3].weapons) s.Deactivate();
-        };
-
-        Input.Player.FireGroup5.started += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[4].weapons) s.Activate();
-        };
-
-        Input.Player.FireGroup5.canceled += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[4].weapons) s.Deactivate();
-        };
-
-        Input.Player.FireGroup6.started += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[5].weapons) s.Activate();
-        };
-
-        Input.Player.FireGroup6.canceled += context =>
-        {
-            if (CurrentEntity.Parent != null) return;
-            foreach (var s in CurrentEntity.TriggerGroups[5].weapons) s.Deactivate();
-        };
+            var num = createBinding($"<Keyboard>/{i}");
+            num.InputIcon.gameObject.SetActive(false);
+            num.InputLabel.text = i.ToString();
+        }
         
         #endregion
 
@@ -579,6 +467,18 @@ public class ActionGameManager : MonoBehaviour
             });
     }
 
+    public void EnablePlayerInput()
+    {
+        Input.Player.Enable();
+        foreach (var a in _actionBarActions) a.Enable();
+    }
+
+    public void DisablePlayerInput()
+    {
+        Input.Player.Disable();
+        foreach (var a in _actionBarActions) a.Disable();
+    }
+
     private void EnterWormhole(Wormhole wormhole)
     {
         if (!(CurrentEntity is Ship ship)) return;
@@ -639,6 +539,45 @@ public class ActionGameManager : MonoBehaviour
         }
     }
 
+    private void ToggleMainMenu()
+    {
+        if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
+        if (CurrentEntity == null) return;
+        if (MainMenu.gameObject.activeSelf)
+        {
+            _paused = false;
+            VolumeRenderer.EnableDepth = true;
+            MainMenu.gameObject.SetActive(false);
+            if (_menuShown)
+            {
+                Menu.gameObject.SetActive(true);
+            }
+            else
+            {
+                GameplayUI.gameObject.SetActive(true);
+                EnablePlayerInput();
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
+        else
+        {
+            _paused = true;
+            VolumeRenderer.EnableDepth = false;
+            MainMenu.gameObject.SetActive(true);
+            _menuShown = Menu.gameObject.activeSelf;
+            if (_menuShown)
+            {
+                Menu.gameObject.SetActive(false);
+            }
+            else
+            {
+                GameplayUI.gameObject.SetActive(false);
+                Cursor.lockState = CursorLockMode.None;
+                DisablePlayerInput();
+            }
+        }
+    }
+
     private void ToggleMenuTab(MenuTab tab)
     {
         if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
@@ -649,7 +588,7 @@ public class ActionGameManager : MonoBehaviour
             Menu.gameObject.SetActive(false);
             if (CurrentEntity != null && CurrentEntity.Parent == null)
             {
-                Input.Player.Enable();
+                EnablePlayerInput();
                 GameplayUI.gameObject.SetActive(true);
                     
                 SchematicDisplay.ShowShip(CurrentEntity);
@@ -659,7 +598,7 @@ public class ActionGameManager : MonoBehaviour
         }
 
         Cursor.lockState = CursorLockMode.None;
-        Input.Player.Disable();
+        DisablePlayerInput();
         Menu.ShowTab(tab);
         GameplayUI.gameObject.SetActive(false);
     }
@@ -832,7 +771,7 @@ public class ActionGameManager : MonoBehaviour
         _visibleHostileIndicators.Clear();
         if(_lockingIndicators!=null) foreach(var (_, indicator, _) in _lockingIndicators)
             indicator.GetComponent<Prototype>().ReturnToPool();
-        Input.Player.Disable();
+        DisablePlayerInput();
         Cursor.lockState = CursorLockMode.None;
         GameplayUI.gameObject.SetActive(false);
         
@@ -862,7 +801,7 @@ public class ActionGameManager : MonoBehaviour
             _viewDirection = float3(CurrentEntity.Direction.x,0,CurrentEntity.Direction.y);
         
         Cursor.lockState = CursorLockMode.Locked;
-        Input.Player.Enable();
+        EnablePlayerInput();
         GameplayUI.gameObject.SetActive(true);
         ShipPanel.Display(CurrentEntity, true);
         SchematicDisplay.ShowShip(CurrentEntity);

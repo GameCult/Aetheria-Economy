@@ -28,6 +28,16 @@ public static class AetheriaMath
         return lerp(a, b, 1 - exp(-lambda * dt));
     }
     
+    public static float2 Damp(float2 a, float2 b, float lambda, float dt)
+    {
+        return lerp(a, b, 1 - exp(-lambda * dt));
+    }
+    
+    public static float3 Damp(float3 a, float3 b, float lambda, float dt)
+    {
+        return lerp(a, b, 1 - exp(-lambda * dt));
+    }
+    
     //first-order intercept using absolute target position
     public static float3 FirstOrderIntercept
     (

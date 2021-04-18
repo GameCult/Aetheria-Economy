@@ -15,6 +15,7 @@ public abstract class Entity
     public Zone Zone;
     public Faction Faction;
     public EquippableItem Hull;
+    public EquippedItem EquippedHull;
     
     public float3 Position;
     public float2 Direction = float2(0,1);
@@ -62,6 +63,9 @@ public abstract class Entity
     private List<Capacitor> _capacitors = new List<Capacitor>();
     private List<Reactor> _reactors = new List<Reactor>();
     private List<Radiator> _heatsinks = new List<Radiator>();
+
+    private List<ConsumableItemEffect> _activeConsumables = new List<ConsumableItemEffect>();
+    
     protected bool _active;
 
     private bool _heatsinksEnabled = true;
@@ -208,6 +212,34 @@ public abstract class Entity
         EntityInfoGathered.ObserveRemove().Subscribe(remove => VisibleEntities.Remove(remove.Key));
     }
 
+    public void ActivateConsumable(ConsumableItem item)
+    {
+        _activeConsumables.Add(new ConsumableItemEffect(item, this));
+    }
+
+    public ConsumableItemEffect FindActiveConsumable(ConsumableItemData data)
+    {
+        return _activeConsumables.FirstOrDefault(ac => ac.Data.ID == data.ID);
+    }
+
+    public bool CanActivateConsumable(ConsumableItemData data)
+    {
+        return data.Stackable || FindActiveConsumable(data) == null;
+    }
+
+    public bool TryActivateConsumable(ConsumableItemData data)
+    {
+        if (!CanActivateConsumable(data)) return false;
+        
+        var bay = FindItemInCargo(data.ID);
+        if (bay == null) return false;
+        
+        var item = (ConsumableItem) bay.ItemsOfType[data.ID].First();
+        ActivateConsumable(item);
+        bay.Remove(item);
+        return true;
+    }
+
     public bool IsHostileTo(Entity other)
     {
         if (Faction == null)
@@ -221,7 +253,8 @@ public abstract class Entity
     private void MapEntity()
     {
         var hullData = ItemManager.GetData(Hull) as HullData;
-        Equipment.Add(new EquippedItem(ItemManager, Hull, int2.zero, this));
+        EquippedHull = new EquippedItem(ItemManager, Hull, int2.zero, this);
+        Equipment.Add(EquippedHull);
         Mass = hullData.Mass;
         Temperature = new float[hullData.Shape.Width, hullData.Shape.Height];
         NewTemperature = new float[hullData.Shape.Width, hullData.Shape.Height];
@@ -257,7 +290,8 @@ public abstract class Entity
     public void GenerateTriggerGroups()
     {
         foreach (var group in Weapons
-            .GroupBy(w => w.Item.EquippableItem.Data)
+            .GroupBy(w => w.Item.EquippableItem.Data.LinkID)
+            .OrderBy(wg=>wg.Average(w=>w.Range))
             .Select((weapons, index) => (weapons, index)))
         {
             TriggerGroups[group.index].weapons = group.weapons.ToList();
@@ -695,7 +729,7 @@ public abstract class Entity
         Parent = null;
     }
 
-    public T GetBehavior<T>() where T : class, IBehavior
+    public T GetBehavior<T>() where T : Behavior
     {
         foreach (var equippedItem in Equipment)
             if(equippedItem.Behaviors != null)
@@ -705,7 +739,7 @@ public abstract class Entity
         return null;
     }
 
-    public IEnumerable<T> GetBehaviors<T>() where T : class, IBehavior
+    public IEnumerable<T> GetBehaviors<T>() where T : Behavior
     {
         foreach (var equippedItem in Equipment)
             if(equippedItem.Behaviors != null)
@@ -779,12 +813,13 @@ public abstract class Entity
         {
             if(Cockpit != null)
             {
-                if (Cockpit.Item.Temperature > ItemManager.GameplaySettings.HeatstrokeTemperature)
+                var cockpitTemp = Cockpit.Temperature;
+                if (cockpitTemp > ItemManager.GameplaySettings.HeatstrokeTemperature)
                 {
                     var previous = Heatstroke;
                     Heatstroke = saturate(
                         Heatstroke +
-                        pow(Cockpit.Item.Temperature - ItemManager.GameplaySettings.HeatstrokeTemperature, ItemManager.GameplaySettings.HeatstrokeExponent) *
+                        pow(cockpitTemp - ItemManager.GameplaySettings.HeatstrokeTemperature, ItemManager.GameplaySettings.HeatstrokeExponent) *
                         ItemManager.GameplaySettings.HeatstrokeMultiplier * delta);
                     if(previous < ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold && Heatstroke > ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold)
                         HeatstrokeRisk.OnNext(Unit.Default);
@@ -798,12 +833,13 @@ public abstract class Entity
                 {
                     Heatstroke = saturate(Heatstroke - ItemManager.GameplaySettings.HeatstrokeRecoverySpeed * delta);
                 }
-                if (Cockpit.Item.Temperature < ItemManager.GameplaySettings.HypothermiaTemperature)
+
+                if (cockpitTemp < ItemManager.GameplaySettings.HypothermiaTemperature)
                 {
                     var previous = Hypothermia;
                     Hypothermia = saturate(
                         Hypothermia +
-                        pow(ItemManager.GameplaySettings.HypothermiaTemperature - Cockpit.Item.Temperature, ItemManager.GameplaySettings.HypothermiaExponent) *
+                        pow(ItemManager.GameplaySettings.HypothermiaTemperature - cockpitTemp, ItemManager.GameplaySettings.HypothermiaExponent) *
                         ItemManager.GameplaySettings.HypothermiaMultiplier * delta);
                     if(previous < ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold && Heatstroke > ItemManager.GameplaySettings.SevereHeatstrokeRiskThreshold)
                         HypothermiaRisk.OnNext(Unit.Default);
@@ -818,7 +854,13 @@ public abstract class Entity
                     Hypothermia = saturate(Hypothermia - ItemManager.GameplaySettings.HypothermiaRecoverySpeed * delta);
                 }
             }
-            
+
+            for (var i = 0; i < _activeConsumables.Count; i++)
+            {
+                _activeConsumables[i].Update(delta);
+                if(_activeConsumables[i].RemainingDuration < 0) _activeConsumables.RemoveAt(i--);
+            }
+
             foreach (var equippedItem in _orderedEquipment)
             {
                 equippedItem.Update(delta);
@@ -935,17 +977,64 @@ public abstract class Entity
     }
 }
 
+public class ConsumableItemEffect
+{
+    public float RemainingDuration { get; private set; }
+    public Entity Entity { get; }
+    public ConsumableItem Item { get; }
+    public ConsumableItemData Data { get; }
+    public Behavior[] Behaviors { get; }
+
+    public ConsumableItemEffect(ConsumableItem item, Entity entity)
+    {
+        Item = item;
+        Entity = entity;
+        Data = (ConsumableItemData) item.Data.Value;
+        RemainingDuration = Data.Duration;
+
+        Behaviors = Data.StatModifiers
+            .Select(bd => bd.CreateInstance(this))
+            .ToArray();
+    }
+
+    public void Update(float delta)
+    {
+        foreach (var behavior in Behaviors)
+            if(behavior is IAlwaysUpdatedBehavior alwaysUpdatedBehavior) alwaysUpdatedBehavior.Update(delta);
+
+        foreach (var behavior in Behaviors)
+        {
+            if (!behavior.Execute(delta))
+                break;
+        }
+
+        RemainingDuration -= delta;
+    }
+
+    public float Evaluate(PerformanceStat stat)
+    {
+        var effectiveness = Data.Effectiveness.Evaluate((Data.Duration - RemainingDuration) / Data.Duration);
+        var quality = pow(Item.Quality, stat.QualityExponent);
+
+        var result = lerp(stat.Min, stat.Max, effectiveness * quality);
+        
+        if (float.IsNaN(result))
+            return stat.Min;
+        return result;
+    }
+}
+
 public class EquippedItem
 {
     public int SortPosition;
     public EquippableItem EquippableItem;
     public int2 Position;
-    public Dictionary<int, BehaviorGroup> BehaviorGroups;
 
     private bool _thermalOnline;
     private bool _durabilityOnline;
     
-    public IBehavior[] Behaviors { get; }
+    public Behavior[] Behaviors { get; }
+    public Dictionary<int, BehaviorGroup> BehaviorGroups { get; }
     public float Conductivity { get; }
     public float ThermalPerformance { get; private set; }
     public float ThermalExponent { get; }
@@ -1077,7 +1166,7 @@ public class EquippedItem
         }
     }
 
-    public T GetBehavior<T>() where T : class, IBehavior
+    public T GetBehavior<T>() where T : Behavior
     {
         foreach (var behavior in Behaviors)
             if (behavior is T b)
@@ -1125,7 +1214,7 @@ public class EquippedCargoBay : EquippedItem
     // Check whether the given item will fit when its origin is placed at the given coordinate
     public bool ItemFits(ItemInstance item, int2 cargoCoord)
     {
-        var itemData = ItemManager.GetData(item);
+        var itemData = item.Data.Value;
         // Check every cell of the item's shape
         foreach (var i in itemData.Shape.Coordinates)
         {
@@ -1249,9 +1338,9 @@ public class EquippedCargoBay : EquippedItem
             }
             Cargo[item] = cargoCoord;
             
-            if(!ItemsOfType.ContainsKey(item.Data))
-                ItemsOfType[item.Data] = new List<ItemInstance>();
-            ItemsOfType[item.Data].Add(item);
+            if(!ItemsOfType.ContainsKey(item.Data.LinkID))
+                ItemsOfType[item.Data.LinkID] = new List<ItemInstance>();
+            ItemsOfType[item.Data.LinkID].Add(item);
         }
         else if (Occupancy[cargoCoord.x, cargoCoord.y] is SimpleCommodity cargoCommodity && cargoCommodity.Data == item.Data)
         {
@@ -1293,9 +1382,9 @@ public class EquippedCargoBay : EquippedItem
         }
         Cargo[item] = cargoCoord;
         
-        if(!ItemsOfType.ContainsKey(item.Data))
-            ItemsOfType[item.Data] = new List<ItemInstance>();
-        ItemsOfType[item.Data].Add(item);
+        if(!ItemsOfType.ContainsKey(item.Data.LinkID))
+            ItemsOfType[item.Data.LinkID] = new List<ItemInstance>();
+        ItemsOfType[item.Data.LinkID].Add(item);
         
         Mass += ItemManager.GetMass(item);
         ThermalMass += ItemManager.GetThermalMass(item);
@@ -1318,9 +1407,9 @@ public class EquippedCargoBay : EquippedItem
                     Occupancy[v.x, v.y] = null;
 
             Cargo.Remove(item);
-            ItemsOfType[item.Data].Remove(item);
-            if (!ItemsOfType[item.Data].Any())
-                ItemsOfType.Remove(item.Data);
+            ItemsOfType[item.Data.LinkID].Remove(item);
+            if (!ItemsOfType[item.Data.LinkID].Any())
+                ItemsOfType.Remove(item.Data.LinkID);
 
             Mass -= ItemManager.GetMass(item);
             ThermalMass -= ItemManager.GetThermalMass(item);
@@ -1347,9 +1436,9 @@ public class EquippedCargoBay : EquippedItem
                 Occupancy[v.x, v.y] = null;
         
         Cargo.Remove(item);
-        ItemsOfType[item.Data].Remove(item);
-        if (!ItemsOfType[item.Data].Any())
-            ItemsOfType.Remove(item.Data);
+        ItemsOfType[item.Data.LinkID].Remove(item);
+        if (!ItemsOfType[item.Data.LinkID].Any())
+            ItemsOfType.Remove(item.Data.LinkID);
         
         Mass -= ItemManager.GetMass(item);
         ThermalMass -= ItemManager.GetThermalMass(item);
@@ -1408,9 +1497,9 @@ public class EquippedDockingBay : EquippedCargoBay
 
 public class BehaviorGroup
 {
-    public IBehavior[] Behaviors;
+    public Behavior[] Behaviors;
 
-    public T GetBehavior<T>() where T : class, IBehavior
+    public T GetBehavior<T>() where T : Behavior
     {
         foreach (var b in Behaviors)
         {
@@ -1421,7 +1510,7 @@ public class BehaviorGroup
         return null;
     }
     
-    public T GetExposed<T>() where T : class, IBehavior, IInteractiveBehavior
+    public T GetExposed<T>() where T : Behavior, IInteractiveBehavior
     {
         foreach (var b in Behaviors)
         {

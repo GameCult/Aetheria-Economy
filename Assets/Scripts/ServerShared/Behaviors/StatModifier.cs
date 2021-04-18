@@ -22,19 +22,21 @@ public class StatModifierData : BehaviorData
     [InspectableType(typeof(BehaviorData)), JsonProperty("requireBehavior"), Key(4)]
     public Type RequireBehavior;
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
         return new StatModifier(this, item);
+    }
+
+    public override Behavior CreateInstance(ConsumableItemEffect consumable)
+    {
+        return new StatModifier(this, consumable);
     }
 }
 
 [Order(-4)]
-public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavior
+public class StatModifier : Behavior, IInitializableBehavior, IDisposable
 {
     private StatModifierData _data;
-    private EquippedItem Item { get; }
-
-    public BehaviorData Data => _data;
 
     private PerformanceStat[] _stats;
     
@@ -43,10 +45,14 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
     private static Type[] StatObjects => _statObjects = _statObjects ?? typeof(BehaviorData).GetAllChildClasses()
         .Concat(typeof(EquippableItemData).GetAllChildClasses()).ToArray();
 
-    public StatModifier(StatModifierData data, EquippedItem item)
+    public StatModifier(StatModifierData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
+    }
+
+    public StatModifier(StatModifierData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
     public void Initialize()
@@ -59,17 +65,17 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
             if (statField != null)
             {
                 if (typeof(EquippableItemData).IsAssignableFrom(targetType))
-                    _stats = Item.Entity.Equipment
+                    _stats = Entity.Equipment
                         .Select(hp => hp.EquippableItem)
-                        .Where(gear => _data.RequireBehavior == null || Item.ItemManager.GetData(gear).Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
-                        .Where(gear => Item.ItemManager.GetData(gear).GetType() == targetType)
-                        .Select(gear => statField.GetValue(Item.ItemManager.GetData(gear)) as PerformanceStat)
+                        .Where(gear => _data.RequireBehavior == null || ItemManager.GetData(gear).Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
+                        .Where(gear => ItemManager.GetData(gear).GetType() == targetType)
+                        .Select(gear => statField.GetValue(ItemManager.GetData(gear)) as PerformanceStat)
                         .ToArray();
                 else
-                    _stats = Item.Entity.Equipment
+                    _stats = Entity.Equipment
                         .Select(hp => hp.EquippableItem)
-                        .Where(gear => _data.RequireBehavior == null || Item.ItemManager.GetData(gear).Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
-                        .SelectMany(gear => Item.ItemManager.GetData(gear).Behaviors)
+                        .Where(gear => _data.RequireBehavior == null || ItemManager.GetData(gear).Behaviors.Any(behavior => behavior.GetType() == _data.RequireBehavior))
+                        .SelectMany(gear => ItemManager.GetData(gear).Behaviors)
                         .Where(behaviorData => behaviorData.GetType() == targetType)
                         .Select(behaviorData => statField.GetValue(behaviorData) as PerformanceStat)
                         .ToArray();
@@ -77,19 +83,19 @@ public class StatModifier : IBehavior, IInitializableBehavior, IDisposableBehavi
         }
     }
 
-    public bool Execute(float dt)
+    public override bool Execute(float dt)
     {
         foreach (var stat in _stats)
             (_data.Type == StatModifierType.Constant
-                ? stat.GetConstantModifiers(Item.Entity)
-                : stat.GetScaleModifiers(Item.Entity))[this] = Item.Evaluate(_data.Modifier);
+                ? stat.GetConstantModifiers(Entity)
+                : stat.GetScaleModifiers(Entity))[this] = Evaluate(_data.Modifier);
         return true;
     }
 
     public void Dispose()
     {
         foreach (var stat in _stats)
-            (_data.Type == StatModifierType.Constant ? stat.GetConstantModifiers(Item.Entity) : stat.GetScaleModifiers(Item.Entity)).Remove(this);
+            (_data.Type == StatModifierType.Constant ? stat.GetConstantModifiers(Entity) : stat.GetScaleModifiers(Entity)).Remove(this);
     }
 }
 

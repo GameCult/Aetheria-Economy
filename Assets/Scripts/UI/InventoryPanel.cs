@@ -661,7 +661,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                 return Color.white * .25f;
 
             var c = float3(1);
-            if (GameManager.ItemManager.GetData(item) is EquippableItemData equippable)
+            if (item.Data.Value is EquippableItemData equippable)
                 c = HardpointData.GetColor(equippable.HardpointType);
             
             if(!highlight)

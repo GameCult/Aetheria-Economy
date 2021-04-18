@@ -76,6 +76,7 @@ pattern by Andrejs Kirma
 edit by The Icon Z
 Resize by Markus
 Rotate by Rohith M
+up key by Dika Darma
 
 Other
 

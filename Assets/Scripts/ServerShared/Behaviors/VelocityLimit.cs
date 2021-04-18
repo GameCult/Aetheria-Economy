@@ -13,35 +13,40 @@ public class VelocityLimitData : BehaviorData
     [Inspectable, JsonProperty("topSpeed"), Key(1), RuntimeInspectable]  
     public PerformanceStat TopSpeed = new PerformanceStat();
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new VelocityLimit(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new VelocityLimit(this, item);
     }
 }
 
 [Order(100)]
-public class VelocityLimit : IBehavior
+public class VelocityLimit : Behavior
 {
-    public EquippedItem Item { get; }
-    
     public float Limit { get; private set; }
 
-    public BehaviorData Data => _data;
-    
     private VelocityLimitData _data;
 
-    public VelocityLimit(VelocityLimitData data, EquippedItem item)
+    public VelocityLimit(VelocityLimitData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
-        Limit = Item.Evaluate(_data.TopSpeed);
+        Limit = Evaluate(_data.TopSpeed);
     }
 
-    public bool Execute(float dt)
+    public VelocityLimit(VelocityLimitData data, ConsumableItemEffect item) : base(data, item)
     {
-        Limit = Item.Evaluate(_data.TopSpeed);
-        if (length(Item.Entity.Velocity) > Limit)
-            Item.Entity.Velocity = normalize(Item.Entity.Velocity) * Limit;
+        _data = data;
+        Limit = Evaluate(_data.TopSpeed);
+    }
+
+    public override bool Execute(float dt)
+    {
+        Limit = Evaluate(_data.TopSpeed);
+        if (length(Entity.Velocity) > Limit)
+            Entity.Velocity = normalize(Entity.Velocity) * Limit;
         return true;
     }
 }

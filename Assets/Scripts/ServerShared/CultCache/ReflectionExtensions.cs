@@ -103,7 +103,7 @@ public static class ReflectionExtensions
     
     public static string FormatTypeName(this string typeName)
     {
-        return (typeName.EndsWith("Data")
+        return (typeName.EndsWith("Data", StringComparison.InvariantCultureIgnoreCase)
             ? typeName.Substring(0, typeName.Length - 4)
             : typeName).SplitCamelCase();
     }

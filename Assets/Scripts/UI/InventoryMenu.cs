@@ -87,7 +87,7 @@ public class InventoryMenu : MonoBehaviour
                     var item = cargoEvent.CargoBay.Occupancy[cargoEvent.Position.x, cargoEvent.Position.y];
                     if (item != null)
                     {
-                        var itemData = GameManager.ItemManager.GetData(item);
+                        var itemData = item.Data.Value;
 
                         var itemPosition = cargoEvent.CargoBay.Cargo[item];
                         _originalOccupancy = cargoEvent.CargoBay.Data.InteriorShape.Inset(itemData.Shape, itemPosition, item.Rotation);
@@ -244,7 +244,7 @@ public class InventoryMenu : MonoBehaviour
                     if (cargoEvent.CargoBay.ItemFits(_dragItem, _dragTargetPosition))
                     {
                         foreach (var cell in _dragCells) cell.gameObject.SetActive(false);
-                        var itemData = GameManager.ItemManager.GetData(_dragItem);
+                        var itemData = _dragItem.Data.Value;
                         panel.FakeItem = _dragItem;
                         panel.FakeOccupancy = cargoEvent.CargoBay.Data.InteriorShape.Inset(itemData.Shape, _dragTargetPosition, _dragItem.Rotation);
                         _dragTargetValid = true;
@@ -258,7 +258,7 @@ public class InventoryMenu : MonoBehaviour
                     if (eqItem != null && entityEvent.Entity.ItemFits(eqItem, _dragTargetPosition))
                     {
                         foreach (var cell in _dragCells) cell.gameObject.SetActive(false);
-                        var itemData = GameManager.ItemManager.GetData(_dragItem);
+                        var itemData = _dragItem.Data.Value;
                         panel.FakeEquipment = _originalEquippedItem;
                         panel.FakeOccupancy = hullData.Shape.Inset(itemData.Shape, _dragTargetPosition, _dragItem.Rotation);
                         _dragTargetValid = true;
@@ -325,7 +325,7 @@ public class InventoryMenu : MonoBehaviour
                             _selectedPanel = panel;
                             _selectedPosition = cargoEvent.CargoBay.Cargo[item];
                             _selectedItem = item;
-                            _selectedItemData = GameManager.ItemManager.GetData(item);
+                            _selectedItemData = item.Data.Value;
                             foreach (var v in _selectedItemData.Shape.Coordinates)
                             {
                                 var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;

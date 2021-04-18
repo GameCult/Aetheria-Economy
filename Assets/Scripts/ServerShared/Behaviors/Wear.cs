@@ -14,39 +14,32 @@ public class WearData : BehaviorData
     [InspectableTemperature, JsonProperty("perSecond"), Key(1)]
     public bool PerSecond = true;
     
-    public override IBehavior CreateInstance(EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
+    {
+        return new Wear(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
     {
         return new Wear(this, item);
     }
 }
 
-public class Wear : IBehavior
+public class Wear : Behavior
 {
     private WearData _data;
 
-    public EquippedItem Item { get; }
-
-    public BehaviorData Data => _data;
-
-    public Wear(WearData data, EquippedItem item)
+    public Wear(WearData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Item = item;
+    }
+    public Wear(WearData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
-    public bool Execute(float dt)
+    public override bool Execute(float dt)
     {
-        if (_data.PerSecond)
-        {
-            var dmg = Item.Wear * dt;
-            Item.EquippableItem.Durability -= dmg;
-            Item.Entity.ItemDamage.OnNext((Item, dmg));
-        }
-        else
-        {
-            Item.EquippableItem.Durability -= Item.Wear;
-            Item.Entity.ItemDamage.OnNext((Item, Item.Wear));
-        }
+        CauseWearDamage(_data.PerSecond ? dt : 1);
         return true;
     }
 }

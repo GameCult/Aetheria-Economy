@@ -107,52 +107,40 @@ public class ItemManager
     //     return Tier[itemData];
     // }
 
-    public ItemData GetData(ItemInstance item)
-    {
-        return ItemData.Get<ItemData>(item.Data);
-    }
-
     public SimpleCommodityData GetData(SimpleCommodity item)
     {
-        return ItemData.Get<SimpleCommodityData>(item.Data);
+        return item.Data.Value as SimpleCommodityData;
     }
 
     public CraftedItemData GetData(CraftedItemInstance item)
     {
-        return ItemData.Get<CraftedItemData>(item.Data);
+        return item.Data.Value as CraftedItemData;
     }
 
-    public EquippableItemData GetData(EquippableItem equippableItem)
+    public EquippableItemData GetData(EquippableItem item)
     {
-        return ItemData.Get<EquippableItemData>(equippableItem.Data);
+        return item.Data.Value as EquippableItemData;
     }
 
     public float GetMass(ItemInstance item)
     {
-        var data = GetData(item);
-        switch (item)
+        return item switch
         {
-            case CraftedItemInstance _:
-                return data.Mass;
-            case SimpleCommodity commodity:
-                return data.Mass * commodity.Quantity;
-        }
-
-        return 0;
+            CraftedItemInstance _ => item.Data.Value.Mass,
+            SimpleCommodity commodity => item.Data.Value.Mass * commodity.Quantity,
+            _ => 0
+        };
     }
 
     public float GetThermalMass(ItemInstance item)
     {
-        var data = GetData(item);
-        switch (item)
+        var data = item.Data.Value;
+        return item switch
         {
-            case CraftedItemInstance _:
-                return data.Mass * data.SpecificHeat;
-            case SimpleCommodity commodity:
-                return data.Mass * data.SpecificHeat * commodity.Quantity;
-        }
-
-        return 0;
+            CraftedItemInstance _ => data.Mass * data.SpecificHeat,
+            SimpleCommodity commodity => data.Mass * data.SpecificHeat * commodity.Quantity,
+            _ => 0
+        };
     }
 
     // Returns stat when not equipped
@@ -184,7 +172,7 @@ public class ItemManager
         {
             var newItem = new SimpleCommodity
             {
-                Data = item.ID,
+                Data = new DatabaseLink<ItemData>{LinkID = item.ID},
                 Quantity = count
             };
             //ItemData.Add(newItem);
@@ -197,7 +185,7 @@ public class ItemManager
 
     public ItemInstance Instantiate(ItemInstance item)
     {
-        var data = GetData(item);
+        var data = item.Data.Value;
         if(data is CraftedItemData c)
         {
             var i = CreateInstance(c);
@@ -217,18 +205,15 @@ public class ItemManager
     {
         if (item is EquippableItemData equippableItemData)
         {
-            var newGear = new EquippableItem
+            return new EquippableItem
             {
-                Data = item.ID,
-                Quality = quality
+                Data = new DatabaseLink<ItemData> {LinkID = item.ID}, Quality = quality, Durability = equippableItemData.Durability
             };
-            newGear.Durability = equippableItemData.Durability;
-            return newGear;
         }
 
         var newCommodity = new CompoundCommodity
         {
-            Data = item.ID,
+            Data = new DatabaseLink<ItemData>{LinkID = item.ID},
             Quality = quality
         };
         return newCommodity;

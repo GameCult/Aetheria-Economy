@@ -14,7 +14,7 @@ public class Minion : Agent
         Ship.VisibleHostiles.ObserveAdd().Where(_ => Ship.Target.Value == null).Subscribe(add => Ship.Target.Value = add.Value);
 
         var combatState = new CombatState(this);
-        _rootState.AddTransition(combatState, 
+        _rootState.AddTransition(combatState,
             () => Ship.Target.Value != null, null, true, _rootState);
         
         combatState.AddTransition(_rootState,

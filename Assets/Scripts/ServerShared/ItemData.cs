@@ -284,8 +284,8 @@ public class SimpleCommodityData : ItemData
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<CraftedItemData>))]
 public abstract class CraftedItemData : ItemData
 {
-    [Inspectable, JsonProperty("ingredientQualityWeight"), Key(9)]  
-    public float IngredientQualityWeight = .5f;
+    // [Inspectable, JsonProperty("ingredientQualityWeight"), Key(9)]  
+    // public float IngredientQualityWeight = .5f;
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject]
@@ -298,7 +298,26 @@ public class CompoundCommodityData : CraftedItemData
     public CompoundCommodityCategory Category;
 }
 
-[JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<EquippableItemData>))]
+[RethinkTable("Items"), Inspectable, MessagePackObject]
+public class ConsumableItemData : CraftedItemData
+{
+    [Inspectable, JsonProperty("behaviors"), Key(10)]
+    public List<StatModifierData> StatModifiers = new List<StatModifierData>();
+
+    [Inspectable, JsonProperty("stackable"), Key(11)]
+    public bool Stackable;
+
+    [Inspectable, JsonProperty("duration"), Key(12)]
+    public float Duration;
+
+    [InspectableTexture, JsonProperty("icon"), Key(13)]
+    public string Icon;
+
+    [Inspectable, JsonProperty("effectiveness"), Key(14)]
+    public BezierCurve Effectiveness;
+}
+
+[JsonObject(MemberSerialization.OptIn)]
 public abstract class EquippableItemData : CraftedItemData
 {
     [InspectableTexture, JsonProperty("schematic"), Key(10)]
@@ -330,6 +349,9 @@ public abstract class EquippableItemData : CraftedItemData
     
     [Inspectable, JsonProperty("sfx"), Key(19)]
     public string SoundEffectTrigger;
+    
+    [InspectableTexture, JsonProperty("actionIcon"), Key(20)]
+    public string ActionBarIcon;
     
     [IgnoreMember]
     public abstract HardpointType HardpointType { get; }
@@ -372,7 +394,7 @@ public abstract class EquippableItemData : CraftedItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GearData : EquippableItemData
 {
-    [Inspectable, JsonProperty("hardpointType"), Key(20)]
+    [Inspectable, JsonProperty("hardpointType"), Key(21)]
     public HardpointType Hardpoint;
 
     [IgnoreMember] public override HardpointType HardpointType => Hardpoint;
@@ -381,7 +403,7 @@ public class GearData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class CargoBayData : EquippableItemData
 {
-    [Inspectable, JsonProperty("interiorShape"), Key(20)]
+    [Inspectable, JsonProperty("interiorShape"), Key(21)]
     public Shape InteriorShape;
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }
@@ -389,48 +411,48 @@ public class CargoBayData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class DockingBayData : CargoBayData
 {
-    [Inspectable, JsonProperty("maxSize"), Key(21)]
+    [Inspectable, JsonProperty("maxSize"), Key(22)]
     public int2 MaxSize;
 }
 
 [RethinkTable("Items"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class WeaponItemData : GearData
 {
-    [Inspectable, JsonProperty("range"), Key(21)]
+    [Inspectable, JsonProperty("range"), Key(22)]
     public WeaponRange WeaponRange;
     
-    [Inspectable, JsonProperty("caliber"), Key(22)]
+    [Inspectable, JsonProperty("caliber"), Key(23)]
     public WeaponCaliber WeaponCaliber;
     
-    [Inspectable, JsonProperty("weaponType"), Key(23)]
+    [Inspectable, JsonProperty("weaponType"), Key(24)]
     public WeaponType WeaponType;
     
-    [Inspectable, JsonProperty("fireTypes"), Key(24)]
+    [Inspectable, JsonProperty("fireTypes"), Key(25)]
     public WeaponFireType WeaponFireTypes;
     
-    [Inspectable, JsonProperty("modifiers"), Key(25)]
+    [Inspectable, JsonProperty("modifiers"), Key(26)]
     public WeaponModifiers WeaponModifiers;
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HullData : EquippableItemData
 {
-    [Inspectable, JsonProperty("hardpoints"), Key(20)]  
+    [Inspectable, JsonProperty("hardpoints"), Key(21)]  
     public List<HardpointData> Hardpoints = new List<HardpointData>();
 
-    [InspectablePrefab, JsonProperty("prefab"), Key(21)]  
+    [InspectablePrefab, JsonProperty("prefab"), Key(22)]  
     public string Prefab;
 
-    [Inspectable, JsonProperty("hullType"), Key(22)]
+    [Inspectable, JsonProperty("hullType"), Key(23)]
     public HullType HullType;
 
-    [Inspectable, JsonProperty("gridOffset"), Key(23)]
+    [Inspectable, JsonProperty("gridOffset"), Key(24)]
     public float GridOffset;
 
-    [Inspectable, JsonProperty("armor"), Key(24)]
+    [Inspectable, JsonProperty("armor"), Key(25)]
     public float Armor;
 
-    [Inspectable, JsonProperty("drag"), Key(25)]
+    [Inspectable, JsonProperty("drag"), Key(26)]
     public float Drag;
 
     [IgnoreMember]
@@ -511,29 +533,29 @@ public class PerformanceStat
 
     // [JsonProperty("ingredient"), Key(5)]  public Guid? Ingredient;
     
-    [IgnoreMember] private Dictionary<Entity,Dictionary<IBehavior,float>> _scaleModifiers;
-    [IgnoreMember] private Dictionary<Entity,Dictionary<IBehavior,float>> _constantModifiers;
+    [IgnoreMember] private Dictionary<Entity,Dictionary<Behavior,float>> _scaleModifiers;
+    [IgnoreMember] private Dictionary<Entity,Dictionary<Behavior,float>> _constantModifiers;
 
     [IgnoreMember]
-    private Dictionary<Entity, Dictionary<IBehavior, float>> ScaleModifiers =>
-        _scaleModifiers = _scaleModifiers ?? new Dictionary<Entity, Dictionary<IBehavior, float>>();
+    private Dictionary<Entity, Dictionary<Behavior, float>> ScaleModifiers =>
+        _scaleModifiers = _scaleModifiers ?? new Dictionary<Entity, Dictionary<Behavior, float>>();
 
     [IgnoreMember]
-    private Dictionary<Entity, Dictionary<IBehavior, float>> ConstantModifiers =>
-        _constantModifiers = _constantModifiers ?? new Dictionary<Entity, Dictionary<IBehavior, float>>();
+    private Dictionary<Entity, Dictionary<Behavior, float>> ConstantModifiers =>
+        _constantModifiers = _constantModifiers ?? new Dictionary<Entity, Dictionary<Behavior, float>>();
 
-    public Dictionary<IBehavior, float> GetScaleModifiers(Entity entity)
+    public Dictionary<Behavior, float> GetScaleModifiers(Entity entity)
     {
         if(!ScaleModifiers.ContainsKey(entity))
-            ScaleModifiers[entity] = new Dictionary<IBehavior, float>();
+            ScaleModifiers[entity] = new Dictionary<Behavior, float>();
 
         return ScaleModifiers[entity];
     }
 
-    public Dictionary<IBehavior, float> GetConstantModifiers(Entity entity)
+    public Dictionary<Behavior, float> GetConstantModifiers(Entity entity)
     {
         if(!ConstantModifiers.ContainsKey(entity))
-            ConstantModifiers[entity] = new Dictionary<IBehavior, float>();
+            ConstantModifiers[entity] = new Dictionary<Behavior, float>();
 
         return ConstantModifiers[entity];
     }
