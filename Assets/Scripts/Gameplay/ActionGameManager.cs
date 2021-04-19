@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Cinemachine;
+using Ink;
+using Ink.Runtime;
 using MessagePack;
 using TMPro;
 using UniRx;
@@ -21,6 +23,7 @@ using UnityEngine.EventSystems;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using float3 = Unity.Mathematics.float3;
+using Path = System.IO.Path;
 using quaternion = Unity.Mathematics.quaternion;
 using Random = UnityEngine.Random;
 
@@ -154,6 +157,7 @@ public class ActionGameManager : MonoBehaviour
     public ItemManager ItemManager { get; private set; }
     public Zone Zone { get; private set; }
     public List<EntityPack> Loadouts { get; } = new List<EntityPack>();
+    public IEnumerable<Story> GetStories => _stories;
 
     private readonly (float2 direction, string name)[] _directions = {
         (float2(0, 1), "Front"),
@@ -164,6 +168,8 @@ public class ActionGameManager : MonoBehaviour
 
     private DragAction _dragAction;
     private Action<DragAction> _endDragCallback;
+
+    private List<Story> _stories = new List<Story>();
 
     public EntitySettings NewEntitySettings
     {
@@ -199,6 +205,14 @@ public class ActionGameManager : MonoBehaviour
         
         ItemManager = new ItemManager(CultCache, Settings.GameplaySettings, Debug.Log);
         ZoneRenderer.ItemManager = ItemManager;
+
+        var narrativePath = GameDataDirectory.CreateSubdirectory("Narrative");
+        var narrativeFiles = narrativePath.EnumerateFiles("*.ink");
+        foreach(var inkFile in narrativeFiles)
+        {
+            var compiler = new Compiler(File.ReadAllText(inkFile.FullName));
+            _stories.Add(compiler.Compile());
+        }
 
         // _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");
         // Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.loadout")

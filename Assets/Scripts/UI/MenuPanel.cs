@@ -73,5 +73,6 @@ public enum MenuTab
     Map,
     Inventory,
     Trade,
-    Galaxy
+    Galaxy,
+    Local
 }
