@@ -147,6 +147,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Repeat.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\Heap\MinHeap.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Switch.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\AetherDrive.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDQuery\QueryClosest.cs" />
      <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonKnownTypesConverter.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\CRC32C.cs" />
@@ -252,7 +253,6 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\AetherDrive.cs" />
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Aetheria.Shared.Unity.asmdef" />
  <Reference Include="System.Threading.Tasks.Extensions">

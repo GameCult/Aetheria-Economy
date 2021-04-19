@@ -150,6 +150,8 @@ GameObject:
   - component: {fileID: 8334150340270499367}
   - component: {fileID: 8334150340270499366}
   - component: {fileID: 8334150340270499361}
+  - component: {fileID: 116092007209826482}
+  - component: {fileID: 2829353637824256212}
   m_Layer: 5
   m_Name: Action Slot
   m_TagString: Untagged
@@ -237,8 +239,8 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 64
-  m_PreferredHeight: 64
+  m_PreferredWidth: 1080
+  m_PreferredHeight: 1080
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -275,6 +277,8 @@ MonoBehaviour:
   InputIcon: {fileID: 8334150340841115256}
   QuantityRemaining: {fileID: 8334150341178146431}
   Fill: {fileID: 8334150340821902602}
+  PointerEnterTrigger: {fileID: 116092007209826482}
+  PointerExitTrigger: {fileID: 2829353637824256212}
 --- !u!114 &8334150340270499361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,6 +292,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
+--- !u!114 &116092007209826482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334150340270499363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3468b3db8d419c745b12124f6432696b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2829353637824256212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334150340270499363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9643e74593988274bbed9adf40384e48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8334150340821902612
 GameObject:
   m_ObjectHideFlags: 0
@@ -465,7 +493,7 @@ RectTransform:
   m_GameObject: {fileID: 8334150340841115258}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8334150340270499360}
   m_RootOrder: 4

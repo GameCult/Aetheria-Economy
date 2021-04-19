@@ -4,6 +4,7 @@ using JsonKnownTypes;
 using MessagePack;
 using Newtonsoft.Json;
 using TMPro;
+using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,8 @@ public class ActionBarSlot : MonoBehaviour
     public Image InputIcon;
     public TextMeshProUGUI QuantityRemaining;
     public Image Fill;
+    public ObservablePointerEnterTrigger PointerEnterTrigger;
+    public ObservablePointerExitTrigger PointerExitTrigger;
     private ActionBarBinding binding;
 
     public Entity Entity { get; set; }
@@ -27,6 +30,8 @@ public class ActionBarSlot : MonoBehaviour
             binding = value;
             if (binding == null)
             {
+                Fill.fillAmount = 0;
+                Label.gameObject.SetActive(false);
                 QuantityRemaining.gameObject.SetActive(false);
                 Icon.gameObject.SetActive(false);
             }
@@ -179,7 +184,8 @@ public class ActionBarWeaponGroupBinding : ActionBarBinding
     public ActionBarWeaponGroupBinding(Entity entity, ActionBarSlot slot, int group) : base(entity, slot)
     {
         Group = group;
-        slot.Label.text = $"G{Group}";
+        slot.Label.gameObject.SetActive(true);
+        slot.Label.text = $"G{Group+1}";
         Slot.Icon.gameObject.SetActive(false);
     }
 

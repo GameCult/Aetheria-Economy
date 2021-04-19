@@ -81,6 +81,7 @@ public class ActionGameManager : MonoBehaviour
     [Header("Input Icons")]
     public Sprite ShiftIcon;
     public Sprite MouseLeftIcon;
+    public Sprite MouseRightIcon;
     public Sprite MouseMiddleIcon;
 
     [Header("Scene Links")]
@@ -160,6 +161,9 @@ public class ActionGameManager : MonoBehaviour
         (float2(-1, 0), "Left"),
         (float2(0, -1), "Rear")
     };
+
+    private DragAction _dragAction;
+    private Action<DragAction> _endDragCallback;
 
     public EntitySettings NewEntitySettings
     {
@@ -325,9 +329,36 @@ public class ActionGameManager : MonoBehaviour
             var action = new InputAction(binding: controlPath);
             _actionBarActions.Add(action);
             var slot = Instantiate(ActionBarSlot, ActionBar);
+            slot.Binding = null;
             _actionBarSlots.Add(slot);
             action.started += context => slot.Binding?.Activate();
             action.canceled += context => slot.Binding?.Deactivate();
+
+            slot.PointerEnterTrigger.OnPointerEnterAsObservable().Subscribe(_ =>
+            {
+                //Debug.Log($"Pointer entered action bar slot {controlPath}");
+                RegisterDragTarget(dragAction =>
+                {
+                    //Debug.Log("Registering binding!");
+                    switch (dragAction)
+                    {
+                        case EquippedItemDragAction equippedItemDragAction:
+                            break;
+                        case ItemInstanceDragAction itemInstanceDragAction:
+                            break;
+                        case WeaponGroupDragAction weaponGroupDragAction:
+                            slot.Binding = new ActionBarWeaponGroupBinding(CurrentEntity, slot, weaponGroupDragAction.Group);
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(dragAction));
+                    }
+                });
+            });
+            slot.PointerExitTrigger.OnPointerExitAsObservable().Subscribe(_ =>
+            {
+                //Debug.Log($"Pointer exited action bar slot {controlPath}");
+                UnregisterDragTarget();
+            });
             return slot;
         }
 
@@ -340,8 +371,7 @@ public class ActionGameManager : MonoBehaviour
         left.InputLabel.gameObject.SetActive(false);
         
         var right = createBinding("<Mouse>/rightButton");
-        right.InputIcon.sprite = MouseLeftIcon;
-        right.InputIcon.transform.localScale = new Vector3(-1, 1, 1);
+        right.InputIcon.sprite = MouseRightIcon;
         right.InputLabel.gameObject.SetActive(false);
         
         var middle = createBinding("<Mouse>/middleButton");
@@ -465,6 +495,27 @@ public class ActionGameManager : MonoBehaviour
                         }
                     });
             });
+    }
+
+    public void BeginDrag(DragAction dragAction)
+    {
+        _dragAction = dragAction;
+    }
+
+    public void RegisterDragTarget(Action<DragAction> onEndDrag)
+    {
+        _endDragCallback = onEndDrag;
+    }
+
+    public void UnregisterDragTarget()
+    {
+        _endDragCallback = null;
+    }
+
+    public void EndDrag()
+    {
+        _endDragCallback?.Invoke(_dragAction);
+        _dragAction = null;
     }
 
     public void EnablePlayerInput()
@@ -1015,4 +1066,36 @@ public class ActionGameManager : MonoBehaviour
             }
         }
     }
+}
+
+public abstract class DragAction{}
+
+public class WeaponGroupDragAction : DragAction
+{
+    public WeaponGroupDragAction(int group)
+    {
+        Group = group;
+    }
+
+    public int Group { get; }
+}
+
+public class ItemInstanceDragAction : DragAction
+{
+    public ItemInstanceDragAction(ItemInstance item)
+    {
+        Item = item;
+    }
+
+    public ItemInstance Item { get; }
+}
+
+public class EquippedItemDragAction : DragAction
+{
+    public EquippedItemDragAction(EquippedItem item)
+    {
+        Item = item;
+    }
+
+    public EquippedItem Item { get; }
 }

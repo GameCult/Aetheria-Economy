@@ -36,7 +36,10 @@ public class PropertiesPanel : MonoBehaviour
     public IncrementField IncrementField;
     public StatSheet StatSheet;
     public CurveField CurveField;
+    public WeaponGroupAssignment WeaponGroupAssignment;
     public RectTransform Content;
+    public RectTransform DragParent;
+    
     [HideInInspector] public FlatFlatButton SelectedChild;
     [HideInInspector] public ActionGameManager GameManager;
 
@@ -44,6 +47,9 @@ public class PropertiesPanel : MonoBehaviour
     protected List<FlatFlatButton> Buttons = new List<FlatFlatButton>();
     protected event Action RefreshPropertyValues;
     protected bool RadioSelection = false;
+
+    private RectTransform _dragObject;
+    
 
     protected event Action<GameObject> OnPropertyAdded;
     protected Action OnPropertiesChanged;
@@ -462,6 +468,33 @@ public class PropertiesPanel : MonoBehaviour
 		
 		AddItemProperties(item.EquippableItem);
 		AddSpacer();
+
+		if (item.GetBehavior<Weapon>() != null)
+		{
+			var weaponGroups = Instantiate(WeaponGroupAssignment, Content ?? transform);
+			weaponGroups.Inspect(item);
+			var dragOffset = Vector2.zero;
+			Transform dragObject = null;
+			weaponGroups.OnBeginDragAsObservable().Subscribe(x =>
+			{
+				//Debug.Log($"Began dragging weapon group {x.group}");
+				GameManager.BeginDrag(new WeaponGroupDragAction(x.group));
+				dragObject = Instantiate(weaponGroups.Groups[x.group], DragParent, true).transform;
+				dragOffset = (Vector2)dragObject.position - x.pointerEventData.position;
+			});
+			weaponGroups.OnDragAsObservable().Subscribe(x =>
+			{
+				dragObject.position = x.pointerEventData.position + dragOffset;
+			});
+			weaponGroups.OnEndDragAsObservable().Subscribe(x =>
+			{
+				//Debug.Log($"Ended dragging weapon group {x.group}");
+				GameManager.EndDrag();
+				Destroy(dragObject.gameObject);
+			});
+			Properties.Add(weaponGroups.gameObject);
+			OnPropertyAdded?.Invoke(weaponGroups.gameObject);
+		}
 		
 		var gearData = GameManager.ItemManager.GetData(item.EquippableItem);
 		var statusSheet = AddStatSheet();
