@@ -241,8 +241,8 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Reconfigure.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\July.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Slice.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Info.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\WhereClauseParsers\DefaultParser.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Info.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\BaseFilterableSubQueryVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Net\JsonConverters\ExtensionsForJsonConverters.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Net\Handshake.cs" />
@@ -295,8 +295,8 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Table.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Day.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\OrderBy.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\MakeArray.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Circle.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\MakeArray.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\RethinkDbGroup.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\ReqlObject.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\ReqlAuthError.cs" />

@@ -43,6 +43,7 @@ public class GameSettings : ScriptableObject
     [HideInInspector] public Sprite[] WeaponFireTypeIcons;
     [HideInInspector] public Sprite[] WeaponModifierIcons;
 
+    public Sprite GetIcon(HardpointType type) => ItemIcons[(int) type];
     public Sprite GetIcon(WeaponType type) => WeaponTypeIcons[(int) type];
     public Sprite GetIcon(WeaponRange range) => WeaponRangeIcons[(int) range];
     public Sprite GetIcon(WeaponCaliber caliber) => WeaponCaliberIcons[(int) caliber];

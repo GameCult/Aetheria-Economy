@@ -478,7 +478,7 @@ public class PropertiesPanel : MonoBehaviour
 			weaponGroups.OnBeginDragAsObservable().Subscribe(x =>
 			{
 				//Debug.Log($"Began dragging weapon group {x.group}");
-				GameManager.BeginDrag(new WeaponGroupDragAction(x.group));
+				GameManager.BeginDrag(new WeaponGroupDragObject(x.group));
 				dragObject = Instantiate(weaponGroups.Groups[x.group], DragParent, true).transform;
 				dragOffset = (Vector2)dragObject.position - x.pointerEventData.position;
 			});

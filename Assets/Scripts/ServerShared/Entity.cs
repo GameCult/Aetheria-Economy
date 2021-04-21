@@ -992,7 +992,7 @@ public class ConsumableItemEffect
         Data = (ConsumableItemData) item.Data.Value;
         RemainingDuration = Data.Duration;
 
-        Behaviors = Data.StatModifiers
+        Behaviors = Data.Behaviors
             .Select(bd => bd.CreateInstance(this))
             .ToArray();
     }
@@ -1117,7 +1117,8 @@ public class EquippedItem
         var quality = pow(EquippableItem.Quality, stat.QualityExponent);
 
         var scaleModifier = 1.0f;
-        foreach (var value in stat.GetScaleModifiers(Entity).Values) scaleModifier = scaleModifier * value;
+        var scaleModifiers = stat.GetScaleModifiers(Entity).Values;
+        foreach (var value in scaleModifiers) scaleModifier *= value;
 
         float constantModifier = 0;
         foreach (var value in stat.GetConstantModifiers(Entity).Values) constantModifier += value;
@@ -1150,9 +1151,6 @@ public class EquippedItem
 
     public void Update(float delta)
     {
-        foreach (var behavior in Behaviors)
-            if(behavior is IAlwaysUpdatedBehavior alwaysUpdatedBehavior) alwaysUpdatedBehavior.Update(delta);
-
         if (Active.Value)
         {
             foreach (var group in BehaviorGroups.Values)
@@ -1164,9 +1162,12 @@ public class EquippedItem
                 }
             }
         }
+        
+        foreach (var behavior in Behaviors)
+            if(behavior is IAlwaysUpdatedBehavior alwaysUpdatedBehavior) alwaysUpdatedBehavior.Update(delta);
     }
 
-    public T GetBehavior<T>() where T : Behavior
+    public T GetBehavior<T>() where T : class
     {
         foreach (var behavior in Behaviors)
             if (behavior is T b)

@@ -5592,6 +5592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Dialog: {fileID: 0}
+  DragParent: {fileID: 0}
   Flip: 1
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   GameManager: {fileID: 1009503729}
@@ -9907,6 +9908,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff,
         type: 2}
+    - target: {fileID: 2279630453886260054, guid: aac073da6df367d499834c926930dd84,
+        type: 3}
+      propertyPath: DragParent
+      value: 
+      objectReference: {fileID: 245842385}
     - target: {fileID: 2279630453886260054, guid: aac073da6df367d499834c926930dd84,
         type: 3}
       propertyPath: ContextMenu
@@ -31055,6 +31061,11 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 2279630453886260054, guid: aac073da6df367d499834c926930dd84,
         type: 3}
+      propertyPath: DragParent
+      value: 
+      objectReference: {fileID: 245842385}
+    - target: {fileID: 2279630453886260054, guid: aac073da6df367d499834c926930dd84,
+        type: 3}
       propertyPath: ContextMenu
       value: 
       objectReference: {fileID: 1157981993}
@@ -36242,6 +36253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Dialog: {fileID: 0}
+  DragParent: {fileID: 0}
   Flip: 0
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   GameManager: {fileID: 1009503729}

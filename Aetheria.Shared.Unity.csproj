@@ -109,8 +109,8 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPacket.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Zone.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Agents\Minion.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ChargedWeapon.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetUtils.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ChargedWeapon.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\DataModel.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\IVertex.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\BaseChannel.cs" />

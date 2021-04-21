@@ -20,7 +20,7 @@ public class SwitchData : BehaviorData
     }
 }
 
-public class Switch : Behavior
+public class Switch : Behavior, IActivatedBehavior
 {
     private SwitchData _data;
 
@@ -38,5 +38,15 @@ public class Switch : Behavior
     public override bool Execute(float dt)
     {
         return Activated;
+    }
+
+    public void Activate()
+    {
+        Activated = true;
+    }
+
+    public void Deactivate()
+    {
+        Activated = false;
     }
 }

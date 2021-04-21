@@ -22,19 +22,22 @@ public class AetherDriveData : BehaviorData
     [Inspectable, JsonProperty("couplingLambdas"), Key(4)]
     public float3 CouplingLambda;
     
-    [Inspectable, JsonProperty("couplingEfficiency"), Key(5), RuntimeInspectable]
+    [Inspectable, JsonProperty("lambdaMultiplier"), Key(5)]
+    public PerformanceStat LambdaMultiplier;
+    
+    [Inspectable, JsonProperty("couplingEfficiency"), Key(6), RuntimeInspectable]
     public PerformanceStat CouplingEfficiency;
     
-    [Inspectable, JsonProperty("torque"), Key(6), RuntimeInspectable]
+    [Inspectable, JsonProperty("torque"), Key(7), RuntimeInspectable]
     public PerformanceStat Torque;
     
-    [Inspectable, JsonProperty("torqueProfile"), Key(7), RuntimeInspectable]
+    [Inspectable, JsonProperty("torqueProfile"), Key(8), RuntimeInspectable]
     public BezierCurve TorqueProfile;
     
-    [Inspectable, JsonProperty("draw"), Key(8), RuntimeInspectable]
+    [Inspectable, JsonProperty("draw"), Key(9), RuntimeInspectable]
     public PerformanceStat EnergyDraw;
     
-    [Inspectable, JsonProperty("passiveCoupling"), Key(9), RuntimeInspectable]
+    [Inspectable, JsonProperty("passiveCoupling"), Key(10), RuntimeInspectable]
     public PerformanceStat PassiveCoupling;
     
     public override Behavior CreateInstance(EquippedItem item)
@@ -88,7 +91,7 @@ public class AetherDrive : Behavior
 
         Thrust = (Rpm - AetheriaMath.Decay(Rpm, _data.CouplingLambda, dt)) * _data.RotorMass * efficiency;
 
-        var couplingLambda = _data.CouplingLambda * max(abs(_axis), Evaluate(_data.PassiveCoupling));
+        var couplingLambda = _data.CouplingLambda * Item.Evaluate(_data.LambdaMultiplier) * max(abs(_axis), Evaluate(_data.PassiveCoupling));
         var previousRpm = Rpm;
         Rpm = AetheriaMath.Decay(Rpm, couplingLambda, dt);
         var rpmLoss = previousRpm - Rpm;

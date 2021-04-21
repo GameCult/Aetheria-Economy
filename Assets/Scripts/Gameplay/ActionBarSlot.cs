@@ -147,15 +147,16 @@ public class ActionBarGearBinding : ActionBarBinding
     public ActionBarGearBinding(Entity entity, ActionBarSlot slot, EquippedItem item, IActivatedBehavior behavior) : base(entity, slot)
     {
         Item = item;
+        var data = item.EquippableItem.Data.Value as EquippableItemData;
         Behavior = behavior;
         Slot.QuantityRemaining.gameObject.SetActive(false);
-        if(!string.IsNullOrEmpty(Item.Data.ActionBarIcon))
-        {
-            Slot.Label.gameObject.SetActive(false);
-            Slot.Icon.gameObject.SetActive(true);
+        Slot.Icon.gameObject.SetActive(true);
+        Slot.Label.gameObject.SetActive(false);
+        if (!string.IsNullOrEmpty(Item.Data.ActionBarIcon))
             Slot.Icon.texture = Resources.Load<Texture2D>(Item.Data.ActionBarIcon.Substring("Assets/Resources/".Length).Split('.').First());
-        }
-        else Slot.Icon.gameObject.SetActive(false);
+        else if (data is WeaponItemData weaponItemData)
+            Slot.Icon.texture = ActionGameManager.Instance.Settings.GetIcon(weaponItemData.WeaponType).texture;
+        else Slot.Icon.texture = ActionGameManager.Instance.Settings.GetIcon(data.HardpointType).texture;
     }
 
     public override void Activate()

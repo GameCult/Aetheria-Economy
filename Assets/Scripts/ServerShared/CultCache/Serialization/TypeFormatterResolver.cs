@@ -14,17 +14,18 @@ public class TypeFormatter : MessagePack.Formatters.IMessagePackFormatter<Type>
     
     public void Serialize(ref MessagePackWriter writer, Type value, MessagePackSerializerOptions options)
     {
-        writer.Write(value.AssemblyQualifiedName);
+        writer.Write(value == null ? "" : value.AssemblyQualifiedName);
     }
 
     public Type Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         if (reader.IsNil)
         {
-            throw new InvalidOperationException("typecode is null, struct not supported");
+            return null; //throw new InvalidOperationException("typecode is null, struct not supported");
         }
 
         var assemblyQualifiedName = reader.ReadString();
+        if (string.IsNullOrEmpty(assemblyQualifiedName)) return null;
         
         return Type.GetType(assemblyQualifiedName);
     }

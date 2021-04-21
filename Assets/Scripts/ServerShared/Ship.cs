@@ -281,7 +281,7 @@ public class Ship : Entity
                 deltaRot = 0;
                 Direction = lerp(Direction, look, min(delta, 1));
             }
-            deltaRot = pow(abs(deltaRot), .75f) * sign(deltaRot);
+            deltaRot = pow(abs(deltaRot), .5f) * sign(deltaRot);
         
             foreach (var thruster in _clockwiseThrusters) thruster.Axis += deltaRot;
             foreach (var thruster in _counterClockwiseThrusters) thruster.Axis += -deltaRot;

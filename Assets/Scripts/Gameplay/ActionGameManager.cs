@@ -166,8 +166,8 @@ public class ActionGameManager : MonoBehaviour
         (float2(0, -1), "Rear")
     };
 
-    private DragAction _dragAction;
-    private Action<DragAction> _endDragCallback;
+    public DragObject DragObject { get; private set; }
+    private Func<DragObject, bool> _endDragCallback;
 
     private List<Story> _stories = new List<Story>();
 
@@ -242,7 +242,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.Dock.performed += context =>
         {
-            if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
+            if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null) return;
             if (MainMenu.gameObject.activeSelf) return;
             if (CurrentEntity == null)
             {
@@ -356,13 +356,18 @@ public class ActionGameManager : MonoBehaviour
                     //Debug.Log("Registering binding!");
                     switch (dragAction)
                     {
-                        case EquippedItemDragAction equippedItemDragAction:
-                            break;
-                        case ItemInstanceDragAction itemInstanceDragAction:
-                            break;
-                        case WeaponGroupDragAction weaponGroupDragAction:
+                        case EquippedItemDragObject equippedItemDragAction:
+                            var trigger = equippedItemDragAction.EquippedItem.GetBehavior<IActivatedBehavior>();
+                            if (trigger == null) return false;
+                            slot.Binding = new ActionBarGearBinding(CurrentEntity, slot, equippedItemDragAction.EquippedItem, trigger);
+                            return true;
+                        case ItemInstanceDragObject itemInstanceDragAction:
+                            if (!(itemInstanceDragAction.Item.Data.Value is ConsumableItemData consumable)) return false;
+                            slot.Binding = new ActionBarConsumableBinding(CurrentEntity, slot, consumable);
+                            return true;
+                        case WeaponGroupDragObject weaponGroupDragAction:
                             slot.Binding = new ActionBarWeaponGroupBinding(CurrentEntity, slot, weaponGroupDragAction.Group);
-                            break;
+                            return true;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(dragAction));
                     }
@@ -511,12 +516,12 @@ public class ActionGameManager : MonoBehaviour
             });
     }
 
-    public void BeginDrag(DragAction dragAction)
+    public void BeginDrag(DragObject dragObject)
     {
-        _dragAction = dragAction;
+        this.DragObject = dragObject;
     }
 
-    public void RegisterDragTarget(Action<DragAction> onEndDrag)
+    public void RegisterDragTarget(Func<DragObject, bool> onEndDrag)
     {
         _endDragCallback = onEndDrag;
     }
@@ -526,10 +531,11 @@ public class ActionGameManager : MonoBehaviour
         _endDragCallback = null;
     }
 
-    public void EndDrag()
+    public bool EndDrag()
     {
-        _endDragCallback?.Invoke(_dragAction);
-        _dragAction = null;
+        var success = _endDragCallback?.Invoke(DragObject);
+        DragObject = null;
+        return success ?? false;
     }
 
     public void EnablePlayerInput()
@@ -606,7 +612,7 @@ public class ActionGameManager : MonoBehaviour
 
     private void ToggleMainMenu()
     {
-        if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
+        if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null) return;
         if (CurrentEntity == null) return;
         if (MainMenu.gameObject.activeSelf)
         {
@@ -645,7 +651,7 @@ public class ActionGameManager : MonoBehaviour
 
     private void ToggleMenuTab(MenuTab tab)
     {
-        if (EventSystem.current.currentSelectedGameObject?.GetComponent<TMP_InputField>() != null) return;
+        if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null) return;
         if (MainMenu.gameObject.activeSelf) return;
         if (Menu.gameObject.activeSelf && Menu.CurrentTab == tab)
         {
@@ -1082,11 +1088,11 @@ public class ActionGameManager : MonoBehaviour
     }
 }
 
-public abstract class DragAction{}
+public abstract class DragObject{}
 
-public class WeaponGroupDragAction : DragAction
+public class WeaponGroupDragObject : DragObject
 {
-    public WeaponGroupDragAction(int group)
+    public WeaponGroupDragObject(int group)
     {
         Group = group;
     }
@@ -1094,22 +1100,36 @@ public class WeaponGroupDragAction : DragAction
     public int Group { get; }
 }
 
-public class ItemInstanceDragAction : DragAction
+public abstract class ItemDragObject : DragObject
 {
-    public ItemInstanceDragAction(ItemInstance item)
+    protected ItemDragObject(int2 originCellOffset, ItemInstance item)
     {
+        OriginCellOffset = originCellOffset;
         Item = item;
     }
 
     public ItemInstance Item { get; }
+    public int2 OriginCellOffset { get; }
 }
 
-public class EquippedItemDragAction : DragAction
+public class ItemInstanceDragObject : ItemDragObject
 {
-    public EquippedItemDragAction(EquippedItem item)
+    public ItemInstanceDragObject(ItemInstance item, EquippedCargoBay originInventory, int2 originCellOffset) : base(originCellOffset, item)
     {
-        Item = item;
+        OriginInventory = originInventory;
     }
 
-    public EquippedItem Item { get; }
+    public EquippedCargoBay OriginInventory { get; }
+}
+
+public class EquippedItemDragObject : ItemDragObject
+{
+    public EquippedItemDragObject(EquippedItem item, Entity originEntity, int2 originCellOffset) : base(originCellOffset, item.EquippableItem)
+    {
+        EquippedItem = item;
+        OriginEntity = originEntity;
+    }
+
+    public EquippedItem EquippedItem { get; }
+    public Entity OriginEntity { get; }
 }

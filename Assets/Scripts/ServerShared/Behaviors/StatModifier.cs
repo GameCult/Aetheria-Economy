@@ -34,13 +34,16 @@ public class StatModifierData : BehaviorData
 }
 
 [Order(-4)]
-public class StatModifier : Behavior, IInitializableBehavior, IDisposable
+public class StatModifier : Behavior, IInitializableBehavior, IDisposable, IAlwaysUpdatedBehavior
 {
     private StatModifierData _data;
 
     private PerformanceStat[] _stats;
     
     private static Type[] _statObjects;
+
+    private bool _applied;
+    private bool _executed;
 
     private static Type[] StatObjects => _statObjects = _statObjects ?? typeof(BehaviorData).GetAllChildClasses()
         .Concat(typeof(EquippableItemData).GetAllChildClasses()).ToArray();
@@ -83,19 +86,41 @@ public class StatModifier : Behavior, IInitializableBehavior, IDisposable
         }
     }
 
-    public override bool Execute(float dt)
+    private void ApplyModifier()
     {
+        _applied = true;
         foreach (var stat in _stats)
             (_data.Type == StatModifierType.Constant
                 ? stat.GetConstantModifiers(Entity)
                 : stat.GetScaleModifiers(Entity))[this] = Evaluate(_data.Modifier);
+    }
+
+    private void RemoveModifier()
+    {
+        _applied = false;
+        foreach (var stat in _stats)
+            (_data.Type == StatModifierType.Constant ? stat.GetConstantModifiers(Entity) : stat.GetScaleModifiers(Entity)).Remove(this);
+    }
+
+    public override bool Execute(float dt)
+    {
+        _executed = true;
         return true;
     }
 
     public void Dispose()
     {
-        foreach (var stat in _stats)
-            (_data.Type == StatModifierType.Constant ? stat.GetConstantModifiers(Entity) : stat.GetScaleModifiers(Entity)).Remove(this);
+        if(_applied)
+            RemoveModifier();
+    }
+
+    public void Update(float delta)
+    {
+        if(_executed && !_applied)
+            ApplyModifier();
+        if(!_executed && _applied)
+            RemoveModifier();
+        _executed = false;
     }
 }
 

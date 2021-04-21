@@ -302,7 +302,7 @@ public class CompoundCommodityData : CraftedItemData
 public class ConsumableItemData : CraftedItemData
 {
     [Inspectable, JsonProperty("behaviors"), Key(10)]
-    public List<StatModifierData> StatModifiers = new List<StatModifierData>();
+    public List<BehaviorData> Behaviors = new List<BehaviorData>();
 
     [Inspectable, JsonProperty("stackable"), Key(11)]
     public bool Stackable;
