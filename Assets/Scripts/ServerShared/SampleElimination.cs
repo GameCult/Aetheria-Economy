@@ -87,11 +87,10 @@ public static class WeightedSampleElimination
 		}, densityFunc, d_max);
 	}
 
-	public static float2[] GeneratePoints(int count, Func<float2, float> density = null, Func<float2, float> envelope = null, Action<string> progressCallback = null, uint seed = 1337)
+	public static float2[] GeneratePoints(int count, ref Random random, Func<float2, float> density = null, Func<float2, float> envelope = null, Action<string> progressCallback = null)
 	{
 		if (density == null) density = v => .5f;
 		if (envelope == null) envelope = v => 1;
-		var random = new Random(seed);
 		var inputSamples = new float2[count * 8];
 		var sample = 0;
 		var accumulator = 0f;

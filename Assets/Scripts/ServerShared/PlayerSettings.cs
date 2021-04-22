@@ -9,6 +9,7 @@ public class PlayerSettings
     [Key(1)] public SavedGame SavedRun;
     [Key(2)] public TemperatureUnit TemperatureUnit = TemperatureUnit.Celsius;
     [Key(3)] public int SignificantDigits = 3;
+    [Key(4)] public bool TutorialPassed;
 
     public string FormatTemperature(float t)
     {

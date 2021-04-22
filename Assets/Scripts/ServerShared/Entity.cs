@@ -1141,7 +1141,7 @@ public class EquippedItem
         ThermalPerformance = Data.Performance(temp);
         DurabilityPerformance = EquippableItem.Durability / Data.Durability;
         var performanceThreshold = Entity.Settings.ShutdownPerformance;
-        Wear = (1 - pow(Data.Performance(temp),
+        Wear = (1 - pow(ThermalPerformance,
                 (1 - pow(EquippableItem.Quality, ItemManager.GameplaySettings.QualityWearExponent)) *
                 ItemManager.GameplaySettings.ThermalWearExponent)
             ) * Data.Durability / Data.ThermalResilience;

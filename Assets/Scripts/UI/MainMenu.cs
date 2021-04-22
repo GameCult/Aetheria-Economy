@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Unity.Mathematics.math;
+using float2 = Unity.Mathematics.float2;
 using Random = UnityEngine.Random;
 
 public class MainMenu : MonoBehaviour
@@ -96,7 +97,9 @@ public class MainMenu : MonoBehaviour
                 _nextMenu.panel.AddButton("Continue",
                     () =>
                     {
-                        ActionGameManager.CurrentSector = new Sector(ActionGameManager.CultCache, ActionGameManager.PlayerSettings.SavedRun);
+                        ActionGameManager.CurrentSector = new Sector(
+                            ActionGameManager.CultCache,
+                            ActionGameManager.PlayerSettings.SavedRun);
                         SceneManager.LoadScene("ARPG");
                     });
             else
@@ -114,15 +117,45 @@ public class MainMenu : MonoBehaviour
                 Dialog.Title.text = "Generating Galaxy";
                 Dialog.AddProperty(() => generatorState);
                 Dialog.Show();
-                Settings.SectorGenerationSettings.NoisePosition = Random.value * 100;
-                
-                var task = Task.Run(() => new Sector(Settings.SectorGenerationSettings, ActionGameManager.CultCache, 0, setState));
-                task.ContinueWith(task => Observable.NextFrame().Subscribe(_ =>
+
+                if (ActionGameManager.PlayerSettings.TutorialPassed)
                 {
-                    ActionGameManager.PlayerSettings.SavedRun = null;
-                    ActionGameManager.CurrentSector = task.Result;
-                    SceneManager.LoadScene("ARPG");
-                }));
+                    Settings.SectorBackgroundSettings.NoisePosition = Random.value * 1000;
+                    ActionGameManager.IsTutorial = false;
+                    var task = Task.Run(() => new Sector(
+                        Settings.SectorGenerationSettings,
+                        Settings.SectorBackgroundSettings,
+                        Settings.NameGeneratorSettings,
+                        ActionGameManager.CultCache,
+                        setState));
+                    task.ContinueWith(task => Observable.NextFrame().Subscribe(_ =>
+                    {
+                        ActionGameManager.PlayerSettings.SavedRun = null;
+                        ActionGameManager.CurrentSector = task.Result;
+                        SceneManager.LoadScene("ARPG");
+                    }));
+                }
+                else
+                {
+                    do
+                    {
+                        Settings.TutorialBackgroundSettings.NoisePosition = Random.value * 1000;
+                    } while (Settings.TutorialBackgroundSettings.CloudDensity(float2(0.5f)) < .5f);
+                    
+                    ActionGameManager.IsTutorial = true;
+                    var task = Task.Run(() => new Sector(
+                        Settings.TutorialGenerationSettings,
+                        Settings.TutorialBackgroundSettings,
+                        Settings.NameGeneratorSettings,
+                        ActionGameManager.CultCache,
+                        setState));
+                    task.ContinueWith(task => Observable.NextFrame().Subscribe(_ =>
+                    {
+                        ActionGameManager.PlayerSettings.SavedRun = null;
+                        ActionGameManager.CurrentSector = task.Result;
+                        SceneManager.LoadScene("ARPG");
+                    }));
+                }
             });
         _nextMenu.panel.AddButton("Settings",
             () =>

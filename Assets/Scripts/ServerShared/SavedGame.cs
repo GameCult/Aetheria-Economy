@@ -33,20 +33,23 @@ public class SavedGame
     public int CurrentZoneEntity;
 
     [Key(8)]
-    public SectorGenerationSettings Settings;
+    public SectorBackgroundSettings Background;
 
     [Key(9)]
     public int[] DiscoveredZones;
 
     [Key(10)]
     public SavedActionBarBinding[] ActionBarBindings;
+
+    [Key(11)]
+    public bool IsTutorial;
     
     public SavedGame() { }
 
     public SavedGame(Sector sector, Zone currentZone, Entity currentEntity)
     {
         DiscoveredZones = sector.DiscoveredZones.Select(dz => Array.IndexOf(sector.Zones, dz)).ToArray();
-        Settings = sector.Settings;
+        Background = sector.Background;
         Factions = sector.HomeZones.Keys.Select(f => f.ID).ToArray();
         
         HomeZones = sector.HomeZones.ToDictionary(

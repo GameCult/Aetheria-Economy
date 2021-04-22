@@ -25,6 +25,10 @@ public class GameSettings : ScriptableObject
     public int AsteroidMeshCount = 5;
     public float MinimapAsteroidSize = 3;
     public float PlanetRotationSpeed = 1;
+    public NameGeneratorSettings NameGeneratorSettings;
+    public TutorialGenerationSettings TutorialGenerationSettings;
+    public SectorBackgroundSettings TutorialBackgroundSettings;
+    public SectorBackgroundSettings SectorBackgroundSettings;
     public SectorGenerationSettings SectorGenerationSettings;
     public BodySettingsCollection[] BodySettingsCollections;
     public PlanetSettings PlanetSettings;

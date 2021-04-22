@@ -116,7 +116,7 @@ public class SectorMap : MonoBehaviour
                     zoneInstance.Secondary.gameObject.SetActive(false);
                 }
 
-                var isOnCriticalPath = ActionGameManager.CurrentSector.ExitPath.Contains(zone);
+                var isOnCriticalPath = ActionGameManager.CurrentSector.ExitPath?.Contains(zone) ?? false;
                 foreach (var adjacentZone in zone.AdjacentZones)
                 {
                     // If the adjacent zone is in the set already revealed, then show the link
@@ -125,7 +125,7 @@ public class SectorMap : MonoBehaviour
                           _revealedLinks.Contains((adjacentZone, zone))))
                     {
                         var link = LinkPrototype.Instantiate<Transform>();
-                        var critical = isOnCriticalPath && ActionGameManager.CurrentSector.ExitPath.Contains(adjacentZone);
+                        var critical = isOnCriticalPath && (ActionGameManager.CurrentSector.ExitPath?.Contains(adjacentZone) ?? false);
                         linksToReveal.Add((zone.Position, adjacentZone.Position, link, critical));
                         if (zone.Owner != null && zone.Owner == adjacentZone.Owner)
                             link.GetComponent<MeshRenderer>().sharedMaterial = _factionMaterials[zone.Owner].linkMaterial;
@@ -297,14 +297,14 @@ public class SectorMap : MonoBehaviour
             legendElement.Label.text = mega.ShortName;
         }
 
-        SectorRenderer.material.SetFloat("CloudAmplitude", ActionGameManager.CurrentSector.Settings.CloudAmplitude);
-        SectorRenderer.material.SetFloat("CloudExponent", ActionGameManager.CurrentSector.Settings.CloudExponent);
-        SectorRenderer.material.SetFloat("NoisePosition", ActionGameManager.CurrentSector.Settings.NoisePosition);
-        SectorRenderer.material.SetFloat("NoiseAmplitude", ActionGameManager.CurrentSector.Settings.NoiseAmplitude);
-        SectorRenderer.material.SetFloat("NoiseOffset", ActionGameManager.CurrentSector.Settings.NoiseOffset);
-        SectorRenderer.material.SetFloat("NoiseGain", ActionGameManager.CurrentSector.Settings.NoiseGain);
-        SectorRenderer.material.SetFloat("NoiseLacunarity", ActionGameManager.CurrentSector.Settings.NoiseLacunarity);
-        SectorRenderer.material.SetFloat("NoiseFrequency", ActionGameManager.CurrentSector.Settings.NoiseFrequency);
+        SectorRenderer.material.SetFloat("CloudAmplitude", ActionGameManager.CurrentSector.Background.CloudAmplitude);
+        SectorRenderer.material.SetFloat("CloudExponent", ActionGameManager.CurrentSector.Background.CloudExponent);
+        SectorRenderer.material.SetFloat("NoisePosition", ActionGameManager.CurrentSector.Background.NoisePosition);
+        SectorRenderer.material.SetFloat("NoiseAmplitude", ActionGameManager.CurrentSector.Background.NoiseAmplitude);
+        SectorRenderer.material.SetFloat("NoiseOffset", ActionGameManager.CurrentSector.Background.NoiseOffset);
+        SectorRenderer.material.SetFloat("NoiseGain", ActionGameManager.CurrentSector.Background.NoiseGain);
+        SectorRenderer.material.SetFloat("NoiseLacunarity", ActionGameManager.CurrentSector.Background.NoiseLacunarity);
+        SectorRenderer.material.SetFloat("NoiseFrequency", ActionGameManager.CurrentSector.Background.NoiseFrequency);
     }
 
     private void RenderInfluence()

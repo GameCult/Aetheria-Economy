@@ -17,7 +17,8 @@ public class Sector
     public Dictionary<Faction, SectorZone> BossZones = new Dictionary<Faction, SectorZone>();
     public HashSet<SectorZone> DiscoveredZones = new HashSet<SectorZone>();
     
-    public SectorGenerationSettings Settings { get; }
+    public SectorBackgroundSettings Background { get; }
+    public NameGeneratorSettings NameGeneratorSettings { get; }
     public Faction[] Factions { get; }
     public SectorZone[] Zones { get; }
     public SectorZone Entrance { get; }
@@ -31,13 +32,15 @@ public class Sector
     {
         get
         {
-            return _exitPath ??= FindPath(Entrance, Exit);
+            if(Entrance!=null && Exit != null)
+                return _exitPath ??= FindPath(Entrance, Exit);
+            return null;
         }
     }
 
     public Sector(CultCache cultCache, SavedGame savedGame)
     {
-        Settings = savedGame.Settings;
+        Background = savedGame.Background;
         Factions = savedGame.Factions.Select(cultCache.Get<Faction>).ToArray();
         Zones = savedGame.Zones.Select(zone =>
         {
@@ -70,43 +73,265 @@ public class Sector
         CalculateDistanceMatrix();
     }
 
-    public Sector(SectorGenerationSettings settings, CultCache cultCache, uint seed = 0, Action<string> progressCallback = null, float minLineSeparation = .01f)
+    public Sector(
+        SectorGenerationSettings settings, 
+        SectorBackgroundSettings background, 
+        NameGeneratorSettings nameGeneratorSettings, 
+        CultCache cache, 
+        Action<string> progressCallback = null,
+        uint seed = 0)
     {
-        Settings = settings;
-        var megas = cultCache.GetAll<Faction>();
+        Background = background;
+        var factions = cache.GetAll<Faction>();
         var random = new Random(seed == 0 ? (uint) (DateTime.Now.Ticks % uint.MaxValue) : seed);
-        Factions = megas.OrderBy(x => random.NextFloat()).Take(settings.MegaCount).ToArray();
+        Factions = factions.OrderBy(x => random.NextFloat()).Take(settings.MegaCount).ToArray();
 
-        var outputSamples = WeightedSampleElimination.GeneratePoints(settings.ZoneCount,
-            settings.CloudDensity,
+        Zones = GenerateZones(settings.ZoneCount, ref random, progressCallback);
+
+        GenerateLinks(settings.LinkDensity, progressCallback);
+
+        CalculateDistanceMatrix(progressCallback);
+
+        // Exit is the most isolated zone (highest total distance to all other zones)
+        Exit = Zones.MaxBy(z => z.Isolation);
+        
+        // Entrance is the zone furthest from the exit
+        Entrance = Zones.MaxBy(z => Exit.Distance[z]);
+        
+        DiscoveredZones.Add(Entrance);
+        foreach(var z in Entrance.AdjacentZones) DiscoveredZones.Add(z);
+        
+        PlaceFactionsMain(settings.BossCount, progressCallback);
+
+        CalculateFactionInfluence(progressCallback);
+
+        GenerateNames(cache, nameGeneratorSettings, ref random, progressCallback);
+
+        progressCallback?.Invoke("Done!");
+        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
+    }
+
+    public Sector(
+        TutorialGenerationSettings settings,
+        SectorBackgroundSettings background,
+        NameGeneratorSettings nameGeneratorSettings,
+        CultCache cache,
+        Action<string> progressCallback = null,
+        uint seed = 0)
+    {
+        Background = background;
+        var allFactions = cache.GetAll<Faction>();
+        var random = new Random(seed == 0 ? (uint) (DateTime.Now.Ticks % uint.MaxValue) : seed);
+        
+        var factions = new List<Faction>();
+        
+        var protagonistFaction = allFactions.First(f => f.Name.StartsWith(settings.ProtagonistFaction, StringComparison.InvariantCultureIgnoreCase));
+        factions.Add(protagonistFaction);
+        
+        var antagonistFaction = allFactions.First(f => f.Name.StartsWith(settings.AntagonistFaction, StringComparison.InvariantCultureIgnoreCase));
+        factions.Add(antagonistFaction);
+        
+        var bufferFaction = allFactions.First(f => f.Name.StartsWith(settings.BufferFaction, StringComparison.InvariantCultureIgnoreCase));
+        factions.Add(bufferFaction);
+        
+        var questFaction = allFactions.First(f => f.Name.StartsWith(settings.QuestFaction, StringComparison.InvariantCultureIgnoreCase));
+        factions.Add(questFaction);
+        
+        var neutralFactions = settings.NeutralFactions
+            .Select(s => allFactions.First(f => f.Name.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)))
+            .ToArray();
+        factions.AddRange(neutralFactions);
+        
+        Factions = factions.ToArray();
+        foreach (var faction in Factions) faction.InfluenceDistance = (faction.InfluenceDistance + 1) / 2;
+
+        Zones = GenerateZones(settings.ZoneCount, ref random, progressCallback);
+
+        GenerateLinks(settings.LinkDensity, progressCallback);
+
+        CalculateDistanceMatrix(progressCallback);
+
+        HomeZones[protagonistFaction] = Zones
+            .MaxBy(z => ConnectedRegion(z, protagonistFaction.InfluenceDistance).Count);
+
+        HomeZones[antagonistFaction] = Zones
+            .MaxBy(z => ConnectedRegion(z, antagonistFaction.InfluenceDistance).Count * z.Distance[HomeZones[protagonistFaction]]);
+
+        HomeZones[protagonistFaction] = Zones
+            .MaxBy(z => ConnectedRegion(z, protagonistFaction.InfluenceDistance).Count * sqrt(z.Distance[HomeZones[antagonistFaction]]));
+        
+        // var antagonistRegion = ConnectedRegion(HomeZones[antagonistFaction], antagonistFaction.InfluenceDistance);
+        // var protagonistRegion = ConnectedRegion(HomeZones[protagonistFaction], protagonistFaction.InfluenceDistance);
+
+        // Place the buffer faction in a zone where it has equal distance to the pro/antagonist HQs and where it can control the most territory
+        var bufferDistance = Zones.Min(z => abs(z.Distance[HomeZones[antagonistFaction]] - z.Distance[HomeZones[protagonistFaction]]));
+        var potentialBufferZones = Zones
+            .Where(z => abs(z.Distance[HomeZones[antagonistFaction]] - z.Distance[HomeZones[protagonistFaction]]) == bufferDistance);
+        HomeZones[bufferFaction] = potentialBufferZones.MaxBy(z => ConnectedRegion(z, bufferFaction.InfluenceDistance).Count);
+        
+        // Place neutral headquarters away from existing factions while also maximizing territory
+        foreach (var faction in neutralFactions)
+        {
+            HomeZones[faction] = Zones.MaxBy(z =>
+                ConnectedRegion(z, faction.InfluenceDistance).Count *
+                HomeZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])));
+        }
+        
+        CalculateFactionInfluence(progressCallback);
+
+        var potentialQuestZones = Zones
+            .Where(z => z.Factions.Contains(antagonistFaction) && z.Factions.Contains(bufferFaction));
+        HomeZones[questFaction] = potentialQuestZones
+            .MaxBy(z=>z.Distance[HomeZones[antagonistFaction]] * ConnectedRegion(z, questFaction.InfluenceDistance).Count);
+        
+        CalculateFactionInfluence(progressCallback);
+
+        Entrance = ConnectedRegion(HomeZones[protagonistFaction], 2)
+            .MaxBy(z => z.Distance[HomeZones[antagonistFaction]]);
+        
+        DiscoveredZones.Add(Entrance);
+        foreach(var z in Entrance.AdjacentZones) DiscoveredZones.Add(z);
+
+        CalculateFactionInfluence(progressCallback);
+
+        GenerateNames(cache, nameGeneratorSettings, ref random, progressCallback);
+
+        progressCallback?.Invoke("Done!");
+        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
+    }
+
+    private SectorZone[] GenerateZones(int zoneCount, ref Random random, Action<string> progressCallback = null)
+    {
+        var outputSamples = WeightedSampleElimination.GeneratePoints(zoneCount,
+            ref random,
+            Background.CloudDensity,
             v => (.2f - lengthsq(v - float2(.5f))) * 4,
             progressCallback);
-        Zones = outputSamples.Select(v => new SectorZone {Position = v}).ToArray();
+        return outputSamples.Select(v => new SectorZone {Position = v}).ToArray();
+    }
 
-        #region Link Placement
-
-        progressCallback?.Invoke("Triangulating Zone Positions");
+    private void PlaceFactionsMain(int bossCount, Action<string> progressCallback = null)
+    {
+        progressCallback?.Invoke("Finding Chokepoints");
         if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
         
+        // Find all zones on the exit path where removing that zone would disconnect the entrance from the exit
+        // Disregard "corridor" zones with only two adjacent zones
+        var chokePoints = ExitPath
+            .Where(z => z.AdjacentZones.Count > 2 && !ConnectedRegion(Entrance, z).Contains(Exit));
+
+        progressCallback?.Invoke("Placing Factions");
+        if (progressCallback != null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
+
+        // Choose some megas to have bosses placed based on whether a boss hull is assigned
+        var bossMegas = Factions
+            .Where(m => m.BossHull != Guid.Empty)
+            .Take(bossCount)
+            .ToArray();
+
+        // Place boss zones along the critical path as far apart from each other as possible
+        foreach (var mega in bossMegas)
+        {
+            BossZones[mega] = chokePoints.MaxBy(z =>
+                Exit.Distance[z] * Entrance.Distance[z] *
+                BossZones.Values.Aggregate(1, (i, os) => i * os.Distance[z]));
+        }
+
+        // Place boss mega headquarters such that their sphere of influence encompasses their boss zone
+        // While occupying as much territory as possible
+        foreach (var mega in bossMegas)
+        {
+            HomeZones[mega] = ConnectedRegion(BossZones[mega], mega.InfluenceDistance)
+                .MaxBy(z =>
+                    ConnectedRegion(z, mega.InfluenceDistance).Count *
+                    HomeZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])));
+        }
+
+        // Place remaining headquarters away from existing megas while also maximizing territory
+        foreach (var mega in Factions.Where(m => !bossMegas.Contains(m)))
+        {
+            HomeZones[mega] = Zones.MaxBy(z =>
+                pow(ConnectedRegion(z, mega.InfluenceDistance).Count, HomeZones.Count) *
+                Exit.Distance[z] * Entrance.Distance[z] *
+                HomeZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])) *
+                BossZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])));
+        }
+    }
+
+    private void CalculateFactionInfluence(Action<string> progressCallback = null)
+    {
+        progressCallback?.Invoke("Calculating Faction Influence");
+        if (progressCallback != null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
+
+        // Assign faction presence
+        foreach (var zone in Zones)
+        {
+            // Factions are present in all zones within their sphere of influence
+            zone.Factions = Factions
+                .Where(f => HomeZones.ContainsKey(f))
+                .Where(f => zone.Distance[HomeZones[f]] <= f.InfluenceDistance)
+                .ToArray();
+
+            // Owner of a zone is the faction with the nearest headquarters
+            var nearestFaction = Factions
+                .Where(f => HomeZones.ContainsKey(f))
+                .MinBy(f => (float)zone.Distance[HomeZones[f]]);
+            if (zone.Distance[HomeZones[nearestFaction]] <= nearestFaction.InfluenceDistance)
+                zone.Owner = nearestFaction;
+        }
+    }
+
+    private void GenerateNames(CultCache cache,
+        NameGeneratorSettings nameGeneratorSettings,
+        ref Random random,
+        Action<string> progressCallback = null)
+    {
+        for (var i = 0; i < Factions.Length; i++)
+        {
+            progressCallback?.Invoke($"Feeding Markov Chains: {i + 1} / {Factions.Length}");
+            //if(progressCallback!=null) Thread.Sleep(250); // Inserting Delay to make it seem like it's doing more work lmao
+            var faction = Factions[i];
+            _nameGenerators[faction] = new MarkovNameGenerator(ref random, cache.Get<NameFile>(faction.GeonameFile).Names, nameGeneratorSettings);
+        }
+
+        // Generate zone name using the owner's name generator, otherwise assign catalogue ID
+        foreach (var zone in Zones)
+        {
+            if (zone.Owner != null)
+            {
+                zone.Name = _nameGenerators[zone.Owner].NextName.Trim();
+            }
+            else
+            {
+                zone.Name = $"EAC-{random.NextInt(9999).ToString()}";
+            }
+        }
+    }
+
+    private void GenerateLinks(float linkDensity, Action<string> progressCallback = null)
+    {
+        progressCallback?.Invoke("Triangulating Zone Positions");
+        if (progressCallback != null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
+
         // Create a delaunay triangulation to connect adjacent sectors
         var triangulation = DelaunayTriangulation<Vertex2<SectorZone>, Cell2<SectorZone>>
             .Create(Zones.Select(z => new Vertex2<SectorZone>(z.Position, z)).ToList(), 1e-7f);
         var links = new HashSet<(SectorZone, SectorZone)>();
-        foreach(var cell in triangulation.Cells)
+        foreach (var cell in triangulation.Cells)
         {
-            if(!links.Contains((cell.Vertices[0].StoredObject, cell.Vertices[1].StoredObject)) &&
-               !links.Contains((cell.Vertices[1].StoredObject, cell.Vertices[0].StoredObject)))
+            if (!links.Contains((cell.Vertices[0].StoredObject, cell.Vertices[1].StoredObject)) &&
+                !links.Contains((cell.Vertices[1].StoredObject, cell.Vertices[0].StoredObject)))
                 links.Add((cell.Vertices[0].StoredObject, cell.Vertices[1].StoredObject));
-            if(!links.Contains((cell.Vertices[1].StoredObject, cell.Vertices[2].StoredObject)) &&
-               !links.Contains((cell.Vertices[2].StoredObject, cell.Vertices[1].StoredObject)))
+            if (!links.Contains((cell.Vertices[1].StoredObject, cell.Vertices[2].StoredObject)) &&
+                !links.Contains((cell.Vertices[2].StoredObject, cell.Vertices[1].StoredObject)))
                 links.Add((cell.Vertices[1].StoredObject, cell.Vertices[2].StoredObject));
-            if(!links.Contains((cell.Vertices[0].StoredObject, cell.Vertices[2].StoredObject)) &&
-               !links.Contains((cell.Vertices[2].StoredObject, cell.Vertices[0].StoredObject)))
+            if (!links.Contains((cell.Vertices[0].StoredObject, cell.Vertices[2].StoredObject)) &&
+                !links.Contains((cell.Vertices[2].StoredObject, cell.Vertices[0].StoredObject)))
                 links.Add((cell.Vertices[0].StoredObject, cell.Vertices[2].StoredObject));
         }
 
         progressCallback?.Invoke("Eliminating Zone Links");
-        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
+        if (progressCallback != null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
         // foreach (var link in links.ToArray())
         // {
         //     foreach (var zone in Zones)
@@ -125,17 +350,17 @@ public class Sector
 
         float LinkWeight((SectorZone, SectorZone) link)
         {
-            return 1 / saturate(settings.CloudDensity((link.Item1.Position + link.Item2.Position) / 2)) *
+            return 1 / saturate(Background.CloudDensity((link.Item1.Position + link.Item2.Position) / 2)) *
                    lengthsq(link.Item1.Position - link.Item2.Position) *
                    (link.Item1.AdjacentZones.Count - 1) * (link.Item2.AdjacentZones.Count - 1);
         }
-        
+
         var heap = new MaxHeap<(SectorZone, SectorZone)>(links.Count);
-        foreach(var link in links) heap.PushObj(link, LinkWeight(link));
-        while (heap.Count > settings.LinkDensity * links.Count)
+        foreach (var link in links) heap.PushObj(link, LinkWeight(link));
+        while (heap.Count > linkDensity * links.Count)
         {
             var link = heap.PopObj();
-            if(ConnectedRegion(link.Item1, link.Item1, link.Item2).Contains(link.Item2))
+            if (ConnectedRegion(link.Item1, link.Item1, link.Item2).Contains(link.Item2))
             {
                 link.Item1.AdjacentZones.Remove(link.Item2);
                 link.Item2.AdjacentZones.Remove(link.Item1);
@@ -152,124 +377,24 @@ public class Sector
                 }
             }
         }
+    }
 
-        #endregion
-
+    // Cache distance matrix and calculate isolation for every zone (used extensively for placing stuff)
+    private void CalculateDistanceMatrix(Action<string> progressCallback = null)
+    {
         progressCallback?.Invoke("Calculating Distance Matrix");
         if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
-        CalculateDistanceMatrix();
-        
-        progressCallback?.Invoke("Finding Chokepoints");
-        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
-
-        // Exit is the most isolated zone (highest total distance to all other zones)
-        Exit = Zones.MaxBy(z => z.Isolation);
-        
-        // Entrance is the zone furthest from the exit
-        Entrance = Zones.MaxBy(z => Exit.Distance[z]);
-        
-        DiscoveredZones.Add(Entrance);
-        foreach(var z in Entrance.AdjacentZones) DiscoveredZones.Add(z);
-        
-        // Find all zones on the exit path where removing that zone would disconnect the entrance from the exit
-        // Disregard "corridor" zones with only two adjacent zones
-        var chokePoints = ExitPath
-            .Where(z => z.AdjacentZones.Count > 2 && !ConnectedRegion(Entrance, z).Contains(Exit));
-        
-        progressCallback?.Invoke("Placing Factions");
-        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
-        
-        // Choose some megas to have bosses placed based on whether a boss hull is assigned
-        var bossMegas = Factions
-            .Where(m => m.BossHull != Guid.Empty)
-            .Take(settings.BossCount)
-            .ToArray();
-        
-        // Place boss zones along the critical path as far apart from each other as possible
-        foreach (var mega in bossMegas)
-        {
-            BossZones[mega] = chokePoints.MaxBy(z =>
-                Exit.Distance[z] * Entrance.Distance[z] * 
-                BossZones.Values.Aggregate(1, (i, os) => i * os.Distance[z]));
-        }
-
-        // Place boss mega headquarters such that their sphere of influence encompasses their boss zone
-        // While occupying as much territory as possible
-        foreach (var mega in bossMegas)
-        {
-            HomeZones[mega] = ConnectedRegion(BossZones[mega], mega.InfluenceDistance)
-                .MaxBy(z =>
-                    ConnectedRegion(z, mega.InfluenceDistance).Count *
-                    HomeZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])));
-        }
-        
-        // Place remaining headquarters away from existing megas while also maximizing territory
-        foreach (var mega in Factions.Where(m=>!bossMegas.Contains(m)))
-        {
-            HomeZones[mega] = Zones.MaxBy(z =>
-                pow(ConnectedRegion(z, mega.InfluenceDistance).Count, HomeZones.Count) *
-                Exit.Distance[z] * Entrance.Distance[z] * 
-                HomeZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])) * 
-                BossZones.Values.Aggregate(1f, (i, os) => i * sqrt(os.Distance[z])));
-        }
-        
-        progressCallback?.Invoke("Calculating Faction Influence");
-        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
-
-        // Assign faction presence
         foreach (var zone in Zones)
         {
-            // Factions are present in all zones within their sphere of influence
-            zone.Factions = Factions
-                .Where(m => zone.Distance[HomeZones[m]] <= m.InfluenceDistance)
-                .ToArray();
-            
-            // Owner of a zone is the faction with the nearest headquarters
-            var nearestFaction = Factions.MinBy(m => zone.Distance[HomeZones[m]]);
-            if (zone.Distance[HomeZones[nearestFaction]] <= nearestFaction.InfluenceDistance)
-                zone.Owner = nearestFaction;
+            zone.Distance = ConnectedRegionDistance(zone);
+            zone.Isolation = zone.Distance.Sum(x => x.Value);
         }
-
-        for (var i = 0; i < Factions.Length; i++)
-        {
-            progressCallback?.Invoke($"Feeding Markov Chains: {i+1} / {Factions.Length}");
-            //if(progressCallback!=null) Thread.Sleep(250); // Inserting Delay to make it seem like it's doing more work lmao
-            var faction = Factions[i];
-            _nameGenerators[faction] = new MarkovNameGenerator(ref random, cultCache.Get<NameFile>(faction.GeonameFile).Names, settings);
-        }
-
-        // Generate zone name using the owner's name generator, otherwise assign catalogue ID
-        foreach (var zone in Zones)
-        {
-            if (zone.Owner != null)
-            {
-                zone.Name = _nameGenerators[zone.Owner].NextName.Trim();
-            }
-            else
-            {
-                zone.Name = $"EAC-{random.NextInt(9999).ToString()}";
-            }
-        }
-        
-        
-        progressCallback?.Invoke("Done!");
-        if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
     }
 
     public bool ContainsFaction(Guid factionID)
     {
         _containedFactions ??= new HashSet<Guid>(Factions.Select(f => f.ID));
         return _containedFactions.Contains(factionID);
-    }
-
-    // Cache distance matrix and calculate isolation for every zone (used extensively for placing stuff)
-    private void CalculateDistanceMatrix()
-    {
-        foreach (var zone in Zones)
-        {
-            zone.Distance = ConnectedRegionDistance(zone);
-            zone.Isolation = zone.Distance.Sum(x => x.Value);
-        }
     }
 
     class DijkstraVertex

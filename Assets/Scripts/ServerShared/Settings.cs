@@ -44,23 +44,24 @@ public class GalaxyShapeSettings
 }
 
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
-public class SectorGenerationSettings
+public class NameGeneratorSettings
 {
-    public float LinkDensity = .5f;
-    public int ZoneCount = 128;
     public int NameGeneratorMinLength = 5;
     public int NameGeneratorMaxLength = 10;
     public int NameGeneratorOrder = 4;
-    public int MegaCount;
-    public int BossCount;
-    public float NoisePosition;
-    public float CloudExponent;
-    public float CloudAmplitude;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
+public class SectorBackgroundSettings
+{
     public float NoiseAmplitude;
     public float NoiseOffset;
     public float NoiseGain;
     public float NoiseLacunarity;
     public float NoiseFrequency;
+    public float NoisePosition;
+    public float CloudExponent;
+    public float CloudAmplitude;
     
     public float fBm(float2 p, int octaves)
     {
@@ -82,6 +83,27 @@ public class SectorGenerationSettings
         float noise = fBm(uv + NoisePosition, 10);
         return pow(noise, CloudExponent) * CloudAmplitude;
     }
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
+public class SectorGenerationSettings
+{
+    public float LinkDensity = .5f;
+    public int ZoneCount = 128;
+    public int MegaCount;
+    public int BossCount;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
+public class TutorialGenerationSettings
+{
+    public string ProtagonistFaction;
+    public string AntagonistFaction;
+    public string BufferFaction;
+    public string[] NeutralFactions;
+    public string QuestFaction;
+    public float LinkDensity = .5f;
+    public int ZoneCount = 32;
 }
 
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]

@@ -387,7 +387,7 @@ public abstract class EquippableItemData : CraftedItemData
 
     public float Performance(float temperature)
     {
-        return saturate(HeatPerformanceCurve.Evaluate(unlerp(MinimumTemperature, MaximumTemperature, temperature)));
+        return saturate(HeatPerformanceCurve?.Evaluate(unlerp(MinimumTemperature, MaximumTemperature, temperature))??1);
     }
 }
 

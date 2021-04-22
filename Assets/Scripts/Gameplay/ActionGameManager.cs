@@ -65,6 +65,7 @@ public class ActionGameManager : MonoBehaviour
     }
 
     public static Sector CurrentSector;
+    public static bool IsTutorial;
 
     public GameSettings Settings;
     //public string StarterShipTemplate = "Longinus";
@@ -186,6 +187,10 @@ public class ActionGameManager : MonoBehaviour
     public void SaveState()
     {
         PlayerSettings.SavedRun = CurrentSector == null ? null : new SavedGame(CurrentSector, Zone, DockedEntity ?? CurrentEntity);
+        if(PlayerSettings.SavedRun != null)
+        {
+            PlayerSettings.SavedRun.IsTutorial = IsTutorial;
+        }
         SavePlayerSettings();
     }
 
@@ -457,11 +462,15 @@ public class ActionGameManager : MonoBehaviour
             {
                 var nearestFaction = CurrentSector.Factions.MinBy(f => CurrentSector.HomeZones[f].Distance[Zone.SectorZone]);
 
-                var loadoutGenerator = new LoadoutGenerator(
+                var loadoutGenerator = IsTutorial ? new LoadoutGenerator(
                     ref ItemManager.Random,
                     ItemManager,
                     CurrentSector,
                     Zone.SectorZone,
+                    nearestFaction,
+                    .5f) : new LoadoutGenerator(
+                    ref ItemManager.Random,
+                    ItemManager,
                     nearestFaction,
                     .5f);
 
@@ -473,47 +482,47 @@ public class ActionGameManager : MonoBehaviour
                 turret.Activate();
             });
         
-        ConsoleController.AddCommand("pingscene",
-            _ =>
-            {
-                var startTime = Time.time;
-                Observable.EveryUpdate().TakeWhile(_ => Time.time - startTime < 5).Subscribe(
-                    _ => Debug.Log($"{(int) (Time.time - startTime)}"),
-                    () =>
-                    {
-                        var nearestFaction = CurrentSector.Factions.MinBy(f => CurrentSector.HomeZones[f].Distance[Zone.SectorZone]);
-                        var nearestFactionHomeZone = CurrentSector.HomeZones[nearestFaction];
-                        var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[Zone.SectorZone] + 1;
-
-                        var loadoutGenerator = new LoadoutGenerator(
-                            ref ItemManager.Random,
-                            ItemManager,
-                            CurrentSector,
-                            Zone.SectorZone,
-                            nearestFaction,
-                            .5f);
-
-                        for (int i = 0; i < 8; i++)
-                        {
-                            var ship = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateShipLoadout(), true);
-                            ship.Position.xz = _currentEntity.Position.xz +
-                                               ItemManager.Random.NextFloat2Direction() * ItemManager.Random.NextFloat(50, 500);
-                            ship.Zone = Zone;
-                            Zone.Entities.Add(ship);
-                            ship.Activate();
-                        }
-
-                        for (int i = 0; i < 8; i++)
-                        {
-                            var turret = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateTurretLoadout(), true);
-                            turret.Position.xz = _currentEntity.Position.xz +
-                                                 ItemManager.Random.NextFloat2Direction() * ItemManager.Random.NextFloat(50, 500);
-                            turret.Zone = Zone;
-                            Zone.Entities.Add(turret);
-                            turret.Activate();
-                        }
-                    });
-            });
+        // ConsoleController.AddCommand("pingscene",
+        //     _ =>
+        //     {
+        //         var startTime = Time.time;
+        //         Observable.EveryUpdate().TakeWhile(_ => Time.time - startTime < 5).Subscribe(
+        //             _ => Debug.Log($"{(int) (Time.time - startTime)}"),
+        //             () =>
+        //             {
+        //                 var nearestFaction = CurrentSector.Factions.MinBy(f => CurrentSector.HomeZones[f].Distance[Zone.SectorZone]);
+        //                 var nearestFactionHomeZone = CurrentSector.HomeZones[nearestFaction];
+        //                 var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[Zone.SectorZone] + 1;
+        //
+        //                 var loadoutGenerator = new LoadoutGenerator(
+        //                     ref ItemManager.Random,
+        //                     ItemManager,
+        //                     CurrentSector,
+        //                     Zone.SectorZone,
+        //                     nearestFaction,
+        //                     .5f);
+        //
+        //                 for (int i = 0; i < 8; i++)
+        //                 {
+        //                     var ship = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateShipLoadout(), true);
+        //                     ship.Position.xz = _currentEntity.Position.xz +
+        //                                        ItemManager.Random.NextFloat2Direction() * ItemManager.Random.NextFloat(50, 500);
+        //                     ship.Zone = Zone;
+        //                     Zone.Entities.Add(ship);
+        //                     ship.Activate();
+        //                 }
+        //
+        //                 for (int i = 0; i < 8; i++)
+        //                 {
+        //                     var turret = EntitySerializer.Unpack(ItemManager, Zone, loadoutGenerator.GenerateTurretLoadout(), true);
+        //                     turret.Position.xz = _currentEntity.Position.xz +
+        //                                          ItemManager.Random.NextFloat2Direction() * ItemManager.Random.NextFloat(50, 500);
+        //                     turret.Zone = Zone;
+        //                     Zone.Entities.Add(turret);
+        //                     turret.Activate();
+        //                 }
+        //             });
+        //     });
     }
 
     public void BeginDrag(DragObject dragObject)
@@ -584,7 +593,8 @@ public class ActionGameManager : MonoBehaviour
                 ItemManager,
                 Settings.ZoneSettings,
                 CurrentSector,
-                sectorZone
+                sectorZone,
+                IsTutorial
             );
             sectorZone.Contents = new Zone(ItemManager, Settings.PlanetSettings, sectorZone.PackedContents, sectorZone);
         }
@@ -682,7 +692,8 @@ public class ActionGameManager : MonoBehaviour
             {
                 SectorMap.QueueZoneReveal(CurrentSector.Entrance.AdjacentZones.Prepend(CurrentSector.Entrance));
                 PopulateLevel(CurrentSector.Entrance);
-                var loadoutGenerator = new LoadoutGenerator(ref ItemManager.Random, ItemManager, CurrentSector, Zone.SectorZone, null, 2);
+                var loadoutGenerator = IsTutorial ? new LoadoutGenerator(ref ItemManager.Random, ItemManager, null, 2) :
+                    new LoadoutGenerator(ref ItemManager.Random, ItemManager, CurrentSector, Zone.SectorZone, null, 2);
                 var ship = EntitySerializer.Unpack(
                     ItemManager, 
                     Zone, 

@@ -39,13 +39,14 @@ public static class ZoneGenerator
 		ItemManager itemManager,
 		ZoneGenerationSettings zoneSettings,
 		Sector sector,
-		SectorZone sectorZone)
+		SectorZone sectorZone,
+		bool isTutorial = false)
 	{
 		var pack = new ZonePack();
 
 		var random = new Random(unchecked((uint) sectorZone.Name.GetHashCode()) ^ hash(sectorZone.Position));
 
-		var density = saturate(sector.Settings.CloudDensity(sectorZone.Position));
+		var density = saturate(sector.Background.CloudDensity(sectorZone.Position));
 		pack.Radius = zoneSettings.ZoneRadius.Evaluate(density);
 		pack.Mass = zoneSettings.ZoneMass.Evaluate(density);
 		var targetSubzoneCount = zoneSettings.SubZoneCount.Evaluate(density);
@@ -225,7 +226,8 @@ public static class ZoneGenerator
         var nearestFactionHomeZone = sector.HomeZones[nearestFaction];
         var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[sectorZone] + 1;
         
-        var loadoutGenerator = new LoadoutGenerator(ref random, itemManager, sector, sectorZone, nearestFaction, .5f);
+        var loadoutGenerator = isTutorial ? new LoadoutGenerator(ref random, itemManager, nearestFaction, .5f) :
+	        new LoadoutGenerator(ref random, itemManager, sector, sectorZone, nearestFaction, .5f);
         for (int i = 0; i < factionPresence; i++)
         {
 	        pack.Entities.Add(loadoutGenerator.GenerateShipLoadout());
