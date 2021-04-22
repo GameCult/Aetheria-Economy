@@ -122,18 +122,21 @@ public class MainMenu : MonoBehaviour
                 {
                     Settings.SectorBackgroundSettings.NoisePosition = Random.value * 1000;
                     ActionGameManager.IsTutorial = false;
-                    var task = Task.Run(() => new Sector(
-                        Settings.SectorGenerationSettings,
-                        Settings.SectorBackgroundSettings,
-                        Settings.NameGeneratorSettings,
-                        ActionGameManager.CultCache,
-                        setState));
-                    task.ContinueWith(task => Observable.NextFrame().Subscribe(_ =>
+                    Task.Run(() =>
                     {
-                        ActionGameManager.PlayerSettings.SavedRun = null;
-                        ActionGameManager.CurrentSector = task.Result;
-                        SceneManager.LoadScene("ARPG");
-                    }));
+                        var sector = new Sector(
+                            Settings.SectorGenerationSettings,
+                            Settings.SectorBackgroundSettings,
+                            Settings.NameGeneratorSettings,
+                            ActionGameManager.CultCache,
+                            setState);
+                        Observable.NextFrame().Subscribe(_ =>
+                        {
+                            ActionGameManager.PlayerSettings.SavedRun = null;
+                            ActionGameManager.CurrentSector = sector;
+                            SceneManager.LoadScene("ARPG");
+                        });
+                    });
                 }
                 else
                 {
@@ -143,18 +146,21 @@ public class MainMenu : MonoBehaviour
                     } while (Settings.TutorialBackgroundSettings.CloudDensity(float2(0.5f)) < .5f);
                     
                     ActionGameManager.IsTutorial = true;
-                    var task = Task.Run(() => new Sector(
-                        Settings.TutorialGenerationSettings,
-                        Settings.TutorialBackgroundSettings,
-                        Settings.NameGeneratorSettings,
-                        ActionGameManager.CultCache,
-                        setState));
-                    task.ContinueWith(task => Observable.NextFrame().Subscribe(_ =>
+                    Task.Run(() =>
                     {
-                        ActionGameManager.PlayerSettings.SavedRun = null;
-                        ActionGameManager.CurrentSector = task.Result;
-                        SceneManager.LoadScene("ARPG");
-                    }));
+                        var sector = new Sector(
+                            Settings.TutorialGenerationSettings,
+                            Settings.TutorialBackgroundSettings,
+                            Settings.NameGeneratorSettings,
+                            ActionGameManager.CultCache,
+                            setState);
+                        Observable.NextFrame().Subscribe(_ =>
+                        {
+                            ActionGameManager.PlayerSettings.SavedRun = null;
+                            ActionGameManager.CurrentSector = sector;
+                            SceneManager.LoadScene("ARPG");
+                        });
+                    });
                 }
             });
         _nextMenu.panel.AddButton("Settings",

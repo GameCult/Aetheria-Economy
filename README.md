@@ -1,5 +1,9 @@
 # Aetheria
-This repository is the home of Aetheria, an economy focused RTS/ARPG. In the ARPG mode you control a single ship, engaging in combat, mining, trade and participating in the narrative. In the RTS mode you control the production, research, supply chains and actions of a corporation tasked with colonizing an alien galaxy. Control over your minions is indirect, like in Rimworld, and gameplay takes place over months as your production and tasks continue acting on the world even when you're offline.
+This repository is the home of Aetheria, a futuristic space game with a surreal story and visual style. We're planning two distinct gameplay modes, which we are initially releasing as individual titles and later combining into a single persistent world.
+
+In the ARPG mode you control a single ship, engaging in combat, mining, trade and participating in a branching interactive storyline. The game loop for our initial ARPG release is structured as an open world rogue-lite, with a new procedurally generated universe to explore during every run.
+
+In the RTS mode you control the production, research, supply chains and actions of a corporation tasked with colonizing an alien galaxy. Control over your minions is indirect, like in Rimworld, and gameplay takes place over months as your production and tasks continue acting on the world even when you're offline.
 
 <img src="https://i.ibb.co/XxvYPfH/Unity-nr8ih-BUJ75.jpg" style="zoom:50%;" />
 <img src="https://i.ibb.co/Twbwk4M/screen-3056x1720-2018-11-18-18-23-01.png" style="zoom:50%;" />
@@ -63,7 +67,7 @@ Aetheria uses [RethinkDB](https://rethinkdb.com/) for data persistence. To make 
 
 ### Programming Paradigms
 
-The codebase makes heavy use of C#'s [Language Integrated Queries (LINQ)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/), allowing for the concise representation of operations that modify or filter collections. Asynchronous stream processing is often performed using the [functional reactive programming](http://reactivex.io/) paradigm, which is achieved using [Microsoft's Reactive Extensions](https://github.com/dotnet/reactive) on the server and [Reactive Extensions for Unity](https://github.com/neuecc/UniRx). Combining Observables with LINQ allows for extremely powerful expressions of the programmer's intent.
+The codebase makes heavy use of C#'s [Language Integrated Queries (LINQ)](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/linq/), allowing for the concise representation of operations that modify or filter collections (though they do generate some garbage so must be avoided within the update loop). Asynchronous stream processing is often performed using the [functional reactive programming](http://reactivex.io/) paradigm, which is achieved using [Microsoft's Reactive Extensions](https://github.com/dotnet/reactive) on the server and [Reactive Extensions for Unity](https://github.com/neuecc/UniRx). Combining Observables with LINQ allows for extremely powerful expressions of the programmer's intent.
 
 ### Data Structures
 
@@ -97,6 +101,8 @@ In order to checkout the project, you need a git client (Github's zip download w
 
 When you have synced with the repository, you can open the project using Unity. The project uses Unity 2020.2 at the moment, and while it may work with newer or older versions, that cannot be guaranteed. You can open the project by opening the root of this repository either directly with the Unity Editor, or using [Unity Hub](https://public-cdn.cloud.unity3d.com/hub/prod/UnityHubSetup.exe), which will also take care of downloading the correct version of the Editor.
 
+**Important note:** One of our VFX features currently relies on a custom modification of the Depth of Field shader in Unity's postprocessing stack. When you open the project this mod will not be there so you may experience a blurred screen. You can fix this by replacing the file `Library\PackageCache\com.unity.postprocessing@2.3.0\PostProcessing\Shaders\Builtins\DepthOfField.hlsl` with the file of the same name placed in the repository root.
+
 ### Choosing a Task
 
 We are organizing according to an [Agile development](https://en.wikipedia.org/wiki/Agile_software_development) schedule, with the progress of each sprint being tracked on its own board in the [Github Projects tab](https://github.com/rwvens/Aetheria-Economy/projects). If you wish to take on a task from the board, please contact us to become an official contributor so that the task can be assigned to you directly. Some issues are not on the sprint schedule, those are ideal for developers who want to jump in but are shy about joining. We use the [good first issue](https://github.com/rwvens/Aetheria-Economy/labels/good%20first%20issue) label for issues that don't require heavy knowledge of the codebase.
@@ -123,17 +129,9 @@ Note that this process needs to be repeated every time the data model changes or
 
 ### Debug Console
 
-Pressing the tilde key (`) while running the game allows you to access the console. Here you can view the debug log as well as entering commands which aid in testing various game mechanics.
+Pressing the tilde key (`) while running the game allows you to access the console. Here you can view the debug log as well as entering commands which aid in testing various game mechanics. Console commands are registered with the console controller. Our current convention is to perform command registration inside ActionGameManager.cs:Start().
 
 #### Commands
-
-##### savezone
-
-Creates a new entity under your control
-
-Arguments:
-
-- Filename: If the zone is saved as "Home", it will be automatically loaded on start
 
 ### Galaxy Editor
 
@@ -151,7 +149,7 @@ After generating stars, you can generate the links between them, which performs 
 
 ## License
 
-The majority of this repository is under the Mozilla Public License and therefore available for anyone to use.
+The majority of this repository is under the Mozilla Public License and therefore available for anyone to use. Note that the MPL is per-file and therefore the license only applies to files which contain the MPL header. If you believe a file has been created by us and is missing the header, please let us know (we do forget sometimes).
 
 ## Contact Us
 

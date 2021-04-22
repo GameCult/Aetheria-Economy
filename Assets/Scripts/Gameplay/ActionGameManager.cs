@@ -201,6 +201,19 @@ public class ActionGameManager : MonoBehaviour
         EntityInstance.ClearWeaponManagers();
     }
 
+    private class AetheriaInkFileHandler : IFileHandler {
+        private DirectoryInfo NarrativeRoot { get; }
+        
+        public AetheriaInkFileHandler(DirectoryInfo narrativeRoot)
+        {
+            NarrativeRoot = narrativeRoot;
+        }
+
+        public string ResolveInkFilename (string includeName) => Path.Combine (NarrativeRoot.FullName, includeName);
+
+        public string LoadInkFileContents (string fullFilename) => File.ReadAllText (fullFilename);
+    }
+
     void Start()
     {
         Instance = this;
@@ -215,8 +228,13 @@ public class ActionGameManager : MonoBehaviour
         var narrativeFiles = narrativePath.EnumerateFiles("*.ink");
         foreach(var inkFile in narrativeFiles)
         {
-            var compiler = new Compiler(File.ReadAllText(inkFile.FullName));
-            _stories.Add(compiler.Compile());
+            var compiler = new Compiler(File.ReadAllText(inkFile.FullName), new Compiler.Options
+            {
+                countAllVisits = true,
+                fileHandler = new AetheriaInkFileHandler(narrativePath)
+            });
+            var story = compiler.Compile();
+            _stories.Add(story);
         }
 
         // _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");
