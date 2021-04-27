@@ -68,7 +68,8 @@ public class Sector
             x => Zones[x.Value]);
 
         Entrance = Zones[savedGame.Entrance];
-        Exit = Zones[savedGame.Exit];
+        if(savedGame.Exit != -1)
+            Exit = Zones[savedGame.Exit];
 
         CalculateDistanceMatrix();
     }
@@ -119,26 +120,27 @@ public class Sector
         Action<string> progressCallback = null,
         uint seed = 0)
     {
+        Faction ResolveFaction(string name) => cache.GetAll<Faction>().FirstOrDefault(f => f.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
+
         Background = background;
-        var allFactions = cache.GetAll<Faction>();
         var random = new Random(seed == 0 ? (uint) (DateTime.Now.Ticks % uint.MaxValue) : seed);
         
         var factions = new List<Faction>();
-        
-        var protagonistFaction = allFactions.First(f => f.Name.StartsWith(settings.ProtagonistFaction, StringComparison.InvariantCultureIgnoreCase));
+
+        var protagonistFaction = ResolveFaction(settings.ProtagonistFaction);
         factions.Add(protagonistFaction);
         
-        var antagonistFaction = allFactions.First(f => f.Name.StartsWith(settings.AntagonistFaction, StringComparison.InvariantCultureIgnoreCase));
+        var antagonistFaction = ResolveFaction(settings.AntagonistFaction);
         factions.Add(antagonistFaction);
         
-        var bufferFaction = allFactions.First(f => f.Name.StartsWith(settings.BufferFaction, StringComparison.InvariantCultureIgnoreCase));
+        var bufferFaction = ResolveFaction(settings.BufferFaction);
         factions.Add(bufferFaction);
         
-        var questFaction = allFactions.First(f => f.Name.StartsWith(settings.QuestFaction, StringComparison.InvariantCultureIgnoreCase));
+        var questFaction = ResolveFaction(settings.QuestFaction);
         factions.Add(questFaction);
         
         var neutralFactions = settings.NeutralFactions
-            .Select(s => allFactions.First(f => f.Name.StartsWith(s, StringComparison.InvariantCultureIgnoreCase)))
+            .Select(ResolveFaction)
             .ToArray();
         factions.AddRange(neutralFactions);
         

@@ -13,11 +13,11 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{d790d414-9064-abda-7ad3-d72285c3faba}</ProjectGuid>
+    <ProjectGuid>{04594220-ca80-0caf-e34a-5898755a01bd}</ProjectGuid>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <AssemblyName>Aetheria.Shared.Unity</AssemblyName>
+    <AssemblyName>Ink</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <BaseDirectory>.</BaseDirectory>
@@ -52,212 +52,104 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Max.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\Heap\BaseHeap.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Shield.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonKnownTypesSettings.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ZoneData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\HaulingController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Reverse.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Cooldown.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\RethinkConnection.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NtpPacket.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\OrbitalEntity.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ActionCollection.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\FastBitConverter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereAggregate.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Rect.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\AutoWeapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ExponentialCurve.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Noise1D.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonDiscriminatorSettings.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonConverters.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Vertex2Object.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\EntitySettings.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Zip.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Constants.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetDataWriter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Single.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\States\Combat.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\OrderBy.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDQuery\QueryInterval.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Triangulation\DelaunayTrianglationInternal.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSelect.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Triangulation\VoronoiEdge.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonDiscriminatorAttribute.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thruster.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Wormhole.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\WhereSum.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\TowingController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Triangulation\DelaunayTriangulation.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Cockpit.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\Heap\MaxHeap.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reflector.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Sum.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SelectWhere.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\EntitySerializer.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\MathResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Cell2Object.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\BezierCurve.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Corporations.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ItemInstance.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\TurretController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDQuery\QueryRadius.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Capacitor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\GlobalData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPacket.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Zone.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Minion.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetUtils.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ChargedWeapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\DataModel.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\IVertex.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\BaseChannel.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Ship.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\ConnectionRequest.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\ConvexHullAlgorithm.Initialize.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonKnownTypeAttribute.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\PlayerData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\Survey.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\StationTowing.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\ReliableChannel.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\CustomPartition.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Vertex3.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NtpRequest.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ConstantWeapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Attributes.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\TypeFormatterResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Triangulation\VoronoiMesh.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\INetSerializable.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetStatistics.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\PatrolOrbits.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetSerializer.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\AnyAll.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\Collections.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Count.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\ComparerMagic.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\VelocityLimit.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Heat.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\ReflectionExtensions.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\InstantWeapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Visibility.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Repeat.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\Heap\MinHeap.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Switch.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\AetherDrive.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDQuery\QueryClosest.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonKnownTypesConverter.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\CRC32C.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDQuery\KDQueryNode.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPacketPool.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetSocket.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SelectMany.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\GenericOperators.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Trigger.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\LoadoutGenerator.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\AttributesManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\VelocityConversion.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetDataReader.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\HaulingTask.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Settings.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\StatModifier.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\EnergyDraw.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reactor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ZoneGenerator.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Last.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetPeer.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Aggregate.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\ConvexFace.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NatPunchModule.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\CultCache.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\AgentTask.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ColorMath.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Radiator.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Cell2.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\States\MoveTo.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\WanderTask.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Distinct.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetConstants.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\PlayerSettings.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\RegisterResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Triangulation\TriangulationCell.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\MathHelper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Launcher.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Sensor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\States\MatchVelocity.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\AetheriaMath.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\Utils\Mapper.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\ObjectManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonKnownThisTypeAttribute.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thermotoggle.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\MarkovNameGenerator.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Where.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Min.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\CollectionExtensions.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ParticleEffect.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\Mining.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Vertex2.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Sector.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\First.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Messages.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Entity.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDQuery\QueryKNearest.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\States\BaseState.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetExceptions.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\EnumDictionary.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\Exceptions\JsonKnownTypesException.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\Error.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\PacketLayerBase.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\XorEncryptLayer.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\DatabaseEntry.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\SampleElimination.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonKnownTypesSettingsManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\INetEventListener.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Triangulation.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDTree.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\MiningTool.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\MathFormatters.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Extensions.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Take.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Range.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Average.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\LockWeapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Select.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\HeatStorage.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Weapon.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\SavedGame.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetDebug.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\Crc32cLayer.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonKnownTypesContractResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\MiningController.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDQuery\Base.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ResourceScanner.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonKnownTypesDictionaryManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ItemData.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\ConvexHullAlgorithm.MainLoop.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Enums.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\ItemUsage.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDBounds.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Contains.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetPacketProcessor.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Face3.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Agents\Agent.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\KDTree\KDNode.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\SequencedChannel.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Wear.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\Heap\KSmallest.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Narrative\ZoneConstraints.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Narrative\ZoneSelectors.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Narrative\StoryProcessor.cs" />
-     <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
-     <None Include="Assets\Scripts\ServerShared\Aetheria.Shared.Unity.asmdef" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Knot.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Weave.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\ContentList.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_CharacterRanges.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\VariableReference.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\VariableReference.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\ControlCommand.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Tag.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Object.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Path.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\ListDefinitionsOrigin.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\StringParser\StringParser.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\InkList.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\INamedContent.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\CommandLineInput.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\IncludedFile.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Content.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\CallStack.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Void.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Story.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\INamedContent.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Value.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Divert.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Sequences.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\DebugMetadata.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_CommandLineInput.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\ChoicePoint.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\VariablesState.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\ConstantDeclaration.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Profiler.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Knot.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\StringExpression.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\SimpleJson.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Number.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\SearchResult.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Stitch.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Path.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkStringConversionExtensions.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\FunctionCall.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\Compiler.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\NativeFunctionCall.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\FileHandler.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\ConditionalSingleBranch.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\VariableAssignment.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Conditional.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Expressions.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Flow.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Identifier.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Story.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Glue.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\Plugins\Plugin.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\DivertTarget.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\StoryException.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Include.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Gather.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Wrap.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\ListDefinition.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Divert.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Expression.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Return.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\FlowLevel.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Object.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Logic.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Text.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\StringJoinExtension.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\TunnelOnwards.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Tags.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Choices.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Error.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\CommentEliminator.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_AuthorWarning.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\FlowBase.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Pointer.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\VariableAssignment.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\AuthorWarning.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Sequence.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\IWeavePoint.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\Plugins\PluginManager.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\StatePatch.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Conditional.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\CharacterRange.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\JsonSerialisation.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\CharacterSet.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Container.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\PushPop.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\ExternalDeclaration.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\ListDefinition.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Statements.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Divert.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser_Whitespace.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\StringParser\StringParserState.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\Stats.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\Choice.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\List.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\InkParser\InkParser.cs" />
+     <Compile Include="Assets\Plugins\Ink\ink-engine-runtime\StoryState.cs" />
+     <Compile Include="Assets\Plugins\Ink\compiler\ParsedHierarchy\Choice.cs" />
+     <None Include="Assets\Plugins\Ink\Ink.asmdef" />
  <Reference Include="System.Threading.Tasks.Extensions">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
  </Reference>
@@ -639,27 +531,6 @@
  <Reference Include="System.Xml.XPath.XDocument">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.6f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/Facades/System.Xml.XPath.XDocument.dll</HintPath>
  </Reference>
- <Reference Include="Unity.Mathematics">
- <HintPath>E:/Projects/Aetheria-Economy/Library/ScriptAssemblies/Unity.Mathematics.dll</HintPath>
- </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="MessagePack.csproj">
-      <Project>{c511ef21-dc27-883d-b027-9a4b6f36bae4}</Project>
-      <Name>MessagePack</Name>
-    </ProjectReference>
-    <ProjectReference Include="UniRx.csproj">
-      <Project>{4d885cb7-1f9e-abb3-b070-7265b432ecda}</Project>
-      <Name>UniRx</Name>
-    </ProjectReference>
-    <ProjectReference Include="RethinkDB.csproj">
-      <Project>{f2483ebc-e82f-a58f-b987-c7502f9ab5d9}</Project>
-      <Name>RethinkDB</Name>
-    </ProjectReference>
-    <ProjectReference Include="Ink.csproj">
-      <Project>{04594220-ca80-0caf-e34a-5898755a01bd}</Project>
-      <Name>Ink</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

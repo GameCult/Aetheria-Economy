@@ -1,13 +1,7 @@
 {
-    "name": "Aetheria.Shared.Unity",
+    "name": "Ink",
     "rootNamespace": "",
-    "references": [
-        "MessagePack",
-        "Unity.Mathematics",
-        "UniRx",
-        "RethinkDB",
-        "Ink"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -96,8 +96,14 @@ public class ActionGameManager : MonoBehaviour
     public Prototype HostileTargetIndicator;
     public PlaceUIElementWorldspace ViewDot;
     public PlaceUIElementWorldspace TargetIndicator;
+    public Image TargetHitpointsFill;
+    public Image TargetVisibilityFill;
+    public Image VisibilityToTargetFill;
+    public Image TargetShieldsFill;
     public Prototype LockIndicator;
     public PlaceUIElementWorldspace[] Crosshairs;
+    public GameObject HitMarker;
+    public float HitMarkerDuration;
     public EventLog EventLog;
     public ZoneRenderer ZoneRenderer;
     public CinemachineVirtualCamera DockCamera;
@@ -139,11 +145,13 @@ public class ActionGameManager : MonoBehaviour
     private (LockWeapon targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] _lockingIndicators;
     private Dictionary<Entity, VisibleHostileIndicator> _visibleHostileIndicators = new Dictionary<Entity, VisibleHostileIndicator>();
     private List<IDisposable> _shipSubscriptions = new List<IDisposable>();
+    private List<IDisposable> _targetSubscriptions = new List<IDisposable>();
     private float _severeHeatstrokePhase;
     private bool _uiHidden;
     private bool _menuShown;
     private List<ActionBarSlot> _actionBarSlots = new List<ActionBarSlot>();
     private List<InputAction> _actionBarActions = new List<InputAction>();
+    private float _hitMarkerTime;
     
     public AetheriaInput Input { get; private set; }
     public EquippedDockingBay DockingBay { get; private set; }
@@ -201,19 +209,6 @@ public class ActionGameManager : MonoBehaviour
         EntityInstance.ClearWeaponManagers();
     }
 
-    private class AetheriaInkFileHandler : IFileHandler {
-        private DirectoryInfo NarrativeRoot { get; }
-        
-        public AetheriaInkFileHandler(DirectoryInfo narrativeRoot)
-        {
-            NarrativeRoot = narrativeRoot;
-        }
-
-        public string ResolveInkFilename (string includeName) => Path.Combine (NarrativeRoot.FullName, includeName);
-
-        public string LoadInkFileContents (string fullFilename) => File.ReadAllText (fullFilename);
-    }
-
     void Start()
     {
         Instance = this;
@@ -225,17 +220,7 @@ public class ActionGameManager : MonoBehaviour
         ZoneRenderer.ItemManager = ItemManager;
 
         var narrativePath = GameDataDirectory.CreateSubdirectory("Narrative");
-        var narrativeFiles = narrativePath.EnumerateFiles("*.ink");
-        foreach(var inkFile in narrativeFiles)
-        {
-            var compiler = new Compiler(File.ReadAllText(inkFile.FullName), new Compiler.Options
-            {
-                countAllVisits = true,
-                fileHandler = new AetheriaInkFileHandler(narrativePath)
-            });
-            var story = compiler.Compile();
-            _stories.Add(story);
-        }
+        // TODO: Process Stories
 
         // _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");
         // Loadouts.AddRange(_loadoutPath.EnumerateFiles("*.loadout")
@@ -928,12 +913,24 @@ public class ActionGameManager : MonoBehaviour
         
         _shipSubscriptions.Add(CurrentEntity.Target.Subscribe(target =>
         {
+            // Clear previous subscriptions related to currently targeted enemy
+            foreach(var subscription in _targetSubscriptions)
+                subscription.Dispose();
+            _targetSubscriptions.Clear();
+
             TargetIndicator.gameObject.SetActive(CurrentEntity.Target.Value != null);
             TargetShipPanel.gameObject.SetActive(target != null);
             if (target != null)
             {
                 TargetShipPanel.Display(target, true);
                 TargetSchematicDisplay.ShowShip(target, CurrentEntity);
+                
+                // Subscribe to incoming hits from the player ship to display the hit marker
+                _targetSubscriptions.Add(target.IncomingHit.Where(e => e == CurrentEntity).Subscribe(_ =>
+                {
+                    HitMarker.SetActive(true);
+                    _hitMarkerTime = HitMarkerDuration;
+                }));
             }
         }));
 
@@ -1039,6 +1036,8 @@ public class ActionGameManager : MonoBehaviour
         if(!_paused)
         {
             _time += Time.deltaTime;
+            _hitMarkerTime -= Time.deltaTime;
+            if(HitMarker.activeSelf && _hitMarkerTime < 0) HitMarker.SetActive(false);
             // ItemManager.Time = _time;
             if(CurrentEntity !=null && CurrentEntity.Parent==null)
             {
@@ -1070,6 +1069,15 @@ public class ActionGameManager : MonoBehaviour
                 if(CurrentEntity is Ship ship)
                 {
                     ship.MovementDirection = Input.Player.Move.ReadValue<Vector2>();
+                }
+
+                var target = CurrentEntity.Target.Value;
+                if (target != null)
+                {
+                    var threshold = Settings.GameplaySettings.TargetDetectionInfoThreshold;
+                    TargetVisibilityFill.fillAmount = lerp(.25f, .75f, (CurrentEntity.EntityInfoGathered[target] - threshold)/(1-threshold));
+                    VisibilityToTargetFill.fillAmount = lerp(.25f, .75f, target.EntityInfoGathered[CurrentEntity] / threshold);
+                    TargetHitpointsFill.fillAmount = lerp(.25f, .75f, target.Hull.Durability / target.EquippedHull.Data.Durability);
                 }
 
                 var tractorPower = Input.Player.TractorBeam.ReadValue<float>();

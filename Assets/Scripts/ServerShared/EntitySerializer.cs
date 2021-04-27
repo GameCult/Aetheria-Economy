@@ -137,6 +137,16 @@ public static class EntitySerializer
 }
 
 [MessagePackObject]
+public class SavedStory
+{
+    [Key(0)]
+    public string StoryJson;
+    
+    [Key(1)]
+    public string StateJson;
+}
+
+[MessagePackObject]
 public class ShipPack : EntityPack
 {
     [Key(16)] public float3 Position;
@@ -149,6 +159,9 @@ public class OrbitalEntityPack : EntityPack
 {
     [Key(16)]
     public Guid Orbit;
+
+    [Key(17)]
+    public SavedStory Story;
 }
 
 [MessagePackObject, 

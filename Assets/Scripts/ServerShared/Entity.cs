@@ -113,7 +113,8 @@ public abstract class Entity
     public int AssignedPopulation => PopulationAssignments.Sum(pa => pa.AssignedPopulation);
     public float Mass { get; private set; }
     public float Visibility => VisibilitySources.Values.Sum();
-    
+
+    public Subject<Entity> IncomingHit = new Subject<Entity>();
     public Subject<(int2 pos, float damage)> ArmorDamage = new Subject<(int2, float)>();
     public Subject<(EquippedItem item, float damage)> ItemDamage = new Subject<(EquippedItem, float)>();
     // public Subject<EquippedItem> ItemOffline = new Subject<EquippedItem>();

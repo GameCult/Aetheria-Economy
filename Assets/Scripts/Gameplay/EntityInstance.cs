@@ -347,6 +347,7 @@ public class EntityInstance : MonoBehaviour
             
             collider.Hit.Subscribe(hit =>
             {
+                Entity.IncomingHit.OnNext(hit.Source);
                 var hardpointIndex = (int) hit.TexCoord.x - 1;
                 
                 var hitShape = new Shape(hullData.Shape.Width, hullData.Shape.Height);

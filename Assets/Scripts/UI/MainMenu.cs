@@ -136,13 +136,15 @@ public class MainMenu : MonoBehaviour
                             ActionGameManager.CurrentSector = sector;
                             SceneManager.LoadScene("ARPG");
                         });
-                    });
+                    }).WrapErrors();
                 }
                 else
                 {
+                    int iteration = 1;
                     do
                     {
                         Settings.TutorialBackgroundSettings.NoisePosition = Random.value * 1000;
+                        setState($"Finding Galaxy Position: iteration {iteration++}");
                     } while (Settings.TutorialBackgroundSettings.CloudDensity(float2(0.5f)) < .5f);
                     
                     ActionGameManager.IsTutorial = true;
@@ -160,7 +162,7 @@ public class MainMenu : MonoBehaviour
                             ActionGameManager.CurrentSector = sector;
                             SceneManager.LoadScene("ARPG");
                         });
-                    });
+                    }).WrapErrors();
                 }
             });
         _nextMenu.panel.AddButton("Settings",

@@ -33,6 +33,8 @@ public class ZonePack
 
     [JsonProperty("time"), Key(5)]
     public double Time;
+    
+    
 }
 
 // [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]

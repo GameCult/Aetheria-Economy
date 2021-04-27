@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using MessagePack;
 
@@ -10,6 +11,7 @@ public class PlayerSettings
     [Key(2)] public TemperatureUnit TemperatureUnit = TemperatureUnit.Celsius;
     [Key(3)] public int SignificantDigits = 3;
     [Key(4)] public bool TutorialPassed;
+    [Key(5)] public Dictionary<string, string> HashedStoryFiles = new Dictionary<string, string>();
 
     public string FormatTemperature(float t)
     {
