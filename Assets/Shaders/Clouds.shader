@@ -29,7 +29,7 @@
             #pragma fragment frag
 
             #include "UnityCG.cginc"
-			#include "Assets/Scripts/NIH/GPU Noise/SimplexNoise3D.cginc"
+			#include "Assets/Plugins/GPU Noise/SimplexNoise3D.cginc"
 
             struct appdata
             {

@@ -1,29 +1,53 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MessagePack;
 using Newtonsoft.Json;
-using UnityEngine;
+using Unity.Mathematics;
 
-
-[RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class Corporation : DatabaseEntry, INamedEntry
+[RethinkTable("Galaxy"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class Faction : DatabaseEntry, INamedEntry
 {
-    [JsonProperty("name"), Key(1)]
+    [Inspectable, JsonProperty("name"), Key(1)]
     public string Name;
-
-    [JsonProperty("parent"), Key(2)]
-    public Guid Parent;
     
-    [JsonProperty("tasks"), Key(3)]
-    public List<Guid> Tasks = new List<Guid>();
+    [Inspectable, JsonProperty("shortName"), Key(2)]
+    public string ShortName;
     
-    [JsonProperty("planetSurveyFloor"), Key(4)]  
-    public Dictionary<Guid, float> PlanetSurveyFloor = new Dictionary<Guid, float>();
+    [InspectableText, JsonProperty("description"), Key(3)]
+    public string Description;
+    
+    [InspectableTexture, JsonProperty("logo"), Key(4)]
+    public string Logo;
+    
+    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(5)]  
+    public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
 
-    [JsonProperty("unlockedBlueprints"), Key(5)]  
-    public List<Guid> UnlockedBlueprints = new List<Guid>();
+    [Inspectable, JsonProperty("hostile"), Key(6)]
+    public bool PlayerHostile;
 
+    [InspectableColor, JsonProperty("primaryColor"), Key(7)]
+    public float3 PrimaryColor;
+    
+    [InspectableColor, JsonProperty("secondaryColor"), Key(8)]
+    public float3 SecondaryColor;
+
+    [InspectableDatabaseLink(typeof(NameFile)), JsonProperty("nameFile"), Key(9)]  
+    public Guid GeonameFile;
+
+    [InspectableDatabaseLink(typeof(HullData)), JsonProperty("bossHull"), Key(10)]  
+    public Guid BossHull;
+
+    [Inspectable, JsonProperty("influence"), Key(11)]
+    public int InfluenceDistance = 4;
+    
+    [InspectableDatabaseLink(typeof(Faction)), RangedFloat(0, 1), JsonProperty("allegiance"), Key(12)]  
+    public Dictionary<Guid, float> Allegiance = new Dictionary<Guid, float>();
+    
     [IgnoreMember] public string EntryName
     {
         get => Name;
@@ -31,34 +55,14 @@ public class Corporation : DatabaseEntry, INamedEntry
     }
 }
 
-[RethinkTable("Galaxy"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class MegaCorporation : DatabaseEntry, INamedEntry
+[Inspectable, MessagePackObject, ExternalEntry]
+public class NameFile : DatabaseEntry, INamedEntry
 {
-    [InspectableField, JsonProperty("name"), Key(1)]
-    public string Name;
-    
-    [InspectableText, JsonProperty("description"), Key(2)]
-    public string Description;
-    
-    [InspectableTexture, JsonProperty("logo"), Key(3)]
-    public string Logo;
-    
-    [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(4)]  
-    public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
-    
-    [InspectableDatabaseLink(typeof(LoadoutData)), JsonProperty("initialFleet"), Key(5)]  
-    public Dictionary<Guid, int> InitialFleet = new Dictionary<Guid, int>();
-    
-    [InspectableDatabaseLink(typeof(BlueprintData)), JsonProperty("initialTechs"), Key(6)]  
-    public List<Guid> InitialTechnologies = new List<Guid>();
+    [Key(1)] public string Name;
+    [Key(2)] public string[] Names;
 
-    [JsonProperty("parent"), Key(7)]
-    public Guid HomeZone;
-    
-    [InspectableField, JsonProperty("placement"), Key(8)]
-    public MegaPlacementType PlacementType;
-    
-    [IgnoreMember] public string EntryName
+    [IgnoreMember]
+    public string EntryName
     {
         get => Name;
         set => Name = value;

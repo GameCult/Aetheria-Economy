@@ -47,6 +47,7 @@ public class Prototype : MonoBehaviour {
 			var instanceIdx = _instancePool.Count-1;
 			instance = _instancePool[instanceIdx];
 			_instancePool.RemoveAt(instanceIdx);
+			instance.transform.SetAsLastSibling();
 		} 
 
 		// Instantiate fresh instance
@@ -83,7 +84,8 @@ public class Prototype : MonoBehaviour {
 			Destroy(gameObject);
 			return;
 		}
-			
+
+		transform.SetParent(_originalPrototype.transform.parent);
 		_originalPrototype.AddToPool(this);
 		OnReturnToPool = null;
 	}

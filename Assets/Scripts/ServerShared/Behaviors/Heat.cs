@@ -1,44 +1,49 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10), Inspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
 public class HeatData : BehaviorData
 {
-    [InspectableField, JsonProperty("heat"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("heat"), Key(1), RuntimeInspectable]
     public PerformanceStat Heat = new PerformanceStat();
     
-    [InspectableField, JsonProperty("perSecond"), Key(2)]
+    [Inspectable, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Heat(context, this, entity, item);
+        return new Heat(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Heat(this, item);
     }
 }
 
-public class Heat : IBehavior
+public class Heat : Behavior
 {
     private HeatData _data;
 
-    private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
-
-    public BehaviorData Data => _data;
-
-    public Heat(GameContext context, HeatData data, Entity entity, Gear item)
+    public Heat(HeatData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
+    }
+    public Heat(HeatData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
-    public bool Update(float delta)
+    public override bool Execute(float dt)
     {
-        Entity.AddHeat(Context.Evaluate(_data.Heat, Item, Entity) * (_data.PerSecond ? delta : 1));
+        AddHeat(Evaluate(_data.Heat) * (_data.PerSecond ? dt : 1));
+
         return true;
     }
 }

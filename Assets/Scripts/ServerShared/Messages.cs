@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using LiteNetLib;
@@ -14,12 +18,6 @@ using Unity.Mathematics;
  Union(6, typeof(ChatMessage)), 
  Union(7, typeof(ChatBroadcastMessage)), 
  Union(8, typeof(ChangeNameMessage)),
- Union(9, typeof(GalaxyRequestMessage)), 
- Union(10, typeof(GalaxyResponseMessage)),
- Union(11, typeof(ZoneRequestMessage)), 
- Union(12, typeof(ZoneResponseMessage)), 
- Union(13, typeof(BlueprintsRequestMessage)), 
- Union(14, typeof(BlueprintsResponseMessage)), 
  MessagePackObject]
 public abstract class Message
 {
@@ -84,52 +82,3 @@ public class ChangeNameMessage : Message
 {
     [Key(0)] public string Name;
 }
-
-[MessagePackObject]
-public class GalaxyRequestMessage : Message
-{
-    //[Key(0)] public int RequiredByMessagePack;
-}
-
-[MessagePackObject]
-public class GalaxyResponseMessage : Message
-{
-    [Key(0)] public SimplifiedZoneData[] Zones;
-    [Key(1)] public GalaxyMapLayerData StarDensity;
-    [Key(2)] public GlobalData GlobalData;
-}
-
-[MessagePackObject]
-public class SimplifiedZoneData
-{
-    [Key(0)] public Guid ZoneID;
-    [Key(1)] public Guid[] Links;
-    [Key(2)] public string Name;
-    [Key(3)] public float2 Position;
-}
-
-[MessagePackObject]
-public class ZoneRequestMessage : Message
-{
-    [Key(0)] public Guid ZoneID;
-}
-
-[MessagePackObject]
-public class ZoneResponseMessage : Message
-{
-    [Key(0)] public ZoneData Zone;
-    [Key(1)] public DatabaseEntry[] Contents;
-}
-
-[MessagePackObject]
-public class BlueprintsRequestMessage : Message
-{
-    
-}
-
-[MessagePackObject]
-public class BlueprintsResponseMessage : Message
-{
-    [Key(0)] public BlueprintData[] Blueprints;
-}
-

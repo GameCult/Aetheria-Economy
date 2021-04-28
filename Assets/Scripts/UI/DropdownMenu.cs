@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +36,7 @@ public class DropdownMenu : MonoBehaviour
     {
         CancelClickCatcher.gameObject.SetActive(false);
         gameObject.SetActive(false);
+        ActionGameManager.Instance?.Input.Global.Enable();
     }
 
     public void Clear()
@@ -46,12 +51,13 @@ public class DropdownMenu : MonoBehaviour
     {
         var optionButton = Instantiate(OptionPrefab, ContentRoot);
         optionButton.Label.text = text;
-        optionButton.Button.OnClick += data =>
+        optionButton.Button.onClick.AddListener(() =>
         {
             action();
             End();
-        };
-        optionButton.Button.CurrentState = !enabled ? FlatButtonState.Disabled : selected ? FlatButtonState.Selected : FlatButtonState.Unselected;
+        });
+        optionButton.Button.interactable = enabled;
+        //optionButton.Button..CurrentState = !enabled ? FlatButtonState.Disabled : selected ? FlatButtonState.Selected : FlatButtonState.Unselected;
         _options.Add(optionButton.gameObject);
     }
 
@@ -69,5 +75,6 @@ public class DropdownMenu : MonoBehaviour
         rect.sizeDelta = parent.sizeDelta;
         rect.position = pivotTop ? corners[0] : corners[1];
         CancelClickCatcher.gameObject.SetActive(true);
+        ActionGameManager.Instance?.Input.Global.Disable();
     }
 }

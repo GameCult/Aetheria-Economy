@@ -1,68 +1,72 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
 public class MiningToolData : BehaviorData
 {
-    [InspectableField, JsonProperty("dps"), Key(1)]
+    [Inspectable, JsonProperty("dps"), Key(1)]
     public PerformanceStat DamagePerSecond = new PerformanceStat();
     
-    [InspectableField, JsonProperty("efficiency"), Key(2)]
+    [Inspectable, JsonProperty("efficiency"), Key(2)]
     public PerformanceStat Efficiency = new PerformanceStat();
     
-    [InspectableField, JsonProperty("penetration"), Key(3)]
+    [Inspectable, JsonProperty("penetration"), Key(3)]
     public PerformanceStat Penetration = new PerformanceStat();
     
-    [InspectableField, JsonProperty("range"), Key(4)]
+    [Inspectable, JsonProperty("range"), Key(4)]
     public PerformanceStat Range = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new MiningTool(context, this, entity, item);
+        return new MiningTool(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new MiningTool(this, item);
     }
 }
 
-public class MiningTool : IBehavior
+public class MiningTool : Behavior
 {
     public Guid AsteroidBelt;
     public int Asteroid;
     
     private MiningToolData _data;
-
-    private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
-
-    public BehaviorData Data => _data;
     public float Range { get; private set; }
 
-    public MiningTool(GameContext context, MiningToolData data, Entity entity, Gear item)
+    public MiningTool(MiningToolData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
     }
 
-    public bool Update(float delta)
+    public MiningTool(MiningToolData data, ConsumableItemEffect item) : base(data, item)
     {
-        Range = Context.Evaluate(_data.Range, Item, Entity);
-        var asteroidTransform = Context.GetAsteroidTransform(AsteroidBelt, Asteroid);
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        Range = Evaluate(_data.Range);
+        var belt = Entity.Zone.AsteroidBelts[AsteroidBelt];
         if (AsteroidBelt != Guid.Empty && 
-            Context.AsteroidExists(AsteroidBelt, Asteroid) && 
-            length(Entity.Position - asteroidTransform.xy) - asteroidTransform.w < Range)
+            Entity.Zone.AsteroidExists(AsteroidBelt, Asteroid) && 
+            length(Entity.Position.xz - belt.Positions[Asteroid].xz) - belt.Scales[Asteroid] < Range)
         {
-            Context.MineAsteroid(
+            Entity.Zone.MineAsteroid(
                 Entity,
                 AsteroidBelt,
                 Asteroid,
-                Context.Evaluate(_data.DamagePerSecond, Item, Entity) * delta,
-                Context.Evaluate(_data.Efficiency, Item, Entity),
-                Context.Evaluate(_data.Penetration, Item, Entity));
+                Evaluate(_data.DamagePerSecond) * dt,
+                Evaluate(_data.Efficiency),
+                Evaluate(_data.Penetration));
             return true;
         }
 

@@ -17,12 +17,4 @@
 		<PackageReference Include="Remotion.Linq" Version="2.2.0" />
 	</ItemGroup>
 
-<!--	<Target Name="GenerateMessagePack" AfterTargets="Compile">-->
-<!--		<MessagePackGenerator -->
-<!--				Input=".\Economy.Shared.csproj" -->
-<!--				Output="..\Assets\Scripts\Generated\MessagePack.Generated.cs"-->
-<!--				ResolverName="MathResolver"-->
-<!--		/>-->
-<!--	</Target>-->
-
 </Project>

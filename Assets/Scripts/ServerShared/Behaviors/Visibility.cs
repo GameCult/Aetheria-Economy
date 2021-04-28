@@ -1,54 +1,47 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VisibilityData : BehaviorData
 {
-    [InspectableField, JsonProperty("visibility"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("visibility"), Key(1), RuntimeInspectable]  
     public PerformanceStat Visibility = new PerformanceStat();
 
-    [InspectableField, JsonProperty("visibilityDecay"), Key(2)]  
+    [Inspectable, JsonProperty("visibilityDecay"), Key(2)]  
     public PerformanceStat VisibilityDecay = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Visibility(context, this, entity, item);
+        return new Visibility(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Visibility(this, item);
     }
 }
 
-public class Visibility : IBehavior, IAlwaysUpdatedBehavior
+public class Visibility : Behavior
 {
     private VisibilityData _data;
 
-    private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
-
-    public BehaviorData Data => _data;
-
-    private float _cooldown; // Normalized
-
-    public Visibility(GameContext context, VisibilityData data, Entity entity, Gear item)
+    public Visibility(VisibilityData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
+    }
+    public Visibility(VisibilityData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
-    public bool Update(float delta)
+    public override bool Execute(float dt)
     {
-        Entity.VisibilitySources[this] = Context.Evaluate(_data.Visibility, Item, Entity);
+        Entity.VisibilitySources[this] = Evaluate(_data.Visibility);
         return true;
-    }
-
-    public void AlwaysUpdate(float delta)
-    {
-        // TODO: Time independent decay?
-        Entity.VisibilitySources[this] *= Context.Evaluate(_data.VisibilityDecay, Item, Entity);
-        
-        if (Entity.VisibilitySources[this] < 0.01f) Entity.VisibilitySources.Remove(this);
     }
 }

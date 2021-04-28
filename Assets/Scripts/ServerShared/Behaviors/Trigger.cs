@@ -1,47 +1,33 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20)]
 public class TriggerData : BehaviorData
 {
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Trigger(context, this, entity, item);
+        return new Trigger(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Trigger(this, item);
     }
 }
 
-public class Trigger : IBehavior
+public class Trigger : Behavior, IActivatedBehavior
 {
-    private TriggerData _data;
-
-    private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
-
-    public BehaviorData Data => _data;
-
     public bool _pulled;
 
-    public void Pull()
-    {
-        _pulled = true;
-    }
+    public Trigger(TriggerData data, EquippedItem item) : base(data, item) { }
+    public Trigger(TriggerData data, ConsumableItemEffect item) : base(data, item) { }
 
-    public Trigger(GameContext context, TriggerData data, Entity entity, Gear item)
-    {
-        _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
-    }
-
-    public void Initialize()
-    {
-    }
-
-    public bool Update(float delta)
+    public override bool Execute(float dt)
     {
         if (_pulled)
         {
@@ -50,5 +36,14 @@ public class Trigger : IBehavior
         }
 
         return false;
+    }
+
+    public void Activate()
+    {
+        _pulled = true;
+    }
+
+    public void Deactivate()
+    {
     }
 }

@@ -1,0 +1,6262 @@
+fileFormatVersion: 2
+guid: d826c67011a143148bb7f6129549ef38
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7421115223572569992
+    second: Nodes8BG_0
+  - first:
+      213: 2115398974705819552
+    second: Nodes8BG_1
+  - first:
+      213: -3917947003626264088
+    second: Nodes8BG_2
+  - first:
+      213: -8210191144177934881
+    second: Nodes8BG_3
+  - first:
+      213: -457016208676947884
+    second: Nodes8BG_4
+  - first:
+      213: -2643431356032879779
+    second: Nodes8BG_5
+  - first:
+      213: 5928721419278155306
+    second: Nodes8BG_6
+  - first:
+      213: 2374993158967451649
+    second: Nodes8BG_7
+  - first:
+      213: 3503768164542189703
+    second: Nodes8BG_8
+  - first:
+      213: 7809947791882780470
+    second: Nodes8BG_9
+  - first:
+      213: 3521652144757081453
+    second: Nodes8BG_10
+  - first:
+      213: -8805923932288759383
+    second: Nodes8BG_11
+  - first:
+      213: -5192510962035101141
+    second: Nodes8BG_12
+  - first:
+      213: -3306175840130698133
+    second: Nodes8BG_13
+  - first:
+      213: 4898856133173222125
+    second: Nodes8BG_14
+  - first:
+      213: 4909017801856461585
+    second: Nodes8BG_15
+  - first:
+      213: 4840700035213915802
+    second: Nodes8BG_16
+  - first:
+      213: -6616566309747706700
+    second: Nodes8BG_17
+  - first:
+      213: -5752789180819155309
+    second: Nodes8BG_18
+  - first:
+      213: 4205231485750456070
+    second: Nodes8BG_19
+  - first:
+      213: 3121750227872538358
+    second: Nodes8BG_20
+  - first:
+      213: -6885100042466894722
+    second: Nodes8BG_21
+  - first:
+      213: -1333157509587208539
+    second: Nodes8BG_22
+  - first:
+      213: 6089422662255472370
+    second: Nodes8BG_23
+  - first:
+      213: -2805152798140921176
+    second: Nodes8BG_24
+  - first:
+      213: -8765547014354120591
+    second: Nodes8BG_25
+  - first:
+      213: 6952422413737705325
+    second: Nodes8BG_26
+  - first:
+      213: -4256333280346567830
+    second: Nodes8BG_27
+  - first:
+      213: -3291808035052036581
+    second: Nodes8BG_28
+  - first:
+      213: -2314366185884348512
+    second: Nodes8BG_29
+  - first:
+      213: 826312238967031789
+    second: Nodes8BG_30
+  - first:
+      213: -5367813289904786726
+    second: Nodes8BG_31
+  - first:
+      213: 7114053869949279385
+    second: Nodes8BG_32
+  - first:
+      213: -7698202726586076176
+    second: Nodes8BG_33
+  - first:
+      213: -1716991398209348200
+    second: Nodes8BG_34
+  - first:
+      213: 564811024471342645
+    second: Nodes8BG_35
+  - first:
+      213: 804569968357926944
+    second: Nodes8BG_36
+  - first:
+      213: -8899748460944701379
+    second: Nodes8BG_37
+  - first:
+      213: 924728570411451940
+    second: Nodes8BG_38
+  - first:
+      213: 1269113623839146803
+    second: Nodes8BG_39
+  - first:
+      213: 8887698802641393929
+    second: Nodes8BG_40
+  - first:
+      213: -9171854385380750635
+    second: Nodes8BG_41
+  - first:
+      213: -4763425477265822139
+    second: Nodes8BG_42
+  - first:
+      213: -7678628840059917316
+    second: Nodes8BG_43
+  - first:
+      213: 1127526268494626402
+    second: Nodes8BG_44
+  - first:
+      213: -3271638851300496266
+    second: Nodes8BG_45
+  - first:
+      213: -3268505434792189474
+    second: Nodes8BG_46
+  - first:
+      213: 4498281472512311928
+    second: Nodes8BG_47
+  - first:
+      213: -2193947467903691406
+    second: Nodes8BG_48
+  - first:
+      213: -8268126963253423288
+    second: Nodes8BG_49
+  - first:
+      213: -7435408962317716226
+    second: Nodes8BG_50
+  - first:
+      213: 138202805687054925
+    second: Nodes8BG_51
+  - first:
+      213: 1733524047710952250
+    second: Nodes8BG_52
+  - first:
+      213: 3506877335217733962
+    second: Nodes8BG_53
+  - first:
+      213: 2661996820352515278
+    second: Nodes8BG_54
+  - first:
+      213: -5883065903039973125
+    second: Nodes8BG_55
+  - first:
+      213: 3021830918981013876
+    second: Nodes8BG_56
+  - first:
+      213: 1430834802416304891
+    second: Nodes8BG_57
+  - first:
+      213: 7392365826199295703
+    second: Nodes8BG_58
+  - first:
+      213: -5095656893371103704
+    second: Nodes8BG_59
+  - first:
+      213: 3457421642495904657
+    second: Nodes8BG_60
+  - first:
+      213: 1175598783620631007
+    second: Nodes8BG_61
+  - first:
+      213: -3348155980997213509
+    second: Nodes8BG_62
+  - first:
+      213: 6300138107236220954
+    second: Nodes8BG_63
+  - first:
+      213: -9012391868356985468
+    second: Nodes8BG_64
+  - first:
+      213: -3186846174551791044
+    second: Nodes8BG_65
+  - first:
+      213: 1320845674306131133
+    second: Nodes8BG_66
+  - first:
+      213: 8585232249589900906
+    second: Nodes8BG_67
+  - first:
+      213: 4912147126471412
+    second: Nodes8BG_68
+  - first:
+      213: -5763806307716576081
+    second: Nodes8BG_69
+  - first:
+      213: 5900920010977852056
+    second: Nodes8BG_70
+  - first:
+      213: -4116127005851028631
+    second: Nodes8BG_71
+  - first:
+      213: 3152337839274362975
+    second: Nodes8BG_72
+  - first:
+      213: -3792717805357554673
+    second: Nodes8BG_73
+  - first:
+      213: 4929423186384401681
+    second: Nodes8BG_74
+  - first:
+      213: -5168927979146797938
+    second: Nodes8BG_75
+  - first:
+      213: 3265571399507585591
+    second: Nodes8BG_76
+  - first:
+      213: -3017328924928994274
+    second: Nodes8BG_77
+  - first:
+      213: 7228744588148459906
+    second: Nodes8BG_78
+  - first:
+      213: -1284367260915950353
+    second: Nodes8BG_79
+  - first:
+      213: 5318057129198068246
+    second: Nodes8BG_80
+  - first:
+      213: 2799722068418958140
+    second: Nodes8BG_81
+  - first:
+      213: -8843590035112175510
+    second: Nodes8BG_82
+  - first:
+      213: -2414833249116437819
+    second: Nodes8BG_83
+  - first:
+      213: 3489081594259925771
+    second: Nodes8BG_84
+  - first:
+      213: -2148884357218057110
+    second: Nodes8BG_85
+  - first:
+      213: -3888663728487953321
+    second: Nodes8BG_86
+  - first:
+      213: -9164298819962141262
+    second: Nodes8BG_87
+  - first:
+      213: 7687710449739828020
+    second: Nodes8BG_88
+  - first:
+      213: -5703674735060841425
+    second: Nodes8BG_89
+  - first:
+      213: 6775745225501389903
+    second: Nodes8BG_90
+  - first:
+      213: -1880660190643596390
+    second: Nodes8BG_91
+  - first:
+      213: -3239958494175849456
+    second: Nodes8BG_92
+  - first:
+      213: -2176752285364911769
+    second: Nodes8BG_93
+  - first:
+      213: 3057106282616256598
+    second: Nodes8BG_94
+  - first:
+      213: -4237527435945941609
+    second: Nodes8BG_95
+  - first:
+      213: -5784859607193377890
+    second: Nodes8BG_96
+  - first:
+      213: 3940681566662966511
+    second: Nodes8BG_97
+  - first:
+      213: -1679913451113052836
+    second: Nodes8BG_98
+  - first:
+      213: 8182466603561287464
+    second: Nodes8BG_99
+  - first:
+      213: -7029853660815812541
+    second: Nodes8BG_100
+  - first:
+      213: 4996225679012729412
+    second: Nodes8BG_101
+  - first:
+      213: -7297401844833743237
+    second: Nodes8BG_102
+  - first:
+      213: 2956833755456255703
+    second: Nodes8BG_103
+  - first:
+      213: -3569694631432404910
+    second: Nodes8BG_104
+  - first:
+      213: -9211802276413629358
+    second: Nodes8BG_105
+  - first:
+      213: -7275362924174266143
+    second: Nodes8BG_106
+  - first:
+      213: -7763451286712153674
+    second: Nodes8BG_107
+  - first:
+      213: -1576322724512087822
+    second: Nodes8BG_108
+  - first:
+      213: -4349641247197244681
+    second: Nodes8BG_109
+  - first:
+      213: -5775234408619938776
+    second: Nodes8BG_110
+  - first:
+      213: -7512616530087115080
+    second: Nodes8BG_111
+  - first:
+      213: 3598633230125056137
+    second: Nodes8BG_112
+  - first:
+      213: -8625141138209731190
+    second: Nodes8BG_113
+  - first:
+      213: 8180210225106242322
+    second: Nodes8BG_114
+  - first:
+      213: 7071430812157055572
+    second: Nodes8BG_115
+  - first:
+      213: -4944481917672394536
+    second: Nodes8BG_116
+  - first:
+      213: 9107306493535147600
+    second: Nodes8BG_117
+  - first:
+      213: -5170436933936117849
+    second: Nodes8BG_118
+  - first:
+      213: 7855476570762774555
+    second: Nodes8BG_119
+  - first:
+      213: -3745805844691385915
+    second: Nodes8BG_120
+  - first:
+      213: -5684460753008425353
+    second: Nodes8BG_121
+  - first:
+      213: 1549105078648193727
+    second: Nodes8BG_122
+  - first:
+      213: -8461211539097952600
+    second: Nodes8BG_123
+  - first:
+      213: 4365727452164300659
+    second: Nodes8BG_124
+  - first:
+      213: 3139984226790562926
+    second: Nodes8BG_125
+  - first:
+      213: 2737099684351340660
+    second: Nodes8BG_126
+  - first:
+      213: 6858244950355173355
+    second: Nodes8BG_127
+  - first:
+      213: -1466150913191706982
+    second: Nodes8BG_128
+  - first:
+      213: 4768445453770288771
+    second: Nodes8BG_129
+  - first:
+      213: 6876306666402375864
+    second: Nodes8BG_130
+  - first:
+      213: -9043052416370495838
+    second: Nodes8BG_131
+  - first:
+      213: 5528871909899681522
+    second: Nodes8BG_132
+  - first:
+      213: -576576919876274472
+    second: Nodes8BG_133
+  - first:
+      213: -8925123812655906803
+    second: Nodes8BG_134
+  - first:
+      213: 4809538775903219248
+    second: Nodes8BG_135
+  - first:
+      213: 4079125148807721314
+    second: Nodes8BG_136
+  - first:
+      213: 5202363413636735238
+    second: Nodes8BG_137
+  - first:
+      213: 5827691148954559295
+    second: Nodes8BG_138
+  - first:
+      213: -2417113724966695608
+    second: Nodes8BG_139
+  - first:
+      213: 1555646468759215644
+    second: Nodes8BG_140
+  - first:
+      213: -1477077582486481761
+    second: Nodes8BG_141
+  - first:
+      213: -3299270554000538893
+    second: Nodes8BG_142
+  - first:
+      213: 1860775816202198134
+    second: Nodes8BG_143
+  - first:
+      213: 3057137882146940880
+    second: Nodes8BG_144
+  - first:
+      213: 4778523869629175214
+    second: Nodes8BG_145
+  - first:
+      213: 4782471972189956506
+    second: Nodes8BG_146
+  - first:
+      213: -6945781257284175730
+    second: Nodes8BG_147
+  - first:
+      213: -1291234209637341415
+    second: Nodes8BG_148
+  - first:
+      213: -908507070231868146
+    second: Nodes8BG_149
+  - first:
+      213: -1329068034890422115
+    second: Nodes8BG_150
+  - first:
+      213: -2716471367829969917
+    second: Nodes8BG_151
+  - first:
+      213: -1192209444175047542
+    second: Nodes8BG_152
+  - first:
+      213: 146764981126390217
+    second: Nodes8BG_153
+  - first:
+      213: -2515661859599136357
+    second: Nodes8BG_154
+  - first:
+      213: 6429425385656107035
+    second: Nodes8BG_155
+  - first:
+      213: 2578177084443587106
+    second: Nodes8BG_156
+  - first:
+      213: -7310301822728036135
+    second: Nodes8BG_157
+  - first:
+      213: 5965239996924938136
+    second: Nodes8BG_158
+  - first:
+      213: -1852578471923577438
+    second: Nodes8BG_159
+  - first:
+      213: 2852533387348986909
+    second: Nodes8BG_160
+  - first:
+      213: 5472796264908594787
+    second: Nodes8BG_161
+  - first:
+      213: -4587579920275951142
+    second: Nodes8BG_162
+  - first:
+      213: -6033659483820948244
+    second: Nodes8BG_163
+  - first:
+      213: 7257935236149628161
+    second: Nodes8BG_164
+  - first:
+      213: 4147551444458063486
+    second: Nodes8BG_165
+  - first:
+      213: -4013851988371093733
+    second: Nodes8BG_166
+  - first:
+      213: 5233044881454030387
+    second: Nodes8BG_167
+  - first:
+      213: -1447552762731324031
+    second: Nodes8BG_168
+  - first:
+      213: 6674133928972707688
+    second: Nodes8BG_169
+  - first:
+      213: 5072477783181274538
+    second: Nodes8BG_170
+  - first:
+      213: -4795312445551664043
+    second: Nodes8BG_171
+  - first:
+      213: 6944583593054600778
+    second: Nodes8BG_172
+  - first:
+      213: 2229088102534388839
+    second: Nodes8BG_173
+  - first:
+      213: 2161507617646333094
+    second: Nodes8BG_174
+  - first:
+      213: -8198602797795733144
+    second: Nodes8BG_175
+  - first:
+      213: 2237570033911157214
+    second: Nodes8BG_176
+  - first:
+      213: -2366343993199997692
+    second: Nodes8BG_177
+  - first:
+      213: -5976952605806052137
+    second: Nodes8BG_178
+  - first:
+      213: 5349643026792014816
+    second: Nodes8BG_179
+  - first:
+      213: 4665247422316029495
+    second: Nodes8BG_180
+  - first:
+      213: -1084725711212545873
+    second: Nodes8BG_181
+  - first:
+      213: -4082189361868780822
+    second: Nodes8BG_182
+  - first:
+      213: -8030871709373485481
+    second: Nodes8BG_183
+  - first:
+      213: 4299934960023911711
+    second: Nodes8BG_184
+  - first:
+      213: 4736012263943254544
+    second: Nodes8BG_185
+  - first:
+      213: 8827861746511382235
+    second: Nodes8BG_186
+  - first:
+      213: -2527193215767156445
+    second: Nodes8BG_187
+  - first:
+      213: -8641880180027242812
+    second: Nodes8BG_188
+  - first:
+      213: 3363146001100581831
+    second: Nodes8BG_189
+  - first:
+      213: -3340031429203467162
+    second: Nodes8BG_190
+  - first:
+      213: 3277937020182790336
+    second: Nodes8BG_191
+  - first:
+      213: 6394564375783263150
+    second: Nodes8BG_192
+  - first:
+      213: 5130616855641558757
+    second: Nodes8BG_193
+  - first:
+      213: -8264981327073066900
+    second: Nodes8BG_194
+  - first:
+      213: 4399171150786783245
+    second: Nodes8BG_195
+  - first:
+      213: 9149117490803448074
+    second: Nodes8BG_196
+  - first:
+      213: 1643311545311474544
+    second: Nodes8BG_197
+  - first:
+      213: -2517250317027208361
+    second: Nodes8BG_198
+  - first:
+      213: -4175901881848134451
+    second: Nodes8BG_199
+  - first:
+      213: 9167237275434237204
+    second: Nodes8BG_200
+  - first:
+      213: 470769855502976100
+    second: Nodes8BG_201
+  - first:
+      213: 4445728156181440634
+    second: Nodes8BG_202
+  - first:
+      213: 2255885655261514910
+    second: Nodes8BG_203
+  - first:
+      213: -206628278697450115
+    second: Nodes8BG_204
+  - first:
+      213: 5510281038234894231
+    second: Nodes8BG_205
+  - first:
+      213: -5692361477467740848
+    second: Nodes8BG_206
+  - first:
+      213: 5088807272104261335
+    second: Nodes8BG_207
+  - first:
+      213: 2995637105667101635
+    second: Nodes8BG_208
+  - first:
+      213: -2976873714432330943
+    second: Nodes8BG_209
+  - first:
+      213: 6276641400030637334
+    second: Nodes8BG_210
+  - first:
+      213: 5686746025200404357
+    second: Nodes8BG_211
+  - first:
+      213: 5494618625931660733
+    second: Nodes8BG_212
+  - first:
+      213: 6520301453726554913
+    second: Nodes8BG_213
+  - first:
+      213: 7008877619395589315
+    second: Nodes8BG_214
+  - first:
+      213: -845832346932012554
+    second: Nodes8BG_215
+  - first:
+      213: -8869101996155354350
+    second: Nodes8BG_216
+  - first:
+      213: 8166485115019018139
+    second: Nodes8BG_217
+  - first:
+      213: 4457284309056862032
+    second: Nodes8BG_218
+  - first:
+      213: 5961876137321229386
+    second: Nodes8BG_219
+  - first:
+      213: 5273439971792734226
+    second: Nodes8BG_220
+  - first:
+      213: -3822476587949003320
+    second: Nodes8BG_221
+  - first:
+      213: -2486070965647728038
+    second: Nodes8BG_222
+  - first:
+      213: 2157059133614953853
+    second: Nodes8BG_223
+  - first:
+      213: 3632123523419731038
+    second: Nodes8BG_224
+  - first:
+      213: -624021450498029332
+    second: Nodes8BG_225
+  - first:
+      213: 6103491273115133148
+    second: Nodes8BG_226
+  - first:
+      213: -1746872550690250689
+    second: Nodes8BG_227
+  - first:
+      213: -8349385416217224319
+    second: Nodes8BG_228
+  - first:
+      213: -2817797315461919686
+    second: Nodes8BG_229
+  - first:
+      213: -8952848295345229027
+    second: Nodes8BG_230
+  - first:
+      213: -2366770569260437519
+    second: Nodes8BG_231
+  - first:
+      213: -302989575004660099
+    second: Nodes8BG_232
+  - first:
+      213: 5412884749461197141
+    second: Nodes8BG_233
+  - first:
+      213: 2407539239158175964
+    second: Nodes8BG_234
+  - first:
+      213: 5831381618852927524
+    second: Nodes8BG_235
+  - first:
+      213: 1905294342271219258
+    second: Nodes8BG_236
+  - first:
+      213: -3255808020502649422
+    second: Nodes8BG_237
+  - first:
+      213: 6913090425554366168
+    second: Nodes8BG_238
+  - first:
+      213: -6342554852119552662
+    second: Nodes8BG_239
+  - first:
+      213: -3323873690411336624
+    second: Nodes8BG_240
+  - first:
+      213: 6462138237582003339
+    second: Nodes8BG_241
+  - first:
+      213: -853510017345081074
+    second: Nodes8BG_242
+  - first:
+      213: -7351190522344097208
+    second: Nodes8BG_243
+  - first:
+      213: 2521422214035971351
+    second: Nodes8BG_244
+  - first:
+      213: -9022860326341559344
+    second: Nodes8BG_245
+  - first:
+      213: -7693687745047039509
+    second: Nodes8BG_246
+  - first:
+      213: 2909699445510056551
+    second: Nodes8BG_247
+  - first:
+      213: -1596674737556537511
+    second: Nodes8BG_248
+  - first:
+      213: 3071429991273276785
+    second: Nodes8BG_249
+  - first:
+      213: 5363756861703353984
+    second: Nodes8BG_250
+  - first:
+      213: 7440164980553020475
+    second: Nodes8BG_251
+  - first:
+      213: 3670144286203889596
+    second: Nodes8BG_252
+  - first:
+      213: 7443985793196283146
+    second: Nodes8BG_253
+  - first:
+      213: 8108522031404256323
+    second: Nodes8BG_254
+  - first:
+      213: -2174629579577706817
+    second: Nodes8BG_255
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Nodes8BG_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37c1d6bb0590bca4e9a288927c302913
+      internalID: -7421115223572569992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_1
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 316bc22bbeae89441a7fd128aacae078
+      internalID: 2115398974705819552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_2
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f29dd6ed1befc645a2414566810ef26
+      internalID: -3917947003626264088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_3
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c84022a1eae95bb49b4358fd5d77a23c
+      internalID: -8210191144177934881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_4
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9963bd09486315547ae1534aa0f15d29
+      internalID: -457016208676947884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_5
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6253c7b94bff2524b87a664b2b68c9e6
+      internalID: -2643431356032879779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_6
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc0e8ac6709728a4a91bd5cf89d3bc9d
+      internalID: 5928721419278155306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_7
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44a47d262369ba14e97cd931b1ee8df6
+      internalID: 2374993158967451649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_8
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 972cd649915da194d869905c2740b27d
+      internalID: 3503768164542189703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_9
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20ba54d2a5c52124281dcb1515727ce0
+      internalID: 7809947791882780470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_10
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08efca5f6372c6d46afa9a0483bc8468
+      internalID: 3521652144757081453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_11
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86d2fb983b8b1d24589946fd9f14d128
+      internalID: -8805923932288759383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_12
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3df9045b9cf764846acf93684f2156be
+      internalID: -5192510962035101141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_13
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7f0fcd1e9e1b0c74fb8b703cedc98cda
+      internalID: -3306175840130698133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_14
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f86e8aa0bd8f964499e105665fb97a69
+      internalID: 4898856133173222125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_15
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 151
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22f7bd1598b8bae408301a61450cd069
+      internalID: 4909017801856461585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_16
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ffd17e9b837478439235edd00861f10
+      internalID: 4840700035213915802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_17
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa77fa1e1c69f0947afbe7af0837f879
+      internalID: -6616566309747706700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_18
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b70d72887e8a3f4b858f2a1c3c2252b
+      internalID: -5752789180819155309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_19
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f73f3823fa7c21f4c97636da1034a351
+      internalID: 4205231485750456070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_20
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36b6d03315619bd46b7e9d3d3f3e1b2a
+      internalID: 3121750227872538358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_21
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1704591dbe9eaa944ab2200c0f8a464f
+      internalID: -6885100042466894722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_22
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23eb1f166178b244e8f4aa5208adac99
+      internalID: -1333157509587208539
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_23
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2a8ed0a13d49ea4b83fe4713794df3a
+      internalID: 6089422662255472370
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_24
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfad237307b1cd947bd7d26ad8c3872b
+      internalID: -2805152798140921176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_25
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee9cf5c97cd43b04dbdd111109077e65
+      internalID: -8765547014354120591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_26
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6afb429d44d9b8b4096b5d7e99e3123d
+      internalID: 6952422413737705325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_27
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f716b69812cbee048a9d8ab00167f985
+      internalID: -4256333280346567830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_28
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12e2458a60909b049b492bd1f00b34e5
+      internalID: -3291808035052036581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_29
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3295eb83f4ae29344a7cc025f57b5d18
+      internalID: -2314366185884348512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_30
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb9f11109e4a0834c9aaa963747ab1d6
+      internalID: 826312238967031789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_31
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 141
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1c5cb0a31e20584a811e472df1a6064
+      internalID: -5367813289904786726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_32
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 386e687efa12d964aa04c94f9316fdd5
+      internalID: 7114053869949279385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_33
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04b9593b7a4fe9d4db949a0f27daf3aa
+      internalID: -7698202726586076176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_34
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cd99ac7828fc494d99ef8753890b4b4
+      internalID: -1716991398209348200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_35
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fb8fe6e97c1ad340a6a0aee61b2b011
+      internalID: 564811024471342645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_36
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 954a0727066c1a04bad7d88423879e42
+      internalID: 804569968357926944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_37
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 825279c825501b94ead5d8bb0c32785b
+      internalID: -8899748460944701379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_38
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee4d16771a912bd4983ba396dc8e64a9
+      internalID: 924728570411451940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_39
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f66d912aafb980047a91dd78d5edda42
+      internalID: 1269113623839146803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_40
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80bb2ea322d0cd44cb84e618775bdc8d
+      internalID: 8887698802641393929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_41
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 316464b2aa04ed24fbe8b7d3fd5d0eba
+      internalID: -9171854385380750635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_42
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5698513db56ed9144b8f3ad34fb3ac03
+      internalID: -4763425477265822139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_43
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a2a87bf1758d964eb25fdee2800345c
+      internalID: -7678628840059917316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_44
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31393447a0b22a945860658a6133726b
+      internalID: 1127526268494626402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_45
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cdafe50eeea2f54bba4640471af9035
+      internalID: -3271638851300496266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_46
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b639f21e61dda14687b76a3f69e0b56
+      internalID: -3268505434792189474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_47
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 131
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcce4e75771e0084ca83b5ef5a1ad726
+      internalID: 4498281472512311928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_48
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b548c2d6b75ce25439165dd3cc38f68f
+      internalID: -2193947467903691406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_49
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 291b6c3c5445c6447aa22d1f55fa36c1
+      internalID: -8268126963253423288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_50
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2de425430b14c047bf900a764e4b784
+      internalID: -7435408962317716226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_51
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd6ab6ef69750044d953d29fa90f7cb0
+      internalID: 138202805687054925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_52
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07ea75dd4470d4c4caae8bd185a9e934
+      internalID: 1733524047710952250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_53
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e0bc7bf5e50a0d4995f78053f1b8db1
+      internalID: 3506877335217733962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_54
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84f2b2b82cc40f549824ad65bc06ad18
+      internalID: 2661996820352515278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_55
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ccb083291f013541bfcb10f3590e4cd
+      internalID: -5883065903039973125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_56
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f606baa8dbc78604ea0904094fe6cff7
+      internalID: 3021830918981013876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_57
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f9357ef4d1d68843a71e5c1413f19c0
+      internalID: 1430834802416304891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_58
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bccc02d284e93d54eaafcd489c021278
+      internalID: 7392365826199295703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_59
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e325c6abf39be74cafdfa0ef025389d
+      internalID: -5095656893371103704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_60
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d3e5ad97f60e164990ac3809f958519
+      internalID: 3457421642495904657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_61
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8326aab6fd9ea0f4cb33ee132c104ee8
+      internalID: 1175598783620631007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_62
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db8c4e28d22f05048a7f5b0e1015898c
+      internalID: -3348155980997213509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_63
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 121
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a81ed4350fa029742abb15d7a2fdd4ec
+      internalID: 6300138107236220954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_64
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3336cc3d019ee4e408d6e16b8ba8cf84
+      internalID: -9012391868356985468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_65
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06201e2bce436cd43a4bbcac4c89a8fa
+      internalID: -3186846174551791044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_66
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f5dbfb9f9e97d046b00c10cb034152c
+      internalID: 1320845674306131133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_67
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de4deacb6a433694086876a9f88b1276
+      internalID: 8585232249589900906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_68
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b00e79d68dd03145b7b5a23bde5d586
+      internalID: 4912147126471412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_69
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8afa417d3f08c684788edcfe67a0384f
+      internalID: -5763806307716576081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_70
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cca64d94afedc64096688c82f29d74a
+      internalID: 5900920010977852056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_71
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1114885e5e029c04491c240ef15a4205
+      internalID: -4116127005851028631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_72
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e5cbfc66ab88804d92ca8339ae8b785
+      internalID: 3152337839274362975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_73
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54f5d5a8e0acdec48ab451efc1379764
+      internalID: -3792717805357554673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_74
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 054a9d62afbd0ac4eac00cf176ba785d
+      internalID: 4929423186384401681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_75
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6168f3163cc9e3f49afb3da97e5c41c3
+      internalID: -5168927979146797938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_76
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40304b3b7068cfb4f89f205faa747344
+      internalID: 3265571399507585591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_77
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a95e99d4ea8a1a4a8ade8aa67c979e9
+      internalID: -3017328924928994274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_78
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1f78f6dede5eaea4a8a3fb0083ae7be5
+      internalID: 7228744588148459906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_79
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 111
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 15ed1a883002f7a4f85a0ec90c03bba5
+      internalID: -1284367260915950353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_80
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18cad7f6b4f7d9e4e82c6feb590f71a9
+      internalID: 5318057129198068246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_81
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa7d77b954452924bab52816991ddd69
+      internalID: 2799722068418958140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_82
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf48cf6db3819544985b3635891adb3a
+      internalID: -8843590035112175510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_83
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcb57d07e12cf2d48910cfc8ee80c134
+      internalID: -2414833249116437819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_84
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff076bd41ab21264cba35aeb4ecb145e
+      internalID: 3489081594259925771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_85
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdccdef2a2536ce42be5846928b8a2a8
+      internalID: -2148884357218057110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_86
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d1cfe4b3e2b5d240a5b6f2f212f1d6f
+      internalID: -3888663728487953321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_87
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c448e0f9da9d8c44a8cfb69dd278474
+      internalID: -9164298819962141262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_88
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f814d6aad29b5b741a351660d4a1007c
+      internalID: 7687710449739828020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_89
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0e444b77e24392449c5ee69ad1a9ae4
+      internalID: -5703674735060841425
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_90
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fa1ad75455d157428e380d7c2d18350
+      internalID: 6775745225501389903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_91
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b664619a9975a644ad065b9f2cd6584
+      internalID: -1880660190643596390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_92
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba741def13f280d44ad19a004d54169b
+      internalID: -3239958494175849456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_93
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5740092ac0ce7eb4582a775126acd97c
+      internalID: -2176752285364911769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_94
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f72dc58fdc41b924ab302d5a72f0defc
+      internalID: 3057106282616256598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_95
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 101
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1af52410ee979c640a8ef4d7e650ac20
+      internalID: -4237527435945941609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_96
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b34c2ec4ee7d06344a3fdee60a7dfb17
+      internalID: -5784859607193377890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_97
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 668071f71bc7e0d49beefc6af5683d60
+      internalID: 3940681566662966511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_98
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0442661fe1f52e745bb6cddea335acda
+      internalID: -1679913451113052836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_99
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3d6b43015d59ae4fa7a66b5ce6812f5
+      internalID: 8182466603561287464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_100
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbd5144d8346caa44ae250bd603fd712
+      internalID: -7029853660815812541
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_101
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dac3f5f257fe9f4ca3cb9aa882fb9a9
+      internalID: 4996225679012729412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_102
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 979a2eabea22de844845b4fdbd62a644
+      internalID: -7297401844833743237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_103
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de33684c0839ab94b831cac4276c2837
+      internalID: 2956833755456255703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_104
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d4d3357e95c2c845815b272ee8d9597
+      internalID: -3569694631432404910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_105
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06037f1e5975c274c806e18812cfbe3f
+      internalID: -9211802276413629358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_106
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac405a8964e867143bd185d3a8438b13
+      internalID: -7275362924174266143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_107
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a17c27ca1faf0a94ab8e4ee672d6edb5
+      internalID: -7763451286712153674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_108
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8cb6c4e263ace7143bc279eea73a423d
+      internalID: -1576322724512087822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_109
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8d818761c3e8284a8e9285d3fd43bc5
+      internalID: -4349641247197244681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_110
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1b54720234dc51489ff4e8bb1f5004a
+      internalID: -5775234408619938776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_111
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 91
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d2541c48e22d054db9fb976de9d3e5c
+      internalID: -7512616530087115080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_112
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46b7dd5bd3efaf645ad155ede707eb10
+      internalID: 3598633230125056137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_113
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93edca5447174b74fb9fc017b33b07d3
+      internalID: -8625141138209731190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_114
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c006fefb1af1f4942b7238bbcaaf70f6
+      internalID: 8180210225106242322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_115
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0cdf467a34dccc4f9f56a006f56146c
+      internalID: 7071430812157055572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_116
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8067a4d52a6989c4282064e8ab189a1d
+      internalID: -4944481917672394536
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_117
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b6646300fae6fc44aadf4531d3a38f6
+      internalID: 9107306493535147600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_118
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c6c81758ce8884c9eae2bf8720dbae
+      internalID: -5170436933936117849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_119
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0deb8fb7d95b92349926c94daef7fba9
+      internalID: 7855476570762774555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_120
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c55b967017e45e544b44b9dbc550a1fe
+      internalID: -3745805844691385915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_121
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fea7742a065fda419ab48a115af5fa6
+      internalID: -5684460753008425353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_122
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f123f3526214fea4cbb5aedacebc22be
+      internalID: 1549105078648193727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_123
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6159691329797e4b86b20781cfe5f8e
+      internalID: -8461211539097952600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_124
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14942e2bf4e6ba24ea3ce7ad0a1b2f3e
+      internalID: 4365727452164300659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_125
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47019065b6200854d8b8655188be3817
+      internalID: 3139984226790562926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_126
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40a6e6863b50f9c4fb47b6d0ac8ca771
+      internalID: 2737099684351340660
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_127
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 81
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d365670cf24837e48b13ac51c18e99f5
+      internalID: 6858244950355173355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_128
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04ed78c8b95255a46a357af7af3efa1e
+      internalID: -1466150913191706982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_129
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56713ce82335f9b479fb8512ae548367
+      internalID: 4768445453770288771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_130
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbf676cee63d96043a29ea0b881622ef
+      internalID: 6876306666402375864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_131
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cca4079a8af54142ade829c5409254e
+      internalID: -9043052416370495838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_132
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94d187e313a71954b88908aea36de9f1
+      internalID: 5528871909899681522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_133
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b2516585a404b344bfb7264bb1bb774
+      internalID: -576576919876274472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_134
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3889d58186a3f4942b165c57ad9832e9
+      internalID: -8925123812655906803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_135
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1bab4ed500f264d47ba902f28637e301
+      internalID: 4809538775903219248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_136
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04ae109a8f4c50743b3f9f43ecca6cda
+      internalID: 4079125148807721314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_137
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f965787f5c0df6940ad726e9b7fd4946
+      internalID: 5202363413636735238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_138
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb9374f6cf77e90429976ba53a363676
+      internalID: 5827691148954559295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_139
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abc2a637067bf024a9f363a085fdc5f1
+      internalID: -2417113724966695608
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_140
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b69080ca0c40b6b47aeb645ac3bf31e9
+      internalID: 1555646468759215644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_141
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 344a63e3471d7ba4d8f2dfe468de4697
+      internalID: -1477077582486481761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_142
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22f8d86c4bbf8194ebbabe638753837c
+      internalID: -3299270554000538893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_143
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 71
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3055b260f20414341973664615966596
+      internalID: 1860775816202198134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_144
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 725a9463f205b534f928a8c5ce214139
+      internalID: 3057137882146940880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_145
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10d07693b6d1a124db8516a4500292bf
+      internalID: 4778523869629175214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_146
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9018b8202cca2a5459297231809a47c1
+      internalID: 4782471972189956506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_147
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3f02b5235d82484fad6661e42c7d190
+      internalID: -6945781257284175730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_148
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a67b9db02f81ebc4a91a2284b18f00e1
+      internalID: -1291234209637341415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_149
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e918c05224e90a4ab0b8f2fa1d87ee8
+      internalID: -908507070231868146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_150
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c1be2634b204c049a0aa0e5c931bab5
+      internalID: -1329068034890422115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_151
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f88c9b4f9f2c753439ab6a131c3589d0
+      internalID: -2716471367829969917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_152
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46e41dc81b4223a45b344b0c48284d08
+      internalID: -1192209444175047542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_153
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f641c7350f496df4d8f100670aca50a5
+      internalID: 146764981126390217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_154
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34f7cd4894a15b54582a08a7529ca241
+      internalID: -2515661859599136357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_155
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a999d0da2cde86149b6c2c3fdca3d720
+      internalID: 6429425385656107035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_156
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10174ac9fcac4c749b45c16060c1e83b
+      internalID: 2578177084443587106
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_157
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9834f51027d48be449ac59a7abed8eec
+      internalID: -7310301822728036135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_158
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a49e91b75b31d848accefd84a355def
+      internalID: 5965239996924938136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_159
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 61
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17f4ffe8a4d9b42419065fd27dcbf1e8
+      internalID: -1852578471923577438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_160
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53fe45f5d231cdc49a381c0701545728
+      internalID: 2852533387348986909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_161
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 661c65940c516ed48bfe4281aa8608a9
+      internalID: 5472796264908594787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_162
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bffb1ca5c54fa9f46baeabb8bff7f82d
+      internalID: -4587579920275951142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_163
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa603a7deb40c4540ba18e61a8dc4435
+      internalID: -6033659483820948244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_164
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c86b19e3230ba8499e0a0c3ae272af0
+      internalID: 7257935236149628161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_165
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f7422f6c34ca9a45bfc429b7d9e4a67
+      internalID: 4147551444458063486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_166
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6797f32b6db411749a49db3a1ca9ec4f
+      internalID: -4013851988371093733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_167
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02b69fd2ee3d1b6469fb022271800a25
+      internalID: 5233044881454030387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_168
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd3c1fbaac948e749ad97686ac7045b0
+      internalID: -1447552762731324031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_169
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42c193c4a205bec409026d430cdd2188
+      internalID: 6674133928972707688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_170
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fdc4a1d3df5da848bd84118779768d5
+      internalID: 5072477783181274538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_171
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fe56cfd74f169443bcc8383e34e8f6f
+      internalID: -4795312445551664043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_172
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5233acca7c95574eb9b643e968f2fa7
+      internalID: 6944583593054600778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_173
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fa9d1ec69dd9f64cbca3f92aec40650
+      internalID: 2229088102534388839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_174
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7e833c3f860053b4595d878f79edce22
+      internalID: 2161507617646333094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_175
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cefb60fa31139e4ba13f811fe5e6d3f
+      internalID: -8198602797795733144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_176
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7467c85d388f89458d14a713af0108e
+      internalID: 2237570033911157214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_177
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fce3319a9cf88344182f8766924ca48c
+      internalID: -2366343993199997692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_178
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7935214119eb9eb4091b6d62e5b54b54
+      internalID: -5976952605806052137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_179
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6f062c0f2004c84fb3a5b5072f7cdd1
+      internalID: 5349643026792014816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_180
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86bb6d51931a9ad4f8be7f8f7ea7e451
+      internalID: 4665247422316029495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_181
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d97a34041a11454e851cfb7d48cffb3
+      internalID: -1084725711212545873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_182
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8141f015beada8f4b99d1852b79d04ad
+      internalID: -4082189361868780822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_183
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c9f36d92849ea546b022f9869e3ec75
+      internalID: -8030871709373485481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_184
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b414f0f9edbbc5b4791ff694315ed39b
+      internalID: 4299934960023911711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_185
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30c3f9838f5b10f4886e401b7ace3b80
+      internalID: 4736012263943254544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_186
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 782b8852f53b2974ba86b2fb82b67432
+      internalID: 8827861746511382235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_187
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a7d3b86b9884a5f4ea0c6d7fb0db3b1a
+      internalID: -2527193215767156445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_188
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48679e7d1c5a82e4f9780a3d0bc66c87
+      internalID: -8641880180027242812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_189
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10d290537034ea246b9abeccd845aa63
+      internalID: 3363146001100581831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_190
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5eda7ad3464d754294a4785c51e8e60
+      internalID: -3340031429203467162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_191
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 41
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b78538f403a56e4098e0fb1a3bfba7d
+      internalID: 3277937020182790336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_192
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7931b43c58f450499655043d8dd0ece
+      internalID: 6394564375783263150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_193
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c054d9c588b6cc4c8004ca6afde6753
+      internalID: 5130616855641558757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_194
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d384824429fc5ae459fb30d17809417b
+      internalID: -8264981327073066900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_195
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b87138079098c8429fd321ebedf46be
+      internalID: 4399171150786783245
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_196
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4308af99308c84b498d187d6d8873c30
+      internalID: 9149117490803448074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_197
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84a3e63a7ed2c714dacabd82ee66ca2c
+      internalID: 1643311545311474544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_198
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51138680d9bc1594d98717f9f7c2cf27
+      internalID: -2517250317027208361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_199
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c9b4f7111766da4299ce6faa6908276
+      internalID: -4175901881848134451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_200
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce53b5715636b2e428af2a4ee511c7d4
+      internalID: 9167237275434237204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_201
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 170aab70d6de3b948bc027b56be1755b
+      internalID: 470769855502976100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_202
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bf11ca54c710ee4aa037e84e8126141
+      internalID: 4445728156181440634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_203
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd1a5c8148e7880449d7b877077126ae
+      internalID: 2255885655261514910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_204
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff9c2d560f4e0b64694c9d6fa6a4f811
+      internalID: -206628278697450115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_205
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b37cf509d76ac9d49ad255610b891c2b
+      internalID: 5510281038234894231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_206
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2b525ead6a4acb41b5da7134d9565c1
+      internalID: -5692361477467740848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_207
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 31
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 975f62a623aa3d84fa44ec0e807f4289
+      internalID: 5088807272104261335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_208
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ccfbb588f82ef1459cbf481b53961dd
+      internalID: 2995637105667101635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_209
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81ca1d84f664cc94bb4c6d06f63eff75
+      internalID: -2976873714432330943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_210
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d770c1f9937ee924597b456723a626c0
+      internalID: 6276641400030637334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_211
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 416db52c0f43a634084eba89f7106ac9
+      internalID: 5686746025200404357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_212
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 675fd9c01c950df4997194722dd7dbf0
+      internalID: 5494618625931660733
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_213
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c7293befb0f2cf4fbd9697cac0b178a
+      internalID: 6520301453726554913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_214
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b17670d355ff879439194e3d0b9e7c7b
+      internalID: 7008877619395589315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_215
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55627b1b4ecdcfe46899c40ef5ea7e1e
+      internalID: -845832346932012554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_216
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5ddd13fdb45e0e47a1439e22174204b
+      internalID: -8869101996155354350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_217
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4759ae3b104d98d40a0a1bdfc1b28015
+      internalID: 8166485115019018139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_218
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 559bd24e60f3fcc4b8954b3ad59d69f8
+      internalID: 4457284309056862032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_219
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 294701060267aba4bb2f2afbea43222e
+      internalID: 5961876137321229386
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_220
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f7e3ea6af41d0241af16b91469e6831
+      internalID: 5273439971792734226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_221
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71209fb5686041143a6b4af77d341816
+      internalID: -3822476587949003320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_222
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59cd2b6f1fddadf44b853892cda71414
+      internalID: -2486070965647728038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_223
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 21
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ae737a0f877c054d902bf1c4c9bb5d7
+      internalID: 2157059133614953853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_224
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5af2a47cbde41684993c7f27fb7cbf15
+      internalID: 3632123523419731038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_225
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9db088af1c2825b4db150f707bdbc056
+      internalID: -624021450498029332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_226
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6f40dd86061e9143ab801f7a75762cd
+      internalID: 6103491273115133148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_227
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 828361dfb879dbf46a071679dfaf9675
+      internalID: -1746872550690250689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_228
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 391030594fe3ad7469af325cf95807f5
+      internalID: -8349385416217224319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_229
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e08c8d52e59f2084bac7ea2552d83975
+      internalID: -2817797315461919686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_230
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eebdb1aba3b42634aab03de01600cf1f
+      internalID: -8952848295345229027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_231
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bd4196044c3a034e8db8babdaa99c42
+      internalID: -2366770569260437519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_232
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8a21969ad7d6ee4187214f34e00b3a8
+      internalID: -302989575004660099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_233
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b669e3e1222aa284a942a02711b551fc
+      internalID: 5412884749461197141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_234
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d5a0bfb0ad09874d84bd985e0b3c858
+      internalID: 2407539239158175964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_235
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba0bd8d24308496428735e558b8a219c
+      internalID: 5831381618852927524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_236
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f976759995328bf42a23e6d5b26513b7
+      internalID: 1905294342271219258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_237
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2d33a13d026726419d9f0f0e9edc7f7
+      internalID: -3255808020502649422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_238
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdc9a5bf349b1a144af22e8317ff4750
+      internalID: 6913090425554366168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_239
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 11
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 473db3e7a72564c4281c10b9c1fb8cd3
+      internalID: -6342554852119552662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_240
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75261d9d6b226894083764475f894610
+      internalID: -3323873690411336624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_241
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcd38acef4f175647bee152ffda4f207
+      internalID: 6462138237582003339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_242
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b63bfc6778f4b8a4fad1bd03ce09e681
+      internalID: -853510017345081074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_243
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0d8d9ff147217941ad3c7a4cb27a50e
+      internalID: -7351190522344097208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_244
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06ff398d7fe8a2f43a0f1fa2c8b68309
+      internalID: 2521422214035971351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_245
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3419677f7b2758546a8c1bcff05f11d9
+      internalID: -9022860326341559344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_246
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03c3c7cb0b6d01042821edc0ec303150
+      internalID: -7693687745047039509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_247
+      rect:
+        serializedVersion: 2
+        x: 71
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e67d3e21ae83afd41921be6a87380c87
+      internalID: 2909699445510056551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_248
+      rect:
+        serializedVersion: 2
+        x: 81
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecf53ef9091aad24e8082ba65a92f5b8
+      internalID: -1596674737556537511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_249
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16e9c9b063768aa4f96eb03e8d5dbbb1
+      internalID: 3071429991273276785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_250
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f2ca9b9bbfc1694ebe2b31a60d32de1
+      internalID: 5363756861703353984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_251
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3e06b6e445f29a4289fd3ed10d0adab
+      internalID: 7440164980553020475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_252
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63550e3ab7019ac45956514d2459b2d1
+      internalID: 3670144286203889596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_253
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4188be72ff848954b9b368634fb9537f
+      internalID: 7443985793196283146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_254
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53e75c87f135ded4cbee79cba03ad7cd
+      internalID: 8108522031404256323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nodes8BG_255
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 1
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14489dd5a69262245975ba90ec5a8a79
+      internalID: -2174629579577706817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: b32b2449d790de24986054a6ee7eccb2
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

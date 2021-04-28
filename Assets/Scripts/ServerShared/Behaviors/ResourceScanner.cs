@@ -1,29 +1,38 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ResourceScannerData : BehaviorData
 {
-    [InspectableField, JsonProperty("range"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("range"), Key(1), RuntimeInspectable]
     public PerformanceStat Range = new PerformanceStat();
     
-    [InspectableField, JsonProperty("minDensity"), Key(2), RuntimeInspectable]
+    [Inspectable, JsonProperty("minDensity"), Key(2), RuntimeInspectable]
     public PerformanceStat MinimumDensity = new PerformanceStat();
     
-    [InspectableField, JsonProperty("scanDuration"), Key(3), RuntimeInspectable]
+    [Inspectable, JsonProperty("scanDuration"), Key(3), RuntimeInspectable]
     public PerformanceStat ScanDuration = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new ResourceScanner(context, this, entity, item);
+        return new ResourceScanner(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new ResourceScanner(this, item);
     }
 }
 
-public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
+public class ResourceScanner : Behavior, IAlwaysUpdatedBehavior
 {
     public int Asteroid = -1;
     
@@ -31,11 +40,6 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
     private float _scanTime;
     private Guid _scanTarget;
 
-    private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
-
-    public BehaviorData Data => _data;
     public float Range { get; private set; }
     public float MinimumDensity { get; private set; }
     public float ScanDuration { get; private set; }
@@ -53,29 +57,32 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
         }
     }
 
-    public ResourceScanner(GameContext context, ResourceScannerData data, Entity entity, Gear item)
+    public ResourceScanner(ResourceScannerData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
     }
 
-    public bool Update(float delta)
+    public ResourceScanner(ResourceScannerData data, ConsumableItemEffect item) : base(data, item)
     {
-        var planetData = Context.Cache.Get<PlanetData>(ScanTarget);
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        var planetData = Entity.Zone.Planets[ScanTarget];
         if (planetData != null)
         {
-            if (planetData.Belt)
+            if (planetData is AsteroidBeltData beltData)
             {
                 if(Asteroid > -1 &&
-                   Asteroid < planetData.Asteroids.Length &&
-                   length(Entity.Position - Context.GetAsteroidTransform(ScanTarget, Asteroid).xy) < Range)
+                   Asteroid < beltData.Asteroids.Length &&
+                   length(Entity.Position.xz - Entity.Zone.AsteroidBelts[ScanTarget].Positions[Asteroid].xz) < Range)
                 {
-                    _scanTime += delta;
+                    _scanTime += dt;
                     if (_scanTime > ScanDuration)
                     {
-                        Context.Cache.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;
+                        // TODO: Implement Scanning!
+                        //Context.ItemData.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;
                         _scanTime = 0;
                     }
                     return true;
@@ -83,12 +90,12 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
             }
             else
             {
-                if(length(Entity.Position - Context.GetOrbitPosition(planetData.Orbit)) < Range)
+                if(length(Entity.Position.xz - Entity.Zone.GetOrbitPosition(planetData.Orbit)) < Range)
                 {
-                    _scanTime += delta;
+                    _scanTime += dt;
                     if (_scanTime > ScanDuration)
                     {
-                        Context.Cache.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;
+                        //Context.ItemData.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;
                         _scanTime = 0;
                     }
                     return true;
@@ -98,10 +105,10 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
         return false;
     }
 
-    public void AlwaysUpdate(float delta)
+    public void Update(float delta)
     {
-        Range = Context.Evaluate(_data.Range, Item, Entity);
-        MinimumDensity = Context.Evaluate(_data.MinimumDensity, Item, Entity);
-        ScanDuration = Context.Evaluate(_data.ScanDuration, Item, Entity);
+        Range = Evaluate(_data.Range);
+        MinimumDensity = Evaluate(_data.MinimumDensity);
+        ScanDuration = Evaluate(_data.ScanDuration);
     }
 }

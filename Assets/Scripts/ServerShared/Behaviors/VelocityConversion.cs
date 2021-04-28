@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
@@ -6,43 +10,35 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VelocityConversionData : BehaviorData
 {
-    [InspectableField, JsonProperty("traction"), Key(1), RuntimeInspectable]  
-    public PerformanceStat Traction = new PerformanceStat();
+    [Inspectable, JsonProperty("lambda"), Key(1), RuntimeInspectable]  
+    public PerformanceStat Lambda = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new VelocityConversion(context, this, entity, item);
+        return new VelocityConversion(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new VelocityConversion(this, item);
     }
 }
 
-public class VelocityConversion : IBehavior
+public class VelocityConversion : Behavior
 {
-    public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
-
-    public BehaviorData Data => _data;
-    
     private VelocityConversionData _data;
 
-    public VelocityConversion(GameContext context, VelocityConversionData data, Entity entity, Gear item)
+    public VelocityConversion(VelocityConversionData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
+    }
+    public VelocityConversion(VelocityConversionData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
-    public void Initialize()
+    public override bool Execute(float dt)
     {
-    }
-
-    public bool Update(float delta)
-    {
+        Entity.Velocity = AetheriaMath.Damp(Entity.Velocity, Entity.Direction * length(Entity.Velocity), Evaluate(_data.Lambda), dt);
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

@@ -1,54 +1,54 @@
-﻿
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-5), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-5), RuntimeInspectable]
 public class ItemUsageData : BehaviorData
 {
     [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("item"), Key(1), RuntimeInspectable]  
     public Guid Item;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new ItemUsage(context, this, entity, item);
+        return new ItemUsage(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new ItemUsage(this, item);
     }
 }
 
-public class ItemUsage : IBehavior
+public class ItemUsage : Behavior
 {
     private ItemUsageData _data;
 
-    private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
-
-    public BehaviorData Data => _data;
-
-    public ItemUsage(GameContext context, ItemUsageData data, Entity entity, Gear item)
+    public ItemUsage(ItemUsageData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
     }
 
-    public bool Update(float delta)
+    public ItemUsage(ItemUsageData data, ConsumableItemEffect item) : base(data, item)
     {
-        var cargoInstances = Entity.Cargo.Select(c => Context.Cache.Get<ItemInstance>(c));
-        if (cargoInstances.FirstOrDefault(c => c.Data == _data.Item) is SimpleCommodity item)
-        {
-            if (item.Quantity > 1)
-                item.Quantity--;
-            else
-            {
-                Entity.Cargo.Remove(item.ID);
-                Context.Cache.Delete(item);
-            }
+        _data = data;
+    }
 
-            return true;
-        }
-        return false;
+    public override bool Execute(float dt)
+    {
+        var cargo = Entity.FindItemInCargo(_data.Item);
+        if (cargo == null) return false;
+
+        var item = cargo.ItemsOfType[_data.Item][0];
+        if (item is SimpleCommodity simpleCommodity)
+            cargo.Remove(simpleCommodity, 1);
+        if (item is CraftedItemInstance craftedItemInstance)
+            cargo.Remove(craftedItemInstance);
+        
+        return true;
     }
 }

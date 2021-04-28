@@ -11,7 +11,7 @@ using Random = UnityEngine.Random;
 
 using static Unity.Mathematics.math;
 
-public static class UnityExtensions
+public static class UnitySceneExtensions
 {
 	public static T FindInParents<T>(this GameObject go) where T : Component
 	{
@@ -74,13 +74,7 @@ public static class UnityExtensions
 			// }
 		}
 	}
-
-	public static Texture2D ToTexture(this Color c)
-	{
-		Texture2D result = new Texture2D(1, 1);
-		result.SetPixels(new[]{c});
-		result.Apply();
-
-		return result;
-	}
+	
+	public static Vector3 Flatland(this Vector2 v, float y = 0) => new Vector3(v.x,y,v.y);
+	public static Vector2 Flatland(this Vector3 v) => new Vector2(v.x,v.z);
 }

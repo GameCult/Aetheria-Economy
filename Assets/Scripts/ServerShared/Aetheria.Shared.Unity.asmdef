@@ -1,0 +1,20 @@
+{
+    "name": "Aetheria.Shared.Unity",
+    "rootNamespace": "",
+    "references": [
+        "MessagePack",
+        "Unity.Mathematics",
+        "UniRx",
+        "RethinkDB",
+        "Ink"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

@@ -1,54 +1,52 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
 using MessagePack;
 using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VelocityLimitData : BehaviorData
 {
-    [InspectableField, JsonProperty("topSpeed"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("topSpeed"), Key(1), RuntimeInspectable]  
     public PerformanceStat TopSpeed = new PerformanceStat();
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new VelocityLimit(context, this, entity, item);
+        return new VelocityLimit(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new VelocityLimit(this, item);
     }
 }
 
 [Order(100)]
-public class VelocityLimit : IBehavior
+public class VelocityLimit : Behavior
 {
-    public Entity Entity { get; }
-    public Gear Item { get; }
-    public GameContext Context { get; }
-    
     public float Limit { get; private set; }
 
-    public BehaviorData Data => _data;
-    
     private VelocityLimitData _data;
 
-    public VelocityLimit(GameContext context, VelocityLimitData data, Entity entity, Gear item)
+    public VelocityLimit(VelocityLimitData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
+        Limit = Evaluate(_data.TopSpeed);
     }
 
-    public void Initialize()
+    public VelocityLimit(VelocityLimitData data, ConsumableItemEffect item) : base(data, item)
     {
+        _data = data;
+        Limit = Evaluate(_data.TopSpeed);
     }
 
-    public bool Update(float delta)
+    public override bool Execute(float dt)
     {
-        Limit = Context.Evaluate(_data.TopSpeed, Item, Entity);
+        Limit = Evaluate(_data.TopSpeed);
         if (length(Entity.Velocity) > Limit)
             Entity.Velocity = normalize(Entity.Velocity) * Limit;
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

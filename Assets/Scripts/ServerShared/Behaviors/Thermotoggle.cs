@@ -1,45 +1,54 @@
-﻿using System;
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+using System;
 using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-22)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-22)]
 public class ThermotoggleData : BehaviorData
 {
-    [TemperatureInspectable, JsonProperty("targetTemp"), Key(1)]
+    [InspectableTemperature, JsonProperty("targetTemp"), Key(1)]
     public float TargetTemperature;
     
-    [InspectableField, JsonProperty("highPass"), Key(2)]
+    [Inspectable, JsonProperty("highPass"), Key(2)]
     public bool HighPass;
+
+    [Inspectable, JsonProperty("adjustable"), Key(3)]
+    public bool Adjustable;
     
-    public override IBehavior CreateInstance(GameContext context, Entity entity, Gear item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Thermotoggle(context, this, entity, item);
+        return new Thermotoggle(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Thermotoggle(this, item);
     }
 }
 
-public class Thermotoggle : IBehavior
+public class Thermotoggle : Behavior
 {
     public float TargetTemperature;
     private ThermotoggleData _data;
 
-    private Entity Entity { get; }
-    private Gear Item { get; }
-    private GameContext Context { get; }
+    public ThermotoggleData ThermotoggleData => _data;
 
-    public BehaviorData Data => _data;
-
-    public Thermotoggle(GameContext context, ThermotoggleData data, Entity entity, Gear item)
+    public Thermotoggle(ThermotoggleData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
+        TargetTemperature = data.TargetTemperature;
+    }
+    public Thermotoggle(ThermotoggleData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
         TargetTemperature = data.TargetTemperature;
     }
 
-    public bool Update(float delta)
+    public override bool Execute(float dt)
     {
-        return Entity.Temperature < TargetTemperature ^ _data.HighPass;
+        return Temperature < TargetTemperature ^ _data.HighPass;
     }
 }
