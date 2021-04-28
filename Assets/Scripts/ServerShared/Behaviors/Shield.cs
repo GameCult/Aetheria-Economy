@@ -7,46 +7,46 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ShieldData : BehaviorData
 {
-    [InspectableField, JsonProperty("efficiency"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("efficiency"), Key(1), RuntimeInspectable]  
     public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("energy"), Key(2), RuntimeInspectable]  
+    [Inspectable, JsonProperty("energy"), Key(2), RuntimeInspectable]  
     public PerformanceStat EnergyUsage = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Shield(context, this, entity, item);
+        return new Shield(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Shield(this, item);
     }
 }
 
-public class Shield : IBehavior
+public class Shield : Behavior
 {
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-    
     public float Efficiency { get; private set; }
     public float EnergyUsage { get; private set; }
 
-    public BehaviorData Data => _data;
     
     private ShieldData _data;
 
-    public Shield(ItemManager context, ShieldData data, Entity entity, EquippedItem item)
+    public Shield(ShieldData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
+    }
+    public Shield(ShieldData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
-    public bool Execute(float delta)
+    public override bool Execute(float dt)
     {
-        Efficiency = Item.Evaluate(_data.Efficiency);
-        EnergyUsage = Item.Evaluate(_data.EnergyUsage);
+        Efficiency = Evaluate(_data.Efficiency);
+        EnergyUsage = Evaluate(_data.EnergyUsage);
         return true;
     }
 
@@ -58,6 +58,6 @@ public class Shield : IBehavior
     public void TakeHit(DamageType type, float damage)
     {
         Entity.TryConsumeEnergy(damage * EnergyUsage);
-        Item.AddHeat(damage / Efficiency);
+        AddHeat(damage / Efficiency);
     }
 }

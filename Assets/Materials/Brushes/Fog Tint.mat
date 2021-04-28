@@ -58,7 +58,7 @@ Material:
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _Depth: 0.33
+    - _Depth: 1.3
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _Frequency: 6.2832
@@ -70,7 +70,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _Phase: 0
-    - _Power: 3
+    - _Power: 8
     - _SinePower: 1.25
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

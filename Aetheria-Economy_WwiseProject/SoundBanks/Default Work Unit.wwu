@@ -22,16 +22,16 @@
 					<ObjectInclusionList>
 						<ObjectRef Name="reactor_type01_stop" ID="{ACD01933-582E-4049-B99E-8A202B5324F7}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="thruster_medium_stop" ID="{BDAB58BA-0893-41E9-B425-2FAA069219F0}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Aetheria_Wormhole_travel_jumpout" ID="{290B97E7-B057-42A4-9BCE-33220B7473A8}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Aetheria_Wormhole_travel_jumpin" ID="{393D96D3-4D2B-42BB-827D-10984647051F}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Aetheria_Wormhole_travel_jumpout" ID="{290B97E7-B057-42A4-9BCE-33220B7473A8}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Aetheria_Wormhole_travel_jumpin" ID="{393D96D3-4D2B-42BB-827D-10984647051F}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="thruster_small" ID="{63E66AEC-CFE1-4362-B99D-280AC043C538}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="thruster_large_stop" ID="{14D488A4-89B5-4582-B79C-D6032306F95E}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="thruster_medium" ID="{0F30DB3D-6A97-4659-BA04-13A267DC19EC}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="thruster_large" ID="{99504764-B63E-48E8-A9A0-717489DD3466}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="thruster_small_stop" ID="{11565353-AF3C-4C1E-A6C1-0C06D05C834D}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Spaceship" ID="{C6CE2D3B-502C-4CC5-815A-B01D11C157EE}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Spaceship" ID="{C6CE2D3B-502C-4CC5-815A-B01D11C157EE}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" Origin="Manual" Filter="7"/>
 						<ObjectRef Name="reactor_type01" ID="{8A0DAB86-FAC0-4D8A-91E6-DD9E0C93259C}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Aetheria_Wormhole_travel" ID="{0EE417AB-A0FE-4E79-8031-FBE3B604C3AB}" WorkUnitID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Aetheria_Wormhole_travel" ID="{0EE417AB-A0FE-4E79-8031-FBE3B604C3AB}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>

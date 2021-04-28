@@ -29,12 +29,8 @@ public class Stardust : MonoBehaviour
     //public Transform TargetTransform;
     public Camera GravityCamera;
 
-    private Vector3[] _vertices;
-
     private const int GROUP_SIZE = 128;
     private int _updateParticlesKernel;
-
-    private float _maxTemperature = 0;
     #endregion
 
     #region Structs
@@ -65,7 +61,6 @@ public class Stardust : MonoBehaviour
 
         //Create particle buffer
         _particlesBuffer = new ComputeBuffer(Span * Span, PARTICLE_STRIDE);
-//        _temperature = new ComputeBuffer(128, TEMP_STRIDE);
 
         Particle[] particles = new Particle[Span * Span];
 

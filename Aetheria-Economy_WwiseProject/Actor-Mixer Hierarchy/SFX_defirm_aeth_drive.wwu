@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" SchemaVersion="97">
+	<AudioObjects>
+		<WorkUnit Name="SFX_defirm_aeth_drive" ID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" PersistMode="Standalone">
+			<ChildrenList>
+				<WorkUnit Name="Spaceship_Aetheric_drivers" ID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}" PersistMode="Reference"/>
+			</ChildrenList>
+		</WorkUnit>
+	</AudioObjects>
+</WwiseDocument>

@@ -20,7 +20,7 @@ public class MarkovNameGenerator
     private int _maxLength;
     private Random _random;
 
-    public MarkovNameGenerator(ref Random random, IEnumerable<string> sampleNames, SectorGenerationSettings settings)
+    public MarkovNameGenerator(ref Random random, IEnumerable<string> sampleNames, NameGeneratorSettings settings)
     {
         var names = new HashSet<string>();
         foreach (var line in sampleNames)

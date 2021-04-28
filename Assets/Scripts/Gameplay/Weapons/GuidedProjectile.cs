@@ -7,6 +7,7 @@ using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;
 using Random = UnityEngine.Random;
 using static Noise1D;
+using float3 = Unity.Mathematics.float3;
 
 public class GuidedProjectile : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class GuidedProjectile : MonoBehaviour
     private float _prevDist;
     private bool _active;
     private bool _alive;
+    private Vector3 _targetVelocity;
+    private Vector3 _previousTargetPosition;
     
     public Transform Target { get; set; }
     public float3 StartPosition { get; set; }
@@ -41,6 +44,8 @@ public class GuidedProjectile : MonoBehaviour
     public float Spread { get; set; }
     public DamageType DamageType { get; set; }
     public Entity SourceEntity { get; set; }
+
+    public event Action OnKill;
 
     void OnEnable()
     {
@@ -67,12 +72,15 @@ public class GuidedProjectile : MonoBehaviour
                 StartCoroutine(FadeOut());
                 return;
             }
+            var position = (float3) t.position;
 
             var targetPosition = TargetPosition?.Invoke() ?? Target.position;
+            _targetVelocity = lerp(_targetVelocity, targetPosition - _previousTargetPosition, saturate(Time.deltaTime * 5));
+            _previousTargetPosition = targetPosition;
+            targetPosition = AetheriaMath.FirstOrderIntercept(position,float3.zero, TopSpeed, targetPosition, _targetVelocity);
 
             var diff = targetPosition - transform.position;
             var targetDist = diff.magnitude;
-            var position = (float3) t.position;
             var sourceDist = length(StartPosition.xz - position.xz);
             
             if (sourceDist > Range || dot(diff,Velocity) < 0)
@@ -104,7 +112,7 @@ public class GuidedProjectile : MonoBehaviour
                     var perpendicularRandom = randomDirection.x * right + randomDirection.y * up;
                     child.Velocity = normalize(lerp(perpendicularRandom, dir, SplitSeparationForwardness)) * length(Velocity) * SplitSeparationVelocity;
                     child.Range = Range;
-                    child.Damage = Damage;
+                    child.Damage = Damage / Children;
                     child.Penetration = Penetration;
                     child.Spread = Spread;
                     child.DamageType = DamageType;
@@ -212,6 +220,7 @@ public class GuidedProjectile : MonoBehaviour
         {
             yield return null;
         }
+        OnKill?.Invoke();
         GetComponent<Prototype>().ReturnToPool();
     }
 }

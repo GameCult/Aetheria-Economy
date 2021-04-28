@@ -7,42 +7,42 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10), Inspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
 public class HeatData : BehaviorData
 {
-    [InspectableField, JsonProperty("heat"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("heat"), Key(1), RuntimeInspectable]
     public PerformanceStat Heat = new PerformanceStat();
     
-    [InspectableField, JsonProperty("perSecond"), Key(2)]
+    [Inspectable, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Heat(context, this, entity, item);
+        return new Heat(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Heat(this, item);
     }
 }
 
-public class Heat : IBehavior
+public class Heat : Behavior
 {
     private HeatData _data;
 
-    private Entity Entity { get; }
-    private EquippedItem Item { get; }
-    private ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
-
-    public Heat(ItemManager context, HeatData data, Entity entity, EquippedItem item)
+    public Heat(HeatData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
+    }
+    public Heat(HeatData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
-    public bool Execute(float delta)
+    public override bool Execute(float dt)
     {
-        Item.AddHeat(Item.Evaluate(_data.Heat) * (_data.PerSecond ? delta : 1));
+        AddHeat(Evaluate(_data.Heat) * (_data.PerSecond ? dt : 1));
 
         return true;
     }

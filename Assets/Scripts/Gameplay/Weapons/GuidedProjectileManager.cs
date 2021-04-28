@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using Unity.Mathematics;
 using UnityEngine;
 using static Unity.Mathematics.math;
@@ -8,11 +10,13 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
 {
     public Prototype ProjectilePrototype;
 
+    public Subject<(Entity source, Transform target, GuidedProjectile missile)> OnFireGuided = new Subject<(Entity source, Transform target, GuidedProjectile missile)>();
+
     public override void Fire(InstantWeapon weapon, EquippedItem item, EntityInstance source, EntityInstance target)
     {
-        if (target == null) return;
         if(weapon.Data is LauncherData launcher)
         {
+            if (target == null) return;
             var p = ProjectilePrototype.Instantiate<GuidedProjectile>();
             p.Source = source.transform;
             p.SourceEntity = source.Entity;
@@ -32,13 +36,13 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
             p.Velocity = barrel.forward * weapon.Velocity;
             p.Thrust = item.Evaluate(launcher.Thrust);
             p.TopSpeed = item.Evaluate(launcher.MissileVelocity);
+            OnFireGuided.OnNext((source.Entity, target.transform, p));
         }
         else if(weapon.Data is GuidedWeaponData guidance)
         {
             var p = ProjectilePrototype.Instantiate<GuidedProjectile>();
             p.Source = source.transform;
             p.SourceEntity = source.Entity;
-            p.Target = target?.transform;
             p.Frequency = guidance.DodgeFrequency;
             var hp = source.Entity.Hardpoints[item.Position.x, item.Position.y];
             var barrel = source.GetBarrel(hp);
@@ -56,6 +60,6 @@ public class GuidedProjectileManager : InstantWeaponEffectManager
             p.TopSpeed = item.Evaluate(guidance.MissileVelocity);
             p.TargetPosition = () => source.Entity.Position + length( (float3)source.LookAtPoint.position - source.Entity.Position) * source.Entity.LookDirection;
         }
-        else Debug.LogError($"Weapon {item.EquippableItem.Name} linked to {name} effect, but is not a Launcher!");
+        else Debug.LogError($"Weapon {item.Data.Name} linked to {name} effect, but is not a Launcher!");
     }
 }

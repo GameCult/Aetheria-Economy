@@ -9,40 +9,42 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-10), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-10), RuntimeInspectable]
 public class CooldownData : BehaviorData
 {
-    [InspectableField, JsonProperty("cooldown"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("cooldown"), Key(1), RuntimeInspectable]
     public PerformanceStat Cooldown = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Cooldown(context, this, entity, item);
+        return new Cooldown(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Cooldown(this, item);
     }
 }
 
-public class Cooldown : IBehavior, IAlwaysUpdatedBehavior, IProgressBehavior
+public class Cooldown : Behavior, IAlwaysUpdatedBehavior, IProgressBehavior
 {
     private CooldownData _data;
-    public BehaviorData Data => _data;
-
-    private Entity Entity { get; }
-    private EquippedItem Item { get; }
-    private ItemManager Context { get; }
 
     private float _cooldown; // Normalized
 
     public float Progress => saturate(_cooldown);
 
-    public Cooldown(ItemManager context, CooldownData data, Entity entity, EquippedItem item)
+    public Cooldown(CooldownData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
     }
 
-    public bool Execute(float delta)
+    public Cooldown(CooldownData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
     {
         if (_cooldown < 0)
         {
@@ -51,11 +53,10 @@ public class Cooldown : IBehavior, IAlwaysUpdatedBehavior, IProgressBehavior
         }
 
         return false;
-
     }
 
     public void Update(float delta)
     {
-        _cooldown -= delta / Item.Evaluate(_data.Cooldown);
+        _cooldown -= delta / Evaluate(_data.Cooldown);
     }
 }

@@ -8,36 +8,30 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class CockpitData : BehaviorData
 {
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Cockpit(context, this, entity, item);
+        return new Cockpit(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Cockpit(this, item);
     }
 }
 
-public class Cockpit : IBehavior
+public class Cockpit : Behavior
 {
     private CockpitData _data;
-
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
     
-
-    public Cockpit(ItemManager context, CockpitData data, Entity entity, EquippedItem item)
+    public Cockpit(CockpitData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
     }
-
-    public bool Execute(float delta)
+    
+    public Cockpit(CockpitData data, ConsumableItemEffect item) : base(data, item)
     {
-        return true;
+        _data = data;
     }
 }

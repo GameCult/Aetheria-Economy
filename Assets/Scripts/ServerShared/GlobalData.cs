@@ -15,46 +15,46 @@ using static NoiseFbm;
 [Inspectable, Serializable, RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GalaxyMapLayerData : DatabaseEntry, INamedEntry
 {
-    [InspectableField, JsonProperty("coreBoost"), Key(1)]  
+    [Inspectable, JsonProperty("coreBoost"), Key(1)]  
     public float CoreBoost = 1.05f;
 
-    [InspectableField, JsonProperty("coreBoostOffset"), Key(2)]  
+    [Inspectable, JsonProperty("coreBoostOffset"), Key(2)]  
     public float CoreBoostOffset = .1f;
 
-    [InspectableField, JsonProperty("coreBoostPower"), Key(3)]  
+    [Inspectable, JsonProperty("coreBoostPower"), Key(3)]  
     public float CoreBoostPower = 2.25f;
 
-    [InspectableField, JsonProperty("spokeScale"), Key(4)]  
+    [Inspectable, JsonProperty("spokeScale"), Key(4)]  
     public float SpokeScale = 1;
 
-    [InspectableField, JsonProperty("spokeOffset"), Key(5)]  
+    [Inspectable, JsonProperty("spokeOffset"), Key(5)]  
     public float SpokeOffset = 0;
 
-    [InspectableField, JsonProperty("edgeReduction"), Key(6)]  
+    [Inspectable, JsonProperty("edgeReduction"), Key(6)]  
     public float EdgeReduction = 3;
 
-    [InspectableField, JsonProperty("noiseOffset"), Key(7)]  
+    [Inspectable, JsonProperty("noiseOffset"), Key(7)]  
     public float NoiseOffset = 0;
 
-    [InspectableField, JsonProperty("noiseAmplitude"), Key(8)]  
+    [Inspectable, JsonProperty("noiseAmplitude"), Key(8)]  
     public float NoiseAmplitude = 1.5f;
 
-    [InspectableField, JsonProperty("noiseGain"), Key(9)]  
+    [Inspectable, JsonProperty("noiseGain"), Key(9)]  
     public float NoiseGain = .7f;
 
-    [InspectableField, JsonProperty("noiseLacunarity"), Key(10)]  
+    [Inspectable, JsonProperty("noiseLacunarity"), Key(10)]  
     public float NoiseLacunarity = 2;
 
-    [InspectableField, JsonProperty("noiseOctaves"), Key(11)]  
+    [Inspectable, JsonProperty("noiseOctaves"), Key(11)]  
     public int NoiseOctaves = 7;
 
-    [InspectableField, JsonProperty("noiseFrequency"), Key(12)]  
+    [Inspectable, JsonProperty("noiseFrequency"), Key(12)]  
     public float NoiseFrequency = 1;
 
-    [InspectableField, JsonProperty("noisePosition"), Key(13)]  
+    [Inspectable, JsonProperty("noisePosition"), Key(13)]  
     public float NoisePosition = 1337;
 
-    [InspectableField, JsonProperty("name"), Key(14)]  
+    [Inspectable, JsonProperty("name"), Key(14)]  
     public string Name;
 
     public float Evaluate(float2 uv, GalaxyShapeSettings settings)

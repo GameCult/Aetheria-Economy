@@ -7,41 +7,42 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20), RuntimeInspectable]
 public class EnergyDrawData : BehaviorData
 {
-    [InspectableField, JsonProperty("draw"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("draw"), Key(1), RuntimeInspectable]
     public PerformanceStat EnergyDraw = new PerformanceStat();
     
-    [InspectableField, JsonProperty("perSecond"), Key(2)]
+    [Inspectable, JsonProperty("perSecond"), Key(2)]
     public bool PerSecond;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new EnergyDraw(context, this, entity, item);
+        return new EnergyDraw(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new EnergyDraw(this, item);
     }
 }
 
-public class EnergyDraw : IBehavior
+public class EnergyDraw : Behavior
 {
     private EnergyDrawData _data;
 
-    private Entity Entity { get; }
-    private EquippedItem Item { get; }
-    private ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
-
-    public EnergyDraw(ItemManager context, EnergyDrawData data, Entity entity, EquippedItem item)
+    public EnergyDraw(EnergyDrawData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
     }
 
-    public bool Execute(float delta)
+    public EnergyDraw(EnergyDrawData data, ConsumableItemEffect item) : base(data, item)
     {
-        return Entity.TryConsumeEnergy(Item.Evaluate(_data.EnergyDraw) * (_data.PerSecond ? delta : 1));
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        return Entity.TryConsumeEnergy(Evaluate(_data.EnergyDraw) * (_data.PerSecond ? dt : 1));
     }
 }

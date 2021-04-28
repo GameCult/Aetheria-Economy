@@ -84,3 +84,4 @@ Economy.Shared/obj/
 
 # JetBrains Rider .idea folder
 .idea/
+Packages/packages-lock.json

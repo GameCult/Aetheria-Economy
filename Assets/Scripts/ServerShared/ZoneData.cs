@@ -30,6 +30,11 @@ public class ZonePack
 
     [JsonProperty("mass"), Key(4)]
     public float Mass = 10000;
+
+    [JsonProperty("time"), Key(5)]
+    public double Time;
+    
+    
 }
 
 // [RethinkTable("Galaxy"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -160,6 +165,9 @@ public class SunData : GasGiantData
     
     [JsonProperty("fogTintColor"), Key(21)]
     public ReactiveProperty<float3> FogTintColor = new ReactiveProperty<float3>(float3.zero);
+
+    [JsonProperty("lightRadiusMul")] [Key(22)]
+    public ReactiveProperty<float> LightRadiusMultiplier = new ReactiveProperty<float>(1);
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]

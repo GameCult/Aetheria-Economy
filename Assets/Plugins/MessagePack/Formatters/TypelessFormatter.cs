@@ -1,8 +1,6 @@
 ﻿// Copyright (c) All contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-#if !UNITY_2018_3_OR_NEWER
-
 using System;
 using System.Buffers;
 using System.Collections;
@@ -87,7 +85,7 @@ namespace MessagePack.Formatters
         // mscorlib or System.Private.CoreLib
         private static readonly bool IsMscorlib = typeof(int).AssemblyQualifiedName.Contains("mscorlib");
 
-        private TypelessFormatter()
+        public TypelessFormatter()
         {
             this.serializers.TryAdd(typeof(object), _ => (object p1, ref MessagePackWriter p2, object p3, MessagePackSerializerOptions p4) => { });
             this.deserializers.TryAdd(typeof(object), _ => (object p1, ref MessagePackReader p2, MessagePackSerializerOptions p3) => new object());
@@ -309,5 +307,3 @@ namespace MessagePack.Formatters
         }
     }
 }
-
-#endif

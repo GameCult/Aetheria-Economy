@@ -58,10 +58,10 @@ Material:
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
-    - _Depth: 20
+    - _Depth: 3.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Frequency: 6.2832
+    - _Frequency: 27.43
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1

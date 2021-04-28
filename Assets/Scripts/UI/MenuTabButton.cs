@@ -15,5 +15,5 @@ public class MenuTabButton : MonoBehaviour
     public Button Button;
     public MenuTab Tab;
     public TextMeshProUGUI Text;
-    public bool RequireParent;
+    public bool RequireDock;
 }

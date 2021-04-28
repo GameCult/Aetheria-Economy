@@ -6,28 +6,33 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class InstantWeaponData : WeaponData
 {
-    [InspectableField, JsonProperty("count"), Key(17)]
+    [Inspectable, JsonProperty("count"), Key(17)]
     public PerformanceStat Count = new PerformanceStat();
 
-    [InspectableField, JsonProperty("burstTime"), Key(18)]
+    [Inspectable, JsonProperty("burstTime"), Key(18)]
     public PerformanceStat BurstTime = new PerformanceStat();
     
-    [InspectableField, JsonProperty("cooldown"), Key(19), RuntimeInspectable]
+    [Inspectable, JsonProperty("cooldown"), Key(19), RuntimeInspectable]
     public PerformanceStat Cooldown = new PerformanceStat();
     
     [InspectablePrefab, JsonProperty("ammoInterval"), Key(20)]  
     public bool SingleAmmoBurst;
 
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new InstantWeapon(context, this, entity, item);
+        return new InstantWeapon(this, item);
+    }
+
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new InstantWeapon(this, item);
     }
 }
 
-public class InstantWeapon : Weapon, IProgressBehavior
+public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
 {
     private InstantWeaponData _data;
 
@@ -63,7 +68,7 @@ public class InstantWeapon : Weapon, IProgressBehavior
     public event Action OnCooldownComplete;
     public event Action OnFire;
 
-    public override void ResetEvents()
+    public virtual void ResetEvents()
     {
         OnReloadBegin = null;
         OnReloadComplete = null;
@@ -71,16 +76,23 @@ public class InstantWeapon : Weapon, IProgressBehavior
         OnFire = null;
     }
 
-    public InstantWeapon(ItemManager context, InstantWeaponData data, Entity entity, EquippedItem item) : base(context,data,entity,item)
+    public InstantWeapon(InstantWeaponData data, EquippedItem item) : base(data, item)
     {
         _data = data;
+        _ammo = data.MagazineSize;
+    }
+
+    public InstantWeapon(InstantWeaponData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+        _ammo = data.MagazineSize;
     }
 
     protected void Trigger()
     {
-        // If 1 ammo is consumed per burst, perform ammo consumption here
+        // If 1 ammo is consumed per burst, perform ammo and energy consumption here
         // UseAmmo returns false when triggering reload; cancel firing if that is the case
-        if(_data.SingleAmmoBurst && !UseAmmo()) return;
+        if(_data.SingleAmmoBurst && (!Entity.TryConsumeEnergy(Energy) || !UseAmmo())) return;
         
         _burstRemaining = (int) BurstCount;
         _burstInterval = BurstTime / _burstRemaining;
@@ -92,9 +104,9 @@ public class InstantWeapon : Weapon, IProgressBehavior
     protected override void UpdateStats()
     {
         base.UpdateStats();
-        BurstCount = Item.Evaluate(_data.Count);
-        BurstTime = Item.Evaluate(_data.BurstTime);
-        Cooldown = Item.Evaluate(_data.Cooldown);
+        BurstCount = Evaluate(_data.Count);
+        BurstTime = Evaluate(_data.BurstTime);
+        Cooldown = Evaluate(_data.Cooldown);
 
         Damage /= (int) BurstCount;
         Heat /= (int) BurstCount;
@@ -103,44 +115,48 @@ public class InstantWeapon : Weapon, IProgressBehavior
 
     private bool UseAmmo()
     {
+        if (_data.MagazineSize <= 1) return true;
+        
+        if (_ammo > 0)
+        {
+            _ammo--;
+            return true;
+        }
+        
+        var hasAmmo = true;
         if (_data.AmmoType != Guid.Empty)
         {
-            if (_data.MagazineSize > 1 && _ammo > 0) _ammo--;
-            else
+            var cargo = Entity.FindItemInCargo(_data.AmmoType);
+            if (cargo != null)
             {
-                var cargo = Entity.FindItemInCargo(_data.AmmoType);
-                if (cargo != null)
-                {
-                    var item = cargo.ItemsOfType[_data.AmmoType][0];
-                    if (item is SimpleCommodity simpleCommodity)
-                        cargo.Remove(simpleCommodity, 1);
-                        
-                    if(_data.MagazineSize > 1)
-                    {
-                        OnReloadBegin?.Invoke();
-                        _cooldown = 1;
-                        _coolingDown = true;
-                        _firing = false;
-                    }
-                }
-                _burstRemaining = 0;
-                return false;
+                var item = cargo.ItemsOfType[_data.AmmoType][0];
+                if (item is SimpleCommodity simpleCommodity)
+                    cargo.Remove(simpleCommodity, 1);
             }
+            else hasAmmo = false;
         }
+        if(hasAmmo)
+        {
+            OnReloadBegin?.Invoke();
+            _cooldown = 1;
+            _coolingDown = true;
+            _firing = false;
+        }
+        _burstRemaining = 0;
+        return false;
 
-        return true;
     }
 
-    public override bool Execute(float delta)
+    public override bool Execute(float dt)
     {
-        base.Execute(delta);
+        base.Execute(dt);
         if (_coolingDown)
         {
-            _cooldown -= delta / (_data.AmmoType != Guid.Empty && _ammo == 0 ? _data.ReloadTime : Cooldown);
+            _cooldown -= dt / (_data.MagazineSize > 0 && _ammo == 0 ? _data.ReloadTime : Cooldown);
             if (_cooldown < 0)
             {
                 _coolingDown = false;
-                if (_data.AmmoType != Guid.Empty && _ammo == 0)
+                if (_data.MagazineSize > 0 && _ammo == 0)
                 {
                     _ammo = _data.MagazineSize;
                     OnReloadComplete?.Invoke();
@@ -150,23 +166,22 @@ public class InstantWeapon : Weapon, IProgressBehavior
             }
         }
         
-        _burstTimer += delta;
+        _burstTimer += dt;
         while (_burstRemaining > 0 && _burstTimer > 0)
         {
-            if (!Entity.TryConsumeEnergy(Energy))
+            // If multiple ammo is consumed per burst, perform ammo and energy consumption here
+            // UseAmmo returns false when triggering reload; cancel firing if that is the case
+            if (!_data.SingleAmmoBurst && (!Entity.TryConsumeEnergy(Energy) || !UseAmmo()))
             {
                 _burstRemaining = 0;
                 return false;
             }
-            // If 1 ammo is consumed per shot in the burst, perform ammo consumption here
-            // UseAmmo returns false when triggering reload; cancel firing if that is the case
-            if (!_data.SingleAmmoBurst && !UseAmmo()) return false;
             
             _burstRemaining--;
             _burstTimer -= _burstInterval;
             OnFire?.Invoke();
-            Item.EquippableItem.Durability -= Item.Wear;
-            Item.AddHeat(Heat);
+            CauseWearDamage(1);
+            AddHeat(Heat);
             Entity.VisibilitySources[this] = Visibility;
         }
         return true;

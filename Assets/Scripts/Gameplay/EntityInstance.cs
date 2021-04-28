@@ -7,9 +7,11 @@ using UnityEngine;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
+using Random = UnityEngine.Random;
 
 public class EntityInstance : MonoBehaviour
 {
+    public Transform PingPrefab;
     public Material InvisibleMaterial;
     public static Transform EffectManagerParent;
     public ShieldManager Shield;
@@ -36,6 +38,10 @@ public class EntityInstance : MonoBehaviour
     private bool _fadedElementsVisible = false;
     private bool _unfadedElementsVisible = false;
     private float _fadeTime;
+    private bool _destroyed;
+    private (Transform transform, MeshRenderer meshRenderer) _currentPing;
+    private float _pingBrightness;
+    private Sensor _sensor;
     
     private (Reactor reactor, GameObject sfxSource) _reactor;
     private Dictionary<Radiator, GameObject> _radiatorSfx = new Dictionary<Radiator, GameObject>();
@@ -43,12 +49,19 @@ public class EntityInstance : MonoBehaviour
     private static Dictionary<InstantWeaponData, InstantWeaponEffectManager> _instantWeaponManagers = new Dictionary<InstantWeaponData, InstantWeaponEffectManager>();
     private static Dictionary<ConstantWeaponData, ConstantWeaponEffectManager> _constantWeaponManagers = new Dictionary<ConstantWeaponData, ConstantWeaponEffectManager>();
 
+    public static void ClearWeaponManagers()
+    {
+        _instantWeaponManagers.Clear();
+        _constantWeaponManagers.Clear();
+    }
+
     public Dictionary<HardpointData, Transform[]> Barrels { get; private set; }
     public Dictionary<HardpointData, int> BarrelIndices { get; private set; }
     public Dictionary<Radiator, MeshRenderer> RadiatorMeshes { get; private set; }
     public Transform LookAtPoint { get; private set; }
     public Entity Entity { get; private set; }
     public ZoneRenderer ZoneRenderer { get; private set; }
+    public Transform LocalSpace { get; private set; }
     public bool Visible
     {
         get => _fade > 0.01f;
@@ -56,6 +69,7 @@ public class EntityInstance : MonoBehaviour
 
     private void Awake()
     {
+        LocalSpace = new GameObject().transform;
         var meshes = gameObject.GetComponentsInChildren<MeshRenderer>();
         var materials = new List<(Material material, List<(MeshRenderer renderer, int index)> submeshes)>();
         foreach (var mesh in meshes)
@@ -139,6 +153,8 @@ public class EntityInstance : MonoBehaviour
     public virtual void SetEntity(ZoneRenderer zoneRenderer, Entity entity)
     {
         gameObject.name = entity.Name;
+        LocalSpace.gameObject.name = $"{entity.Name} Sim Space";
+        LocalSpace.SetParent(transform.parent);
         Entity = entity;
         ZoneRenderer = zoneRenderer;
         var hullData = entity.ItemManager.GetData(entity.Hull) as HullData;
@@ -151,6 +167,20 @@ public class EntityInstance : MonoBehaviour
         {
             foreach (var behavior in item.Behaviors)
             {
+                if (behavior is Sensor sensor)
+                {
+                    _sensor = sensor;
+                    sensor.OnPingStart += () =>
+                    {
+                        var pingInstance = Instantiate(PingPrefab);
+                        var pingMesh = pingInstance.GetComponent<MeshRenderer>();
+                        pingInstance.position = entity.Position;
+                        _pingBrightness = pingMesh.material.GetFloat("_Depth");
+                        _currentPing = (pingInstance, pingMesh);
+                    };
+                    sensor.OnPingEnd += () => Destroy(_currentPing.transform.gameObject);
+                }
+                
                 if (behavior is InstantWeapon instantWeapon)
                 {
                     var data = (InstantWeaponData) instantWeapon.Data;
@@ -217,20 +247,20 @@ public class EntityInstance : MonoBehaviour
                         }
                     }
                 }
-                if(hp.Type == HardpointType.Reactor)
-                {
-                    var reactorHardpoint = EquipmentHardpoints.FirstOrDefault(x => x.name == hp.Transform);
-                    if (reactorHardpoint)
-                    {
-                        var reactor = item.GetBehavior<Reactor>();
-                        if( reactor != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger) )
-                        {
-                            AkSoundEngine.RegisterGameObj(reactorHardpoint.gameObject);
-                            AkSoundEngine.PostEvent(item.Data.SoundEffectTrigger, reactorHardpoint.gameObject);
-                            _reactor = (reactor, reactorHardpoint.gameObject);
-                        }
-                    }
-                }
+                // if(hp.Type == HardpointType.Reactor)
+                // {
+                //     var reactorHardpoint = EquipmentHardpoints.FirstOrDefault(x => x.name == hp.Transform);
+                //     if (reactorHardpoint)
+                //     {
+                //         var reactor = item.GetBehavior<Reactor>();
+                //         if( reactor != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger) )
+                //         {
+                //             AkSoundEngine.RegisterGameObj(reactorHardpoint.gameObject);
+                //             AkSoundEngine.PostEvent(item.Data.SoundEffectTrigger, reactorHardpoint.gameObject);
+                //             _reactor = (reactor, reactorHardpoint.gameObject);
+                //         }
+                //     }
+                // }
             }
         }
         RadiatorMeshes = new Dictionary<Radiator, MeshRenderer>();
@@ -317,6 +347,7 @@ public class EntityInstance : MonoBehaviour
             
             collider.Hit.Subscribe(hit =>
             {
+                Entity.IncomingHit.OnNext(hit.Source);
                 var hardpointIndex = (int) hit.TexCoord.x - 1;
                 
                 var hitShape = new Shape(hullData.Shape.Width, hullData.Shape.Height);
@@ -337,6 +368,7 @@ public class EntityInstance : MonoBehaviour
                         {
                             distance = cellDist;
                             hitCell = v;
+                            hitPos = v + float2(.5f);
                         }
                     }
 
@@ -364,14 +396,15 @@ public class EntityInstance : MonoBehaviour
                     // Find the local 2D vector corresponding to the direction of the incoming hit
                     var localHitDirection = transform.InverseTransformDirection(hit.Direction);
                     var penetrationVector = normalize(float2(localHitDirection.x, localHitDirection.z));
-
+                    // TODO: Bresenham's line algorithm
                     // March a ray through the ship from the hit position
                     var penetrationPoint = hitPos;
-                    var penetrationDistance = 0;
-                    while (penetrationDistance < hit.Penetration)
+                    var penetrationDistance = 0f;
+                    while (penetrationDistance < hit.Penetration && hullData.Shape[int2(penetrationPoint)])
                     {
-                        penetrationPoint += penetrationVector * .5f;
+                        penetrationDistance += .5f;
                         hitShape[int2(penetrationPoint)] = true;
+                        penetrationPoint += penetrationVector * .5f;
                     }
                 }
                 
@@ -390,6 +423,29 @@ public class EntityInstance : MonoBehaviour
         {
             if (Entity.Hull.Durability < .01f)
             {
+                if (!this) return;
+                _destroyed = true;
+                foreach (var gear in Entity.Equipment)
+                {
+                    if (Random.value < ZoneRenderer.Settings.LootDropProbability)
+                    {
+                        ZoneRenderer.DropItem(
+                            Entity.Position, 
+                            Random.onUnitSphere * ZoneRenderer.Settings.LootDropVelocity, 
+                            gear.EquippableItem);
+                    }
+                }
+
+                foreach (var cargo in Entity.CargoBays)
+                {
+                    foreach (var item in cargo.Cargo.Keys)
+                    {
+                        ZoneRenderer.DropItem(
+                            Entity.Position, 
+                            Random.onUnitSphere * ZoneRenderer.Settings.LootDropVelocity, 
+                            item);
+                    }
+                }
                 if (DestroyEffect != null)
                 {
                     var t = Instantiate(DestroyEffect).transform;
@@ -424,6 +480,12 @@ public class EntityInstance : MonoBehaviour
 
     public virtual void Update()
     {
+        LocalSpace.localPosition = transform.localPosition;
+        if (_currentPing.transform)
+        {
+            _currentPing.transform.localScale = _sensor.PingRadius * Vector3.one;
+            _currentPing.meshRenderer.material.SetFloat("_Depth", _pingBrightness * _sensor.PingBrightness);
+        }
         if (_fading)
         {
             if (_fadingIn)
@@ -467,18 +529,18 @@ public class EntityInstance : MonoBehaviour
             AkSoundEngine.SetObjectPosition(r.Value, r.Value.transform);
             AkSoundEngine.SetRTPCValue("performance_durability", r.Key.Item.DurabilityPerformance, r.Value);
             AkSoundEngine.SetRTPCValue("performance_thermal", r.Key.Item.ThermalPerformance, r.Value);
-            AkSoundEngine.SetRTPCValue("performance_quality", r.Key.Item.ItemManager.CompoundQuality(r.Key.Item.EquippableItem), r.Value);
+            AkSoundEngine.SetRTPCValue("performance_quality", r.Key.Item.EquippableItem.Quality, r.Value);
         }
 
-        if (_reactor.reactor != null)
-        {
-            _reactor.sfxSource.SetActive(_reactor.reactor.Item.Online.Value);
-            AkSoundEngine.SetObjectPosition(_reactor.sfxSource, _reactor.sfxSource.transform);
-            AkSoundEngine.SetRTPCValue("reactor_load", _reactor.reactor.CurrentLoadRatio, _reactor.sfxSource);
-            AkSoundEngine.SetRTPCValue("performance_durability", _reactor.reactor.Item.DurabilityPerformance, _reactor.sfxSource);
-            AkSoundEngine.SetRTPCValue("performance_thermal", _reactor.reactor.Item.ThermalPerformance, _reactor.sfxSource);
-            AkSoundEngine.SetRTPCValue("performance_quality", _reactor.reactor.Item.ItemManager.CompoundQuality(_reactor.reactor.Item.EquippableItem), _reactor.sfxSource);
-        }
+        // if (_reactor.reactor != null)
+        // {
+        //     _reactor.sfxSource.SetActive(_reactor.reactor.Item.Online.Value);
+        //     AkSoundEngine.SetObjectPosition(_reactor.sfxSource, _reactor.sfxSource.transform);
+        //     AkSoundEngine.SetRTPCValue("reactor_load", _reactor.reactor.CurrentLoadRatio, _reactor.sfxSource);
+        //     AkSoundEngine.SetRTPCValue("performance_durability", _reactor.reactor.Item.DurabilityPerformance, _reactor.sfxSource);
+        //     AkSoundEngine.SetRTPCValue("performance_thermal", _reactor.reactor.Item.ThermalPerformance, _reactor.sfxSource);
+        //     AkSoundEngine.SetRTPCValue("performance_quality", _reactor.reactor.Item.EquippableItem.Quality, _reactor.sfxSource);
+        // }
         
         foreach (var x in RadiatorMeshes)
         {
@@ -497,15 +559,16 @@ public class EntityInstance : MonoBehaviour
 
     public virtual void OnDestroy()
     {
+        Destroy(LocalSpace.gameObject);
         foreach (var r in _radiatorSfx)
         {
-            AkSoundEngine.PostEvent(r.Key.Item.Data.SoundEffectTrigger + "_stop", r.Value);
+            AkSoundEngine.PostEvent($"{r.Key.Item.Data.SoundEffectTrigger}_stop", r.Value);
             AkSoundEngine.UnregisterGameObj(r.Value);
         }
 
         if (_reactor.reactor != null)
         {
-            AkSoundEngine.PostEvent(_reactor.reactor.Item.Data.SoundEffectTrigger + "_stop", _reactor.sfxSource);
+            AkSoundEngine.PostEvent($"{_reactor.reactor.Item.Data.SoundEffectTrigger}_stop", _reactor.sfxSource);
             AkSoundEngine.UnregisterGameObj(_reactor.sfxSource);
         }
         foreach(var x in _subscriptions)

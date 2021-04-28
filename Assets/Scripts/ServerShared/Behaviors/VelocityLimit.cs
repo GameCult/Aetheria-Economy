@@ -7,52 +7,46 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VelocityLimitData : BehaviorData
 {
-    [InspectableField, JsonProperty("topSpeed"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("topSpeed"), Key(1), RuntimeInspectable]  
     public PerformanceStat TopSpeed = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new VelocityLimit(context, this, entity, item);
+        return new VelocityLimit(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new VelocityLimit(this, item);
     }
 }
 
 [Order(100)]
-public class VelocityLimit : IBehavior
+public class VelocityLimit : Behavior
 {
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-    
     public float Limit { get; private set; }
 
-    public BehaviorData Data => _data;
-    
     private VelocityLimitData _data;
 
-    public VelocityLimit(ItemManager context, VelocityLimitData data, Entity entity, EquippedItem item)
+    public VelocityLimit(VelocityLimitData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
+        Limit = Evaluate(_data.TopSpeed);
     }
 
-    public void Initialize()
+    public VelocityLimit(VelocityLimitData data, ConsumableItemEffect item) : base(data, item)
     {
+        _data = data;
+        Limit = Evaluate(_data.TopSpeed);
     }
 
-    public bool Execute(float delta)
+    public override bool Execute(float dt)
     {
-        Limit = Item.Evaluate(_data.TopSpeed);
+        Limit = Evaluate(_data.TopSpeed);
         if (length(Entity.Velocity) > Limit)
             Entity.Velocity = normalize(Entity.Velocity) * Limit;
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

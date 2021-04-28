@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class HitscanManager : InstantWeaponEffectManager
 {
     public Prototype Prototype;
@@ -8,8 +10,12 @@ public class HitscanManager : InstantWeaponEffectManager
         var hp = source.Entity.Hardpoints[item.Position.x, item.Position.y];
         var barrel = source.GetBarrel(hp);
         var t = p.transform;
-        t.position = barrel.position;
-        t.forward = barrel.forward;
+        t.SetParent(barrel, false);
+        t.localRotation = Quaternion.identity;
+        t.localPosition = Vector3.zero;
+        // t.position = barrel.position;
+        // t.forward = barrel.forward;
+        p.Range = weapon.Range;
         p.Damage = weapon.Damage;
         p.Penetration = weapon.Penetration;
         p.Spread = weapon.DamageSpread;

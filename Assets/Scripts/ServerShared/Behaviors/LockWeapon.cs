@@ -6,27 +6,31 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class LockWeaponData : InstantWeaponData
 {
-    [InspectableField, JsonProperty("speed"), Key(21), RuntimeInspectable]
+    [Inspectable, JsonProperty("speed"), Key(21), RuntimeInspectable]
     public PerformanceStat LockSpeed = new PerformanceStat();
 
-    [InspectableField, JsonProperty("sensorImpact"), Key(22)]
+    [Inspectable, JsonProperty("sensorImpact"), Key(22)]
     public PerformanceStat SensorImpact = new PerformanceStat();
 
-    [InspectableField, JsonProperty("threshold"), Key(23), RuntimeInspectable]
+    [Inspectable, JsonProperty("threshold"), Key(23), RuntimeInspectable]
     public PerformanceStat LockAngle = new PerformanceStat();
 
-    [InspectableField, JsonProperty("directionImpact"), Key(24)]
+    [Inspectable, JsonProperty("directionImpact"), Key(24)]
     public PerformanceStat DirectionImpact = new PerformanceStat();
 
-    [InspectableField, JsonProperty("decay"), Key(25)]
+    [Inspectable, JsonProperty("decay"), Key(25)]
     public PerformanceStat Decay = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new LockWeapon(context, this, entity, item);
+        return new LockWeapon(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new LockWeapon(this, item);
     }
 }
 
@@ -56,12 +60,16 @@ public class LockWeapon : InstantWeapon
         get => saturate(_lock);
     }
     
-    public LockWeapon(ItemManager context, LockWeaponData data, Entity entity, EquippedItem item) : base(context, data, entity, item)
+    public LockWeapon(LockWeaponData data, EquippedItem item) : base(data, item)
+    {
+        _data = data;
+    }
+    public LockWeapon(LockWeaponData data, ConsumableItemEffect item) : base(data, item)
     {
         _data = data;
     }
 
-    public override bool Execute(float delta)
+    public override bool Execute(float dt)
     {
         if (_target != Entity.Target.Value)
         {
@@ -71,22 +79,22 @@ public class LockWeapon : InstantWeapon
 
         if (Entity.Target.Value != null && Entity.Target.Value.IsHostileTo(Entity))
         {
-            LockSpeed = Item.Evaluate(_data.LockSpeed);
-            SensorImpact = Item.Evaluate(_data.SensorImpact);
-            LockAngle = Item.Evaluate(_data.LockAngle);
-            DirectionImpact = Item.Evaluate(_data.DirectionImpact);
-            Decay = Item.Evaluate(_data.Decay);
+            LockSpeed = Evaluate(_data.LockSpeed);
+            SensorImpact = Evaluate(_data.SensorImpact);
+            LockAngle = Evaluate(_data.LockAngle);
+            DirectionImpact = Evaluate(_data.DirectionImpact);
+            Decay = Evaluate(_data.Decay);
 
             var degrees = acos(dot(normalize(Entity.Target.Value.Position - Entity.Position), normalize(Entity.LookDirection))) * 57.2958f;
             if (degrees < LockAngle)
             {
                 var lerp = 1 - unlerp(0, 90, degrees);
-                _lock = saturate(_lock + pow(lerp, DirectionImpact) * delta * LockSpeed);
+                _lock = saturate(_lock + pow(lerp, DirectionImpact) * dt * LockSpeed * pow(Entity.EntityInfoGathered[Entity.Target.Value], SensorImpact));
             }
-            else _lock = saturate(_lock - delta * Decay);
+            else _lock = saturate(_lock - dt * Decay);
         }
 
-        return base.Execute(delta);
+        return base.Execute(dt);
     }
 }
 

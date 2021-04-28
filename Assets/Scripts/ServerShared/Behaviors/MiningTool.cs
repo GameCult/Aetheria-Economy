@@ -9,52 +9,52 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(10)]
 public class MiningToolData : BehaviorData
 {
-    [InspectableField, JsonProperty("dps"), Key(1)]
+    [Inspectable, JsonProperty("dps"), Key(1)]
     public PerformanceStat DamagePerSecond = new PerformanceStat();
     
-    [InspectableField, JsonProperty("efficiency"), Key(2)]
+    [Inspectable, JsonProperty("efficiency"), Key(2)]
     public PerformanceStat Efficiency = new PerformanceStat();
     
-    [InspectableField, JsonProperty("penetration"), Key(3)]
+    [Inspectable, JsonProperty("penetration"), Key(3)]
     public PerformanceStat Penetration = new PerformanceStat();
     
-    [InspectableField, JsonProperty("range"), Key(4)]
+    [Inspectable, JsonProperty("range"), Key(4)]
     public PerformanceStat Range = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new MiningTool(context, this, entity, item);
+        return new MiningTool(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new MiningTool(this, item);
     }
 }
 
-public class MiningTool : IBehavior
+public class MiningTool : Behavior
 {
     public Guid AsteroidBelt;
     public int Asteroid;
     
     private MiningToolData _data;
-
-    private Entity Entity { get; }
-    private EquippedItem Item { get; }
-    private ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
     public float Range { get; private set; }
 
-    public MiningTool(ItemManager context, MiningToolData data, Entity entity, EquippedItem item)
+    public MiningTool(MiningToolData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
     }
 
-    public bool Execute(float delta)
+    public MiningTool(MiningToolData data, ConsumableItemEffect item) : base(data, item)
     {
-        Range = Item.Evaluate(_data.Range);
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        Range = Evaluate(_data.Range);
         var belt = Entity.Zone.AsteroidBelts[AsteroidBelt];
         if (AsteroidBelt != Guid.Empty && 
             Entity.Zone.AsteroidExists(AsteroidBelt, Asteroid) && 
@@ -64,9 +64,9 @@ public class MiningTool : IBehavior
                 Entity,
                 AsteroidBelt,
                 Asteroid,
-                Item.Evaluate(_data.DamagePerSecond) * delta,
-                Item.Evaluate(_data.Efficiency),
-                Item.Evaluate(_data.Penetration));
+                Evaluate(_data.DamagePerSecond) * dt,
+                Evaluate(_data.Efficiency),
+                Evaluate(_data.Penetration));
             return true;
         }
 

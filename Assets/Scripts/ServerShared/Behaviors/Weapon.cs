@@ -10,33 +10,34 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[Union(0, typeof(InstantWeaponData)),
+[Inspectable, 
+ Union(0, typeof(InstantWeaponData)),
  Union(1, typeof(LauncherData)),
  Union(2, typeof(ConstantWeaponData)), 
  Union(3, typeof(ChargedWeaponData)), 
  RuntimeInspectable]
 public abstract class WeaponData : BehaviorData
 {
-    [InspectableField, JsonProperty("damageType"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("damageType"), Key(1), RuntimeInspectable]
     public DamageType DamageType;
 
-    [InspectableField, JsonProperty("damage"), Key(2), RuntimeInspectable]
+    [Inspectable, JsonProperty("damage"), Key(2), RuntimeInspectable]
     public PerformanceStat Damage = new PerformanceStat();
 
-    [RangedFloatInspectable(0,1), JsonProperty("penetration"), Key(3), RuntimeInspectable]
+    [InspectableRangedFloat(0,1), JsonProperty("penetration"), Key(3), RuntimeInspectable]
     public PerformanceStat Penetration = new PerformanceStat();
 
-    [RangedFloatInspectable(0,1), JsonProperty("damageSpread"), Key(4)]
+    [InspectableRangedFloat(0,1), JsonProperty("damageSpread"), Key(4)]
     public PerformanceStat DamageSpread = new PerformanceStat();
 
-    [InspectableField, JsonProperty("minRange"), Key(5), RuntimeInspectable]
+    [Inspectable, JsonProperty("minRange"), Key(5)]
     public PerformanceStat MinRange = new PerformanceStat();
 
-    [InspectableField, JsonProperty("range"), Key(6), RuntimeInspectable]
+    [Inspectable, JsonProperty("range"), Key(6)]
     public PerformanceStat Range = new PerformanceStat();
 
-    [InspectableAnimationCurve, JsonProperty("damageRange"), Key(7), RuntimeInspectable]
-    public float4[] DamageCurve;
+    [InspectableAnimationCurve, JsonProperty("damageCurve"), Key(7)]
+    public BezierCurve DamageCurve;
     
     [InspectablePrefab, JsonProperty("effect"), Key(8)]  
     public string EffectPrefab;
@@ -62,24 +63,18 @@ public abstract class WeaponData : BehaviorData
     [InspectablePrefab, JsonProperty("spread"), Key(15)]  
     public PerformanceStat Spread = new PerformanceStat();
 
-    [InspectableField, JsonProperty("velocity"), Key(16)]
+    [Inspectable, JsonProperty("velocity"), Key(16)]
     public PerformanceStat Velocity = new PerformanceStat();
 }
 
-public abstract class Weapon : IActivatedBehavior
+public abstract class Weapon : Behavior, IActivatedBehavior
 {
     private WeaponData _data;
-    private EquippableItemData _itemData;
-    
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
 
     public abstract float DamagePerSecond { get; }
     public abstract float RangeDamagePerSecond(float range);
     public abstract int Ammo { get; }
     public WeaponData WeaponData => _data;
-    public BehaviorData Data => _data;
     
     public float Damage { get; protected set; }
     public float Penetration { get; protected set; }
@@ -98,34 +93,32 @@ public abstract class Weapon : IActivatedBehavior
     {
         get => _firing;
     }
-
-
-    public Weapon(ItemManager context, WeaponData data, Entity entity, EquippedItem item)
+    
+    public Weapon(WeaponData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
-        Entity = entity;
-        Item = item;
         _data = data;
-        _itemData = context.GetData(item.EquippableItem);
     }
-
-    public virtual void ResetEvents(){}
+    
+    public Weapon(WeaponData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+    }
 
     protected virtual void UpdateStats()
     {
-        Damage = Item.Evaluate(_data.Damage);
-        Penetration = Item.Evaluate(_data.Penetration);
-        DamageSpread = Item.Evaluate(_data.DamageSpread);
-        MinRange = Item.Evaluate(_data.MinRange);
-        Range = Item.Evaluate(_data.Range);
-        Energy = Item.Evaluate(_data.Energy);
-        Heat = Item.Evaluate(_data.Heat);
-        Visibility = Item.Evaluate(_data.Visibility);
-        Spread = Item.Evaluate(_data.Spread);
-        Velocity = Item.Evaluate(_data.Velocity);
+        Damage = Evaluate(_data.Damage);
+        Penetration = Evaluate(_data.Penetration);
+        DamageSpread = Evaluate(_data.DamageSpread);
+        MinRange = Evaluate(_data.MinRange);
+        Range = Evaluate(_data.Range);
+        Energy = Evaluate(_data.Energy);
+        Heat = Evaluate(_data.Heat);
+        Visibility = Evaluate(_data.Visibility);
+        Spread = Evaluate(_data.Spread);
+        Velocity = Evaluate(_data.Velocity);
     }
 
-    public virtual bool Execute(float delta)
+    public override bool Execute(float dt)
     {
         UpdateStats();
         return true;

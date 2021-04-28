@@ -23,9 +23,9 @@ public class PlanetSettings
     public ExponentialCurve WaveRadius;
     public ExponentialCurve WaveFrequency;
     public ExponentialCurve WaveSpeed;
-    public ExponentialCurve FogTintRadius;
     public ExponentialCurve LightRadius;
     public ExponentialCurve BodyRadius;
+    public float AsteroidVerticalOffset = -5f;
     public ExponentialLerp AsteroidSize;
     public ExponentialLerp AsteroidHitpoints;
     public ExponentialLerp AsteroidRespawnTime;
@@ -44,23 +44,24 @@ public class GalaxyShapeSettings
 }
 
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
-public class SectorGenerationSettings
+public class NameGeneratorSettings
 {
-    public float LinkDensity = .5f;
-    public int ZoneCount = 128;
     public int NameGeneratorMinLength = 5;
     public int NameGeneratorMaxLength = 10;
     public int NameGeneratorOrder = 4;
-    public int MegaCount;
-    public int BossCount;
-    public float NoisePosition;
-    public float CloudExponent;
-    public float CloudAmplitude;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
+public class SectorBackgroundSettings
+{
     public float NoiseAmplitude;
     public float NoiseOffset;
     public float NoiseGain;
     public float NoiseLacunarity;
     public float NoiseFrequency;
+    public float NoisePosition;
+    public float CloudExponent;
+    public float CloudAmplitude;
     
     public float fBm(float2 p, int octaves)
     {
@@ -85,10 +86,29 @@ public class SectorGenerationSettings
 }
 
 [Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
+public class SectorGenerationSettings
+{
+    public float LinkDensity = .5f;
+    public int ZoneCount = 128;
+    public int MegaCount;
+    public int BossCount;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
+public class TutorialGenerationSettings
+{
+    public string ProtagonistFaction;
+    public string AntagonistFaction;
+    public string BufferFaction;
+    public string[] NeutralFactions;
+    public string QuestFaction;
+    public float LinkDensity = .5f;
+    public int ZoneCount = 32;
+}
+
+[Serializable, MessagePackObject(keyAsPropertyName:true), JsonObject]
 public class ZoneGenerationSettings
 {
-    public GalaxyShapeSettings ShapeSettings;
-    
     public ExponentialCurve PlanetSafetyRadius;
     
     public float MassFloor = 1;
@@ -104,6 +124,8 @@ public class ZoneGenerationSettings
 
     public ExponentialLerp ZoneRadius;
     public ExponentialLerp ZoneMass;
+    public ExponentialLerp SubZoneCount;
+    public float ZoneBoundaryRadius;
     
     public float BeltProbability = .05f;
     public float BeltMassCeiling = 500f;
@@ -134,6 +156,13 @@ public class GameplaySettings
 {
     public EntitySettings DefaultEntitySettings;
     public RarityTier[] Tiers;
+    public ExponentialLerp QualityPriceModifier;
+    public float DurabilityQualityExponent = 2;
+    public float DurabilityQualityMin = 2;
+    public float DurabilityQualityMax = .25f;
+    public float ThermalQualityExponent = 2;
+    public float ThermalQualityMin = 2;
+    public float ThermalQualityMax = .25f;
     public float DefaultShutdownPerformance = .25f;
     public float SevereHeatstrokeRiskThreshold = .25f;
     public float WormholeDepth = 1000;
@@ -146,7 +175,6 @@ public class GameplaySettings
     public int TriggerGroupCount = 6;
     public float WarpDistance = 25;
     public float DockingDistance = 25;
-    public int SignificantDigits = 3;
     public float ProductionPersonalityLerp = .05f;
     public float MessageDuration = 4f;
     public float TargetPersistenceDuration = 3;
@@ -160,11 +188,18 @@ public class GameplaySettings
     public float HeatstrokeExponent = 2;
     public float HeatstrokeRecoverySpeed = .2f;
     public float HeatstrokeControlLimit = .75f;
+    public float HypothermiaTemperature = 273;
+    public float HypothermiaMultiplier = .00001f;
+    public float HypothermiaExponent = 2;
+    public float HypothermiaRecoverySpeed = .2f;
+    public float HypothermiaControlLimit = .75f;
     public float LockIndicatorNoiseAmplitude = 50f;
     public ExponentialLerp LockIndicatorFrequency;
     public ExponentialLerp LockSpinSpeed;
     public float TorqueFloor;
     public float TorqueMultiplier;
+    public float AetherTorqueMultiplier;
+    public float AetherHeatMultiplier;
     public float VisibilityDecay;
     public float TargetInfoDecay;
     public float TargetDetectionInfoThreshold;

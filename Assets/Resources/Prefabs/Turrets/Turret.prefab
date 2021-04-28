@@ -1072,11 +1072,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170aefb3b5cd0e444826f3561d38a962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PingPrefab: {fileID: 0}
   InvisibleMaterial: {fileID: 2100000, guid: c94a225de88e5ce42af01c34df3521e6, type: 2}
+  Shield: {fileID: 0}
   HullColliders:
   - {fileID: 6946734302097032818}
   - {fileID: 2664341253667465548}
   - {fileID: 3028840165937219683}
+  - {fileID: 8304154918997209436}
+  EquipmentHardpoints: []
   RadiatorHardpoints: []
   ThrusterHardpoints: []
   WeaponHardpoints:

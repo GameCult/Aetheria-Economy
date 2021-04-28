@@ -18,6 +18,7 @@ using static Unity.Mathematics.math;
 
 public class PropertiesPanel : MonoBehaviour
 {
+	public RectTransform Spacer;
 	public DropdownMenu Dropdown;
     public TextMeshProUGUI Title;
     public RectTransform Section;
@@ -33,14 +34,22 @@ public class PropertiesPanel : MonoBehaviour
     public PropertyButton PropertyButton;
     public ButtonField ButtonField;
     public IncrementField IncrementField;
+    public StatSheet StatSheet;
+    public CurveField CurveField;
+    public WeaponGroupAssignment WeaponGroupAssignment;
     public RectTransform Content;
+    public RectTransform DragParent;
+    
     [HideInInspector] public FlatFlatButton SelectedChild;
-    [HideInInspector] public ItemManager Context;
+    [HideInInspector] public ActionGameManager GameManager;
 
     protected List<GameObject> Properties = new List<GameObject>();
     protected List<FlatFlatButton> Buttons = new List<FlatFlatButton>();
     protected event Action RefreshPropertyValues;
     protected bool RadioSelection = false;
+
+    private RectTransform _dragObject;
+    
 
     protected event Action<GameObject> OnPropertyAdded;
     protected Action OnPropertiesChanged;
@@ -86,6 +95,14 @@ public class PropertiesPanel : MonoBehaviour
 	    SelectedChild = null;
     }
 
+    public RectTransform AddSpacer()
+    {
+	    var spacer = Instantiate(Spacer, Content ?? transform);
+	    Properties.Add(spacer.gameObject);
+	    OnPropertyAdded?.Invoke(spacer.gameObject);
+	    return spacer;
+    }
+
     public RectTransform AddSection(string name)
     {
         var section = Instantiate(Section, Content ?? transform);
@@ -124,10 +141,19 @@ public class PropertiesPanel : MonoBehaviour
         return property;
     }
 
+    public StatSheet AddStatSheet()
+    {
+	    var sheet = Instantiate(StatSheet, Content ?? transform);
+	    Properties.Add(sheet.gameObject);
+        OnPropertyAdded?.Invoke(sheet.gameObject);
+        RefreshPropertyValues += () => sheet.RefreshValues();
+        return sheet;
+    }
+
     public PropertiesList AddList(string name) //, IEnumerable<(string, Func<string>)> elements)
     {
         var list = Instantiate(List, Content ?? transform);
-        list.Context = Context;
+        list.GameManager = GameManager;
         list.Dropdown = Dropdown;
         list.Title.text = name;
         // foreach (var element in elements)
@@ -154,6 +180,13 @@ public class PropertiesPanel : MonoBehaviour
         Properties.Add(attributeInstance.gameObject);
         OnPropertyAdded?.Invoke(attributeInstance.gameObject);
         return attributeInstance;
+    }
+
+    public CurveField AddCurveField()
+    {
+	    var curveInstance = Instantiate(CurveField, Content ?? transform);
+	    Properties.Add(curveInstance.gameObject);
+	    return curveInstance;
     }
 
     public virtual PropertyButton AddButton(string name, Action onClick)
@@ -335,92 +368,209 @@ public class PropertiesPanel : MonoBehaviour
 		OnPropertyAdded?.Invoke(field.gameObject);
 	}
 	
-	public void Inspect(Entity entity)
-	{
-        Clear();
-        Title.text = entity.Name;
-        var hullData = Context.GetData(entity.Hull) as HullData;
-        AddSection(
-            hullData.HullType == HullType.Ship ? "Ship" :
-            hullData.HullType == HullType.Station ? "Station" :
-            "Platform");
-        //AddList(hullData.Name).Inspect(hull, entity);
-        //PropertiesPanel.AddProperty("Hull", () => $"{hullData.Name}");
-        AddEntityProperties(entity);
-        //cargoList.SetExpanded(false,true);
-        
-        RefreshValues();
-	}
+	// public void Inspect(Entity entity)
+	// {
+ //        Clear();
+ //        Title.text = entity.Name;
+ //        var hullData = Context.GetData(entity.Hull) as HullData;
+ //        AddSection(
+ //            hullData.HullType == HullType.Ship ? "Ship" :
+ //            hullData.HullType == HullType.Station ? "Station" :
+ //            "Platform");
+ //        //AddList(hullData.Name).Inspect(hull, entity);
+ //        //PropertiesPanel.AddProperty("Hull", () => $"{hullData.Name}");
+ //        AddEntityProperties(entity);
+ //        //cargoList.SetExpanded(false,true);
+ //        
+ //        RefreshValues();
+	// }
 
-	public void AddEntityProperties(Entity entity)
-	{
-		AddField("Name", () => entity.Name, name => entity.Name = name);
-		AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-	}
+	// private void AddEntityProperties(Entity entity)
+	// {
+	// 	AddField("Name", () => entity.Name, name => entity.Name = name);
+	// 	AddProperty("Mass", () => $"{entity.Mass.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+	// }
 
-	public void AddItemProperties(Entity entity, ItemInstance item)
+	private void AddItemProperties(ItemInstance item)
 	{
-		var data = Context.ItemData.Get<ItemData>(item.Data);
-		AddProperty(data.Description);//.Label.fontStyle = FontStyles.Normal;
-		var manufacturer = Context.ItemData.Get<MegaCorporation>(data.Manufacturer);
-		if (manufacturer != null)
-		{
-			AddProperty("Manufacturer", () => manufacturer.Name);
-		}
-		else
-		{
-			AddProperty("Manufacturer", () => "GameCult");
-		}
+		var data = item.Data.Value;
+		
+		AddProperty(data.Description);
+		
 		if (item is SimpleCommodity simpleCommodity)
 			AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
-		AddProperty("Mass", () => Context.GetMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-		if (item is EquippableItem gear)
+		
+		var sheet = AddStatSheet();
+		var manufacturer = ActionGameManager.CultCache.Get<Faction>(data.Manufacturer);
+		sheet.AddStat("Manufacturer", () => manufacturer?.Name ?? "GameCult");
+		sheet.AddStat("Mass", () => ActionGameManager.PlayerSettings.Format(GameManager.ItemManager.GetMass(item)));
+		
+		//AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
+	}
+
+	private void AddEquippableItemProperties(EquippableItem item, Func<PerformanceStat, float> statValueFunction)
+	{
+		if (item.Durability < .01f)
 		{
-			var tier = entity.ItemManager.GetTier(gear);
-			Title.text =
-				$"<color=#{ColorUtility.ToHtmlStringRGB(tier.tier.Color.ToColor())}>{gear.Name}</color><smallcaps><size=60%> ({tier.tier.Name}{new string('+', tier.upgrades)})";
-			var gearData = Context.GetData(gear);
-			AddProperty("Durability", () =>
-				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-			foreach (var behavior in gearData.Behaviors)
+			return;
+		}
+
+		var gearData = GameManager.ItemManager.GetData(item);
+
+		var sheet = AddStatSheet();
+		foreach (var behavior in gearData.Behaviors)
+		{
+			if (behavior is StatModifierData statMod)
+			{
+				sheet.AddStat($"{statMod.Stat.Target.SplitCamelCase()}:{statMod.Stat.Stat.SplitCamelCase()}", () => $"{(statMod.Type == StatModifierType.Constant ? "+" : "x")}{ActionGameManager.PlayerSettings.Format(statValueFunction(statMod.Modifier))}");
+			}
+			else
 			{
 				var type = behavior.GetType();
-				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
+				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) == null) continue;
+				foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
 				{
-					foreach (var field in type.GetFields().Where(f => f.GetCustomAttribute<RuntimeInspectable>() != null))
+					var fieldType = field.FieldType;
+					if (fieldType == typeof(float))
+						sheet.AddStat(field.Name.SplitCamelCase(), () => $"{ActionGameManager.PlayerSettings.Format((float) field.GetValue(behavior))}");
+					else if (fieldType == typeof(int))
+						sheet.AddStat(field.Name.SplitCamelCase(), () => $"{(int) field.GetValue(behavior)}");
+					else if (fieldType == typeof(PerformanceStat))
 					{
-						var fieldType = field.FieldType;
-						if (fieldType == typeof(float))
-							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-						else if (fieldType == typeof(int))
-							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
-						else if (fieldType == typeof(PerformanceStat))
-						{
-							var stat = (PerformanceStat) field.GetValue(behavior);
-							AddProperty(field.Name, () => $"{Context.Evaluate(stat, gear).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-						}
+						var stat = (PerformanceStat) field.GetValue(behavior);
+						sheet.AddStat(field.Name.SplitCamelCase(), () => $"{ActionGameManager.PlayerSettings.Format(statValueFunction(stat))}");
 					}
 				}
 			}
 		}
+
+		if (gearData.Behaviors.FirstOrDefault(b => b is WeaponData) is WeaponData weapon)
+		{
+			var range = AddCurveField();
+			range.Show("Damage Range", weapon.DamageCurve, t => ActionGameManager.PlayerSettings.Format(lerp(statValueFunction(weapon.MinRange), statValueFunction(weapon.Range), t)));
+		}
 	}
 
-	public void AddItemDataProperties(ItemData data)
+	private string GetTitle(EquippableItem item)
+	{
+		var data = item.Data.Value;
+		var (tier, upgrades) = GameManager.ItemManager.GetTier(item);
+		return
+			$"<color=#{ColorUtility.ToHtmlStringRGB(tier.Color.ToColor())}>{data.Name}</color><smallcaps><size=60%> ({tier.Name}{new string('+', upgrades)})";
+	}
+
+	public void Inspect(EquippedItem item)
+	{
+		Clear();
+		if (item?.EquippableItem == null) return;
+		
+		Title.text = GetTitle(item.EquippableItem);
+		
+		AddItemProperties(item.EquippableItem);
+		AddSpacer();
+
+		if (item.GetBehavior<Weapon>() != null)
+		{
+			var weaponGroups = Instantiate(WeaponGroupAssignment, Content ?? transform);
+			weaponGroups.Inspect(item);
+			var dragOffset = Vector2.zero;
+			Transform dragObject = null;
+			weaponGroups.OnBeginDragAsObservable().Subscribe(x =>
+			{
+				//Debug.Log($"Began dragging weapon group {x.group}");
+				GameManager.BeginDrag(new WeaponGroupDragObject(x.group));
+				dragObject = Instantiate(weaponGroups.Groups[x.group], DragParent, true).transform;
+				dragOffset = (Vector2)dragObject.position - x.pointerEventData.position;
+			});
+			weaponGroups.OnDragAsObservable().Subscribe(x =>
+			{
+				dragObject.position = x.pointerEventData.position + dragOffset;
+			});
+			weaponGroups.OnEndDragAsObservable().Subscribe(x =>
+			{
+				//Debug.Log($"Ended dragging weapon group {x.group}");
+				GameManager.EndDrag();
+				Destroy(dragObject.gameObject);
+			});
+			Properties.Add(weaponGroups.gameObject);
+			OnPropertyAdded?.Invoke(weaponGroups.gameObject);
+		}
+		
+		var gearData = GameManager.ItemManager.GetData(item.EquippableItem);
+		var statusSheet = AddStatSheet();
+		if (item.EquippableItem.Durability < .01f)
+			statusSheet.AddStat("Durability", () => "Item Destroyed!");
+		else statusSheet.AddStat("Durability", () => $"{(int)(item.EquippableItem.Durability / gearData.Durability * 100)}%");
+		statusSheet.AddStat("Temperature", () => ActionGameManager.PlayerSettings.FormatTemperature(item.Temperature));
+		
+		var heatCurve = AddCurveField();
+		heatCurve.Show(
+			"Thermal Performance", 
+			gearData.HeatPerformanceCurve, 
+			t => ActionGameManager.PlayerSettings.FormatTemperature(lerp(gearData.MinimumTemperature, gearData.MaximumTemperature, t)), 
+			true);
+		RefreshPropertyValues += () => heatCurve.SetCurrent(unlerp(gearData.MinimumTemperature, gearData.MaximumTemperature, item.Temperature));
+		AddEquippableItemProperties(item.EquippableItem, item.Evaluate);
+		AddSpacer();
+		
+		AddField("Override Shutdown", () => item.EquippableItem.OverrideShutdown, b => item.EquippableItem.OverrideShutdown = b);
+		
+		foreach (var behavior in item.Behaviors)
+		{
+			switch (behavior)
+			{
+				case Thermotoggle thermotoggle when thermotoggle.ThermotoggleData.Adjustable:
+					AddField("Target Temperature",
+						() => thermotoggle.TargetTemperature,
+						temp => thermotoggle.TargetTemperature = temp);
+					break;
+			}
+		}
+
+		RefreshValues();
+	}
+
+	public void Inspect(ItemInstance item)
+	{
+		Clear();
+		
+		AddItemProperties(item);
+		
+		if (item is EquippableItem gear)
+		{
+			Title.text = GetTitle(gear);
+			AddSpacer();
+			var gearData = GameManager.ItemManager.GetData(gear);
+			var statusSheet = AddStatSheet();
+			statusSheet.AddStat("Durability", () => $"{(int)(gear.Durability / gearData.Durability * 100)}%");
+			var heatCurve = AddCurveField();
+			heatCurve.Show(
+				"Thermal Performance", 
+				gearData.HeatPerformanceCurve, 
+				t => ActionGameManager.PlayerSettings.FormatTemperature(lerp(gearData.MinimumTemperature, gearData.MaximumTemperature, t)), 
+				true);
+			AddEquippableItemProperties(gear, stat => GameManager.ItemManager.Evaluate(stat, gear));
+		}
+		
+		RefreshValues();
+	}
+
+	public void Inspect(ItemData data)
 	{
 		AddProperty("Type", () => data.Name);
 		AddProperty(data.Description).Label.fontStyle = FontStyles.Normal;
 		if (data is EquippableItemData gearData)
 		{
-			AddProperty("Durability", () => gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits));
+			AddProperty("Durability", () => ActionGameManager.PlayerSettings.Format(gearData.Durability));
+			var sheet = AddStatSheet();
 			foreach (var behavior in gearData.Behaviors)
 			{
 				if (behavior is StatModifierData statMod)
 				{
 					if(Math.Abs(statMod.Modifier.Min - statMod.Modifier.Max) < .001f)
-						AddProperty("Stat Mod", () => $"{statMod.Stat.Target}:{statMod.Stat.Stat}{(statMod.Type == StatModifierType.Constant ? "+" : "x")}{statMod.Modifier.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+						sheet.AddStat($"{statMod.Stat.Target}:{statMod.Stat.Stat}", () => $"{(statMod.Type == StatModifierType.Constant ? "+" : "x")}{ActionGameManager.PlayerSettings.Format(statMod.Modifier.Min)}");
 					else
-						AddProperty("Stat Mod", () => $"{statMod.Stat.Target}:{statMod.Stat.Stat}{(statMod.Type == StatModifierType.Constant ? "+" : "x")}{statMod.Modifier.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}-{statMod.Modifier.Max.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+						sheet.AddStat($"{statMod.Stat.Target}:{statMod.Stat.Stat}", () => $"{(statMod.Type == StatModifierType.Constant ? "+" : "x")}{ActionGameManager.PlayerSettings.Format(statMod.Modifier.Min)}-{ActionGameManager.PlayerSettings.Format(statMod.Modifier.Max)}");
 				}
 				var type = behavior.GetType();
 				if (type.GetCustomAttribute(typeof(RuntimeInspectable)) != null)
@@ -429,89 +579,20 @@ public class PropertiesPanel : MonoBehaviour
 					{
 						var fieldType = field.FieldType;
 						if (fieldType == typeof(float))
-							AddProperty(field.Name, () => $"{((float) field.GetValue(behavior)).SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+							sheet.AddStat(field.Name, () => $"{ActionGameManager.PlayerSettings.Format((float) field.GetValue(behavior))}");
 						else if (fieldType == typeof(int))
-							AddProperty(field.Name, () => $"{(int) field.GetValue(behavior)}");
+							sheet.AddStat(field.Name, () => $"{(int) field.GetValue(behavior)}");
 						else if (fieldType == typeof(PerformanceStat))
 						{
 							var stat = (PerformanceStat) field.GetValue(behavior);
 							if(Math.Abs(stat.Min - stat.Max) < .001f)
-								AddProperty(field.Name, () => $"{stat.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+								sheet.AddStat(field.Name, () => $"{ActionGameManager.PlayerSettings.Format(stat.Min)}");
 							else
-								AddProperty(field.Name, () => $"{stat.Min.SignificantDigits(Context.GameplaySettings.SignificantDigits)}-{stat.Max.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
+								sheet.AddStat(field.Name, () => $"{ActionGameManager.PlayerSettings.Format(stat.Min)}-{ActionGameManager.PlayerSettings.Format(stat.Max)}");
 						}
 					}
 				}
 			}
-		}
-	}
-
-	public void AddItemProperties(ItemInstance item)
-	{
-		var data = Context.ItemData.Get<ItemData>(item.Data);
-		AddItemDataProperties(data);
-		// if (item is CraftedItemInstance craftedItemInstance)
-		// {
-		// 	var sourceEntity = Context.ItemData.Get<Entity>(craftedItemInstance.SourceEntity);
-		// 	if (sourceEntity != null)
-		// 	{
-		// 		var corporation = Context.ItemData.Get<Corporation>(sourceEntity.Corporation);
-		// 		AddProperty("Manufacturer", () => corporation.Name);
-		// 	}
-		// 	else
-		// 	{
-		// 		AddProperty("Manufacturer", () => "GameCult");
-		// 	}
-		// }
-		// if (item is SimpleCommodity simpleCommodity)
-		// 	AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
-		AddProperty("Mass", () => Context.GetMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-		if (item is EquippableItem gear)
-		{
-			var gearData = Context.GetData(gear);
-			AddProperty("Durability", () =>
-				$"{gear.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}/{gearData.Durability.SignificantDigits(Context.GameplaySettings.SignificantDigits)}");
-
-		}
-	}
-
-	public void Inspect(Entity entity, EquippedItem item)
-	{
-		if (this is PropertiesList list)
-		{
-			if (list.Expanded)
-				InspectGearInternal();
-			else
-				list.OnExpand += b =>
-				{
-					if (b) InspectGearInternal();
-				};
-		}
-		else
-			InspectGearInternal();
-
-		void InspectGearInternal()
-		{
-			//Debug.Log($"Refreshing {hardpoint.Gear.Name} properties");
-			Clear();
-			if (item.EquippableItem != null)
-			{
-				AddField("Override Shutdown", () => item.EquippableItem.OverrideShutdown, b => item.EquippableItem.OverrideShutdown = b);
-				AddProperty("Temperature", () => (item.Temperature - 273.15f).SignificantDigits(Context.GameplaySettings.SignificantDigits));
-				AddItemProperties(entity, item.EquippableItem);
-		        foreach (var behavior in item.Behaviors)
-		        {
-			        if(behavior is IPopulationAssignment populationAssignment)
-				        AddIncrementField("Assigned Population", 
-					        () => populationAssignment.AssignedPopulation, 
-					        p => populationAssignment.AssignedPopulation = p,
-					        () => 0, () => entity.Population - entity.AssignedPopulation + populationAssignment.AssignedPopulation);
-			        if (behavior is Thermotoggle thermotoggle)
-				        AddField("Target Temperature", () => thermotoggle.TargetTemperature, temp => thermotoggle.TargetTemperature = temp);
-		        }
-			}
-			RefreshValues();
 		}
 	}
 

@@ -30,17 +30,22 @@ public class Zone
     private HashSet<Guid> _updatedOrbits = new HashSet<Guid>();
 
     private ItemManager _itemManager;
-    private float _time;
+    private double _time;
     private Random _random;
     public List<Agent> Agents = new List<Agent>();
 
     private List<Task> BeltUpdates = new List<Task>();
     
+    public float Time
+    {
+        get => (float) _time;
+    }
     public ZonePack Pack { get; }
     public SectorZone SectorZone { get; }
 
     public Zone(ItemManager itemManager, PlanetSettings settings, ZonePack pack, SectorZone sectorZone)
     {
+        _time = pack.Time;
         SectorZone = sectorZone;
         Pack = pack;
         _itemManager = itemManager;
@@ -60,6 +65,9 @@ public class Zone
                 case AsteroidBeltData belt:
                     AsteroidBelts[belt.ID] = new AsteroidBelt(belt);
                     break;
+                case SunData sun:
+                    PlanetInstances.Add(sun.ID, new Sun(settings, sun, Orbits[planet.Orbit]));
+                    break;
                 case GasGiantData gas:
                     PlanetInstances.Add(gas.ID, new GasGiant(settings, gas, Orbits[planet.Orbit]));
                     break;
@@ -74,9 +82,24 @@ public class Zone
             var entity = EntitySerializer.Unpack(_itemManager, this, entityPack);
             Entities.Add(entity);
             entity.Activate();
+            if (entity is Ship {IsPlayerShip: false} ship)
+            {
+                Agents.Add(CreateAgent(ship));
+                if (lengthsq(ship.Position) < 1)
+                    ship.Position = _itemManager.Random.NextFloat3(float3(-pack.Radius * .5f), float3(pack.Radius * .5f));
+            }
         }
 
         // TODO: Associate planets with stored entities for planetary colonies
+    }
+
+    private Agent CreateAgent(Ship ship)
+    {
+        var agent = new Minion(ship);
+        var task = new PatrolOrbitsTask();
+        task.Circuit = Orbits.OrderBy(_ => _itemManager.Random.NextFloat()).Take(4).Select(x => x.Key).ToArray();
+        agent.Task = task;
+        return agent;
     }
 
     public ZonePack PackZone()
@@ -87,7 +110,8 @@ public class Zone
             Mass = Pack.Mass,
             Entities = Entities.Select(EntitySerializer.Pack).ToList(),
             Orbits = Orbits.Values.Select(o=>o.Data).ToList(),
-            Planets = Planets.Values.ToList()
+            Planets = Planets.Values.ToList(),
+            Time = _time
         };
     }
 
@@ -96,9 +120,9 @@ public class Zone
         Orbits.Add(orbit.ID, new Orbit(Settings, orbit));
     }
 
-    public void Update(float time, float deltaTime)
+    public void Update(float deltaTime)
     {
-        _time = time;
+        _time += deltaTime;
         _updatedOrbits.Clear();
         foreach (var t in BeltUpdates)
             t.Wait();
@@ -213,12 +237,12 @@ public class Zone
             }
             else size = Settings.AsteroidSize.Evaluate(beltData.Asteroids[i].Size);
 
-            belt.NewRotations[i] = _time * beltData.Asteroids[i].RotationSpeed % (PI * 2);
+            belt.NewRotations[i] = (float) (_time * beltData.Asteroids[i].RotationSpeed % (PI * 2));
             belt.NewScales[i] = size;
-            var pos = OrbitData.Evaluate(frac(_time / Settings.OrbitPeriod.Evaluate(beltData.Asteroids[i].Distance) +
-                                              beltData.Asteroids[i].Phase)) * beltData.Asteroids[i].Distance + orbitPosition;
+            var pos = OrbitData.Evaluate((float) frac(_time / Settings.OrbitPeriod.Evaluate(beltData.Asteroids[i].Distance) +
+                                                      beltData.Asteroids[i].Phase)) * beltData.Asteroids[i].Distance + orbitPosition;
             belt.NewVelocities[i] = pos - belt.Positions[i].xz;
-            belt.NewPositions[i] = float3(pos.x, GetHeight(pos), pos.y);
+            belt.NewPositions[i] = float3(pos.x, GetHeight(pos) + Settings.AsteroidVerticalOffset, pos.y);
         }
     }
 
@@ -284,7 +308,7 @@ public class Zone
     }
     public float GetHeight(float2 position)
     {
-        float result = -PowerPulse(length(position)/(Pack.Radius*2), Settings.ZoneDepthExponent) * Settings.ZoneDepth;
+        var result = -PowerPulse(length(position)/(Pack.Radius*2), Settings.ZoneDepthExponent) * Settings.ZoneDepth;
         foreach (var body in PlanetInstances.Values)
         {
             var p = position - body.Orbit.Position; //GetOrbitPosition(body.BodyData.Orbit)
@@ -304,12 +328,32 @@ public class Zone
                     var depth = gas.GravityWavesDepth.Value;
                     var frequency = Settings.WaveFrequency.Evaluate(body.BodyData.Mass.Value);
                     var speed = gas.GravityWavesSpeed.Value;
-                    result -= RadialWaves(sqrt(distSqr) / waveRadius, 8, 1.25f, frequency, _time * speed) * depth;
+                    result -= RadialWaves(sqrt(distSqr) / waveRadius, 8, 1.25f, frequency, (float) (_time * speed)) * depth;
                 }
             }
         }
 
         return result;
+    }
+
+    public float GetLight(float2 position)
+    {
+        var light = 0f;
+        foreach (var body in PlanetInstances.Values)
+        {
+            if (body is Sun sun)
+            {
+                var p = position - body.Orbit.Position;
+                var distSqr = lengthsq(p);
+                var lightRadius = sun.LightRadius.Value;
+                if (distSqr < lightRadius * lightRadius)
+                {
+                    light += PowerPulse(sqrt(distSqr) / lightRadius, 8);
+                }
+            }
+        }
+
+        return light;
     }
 
     public float2 GetForce(float2 position)
@@ -391,10 +435,17 @@ public class GasGiant : Planet
     }
 }
 
-// public class Sun : GasGiant
-// {
-//     
-// }
+public class Sun : GasGiant
+{
+    public ReadOnlyReactiveProperty<float> LightRadius;
+    
+    public Sun(PlanetSettings settings, SunData data, Orbit orbit) : base(settings, data, orbit)
+    {
+        LightRadius = new ReadOnlyReactiveProperty<float>(
+            data.Mass.CombineLatest(data.LightRadiusMultiplier,
+                (mass, radius) => settings.LightRadius.Evaluate(mass) * radius));
+    }
+}
 
 public class AsteroidBelt
 {

@@ -27,7 +27,7 @@ public class ConfirmationDialog : PropertiesPanel
     private void Start()
     {
         Cancel.onClick.AddListener(() => End());
-        Confirm.onClick.AddListener(() => End());
+        Confirm.onClick.AddListener(() => End(true));
         if (CancelClickCatcher != null)
             CancelClickCatcher.OnClick += data =>
             {
@@ -49,6 +49,7 @@ public class ConfirmationDialog : PropertiesPanel
         else _onCancel?.Invoke();
         CancelClickCatcher?.gameObject.SetActive(false);
         gameObject.SetActive(false);
+        ActionGameManager.Instance?.Input.Global.Enable();
     }
 
     public void MoveToCursor()
@@ -71,5 +72,6 @@ public class ConfirmationDialog : PropertiesPanel
         ButtonGroup.SetActive(onConfirm!=null || onCancel!=null);
         
         CancelClickCatcher?.gameObject.SetActive(true);
+        ActionGameManager.Instance?.Input.Global.Disable();
     }
 }

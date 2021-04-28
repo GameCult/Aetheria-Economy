@@ -13,12 +13,15 @@ using UnityEngine.InputSystem;
 public class ConsoleView : MonoBehaviour {
 	bool _didShow = false;
 
+	public ActionGameManager GameManager;
 	public GameObject ViewContainer; //Container for console view, should be a child of this GameObject
 	public TextMeshProUGUI LogTextArea;
 	public TextMeshProUGUI InputArea;
     public ScrollRect Scroll;
 
     private string _inputString = "";
+    private CursorLockMode _previousCursorLockMode;
+    private bool _playerInputPreviouslyEnabled;
 
     public string InputString
     {
@@ -110,7 +113,22 @@ public class ConsoleView : MonoBehaviour {
 		ViewContainer.SetActive(visible);
 	    Visible = visible;
 		if(visible)
+		{
+			_playerInputPreviouslyEnabled = GameManager.Input.Player.enabled;
+			GameManager.Input.Global.Disable();
+			GameManager.DisablePlayerInput();
+			GameManager.Input.UI.Disable();
+			_previousCursorLockMode = Cursor.lockState;
 			Cursor.lockState = CursorLockMode.None;
+		}
+		else
+		{
+			if(_playerInputPreviouslyEnabled)
+				GameManager.EnablePlayerInput();
+			else GameManager.Input.UI.Enable();
+			GameManager.Input.Global.Enable();
+			Cursor.lockState = _previousCursorLockMode;
+		}
 	}
 
     void OnVisibilityChanged(bool visible) {
@@ -121,7 +139,11 @@ public class ConsoleView : MonoBehaviour {
 		LogTextArea.text = string.Join("\n", newLog);
 		// if (AcceptingInput)
 		// 	LogTextArea.text += "\n\n> " + _inputString;
-		Observable.NextFrame().Subscribe(_ => Scroll.verticalNormalizedPosition = 0);
+		Observable.NextFrame().Subscribe(_ =>
+		{
+			if(Scroll)
+				Scroll.verticalNormalizedPosition = 0;
+		});
 	}
 
 }

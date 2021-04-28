@@ -20,7 +20,8 @@ using int2 = Unity.Mathematics.int2;
 
 public class InventoryPanel : MonoBehaviour, IPointerClickHandler
 {
-    [FormerlySerializedAs("ConfirmationDialog")] public ConfirmationDialog Dialog;
+    public ConfirmationDialog Dialog;
+    public RectTransform DragParent;
     public bool Flip;
     public GameSettings Settings;
     public ActionGameManager GameManager;
@@ -30,6 +31,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     public TextMeshProUGUI MaxTempLabel;
     public GameObject TemperatureRange;
     public Button Dropdown;
+    public Button EditName;
     public Button Current;
     public Button Thermal;
     public GridLayoutGroup Grid;
@@ -42,26 +44,27 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     public Texture2D TemperatureColor;
     public ExponentialLerp TemperatureColorCurve;
     public ExponentialLerp TemperatureAlphaCurve;
-    public float MaxTemperature;
     public bool FitToContent;
     public float CellHitPulseTime;
     public Color ToggleEnabledColor;
     public Color ToggleDisabledColor;
     public Color CellBackgroundColor = new Color(0, 0, 0, .75f);
+    public float MinTempRange = 1;
+    public float DoubleClickTime = .5f;
+    public float HitDamageThreshold = 1;
     
-    Subject<InventoryEventData> _onBeginDrag;
-    Subject<InventoryEventData> _onDrag;
-    Subject<InventoryEventData> _onEndDrag;
-    Subject<InventoryEventData> _onClick;
-    Subject<InventoryEventData> _onPointerEnter;
-    Subject<InventoryEventData> _onPointerExit;
+    // Subject<InventoryEventData> _onBeginDrag;
+    // Subject<InventoryEventData> _onDrag;
+    // Subject<InventoryEventData> _onEndDrag;
+    Subject<(InventoryEventData data, int clickCount)> _onClick;
+    // Subject<InventoryEventData> _onPointerEnter;
+    // Subject<InventoryEventData> _onPointerExit;
 
     private Entity _displayedEntity;
     private EquippedCargoBay _displayedCargo;
     private Texture2D _temperatureTexture;
     private RectTransform _firstRect;
 
-    public EquippedItem FakeEquipment;
     public ItemInstance FakeItem;
     public Shape FakeOccupancy;
     public Shape IgnoreOccupancy;
@@ -72,6 +75,9 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     private Dictionary<int2, int> _cellAnimationSequence = new Dictionary<int2, int>();
     private int _hitSequence = 0;
     private bool _thermal = false;
+    private int _clickCount;
+    private InventoryCell _clickCell;
+    private float _clickTime;
 
     private bool _hud;
     
@@ -122,6 +128,23 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                 }
             });
         }
+
+        if (EditName)
+        {
+            EditName.onClick.AddListener(() =>
+            {
+                Dialog.Clear();
+                var entityName = _displayedEntity.Name;
+                Dialog.AddField("Name", () => entityName, s => entityName = s);
+                Dialog.Show(() =>
+                {
+                    _displayedEntity.Name = entityName;
+                    Title.text = _displayedEntity.Name;
+                });
+                Dialog.MoveToCursor();
+            });
+        }
+        
         if(Dropdown)
         {
             Dropdown.onClick.AddListener(() =>
@@ -134,7 +157,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                         var options = entity.CargoBays
                             .Where(bay => bay != _displayedCargo)
                             .Select<EquippedCargoBay, (string text, Action action, bool enabled)>((bay, index) =>
-                                ($"Bay {index}", () => Display(bay), true));
+                                ($"Bay {index+1}", () => Display(bay), true));
                         if(entity != _displayedEntity) options = options.Prepend(("Equipment", () => Display(entity), true));
                         ContextMenu.AddDropdown(entity.Name, options);
                     }
@@ -180,10 +203,12 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     {
         if (_displayedEntity != null && TemperatureDisplay)
         {
+            var tempRange = _displayedEntity.MaxTemp - _displayedEntity.MinTemp;
+            var opacity = smoothstep(0, MinTempRange, tempRange);
             if(MinTempLabel)
             {
-                MinTempLabel.text = $"{((int) (_displayedEntity.MinTemp - 273.15f)).ToString()}°C";
-                MaxTempLabel.text = $"{((int) (_displayedEntity.MaxTemp - 273.15f)).ToString()}°C";
+                MinTempLabel.text = ActionGameManager.PlayerSettings.FormatTemperature(_displayedEntity.MinTemp);
+                MaxTempLabel.text = ActionGameManager.PlayerSettings.FormatTemperature(_displayedEntity.MaxTemp);
             }
             var hullData = GameManager.ItemManager.GetData(_displayedEntity.Hull) as HullData;
             for(var x = 0; x < _temperatureTexture.width; x++)
@@ -194,7 +219,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                     {
                         var temp = (_displayedEntity.Temperature[x - 1, y - 1] - _displayedEntity.MinTemp) / (_displayedEntity.MaxTemp-_displayedEntity.MinTemp);
                         var color = TemperatureColor.GetPixelBilinear(TemperatureColorCurve.Evaluate(temp), 0);
-                        color.a = TemperatureAlphaCurve.Evaluate(temp);
+                        color.a = TemperatureAlphaCurve.Evaluate(temp) * opacity;
                         _temperatureTexture.SetPixel(x,y,color);
                     }
                     else
@@ -230,17 +255,12 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
         
         _subscriptions.Clear();
         
-        if (Current)
-            Current.gameObject.SetActive(false);
-        if (Thermal)
-            Thermal.gameObject.SetActive(false);
+        if (Current) Current.gameObject.SetActive(false);
+        if (Thermal) Thermal.gameObject.SetActive(false);
+        if (TemperatureRange) TemperatureRange.SetActive(false);
+        if(TemperatureDisplay) TemperatureDisplay.gameObject.SetActive(false);
+        if (EditName) EditName.gameObject.SetActive(false);
 
-        if (TemperatureRange)
-            TemperatureRange.SetActive(false);
-        
-        if(TemperatureDisplay)
-            TemperatureDisplay.gameObject.SetActive(false);
-        
         if(Title)
             Title.text = "None";
     }
@@ -248,6 +268,10 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     public void Display(Entity entity, bool hud = false, bool thermal = false)
     {
         Clear();
+        
+        _subscriptions.Add(entity.Equipment.ObserveAdd().Subscribe(_ => RefreshCells()));
+        _subscriptions.Add(entity.Equipment.ObserveRemove().Subscribe(_ => RefreshCells()));
+        
         _thermal = thermal;
         _hud = hud;
 
@@ -260,6 +284,11 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
 
         if(Title)
             Title.text = entity.Name;
+
+        if (EditName)
+        {
+            EditName.gameObject.SetActive(true);
+        }
 
         var hullData = GameManager.ItemManager.GetData(entity.Hull) as HullData;
         
@@ -317,17 +346,115 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                     if(cell.PointerClickTrigger)
                     {
                         cell.PointerClickTrigger.OnPointerClickAsObservable()
-                            .Subscribe(data => _onClick?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                            .Subscribe(data =>
+                            {
+                                if (cell != _clickCell || Time.time - _clickTime > DoubleClickTime) 
+                                    _clickCount = 0;
+                                _clickCell = cell;
+                                _clickTime = Time.time;
+                                _clickCount++;
+                                _onClick?.OnNext((new InventoryEntityEventData(data, v, entity), _clickCount));
+                            });
                         cell.BeginDragTrigger.OnBeginDragAsObservable()
-                            .Subscribe(data => _onBeginDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                            .Subscribe(data =>
+                            {
+                                //Debug.Log("Entity Drag Start");
+                                var item = entity.GearOccupancy[v.x, v.y];
+                                if (item != null)
+                                {
+                                    var originalOccupancy = hullData.Shape.Inset(item.Data.Shape, item.Position, item.EquippableItem.Rotation);
+                                    _dragCells = originalOccupancy.Coordinates
+                                        .Select(v1 => Instantiate(CellInstances[v1], DragParent, true).transform).ToArray();
+                                    foreach(var dragCell in _dragCells)
+                                    {
+                                        DestroyImmediate(dragCell.GetComponent<Prototype>());
+                                        foreach (var component in dragCell.GetComponentsInChildren<ObservableTriggerBase>())
+                                            component.enabled = false;
+                                        foreach (var img in dragCell.GetComponentsInChildren<Image>())
+                                            img.color = new Color(img.color.r, img.color.g, img.color.b, img.color.a * .5f);
+                                        dragCell.GetComponentInChildren<Image>().raycastTarget = false;
+                                    }
+                                    _dragOffsets = _dragCells.Select(x => (Vector2) x.position - data.position).ToArray();
+                                    IgnoreOccupancy = originalOccupancy;
+                                    RefreshCells();
+                                    _originalRotation = item.EquippableItem.Rotation;
+                                    GameManager.BeginDrag(new EquippedItemDragObject(item, entity, item.Position - v));
+                                    AkSoundEngine.PostEvent("Pickup", gameObject);
+                                }
+                            });
                         cell.DragTrigger.OnDragAsObservable()
-                            .Subscribe(data => _onDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                            .Subscribe(data =>
+                            {
+                                for (var i = 0; i < _dragCells.Length; i++)
+                                    _dragCells[i].position = new Vector3(
+                                        data.position.x + _dragOffsets[i].x,
+                                        data.position.y + _dragOffsets[i].y,
+                                        _dragCells[i].position.z);
+                            });
                         cell.EndDragTrigger.OnEndDragAsObservable()
-                            .Subscribe(data => _onEndDrag?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                            .Subscribe(data =>
+                            {
+                                //Debug.Log("Entity Drag End");
+                                IgnoreOccupancy = null;
+                                if (!GameManager.EndDrag())
+                                    entity.GearOccupancy[v.x, v.y].EquippableItem.Rotation = _originalRotation;
+                                foreach(var dragObject in _dragCells)
+                                    Destroy(dragObject.gameObject);
+                                _dragCells = null;
+                                RefreshCells();
+                            });
                         cell.PointerEnterTrigger.OnPointerEnterAsObservable()
-                            .Subscribe(data => _onPointerEnter?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                            .Subscribe(data =>
+                            {
+                                //Debug.Log("Entity Pointer Enter");
+                                if (!(GameManager.DragObject is ItemDragObject itemDragObject)) return;
+                                var item = itemDragObject.Item;
+                                var itemData = item.Data.Value;
+                                if (!(item is EquippableItem equippableItem)) return;
+                                var placementPosition = v + itemDragObject.OriginCellOffset;
+                                if (entity.ItemFits(equippableItem, placementPosition))
+                                {
+                                    //foreach (var cell in _dragCells) cell.gameObject.SetActive(false);
+                                    FakeItem = item;
+                                    FakeOccupancy = hullData.Shape.Inset(itemData.Shape, placementPosition, item.Rotation);
+                                    RefreshCells();
+                                    GameManager.RegisterDragTarget(drag =>
+                                    {
+                                        //Debug.Log("Entity Drag Callback");
+                                        if (GameManager.DragObject is EquippedItemDragObject equippedItemDragObject)
+                                        {
+                                            if(equippedItemDragObject.OriginEntity.TryUnequip(equippedItemDragObject.EquippedItem) == null)
+                                            {
+                                                AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                                                Dialog.Clear();
+                                                Dialog.Title.text = "Unable to move item!";
+                                                Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
+                                                Dialog.Show();
+                                                Dialog.MoveToCursor();
+                                            }
+                                            else 
+                                                AkSoundEngine.PostEvent("Unequip", gameObject);
+                                        }
+                                        else if (GameManager.DragObject is ItemInstanceDragObject itemInstanceDragObject)
+                                            itemInstanceDragObject.OriginInventory.Remove(itemInstanceDragObject.Item);
+
+                                        FakeOccupancy = null;
+                                        entity.TryEquip(equippableItem, placementPosition);
+                                        RefreshCells();
+                                        AkSoundEngine.PostEvent("Equip", gameObject);
+                                        return false;
+                                    });
+                                }
+                            });
                         cell.PointerExitTrigger.OnPointerExitAsObservable()
-                            .Subscribe(data => _onPointerExit?.OnNext(new InventoryEntityEventData(data, v, entity)));
+                            .Subscribe(data =>
+                            {
+                                if (!(GameManager.DragObject is ItemDragObject)) return;
+                                FakeItem = null;
+                                FakeOccupancy = null;
+                                RefreshCells();
+                                GameManager.UnregisterDragTarget();
+                            });
                     }
                 }
                 else
@@ -371,11 +498,11 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
             RefreshCells(hitCells);
         }));
         
-        _subscriptions.Add(entity.ItemDamage.Subscribe(hit =>
+        _subscriptions.Add(entity.ItemDamage.Where(hit=>hit.damage > HitDamageThreshold).Subscribe(hit =>
         {
-            var data = entity.ItemManager.GetData(hit.item.EquippableItem);
-            var hitCells = data.Shape.Coordinates.Select(v => v + hit.item.Position).ToArray();
-            StartCoroutine(Pulse(hitCells, HitType.Armor, _hitSequence++));
+            var hitCells = hit.item.InsetShape.Coordinates;
+            if(gameObject.activeInHierarchy)
+                StartCoroutine(Pulse(hitCells, HitType.Armor, _hitSequence++));
             RefreshCells(hitCells);
         }));
     }
@@ -415,6 +542,9 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     {
         Clear();
         
+        _subscriptions.Add(cargo.Cargo.ObserveAdd().Subscribe(_ => RefreshCells()));
+        _subscriptions.Add(cargo.Cargo.ObserveRemove().Subscribe(_ => RefreshCells()));
+        
         _displayedCargo = cargo;
         _displayedEntity = null;
 
@@ -436,17 +566,113 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
             {
                 var cell = NodePrototype.Instantiate<InventoryCell>();
                 cell.PointerClickTrigger.OnPointerClickAsObservable()
-                    .Subscribe(data => _onClick?.OnNext(new InventoryCargoEventData(data, v, cargo)));
+                    .Subscribe(data =>
+                    {
+                        if (cell != _clickCell || Time.time - _clickTime > DoubleClickTime) 
+                            _clickCount = 0;
+                        _clickCell = cell;
+                        _clickTime = Time.time;
+                        _clickCount++;
+                        _onClick?.OnNext((new InventoryCargoEventData(data, v, cargo), _clickCount));
+                    });
                 cell.BeginDragTrigger.OnBeginDragAsObservable()
-                    .Subscribe(data => _onBeginDrag?.OnNext(new InventoryCargoEventData(data, v, cargo)));
+                    .Subscribe(data =>
+                    {
+                        //Debug.Log("Inventory Drag Start");
+                        var item = cargo.Occupancy[v.x, v.y];
+                        if (item != null)
+                        {
+                            var itemPosition = cargo.Cargo[item];
+                            var itemData = item.Data.Value;
+                            var originalOccupancy = cargo.Data.InteriorShape.Inset(itemData.Shape, itemPosition, item.Rotation);
+                            _dragCells = originalOccupancy.Coordinates
+                                .Select(v1 => Instantiate(CellInstances[v1], DragParent, true).transform).ToArray();
+                            foreach(var dragCell in _dragCells)
+                            {
+                                DestroyImmediate(dragCell.GetComponent<Prototype>());
+                                foreach (var component in dragCell.GetComponentsInChildren<ObservableTriggerBase>())
+                                    component.enabled = false;
+                                foreach (var img in dragCell.GetComponentsInChildren<Image>())
+                                    img.color = new Color(img.color.r, img.color.g, img.color.b, img.color.a * .5f);
+                                dragCell.GetComponentInChildren<Image>().raycastTarget = false;
+                            }
+                            _dragOffsets = _dragCells.Select(x => (Vector2) x.position - data.position).ToArray();
+                            IgnoreOccupancy = originalOccupancy;
+                            RefreshCells();
+                            _originalRotation = item.Rotation;
+                            GameManager.BeginDrag(new ItemInstanceDragObject(item, cargo, cargo.Cargo[item] - v));
+                            AkSoundEngine.PostEvent("Pickup", gameObject);
+                        }
+                    });
                 cell.DragTrigger.OnDragAsObservable()
-                    .Subscribe(data => _onDrag?.OnNext(new InventoryCargoEventData(data, v, cargo)));
+                    .Subscribe(data =>
+                    {
+                        for (var i = 0; i < _dragCells.Length; i++)
+                            _dragCells[i].position = new Vector3(
+                                data.position.x + _dragOffsets[i].x,
+                                data.position.y + _dragOffsets[i].y,
+                                _dragCells[i].position.z);
+                    });
                 cell.EndDragTrigger.OnEndDragAsObservable()
-                    .Subscribe(data => _onEndDrag?.OnNext(new InventoryCargoEventData(data, v, cargo)));
+                    .Subscribe(data =>
+                    {
+                        //Debug.Log("Inventory Drag End");
+                        IgnoreOccupancy = null;
+                        GameManager.EndDrag();
+                        foreach(var dragObject in _dragCells)
+                            Destroy(dragObject.gameObject);
+                        _dragCells = null;
+                    });
                 cell.PointerEnterTrigger.OnPointerEnterAsObservable()
-                    .Subscribe(data => _onPointerEnter?.OnNext(new InventoryCargoEventData(data, v, cargo)));
+                    .Subscribe(data =>
+                    {
+                        //Debug.Log("Inventory Pointer Enter");
+                        if (!(GameManager.DragObject is ItemDragObject itemDragObject)) return;
+                        var item = itemDragObject.Item;
+                        var itemData = item.Data.Value;
+                        var placementPosition = v + itemDragObject.OriginCellOffset;
+                        if (cargo.ItemFits(item, placementPosition))
+                        {
+                            //foreach (var cell in _dragCells) cell.gameObject.SetActive(false);
+                            FakeItem = item;
+                            FakeOccupancy = cargo.Data.InteriorShape.Inset(itemData.Shape, placementPosition, item.Rotation);
+                            RefreshCells();
+                            GameManager.RegisterDragTarget(drag =>
+                            {
+                                //Debug.Log("Inventory Drag Callback");
+                                if (GameManager.DragObject is EquippedItemDragObject equippedItemDragObject)
+                                {
+                                    if(equippedItemDragObject.OriginEntity.TryUnequip(equippedItemDragObject.EquippedItem) == null)
+                                    {
+                                        AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                                        Dialog.Clear();
+                                        Dialog.Title.text = "Unable to move item!";
+                                        Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
+                                        Dialog.Show();
+                                        Dialog.MoveToCursor();
+                                    }
+                                    else 
+                                        AkSoundEngine.PostEvent("Unequip", gameObject);
+                                }
+                                else if (GameManager.DragObject is ItemInstanceDragObject itemInstanceDragObject)
+                                    itemInstanceDragObject.OriginInventory.Remove(itemInstanceDragObject.Item);
+                                cargo.TryStore(item, placementPosition);
+                                FakeOccupancy = null;
+                                AkSoundEngine.PostEvent("Drop", gameObject);
+                                return true;
+                            });
+                        }
+                    });
                 cell.PointerExitTrigger.OnPointerExitAsObservable()
-                    .Subscribe(data => _onPointerExit?.OnNext(new InventoryCargoEventData(data, v, cargo)));
+                    .Subscribe(data =>
+                    {
+                        if (!(GameManager.DragObject is ItemDragObject)) return;
+                        FakeItem = null;
+                        FakeOccupancy = null;
+                        RefreshCells();
+                        GameManager.UnregisterDragTarget();
+                    });
+                
                 CellInstances.Add(v, cell);
             }
         }
@@ -470,7 +696,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
             
                 var spriteIndex = 0;
                 var interior = hullData.InteriorCells[v];
-                var item = FakeOccupancy?[v]??false ? FakeEquipment : IgnoreOccupancy?[v]??false ? null : _displayedEntity.GearOccupancy[v.x, v.y];
+                var item = FakeOccupancy?[v]??false ? FakeItem : IgnoreOccupancy?[v]??false ? null : _displayedEntity.GearOccupancy[v.x, v.y]?.EquippableItem;
                 var hardpoint = _displayedEntity.Hardpoints[v.x, v.y];
 
                 bool HardpointMatch(int2 offset)
@@ -479,7 +705,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                     return !(
                         hullData.Shape[v2] &&
                         _displayedEntity.Hardpoints[v2.x, v2.y] == hardpoint &&
-                        (FakeOccupancy?[v2]??false ? FakeEquipment : IgnoreOccupancy?[v2]??false ? null : _displayedEntity.GearOccupancy[v2.x, v2.y]) == item
+                        (FakeOccupancy?[v2]??false ? FakeItem : IgnoreOccupancy?[v2]??false ? null : _displayedEntity.GearOccupancy[v2.x, v2.y]?.EquippableItem) == item
                     );
                 }
 
@@ -490,7 +716,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                         hullData.Shape[v2] && (
                             !interior && !hullData.InteriorCells[v2] && _displayedEntity.Hardpoints[v2.x, v2.y] == null ||
                             interior && item != null && 
-                            (FakeOccupancy?[v2]??false ? FakeEquipment : IgnoreOccupancy?[v2]??false ? null : _displayedEntity.GearOccupancy[v2.x, v2.y]) == item
+                            (FakeOccupancy?[v2]??false ? FakeItem : IgnoreOccupancy?[v2]??false ? null : _displayedEntity.GearOccupancy[v2.x, v2.y]?.EquippableItem) == item
                         )
                     );
                 }
@@ -578,14 +804,15 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
             var hullData = GameManager.ItemManager.GetData(_displayedEntity.Hull) as HullData;
             var interior = hullData.InteriorCells[position];
             var hardpoint = _displayedEntity.Hardpoints[position.x, position.y];
-            var item = FakeOccupancy?[position] ?? false ? FakeEquipment : IgnoreOccupancy?[position] ?? false ? null : _displayedEntity.GearOccupancy[position.x, position.y];
+            var item = (FakeOccupancy?[position] ?? false ? FakeItem :
+                IgnoreOccupancy?[position] ?? false ? null : _displayedEntity.GearOccupancy[position.x, position.y]?.EquippableItem) as EquippableItem;
 
             if (_hud)
             {
                 if (_displayedEntity.Armor[position.x, position.y] > .01f)
                     return Settings.ArmorGradient.Evaluate(_displayedEntity.Armor[position.x, position.y] / _displayedEntity.MaxArmor[position.x, position.y]);
 
-                if (item != null) return Settings.DurabilityGradient.Evaluate(item.EquippableItem.Durability / _displayedEntity.ItemManager.GetData(item.EquippableItem).Durability);
+                if (item != null) return Settings.DurabilityGradient.Evaluate(item.Durability / _displayedEntity.ItemManager.GetData(item).Durability);
                 return float3(.25f).ToColor();
             }
 
@@ -620,7 +847,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                 return Color.white * .25f;
 
             var c = float3(1);
-            if (GameManager.ItemManager.GetData(item) is EquippableItemData equippable)
+            if (item.Data.Value is EquippableItemData equippable)
                 c = HardpointData.GetColor(equippable.HardpointType);
             
             if(!highlight)
@@ -628,21 +855,6 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
 
             return c.ToColor();
         }
-    }
-
-    public bool DropItem(ItemInstance item, int2 position)
-    {
-        if (_displayedEntity != null && item is EquippableItem equippableItem)
-        {
-            return _displayedEntity.TryEquip(equippableItem, position);
-        }
-
-        if(_displayedCargo != null)
-        {
-            return _displayedCargo.TryStore(item, position);
-        }
-
-        return false;
     }
 
     public bool CanDropItem(ItemInstance item)
@@ -676,12 +888,16 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
     }
 
     public Subject<PointerEventData> OnBackgroundClick = new Subject<PointerEventData>();
-    public UniRx.IObservable<InventoryEventData> OnClickAsObservable() => _onClick ?? (_onClick = new Subject<InventoryEventData>());
-    public UniRx.IObservable<InventoryEventData> OnBeginDragAsObservable() => _onBeginDrag ?? (_onBeginDrag = new Subject<InventoryEventData>());
-    public UniRx.IObservable<InventoryEventData> OnDragAsObservable() => _onDrag ?? (_onDrag = new Subject<InventoryEventData>());
-    public UniRx.IObservable<InventoryEventData> OnEndDragAsObservable() => _onEndDrag ?? (_onEndDrag = new Subject<InventoryEventData>());
-    public UniRx.IObservable<InventoryEventData> OnPointerEnterAsObservable() => _onPointerEnter ?? (_onPointerEnter = new Subject<InventoryEventData>());
-    public UniRx.IObservable<InventoryEventData> OnPointerExitAsObservable() => _onPointerExit ?? (_onPointerExit = new Subject<InventoryEventData>());
+    private Transform[] _dragCells;
+    private Vector2[] _dragOffsets;
+    private ItemRotation _originalRotation;
+
+    public Subject<(InventoryEventData data, int clickCount)> OnClickAsObservable() => _onClick ?? (_onClick = new Subject<(InventoryEventData data, int clickCount)>());
+    // public UniRx.IObservable<InventoryEventData> OnBeginDragAsObservable() => _onBeginDrag ?? (_onBeginDrag = new Subject<InventoryEventData>());
+    // public UniRx.IObservable<InventoryEventData> OnDragAsObservable() => _onDrag ?? (_onDrag = new Subject<InventoryEventData>());
+    // public UniRx.IObservable<InventoryEventData> OnEndDragAsObservable() => _onEndDrag ?? (_onEndDrag = new Subject<InventoryEventData>());
+    // public UniRx.IObservable<InventoryEventData> OnPointerEnterAsObservable() => _onPointerEnter ?? (_onPointerEnter = new Subject<InventoryEventData>());
+    // public UniRx.IObservable<InventoryEventData> OnPointerExitAsObservable() => _onPointerExit ?? (_onPointerExit = new Subject<InventoryEventData>());
     
     public void OnPointerClick(PointerEventData eventData)
     {

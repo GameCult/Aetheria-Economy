@@ -47,7 +47,7 @@ public class MenuPanel : MonoBehaviour
     {
         foreach (var tabButton in _tabs.Values)
         {
-            tabButton.gameObject.SetActive(!tabButton.RequireParent || GameManager.CurrentEntity.Parent != null);
+            tabButton.gameObject.SetActive(!tabButton.RequireDock || GameManager.DockedEntity != null);
         }
     }
 
@@ -73,5 +73,6 @@ public enum MenuTab
     Map,
     Inventory,
     Trade,
-    Galaxy
+    Galaxy,
+    Local
 }

@@ -37,7 +37,7 @@ public static class WeightedSampleElimination
 	// of a sample point based on the placement of its neighbors within d_max radius. The weight function
 	// must have the following form:
 	//
-	// float weightFunction( float2 p0, float2 p1, float dist2, float dmax )
+	// float weightFunction( float2 p0, float2 p1, float dist2, float dmax, float density )
 	//
 	// The arguments p0 and p1 are the two neighboring points, dist2 is the square of the Euclidean distance 
 	// between these two points, and d_max is the current radius for the weight function.
@@ -45,51 +45,52 @@ public static class WeightedSampleElimination
 	// different than the d_max value passed to this method.
 	public static void Eliminate (
 		float2[] inputPoints, 
-		float2[] outputPoints, 
-		Func<float2, float2, float, float, float> weightFunction,
+		float2[] outputPoints,
+		Func<float2, float2, float, float, float, float> weightFunction,
+		Func<float2, float> densityFunction,
 		float d_max = 0)
 	{
 		if ( d_max < .001f ) d_max = 2 * GetMaxPoissonDiskRadius( outputPoints.Length );
-		DoEliminate( inputPoints, outputPoints, d_max, weightFunction );
+		DoEliminate( inputPoints, outputPoints, d_max, weightFunction, densityFunction );
 	}
 
-	public static void Eliminate(
-		float2[] inputPoints, 
-		float2[] outputPoints, 
-		float d_max = 0,
-		float alpha = 8,
-		float beta = 0.65f,
-		float gamma = 1.5f)
-	{
-		if ( d_max < .001f ) d_max = 2 * GetMaxPoissonDiskRadius( outputPoints.Length );
-		float d_min = d_max * GetWeightLimitFraction( inputPoints.Length, outputPoints.Length, beta, gamma );
-		Eliminate( inputPoints, outputPoints, (p0, p1, d2, dmax) => 
-		{
-			float d = sqrt(d2);
-			if ( d < d_min ) d = d_min;
-			return pow( 1f / (d / dmax + .01f), alpha );
-		}, d_max);
-	}
+	// public static void Eliminate(
+	// 	float2[] inputPoints, 
+	// 	float2[] outputPoints,
+	// 	float d_max = 0,
+	// 	float alpha = 8,
+	// 	float beta = 0.65f,
+	// 	float gamma = 1.5f)
+	// {
+	// 	if ( d_max < .001f ) d_max = 2 * GetMaxPoissonDiskRadius( outputPoints.Length );
+	// 	float d_min = d_max * GetWeightLimitFraction( inputPoints.Length, outputPoints.Length, beta, gamma );
+	// 	Eliminate( inputPoints, outputPoints, (p0, p1, d2, dmax, density) => 
+	// 	{
+	// 		float d = sqrt(d2);
+	// 		if ( d < d_min ) d = d_min;
+	// 		return pow( 1f / (d / dmax + .01f), alpha );
+	// 	}, v => 1, d_max);
+	// }
 
 	public static void Eliminate(
 		float2[] inputPoints, 
 		float2[] outputPoints,
-		Func<float2, float> density = null, 
+		Func<float2, float> densityFunc = null, 
 		float d_max = 0)
 	{
+		if (densityFunc == null) densityFunc = v => 1;
 		if ( d_max < .001f ) d_max = 2 * GetMaxPoissonDiskRadius( outputPoints.Length );
-		Eliminate( inputPoints, outputPoints, (p0, p1, d2, dmax) => 
+		Eliminate( inputPoints, outputPoints, (p0, p1, d2, dmax, density) => 
 		{
 			float d = sqrt(d2);
-			return pow( 1 - (d / dmax), 5 + 6 * saturate((density ?? (v => .5f))((p0 + p1) / 2)) );
-		}, d_max);
+			return pow( 1 - d / dmax, 5 + 6 * density );
+		}, densityFunc, d_max);
 	}
 
-	public static float2[] GeneratePoints(int count, Func<float2, float> density = null, Func<float2, float> envelope = null, Action<string> progressCallback = null, uint seed = 1337)
+	public static float2[] GeneratePoints(int count, ref Random random, Func<float2, float> density = null, Func<float2, float> envelope = null, Action<string> progressCallback = null)
 	{
 		if (density == null) density = v => .5f;
 		if (envelope == null) envelope = v => 1;
-		var random = new Random(seed);
 		var inputSamples = new float2[count * 8];
 		var sample = 0;
 		var accumulator = 0f;
@@ -127,7 +128,8 @@ public static class WeightedSampleElimination
 		float2[]         inputPoints, 
 		float2[]         outputPoints, 
 		float            d_max,
-		Func<float2, float2, float, float, float>   weightFunction
+		Func<float2, float2, float, float, float, float>   weightFunction,
+		Func<float2, float> density
 		)
 	{
 		// Build a k-d tree for samples
@@ -137,13 +139,15 @@ public static class WeightedSampleElimination
 		var dmax2 = d_max * d_max;
 		// Assign weights to each sample
 		float[] weights = new float[inputPoints.Length];
+		float[] densities = new float[inputPoints.Length];
 		for (int i = 0; i < inputPoints.Length; i++)
 		{
-			var p = inputPoints[i];
+			var point = inputPoints[i];
+			densities[i] += density(point);
 			foreach (var (qi, d2) in query.Radius(kdtree, inputPoints[i], d_max))
 			{
-				var p2 = inputPoints[qi];
-				weights[i] += weightFunction(p, p2, d2, d_max);
+				var otherPoint = inputPoints[qi];
+				weights[i] += weightFunction(point, otherPoint, d2, d_max, densities[i]);
 			}
 		}
 
@@ -157,13 +161,13 @@ public static class WeightedSampleElimination
 		while (sampleCount > outputPoints.Length)
 		{
 			// Pull the top sample from heap
-			var i = heap.PopObj();
-			var p = inputPoints[i];
+			var elim = heap.PopObj();
+			var pElim = inputPoints[elim];
 			// For each sample around it, remove its weight contribution and update the heap
-			foreach (var (qi, d2) in query.Radius(kdtree, p, d_max))
+			foreach (var (qi, d2) in query.Radius(kdtree, pElim, d_max))
 			{
-				var p2 = inputPoints[qi];
-				weights[qi] -= weightFunction(p, p2, d2, d_max);
+				var point = inputPoints[qi];
+				weights[qi] -= weightFunction(point, pElim, d2, d_max, densities[qi]);
 				heap.SetValue(qi, weights[qi]);
 			}
 			sampleCount--;

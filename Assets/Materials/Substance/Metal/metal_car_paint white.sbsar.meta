@@ -66,7 +66,7 @@ ScriptedImporter:
       value=\"1\" />\n  <presetinput identifier=\"flakes_scale\" uid=\"20192266\"
       type=\"0\" value=\"0\" />\n  <presetinput identifier=\"paint_scratches\" uid=\"22509202\"
       type=\"0\" value=\"1\" />\n  <presetinput identifier=\"paint_peeling\" uid=\"103560714\"
-      type=\"0\" value=\"0.089\" />\n  <presetinput identifier=\"metal_roughness\"
+      type=\"0\" value=\"0.095\" />\n  <presetinput identifier=\"metal_roughness\"
       uid=\"22504787\" type=\"0\" value=\"0.33\" />\n  <presetinput identifier=\"paint_color\"
       uid=\"105341618\" type=\"2\" value=\"1,0.891509,0.946396\" />\n  <presetinput
       identifier=\"paint_roughness\" uid=\"22504606\" type=\"0\" value=\"0\" />\n 
@@ -100,12 +100,12 @@ ScriptedImporter:
         offset: {x: 0, y: 0}
       - name: _EmissionMap
         texture: {instanceID: 0}
-        scale: {x: 1, y: 1}
+        scale: {x: 0.5, y: 0.5}
         offset: {x: 0, y: 0}
       - name: _MainTex
         texture: {fileID: 5917659159057834157, guid: b2bec4b400153d745b2915f1c43e5c96,
           type: 3}
-        scale: {x: 2, y: 2}
+        scale: {x: 0.5, y: 0.5}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
         texture: {fileID: -3552914696322007609, guid: b2bec4b400153d745b2915f1c43e5c96,

@@ -42,6 +42,7 @@ Transform:
   - {fileID: 3808243476704657384}
   - {fileID: 4269524162621747868}
   - {fileID: 6012453260758506882}
+  - {fileID: 8650006510622813505}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -153.969, z: 0}
@@ -57,6 +58,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1306f57022ae47ceba7441145a065cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PingPrefab: {fileID: 3496685214803260728, guid: bfcaa66e173f6a44cb640aabbcb5e429,
+    type: 3}
   InvisibleMaterial: {fileID: 2100000, guid: c94a225de88e5ce42af01c34df3521e6, type: 2}
   Shield: {fileID: 1396696402015347448}
   HullColliders:
@@ -81,6 +84,7 @@ MonoBehaviour:
   - {fileID: 5252554217388465174}
   DestroyEffect: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664,
     type: 3}
+  TractorBeam: {fileID: 4812185330873570173}
 --- !u!1 &622200413621136596
 GameObject:
   m_ObjectHideFlags: 0
@@ -1862,5 +1866,92 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a42e4b31178f74d43b17322b0ae8f178, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &3964071774140897127
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 737798575382408336}
+    m_Modifications:
+    - target: {fileID: 2009124798951080406, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_Name
+      value: Tractor Beam
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1df59848be1db8547bc662080d0d6000, type: 3}
+--- !u!4 &8650006510622813505 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5695304557067713062, guid: 1df59848be1db8547bc662080d0d6000,
+    type: 3}
+  m_PrefabInstance: {fileID: 3964071774140897127}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4812185330873570173 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8487991487311807514, guid: 1df59848be1db8547bc662080d0d6000,
+    type: 3}
+  m_PrefabInstance: {fileID: 3964071774140897127}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f02211fcfb247b88dc54e58ad3b72d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

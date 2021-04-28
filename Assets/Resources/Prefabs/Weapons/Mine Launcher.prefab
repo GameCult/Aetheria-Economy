@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 4535912766998605946}
   - component: {fileID: 2069293240452108309}
   - component: {fileID: 951258163572815990}
-  m_Layer: 0
+  - component: {fileID: 6357237398779034136}
+  m_Layer: 21
   m_Name: Mine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f190191fe8c8419f85767868c50cde5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GridObject: {fileID: 6357237398779034136}
   MeshRenderer: {fileID: 4535912766998605946}
   EmissionSubmesh: 2
   EmissionCurve:
@@ -149,17 +151,29 @@ MonoBehaviour:
   ArmedCycleDuration: 0.25
   ActiveEmission: 100
   ArmedEmission: 1000
+  HitEffect: {fileID: 3349939966709198091}
+  Lifetime: 30
+  ActivationDelay: 2
+  BlastRange: 25
+  BlastDelay: 2
+--- !u!114 &6357237398779034136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756302067359749329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 737f47c158214f0995ba2835f040ed96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   RotationSpeed: 1
   GridOffset: 0
   GridAttraction: 10
   Gravity: 1
   Drag: 0.05
   LaunchDrag: 0.2
-  HitEffect: {fileID: 3349939966709198091}
-  Lifetime: 30
-  ActivationDelay: 2
-  BlastRange: 25
-  BlastDelay: 2
 --- !u!1 &951357816492268516
 GameObject:
   m_ObjectHideFlags: 0

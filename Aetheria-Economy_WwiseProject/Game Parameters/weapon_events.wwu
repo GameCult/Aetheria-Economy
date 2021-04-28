@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}" SchemaVersion="97">
+	<GameParameters>
+		<WorkUnit Name="weapon_events" ID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}" PersistMode="Standalone">
+			<ChildrenList>
+				<GameParameter Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+				<GameParameter Name="target_locking" ID="{215424C5-9F3E-438A-AE24-4314B540C243}">
+					<PropertyList>
+						<Property Name="InitialValue" Type="Real64" Value="0"/>
+						<Property Name="Max" Type="Real64" Value="1"/>
+					</PropertyList>
+				</GameParameter>
+			</ChildrenList>
+		</WorkUnit>
+	</GameParameters>
+</WwiseDocument>

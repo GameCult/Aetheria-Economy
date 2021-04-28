@@ -8,35 +8,30 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class HeatStorageData : BehaviorData
 {
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new HeatStorage(context, this, entity, item);
+        return new HeatStorage(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new HeatStorage(this, item);
     }
 }
 
-public class HeatStorage : IBehavior
+public class HeatStorage : Behavior
 {
     private HeatStorageData _data;
 
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
-
-    public HeatStorage(ItemManager context, HeatStorageData data, Entity entity, EquippedItem item)
+    public HeatStorage(HeatStorageData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
     }
 
-    public bool Execute(float delta)
+    public HeatStorage(HeatStorageData data, ConsumableItemEffect item) : base(data, item)
     {
-        return true;
+        _data = data;
     }
 }

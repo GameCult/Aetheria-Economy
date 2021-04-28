@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
 
 public class ShipInstance : EntityInstance
 {
+    private static int _shipIndex;
+    public TractorBeam TractorBeam;
     private class ThrusterInstance
     {
         public Thruster Thruster;
@@ -16,6 +19,12 @@ public class ShipInstance : EntityInstance
     private ThrusterInstance[] _thrusters;
     
     public Ship Ship { get; private set; }
+
+    private void Start()
+    {
+        var tractorBeamMain = TractorBeam.ParticleSystem.main;
+        tractorBeamMain.customSimulationSpace = LocalSpace;
+    }
 
     public override void SetEntity(ZoneRenderer zoneRenderer, Entity entity)
     {
@@ -33,13 +42,13 @@ public class ShipInstance : EntityInstance
                 var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(effectData.ParticlesPrefab), transform, false);
                 var particlesShape = particles.shape;
                 var thrusterHardpoint = ThrusterHardpoints
-                    .FirstOrDefault(t => t.name == thruster.Entity.Hardpoints[thruster.Item.Position.x, thruster.Item.Position.y].Transform);
+                    .FirstOrDefault(t => t.name == ship.Hardpoints[thruster.Item.Position.x, thruster.Item.Position.y].Transform);
                 particlesShape.meshRenderer = thrusterHardpoint?.Emitter;
-                if (!string.IsNullOrEmpty(thruster.Item.Data.SoundEffectTrigger) && thrusterHardpoint != null)
-                {
-                    AkSoundEngine.RegisterGameObj(thrusterHardpoint.gameObject);
-                    AkSoundEngine.PostEvent(thruster.Item.Data.SoundEffectTrigger, thrusterHardpoint.gameObject);
-                }
+                // if (!string.IsNullOrEmpty(thruster.Item.Data.SoundEffectTrigger) && thrusterHardpoint != null)
+                // {
+                //     AkSoundEngine.RegisterGameObj(thrusterHardpoint.gameObject);
+                //     AkSoundEngine.PostEvent(thruster.Item.Data.SoundEffectTrigger, thrusterHardpoint.gameObject);
+                // }
 
                 return new ThrusterInstance
                 {
@@ -79,6 +88,9 @@ public class ShipInstance : EntityInstance
     public override void Update()
     {
         base.Update();
+
+        TractorBeam.Power = Entity.TractorPower;
+        TractorBeam.Direction = Entity.LookDirection;
         
         foreach (var thrusterInstance in _thrusters)
         {
@@ -87,18 +99,17 @@ public class ShipInstance : EntityInstance
             var data = Entity.ItemManager.GetData(item);
             thrusterInstance.MaxParticleCount = thrusterInstance.System.particleCount;
             emissionModule.rateOverTimeMultiplier = thrusterInstance.BaseEmission * thrusterInstance.Thruster.Axis * (item.Durability / data.Durability);
-            if (thrusterInstance.SfxSource)
-            {
-                var throttle = 0f;
-                if (thrusterInstance.System.particleCount > 0)
-                    throttle = (float) thrusterInstance.System.particleCount / thrusterInstance.MaxParticleCount;
-                AkSoundEngine.SetObjectPosition(thrusterInstance.SfxSource, thrusterInstance.SfxSource.transform);
-                AkSoundEngine.SetRTPCValue("thruster_throttle", throttle, thrusterInstance.SfxSource);
-                AkSoundEngine.SetRTPCValue("performance_durability", thrusterInstance.Thruster.Item.DurabilityPerformance, thrusterInstance.SfxSource);
-                AkSoundEngine.SetRTPCValue("performance_thermal", thrusterInstance.Thruster.Item.ThermalPerformance, thrusterInstance.SfxSource);
-                AkSoundEngine.SetRTPCValue("performance_quality",
-                    thrusterInstance.Thruster.Item.ItemManager.CompoundQuality(thrusterInstance.Thruster.Item.EquippableItem), thrusterInstance.SfxSource);
-            }
+            // if (thrusterInstance.SfxSource)
+            // {
+            //     var throttle = 0f;
+            //     if (thrusterInstance.System.particleCount > 0)
+            //         throttle = (float) thrusterInstance.System.particleCount / thrusterInstance.MaxParticleCount;
+            //     AkSoundEngine.SetObjectPosition(thrusterInstance.SfxSource, thrusterInstance.SfxSource.transform);
+            //     AkSoundEngine.SetRTPCValue("thruster_throttle", throttle, thrusterInstance.SfxSource);
+            //     AkSoundEngine.SetRTPCValue("performance_durability", thrusterInstance.Thruster.Item.DurabilityPerformance, thrusterInstance.SfxSource);
+            //     AkSoundEngine.SetRTPCValue("performance_thermal", thrusterInstance.Thruster.Item.ThermalPerformance, thrusterInstance.SfxSource);
+            //     AkSoundEngine.SetRTPCValue("performance_quality", thrusterInstance.Thruster.Item.EquippableItem.Quality, thrusterInstance.SfxSource);
+            // }
         }
 
         transform.rotation = Ship.Rotation;

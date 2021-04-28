@@ -33,13 +33,23 @@ public class SavedGame
     public int CurrentZoneEntity;
 
     [Key(8)]
-    public SectorGenerationSettings Settings;
+    public SectorBackgroundSettings Background;
+
+    [Key(9)]
+    public int[] DiscoveredZones;
+
+    [Key(10)]
+    public SavedActionBarBinding[] ActionBarBindings;
+
+    [Key(11)]
+    public bool IsTutorial;
     
     public SavedGame() { }
 
     public SavedGame(Sector sector, Zone currentZone, Entity currentEntity)
     {
-        Settings = sector.Settings;
+        DiscoveredZones = sector.DiscoveredZones.Select(dz => Array.IndexOf(sector.Zones, dz)).ToArray();
+        Background = sector.Background;
         Factions = sector.HomeZones.Keys.Select(f => f.ID).ToArray();
         
         HomeZones = sector.HomeZones.ToDictionary(
@@ -87,4 +97,32 @@ public class SavedZone
     
     [Key(5)]
     public ZonePack Contents;
+}
+
+[MessagePackObject,
+ Union(0, typeof(SavedActionBarConsumableBinding)),
+ Union(1, typeof(SavedActionBarGearBinding)),
+ Union(2, typeof(SavedActionBarWeaponGroupBinding))
+]
+public abstract class SavedActionBarBinding
+{
+}
+
+[MessagePackObject]
+public class SavedActionBarConsumableBinding : SavedActionBarBinding
+{
+    [Key(0)] public DatabaseLink<ConsumableItemData> Target;
+}
+
+[MessagePackObject]
+public class SavedActionBarGearBinding : SavedActionBarBinding
+{
+    [Key(0)] public int EquipmentIndex;
+    [Key(1)] public int BehaviorIndex;
+}
+
+[MessagePackObject]
+public class SavedActionBarWeaponGroupBinding : SavedActionBarBinding
+{
+    [Key(0)] public int Group;
 }

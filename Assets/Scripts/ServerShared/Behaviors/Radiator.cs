@@ -7,39 +7,42 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class RadiatorData : BehaviorData
 {
-    [InspectableField, JsonProperty("emissivity"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("emissivity"), Key(1), RuntimeInspectable]  
     public PerformanceStat Emissivity = new PerformanceStat();
     
-    [InspectableField, JsonProperty("pumpedHeat"), Key(2), RuntimeInspectable]  
+    [Inspectable, JsonProperty("pumpedHeat"), Key(2), RuntimeInspectable]  
     public PerformanceStat PumpedHeat = new PerformanceStat();
     
     [InspectableTemperature, JsonProperty("temperatureFloor"), Key(3), RuntimeInspectable]  
     public float TemperatureFloor;
     
-    [InspectableField, JsonProperty("wasteHeat"), Key(4), RuntimeInspectable]  
+    [Inspectable, JsonProperty("wasteHeat"), Key(4), RuntimeInspectable]  
     public PerformanceStat WasteHeat = new PerformanceStat();
     
-    [InspectableField, JsonProperty("energyUsage"), Key(5), RuntimeInspectable]  
+    [Inspectable, JsonProperty("energyUsage"), Key(5), RuntimeInspectable]  
     public PerformanceStat EnergyUsage = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    [Inspectable, JsonProperty("thermalMass"), Key(6), RuntimeInspectable]  
+    public PerformanceStat ThermalMass = new PerformanceStat();
+    
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Radiator(context, this, entity, item);
+        return new Radiator(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Radiator(this, item);
     }
 }
 
-public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavior
+public class Radiator : Behavior, IAlwaysUpdatedBehavior, IInitializableBehavior
 {
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-    public float Temperature { get; private set; }
-
-    public BehaviorData Data => _data;
-
+    public float RadiatorTemperature { get; private set; }
+    
     public float Emissivity { get; private set; }
     public float PumpedHeat { get; private set; }
     public float WasteHeat { get; private set; }
@@ -47,27 +50,28 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
     
     private RadiatorData _data;
 
-    public Radiator(ItemManager context, RadiatorData data, Entity entity, EquippedItem item)
+    public Radiator(RadiatorData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
+    }
+    public Radiator(RadiatorData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
-    public bool Execute(float delta)
+    public override bool Execute(float dt)
     {
-        PumpedHeat = Item.Evaluate(_data.PumpedHeat);
-        WasteHeat = Item.Evaluate(_data.WasteHeat);
-        EnergyUsage = Item.Evaluate(_data.EnergyUsage);
+        PumpedHeat = Evaluate(_data.PumpedHeat);
+        WasteHeat = Evaluate(_data.WasteHeat);
+        EnergyUsage = Evaluate(_data.EnergyUsage);
 
-        var itemTemperature = Item.Temperature;
-        var tempRatio = max(Temperature / itemTemperature, 1);
+        var itemTemperature = Temperature;
+        var tempRatio = max(RadiatorTemperature / itemTemperature, 1);
         
         // Temperature ratio would cause more waste heat than pump capacity, stop executing
         if (tempRatio > PumpedHeat / WasteHeat) return true;
 
-        if (!Entity.TryConsumeEnergy(EnergyUsage * tempRatio * delta)) return false;
+        if (!Entity.TryConsumeEnergy(EnergyUsage * tempRatio * dt)) return false;
         
         var pumpedHeat = PumpedHeat * max(itemTemperature - _data.TemperatureFloor, 0);
         
@@ -76,22 +80,22 @@ public class Radiator : IBehavior, IAlwaysUpdatedBehavior, IInitializableBehavio
         
         var wasteHeat = WasteHeat * tempRatio;
         
-        Item.AddHeat((wasteHeat - pumpedHeat) * delta);
-        Temperature += pumpedHeat / Context.GetThermalMass(Item.EquippableItem) * delta;
+        AddHeat((wasteHeat - pumpedHeat) * dt);
+        RadiatorTemperature += pumpedHeat / Evaluate(_data.ThermalMass) * dt;
 
         return true;
     }
 
     public void Update(float delta)
     {
-        Emissivity = Item.Evaluate(_data.Emissivity);
-        var rad = pow(Temperature, Context.GameplaySettings.HeatRadiationExponent) * Context.GameplaySettings.HeatRadiationMultiplier * Emissivity;
-        Temperature -= rad * delta;
+        Emissivity = Evaluate(_data.Emissivity);
+        var rad = pow(RadiatorTemperature, ItemManager.GameplaySettings.HeatRadiationExponent) * ItemManager.GameplaySettings.HeatRadiationMultiplier * Emissivity;
+        RadiatorTemperature -= rad * delta;
         Entity.VisibilitySources[this] = rad;
     }
 
     public void Initialize()
     {
-        Temperature = Item.Temperature;
+        RadiatorTemperature = Temperature;
     }
 }

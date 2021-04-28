@@ -7,37 +7,46 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-25)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-25)]
 public class SwitchData : BehaviorData
 {
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Switch(context, this, entity, item);
+        return new Switch(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Switch(this, item);
     }
 }
 
-public class Switch : IBehavior
+public class Switch : Behavior, IActivatedBehavior
 {
     private SwitchData _data;
 
-    private Entity Entity { get; }
-    private EquippedItem Item { get; }
-    private ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
-
     public bool Activated { get; set; }
 
-    public Switch(ItemManager context, SwitchData data, Entity entity, EquippedItem item)
+    public Switch(SwitchData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
+    }
+    public Switch(SwitchData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
-    public bool Execute(float delta)
+    public override bool Execute(float dt)
     {
         return Activated;
+    }
+
+    public void Activate()
+    {
+        Activated = true;
+    }
+
+    public void Deactivate()
+    {
+        Activated = false;
     }
 }

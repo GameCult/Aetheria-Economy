@@ -8,19 +8,24 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class ConstantWeaponData : WeaponData
 {
     [InspectablePrefab, JsonProperty("ammoInterval"), Key(17)]  
     public float AmmoInterval = 1;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new ConstantWeapon(context, this, entity, item);
+        return new ConstantWeapon(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new ConstantWeapon(this, item);
     }
 }
 
-public class ConstantWeapon : Weapon, IProgressBehavior
+public class ConstantWeapon : Weapon, IProgressBehavior, IEventBehavior
 {
     private ConstantWeaponData _data;
     private int _ammo = 1;
@@ -49,7 +54,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior
     public event Action OnStartFiring;
     public event Action OnStopFiring;
     
-    public override void ResetEvents()
+    public void ResetEvents()
     {
         OnReloadBegin = null;
         OnReloadComplete = null;
@@ -57,17 +62,22 @@ public class ConstantWeapon : Weapon, IProgressBehavior
         OnStopFiring = null;
     }
 
-    public ConstantWeapon(ItemManager context, ConstantWeaponData data, Entity entity, EquippedItem item) : base(context, data, entity, item)
+    public ConstantWeapon(ConstantWeaponData data, EquippedItem item) : base(data, item)
     {
         _data = data;
     }
 
-    public override bool Execute(float delta)
+    public ConstantWeapon(ConstantWeaponData data, ConsumableItemEffect item) : base(data, item)
     {
-        base.Execute(delta);
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        base.Execute(dt);
         if (_firing)
         {
-            if (!Entity.TryConsumeEnergy(Item.Evaluate(_data.Energy) * delta))
+            if (!Entity.TryConsumeEnergy(Evaluate(_data.Energy) * dt))
             {
                 _firing = false;
                 OnStopFiring?.Invoke();
@@ -77,7 +87,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior
             {
                 if (_reloading)
                 {
-                    _reload -= delta / _data.ReloadTime;
+                    _reload -= dt / _data.ReloadTime;
                     if (_reload < 0)
                     {
                         _reloading = false;
@@ -86,7 +96,7 @@ public class ConstantWeapon : Weapon, IProgressBehavior
                     return false;
                 }
                 
-                _ammoInterval -= delta / _data.AmmoInterval;
+                _ammoInterval -= dt / _data.AmmoInterval;
                 if (_ammoInterval < 0)
                 {
                     _ammoInterval = 1;
@@ -115,9 +125,9 @@ public class ConstantWeapon : Weapon, IProgressBehavior
                 }
             }
 
-            Item.EquippableItem.Durability -= Item.Wear * delta;
-            Item.AddHeat(Item.Evaluate(_data.Heat) * delta);
-            Entity.VisibilitySources[this] = Item.Evaluate(_data.Visibility);
+            CauseWearDamage(dt);
+            AddHeat(Evaluate(_data.Heat) * dt);
+            Entity.VisibilitySources[this] = Evaluate(_data.Visibility);
         }
         return true;
     }

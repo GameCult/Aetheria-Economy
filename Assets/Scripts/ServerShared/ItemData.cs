@@ -14,7 +14,7 @@ using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
 using int2 = Unity.Mathematics.int2;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class Shape
 {
     [JsonProperty("name"), Key(0)] public bool[,] Cells;
@@ -68,17 +68,13 @@ public class Shape
     
     public int2 Rotate(int2 position, ItemRotation rotation)
     {
-        switch (rotation)
+        return rotation switch
         {
-            case ItemRotation.Clockwise:
-                return int2(position.y, Width - 1 - position.x);
-            case ItemRotation.Reversed:
-                return int2(Width - 1 - position.x, Height - 1 - position.y);
-            case ItemRotation.CounterClockwise:
-                return int2(Height - 1 - position.y, position.x);
-            default:
-                return int2(position.x, position.y);
-        }
+            ItemRotation.Clockwise => int2(position.y, Width - 1 - position.x),
+            ItemRotation.Reversed => int2(Width - 1 - position.x, Height - 1 - position.y),
+            ItemRotation.CounterClockwise => int2(Height - 1 - position.y, position.x),
+            _ => int2(position.x, position.y)
+        };
     }
 
     private int2[] _cachedShapeCoordinates;
@@ -175,41 +171,80 @@ public class Shape
             );
         return shape;
     }
+
+    // TODO: Use the power of math to optimize this function!
+    // Try to find a rotation and position with which a shape can be placed to fit within another shape
+    public bool FitsWithin(Shape other, out ItemRotation rotation, out int2 position)
+    {
+        // Try every item orientation
+        foreach(var rot in (ItemRotation[])Enum.GetValues(typeof(ItemRotation)))
+        {
+            rotation = rot;
+            if (FitsWithin(other, rot, out var pos))
+            {
+                position = pos;
+                return true;
+            }
+        }
+
+        rotation = ItemRotation.None;
+        position = int2.zero;
+        return false;
+    }
+    
+    // Try to find a position with which a shape can be placed to fit within another shape
+    public bool FitsWithin(Shape other, ItemRotation rotation, out int2 position)
+    {
+        var width = rotation == ItemRotation.Clockwise || rotation == ItemRotation.CounterClockwise ? Height : Width;
+        var height = rotation == ItemRotation.Clockwise || rotation == ItemRotation.CounterClockwise ? Width : Height;
+        // Try every item position that could possibly fit
+        for(int x = 0; x < other.Width - width + 1; x++)
+        {
+            for (int y = 0; y < other.Height - height + 1; y++)
+            {
+                position = int2(x, y);
+                var fits = true;
+                foreach (var v in Coordinates)
+                {
+                    fits = fits && other[Rotate(v, rotation) + position];
+                    if (!fits) break;
+                }
+
+                if (fits) return true;
+            }
+        }
+
+        position = int2.zero;
+        return false;
+    }
 }
 
-[MessagePackObject, 
- Union(0, typeof(SimpleCommodityData)), 
- Union(1, typeof(CompoundCommodityData)),
- Union(2, typeof(GearData)), 
- Union(3, typeof(HullData)), 
- Union(4, typeof(CargoBayData)), 
- Union(5, typeof(DockingBayData)), 
- JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<ItemData>))]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<ItemData>))]
 public abstract class ItemData : DatabaseEntry, INamedEntry
 {
-    [InspectableField, JsonProperty("name"), Key(1)]
+    [Inspectable, JsonProperty("name"), Key(1)]
     public string Name;
     
     [InspectableText, JsonProperty("description"), Key(2)]
     public string Description;
     
-    [InspectableDatabaseLink(typeof(MegaCorporation)), JsonProperty("creator"), Key(3)]
+    [InspectableDatabaseLink(typeof(Faction)), JsonProperty("creator"), Key(3)]
     public Guid Manufacturer;
 
-    [InspectableField, JsonProperty("mass"), Key(4)]
+    [Inspectable, JsonProperty("mass"), Key(4)]
     public float Mass;
 
-    [InspectableField, JsonProperty("shape"), Key(5)]
+    [Inspectable, JsonProperty("shape"), Key(5)]
     public Shape Shape;
 
     // Heat needed to change temperature of 1 gram by 1 degree
-    [InspectableField, JsonProperty("specificHeat"), Key(6)]
+    [Inspectable, JsonProperty("specificHeat"), Key(6)]
     public float SpecificHeat = 1;
     
-    [InspectableField, JsonProperty("conductivity"), Key(7)]
+    [Inspectable, JsonProperty("conductivity"), Key(7)]
     public float Conductivity = 1;
     
-    [InspectableField, JsonProperty("price"), Key(8)]
+    [Inspectable, JsonProperty("price"), Key(8)]
     public int Price = 0;
     
     [IgnoreMember] public string EntryName
@@ -239,23 +274,18 @@ public class SimpleCommodityData : ItemData
     // [InspectableField, JsonProperty("floor"), Key(11)]
     // public float Floor = 5f;
 
-    [InspectableField, JsonProperty("maxStackSize"), Key(9)]
+    [Inspectable, JsonProperty("maxStackSize"), Key(9)]
     public int MaxStack = 10;
 
-    [InspectableField, JsonProperty("category"), Key(10)]  
+    [Inspectable, JsonProperty("category"), Key(10)]  
     public SimpleCommodityCategory Category;
 }
 
-[MessagePackObject, 
- Union(0, typeof(CompoundCommodityData)), 
- Union(1, typeof(GearData)), 
- Union(2, typeof(HullData)),
- JsonObject(MemberSerialization.OptIn),
- JsonConverter(typeof(JsonKnownTypesConverter<CraftedItemData>))]
+[MessagePackObject, JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<CraftedItemData>))]
 public abstract class CraftedItemData : ItemData
 {
-    [InspectableField, JsonProperty("ingredientQualityWeight"), Key(9)]  
-    public float IngredientQualityWeight = .5f;
+    // [Inspectable, JsonProperty("ingredientQualityWeight"), Key(9)]  
+    // public float IngredientQualityWeight = .5f;
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject]
@@ -264,22 +294,39 @@ public class CompoundCommodityData : CraftedItemData
     [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("demandProfile"), Key(10)]
     public Dictionary<Guid, float> DemandProfile = new Dictionary<Guid, float>();
 
-    [InspectableField, JsonProperty("category"), Key(11)] 
+    [Inspectable, JsonProperty("category"), Key(11)] 
     public CompoundCommodityCategory Category;
 }
 
-[Union(0, typeof(GearData)), 
- Union(1, typeof(HullData)), 
- JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<EquippableItemData>))]
+[RethinkTable("Items"), Inspectable, MessagePackObject]
+public class ConsumableItemData : CraftedItemData
+{
+    [Inspectable, JsonProperty("behaviors"), Key(10)]
+    public List<BehaviorData> Behaviors = new List<BehaviorData>();
+
+    [Inspectable, JsonProperty("stackable"), Key(11)]
+    public bool Stackable;
+
+    [Inspectable, JsonProperty("duration"), Key(12)]
+    public float Duration;
+
+    [InspectableTexture, JsonProperty("icon"), Key(13)]
+    public string Icon;
+
+    [Inspectable, JsonProperty("effectiveness"), Key(14)]
+    public BezierCurve Effectiveness;
+}
+
+[JsonObject(MemberSerialization.OptIn)]
 public abstract class EquippableItemData : CraftedItemData
 {
     [InspectableTexture, JsonProperty("schematic"), Key(10)]
     public string Schematic;
     
-    [InspectableField, JsonProperty("behaviors"), Key(11)]  
+    [Inspectable, JsonProperty("behaviors"), Key(11)]  
     public List<BehaviorData> Behaviors = new List<BehaviorData>();
 
-    [InspectableField, JsonProperty("durability"), Key(12)]
+    [Inspectable, JsonProperty("durability"), Key(12)]
     public float Durability;
     
     [InspectableTemperature, JsonProperty("minTemp"), Key(13)]
@@ -288,20 +335,23 @@ public abstract class EquippableItemData : CraftedItemData
     [InspectableTemperature, JsonProperty("maxTemp"), Key(14)]
     public float MaximumTemperature;
 
-    [InspectableField, JsonProperty("durabilityExponent"), Key(15), SimplePerformanceStat]
-    public PerformanceStat DurabilityExponent = new PerformanceStat();
-
-    [InspectableField, JsonProperty("heatExponent"), Key(16), SimplePerformanceStat]
-    public PerformanceStat HeatExponent = new PerformanceStat();
+    // [InspectableField, JsonProperty("durabilityExponent"), Key(15), SimplePerformanceStat]
+    // public PerformanceStat DurabilityExponent = new PerformanceStat();
+    //
+    // [InspectableField, JsonProperty("heatExponent"), Key(16), SimplePerformanceStat]
+    // public PerformanceStat HeatExponent = new PerformanceStat();
     
-    [InspectableAnimationCurve, JsonProperty("performanceCurve"), Key(17)]
-    public float4[] HeatPerformanceCurve;
+    [InspectableAnimationCurve, JsonProperty("heatCurve"), Key(17)]
+    public BezierCurve HeatPerformanceCurve;
 
-    [InspectableField, JsonProperty("resilience"), Key(18)]
+    [Inspectable, JsonProperty("resilience"), Key(18)]
     public float ThermalResilience = 1;
     
-    [InspectableField, JsonProperty("sfx"), Key(19)]
+    [Inspectable, JsonProperty("sfx"), Key(19)]
     public string SoundEffectTrigger;
+    
+    [InspectableTexture, JsonProperty("actionIcon"), Key(20)]
+    public string ActionBarIcon;
     
     [IgnoreMember]
     public abstract HardpointType HardpointType { get; }
@@ -337,14 +387,14 @@ public abstract class EquippableItemData : CraftedItemData
 
     public float Performance(float temperature)
     {
-        return saturate(HeatPerformanceCurve.Evaluate(unlerp(MinimumTemperature, MaximumTemperature, temperature)));
+        return saturate(HeatPerformanceCurve?.Evaluate(unlerp(MinimumTemperature, MaximumTemperature, temperature))??1);
     }
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GearData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpointType"), Key(20)]
+    [Inspectable, JsonProperty("hardpointType"), Key(21)]
     public HardpointType Hardpoint;
 
     [IgnoreMember] public override HardpointType HardpointType => Hardpoint;
@@ -353,7 +403,7 @@ public class GearData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class CargoBayData : EquippableItemData
 {
-    [InspectableField, JsonProperty("interiorShape"), Key(20)]
+    [Inspectable, JsonProperty("interiorShape"), Key(21)]
     public Shape InteriorShape;
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }
@@ -361,28 +411,49 @@ public class CargoBayData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class DockingBayData : CargoBayData
 {
-    [InspectableField, JsonProperty("maxSize"), Key(21)]
+    [Inspectable, JsonProperty("maxSize"), Key(22)]
     public int2 MaxSize;
-    [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
+}
+
+[RethinkTable("Items"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class WeaponItemData : GearData
+{
+    [Inspectable, JsonProperty("range"), Key(22)]
+    public WeaponRange WeaponRange;
+    
+    [Inspectable, JsonProperty("caliber"), Key(23)]
+    public WeaponCaliber WeaponCaliber;
+    
+    [Inspectable, JsonProperty("weaponType"), Key(24)]
+    public WeaponType WeaponType;
+    
+    [Inspectable, JsonProperty("fireTypes"), Key(25)]
+    public WeaponFireType WeaponFireTypes;
+    
+    [Inspectable, JsonProperty("modifiers"), Key(26)]
+    public WeaponModifiers WeaponModifiers;
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HullData : EquippableItemData
 {
-    [InspectableField, JsonProperty("hardpoints"), Key(20)]  
+    [Inspectable, JsonProperty("hardpoints"), Key(21)]  
     public List<HardpointData> Hardpoints = new List<HardpointData>();
 
-    [InspectablePrefab, JsonProperty("prefab"), Key(21)]  
+    [InspectablePrefab, JsonProperty("prefab"), Key(22)]  
     public string Prefab;
 
-    [InspectableField, JsonProperty("hullType"), Key(22)]
+    [Inspectable, JsonProperty("hullType"), Key(23)]
     public HullType HullType;
 
-    [InspectableField, JsonProperty("gridOffset"), Key(23)]
+    [Inspectable, JsonProperty("gridOffset"), Key(24)]
     public float GridOffset;
 
-    [InspectableField, JsonProperty("armor"), Key(24)]
+    [Inspectable, JsonProperty("armor"), Key(25)]
     public float Armor;
+
+    [Inspectable, JsonProperty("drag"), Key(26)]
+    public float Drag;
 
     [IgnoreMember]
     public Shape InteriorCells
@@ -403,15 +474,15 @@ public class HullData : EquippableItemData
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Hull;
 }
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HardpointData : ITintInspector
 {
-    [InspectableField, JsonProperty("type"), Key(0)] public HardpointType Type;
-    [InspectableField, JsonProperty("position"), Key(1)] public int2 Position;
-    [InspectableField, JsonProperty("shape"), Key(2)] public Shape Shape = new Shape();
-    [InspectableField, JsonProperty("transform"), Key(3)] public string Transform;
-    [InspectableField, JsonProperty("rotation"), Key(4)] public ItemRotation Rotation;
-    [InspectableField, JsonProperty("armor"), Key(5)] public float Armor;
+    [Inspectable, JsonProperty("type"), Key(0)] public HardpointType Type;
+    [Inspectable, JsonProperty("position"), Key(1)] public int2 Position;
+    [Inspectable, JsonProperty("shape"), Key(2)] public Shape Shape = new Shape();
+    [Inspectable, JsonProperty("transform"), Key(3)] public string Transform;
+    [Inspectable, JsonProperty("rotation"), Key(4)] public ItemRotation Rotation;
+    [Inspectable, JsonProperty("armor"), Key(5)] public float Armor;
 
     public override string ToString()
     {
@@ -449,45 +520,42 @@ public class PerformanceStat
 
     [JsonProperty("max"), Key(1)]  public float Max;
 
-    [JsonProperty("durabilityDependent"), Key(2)] 
-    public bool DurabilityDependent;
+    [JsonProperty("heatExponentMultiplier"), Key(2)] 
+    public float HeatExponentMultiplier;
 
-    [JsonProperty("qualityExponent"), Key(3)] 
+    [JsonProperty("durabilityExponentMultiplier"), Key(3)] 
+    public float DurabilityExponentMultiplier;
+
+    [JsonProperty("qualityExponent"), Key(4)] 
     public float QualityExponent;
-
-    [JsonProperty("heatDependent"), Key(4)] 
-    public bool HeatDependent;
-
-    [JsonProperty("heatExponentMultiplier"), Key(5)] 
-    public float HeatExponentMultiplier = 1;
     
     //[JsonProperty("id"), Key(5)]  public Guid ID = Guid.NewGuid();
 
     // [JsonProperty("ingredient"), Key(5)]  public Guid? Ingredient;
     
-    [IgnoreMember] private Dictionary<Entity,Dictionary<IBehavior,float>> _scaleModifiers;
-    [IgnoreMember] private Dictionary<Entity,Dictionary<IBehavior,float>> _constantModifiers;
+    [IgnoreMember] private Dictionary<Entity,Dictionary<Behavior,float>> _scaleModifiers;
+    [IgnoreMember] private Dictionary<Entity,Dictionary<Behavior,float>> _constantModifiers;
 
     [IgnoreMember]
-    private Dictionary<Entity, Dictionary<IBehavior, float>> ScaleModifiers =>
-        _scaleModifiers = _scaleModifiers ?? new Dictionary<Entity, Dictionary<IBehavior, float>>();
+    private Dictionary<Entity, Dictionary<Behavior, float>> ScaleModifiers =>
+        _scaleModifiers = _scaleModifiers ?? new Dictionary<Entity, Dictionary<Behavior, float>>();
 
     [IgnoreMember]
-    private Dictionary<Entity, Dictionary<IBehavior, float>> ConstantModifiers =>
-        _constantModifiers = _constantModifiers ?? new Dictionary<Entity, Dictionary<IBehavior, float>>();
+    private Dictionary<Entity, Dictionary<Behavior, float>> ConstantModifiers =>
+        _constantModifiers = _constantModifiers ?? new Dictionary<Entity, Dictionary<Behavior, float>>();
 
-    public Dictionary<IBehavior, float> GetScaleModifiers(Entity entity)
+    public Dictionary<Behavior, float> GetScaleModifiers(Entity entity)
     {
         if(!ScaleModifiers.ContainsKey(entity))
-            ScaleModifiers[entity] = new Dictionary<IBehavior, float>();
+            ScaleModifiers[entity] = new Dictionary<Behavior, float>();
 
         return ScaleModifiers[entity];
     }
 
-    public Dictionary<IBehavior, float> GetConstantModifiers(Entity entity)
+    public Dictionary<Behavior, float> GetConstantModifiers(Entity entity)
     {
         if(!ConstantModifiers.ContainsKey(entity))
-            ConstantModifiers[entity] = new Dictionary<IBehavior, float>();
+            ConstantModifiers[entity] = new Dictionary<Behavior, float>();
 
         return ConstantModifiers[entity];
     }
@@ -496,13 +564,13 @@ public class PerformanceStat
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class PersonalityAttribute : DatabaseEntry, INamedEntry
 {
-    [InspectableField, JsonProperty("name"), Key(1)]
+    [Inspectable, JsonProperty("name"), Key(1)]
     public string Name;
     
-    [InspectableField, JsonProperty("low"), Key(2)]
+    [Inspectable, JsonProperty("low"), Key(2)]
     public string LowName;
     
-    [InspectableField, JsonProperty("high"), Key(3)]
+    [Inspectable, JsonProperty("high"), Key(3)]
     public string HighName;
     
     [IgnoreMember] public string EntryName
@@ -510,9 +578,4 @@ public class PersonalityAttribute : DatabaseEntry, INamedEntry
         get => Name;
         set => Name = value;
     }
-}
-
-public interface ITintInspector
-{
-    float3 TintColor { get; }
 }

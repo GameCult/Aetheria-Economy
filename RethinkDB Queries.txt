@@ -1,4 +1,4 @@
-Empty Galaxy
+Reset Galaxy
 r.db('Aetheria').table('Galaxy').filter({$type:'ZoneData'}).update({visited: false})
 r.db('Aetheria').table('Galaxy').filter({$type:'ZoneData'}).update({orbits: [ ]})
 r.db('Aetheria').table('Galaxy').filter({$type:'ZoneData'}).update({planets: [ ]})
@@ -21,3 +21,11 @@ r.db('Aetheria').table('Galaxy').filter({$type:'ZoneData'}).filter(function (zon
 
 Find orphaned blueprints
 r.db('Aetheria').table('Items').filter({$type:'BlueprintData'}).filter({item:'00000000-0000-0000-0000-000000000000'})
+
+Update type name for all items with launcher, ballistic or energy hardpoint types
+r.db('Aetheria').table('Items').filter(
+    r.row("hardpointType").eq(9).or(r.row("hardpointType").eq(10)).or(r.row("hardpointType").eq(11))
+).update({$type:'WeaponItemData'})
+
+// Set required enum fields in weapons
+r.db('Aetheria').table('Items').filter({$type:"WeaponItemData"}).update({range:0, caliber:0, weaponType:0, fireTypes:0, modifiers:0})

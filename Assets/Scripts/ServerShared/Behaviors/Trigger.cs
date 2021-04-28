@@ -7,40 +7,27 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20)]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-20)]
 public class TriggerData : BehaviorData
 {
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Trigger(context, this, entity, item);
+        return new Trigger(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Trigger(this, item);
     }
 }
 
-public class Trigger : IBehavior, IActivatedBehavior
+public class Trigger : Behavior, IActivatedBehavior
 {
-    private TriggerData _data;
-
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
-
     public bool _pulled;
 
-    public Trigger(ItemManager context, TriggerData data, Entity entity, EquippedItem item)
-    {
-        _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
-    }
+    public Trigger(TriggerData data, EquippedItem item) : base(data, item) { }
+    public Trigger(TriggerData data, ConsumableItemEffect item) : base(data, item) { }
 
-    public void Initialize()
-    {
-    }
-
-    public bool Execute(float delta)
+    public override bool Execute(float dt)
     {
         if (_pulled)
         {

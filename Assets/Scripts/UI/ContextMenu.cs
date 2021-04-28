@@ -48,6 +48,7 @@ public class ContextMenu : MonoBehaviour
             Destroy(_dropdown);
         CancelClickCatcher.gameObject.SetActive(false);
         gameObject.SetActive(false);
+        ActionGameManager.Instance?.Input.Global.Enable();
     }
 
     public void Clear()
@@ -128,5 +129,6 @@ public class ContextMenu : MonoBehaviour
         rect.position = (Parent != null ? ForcePosition : (Vector3) mousePosition) + Vector3.up * deltaY;
         if (Parent==null)
             CancelClickCatcher.gameObject.SetActive(true);
+        ActionGameManager.Instance?.Input.Global.Disable();
     }
 }

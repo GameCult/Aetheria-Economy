@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MessagePack;
-using RethinkDb.Driver.Ast;
 using Unity.Mathematics;
 
 public static class EntitySerializer
@@ -39,6 +38,7 @@ public static class EntitySerializer
 
         pack.Hull = entity.Hull;
         pack.Name = entity.Name;
+        pack.Faction = entity.Faction?.ID ?? Guid.Empty;
         pack.Equipment = entity.Equipment.Select(e => (e.Position, e.EquippableItem)).ToArray();
         pack.CargoBays = entity.CargoBays.Select(e => (e.Position, e.EquippableItem)).ToArray();
         pack.DockingBays = entity.DockingBays.Select(e => (e.Position, e.EquippableItem)).ToArray();
@@ -86,6 +86,7 @@ public static class EntitySerializer
     private static void Restore(ItemManager itemManager, Zone zone, EntityPack pack, Entity entity, bool instantiate = false)
     {
         entity.Name = pack.Name;
+        entity.Faction = itemManager.ItemData.Get<Faction>(pack.Faction);
         entity.Children = pack.Children.Select(c =>
         {
             var child = Unpack(itemManager, zone, c, instantiate);
@@ -136,18 +137,31 @@ public static class EntitySerializer
 }
 
 [MessagePackObject]
+public class SavedStory
+{
+    [Key(0)]
+    public string StoryJson;
+    
+    [Key(1)]
+    public string StateJson;
+}
+
+[MessagePackObject]
 public class ShipPack : EntityPack
 {
-    [Key(15)] public float3 Position;
-    [Key(16)] public float2 Direction;
-    [Key(17)] public bool IsPlayerShip;
+    [Key(16)] public float3 Position;
+    [Key(17)] public float2 Direction;
+    [Key(18)] public bool IsPlayerShip;
 }
 
 [MessagePackObject]
 public class OrbitalEntityPack : EntityPack
 {
-    [Key(15)]
+    [Key(16)]
     public Guid Orbit;
+
+    [Key(17)]
+    public SavedStory Story;
 }
 
 [MessagePackObject, 
@@ -197,6 +211,9 @@ public abstract class EntityPack
     [Key(14)]
     public EntitySettings Settings;
 
+    [Key(15)]
+    public Guid Faction;
+
     private int _price;
 
     public int Price(ItemManager itemManager)
@@ -226,7 +243,7 @@ public abstract class EntityPack
         {
             foreach (var (_, item) in t)
             {
-                var itemData = itemManager.GetData(item);
+                var itemData = item.Data.Value;
                 if (item is SimpleCommodity s)
                     _price += itemData.Price * s.Quantity;
                 else
@@ -238,7 +255,7 @@ public abstract class EntityPack
         {
             foreach (var (_, item) in t)
             {
-                var itemData = itemManager.GetData(item);
+                var itemData = item.Data.Value;
                 if (item is SimpleCommodity s)
                     _price += itemData.Price * s.Quantity;
                 else

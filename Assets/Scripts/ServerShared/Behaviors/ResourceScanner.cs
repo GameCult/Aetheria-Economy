@@ -9,25 +9,30 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ResourceScannerData : BehaviorData
 {
-    [InspectableField, JsonProperty("range"), Key(1), RuntimeInspectable]
+    [Inspectable, JsonProperty("range"), Key(1), RuntimeInspectable]
     public PerformanceStat Range = new PerformanceStat();
     
-    [InspectableField, JsonProperty("minDensity"), Key(2), RuntimeInspectable]
+    [Inspectable, JsonProperty("minDensity"), Key(2), RuntimeInspectable]
     public PerformanceStat MinimumDensity = new PerformanceStat();
     
-    [InspectableField, JsonProperty("scanDuration"), Key(3), RuntimeInspectable]
+    [Inspectable, JsonProperty("scanDuration"), Key(3), RuntimeInspectable]
     public PerformanceStat ScanDuration = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new ResourceScanner(context, this, entity, item);
+        return new ResourceScanner(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new ResourceScanner(this, item);
     }
 }
 
-public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
+public class ResourceScanner : Behavior, IAlwaysUpdatedBehavior
 {
     public int Asteroid = -1;
     
@@ -35,11 +40,6 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
     private float _scanTime;
     private Guid _scanTarget;
 
-    private Entity Entity { get; }
-    private EquippedItem Item { get; }
-    private ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
     public float Range { get; private set; }
     public float MinimumDensity { get; private set; }
     public float ScanDuration { get; private set; }
@@ -57,17 +57,19 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
         }
     }
 
-    public ResourceScanner(ItemManager context, ResourceScannerData data, Entity entity, EquippedItem item)
+    public ResourceScanner(ResourceScannerData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
     }
 
-    public bool Execute(float delta)
+    public ResourceScanner(ResourceScannerData data, ConsumableItemEffect item) : base(data, item)
     {
-        var planetData = Context.ItemData.Get<BodyData>(ScanTarget);
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        var planetData = Entity.Zone.Planets[ScanTarget];
         if (planetData != null)
         {
             if (planetData is AsteroidBeltData beltData)
@@ -76,7 +78,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
                    Asteroid < beltData.Asteroids.Length &&
                    length(Entity.Position.xz - Entity.Zone.AsteroidBelts[ScanTarget].Positions[Asteroid].xz) < Range)
                 {
-                    _scanTime += delta;
+                    _scanTime += dt;
                     if (_scanTime > ScanDuration)
                     {
                         // TODO: Implement Scanning!
@@ -90,7 +92,7 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
             {
                 if(length(Entity.Position.xz - Entity.Zone.GetOrbitPosition(planetData.Orbit)) < Range)
                 {
-                    _scanTime += delta;
+                    _scanTime += dt;
                     if (_scanTime > ScanDuration)
                     {
                         //Context.ItemData.Get<Corporation>(Entity.Corporation).PlanetSurveyFloor[ScanTarget] = MinimumDensity;
@@ -105,8 +107,8 @@ public class ResourceScanner : IBehavior, IAlwaysUpdatedBehavior
 
     public void Update(float delta)
     {
-        Range = Item.Evaluate(_data.Range);
-        MinimumDensity = Item.Evaluate(_data.MinimumDensity);
-        ScanDuration = Item.Evaluate(_data.ScanDuration);
+        Range = Evaluate(_data.Range);
+        MinimumDensity = Evaluate(_data.MinimumDensity);
+        ScanDuration = Evaluate(_data.ScanDuration);
     }
 }

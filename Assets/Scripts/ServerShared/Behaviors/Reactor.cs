@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MessagePack;
@@ -10,62 +11,70 @@ using UniRx;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ReactorData : BehaviorData
 {
-    [InspectableField, JsonProperty("charge"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("charge"), Key(1), RuntimeInspectable]  
     public PerformanceStat Charge = new PerformanceStat();
 
-    [InspectableField, JsonProperty("efficiency"), Key(2), RuntimeInspectable]  
+    [Inspectable, JsonProperty("efficiency"), Key(2), RuntimeInspectable]  
     public PerformanceStat Efficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("overload"), Key(3), RuntimeInspectable]  
+    [Inspectable, JsonProperty("overload"), Key(3), RuntimeInspectable]  
     public PerformanceStat OverloadEfficiency = new PerformanceStat();
 
-    [InspectableField, JsonProperty("underload"), Key(4), RuntimeInspectable]  
+    [Inspectable, JsonProperty("underload"), Key(4), RuntimeInspectable]  
     public PerformanceStat ThrottlingFactor = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Reactor(context, this, entity, item);
+        return new Reactor(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Reactor(this, item);
     }
 }
 
-public class Reactor : IBehavior, IOrderedBehavior
+public class Reactor : Behavior, IOrderedBehavior, IDisposable
 {
     private ReactorData _data;
 
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-    
     public float Draw { get; private set; }
     
     public float CurrentLoadRatio { get; private set; }
 
     public int Order => 100;
 
-    public BehaviorData Data => _data;
-
     private List<Capacitor> _capacitors;
 
-    public Reactor(ItemManager context, ReactorData data, Entity entity, EquippedItem item)
+    private List<IDisposable> _subscriptions = new List<IDisposable>();
+
+    public Reactor(ReactorData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
-        _capacitors = entity.GetBehaviors<Capacitor>().ToList();
-        entity.Equipment.ObserveAdd().Subscribe(onAdd =>
+        FindCapacitors();
+    }
+    public Reactor(ReactorData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+        FindCapacitors();
+    }
+
+    private void FindCapacitors()
+    {
+        _capacitors = Entity.GetBehaviors<Capacitor>().ToList();
+        _subscriptions.Add(Entity.Equipment.ObserveAdd().Subscribe(onAdd =>
         {
             var capacitor = onAdd.Value.GetBehavior<Capacitor>();
             if (capacitor != null) _capacitors.Add(capacitor);
-        });
-        entity.Equipment.ObserveRemove().Subscribe(onRemove =>
+        }));
+        _subscriptions.Add(Entity.Equipment.ObserveRemove().Subscribe(onRemove =>
         {
             var capacitor = onRemove.Value.GetBehavior<Capacitor>();
             if (capacitor != null) _capacitors.Remove(capacitor);
-        });
+        }));
     }
 
     public void ConsumeEnergy(float energy)
@@ -73,10 +82,10 @@ public class Reactor : IBehavior, IOrderedBehavior
         Draw += energy;
     }
 
-    public bool Execute(float delta)
+    public override bool Execute(float dt)
     {
-        var charge = Item.Evaluate(_data.Charge) * delta;
-        var efficiency = Item.Evaluate(_data.Efficiency);
+        var charge = Evaluate(_data.Charge) * dt;
+        var efficiency = Evaluate(_data.Efficiency);
 
         // This behavior executes last, so any components drawing power have already done so
 
@@ -90,7 +99,7 @@ public class Reactor : IBehavior, IOrderedBehavior
         if (Draw > .01f)
         {
             CurrentLoadRatio = (Draw + charge) / max(charge, .01f);
-            var overloadEfficiency = Item.Evaluate(_data.OverloadEfficiency);
+            var overloadEfficiency = Evaluate(_data.OverloadEfficiency);
             
             // Generate heat using overload efficiency, usually much less efficient!
             heat += Draw / overloadEfficiency;
@@ -123,7 +132,7 @@ public class Reactor : IBehavior, IOrderedBehavior
         if (Draw < -.01f)
         {
             CurrentLoadRatio = (Draw + charge) / max(charge, .01f);
-            heat -= Draw / efficiency * (1 - 1 / Item.Evaluate(_data.ThrottlingFactor));
+            heat -= Draw / efficiency * (1 - 1 / Evaluate(_data.ThrottlingFactor));
             Draw = 0;
         }
         else
@@ -131,7 +140,13 @@ public class Reactor : IBehavior, IOrderedBehavior
             CurrentLoadRatio = 1;
         }
         
-        Item.AddHeat(heat);
+        AddHeat(heat);
         return true;
+    }
+
+    public void Dispose()
+    {
+        foreach(var sub in _subscriptions)
+            sub.Dispose();
     }
 }

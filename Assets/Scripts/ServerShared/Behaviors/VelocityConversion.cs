@@ -10,43 +10,35 @@ using static Unity.Mathematics.math;
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class VelocityConversionData : BehaviorData
 {
-    [InspectableField, JsonProperty("traction"), Key(1), RuntimeInspectable]  
-    public PerformanceStat Traction = new PerformanceStat();
+    [Inspectable, JsonProperty("lambda"), Key(1), RuntimeInspectable]  
+    public PerformanceStat Lambda = new PerformanceStat();
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new VelocityConversion(context, this, entity, item);
+        return new VelocityConversion(this, item);
+    }
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new VelocityConversion(this, item);
     }
 }
 
-public class VelocityConversion : IBehavior
+public class VelocityConversion : Behavior
 {
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
-    
     private VelocityConversionData _data;
 
-    public VelocityConversion(ItemManager context, VelocityConversionData data, Entity entity, EquippedItem item)
+    public VelocityConversion(VelocityConversionData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
+    }
+    public VelocityConversion(VelocityConversionData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
     }
 
-    public void Initialize()
+    public override bool Execute(float dt)
     {
-    }
-
-    public bool Execute(float delta)
-    {
+        Entity.Velocity = AetheriaMath.Damp(Entity.Velocity, Entity.Direction * length(Entity.Velocity), Evaluate(_data.Lambda), dt);
         return true;
-    }
-
-    public void Remove()
-    {
     }
 }

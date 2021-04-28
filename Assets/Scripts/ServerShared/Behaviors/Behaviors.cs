@@ -13,26 +13,97 @@ using Unity.Mathematics;
 using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;
 
-public interface IBehavior
+public abstract class Behavior
 {
-    bool Execute(float delta);
-    BehaviorData Data { get; }
+    public BehaviorData Data { get; }
+    public EquippedItem Item { get; }
+    private ConsumableItemEffect Consumable { get; }
+    protected ItemManager ItemManager { get; }
+
+    protected Entity Entity => Item?.Entity ?? Consumable.Entity;
+    public float Temperature => Item?.Temperature ?? Consumable.Entity.MaxTemp;
+
+    public float3 Direction
+    {
+        get
+        {
+            if(Item != null)
+            {
+                var hardpoint = Entity.Hardpoints[Item.Position.x, Item.Position.y];
+                if (hardpoint != null && Entity.HardpointTransforms.ContainsKey(hardpoint))
+                {
+                    return normalize(Entity.HardpointTransforms[hardpoint].direction);
+                }
+                else
+                {
+                    var itemDirection = Entity.Direction.Rotate(Item.EquippableItem.Rotation);
+                    return float3(itemDirection.x, 0, itemDirection.y);
+                }
+            }
+
+            return float3(Entity.Direction.x, 0, Entity.Direction.y);
+        }
+    }
+
+    protected Behavior(BehaviorData data, EquippedItem item)
+    {
+        Data = data;
+        Item = item;
+        ItemManager = Item.ItemManager;
+    }
+    
+    protected Behavior(BehaviorData data, ConsumableItemEffect consumable)
+    {
+        Data = data;
+        Consumable = consumable;
+        ItemManager = consumable.Entity.ItemManager;
+    }
+    
+    public float Evaluate(PerformanceStat stat) => Item?.Evaluate(stat) ?? Consumable.Evaluate(stat);
+    protected void AddHeat(float heat) => Item?.AddHeat(heat); // TODO: Heat for Consumables
+
+    protected void CauseDamage(float damage)
+    {
+        if (Item != null)
+        {
+            Item.EquippableItem.Durability -= damage;
+            Entity.ItemDamage.OnNext((Item, damage));
+        }
+        else
+        {
+            Consumable.Entity.Hull.Durability -= damage;
+            Consumable.Entity.HullDamage.OnNext(damage);
+        }
+    }
+
+    protected void CauseWearDamage(float multiplier)
+    {
+        if (Item != null)
+        {
+            CauseDamage(Item.Wear * multiplier);
+        }
+    }
+    
+    public virtual bool Execute(float dt)
+    {
+        return true;
+    }
 }
 
-public interface IActivatedBehavior : IBehavior
+public interface IActivatedBehavior
 {
     void Activate();
     void Deactivate();
 }
 
-public interface IAnalogBehavior : IBehavior
+public interface IAnalogBehavior
 {
     float Axis { get; set; }
 }
 
-public interface IDisposableBehavior
+public interface IEventBehavior
 {
-    void Dispose();
+    void ResetEvents();
 }
 
 public interface IInitializableBehavior
@@ -72,14 +143,13 @@ public interface IPopulationAssignment
 }
 
 [MessagePackObject,
- Union(0, typeof(FactoryPersistence)),
  JsonObject(MemberSerialization.OptIn),
  JsonConverter(typeof(JsonKnownTypesConverter<PersistentBehaviorData>))]
 public abstract class PersistentBehaviorData
 {
 }
 
-[InspectableField, 
+[Inspectable, 
  Union(0, typeof(GuidedWeaponData)),
  Union(1, typeof(LauncherData)),
  Union(2, typeof(ReactorData)), 
@@ -92,14 +162,13 @@ public abstract class PersistentBehaviorData
  Union(9, typeof(WearData)),
  Union(10, typeof(VelocityConversionData)),
  Union(11, typeof(VelocityLimitData)),
- Union(12, typeof(FactoryData)),
- // Union(13, typeof(PatrolControllerData)),
+ Union(12, typeof(AetherDriveData)),
  // Union(14, typeof(TowingControllerData)),
  Union(15, typeof(CooldownData)),
  Union(16, typeof(HeatData)),
  // Union(17, typeof(HitscanData)),
  Union(18, typeof(ItemUsageData)),
- Union(19, typeof(RadianceData)),
+ //Union(19, typeof(RadianceData)),
  Union(20, typeof(SwitchData)),
  Union(21, typeof(TriggerData)),
  Union(22, typeof(VisibilityData)),
@@ -122,15 +191,14 @@ public abstract class PersistentBehaviorData
  JsonConverter(typeof(JsonKnownTypesConverter<BehaviorData>)), JsonObject(MemberSerialization.OptIn)]
 public abstract class BehaviorData
 {
-    [InspectableField, JsonProperty("group"), Key(0)]
+    [Inspectable, JsonProperty("group"), Key(0)]
     public int Group;
     
-    public abstract IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item);
+    public abstract Behavior CreateInstance(EquippedItem item);
+    public abstract Behavior CreateInstance(ConsumableItemEffect consumable);
 
     public override string ToString()
     {
-        var className = base.ToString();
-        var dataIndex = className.IndexOf("data", StringComparison.InvariantCultureIgnoreCase);
-        return dataIndex>0 ? className.Substring(0,dataIndex).SplitCamelCase() : className;
+        return base.ToString().FormatTypeName();
     }
 }

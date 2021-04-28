@@ -7,42 +7,44 @@ using Newtonsoft.Json;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), RuntimeInspectable]
 public class ReflectorData : BehaviorData
 {
-    [InspectableField, JsonProperty("crossSection"), Key(1), RuntimeInspectable]  
+    [Inspectable, JsonProperty("crossSection"), Key(1), RuntimeInspectable]  
     public PerformanceStat CrossSection = new PerformanceStat();
 
     // [InspectableAnimationCurve, JsonProperty("visibility"), Key(1)]  
     // public float4[] VisibilityCurve;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new Reflector(context, this, entity, item);
+        return new Reflector(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new Reflector(this, item);
     }
 }
 
-public class Reflector : IBehavior
+public class Reflector : Behavior
 {
-    public Entity Entity { get; }
-    public EquippedItem Item { get; }
-    public ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
-    
     private ReflectorData _data;
 
-    public Reflector(ItemManager context, ReflectorData data, Entity entity, EquippedItem item)
+    public Reflector(ReflectorData data, EquippedItem item) : base(data, item)
     {
-        Context = context;
         _data = data;
-        Entity = entity;
-        Item = item;
     }
 
-    public bool Execute(float delta)
+    public Reflector(ReflectorData data, ConsumableItemEffect item) : base(data, item)
     {
-        // TODO: Light system!
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
+    {
+        Entity.VisibilitySources[this] = Evaluate(_data.CrossSection) * Entity.Zone.GetLight(Entity.Position.xz);
+        
         return true;
     }
 }

@@ -35,6 +35,8 @@ public class Ship : Entity
     private HashSet<Thruster> _leftThrusters;
     private HashSet<Thruster> _clockwiseThrusters;
     private HashSet<Thruster> _counterClockwiseThrusters;
+    private HashSet<EquippedItem> _aetherDriveItems;
+    private HashSet<AetherDrive> _aetherDrives;
 
     private bool _exitingWormhole = false;
     private bool _enteringWormhole = false;
@@ -51,9 +53,9 @@ public class Ship : Entity
     public float ClockwiseTorque { get; private set; }
     public float CounterClockwiseTorque { get; private set; }
     public float LeftStrafeTotalTorque { get; private set; }
-    private Thruster[] LeftStrafeTorqueThrusters;
+    private List<Thruster> LeftStrafeTorqueThrusters = new List<Thruster>();
     public float RightStrafeTotalTorque { get; private set; }
-    private Thruster[] RightStrafeTorqueThrusters;
+    private List<Thruster> RightStrafeTorqueThrusters = new List<Thruster>();
 
     public float TurnTime(float2 direction)
     {
@@ -78,6 +80,7 @@ public class Ship : Entity
 
     public void EnterWormhole(float2 wormholePosition)
     {
+        Target.Value = null;
         _wormholeAnimationProgress = 0;
         _enteringWormhole = true;
         _wormholeEntryPosition = Position.xz;
@@ -88,91 +91,90 @@ public class Ship : Entity
     public override void Activate()
     {
         base.Activate();
+
+        _aetherDrives = new HashSet<AetherDrive>(GetBehaviors<AetherDrive>());
+        _aetherDriveItems = new HashSet<EquippedItem>(_aetherDrives.Select(x => x.Item));
         
         _allThrusters = GetBehaviors<Thruster>().ToArray();
         _thrusterItems = new HashSet<EquippedItem>(_allThrusters.Select(x=>x.Item));
         
         _forwardThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Reversed));
-        RecalculateForwardThrust();
-        foreach (var thruster in _forwardThrusters) 
-            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateForwardThrust());
 
         _reverseThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.None));
-        RecalculateReverseThrust();
-        foreach (var thruster in _reverseThrusters) 
-            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateReverseThrust());
         
         _rightThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.CounterClockwise));
-        RecalculateRightStrafeThrust();
-        foreach (var thruster in _rightThrusters) 
-            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateRightStrafeThrust());
         
         _leftThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Item.EquippableItem.Rotation == ItemRotation.Clockwise));
-        RecalculateLeftStrafeThrust();
-        foreach (var thruster in _leftThrusters) 
-            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateLeftStrafeThrust());
         
         _counterClockwiseThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Torque < -ItemManager.GameplaySettings.TorqueFloor));
-        RecalculateCounterClockwiseTorque();
-        foreach (var thruster in _counterClockwiseThrusters) 
-            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateCounterClockwiseTorque());
         
         _clockwiseThrusters = new HashSet<Thruster>(_allThrusters
             .Where(x => x.Torque > ItemManager.GameplaySettings.TorqueFloor));
-        RecalculateClockwiseTorque();
-        foreach (var thruster in _clockwiseThrusters) 
-            thruster.Item.Online.Skip(1).Subscribe(b => RecalculateClockwiseTorque());
     }
 
     public Ship(ItemManager itemManager, Zone zone, EquippableItem hull, EntitySettings settings) : base(itemManager, zone, hull, settings)
     {
-        void CheckForThruster(EquippedItem item)
-        {
-            if (_thrusterItems.Contains(item))
-            {
-                foreach (var behavior in item.Behaviors)
-                {
-                    if (behavior is Thruster thruster)
-                    {
-                        if (_forwardThrusters.Contains(thruster)) RecalculateForwardThrust();
-                        if (_reverseThrusters.Contains(thruster)) RecalculateReverseThrust();
-                        if (_rightThrusters.Contains(thruster)) RecalculateRightStrafeThrust();
-                        if (_leftThrusters.Contains(thruster)) RecalculateLeftStrafeThrust();
-                        if (_clockwiseThrusters.Contains(thruster)) RecalculateClockwiseTorque();
-                        if (_counterClockwiseThrusters.Contains(thruster)) RecalculateCounterClockwiseTorque();
-                    }
-                }
-            }
-        }
+        ItemDestroyed.Where(item=>_thrusterItems.Contains(item)).Subscribe(RemoveThruster);
+        ItemDestroyed.Where(item=>_aetherDriveItems.Contains(item)).Subscribe(RemoveAetherDrive);
+    }
 
-        ItemDamage.Select(x => x.item).Subscribe(CheckForThruster);
+    private void RemoveAetherDrive(EquippedItem item)
+    {
+        _aetherDriveItems.Remove(item);
+        _aetherDrives.Remove(item.GetBehavior<AetherDrive>());
+    }
+
+    private void RemoveThruster(EquippedItem item)
+    {
+        _thrusterItems.Remove(item);
+        var thruster = item.GetBehavior<Thruster>();
+        if (_forwardThrusters.Contains(thruster)) _forwardThrusters.Remove(thruster);
+        if (_reverseThrusters.Contains(thruster)) _reverseThrusters.Remove(thruster);
+        if (_rightThrusters.Contains(thruster)) _rightThrusters.Remove(thruster);
+        if (_leftThrusters.Contains(thruster)) _leftThrusters.Remove(thruster);
+        if (_clockwiseThrusters.Contains(thruster)) _clockwiseThrusters.Remove(thruster);
+        if (_counterClockwiseThrusters.Contains(thruster)) _counterClockwiseThrusters.Remove(thruster);
     }
 
     #region ThrustCalculation
+
+    private void RecalculateThrust()
+    {
+        RecalculateForwardThrust();
+        RecalculateReverseThrust();
+        RecalculateLeftStrafeThrust();
+        RecalculateRightStrafeThrust();
+        RecalculateClockwiseTorque();
+        RecalculateCounterClockwiseTorque();
+    }
     
     private void RecalculateForwardThrust()
     {
         ForwardThrust = 0;
         foreach (var thruster in _forwardThrusters)
-        {
-            if(thruster.Item.Active.Value)
+            if (thruster.Item.Active.Value)
                 ForwardThrust += thruster.Thrust;
-        }
+
+        foreach (var drive in _aetherDrives)
+            if (drive.Item.Active.Value)
+                ForwardThrust += drive.Thrust.x;
     }
 
     private void RecalculateReverseThrust()
     {
         ReverseThrust = 0;
         foreach (var thruster in _reverseThrusters)
-        {
-            if(thruster.Item.Active.Value)
+            if (thruster.Item.Active.Value)
                 ReverseThrust += thruster.Thrust;
-        }
+
+        foreach (var drive in _aetherDrives)
+            if (drive.Item.Active.Value)
+                ReverseThrust += drive.Thrust.x;
     }
 
     private void RecalculateLeftStrafeThrust()
@@ -187,9 +189,14 @@ public class Ship : Entity
                 LeftStrafeTotalTorque += thruster.Torque * thruster.Thrust;
             }
         }
-        LeftStrafeTorqueThrusters = _leftThrusters
-            .Where(x => abs(sign(x.Torque) - sign(LeftStrafeTotalTorque)) < .01f)
-            .ToArray();
+        LeftStrafeTorqueThrusters.Clear();
+        foreach(var thruster in _leftThrusters)
+            if (abs(sign(thruster.Torque) - sign(LeftStrafeTotalTorque)) < .01f)
+                LeftStrafeTorqueThrusters.Add(thruster);
+
+        foreach (var drive in _aetherDrives)
+            if (drive.Item.Active.Value)
+                LeftStrafeThrust += drive.Thrust.y;
     }
 
     private void RecalculateRightStrafeThrust()
@@ -204,39 +211,49 @@ public class Ship : Entity
                 RightStrafeTotalTorque += thruster.Torque * thruster.Thrust;
             }
         }
-        RightStrafeTorqueThrusters = _rightThrusters
-            .Where(x => abs(sign(x.Torque) - sign(RightStrafeTotalTorque)) < .01f)
-            .ToArray();
+        RightStrafeTorqueThrusters.Clear();
+        foreach(var thruster in _rightThrusters)
+            if (abs(sign(thruster.Torque) - sign(RightStrafeTotalTorque)) < .01f)
+                RightStrafeTorqueThrusters.Add(thruster);
+
+        foreach (var drive in _aetherDrives)
+            if (drive.Item.Active.Value)
+                RightStrafeThrust += drive.Thrust.y;
     }
 
     private void RecalculateClockwiseTorque()
     {
         ClockwiseTorque = 0;
         foreach (var thruster in _clockwiseThrusters)
-        {
-            if(thruster.Item.Active.Value)
+            if (thruster.Item.Active.Value)
                 ClockwiseTorque += thruster.Torque;
-        }
+
+        foreach (var drive in _aetherDrives)
+            if (drive.Item.Active.Value)
+                ClockwiseTorque += drive.Thrust.z;
     }
 
     private void RecalculateCounterClockwiseTorque()
     {
         CounterClockwiseTorque = 0;
         foreach (var thruster in _counterClockwiseThrusters)
-        {
-            if(thruster.Item.Active.Value)
+            if (thruster.Item.Active.Value)
                 CounterClockwiseTorque -= thruster.Torque;
-        }
+
+        foreach (var drive in _aetherDrives)
+            if (drive.Item.Active.Value)
+                CounterClockwiseTorque += drive.Thrust.z;
     }
 
     #endregion
 
     public override void Update(float delta)
     {
-        foreach (var thruster in _allThrusters) thruster.Axis = 0;
         if (_active && !_exitingWormhole && !_enteringWormhole)
         {
-            var rightThrusterTorqueCompensation = abs(RightStrafeTotalTorque) / RightStrafeTorqueThrusters.Length;
+            RecalculateThrust();
+            foreach (var thruster in _allThrusters) thruster.Axis = 0;
+            var rightThrusterTorqueCompensation = abs(RightStrafeTotalTorque) / RightStrafeTorqueThrusters.Count;
             foreach (var thruster in _rightThrusters)
             {
                 var thrust = 0f;
@@ -245,7 +262,7 @@ public class Ship : Entity
                     thrust -= MovementDirection.x * (rightThrusterTorqueCompensation / (abs(thruster.Torque) * thruster.Thrust));
                 thruster.Axis = thrust;
             }
-            var leftThrusterTorqueCompensation = abs(LeftStrafeTotalTorque) / LeftStrafeTorqueThrusters.Length;
+            var leftThrusterTorqueCompensation = abs(LeftStrafeTotalTorque) / LeftStrafeTorqueThrusters.Count;
             foreach (var thruster in _leftThrusters)
             {
                 var thrust = 0f;
@@ -264,11 +281,18 @@ public class Ship : Entity
                 deltaRot = 0;
                 Direction = lerp(Direction, look, min(delta, 1));
             }
-            deltaRot = pow(abs(deltaRot), .75f) * sign(deltaRot);
+            deltaRot = pow(abs(deltaRot), .5f) * sign(deltaRot);
         
             foreach (var thruster in _clockwiseThrusters) thruster.Axis += deltaRot;
             foreach (var thruster in _counterClockwiseThrusters) thruster.Axis += -deltaRot;
+
+            foreach (var drive in _aetherDrives)
+                drive.Axis = float3(MovementDirection.y, MovementDirection.x, deltaRot);
         }
+
+        var velocityMagnitude = length(Velocity);
+        if(velocityMagnitude > .01f)
+            Velocity = normalize(Velocity) * AetheriaMath.Decay(velocityMagnitude, HullData.Drag, delta);
         
         Position.xz += Velocity * delta;
         
@@ -300,7 +324,7 @@ public class Ship : Entity
                 {
                     var exitLerp = (_wormholeAnimationProgress - ItemManager.GameplaySettings.WormholeExitCurveStart) /
                                    (1 - ItemManager.GameplaySettings.WormholeExitCurveStart);
-                    exitLerp *= exitLerp; // Square the interpolation variable to produce curve with zero slope at start
+                    exitLerp = AetheriaMath.Smootherstep(exitLerp); // Square the interpolation variable to produce curve with zero slope at start
                     Position.xz = _wormholePosition + normalize(_wormholeExitVelocity) * exitLerp * ItemManager.GameplaySettings.WormholeExitRadius;
                     Rotation = quaternion.LookRotation(
                         lerp(float3(0, 1, 0), forward, exitLerp),
@@ -326,7 +350,7 @@ public class Ship : Entity
                 if (_wormholeAnimationProgress < 1 - ItemManager.GameplaySettings.WormholeExitCurveStart)
                 {
                     var enterLerp = _wormholeAnimationProgress / (1 - ItemManager.GameplaySettings.WormholeExitCurveStart);
-                    enterLerp *= enterLerp; // Square the interpolation variable to produce curve with zero slope at vertical
+                    enterLerp = AetheriaMath.Smootherstep(enterLerp); // Square the interpolation variable to produce curve with zero slope at vertical
                     Position.xz = lerp(_wormholeEntryPosition, _wormholePosition, enterLerp);
                     Rotation = quaternion.LookRotation(
                         lerp(forward, float3(0, -1, 0), enterLerp),

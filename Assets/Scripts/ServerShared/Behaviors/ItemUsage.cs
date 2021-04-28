@@ -7,37 +7,38 @@ using System.Linq;
 using MessagePack;
 using Newtonsoft.Json;
 
-[InspectableField, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-5), RuntimeInspectable]
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn), Order(-5), RuntimeInspectable]
 public class ItemUsageData : BehaviorData
 {
     [InspectableDatabaseLink(typeof(SimpleCommodityData)), JsonProperty("item"), Key(1), RuntimeInspectable]  
     public Guid Item;
     
-    public override IBehavior CreateInstance(ItemManager context, Entity entity, EquippedItem item)
+    public override Behavior CreateInstance(EquippedItem item)
     {
-        return new ItemUsage(context, this, entity, item);
+        return new ItemUsage(this, item);
+    }
+    
+    public override Behavior CreateInstance(ConsumableItemEffect item)
+    {
+        return new ItemUsage(this, item);
     }
 }
 
-public class ItemUsage : IBehavior
+public class ItemUsage : Behavior
 {
     private ItemUsageData _data;
 
-    private Entity Entity { get; }
-    private EquippedItem Item { get; }
-    private ItemManager Context { get; }
-
-    public BehaviorData Data => _data;
-
-    public ItemUsage(ItemManager context, ItemUsageData data, Entity entity, EquippedItem item)
+    public ItemUsage(ItemUsageData data, EquippedItem item) : base(data, item)
     {
         _data = data;
-        Entity = entity;
-        Item = item;
-        Context = context;
     }
 
-    public bool Execute(float delta)
+    public ItemUsage(ItemUsageData data, ConsumableItemEffect item) : base(data, item)
+    {
+        _data = data;
+    }
+
+    public override bool Execute(float dt)
     {
         var cargo = Entity.FindItemInCargo(_data.Item);
         if (cargo == null) return false;

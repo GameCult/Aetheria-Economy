@@ -10,4 +10,5 @@ public class SectorZoneUI : MonoBehaviour
     public MeshRenderer Secondary;
     public MeshRenderer Influence;
     public TextMeshPro Label;
+    public Transform IconContainer;
 }
