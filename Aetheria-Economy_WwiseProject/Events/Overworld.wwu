@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{CA56ADA8-FBA0-4374-9F87-2C1DA1FF8DA3}" SchemaVersion="97">
+	<Events>
+		<WorkUnit Name="Overworld" ID="{CA56ADA8-FBA0-4374-9F87-2C1DA1FF8DA3}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="Play_Gen_OW_01" ID="{A7BDC53B-92FA-4156-A6DF-8F8B80B144BE}">
+					<ChildrenList>
+						<Action Name="" ID="{267F4ABF-6130-4FCF-BA14-6F016DB89356}" ShortID="817607046">
+							<PropertyList>
+								<Property Name="FadeTime" Type="Real64" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Gen_OW_01" ID="{AAF59638-2F79-498D-A1F2-C52181563AD6}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_Kawaii_Future_Bass" ID="{99F44592-FE4A-4A32-92A1-01FE5DD8C4D0}">
+					<ChildrenList>
+						<Action Name="" ID="{18020EBD-38D2-4902-B778-42AF9507D7D6}" ShortID="892850464">
+							<PropertyList>
+								<Property Name="FadeTime" Type="Real64" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Kawaii Future Bass" ID="{586B920D-AA94-4B2C-828B-37B68C3F2982}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_Metal_OW_01" ID="{1094EF98-562A-460B-B975-A61636956FC2}">
+					<ChildrenList>
+						<Action Name="" ID="{8B58B90F-B1F6-480F-9E02-6A7C9ABE5FF4}" ShortID="845722848">
+							<PropertyList>
+								<Property Name="FadeTime" Type="Real64" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Metal_OW_01" ID="{7282DE71-9B0C-4E9B-960C-0EF0036250A4}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_Gen_OW_01" ID="{6A3916A1-90A8-4FE3-93EB-1E02A36AE304}">
+					<ChildrenList>
+						<Action Name="" ID="{6890D44C-7DE7-4125-B4AB-AAF7DBBFFA91}" ShortID="961438877">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+								<Property Name="FadeTime" Type="Real64" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Gen_OW_01" ID="{AAF59638-2F79-498D-A1F2-C52181563AD6}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_Kawaii_Future_Bass" ID="{CD80CCEC-B819-47AF-9D3E-7AC27CC32221}">
+					<ChildrenList>
+						<Action Name="" ID="{48F8BFAD-CCBA-49D5-830D-9F078C83DA2C}" ShortID="867751787">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+								<Property Name="FadeTime" Type="Real64" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Kawaii Future Bass" ID="{586B920D-AA94-4B2C-828B-37B68C3F2982}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_Metal_OW_01" ID="{43F9794D-92EB-4B0D-A80B-3179124200AD}">
+					<ChildrenList>
+						<Action Name="" ID="{2C258DEA-F95B-4AA4-BD4D-75363863F2F9}" ShortID="621026846">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+								<Property Name="FadeTime" Type="Real64" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Metal_OW_01" ID="{7282DE71-9B0C-4E9B-960C-0EF0036250A4}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

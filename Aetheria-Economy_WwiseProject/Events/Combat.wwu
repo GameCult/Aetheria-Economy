@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{23F632AB-7CF3-452A-8404-D4FD5E63A309}" SchemaVersion="97">
+	<Events>
+		<WorkUnit Name="Combat" ID="{23F632AB-7CF3-452A-8404-D4FD5E63A309}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="Play_Gen_Combat_1" ID="{46E9FFD3-34FA-4981-BB68-3444030D6D96}">
+					<ChildrenList>
+						<Action Name="" ID="{E883515D-5A32-4764-BD61-FACD0091A03B}" ShortID="278496761">
+							<PropertyList>
+								<Property Name="FadeTime" Type="Real64" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Gen_Combat_1" ID="{37FA2177-60F1-4326-AF74-CD4928CEE0BE}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Play_Metal_Combat_01" ID="{0C78FC73-D934-4784-8F53-0DA94F3A3F03}">
+					<ChildrenList>
+						<Action Name="" ID="{B12E8A46-F609-44E4-AD16-9D10FB304312}" ShortID="854367943">
+							<PropertyList>
+								<Property Name="FadeTime" Type="Real64" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Metal_Combat_01" ID="{065373CA-B6B7-4634-9C4B-6D6F79214FAA}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_Gen_Combat_1" ID="{E47CBC86-A12F-44A7-88D8-37198C4AD4C9}">
+					<ChildrenList>
+						<Action Name="" ID="{FED54D72-6E09-4432-ADC0-592D30D31C19}" ShortID="651580044">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+								<Property Name="FadeTime" Type="Real64" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Gen_Combat_1" ID="{37FA2177-60F1-4326-AF74-CD4928CEE0BE}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_Metal_Combat_01" ID="{EA22EB59-C69E-4AB3-873E-8E9F02393B69}">
+					<ChildrenList>
+						<Action Name="" ID="{094AB17B-165C-424B-8A12-BC248E8086C9}" ShortID="599593189">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+								<Property Name="FadeTime" Type="Real64" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Metal_Combat_01" ID="{065373CA-B6B7-4634-9C4B-6D6F79214FAA}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

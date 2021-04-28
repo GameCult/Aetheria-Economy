@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{FF1A6C37-E1EC-4532-A4B8-D50FF97BE774}" SchemaVersion="97">
+	<Events>
+		<WorkUnit Name="Boss" ID="{FF1A6C37-E1EC-4532-A4B8-D50FF97BE774}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="Play_Metal_Boss_01" ID="{B262C0C5-661B-42DD-BD90-8DC54002C57E}">
+					<ChildrenList>
+						<Action Name="" ID="{B7191CEF-0635-4BBE-B007-D6962027E8BF}" ShortID="81631504">
+							<PropertyList>
+								<Property Name="FadeTime" Type="Real64" Value="1"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Metal_Boss_01" ID="{A63A6F6B-5A29-43FE-815C-1CE54D8891E4}" WorkUnitID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_Metal_Boss_01" ID="{36D59E0E-8D99-4FFC-9F7F-AEE16A2A7612}">
+					<ChildrenList>
+						<Action Name="" ID="{DD3CAFC9-A356-4A6F-86EC-F1111F9892E9}" ShortID="131105348">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+								<Property Name="FadeTime" Type="Real64" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Metal_Boss_01" ID="{A63A6F6B-5A29-43FE-815C-1CE54D8891E4}" WorkUnitID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

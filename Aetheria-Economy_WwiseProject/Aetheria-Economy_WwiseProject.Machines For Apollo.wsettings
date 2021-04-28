@@ -8,6 +8,7 @@
 				<Property Name="Event Action List\{1094EF98-562A-460B-B975-A61636956FC2}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{12126EC0-F175-4037-BEFB-0D3B0383B7D7}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{18D5D3D5-31C3-4FF4-8FE8-58C759045DB9}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Event Action List\{1C63808A-5D96-4A17-A4AD-D40DD015E70B}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{24D6EA7C-0C99-443B-A6CE-08E49A2270CA}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{2DD3A6E8-6B3F-41E9-B81A-D8AECDA45C09}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{36D59E0E-8D99-4FFC-9F7F-AEE16A2A7612}\x64_Expand States" Type="string" Value=""/>
@@ -19,6 +20,7 @@
 				<Property Name="Event Action List\{86CE7AD5-1704-4120-9025-C55B74860BF6}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{8B0AC59C-DE91-4E38-A96F-6309B3C6DE94}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{8B29E9EE-C1C1-4D4E-9C96-08107DC97E53}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Event Action List\{93DFB1C4-3F2A-42A7-A6D5-8B65A2984E7C}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{99F44592-FE4A-4A32-92A1-01FE5DD8C4D0}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{A7BDC53B-92FA-4156-A6DF-8F8B80B144BE}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{B0DECFF4-24C4-43E1-AB8A-8B8B98CDCAD3}\x64_Expand States" Type="string" Value=""/>
@@ -95,7 +97,7 @@
 				<Property Name="ProjectExplorer\FirstVisible_8_1" Type="string" Value="{41093F77-829F-4D88-8601-E8B25F3D4781}"/>
 				<Property Name="ProjectExplorer\x64_Expanded_10_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_11_1" Type="string" Value=""/>
-				<Property Name="ProjectExplorer\x64_Expanded_12_1" Type="string" Value="qfZBeUhp2kGLRoozSZFl62tvOqYpWv5DgVwc5U2IkeTj2hdk4CwJRJ2LrQD1vSsgc439UvsXXUSkhJ+kuhuM8qVxlcE4AQ1FpjKPDFDngmvxhFaWG58XRbGhviCrj5N6KHNLKmE8UkaVaxXDHGvW0/Qit3ydOGdIh8oAEgp0WiI="/>
+				<Property Name="ProjectExplorer\x64_Expanded_12_1" Type="string" Value="c439UvsXXUSkhJ+kuhuM8qVxlcE4AQ1FpjKPDFDngmvxhFaWG58XRbGhviCrj5N6KHNLKmE8UkaVaxXDHGvW0/Qit3ydOGdIh8oAEgp0WiKCVXSIS+HdSouZqzbGVH9lvvuxxoiq2E+c+gyku4FwHg=="/>
 				<Property Name="ProjectExplorer\x64_Expanded_13_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_14_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_15_1" Type="string" Value=""/>
@@ -106,11 +108,11 @@
 				<Property Name="ProjectExplorer\x64_Expanded_1_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_20_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_21_1" Type="string" Value=""/>
-				<Property Name="ProjectExplorer\x64_Expanded_2_1" Type="string" Value="H5tsB0ZV2kOKkuShybP9QkoyWPWO3dBGuafkHM5t3t87Lc7GLFDFTIFasB0RwVfu"/>
-				<Property Name="ProjectExplorer\x64_Expanded_3_1" Type="string" Value=""/>
+				<Property Name="ProjectExplorer\x64_Expanded_2_1" Type="string" Value="H5tsB0ZV2kOKkuShybP9Qg=="/>
+				<Property Name="ProjectExplorer\x64_Expanded_3_1" Type="string" Value="qK1WyqD7dEOfhywdof+No6sy9iPzfCpFhATU/V5jowk3bBr/7OEyRaS41Q/5e+d0eOBD5vLkck69OvDWurwDzQ=="/>
 				<Property Name="ProjectExplorer\x64_Expanded_4_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_5_1" Type="string" Value=""/>
-				<Property Name="ProjectExplorer\x64_Expanded_6_1" Type="string" Value=""/>
+				<Property Name="ProjectExplorer\x64_Expanded_6_1" Type="string" Value="PdunN+1Z302GveAHIPhfIw=="/>
 				<Property Name="ProjectExplorer\x64_Expanded_7_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_8_1" Type="string" Value=""/>
 				<Property Name="RTPC\GameParameterSimValue\{2A6D7A97-7D45-4B6C-96EE-CCD56FA83773}" Type="Real64" Value="0"/>

@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{E643E078-E4F2-4E72-BD3A-F0D6BABC03CD}" SchemaVersion="97">
 	<Events>
-		<WorkUnit Name="Menu_Music" ID="{E643E078-E4F2-4E72-BD3A-F0D6BABC03CD}" PersistMode="Standalone"/>
+		<WorkUnit Name="Menu_Music" ID="{E643E078-E4F2-4E72-BD3A-F0D6BABC03CD}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="Play_Main_Menu_01" ID="{B0DECFF4-24C4-43E1-AB8A-8B8B98CDCAD3}">
+					<ChildrenList>
+						<Action Name="" ID="{FA9A6EB0-0E57-446C-B2CC-983F65E7EDBC}" ShortID="855697419">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Main_Menu_01" ID="{59BA138D-D6DB-4F02-909A-8329475FE98D}" WorkUnitID="{7CB722F4-389D-4867-87CA-00120A745A22}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="Stop_Main_Menu_01" ID="{7109DF3B-FFDD-4EC1-99EC-2E9DA3ADE174}">
+					<ChildrenList>
+						<Action Name="" ID="{6AAE3F61-B411-4777-A832-9BF2360B9E1F}" ShortID="1051525440">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="Main_Menu_01" ID="{59BA138D-D6DB-4F02-909A-8329475FE98D}" WorkUnitID="{7CB722F4-389D-4867-87CA-00120A745A22}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
 	</Events>
 </WwiseDocument>
