@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}" SchemaVersion="97">
+	<InteractiveMusic>
+		<WorkUnit Name="Overworld" ID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}" PersistMode="Standalone">
+			<ChildrenList>
+				<MusicPlaylistContainer Name="Generic" ID="{965684F1-9F1B-4517-B1A1-BE20AB8F937A}" ShortID="790245171">
+					<PropertyList>
+						<Property Name="Tempo" Type="Real64" Value="110"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicSegment Name="Gen_OW_01" ID="{AAF59638-2F79-498D-A1F2-C52181563AD6}" ShortID="777761170">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="190949.501893939"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="Gen_OW_01" ID="{8877567A-3CB9-4EE0-B63B-68ECC7D485C5}" ShortID="1068357379">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Gen_OW_01" ID="{2A3CDC30-FB33-4F9F-BB4C-34A9042A119B}">
+											<Language>SFX</Language>
+											<AudioFile>Gen_OW_01.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="164977959"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<TransitionList>
+										<MusicTransition Name="Root" ID="{955288BD-4F88-4870-9074-700F4B033221}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</TransitionList>
+									<SequenceList>
+										<MusicTrackSequence Name="" ID="{59164C5A-3D41-42A3-8D41-316E67B8B15A}">
+											<ClipList>
+												<MusicClip Name="Gen_OW_01" ID="{2FEC4DB1-E980-4A58-9800-73CE35C5B058}">
+													<PropertyList>
+														<Property Name="EndTrimOffset" Type="Real64" Value="182222.229166667"/>
+														<Property Name="FadeInMode" Type="int16" Value="0"/>
+														<Property Name="FadeOutMode" Type="int16" Value="0"/>
+													</PropertyList>
+													<AudioSourceRef Name="Gen_OW_01" ID="{2A3CDC30-FB33-4F9F-BB4C-34A9042A119B}"/>
+												</MusicClip>
+											</ClipList>
+										</MusicTrackSequence>
+									</SequenceList>
+								</MusicTrack>
+							</ChildrenList>
+							<CueList>
+								<MusicCue Name="Entry Cue" ID="{B0B1D3B4-3939-4BAF-812D-9D496927D268}">
+									<PropertyList>
+										<Property Name="TimeMs" Type="Real64" Value="17727.2727272727"/>
+									</PropertyList>
+								</MusicCue>
+								<MusicCue Name="Exit Cue" ID="{3EFA5887-07BC-4A55-875D-CFAA703B73D0}">
+									<PropertyList>
+										<Property Name="CueType" Type="int16" Value="1"/>
+										<Property Name="TimeMs" Type="Real64" Value="159818.181818182"/>
+									</PropertyList>
+								</MusicCue>
+							</CueList>
+						</MusicSegment>
+					</ChildrenList>
+					<TransitionList>
+						<MusicTransition Name="Root" ID="{9DA8CBF8-1363-4B6D-8867-BD3A01968F26}">
+							<PropertyList>
+								<Property Name="IsFolder" Type="bool" Value="True"/>
+							</PropertyList>
+							<ChildrenList>
+								<MusicTransition Name="Transition" ID="{98726A31-813E-42AC-A4B9-CA582011AC9A}">
+									<TransitionInfo>
+										<SourceFadeOut>
+											<MusicFade Name="Source Fade-out" ID="{738CE6BF-A124-44E5-A741-3BCA6B553B31}">
+												<PropertyList>
+													<Property Name="FadeTime" Type="Real64" Value="1"/>
+													<Property Name="FadeType" Type="int16" Value="1"/>
+												</PropertyList>
+											</MusicFade>
+										</SourceFadeOut>
+									</TransitionInfo>
+								</MusicTransition>
+							</ChildrenList>
+							<TransitionInfo/>
+						</MusicTransition>
+					</TransitionList>
+					<Playlist>
+						<MusicPlaylistItem Name="" ID="{882F231E-A9BB-4C90-B586-CA66026E1358}" ShortID="235781223">
+							<ChildrenList>
+								<MusicPlaylistItem Name="" ID="{0D23C859-1700-4468-AA10-ECFD8140F005}" ShortID="684533752">
+									<PropertyList>
+										<Property Name="LoopCount" Type="int16" Value="0"/>
+										<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+									</PropertyList>
+									<SegmentRef Name="Gen_OW_01" ID="{AAF59638-2F79-498D-A1F2-C52181563AD6}"/>
+								</MusicPlaylistItem>
+							</ChildrenList>
+						</MusicPlaylistItem>
+					</Playlist>
+				</MusicPlaylistContainer>
+				<MusicPlaylistContainer Name="Metal" ID="{C6B1FBBE-AA88-4FD8-9CFA-0CA4BB81701E}" ShortID="299004060">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicSegment Name="Metal_OW_01" ID="{7282DE71-9B0C-4E9B-960C-0EF0036250A4}" ShortID="2526558">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="151125"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="METAL OW" ID="{14BBC6A5-8F22-4DA2-8BBE-BDBF2D2587B3}" ShortID="498169480">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="METAL OW" ID="{DFFB132C-84BB-4707-B73A-B0556897DB44}">
+											<Language>SFX</Language>
+											<AudioFile>METAL OW.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="795357291"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<TransitionList>
+										<MusicTransition Name="Root" ID="{2DC8EF0E-7469-4FA2-883B-94DC6F8D6578}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</TransitionList>
+									<SequenceList>
+										<MusicTrackSequence Name="" ID="{BE9AB665-1008-4D0D-9DAD-6059B5A84516}">
+											<ClipList>
+												<MusicClip Name="METAL OW" ID="{430FFC04-95E6-4D44-B476-132A8966D651}">
+													<PropertyList>
+														<Property Name="EndTrimOffset" Type="Real64" Value="151125"/>
+														<Property Name="FadeInMode" Type="int16" Value="0"/>
+														<Property Name="FadeOutMode" Type="int16" Value="0"/>
+													</PropertyList>
+													<AudioSourceRef Name="METAL OW" ID="{DFFB132C-84BB-4707-B73A-B0556897DB44}"/>
+												</MusicClip>
+											</ClipList>
+										</MusicTrackSequence>
+									</SequenceList>
+								</MusicTrack>
+							</ChildrenList>
+							<CueList>
+								<MusicCue Name="Entry Cue" ID="{1B552AFF-8710-4B88-A5B4-10F6F81C7F43}"/>
+								<MusicCue Name="Exit Cue" ID="{9563F320-6681-4DCF-926F-5AEFEBCB64BB}">
+									<PropertyList>
+										<Property Name="CueType" Type="int16" Value="1"/>
+										<Property Name="TimeMs" Type="Real64" Value="140000"/>
+									</PropertyList>
+								</MusicCue>
+							</CueList>
+						</MusicSegment>
+					</ChildrenList>
+					<TransitionList>
+						<MusicTransition Name="Root" ID="{B922C5D3-0D58-49A7-8E18-B7C9B8EB7658}">
+							<PropertyList>
+								<Property Name="IsFolder" Type="bool" Value="True"/>
+							</PropertyList>
+							<ChildrenList>
+								<MusicTransition Name="Transition" ID="{4E27D5B9-7A75-4E60-9BAC-222F14617EAF}">
+									<TransitionInfo>
+										<SourceFadeOut>
+											<MusicFade Name="Source Fade-out" ID="{5DB0F64B-1654-414A-963E-98C1F7CB7B5E}">
+												<PropertyList>
+													<Property Name="FadeTime" Type="Real64" Value="1"/>
+													<Property Name="FadeType" Type="int16" Value="1"/>
+												</PropertyList>
+											</MusicFade>
+										</SourceFadeOut>
+									</TransitionInfo>
+								</MusicTransition>
+							</ChildrenList>
+							<TransitionInfo/>
+						</MusicTransition>
+					</TransitionList>
+					<Playlist>
+						<MusicPlaylistItem Name="" ID="{C98A423B-4402-446C-81BD-77306CD02B88}" ShortID="164673923">
+							<ChildrenList>
+								<MusicPlaylistItem Name="" ID="{C1919745-9E3C-4DB0-8024-3474B337DB1E}" ShortID="924149987">
+									<PropertyList>
+										<Property Name="LoopCount" Type="int16" Value="0"/>
+										<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+									</PropertyList>
+									<SegmentRef Name="Metal_OW_01" ID="{7282DE71-9B0C-4E9B-960C-0EF0036250A4}"/>
+								</MusicPlaylistItem>
+							</ChildrenList>
+						</MusicPlaylistItem>
+					</Playlist>
+				</MusicPlaylistContainer>
+				<MusicPlaylistContainer Name="Narrative" ID="{049E3E09-0B7D-43E8-959B-B7D3490BA9FF}" ShortID="987109786">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicSegment Name="Kawaii Future Bass" ID="{586B920D-AA94-4B2C-828B-37B68C3F2982}" ShortID="411285525">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="121379.319727891"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="Kawaii Future Bass" ID="{53F220FA-2147-41DA-AE9D-79443CF38429}" ShortID="925321435">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Kawaii Future Bass" ID="{AFE98D27-998E-485D-8CDB-33D04241F16B}">
+											<Language>SFX</Language>
+											<AudioFile>Kawaii Future Bass.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="940954544"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<TransitionList>
+										<MusicTransition Name="Root" ID="{50548311-E72D-4B19-9B06-91F2929B6374}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</TransitionList>
+									<SequenceList>
+										<MusicTrackSequence Name="" ID="{1FFF2597-1956-402A-B82A-922A870EDCBD}">
+											<ClipList>
+												<MusicClip Name="Kawaii Future Bass" ID="{F23BF5D1-DA46-45DA-B31C-B43A77CA4B17}">
+													<PropertyList>
+														<Property Name="EndTrimOffset" Type="Real64" Value="121379.319727891"/>
+														<Property Name="FadeInMode" Type="int16" Value="0"/>
+														<Property Name="FadeOutMode" Type="int16" Value="0"/>
+													</PropertyList>
+													<AudioSourceRef Name="Kawaii Future Bass" ID="{AFE98D27-998E-485D-8CDB-33D04241F16B}"/>
+												</MusicClip>
+											</ClipList>
+										</MusicTrackSequence>
+									</SequenceList>
+								</MusicTrack>
+							</ChildrenList>
+							<CueList>
+								<MusicCue Name="Entry Cue" ID="{3F01411B-565D-41FC-9679-69DC01F63E6F}"/>
+								<MusicCue Name="Exit Cue" ID="{142CC0B2-3565-48BD-92A9-4F711290CA39}">
+									<PropertyList>
+										<Property Name="CueType" Type="int16" Value="1"/>
+										<Property Name="TimeMs" Type="Real64" Value="121379.319727891"/>
+									</PropertyList>
+								</MusicCue>
+							</CueList>
+						</MusicSegment>
+					</ChildrenList>
+					<TransitionList>
+						<MusicTransition Name="Root" ID="{CB7FB65F-7E6A-4331-867E-41B9CD00ACB3}">
+							<PropertyList>
+								<Property Name="IsFolder" Type="bool" Value="True"/>
+							</PropertyList>
+							<ChildrenList>
+								<MusicTransition Name="Transition" ID="{E854E379-70BF-4188-8306-9A60CD3D99C2}">
+									<TransitionInfo>
+										<SourceFadeOut>
+											<MusicFade Name="Source Fade-out" ID="{69D311E5-0F14-4E71-BD62-5C111FF07BB4}">
+												<PropertyList>
+													<Property Name="FadeTime" Type="Real64" Value="1"/>
+													<Property Name="FadeType" Type="int16" Value="1"/>
+												</PropertyList>
+											</MusicFade>
+										</SourceFadeOut>
+									</TransitionInfo>
+								</MusicTransition>
+							</ChildrenList>
+							<TransitionInfo/>
+						</MusicTransition>
+					</TransitionList>
+					<Playlist>
+						<MusicPlaylistItem Name="" ID="{54EFAA41-F550-4B7B-B34E-AA83DA014D17}" ShortID="470153105">
+							<ChildrenList>
+								<MusicPlaylistItem Name="" ID="{13C80B06-9EEF-457D-80FE-49AC86AC05A8}" ShortID="560594703">
+									<PropertyList>
+										<Property Name="LoopCount" Type="int16" Value="0"/>
+										<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+									</PropertyList>
+									<SegmentRef Name="Kawaii Future Bass" ID="{586B920D-AA94-4B2C-828B-37B68C3F2982}"/>
+								</MusicPlaylistItem>
+							</ChildrenList>
+						</MusicPlaylistItem>
+					</Playlist>
+				</MusicPlaylistContainer>
+			</ChildrenList>
+		</WorkUnit>
+	</InteractiveMusic>
+</WwiseDocument>
