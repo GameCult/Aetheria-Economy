@@ -96,6 +96,7 @@
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Reflector.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Sum.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SelectWhere.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Narrative\ZoneSelectors.cs" />
      <Compile Include="Assets\Scripts\ServerShared\EntitySerializer.cs" />
      <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\MathResolver.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Cell2Object.cs" />
@@ -179,6 +180,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\Cell2.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Agents\States\MoveTo.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\WanderTask.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Narrative\ZoneConstraints.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Distinct.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetConstants.cs" />
      <Compile Include="Assets\Scripts\ServerShared\PlayerSettings.cs" />
@@ -212,6 +214,7 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\Error.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\Behaviors.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\PacketLayerBase.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Narrative\StoryProcessor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Layers\XorEncryptLayer.cs" />
      <Compile Include="Assets\Scripts\ServerShared\CultCache\DatabaseEntry.cs" />
      <Compile Include="Assets\Scripts\ServerShared\SampleElimination.cs" />
@@ -253,9 +256,6 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\SequenceEqual.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Skip.cs" />
      <Compile Include="Assets\Scripts\ServerShared\ItemManager.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Narrative\ZoneConstraints.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Narrative\ZoneSelectors.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Narrative\StoryProcessor.cs" />
      <None Include="Assets\Scripts\ServerShared\NIH\LinqFaster\readme.txt" />
      <None Include="Assets\Scripts\ServerShared\Aetheria.Shared.Unity.asmdef" />
  <Reference Include="System.Threading.Tasks.Extensions">
