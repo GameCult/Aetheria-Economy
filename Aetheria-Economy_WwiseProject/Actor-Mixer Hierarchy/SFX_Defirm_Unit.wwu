@@ -12,8 +12,10 @@
 						<ActorMixer Name="Spaceship" ID="{C6CE2D3B-502C-4CC5-815A-B01D11C157EE}" ShortID="291090047">
 							<PropertyList>
 								<Property Name="3DSpatialization" Type="int16" Value="2"/>
+								<Property Name="BelowThresholdBehavior" Type="int16" Value="2"/>
 								<Property Name="Color" Type="int16" Value="3"/>
 								<Property Name="OverrideColor" Type="bool" Value="True"/>
+								<Property Name="VirtualVoiceQueueBehavior" Type="int16" Value="2"/>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Attenuation">
@@ -2994,9 +2996,16 @@
 												<MediaID ID="235994019"/>
 											</MediaIDList>
 										</AudioFileSource>
+										<AudioFileSource Name="SFX__ship_sensor_ping3" ID="{CAFCA10D-A305-42A7-9CF2-1B83BC22CEF6}">
+											<Language>SFX</Language>
+											<AudioFile>SFX__ship_sensor_ping3.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="201765835"/>
+											</MediaIDList>
+										</AudioFileSource>
 									</ChildrenList>
 									<ActiveSourceList>
-										<ActiveSource Name="SFX__ship_sensor_ping" ID="{E62C5216-1DF6-4D35-BFD4-A8707ACA0194}" Platform="Linked"/>
+										<ActiveSource Name="SFX__ship_sensor_ping3" ID="{CAFCA10D-A305-42A7-9CF2-1B83BC22CEF6}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
 							</ChildrenList>

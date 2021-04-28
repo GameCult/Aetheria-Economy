@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" SchemaVersion="97">
+	<Events>
+		<WorkUnit Name="SFX_defirm_aeth_drive_model" ID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" PersistMode="Standalone">
+			<ChildrenList>
+				<Event Name="electric_drive_play" ID="{C231C587-6292-47DD-BD73-AD4D8D14F12B}">
+					<ChildrenList>
+						<Action Name="" ID="{6E68BD96-F32A-4109-8F63-3ED2AC416043}" ShortID="978335520">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{CE8E6A0E-13B2-4432-8B71-7B777E199E54}" ShortID="162266677">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="nuclear" ID="{D3E5D2FC-628C-48A7-8CB6-35B7B12B107E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{491B69A0-6AD3-4AF7-88C7-3412B526689C}" ShortID="440511318">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{4EB2AD0E-D348-463A-9A3A-E0942B316FEF}" ShortID="938117820">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="dc_start" ID="{0ACDD876-8065-4311-98C0-03D9E98661A1}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{E3A24AA9-0C6A-4220-83FA-8FEF95E4B809}" ShortID="31310572">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="electric_suf01" ID="{54D2244A-2CAB-4983-8CD1-DA8C8AD9ED5C}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{5EE8FEB8-D823-4D41-9E42-A0111EF57DA5}" ShortID="371738681">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="nuclear_start" ID="{FD939B3E-0658-43B4-B8C4-0DA5FDEA0D28}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{7FEC8BC1-1505-4006-9891-D98941DBDA97}" ShortID="337748478">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="OneShot_neaclear_steam_long" ID="{681A4291-8662-4249-8E4D-8F991FF5E701}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{D3073B65-DEE4-4213-8CD1-EA4DA09AA858}" ShortID="411966913">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="OneShot_nuclear_steam_short" ID="{A1C8078D-44A0-4DF4-9F53-2B70E20A612E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="reactor_play" ID="{024B1FD8-BEA0-4265-A083-F7583D4883BC}">
+					<ChildrenList>
+						<Action Name="" ID="{12854BCB-D9CD-46BB-A0BC-14641BBCDEA2}" ShortID="472586488">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="spaceship_reactor_overheat_alarm" ID="{C0EE6869-AF17-4966-A1CB-FF799D71281E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{DD0BDADF-CA20-4F28-8423-5599F689CBFE}" ShortID="952690825">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="reactor" ID="{8D0ED9E5-D9D6-41E5-A093-CF203E6F2F95}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="electric_drive_stop" ID="{1098DC5B-9284-4AE8-A4AA-5795A99C565A}">
+					<ChildrenList>
+						<Action Name="" ID="{F59FB234-F55C-4609-B7FE-7F0371182A35}" ShortID="540391783">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="electric_suf01" ID="{54D2244A-2CAB-4983-8CD1-DA8C8AD9ED5C}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{F4127363-69F5-4F05-865A-2B278CD1F2A2}" ShortID="691384053">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{77DCFFD3-1F67-486E-9D1C-AA436C90D152}" ShortID="908260376">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{1E2A52FB-ABF7-4496-A883-297E1D65427A}" ShortID="1018872927">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="dc_start" ID="{0ACDD876-8065-4311-98C0-03D9E98661A1}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="nuclear_drive_play" ID="{B92BC8AD-BEE8-4171-BDBF-AE18AEAEFF80}">
+					<ChildrenList>
+						<Action Name="" ID="{1E38F528-BE8B-493C-913A-89E0692C58BC}" ShortID="1050325137">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="electric_suf01" ID="{54D2244A-2CAB-4983-8CD1-DA8C8AD9ED5C}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{55634FE4-3E11-467F-BA15-D1509ACD9749}" ShortID="58886145">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="nuclear" ID="{D3E5D2FC-628C-48A7-8CB6-35B7B12B107E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{288F867C-4606-48F1-A5B7-B2D27A23C4F1}" ShortID="474720117">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{C31A6EA3-C805-4FA9-A1A5-79775CCAE281}" ShortID="389883265">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="OneShot_nuclear_steam_short" ID="{A1C8078D-44A0-4DF4-9F53-2B70E20A612E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{38F9DD61-BB3E-4AD2-A8A8-167848D68883}" ShortID="339740372">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="nuclear_start" ID="{FD939B3E-0658-43B4-B8C4-0DA5FDEA0D28}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{20E58C1B-B24A-4300-A0EE-CB5BEA9DC3CB}" ShortID="1009351723">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="OneShot_neaclear_steam_long" ID="{681A4291-8662-4249-8E4D-8F991FF5E701}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{4B348B54-2493-4C3B-ACDB-2D76E378C498}" ShortID="615326334">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{8CB82710-E15F-4165-91EF-5E1A480764DF}" ShortID="966841349">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="dc_start" ID="{0ACDD876-8065-4311-98C0-03D9E98661A1}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="nuclear_drive_stop" ID="{73F86CF2-764E-4EE6-83F3-A385BE96CCD1}">
+					<ChildrenList>
+						<Action Name="" ID="{5680FA19-3671-4B8E-ADE2-B136DB0A9A8F}" ShortID="775093477">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="nuclear" ID="{D3E5D2FC-628C-48A7-8CB6-35B7B12B107E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{6A8AE9F4-33D5-4CA4-ABCB-F082E386811E}" ShortID="350405328">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{E04DE6ED-2FFA-4529-8789-BAE28AE95E84}" ShortID="506654087">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="OneShot_neaclear_steam_long" ID="{681A4291-8662-4249-8E4D-8F991FF5E701}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{54F6E10A-F6E5-4A1A-8DFA-E8CF8D70664E}" ShortID="437034959">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="2"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="OneShot_nuclear_steam_short" ID="{A1C8078D-44A0-4DF4-9F53-2B70E20A612E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="lightingGun_fire" ID="{28EC6948-265B-44F6-9478-679529D93615}">
+					<ChildrenList>
+						<Action Name="" ID="{C0368482-CA6E-4FB1-A34C-E40E7E8D628D}" ShortID="621964996">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="lightingGun_fire_lighting01" ID="{735F0673-92AA-40A1-BB47-574C90694862}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{54A2F970-CA55-41B8-ABB2-060A7A8539FA}" ShortID="334508583">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="lighting_low_harmonics" ID="{7990EACB-7757-4658-8A8A-53152658E014}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{0F3EB2FD-1F6F-45C7-903E-B55644041749}" ShortID="862778792">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="lighting_hi_harmonics" ID="{B75DA37A-DB4C-4621-9CA9-E5D9C3F736FB}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="lightingGun_hit" ID="{32B73DBC-3EDA-4794-99FC-FA5129F546BF}">
+					<ChildrenList>
+						<Action Name="" ID="{631DECEF-B1E3-4B3C-9384-526D96B51B26}" ShortID="584928884">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="thunder" ID="{84C05BA3-8738-4E6C-B31C-D4FC26361D90}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{1492C25C-D346-4F0F-BF36-4C00DCCFE09B}" ShortID="556282184">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="boom" ID="{B1650DA6-0B94-4EFF-94F2-47A1570D96CE}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="lightingGun_hit_ship_destroyed" ID="{D049C09F-090C-4CFF-9952-BB6FEEFF894E}">
+					<ChildrenList>
+						<Action Name="" ID="{DCD884F0-581C-4080-A486-9A87F18D7009}" ShortID="140423180">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="lightingGun_ship_destryed" ID="{17DF7E58-2AB3-4956-937D-9B5580652C49}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="lightingGun_miss" ID="{F54EC4E0-76FB-4F9D-B77D-A4E40E558D01}">
+					<ChildrenList>
+						<Action Name="" ID="{6AAB8AEC-6DA5-46A4-BEA9-879B64120643}" ShortID="191452086">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="lightingGun_miss" ID="{3883E890-7748-4AFE-B096-ADCA4FFF8C9C}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_fire" ID="{E0F70C0D-8DDA-4811-A87A-462972871E1A}">
+					<ChildrenList>
+						<Action Name="" ID="{55143A11-1236-49CB-B044-BEDF7680CB37}" ShortID="115662961">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_fire" ID="{A1395B69-32F8-46CE-9DB6-FF255F8AC1A0}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_hit" ID="{749865F9-EFBD-41B5-9874-3A48F535F28F}">
+					<ChildrenList>
+						<Action Name="" ID="{376FED9D-0A17-421D-A3DC-8E43CECCEB46}" ShortID="419146100">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_hit" ID="{81702202-C261-419A-A886-C3432FBDB910}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_charging" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}">
+					<ChildrenList>
+						<Action Name="" ID="{3B675650-DA3A-482C-ADBD-053E55526F80}" ShortID="629614386">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_charging" ID="{A2A46B8E-0D70-4BF5-AF46-53F109E083DB}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_muzzle" ID="{E9B80512-0184-48FB-A298-BE9C088B6CC9}">
+					<ChildrenList>
+						<Action Name="" ID="{31EE7DEE-9F4D-470B-8198-C4FED84260C2}" ShortID="255093623">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_muzzle" ID="{C362465E-F003-4D17-AA04-6E9202875CA5}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_overcharge_fail" ID="{4CFC4DF9-2C65-4EE8-950D-C61EDBA90E64}">
+					<ChildrenList>
+						<Action Name="" ID="{D87B5548-28E3-4FFB-8BFD-FF5D082D33EF}" ShortID="120278333">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_overcharge_fail" ID="{F23B6623-3CA0-4D0D-BA3A-3FE02C552DC6}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_hit_ship_destroyed" ID="{19757E9C-B4DE-4B8C-82C4-47E306DE3E7D}">
+					<ChildrenList>
+						<Action Name="" ID="{A94C704C-FBEF-41E4-B162-D8C85AB099A6}" ShortID="1039535959">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="ship_destroyed" ID="{DF2A7795-9583-455A-B783-184EF701B70B}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="railgun_miss" ID="{EB924EA5-6CC2-4D4D-B6B6-893A2998A1BB}">
+					<ChildrenList>
+						<Action Name="" ID="{339251B8-5C30-48BB-A7C5-FD1C01007C50}" ShortID="1071339755">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="railgun_miss" ID="{0BE1DA02-C0C9-4C8D-8B8C-A0CCF9D43879}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="cannon_fire" ID="{8D1B9ABD-69A8-4C91-9DA4-E1C5748032C4}">
+					<ChildrenList>
+						<Action Name="" ID="{127976EC-CD90-4439-A51B-0F23BCE5A61E}" ShortID="1057725604">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="cannon_fire" ID="{CC8D2668-6F4F-4272-86B2-9674CAEE2FCF}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="cannon_hit" ID="{889A50FB-036F-4C09-B3CA-8BAAEEC598F2}">
+					<ChildrenList>
+						<Action Name="" ID="{59A8D214-3A73-42B3-8497-E153E1B0802F}" ShortID="751616969">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="cannon_hit" ID="{99F85F09-7AA1-4CFA-BD79-7789B22C8A8E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="cannon_ship_destroyed" ID="{EA25ABB1-985D-4B76-88D1-8867BA139BDD}">
+					<ChildrenList>
+						<Action Name="" ID="{C021A046-E540-4833-B3FC-E427E56F799D}" ShortID="119140805">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="cannon_ship_destroyed" ID="{A5A74A9F-967D-4624-AC4B-3AD0573FE1C9}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="cannon_missing" ID="{B3C25F00-FBBF-473C-BA0F-84FF13FF9C35}">
+					<ChildrenList>
+						<Action Name="" ID="{82FFFDEC-C198-47D7-A92E-2CAA1ACB64A4}" ShortID="903929772">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="cannon_miss" ID="{481DB8D8-3BA3-428A-B8B3-DECF5A568D60}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="lightingGun_charge" ID="{C079F5B7-E84D-4949-A243-E3CEF7A9C3BB}">
+					<ChildrenList>
+						<Action Name="" ID="{51FD9B7A-8611-4EA5-AFFC-46636D4B9CB3}" ShortID="203203463">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="lightingGun_charge" ID="{2B2952E6-A76F-491A-AD59-E3ACD131410D}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="lightingGun_overcharge_fail" ID="{9ED3C60B-E1E5-4617-BA63-4988F4075D14}">
+					<ChildrenList>
+						<Action Name="" ID="{4DE8465E-E88A-436E-9359-82B418B83B18}" ShortID="963035327">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="lightingGun_overcharge_fail" ID="{CBC3BFA5-58A1-4360-9902-3A55F49C8D15}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="machinegun_fire" ID="{B6698F66-EEE7-4164-9D8F-AD0C0BD3E6B7}">
+					<ChildrenList>
+						<Action Name="" ID="{E3E7D5D1-B3A5-4355-9303-19F3C0AC8572}" ShortID="74036990">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="machinegun_fire" ID="{0908DEB2-749C-4F24-864B-8F5C80B9F2E7}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="machinegun_hit" ID="{F6A50084-412C-42C9-9C0A-75230B6C74FB}">
+					<ChildrenList>
+						<Action Name="" ID="{B25D17FE-9513-419A-ADDB-ECBFBA4C9EA6}" ShortID="79808171">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="machinegun_hit" ID="{5BD210B1-419E-4ABD-A940-A27063C392E6}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="machinegun_miss" ID="{436391B4-9A97-4448-8955-7E2EDD68BDDC}">
+					<ChildrenList>
+						<Action Name="" ID="{5A76EAD8-B96A-41D7-9B54-42317401AA25}" ShortID="798808417">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="machinegun_miss" ID="{6695AE2C-5F79-4857-91C2-B28A2F040A3B}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="machinegun_ship_destroyed" ID="{707F03CC-D3DD-414B-BAAF-E17D9D42B591}">
+					<ChildrenList>
+						<Action Name="" ID="{4DD0CA54-13A4-40FF-BF3E-DD1D7A037A23}" ShortID="318651696">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="machinegun_ship_destroyed" ID="{FEBF1A44-B6D0-4F6F-AF22-5BF5EFF47EBF}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="shield_up_active" ID="{B8A4C7FC-37F0-4E8C-9620-C29A6411B0EE}">
+					<ChildrenList>
+						<Action Name="" ID="{3BCC47D1-E8C0-4CC8-B70D-12AF3CDDB319}" ShortID="915619926">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="shield_up" ID="{2AE77E08-B637-406A-976B-A145E6B5393E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{EE93D3E7-50B7-40FF-B35D-48E8908F04A8}" ShortID="607976286">
+							<PropertyList>
+								<Property Name="FadeInCurve" Type="int16" Value="2"/>
+								<Property Name="FadeTime" Type="Real64" Value="0.4"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="shield_active" ID="{AF9A908A-51D6-4FBD-9145-5869CB588F47}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{FBDC2D16-A206-42DF-89E2-042ECC2C3F6F}" ShortID="1015446166">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="12"/>
+								<Property Name="FadeTime" Type="Real64" Value="0.5"/>
+								<Property Name="Volume" Type="Real64" Value="-8"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="reactor" ID="{8D0ED9E5-D9D6-41E5-A093-CF203E6F2F95}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="shield_down" ID="{43AC8002-C192-472E-B332-99B6453C54FA}">
+					<ChildrenList>
+						<Action Name="" ID="{D2B0A7B1-5A4E-4C71-A31E-8957C90FCE70}" ShortID="861041028">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="shield_down" ID="{320C6633-0220-4887-9614-EBA19702237B}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+						<Action Name="" ID="{C8BA4403-E2FD-42CD-8153-9301B0F20637}" ShortID="344392582">
+							<PropertyList>
+								<Property Name="ActionType" Type="int16" Value="12"/>
+								<Property Name="FadeTime" Type="Real64" Value="0.5"/>
+								<Property Name="Volume" Type="Real64" Value="6"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="reactor" ID="{8D0ED9E5-D9D6-41E5-A093-CF203E6F2F95}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="ionCannon_charge" ID="{926CA47C-05B7-443F-92F1-7F99ED878BFE}">
+					<ChildrenList>
+						<Action Name="" ID="{739F5D09-3808-4D68-9B17-DFDAA22D3ABF}" ShortID="67337178">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="ionCannon_charge" ID="{AB1CDB93-B4E8-426C-988D-76F8F0A57434}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="ionCannon_fire" ID="{4E75BD76-EFDF-4729-B419-2CD3EFAC87ED}">
+					<ChildrenList>
+						<Action Name="" ID="{F2F429D0-BCC4-4B5D-BBC2-3059D5AB6E19}" ShortID="872318280">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="IonCannon_fire" ID="{F342EF35-B9FB-43DF-AC49-9C25006D66F7}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="ionCannon_miss" ID="{EE886D7C-E644-4E41-918C-332FFC333B4E}">
+					<ChildrenList>
+						<Action Name="" ID="{815946CD-5CC9-439B-BC4A-4C9DD96620BC}" ShortID="70575548">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="IonCanon_miss" ID="{A1EE3BC5-E24E-42FD-BC32-0B42BF2CAF89}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="ionCannon_overcharge_fail" ID="{67274AD3-8D3A-4041-A799-9BE929F06BD1}">
+					<ChildrenList>
+						<Action Name="" ID="{5F0013C9-B73C-4066-9681-830BBC7746DC}" ShortID="748997812">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="ionCannon_overcharge_fail" ID="{C6965B65-65A8-498F-80B0-B85675AAFDFE}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="ionCannon_hit" ID="{6EB479E4-48C4-481D-98EB-93C4689AF319}">
+					<ChildrenList>
+						<Action Name="" ID="{CC64CB9C-D2CF-4CFA-8B65-50D58C7A6BCC}" ShortID="140328872">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="IonCannon_hit" ID="{D1773018-EB65-45CB-857B-1158EFED37A3}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="ionCannon_ship_destroyed" ID="{9E66D8B7-AEC1-47DC-ADE4-2C830F5C4E87}">
+					<ChildrenList>
+						<Action Name="" ID="{245AF479-9936-4903-8E31-952A10E1043E}" ShortID="283819787">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="ionCannon_ship_destroyed" ID="{4410E0F9-FBD6-4B39-985B-CFA8D2385F93}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>
