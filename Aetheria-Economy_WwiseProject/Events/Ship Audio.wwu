@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" SchemaVersion="97" RootDocumentID="{4FA02AD0-1AB3-4ADB-86E9-A5543490085E}">
+<WwiseDocument Type="WorkUnit" ID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" SchemaVersion="103" RootDocumentID="{4FA02AD0-1AB3-4ADB-86E9-A5543490085E}" ParentDocumentID="{4FA02AD0-1AB3-4ADB-86E9-A5543490085E}">
 	<Events>
 		<WorkUnit Name="Ship Audio" ID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" OwnerID="{4FA02AD0-1AB3-4ADB-86E9-A5543490085E}" PersistMode="Nested">
 			<ChildrenList>

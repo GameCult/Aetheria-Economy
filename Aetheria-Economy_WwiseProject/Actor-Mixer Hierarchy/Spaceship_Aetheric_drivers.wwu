@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}" SchemaVersion="97" RootDocumentID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}">
+<WwiseDocument Type="WorkUnit" ID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}" SchemaVersion="103" RootDocumentID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" ParentDocumentID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}">
 	<AudioObjects>
 		<WorkUnit Name="Spaceship_Aetheric_drivers" ID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}" OwnerID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" PersistMode="Nested">
 			<ChildrenList>
@@ -242,8 +242,10 @@
 												</AudioFileSource>
 											</ChildrenList>
 											<Language>SFX</Language>
+											<PluginData/>
 										</SourcePlugin>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{03E523D5-1AFD-4FE4-B67F-46CE0282B6C7}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -361,6 +363,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr02" ID="{2FEA3843-7988-4971-A87A-DDF1C8E687DF}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -383,6 +386,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr01" ID="{FA925C57-72C1-441A-A3E2-D8A368F9CD16}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -405,6 +409,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr03" ID="{F68A808D-F449-4A0D-96CE-7657783424FC}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -427,6 +432,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr04" ID="{11E75C1B-A765-4B5A-A4CC-594AAB28DE6E}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -449,6 +455,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr05" ID="{7FE3DAC8-8F65-451C-A718-BED2B6DE239A}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -471,6 +478,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr06" ID="{E7C194FC-A252-4EF0-B5D8-61B2420C09E7}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -493,6 +501,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr07" ID="{A5FF007F-FC15-4095-9AC3-33A0300C06B6}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -515,6 +524,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr08" ID="{2D7D0147-DEE6-44A4-83B4-28AE13E33365}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -537,6 +547,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr09" ID="{1789FC04-2EDF-4AE7-AE45-CC72063C4DC2}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -559,11 +570,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_thrst_electr10" ID="{F92621E5-0CD1-4C8C-83F4-881F9AD1E76E}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 								<Sound Name="nuclear" ID="{D3E5D2FC-628C-48A7-8CB6-35B7B12B107E}" ShortID="113354289">
 									<PropertyList>
@@ -776,6 +789,7 @@
 												</AudioFileSource>
 											</ChildrenList>
 											<Language>SFX</Language>
+											<PluginData/>
 											<PluginInnerObjectList>
 												<List Name="ParameterModulatorAssociation">
 													<PluginInnerObject Name="" ID="{D249B63F-787E-4888-8D9B-79BAB74F4C3D}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
@@ -812,6 +826,7 @@
 											</PluginInnerObjectList>
 										</SourcePlugin>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{11CD630C-65EF-430C-878D-64AF35639FC7}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -958,6 +973,7 @@
 												</AudioFileSource>
 											</ChildrenList>
 											<Language>SFX</Language>
+											<PluginData/>
 											<PluginInnerObjectList>
 												<List Name="ParameterModulatorAssociation">
 													<PluginInnerObject Name="" ID="{EA876A99-6CB8-4E71-BBCB-4D5A1FD778E9}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
@@ -984,6 +1000,7 @@
 											</PluginInnerObjectList>
 										</SourcePlugin>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{6389EDF5-0863-4B01-AD89-19303289E4BD}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -1021,6 +1038,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="sfx_spcp_drives_dc_start" ID="{06C068E2-E1E8-4495-BF6F-62EC1791B3EA}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -1125,6 +1143,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_shrt01" ID="{42A5A37B-CCEF-40BD-8EFD-2F003271C16B}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1152,6 +1171,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_shrt02" ID="{908425D5-2ACA-4B3A-8CF2-FDF85AFDFC5F}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1174,6 +1194,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_shrt03" ID="{4B3B88AB-6B34-4C57-BF13-C5254342E04C}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1196,6 +1217,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_shrt04" ID="{0E522372-8637-406D-AD11-9BBBF00B7ECC}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1218,6 +1240,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_shrt05" ID="{88127AEB-F5E5-4780-96B5-FEB7A2A8DD6E}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1240,6 +1263,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_shrt06" ID="{FC3C1A66-7865-40BA-B903-7D131BB4063F}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1262,6 +1286,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_shrt07" ID="{11FBE538-87C2-4624-A5CD-6ED27C11EEB0}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1284,11 +1309,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_shrt08" ID="{C99E4998-78A3-4B13-A959-C762680C00B4}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 								<Sound Name="nuclear_start" ID="{FD939B3E-0658-43B4-B8C4-0DA5FDEA0D28}" ShortID="148381714">
 									<PropertyList>
@@ -1320,6 +1347,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="Aetheria_spaceship_Drivers_nuclear_start" ID="{C5CCB790-3201-45BC-B987-73C8FC295DC3}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -1418,6 +1446,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_long01" ID="{DBAC2FF0-5376-4203-8458-CD4C36F81B1F}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1440,6 +1469,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_long02" ID="{74678467-A21A-403B-A40F-54FDF88A28F1}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1462,6 +1492,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_long03" ID="{3894D312-24E2-4013-90DA-8BADE26F7465}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1484,6 +1515,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_long04" ID="{D9D437B4-7DF3-4EB0-A45B-DAC7744BB4E5}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1506,6 +1538,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_long05" ID="{080E3EEB-56B2-464D-AFA2-B9E8AEA9C9B1}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1528,6 +1561,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_long06" ID="{268973B1-1BB4-411C-B925-5B044F78DCFE}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -1550,13 +1584,16 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="sfx_spcp_drives_nuc_steam_long07" ID="{1CA73525-81CC-4555-89E2-493BF8E93436}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 							</ChildrenList>
+							<ObjectLists/>
 						</BlendContainer>
 					</ChildrenList>
 				</Folder>
@@ -1629,6 +1666,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX__railgun_fire" ID="{8D6EB6CB-7010-4429-9616-E11DDFF9C61D}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -1775,8 +1813,10 @@
 												</AudioFileSource>
 											</ChildrenList>
 											<Language>SFX</Language>
+											<PluginData/>
 										</SourcePlugin>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{2FA5043D-7333-4C9A-87B8-F1E31E57FC0E}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -1823,6 +1863,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX__railgun_charginf_failure" ID="{8DD16AAF-D986-4148-9570-2D488859C736}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -1883,6 +1924,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX__railgun_charginf_failure" ID="{471D8BEA-B97F-4A91-80D9-7314C262F80F}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -1946,6 +1988,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX_railgun_hit3" ID="{91000193-CC8C-4A97-95AC-B94C4CED9E37}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -2008,6 +2051,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX_railgun_hit3" ID="{CDFA026D-673A-4873-B64F-364C63FE754C}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -2092,6 +2136,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_railgun_miss01" ID="{B369EECA-837F-4D53-ADF8-B4D2689BD0B7}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -2114,6 +2159,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_railgun_miss02" ID="{5004EF14-A4FC-4B78-B87C-F1C910C3968D}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -2136,6 +2182,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_railgun_miss03" ID="{FEA7E80A-1640-43C3-BFFF-4F809E7D3F28}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -2158,11 +2205,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_railgun_miss04" ID="{44BD2623-1B36-41E0-B6B1-D8CEBBA33A78}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 							</ChildrenList>
 						</Folder>
@@ -2310,6 +2359,7 @@
 												</AudioFileSource>
 											</ChildrenList>
 											<Language>SFX</Language>
+											<PluginData/>
 											<PluginInnerObjectList>
 												<List Name="ParameterModulatorAssociation">
 													<PluginInnerObject Name="" ID="{0C27EB24-EB75-4901-B9FE-46EADF2D3DE1}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
@@ -2336,6 +2386,7 @@
 											</PluginInnerObjectList>
 										</SourcePlugin>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{67039B8A-C316-4911-AD10-CF38B4D9E37A}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -2475,6 +2526,7 @@
 														</AudioFileSource>
 													</ChildrenList>
 													<Language>SFX</Language>
+													<PluginData/>
 													<PluginInnerObjectList>
 														<List Name="ParameterModulatorAssociation">
 															<PluginInnerObject Name="" ID="{D676F45F-3A9F-4714-AA6A-14179AD889FF}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
@@ -2501,6 +2553,7 @@
 													</PluginInnerObjectList>
 												</SourcePlugin>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SoundSeed Grain" ID="{69E273D3-6807-4EA3-B4C1-828DD7228F2C}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -2638,6 +2691,7 @@
 														</AudioFileSource>
 													</ChildrenList>
 													<Language>SFX</Language>
+													<PluginData/>
 													<PluginInnerObjectList>
 														<List Name="ParameterModulatorAssociation">
 															<PluginInnerObject Name="" ID="{49D44B41-53FE-4A03-9175-0A752793B3FF}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
@@ -2664,11 +2718,13 @@
 													</PluginInnerObjectList>
 												</SourcePlugin>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SoundSeed Grain" ID="{A4EC59AB-2993-45B7-8D93-066B6970C4AD}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</BlendContainer>
 								<BlendContainer Name="lightingGun_Hit_target" ID="{BF6D0651-F4B3-42FF-8EB5-665213B88F13}" ShortID="1020634640">
 									<PropertyList>
@@ -2739,6 +2795,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_hit01" ID="{0B092AF1-B4CB-471E-9600-0F6F18154438}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2766,6 +2823,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_hit03" ID="{EF7587B2-A928-4907-B1B0-A057D49307FD}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2793,11 +2851,13 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_hit05" ID="{238E8099-2AE3-41DE-AE20-A901367818C5}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>
+											<ObjectLists/>
 										</RandomSequenceContainer>
 										<RandomSequenceContainer Name="boom" ID="{B1650DA6-0B94-4EFF-94F2-47A1570D96CE}" ShortID="838913576">
 											<PropertyList>
@@ -2847,6 +2907,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom01" ID="{70300AAE-6611-4585-9578-8D02EA37E2EE}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2875,6 +2936,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom02" ID="{63F2967A-B2DF-4BEA-A780-D7F7A4C5F235}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2902,6 +2964,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom03" ID="{6F5C9A1C-9E6D-428B-8C11-A79240B7B370}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2930,6 +2993,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom04" ID="{C7FBC30E-3783-480C-ACF0-D505AB832821}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2957,13 +3021,16 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom05" ID="{CECBF0BB-DB86-4FBF-903E-F9FBF4A00032}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>
+											<ObjectLists/>
 										</RandomSequenceContainer>
 									</ChildrenList>
+									<ObjectLists/>
 								</BlendContainer>
 								<BlendContainer Name="lightingGun_ship_destryed" ID="{17DF7E58-2AB3-4956-937D-9B5580652C49}" ShortID="186696709">
 									<PropertyList>
@@ -3047,6 +3114,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_hit01" ID="{AAA98D02-9244-4018-8D3D-C0B201D9BDA9}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -3074,6 +3142,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_hit03" ID="{B6031709-E53E-4C5C-B933-7BA8E0C71566}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -3101,11 +3170,13 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_hit05" ID="{E092993B-AC2B-4BD1-8372-B5368196C2C6}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>
+											<ObjectLists/>
 										</RandomSequenceContainer>
 										<RandomSequenceContainer Name="boom" ID="{A5CF2B4B-C39E-4FB4-ADC8-3955BA7222C1}" ShortID="573516334">
 											<PropertyList>
@@ -3155,6 +3226,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom01" ID="{6703542D-2E5A-4BC7-ADD8-46CE04AAB7C6}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -3183,6 +3255,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom02" ID="{840943CF-3452-45D6-A88B-E8F8E6DA4154}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -3210,6 +3283,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom03" ID="{C6917A5A-546F-42FB-B09D-C6DEA0E9BE21}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -3238,6 +3312,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom04" ID="{8B37B968-B59C-4097-9403-77E1BDC42A10}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -3265,13 +3340,16 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_weapon_lightingGun_boom05" ID="{F59B84CE-353F-4E46-8F8F-C82900D4A0F7}" Platform="Linked"/>
 													</ActiveSourceList>
 												</Sound>
 											</ChildrenList>
+											<ObjectLists/>
 										</RandomSequenceContainer>
 									</ChildrenList>
+									<ObjectLists/>
 								</BlendContainer>
 								<RandomSequenceContainer Name="lightingGun_miss" ID="{3883E890-7748-4AFE-B096-ADCA4FFF8C9C}" ShortID="1030576627">
 									<PropertyList>
@@ -3364,6 +3442,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_lightingGun_miss01" ID="{E0FF3A3A-7ECF-47BB-AD21-FF5B978F4366}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -3392,6 +3471,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_lightingGun_miss02" ID="{03266DBF-B463-4DEC-8CA0-4CC216033EC0}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -3420,11 +3500,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_lightingGun_miss03" ID="{C730C731-21DC-4B48-BB19-750074FDE0FB}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 								<Sound Name="lightingGun_charge" ID="{2B2952E6-A76F-491A-AD59-E3ACD131410D}" ShortID="152149811">
 									<PropertyList>
@@ -3585,8 +3667,10 @@
 												</AudioFileSource>
 											</ChildrenList>
 											<Language>SFX</Language>
+											<PluginData/>
 										</SourcePlugin>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{232C1E77-A1E8-487E-A1B0-3CBABCAAA4F1}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -3640,6 +3724,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX_weapon_lightingGun_charge_fail" ID="{02BEC30B-9EA0-4D1C-B78D-F1D19A5E469A}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -3778,8 +3863,10 @@
 										</AudioFileSource>
 									</ChildrenList>
 									<Language>SFX</Language>
+									<PluginData/>
 								</SourcePlugin>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="SoundSeed Grain" ID="{E6F10DEF-3D78-4CBE-A632-8E051FD7B488}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -3847,6 +3934,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX_weapon_cannon_fire" ID="{BC90198B-673F-4DA7-9EB4-67B4BC2453FB}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -3913,6 +4001,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX_weapon_cannon_hit" ID="{29DE1CA9-7843-4B8A-81B2-255288EA24F3}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -3975,6 +4064,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX_weapon_cannon_hit" ID="{4C561304-9CA6-4CA2-A3AC-7A280E1FC25C}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -4066,6 +4156,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_cannon_miss01" ID="{5B2A53AF-2730-4DB4-8BAC-47C729407D1B}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4088,6 +4179,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_cannon_miss02" ID="{34619D9F-FED5-4917-AA5F-5720B85AF455}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4110,6 +4202,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_cannon_miss03" ID="{6322A335-6B20-4C52-A0DA-BA9C651C9D22}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4132,11 +4225,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_cannon_miss04" ID="{1FFE6D20-E8C0-4B24-BFB7-45C331A342A2}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 							</ChildrenList>
 						</Folder>
@@ -4196,6 +4291,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_fire01" ID="{625F32F2-AB8F-4930-A02C-BF950AD85B26}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4218,6 +4314,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_fire02" ID="{6B05D4BC-1B82-4295-9982-BCD170D798C8}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4240,6 +4337,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_fire03" ID="{40D1F20B-D6BB-434B-921C-F439CDAC2405}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4262,11 +4360,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_fire04" ID="{3A4DFA4C-51C3-4AA8-8DB7-EB228D9E7869}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 								<RandomSequenceContainer Name="machinegun_hit" ID="{5BD210B1-419E-4ABD-A940-A27063C392E6}" ShortID="899144980">
 									<PropertyList>
@@ -4317,6 +4417,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_hit" ID="{666D6423-7481-4BE6-A456-DDE02C897871}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4339,6 +4440,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_hit02" ID="{7BEC066F-D2AA-4C3C-8BE1-2CA59BEF7CE3}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4361,6 +4463,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_hit03" ID="{9C950B2E-F2E3-4FF4-981E-6090E6EEDB5D}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4383,11 +4486,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_hit04" ID="{F9425361-5F77-4B5A-BB13-444C59C141A1}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 								<RandomSequenceContainer Name="machinegun_miss" ID="{6695AE2C-5F79-4857-91C2-B28A2F040A3B}" ShortID="573193494">
 									<PropertyList>
@@ -4437,6 +4542,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_miss01" ID="{1D3CF49A-2654-45ED-BD0B-ECC187C3CBC2}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4459,6 +4565,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_miss02" ID="{65CC31F0-BADD-4226-911D-FFEDBF4E7690}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4481,6 +4588,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_miss03" ID="{D16DFA1B-AD5F-44F6-AF73-853E18F2A321}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4503,11 +4611,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_machinegun_miss04" ID="{F260CF82-5170-494D-A34E-32E3223E9C49}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 								<Sound Name="machinegun_ship_destroyed" ID="{FEBF1A44-B6D0-4F6F-AF22-5BF5EFF47EBF}" ShortID="286744754">
 									<PropertyList>
@@ -4550,6 +4660,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX_weapon_machinegun_ship_destroyed" ID="{9A0E022A-C196-45C9-A28D-B2B9AE13CC93}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -4607,6 +4718,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_fire01" ID="{5BC477A7-4ECA-48FC-8FE5-DA7E8451E048}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4629,6 +4741,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_fire02" ID="{2A188299-E657-433F-9DEA-8EED922777B3}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4651,6 +4764,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_fire03" ID="{7BBAAC27-2608-49F0-BF26-45AE7EF9F9A6}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4673,11 +4787,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_fire04" ID="{1704B25D-0CB2-43EB-AE33-8A00CE26F699}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 								<RandomSequenceContainer Name="IonCanon_miss" ID="{A1EE3BC5-E24E-42FD-BC32-0B42BF2CAF89}" ShortID="31284936">
 									<PropertyList>
@@ -4740,6 +4856,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_miss01" ID="{25B338B1-D9AC-4F89-9F22-E6D164DC9965}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4762,6 +4879,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_miss02" ID="{E79BA013-5D4C-4C72-BF52-49C97CAD624D}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4784,6 +4902,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_miss03" ID="{06830504-407E-4B4A-9E71-8DA3A1504A82}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4806,11 +4925,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_miss04" ID="{ED42C1E6-E2A9-4CC5-BB0F-7EE365E71C87}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 								<RandomSequenceContainer Name="IonCannon_hit" ID="{D1773018-EB65-45CB-857B-1158EFED37A3}" ShortID="727113654">
 									<PropertyList>
@@ -4869,6 +4990,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_hit01" ID="{9AAF5838-D664-4BD7-BE0F-8B34D9ECD8F7}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4891,6 +5013,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_hit02" ID="{F233B707-5AE4-443E-9A43-C4A5B9946B43}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4913,6 +5036,7 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_hit03" ID="{562AE170-89A5-40F5-B3B1-E2F3DC5838DE}" Platform="Linked"/>
 											</ActiveSourceList>
@@ -4935,11 +5059,13 @@
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
+											<ObjectLists/>
 											<ActiveSourceList>
 												<ActiveSource Name="SFX_weapon_ioncannon_hit04" ID="{F6E893F0-8FD7-4D83-A0CA-A4C080C2090B}" Platform="Linked"/>
 											</ActiveSourceList>
 										</Sound>
 									</ChildrenList>
+									<ObjectLists/>
 								</RandomSequenceContainer>
 								<Sound Name="ionCannon_ship_destroyed" ID="{4410E0F9-FBD6-4B39-985B-CFA8D2385F93}" ShortID="885246363">
 									<PropertyList>
@@ -4978,6 +5104,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX_weapon_ioncannon_ship_destroyed" ID="{06FC6DD8-E446-4481-8CC6-F6D06DE4D03C}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -5112,6 +5239,7 @@
 												</AudioFileSource>
 											</ChildrenList>
 											<Language>SFX</Language>
+											<PluginData/>
 											<PluginInnerObjectList>
 												<List Name="ParameterModulatorAssociation">
 													<PluginInnerObject Name="" ID="{9796F57A-5CD9-4CC8-BE9C-9BDC944FB4DC}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
@@ -5128,6 +5256,7 @@
 											</PluginInnerObjectList>
 										</SourcePlugin>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{0B6801A8-8A69-4333-82C0-B9CC1C8C1BC9}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -5161,6 +5290,7 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX_weapon_ioncannon_ship_overcharge_fail" ID="{69779B76-9891-4CA4-B6D0-9CF9E42BFF5C}" Platform="Linked"/>
 									</ActiveSourceList>
@@ -5410,6 +5540,7 @@
 										</AudioFileSource>
 									</ChildrenList>
 									<Language>SFX</Language>
+									<PluginData/>
 									<PluginInnerObjectList>
 										<List Name="ParameterModulatorAssociation">
 											<PluginInnerObject Name="" ID="{0CFB0B07-A7DE-4EF8-BFFC-93D325824E08}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
@@ -5426,6 +5557,7 @@
 									</PluginInnerObjectList>
 								</SourcePlugin>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="SoundSeed Grain" ID="{9E8CB724-4FC3-4D87-A54B-189045530E88}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -5491,6 +5623,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Reactor_Overheat" ID="{3ED5A44D-12FC-4138-8008-9739EC6F8609}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -5540,6 +5673,7 @@
 							</MediaIDList>
 						</AudioFileSource>
 					</ChildrenList>
+					<ObjectLists/>
 					<ActiveSourceList>
 						<ActiveSource Name="SFX__ship_sensor_ping3" ID="{6169AE93-1BB2-45BD-ACCD-B37404E6AAF9}" Platform="Linked"/>
 					</ActiveSourceList>
@@ -5634,6 +5768,7 @@
 										</AudioFileSource>
 									</ChildrenList>
 									<Language>SFX</Language>
+									<PluginData/>
 									<PluginInnerObjectList>
 										<List Name="ParameterModulatorAssociation">
 											<PluginInnerObject Name="" ID="{E0048E1A-65F4-44A3-BFF7-FD43C8A03CE0}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
@@ -5660,6 +5795,7 @@
 									</PluginInnerObjectList>
 								</SourcePlugin>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="SoundSeed Grain" ID="{FAB49A7B-7E70-4E55-B507-D48F5F1E4247}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -5723,6 +5859,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="SFX_spcship_shield_up" ID="{D7C26471-46EF-4505-8B61-BF8F9283D8C7}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -5756,6 +5893,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="SFX_spcship_shield_down" ID="{04E9962C-30E3-4399-8DDA-FC29156DD0AF}" Platform="Linked"/>
 							</ActiveSourceList>

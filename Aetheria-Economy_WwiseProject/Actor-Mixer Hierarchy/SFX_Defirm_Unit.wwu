@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" SchemaVersion="97">
+<WwiseDocument Type="WorkUnit" ID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" SchemaVersion="103">
 	<AudioObjects>
 		<WorkUnit Name="SFX_Defirm_Unit" ID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" PersistMode="Standalone">
 			<ChildrenList>
@@ -263,6 +263,7 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{DCD6FA5A-4296-467D-8814-45DF0E132316}" Platform="Linked"/>
 																	</ActiveSourceList>
@@ -354,6 +355,7 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{9666BC97-4DF2-4FB5-B671-041FDDFD5222}" Platform="Linked"/>
 																	</ActiveSourceList>
@@ -438,6 +440,7 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{21C163D5-E43F-48D5-B9DF-762D79C13DA9}" Platform="Linked"/>
 																	</ActiveSourceList>
@@ -522,11 +525,13 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{0EF1EC4A-31EF-4FFB-80E3-FC18B05053B4}" Platform="Linked"/>
 																	</ActiveSourceList>
 																</Sound>
 															</ChildrenList>
+															<ObjectLists/>
 														</BlendContainer>
 														<Sound Name="wind" ID="{29E9F292-8DC2-4CD2-A11E-822089AF8B1B}" ShortID="804645390">
 															<PropertyList>
@@ -728,6 +733,7 @@
 																	</PluginInnerObjectList>
 																</SourcePlugin>
 															</ChildrenList>
+															<ObjectLists/>
 															<ActiveSourceList>
 																<ActiveSource Name="SoundSeed Air Wind" ID="{1771AE30-A2FE-4CE5-896D-6E387B33AAB5}" Platform="Linked"/>
 															</ActiveSourceList>
@@ -804,6 +810,7 @@
 																	</PluginInnerObjectList>
 																</SourcePlugin>
 															</ChildrenList>
+															<ObjectLists/>
 															<ActiveSourceList>
 																<ActiveSource Name="SoundSeed Air Wind" ID="{1CB12E2A-AA4C-4E97-8193-CF5AAFDF2345}" Platform="Linked"/>
 															</ActiveSourceList>
@@ -879,11 +886,13 @@
 																	</MediaIDList>
 																</AudioFileSource>
 															</ChildrenList>
+															<ObjectLists/>
 															<ActiveSourceList>
 																<ActiveSource Name="Flamethrower SOUND" ID="{D4031534-9886-4B03-B1F9-97A4142A8314}" Platform="Linked"/>
 															</ActiveSourceList>
 														</Sound>
 													</ChildrenList>
+													<ObjectLists/>
 												</BlendContainer>
 												<BlendContainer Name="thruster_medium" ID="{4261D6D4-BDC3-4423-BA6B-A92DE2181A21}" ShortID="616815775">
 													<PropertyList>
@@ -1051,6 +1060,7 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{345D4474-FEB1-47DD-9B22-280F7B197138}" Platform="Linked"/>
 																	</ActiveSourceList>
@@ -1142,6 +1152,7 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{536C910B-943F-4ECF-8CB9-CE02B267C6F6}" Platform="Linked"/>
 																	</ActiveSourceList>
@@ -1226,6 +1237,7 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{46CAAE55-9389-40B2-9AC0-12570E939CE7}" Platform="Linked"/>
 																	</ActiveSourceList>
@@ -1310,11 +1322,13 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{9FAF22C6-E1A1-487F-9C6F-CAD0616ECA1A}" Platform="Linked"/>
 																	</ActiveSourceList>
 																</Sound>
 															</ChildrenList>
+															<ObjectLists/>
 														</BlendContainer>
 														<Sound Name="wind" ID="{5938B792-94BD-4A03-BBD7-CA6FA514F27E}" ShortID="1018504265">
 															<PropertyList>
@@ -1463,6 +1477,7 @@
 																	</PluginInnerObjectList>
 																</SourcePlugin>
 															</ChildrenList>
+															<ObjectLists/>
 															<ActiveSourceList>
 																<ActiveSource Name="SoundSeed Air Wind" ID="{9EBB9A6C-09E1-4710-931A-8B8894D7CBBC}" Platform="Linked"/>
 															</ActiveSourceList>
@@ -1542,6 +1557,7 @@
 																	</PluginInnerObjectList>
 																</SourcePlugin>
 															</ChildrenList>
+															<ObjectLists/>
 															<ActiveSourceList>
 																<ActiveSource Name="SoundSeed Air Wind" ID="{967D2B19-DA1C-433D-9AC5-B767E662DC37}" Platform="Linked"/>
 															</ActiveSourceList>
@@ -1612,11 +1628,13 @@
 																	</MediaIDList>
 																</AudioFileSource>
 															</ChildrenList>
+															<ObjectLists/>
 															<ActiveSourceList>
 																<ActiveSource Name="Flamethrower SOUND" ID="{FCD685D5-B2A3-40D3-8733-C3C43BD75134}" Platform="Linked"/>
 															</ActiveSourceList>
 														</Sound>
 													</ChildrenList>
+													<ObjectLists/>
 												</BlendContainer>
 												<BlendContainer Name="thruster_small" ID="{D355F5AE-732C-4638-988F-F1E01D1FC547}" ShortID="429644083">
 													<PropertyList>
@@ -1784,6 +1802,7 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{4D83EF75-F164-4F47-8DE2-8925E4FD9442}" Platform="Linked"/>
 																	</ActiveSourceList>
@@ -1875,6 +1894,7 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{A9C297B6-BA20-4D83-AEC4-D4839D02DB45}" Platform="Linked"/>
 																	</ActiveSourceList>
@@ -1959,6 +1979,7 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{75F7D448-EFB6-410A-8BC4-7F9D897D4036}" Platform="Linked"/>
 																	</ActiveSourceList>
@@ -2043,11 +2064,13 @@
 																			<Language>SFX</Language>
 																		</SourcePlugin>
 																	</ChildrenList>
+																	<ObjectLists/>
 																	<ActiveSourceList>
 																		<ActiveSource Name="Wwise Synth One" ID="{38997918-A148-415C-8143-362C4FDD591B}" Platform="Linked"/>
 																	</ActiveSourceList>
 																</Sound>
 															</ChildrenList>
+															<ObjectLists/>
 														</BlendContainer>
 														<Sound Name="wind" ID="{41AB9709-46D8-4FEC-A43C-D115E7C357F0}" ShortID="1028864579">
 															<PropertyList>
@@ -2196,6 +2219,7 @@
 																	</PluginInnerObjectList>
 																</SourcePlugin>
 															</ChildrenList>
+															<ObjectLists/>
 															<ActiveSourceList>
 																<ActiveSource Name="SoundSeed Air Wind" ID="{65C0A735-8B14-48A4-82FC-DB2E5FFDE750}" Platform="Linked"/>
 															</ActiveSourceList>
@@ -2273,6 +2297,7 @@
 																	</PluginInnerObjectList>
 																</SourcePlugin>
 															</ChildrenList>
+															<ObjectLists/>
 															<ActiveSourceList>
 																<ActiveSource Name="SoundSeed Air Wind" ID="{3AE54CD5-D398-46D9-B840-7DF83A3BA461}" Platform="Linked"/>
 															</ActiveSourceList>
@@ -2343,16 +2368,19 @@
 																	</MediaIDList>
 																</AudioFileSource>
 															</ChildrenList>
+															<ObjectLists/>
 															<ActiveSourceList>
 																<ActiveSource Name="Flamethrower SOUND" ID="{6C2BA711-D768-44AC-979B-B97F8452DEEC}" Platform="Linked"/>
 															</ActiveSourceList>
 														</Sound>
 													</ChildrenList>
+													<ObjectLists/>
 												</BlendContainer>
 											</ChildrenList>
 											<PositioningInfo>
 												<Panner Name="" ID="{445B7FB9-8B58-4FB3-A064-C753B668FFB8}"/>
 											</PositioningInfo>
+											<ObjectLists/>
 										</ActorMixer>
 									</ChildrenList>
 								</Folder>
@@ -2634,8 +2662,10 @@
 																</AudioFileSource>
 															</ChildrenList>
 															<Language>SFX</Language>
+															<PluginData/>
 														</SourcePlugin>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SoundSeed Grain" ID="{977AC916-0B90-426D-88DC-F48040D2DB92}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2701,6 +2731,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="Reactor_Overheat" ID="{62246652-9231-4A63-8732-A26E011D8D3F}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2731,6 +2762,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX__railgun_fire" ID="{4D1C368C-FD56-4800-A2A7-CF0452AABC09}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2866,8 +2898,10 @@
 																</AudioFileSource>
 															</ChildrenList>
 															<Language>SFX</Language>
+															<PluginData/>
 														</SourcePlugin>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SoundSeed Grain" ID="{F8B14520-9762-4776-A30B-AA91F5521B9D}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2895,6 +2929,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX__railgun_charginf_failure" ID="{2942276E-5D61-4B3E-95A8-7947055021F3}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2930,6 +2965,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX__railgun_charginf_failure" ID="{E7CEFDD6-EDF9-4695-80E6-CD24038DB947}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -2959,6 +2995,7 @@
 															</MediaIDList>
 														</AudioFileSource>
 													</ChildrenList>
+													<ObjectLists/>
 													<ActiveSourceList>
 														<ActiveSource Name="SFX_railgun_hit3" ID="{386AC49C-9749-4148-AFB8-8D4332C3BBD3}" Platform="Linked"/>
 													</ActiveSourceList>
@@ -3004,11 +3041,13 @@
 											</MediaIDList>
 										</AudioFileSource>
 									</ChildrenList>
+									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SFX__ship_sensor_ping3" ID="{CAFCA10D-A305-42A7-9CF2-1B83BC22CEF6}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
 							</ChildrenList>
+							<ObjectLists/>
 						</ActorMixer>
 					</ChildrenList>
 				</Folder>
@@ -3036,6 +3075,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Aetheria_Wormhole_travel_jumpin" ID="{CD6E7758-CBC6-4D33-8CD2-2FBDEA7D9694}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -3064,6 +3104,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Aetheria_Wormhole_travel_jumpout" ID="{D5D96A6C-285B-43E9-B466-4DF91D74284C}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -3093,6 +3134,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Aetheria_Wormhole_travel" ID="{DA408B3D-CAD9-4B5F-8ADB-3886C3C122FD}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -3123,6 +3165,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="SFX__inventory_menu_trade_item_buy" ID="{4A59B2C9-1565-4F06-AEE3-D151E113F54C}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -3145,6 +3188,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="SFX__inventory_menu_trade_item_sell" ID="{436CF15E-3EDA-4699-A101-93FD394CE78B}" Platform="Linked"/>
 							</ActiveSourceList>

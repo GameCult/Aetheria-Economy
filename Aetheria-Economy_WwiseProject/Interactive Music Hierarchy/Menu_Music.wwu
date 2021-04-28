@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{7CB722F4-389D-4867-87CA-00120A745A22}" SchemaVersion="97">
+<WwiseDocument Type="WorkUnit" ID="{7CB722F4-389D-4867-87CA-00120A745A22}" SchemaVersion="103">
 	<InteractiveMusic>
 		<WorkUnit Name="Menu_Music" ID="{7CB722F4-389D-4867-87CA-00120A745A22}" PersistMode="Standalone">
 			<ChildrenList>
@@ -49,31 +49,53 @@
 											<TransitionInfo/>
 										</MusicTransition>
 									</TransitionList>
-									<SequenceList>
-										<MusicTrackSequence Name="" ID="{A91091BC-4159-4C1B-B26C-72ACAB813534}">
-											<ClipList>
-												<MusicClip Name="Main_Menu_01" ID="{21DFC704-CA92-42B5-BFD9-EFA30CA9DE14}">
-													<PropertyList>
-														<Property Name="EndTrimOffset" Type="Real64" Value="202673.604166667"/>
-														<Property Name="FadeInMode" Type="int16" Value="0"/>
-														<Property Name="FadeOutMode" Type="int16" Value="0"/>
-													</PropertyList>
-													<AudioSourceRef Name="Main_Menu_01" ID="{A2393024-E320-4F05-896F-D7C0C48ACCCB}"/>
-												</MusicClip>
-											</ClipList>
-										</MusicTrackSequence>
-									</SequenceList>
+									<ObjectLists>
+										<ObjectList Name="Sequences">
+											<Reference>
+												<Local>
+													<MusicTrackSequence Name="" ID="{A91091BC-4159-4C1B-B26C-72ACAB813534}">
+														<ObjectLists>
+															<ObjectList Name="Clips">
+																<Reference>
+																	<Local>
+																		<MusicClip Name="Main_Menu_01" ID="{21DFC704-CA92-42B5-BFD9-EFA30CA9DE14}">
+																			<PropertyList>
+																				<Property Name="EndTrimOffset" Type="Real64" Value="202673.604166667"/>
+																				<Property Name="FadeInMode" Type="int16" Value="0"/>
+																				<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																			</PropertyList>
+																			<AudioSourceRef Name="Main_Menu_01" ID="{A2393024-E320-4F05-896F-D7C0C48ACCCB}"/>
+																		</MusicClip>
+																	</Local>
+																</Reference>
+															</ObjectList>
+														</ObjectLists>
+													</MusicTrackSequence>
+												</Local>
+											</Reference>
+										</ObjectList>
+									</ObjectLists>
 								</MusicTrack>
 							</ChildrenList>
-							<CueList>
-								<MusicCue Name="Entry Cue" ID="{8D2D42EF-0C6F-45B1-AF4F-E9BAA41F2DAE}"/>
-								<MusicCue Name="Exit Cue" ID="{B225F7F2-E855-4F8E-88BD-3E2EE359EAC3}">
-									<PropertyList>
-										<Property Name="CueType" Type="int16" Value="1"/>
-										<Property Name="TimeMs" Type="Real64" Value="202673.604166667"/>
-									</PropertyList>
-								</MusicCue>
-							</CueList>
+							<ObjectLists>
+								<ObjectList Name="Cues">
+									<Reference>
+										<Local>
+											<MusicCue Name="Entry Cue" ID="{8D2D42EF-0C6F-45B1-AF4F-E9BAA41F2DAE}"/>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<MusicCue Name="Exit Cue" ID="{B225F7F2-E855-4F8E-88BD-3E2EE359EAC3}">
+												<PropertyList>
+													<Property Name="CueType" Type="int16" Value="1"/>
+													<Property Name="TimeMs" Type="Real64" Value="202673.604166667"/>
+												</PropertyList>
+											</MusicCue>
+										</Local>
+									</Reference>
+								</ObjectList>
+							</ObjectLists>
 						</MusicSegment>
 					</ChildrenList>
 					<TransitionList>
@@ -89,6 +111,7 @@
 							<TransitionInfo/>
 						</MusicTransition>
 					</TransitionList>
+					<ObjectLists/>
 					<Playlist>
 						<MusicPlaylistItem Name="" ID="{A2047830-CA37-427F-9850-C7182DC037FA}" ShortID="607048362">
 							<ChildrenList>

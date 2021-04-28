@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}" SchemaVersion="97">
+<WwiseDocument Type="WorkUnit" ID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}" SchemaVersion="103">
 	<GameParameters>
 		<WorkUnit Name="weapon_events" ID="{BC3E332F-D5E2-4769-90BB-53D02DF37B28}" PersistMode="Standalone">
 			<ChildrenList>

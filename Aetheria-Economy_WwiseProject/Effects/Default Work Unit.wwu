@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{BF6DB01C-A79D-4B99-89E5-E47246AD6F26}" SchemaVersion="97">
+<WwiseDocument Type="WorkUnit" ID="{BF6DB01C-A79D-4B99-89E5-E47246AD6F26}" SchemaVersion="103">
 	<Effects>
 		<WorkUnit Name="Default Work Unit" ID="{BF6DB01C-A79D-4B99-89E5-E47246AD6F26}" PersistMode="Standalone">
 			<ChildrenList>
@@ -167,6 +167,12 @@
 						<Property Name="MicType" Type="int32" Value="2"/>
 					</PropertyList>
 					<ChildrenList>
+						<PluginMediaSource Name="" ID="{04772C54-3308-4F54-8217-EB52E3BEBD18}">
+							<ParentPluginID>462899</ParentPluginID>
+							<MediaIDList>
+								<MediaID ID="435959294"/>
+							</MediaIDList>
+						</PluginMediaSource>
 						<PluginMediaSource Name="" ID="{F2FE757D-959A-42B0-BC09-90A592EED75C}">
 							<ParentPluginID>462899</ParentPluginID>
 							<MediaIDList>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{4FA02AD0-1AB3-4ADB-86E9-A5543490085E}" SchemaVersion="97">
+<WwiseDocument Type="WorkUnit" ID="{4FA02AD0-1AB3-4ADB-86E9-A5543490085E}" SchemaVersion="103">
 	<Events>
 		<WorkUnit Name="SFX_Defirm_unit" ID="{4FA02AD0-1AB3-4ADB-86E9-A5543490085E}" PersistMode="Standalone">
 			<ChildrenList>

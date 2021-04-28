@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}" SchemaVersion="97">
+<WwiseDocument Type="WorkUnit" ID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}" SchemaVersion="103">
 	<InteractiveMusic>
 		<WorkUnit Name="Boss" ID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}" PersistMode="Standalone">
 			<ChildrenList>
@@ -52,31 +52,53 @@
 											<TransitionInfo/>
 										</MusicTransition>
 									</TransitionList>
-									<SequenceList>
-										<MusicTrackSequence Name="" ID="{D0AF8EE7-9E40-4282-AF06-C8C2CE2DF6FF}">
-											<ClipList>
-												<MusicClip Name="METAL BOSS FINAL" ID="{17DB4998-8530-48CD-B54D-C1C57609D8E4}">
-													<PropertyList>
-														<Property Name="EndTrimOffset" Type="Real64" Value="169194.854166667"/>
-														<Property Name="FadeInMode" Type="int16" Value="0"/>
-														<Property Name="FadeOutMode" Type="int16" Value="0"/>
-													</PropertyList>
-													<AudioSourceRef Name="METAL BOSS FINAL" ID="{0EC376FC-5CE4-43F6-8446-1574C2DA9412}"/>
-												</MusicClip>
-											</ClipList>
-										</MusicTrackSequence>
-									</SequenceList>
+									<ObjectLists>
+										<ObjectList Name="Sequences">
+											<Reference>
+												<Local>
+													<MusicTrackSequence Name="" ID="{D0AF8EE7-9E40-4282-AF06-C8C2CE2DF6FF}">
+														<ObjectLists>
+															<ObjectList Name="Clips">
+																<Reference>
+																	<Local>
+																		<MusicClip Name="METAL BOSS FINAL" ID="{17DB4998-8530-48CD-B54D-C1C57609D8E4}">
+																			<PropertyList>
+																				<Property Name="EndTrimOffset" Type="Real64" Value="169194.854166667"/>
+																				<Property Name="FadeInMode" Type="int16" Value="0"/>
+																				<Property Name="FadeOutMode" Type="int16" Value="0"/>
+																			</PropertyList>
+																			<AudioSourceRef Name="METAL BOSS FINAL" ID="{0EC376FC-5CE4-43F6-8446-1574C2DA9412}"/>
+																		</MusicClip>
+																	</Local>
+																</Reference>
+															</ObjectList>
+														</ObjectLists>
+													</MusicTrackSequence>
+												</Local>
+											</Reference>
+										</ObjectList>
+									</ObjectLists>
 								</MusicTrack>
 							</ChildrenList>
-							<CueList>
-								<MusicCue Name="Entry Cue" ID="{80FE9DA2-5295-4F9B-B824-442EC9FF7DC2}"/>
-								<MusicCue Name="Exit Cue" ID="{B6B9D5FE-D686-45BE-8DFA-5E232A262A5E}">
-									<PropertyList>
-										<Property Name="CueType" Type="int16" Value="1"/>
-										<Property Name="TimeMs" Type="Real64" Value="163764.705882353"/>
-									</PropertyList>
-								</MusicCue>
-							</CueList>
+							<ObjectLists>
+								<ObjectList Name="Cues">
+									<Reference>
+										<Local>
+											<MusicCue Name="Entry Cue" ID="{80FE9DA2-5295-4F9B-B824-442EC9FF7DC2}"/>
+										</Local>
+									</Reference>
+									<Reference>
+										<Local>
+											<MusicCue Name="Exit Cue" ID="{B6B9D5FE-D686-45BE-8DFA-5E232A262A5E}">
+												<PropertyList>
+													<Property Name="CueType" Type="int16" Value="1"/>
+													<Property Name="TimeMs" Type="Real64" Value="163764.705882353"/>
+												</PropertyList>
+											</MusicCue>
+										</Local>
+									</Reference>
+								</ObjectList>
+							</ObjectLists>
 						</MusicSegment>
 					</ChildrenList>
 					<TransitionList>
@@ -101,6 +123,7 @@
 							<TransitionInfo/>
 						</MusicTransition>
 					</TransitionList>
+					<ObjectLists/>
 					<Playlist>
 						<MusicPlaylistItem Name="" ID="{AB33CF31-1C67-4483-BA8B-78603B9CC4B7}" ShortID="1042679147">
 							<ChildrenList>
