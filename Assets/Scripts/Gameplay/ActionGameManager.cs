@@ -92,38 +92,50 @@ public class ActionGameManager : MonoBehaviour
     public Transform ActionBar;
     public ActionBarSlot ActionBarSlot;
     public Transform EffectManagerParent;
-    public TradeMenu TradeMenu;
-    public Prototype HostileTargetIndicator;
-    public PlaceUIElementWorldspace ViewDot;
-    public PlaceUIElementWorldspace TargetIndicator;
-    public Image TargetHitpointsFill;
-    public Image TargetVisibilityFill;
-    public Image VisibilityToTargetFill;
-    public Image TargetShieldsFill;
-    public Prototype LockIndicator;
-    public PlaceUIElementWorldspace[] Crosshairs;
-    public GameObject HitMarker;
-    public float HitMarkerDuration;
-    public EventLog EventLog;
     public ZoneRenderer ZoneRenderer;
     public CinemachineVirtualCamera DockCamera;
     public CinemachineVirtualCamera FollowCamera;
     public CinemachineVirtualCamera WormholeCamera;
-    public CanvasGroup GameplayUI;
-    public MainMenu MainMenu;
-    public MenuPanel Menu;
-    public MapRenderer MenuMap;
     //public SectorRenderer SectorRenderer;
     public SectorMap SectorMap;
     public VolumeSampling VolumeRenderer;
-    public SchematicDisplay SchematicDisplay;
-    public SchematicDisplay TargetSchematicDisplay;
+    
+    [Header("Menu UI")]
+    public MainMenu MainMenu;
+    public MenuPanel Menu;
+    public MapRenderer MenuMap;
+    public TradeMenu TradeMenu;
     public InventoryMenu Inventory;
     public InventoryPanel ShipPanel;
     public InventoryPanel TargetShipPanel;
     public ConfirmationDialog Dialog;
     public ContextMenu Context;
     public DropdownMenu Dropdown;
+    
+    [Header("Gameplay UI")]
+    public CanvasGroup GameplayUI;
+    public EventLog EventLog;
+    public Prototype HostileTargetIndicator;
+    public PlaceUIElementWorldspace ViewDot;
+    public Prototype LockIndicator;
+    public PlaceUIElementWorldspace[] Crosshairs;
+    public GameObject HitMarker;
+    public float HitMarkerDuration;
+    public SchematicDisplay SchematicDisplay;
+    public SchematicDisplay TargetSchematicDisplay;
+    
+    [Header("Target Indicator")]
+    public PlaceUIElementWorldspace TargetIndicator;
+    public Image TargetHitpointsFill;
+    public Image TargetVisibilityFill;
+    public Image VisibilityToTargetFill;
+    public Image TargetShieldsBackground;
+    public Image TargetShieldsFill;
+    public Image TargetShieldsIcon;
+    public Color ShieldColor;
+    public Color NoShieldColor;
+    public Sprite ShieldIcon;
+    public Sprite NoShieldIcon;
 
     public float IntroDuration;
     
@@ -922,6 +934,18 @@ public class ActionGameManager : MonoBehaviour
             TargetShipPanel.gameObject.SetActive(target != null);
             if (target != null)
             {
+                if (target.Shield != null)
+                {
+                    TargetShieldsBackground.color = new Color(ShieldColor.r, ShieldColor.g, ShieldColor.b, .4f);
+                    TargetShieldsIcon.color = ShieldColor;
+                    TargetShieldsIcon.sprite = ShieldIcon;
+                }
+                else
+                {
+                    TargetShieldsBackground.color = new Color(NoShieldColor.r, NoShieldColor.g, NoShieldColor.b, .4f);
+                    TargetShieldsIcon.color = NoShieldColor;
+                    TargetShieldsIcon.sprite = NoShieldIcon;
+                }
                 TargetShipPanel.Display(target, true);
                 TargetSchematicDisplay.ShowShip(target, CurrentEntity);
                 
@@ -1078,6 +1102,7 @@ public class ActionGameManager : MonoBehaviour
                     TargetVisibilityFill.fillAmount = lerp(.25f, .75f, (CurrentEntity.EntityInfoGathered[target] - threshold)/(1-threshold));
                     VisibilityToTargetFill.fillAmount = lerp(.25f, .75f, target.EntityInfoGathered[CurrentEntity] / threshold);
                     TargetHitpointsFill.fillAmount = lerp(.25f, .75f, target.Hull.Durability / target.EquippedHull.Data.Durability);
+                    TargetShieldsFill.fillAmount = target.Shield == null ? 0 : lerp(.25f, .75f, target.Shield.Progress);
                 }
 
                 var tractorPower = Input.Player.TractorBeam.ReadValue<float>();

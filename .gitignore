@@ -12,6 +12,7 @@
 /Recordings/
 
 # Wwise folders
+/Aetheria-Economy_WwiseProject/.backup
 /Aetheria-Economy_WwiseProject/.cache
 /Aetheria-Economy_WwiseProject/GeneratedSoundBanks
 
@@ -84,4 +85,5 @@ Economy.Shared/obj/
 
 # JetBrains Rider .idea folder
 .idea/
+
 Packages/packages-lock.json

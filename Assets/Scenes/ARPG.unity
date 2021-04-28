@@ -888,7 +888,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b7e9fa39f6151b14ca05120764cf2cb5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2a61aee34fcf7e640a093cb4c4fa56bc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -16189,14 +16189,26 @@ MonoBehaviour:
   ActionBarSlot: {fileID: 8334150340270499366, guid: bfce34a0acbaa454e97a700e1875357e,
     type: 3}
   EffectManagerParent: {fileID: 134113271}
+  ZoneRenderer: {fileID: 1009503731}
+  DockCamera: {fileID: 393266593}
+  FollowCamera: {fileID: 887677622}
+  WormholeCamera: {fileID: 1644480539}
+  SectorMap: {fileID: 2132980328}
+  VolumeRenderer: {fileID: 2115559093}
+  MainMenu: {fileID: 588628536}
+  Menu: {fileID: 1726632268}
+  MenuMap: {fileID: 630131162}
   TradeMenu: {fileID: 522642869}
+  Inventory: {fileID: 1997243495}
+  ShipPanel: {fileID: 7628189704109037582}
+  TargetShipPanel: {fileID: 410701133}
+  Dialog: {fileID: 620555924}
+  Context: {fileID: 1157981993}
+  Dropdown: {fileID: 178733681}
+  GameplayUI: {fileID: 346000248}
+  EventLog: {fileID: 1396909588}
   HostileTargetIndicator: {fileID: 1787772783}
   ViewDot: {fileID: 146394778}
-  TargetIndicator: {fileID: 1556666357}
-  TargetHitpointsFill: {fileID: 1691348884}
-  TargetVisibilityFill: {fileID: 1715434759}
-  VisibilityToTargetFill: {fileID: 88683285}
-  TargetShieldsFill: {fileID: 932155240}
   LockIndicator: {fileID: 1876420642}
   Crosshairs:
   - {fileID: 1914685583}
@@ -16205,25 +16217,19 @@ MonoBehaviour:
   - {fileID: 1631662979}
   HitMarker: {fileID: 1771741748}
   HitMarkerDuration: 0.25
-  EventLog: {fileID: 1396909588}
-  ZoneRenderer: {fileID: 1009503731}
-  DockCamera: {fileID: 393266593}
-  FollowCamera: {fileID: 887677622}
-  WormholeCamera: {fileID: 1644480539}
-  GameplayUI: {fileID: 346000248}
-  MainMenu: {fileID: 588628536}
-  Menu: {fileID: 1726632268}
-  MenuMap: {fileID: 630131162}
-  SectorMap: {fileID: 2132980328}
-  VolumeRenderer: {fileID: 2115559093}
   SchematicDisplay: {fileID: 7628189704109037584}
   TargetSchematicDisplay: {fileID: 410701129}
-  Inventory: {fileID: 1997243495}
-  ShipPanel: {fileID: 7628189704109037582}
-  TargetShipPanel: {fileID: 410701133}
-  Dialog: {fileID: 620555924}
-  Context: {fileID: 1157981993}
-  Dropdown: {fileID: 178733681}
+  TargetIndicator: {fileID: 1556666357}
+  TargetHitpointsFill: {fileID: 1691348884}
+  TargetVisibilityFill: {fileID: 1715434759}
+  VisibilityToTargetFill: {fileID: 88683285}
+  TargetShieldsBackground: {fileID: 2030645739}
+  TargetShieldsFill: {fileID: 932155240}
+  TargetShieldsIcon: {fileID: 79560454}
+  ShieldColor: {r: 0.18823527, g: 0.5620914, b: 0.7490196, a: 1}
+  NoShieldColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  ShieldIcon: {fileID: 21300000, guid: 2a61aee34fcf7e640a093cb4c4fa56bc, type: 3}
+  NoShieldIcon: {fileID: 21300000, guid: bc1017eafc2627f4aaa4e247f14347fd, type: 3}
   IntroDuration: 10
 --- !u!4 &1009503730
 Transform:
@@ -23544,12 +23550,12 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -23569,7 +23575,7 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 1713457305180270767, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -24756,12 +24762,12 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -24781,7 +24787,7 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 1713457305180270767, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}

@@ -26,12 +26,11 @@ public class ShieldData : BehaviorData
     }
 }
 
-public class Shield : Behavior
+public class Shield : Behavior, IProgressBehavior
 {
     public float Efficiency { get; private set; }
     public float EnergyUsage { get; private set; }
 
-    
     private ShieldData _data;
 
     public Shield(ShieldData data, EquippedItem item) : base(data, item)
@@ -60,4 +59,6 @@ public class Shield : Behavior
         Entity.TryConsumeEnergy(damage * EnergyUsage);
         AddHeat(damage / Efficiency);
     }
+
+    public virtual float Progress => Item.ThermalPerformance;
 }
