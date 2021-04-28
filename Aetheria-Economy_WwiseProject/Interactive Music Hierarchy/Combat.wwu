@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{88745582-E14B-4ADD-8B99-AB36C6547F65}" SchemaVersion="97">
+	<InteractiveMusic>
+		<WorkUnit Name="Combat" ID="{88745582-E14B-4ADD-8B99-AB36C6547F65}" PersistMode="Standalone">
+			<ChildrenList>
+				<MusicPlaylistContainer Name="Generic" ID="{7941F6A9-6948-41DA-8B46-8A33499165EB}" ShortID="891419680">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicSegment Name="Gen_Combat_1" ID="{37FA2177-60F1-4326-AF74-CD4928CEE0BE}" ShortID="512868426">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="177230.791666667"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="Gen_Combat_01" ID="{A6145968-737C-4D84-93FD-59C818C3F0DF}" ShortID="215779882">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Gen_Combat_01" ID="{302E2752-39C3-4A03-B0DD-20F24F87622C}">
+											<Language>SFX</Language>
+											<AudioFile>Gen_Combat_01.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="203127691"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<TransitionList>
+										<MusicTransition Name="Root" ID="{A532921B-2A54-43D5-AECC-40862D2BCC97}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</TransitionList>
+									<SequenceList>
+										<MusicTrackSequence Name="" ID="{8E6C358C-6B6B-4EAD-BC50-5DDAA028E09C}">
+											<ClipList>
+												<MusicClip Name="Gen_Combat_01" ID="{C2FFF9FB-0D85-4885-B043-9F9F12AB548F}">
+													<PropertyList>
+														<Property Name="EndTrimOffset" Type="Real64" Value="177230.791666667"/>
+														<Property Name="FadeInMode" Type="int16" Value="0"/>
+														<Property Name="FadeOutMode" Type="int16" Value="0"/>
+													</PropertyList>
+													<AudioSourceRef Name="Gen_Combat_01" ID="{302E2752-39C3-4A03-B0DD-20F24F87622C}"/>
+												</MusicClip>
+											</ClipList>
+										</MusicTrackSequence>
+									</SequenceList>
+								</MusicTrack>
+							</ChildrenList>
+							<CueList>
+								<MusicCue Name="Entry Cue" ID="{E3496FD5-0B56-4DEF-88B4-84ACC2723486}">
+									<PropertyList>
+										<Property Name="TimeMs" Type="Real64" Value="7385.30875097831"/>
+									</PropertyList>
+								</MusicCue>
+								<MusicCue Name="Exit Cue" ID="{87650B22-66B3-4388-8205-4665F57B6899}">
+									<PropertyList>
+										<Property Name="CueType" Type="int16" Value="1"/>
+										<Property Name="TimeMs" Type="Real64" Value="170000"/>
+									</PropertyList>
+								</MusicCue>
+							</CueList>
+						</MusicSegment>
+					</ChildrenList>
+					<TransitionList>
+						<MusicTransition Name="Root" ID="{0E491E42-4E4E-42E3-8982-1EE368EEE011}">
+							<PropertyList>
+								<Property Name="IsFolder" Type="bool" Value="True"/>
+							</PropertyList>
+							<ChildrenList>
+								<MusicTransition Name="Transition" ID="{D7BF4DA7-BE41-42ED-B378-6BB192C81649}">
+									<TransitionInfo>
+										<SourceFadeOut>
+											<MusicFade Name="Source Fade-out" ID="{720EC98D-441C-411C-8C1D-2AE6C05F010A}">
+												<PropertyList>
+													<Property Name="FadeTime" Type="Real64" Value="1"/>
+													<Property Name="FadeType" Type="int16" Value="1"/>
+												</PropertyList>
+											</MusicFade>
+										</SourceFadeOut>
+									</TransitionInfo>
+								</MusicTransition>
+							</ChildrenList>
+							<TransitionInfo/>
+						</MusicTransition>
+					</TransitionList>
+					<Playlist>
+						<MusicPlaylistItem Name="" ID="{B4C41D28-70E3-4666-BE24-EA67A1D2FAA4}" ShortID="70896191">
+							<ChildrenList>
+								<MusicPlaylistItem Name="" ID="{88A86E5A-A33A-4ECE-8FB8-94E8548C899C}" ShortID="926510559">
+									<PropertyList>
+										<Property Name="LoopCount" Type="int16" Value="0"/>
+										<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+									</PropertyList>
+									<SegmentRef Name="Gen_Combat_1" ID="{37FA2177-60F1-4326-AF74-CD4928CEE0BE}"/>
+								</MusicPlaylistItem>
+							</ChildrenList>
+						</MusicPlaylistItem>
+					</Playlist>
+				</MusicPlaylistContainer>
+				<MusicPlaylistContainer Name="Metal" ID="{6417DAE3-2CE0-4409-9D8B-AD00F5BD2B20}" ShortID="51586921">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicSegment Name="Metal_Combat_01" ID="{065373CA-B6B7-4634-9C4B-6D6F79214FAA}" ShortID="921989608">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="184072.916666667"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="METAL COMBAT FINAL" ID="{EE7EB190-D721-4534-9D41-AEF918FBC7D0}" ShortID="532572570">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="METAL COMBAT FINAL" ID="{FC851FDF-D364-48FC-9943-95880B216F1B}">
+											<Language>SFX</Language>
+											<AudioFile>METAL COMBAT FINAL.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="936702341"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<TransitionList>
+										<MusicTransition Name="Root" ID="{0F15A8AC-0C81-4CD3-A687-5F795EF1E852}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</TransitionList>
+									<SequenceList>
+										<MusicTrackSequence Name="" ID="{8315DD9E-53C5-4708-AD7B-DD47E493A713}">
+											<ClipList>
+												<MusicClip Name="METAL COMBAT FINAL" ID="{3D970BC2-E4D4-409D-A1D1-C79611D71D0E}">
+													<PropertyList>
+														<Property Name="EndTrimOffset" Type="Real64" Value="176072.916666667"/>
+														<Property Name="FadeInMode" Type="int16" Value="0"/>
+														<Property Name="FadeOutMode" Type="int16" Value="0"/>
+													</PropertyList>
+													<AudioSourceRef Name="METAL COMBAT FINAL" ID="{FC851FDF-D364-48FC-9943-95880B216F1B}"/>
+												</MusicClip>
+											</ClipList>
+										</MusicTrackSequence>
+									</SequenceList>
+								</MusicTrack>
+							</ChildrenList>
+							<CueList>
+								<MusicCue Name="Entry Cue" ID="{F14136F1-1CAF-40F5-A1D9-6404191E1128}">
+									<PropertyList>
+										<Property Name="TimeMs" Type="Real64" Value="8000"/>
+									</PropertyList>
+								</MusicCue>
+								<MusicCue Name="Exit Cue" ID="{37B9BC0C-C395-4646-B0C7-6910B63EDD2C}">
+									<PropertyList>
+										<Property Name="CueType" Type="int16" Value="1"/>
+										<Property Name="TimeMs" Type="Real64" Value="173953.877188184"/>
+									</PropertyList>
+								</MusicCue>
+							</CueList>
+						</MusicSegment>
+					</ChildrenList>
+					<TransitionList>
+						<MusicTransition Name="Root" ID="{49A53574-1A5B-4746-951C-2477263579AA}">
+							<PropertyList>
+								<Property Name="IsFolder" Type="bool" Value="True"/>
+							</PropertyList>
+							<ChildrenList>
+								<MusicTransition Name="Transition" ID="{0D489914-011F-45EE-9182-CAE83B425E67}">
+									<TransitionInfo>
+										<SourceFadeOut>
+											<MusicFade Name="Source Fade-out" ID="{CC8A6D73-D04D-4E67-9370-82713D0B7712}">
+												<PropertyList>
+													<Property Name="FadeTime" Type="Real64" Value="1"/>
+													<Property Name="FadeType" Type="int16" Value="1"/>
+												</PropertyList>
+											</MusicFade>
+										</SourceFadeOut>
+									</TransitionInfo>
+								</MusicTransition>
+							</ChildrenList>
+							<TransitionInfo/>
+						</MusicTransition>
+					</TransitionList>
+					<Playlist>
+						<MusicPlaylistItem Name="" ID="{F68CEE96-BFC2-473E-A458-DB293F8D3529}" ShortID="30983012">
+							<ChildrenList>
+								<MusicPlaylistItem Name="" ID="{62CBA784-6D63-4FBD-BFB5-D970D54C90F9}" ShortID="705207771">
+									<PropertyList>
+										<Property Name="LoopCount" Type="int16" Value="0"/>
+										<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+									</PropertyList>
+									<SegmentRef Name="Metal_Combat_01" ID="{065373CA-B6B7-4634-9C4B-6D6F79214FAA}"/>
+								</MusicPlaylistItem>
+							</ChildrenList>
+						</MusicPlaylistItem>
+					</Playlist>
+				</MusicPlaylistContainer>
+			</ChildrenList>
+		</WorkUnit>
+	</InteractiveMusic>
+</WwiseDocument>

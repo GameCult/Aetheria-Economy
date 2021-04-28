@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}" SchemaVersion="97">
+	<InteractiveMusic>
+		<WorkUnit Name="Boss" ID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}" PersistMode="Standalone">
+			<ChildrenList>
+				<MusicPlaylistContainer Name="Metal_Boss_01" ID="{A63A6F6B-5A29-43FE-815C-1CE54D8891E4}" ShortID="611602080">
+					<PropertyList>
+						<Property Name="Tempo" Type="Real64" Value="170"/>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<MusicSegment Name="Metal_Boss_01" ID="{B63DD0AD-5CEB-42A1-806C-B704B3F7097A}" ShortID="194476652">
+							<PropertyList>
+								<Property Name="EndPosition" Type="Real64" Value="169194.854166667"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<MusicTrack Name="METAL BOSS FINAL" ID="{94700665-FF1C-4F26-9127-26304200A2F9}" ShortID="839918767">
+									<ReferenceList>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="METAL BOSS FINAL" ID="{0EC376FC-5CE4-43F6-8446-1574C2DA9412}">
+											<Language>SFX</Language>
+											<AudioFile>METAL BOSS FINAL.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="230464935"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<TransitionList>
+										<MusicTransition Name="Root" ID="{526D3C08-8A21-4C53-B84F-7DB3511B7A21}">
+											<PropertyList>
+												<Property Name="IsFolder" Type="bool" Value="True"/>
+											</PropertyList>
+											<TransitionInfo/>
+										</MusicTransition>
+									</TransitionList>
+									<SequenceList>
+										<MusicTrackSequence Name="" ID="{D0AF8EE7-9E40-4282-AF06-C8C2CE2DF6FF}">
+											<ClipList>
+												<MusicClip Name="METAL BOSS FINAL" ID="{17DB4998-8530-48CD-B54D-C1C57609D8E4}">
+													<PropertyList>
+														<Property Name="EndTrimOffset" Type="Real64" Value="169194.854166667"/>
+														<Property Name="FadeInMode" Type="int16" Value="0"/>
+														<Property Name="FadeOutMode" Type="int16" Value="0"/>
+													</PropertyList>
+													<AudioSourceRef Name="METAL BOSS FINAL" ID="{0EC376FC-5CE4-43F6-8446-1574C2DA9412}"/>
+												</MusicClip>
+											</ClipList>
+										</MusicTrackSequence>
+									</SequenceList>
+								</MusicTrack>
+							</ChildrenList>
+							<CueList>
+								<MusicCue Name="Entry Cue" ID="{80FE9DA2-5295-4F9B-B824-442EC9FF7DC2}"/>
+								<MusicCue Name="Exit Cue" ID="{B6B9D5FE-D686-45BE-8DFA-5E232A262A5E}">
+									<PropertyList>
+										<Property Name="CueType" Type="int16" Value="1"/>
+										<Property Name="TimeMs" Type="Real64" Value="163764.705882353"/>
+									</PropertyList>
+								</MusicCue>
+							</CueList>
+						</MusicSegment>
+					</ChildrenList>
+					<TransitionList>
+						<MusicTransition Name="Root" ID="{76C77822-E45E-44B2-8502-6E759C801DD0}">
+							<PropertyList>
+								<Property Name="IsFolder" Type="bool" Value="True"/>
+							</PropertyList>
+							<ChildrenList>
+								<MusicTransition Name="Transition" ID="{88DF3A06-C097-44F1-B5F1-6835545DDB40}">
+									<TransitionInfo>
+										<SourceFadeOut>
+											<MusicFade Name="Source Fade-out" ID="{DD30BCB2-C711-43E6-8B21-7A9685681E91}">
+												<PropertyList>
+													<Property Name="FadeTime" Type="Real64" Value="1"/>
+													<Property Name="FadeType" Type="int16" Value="1"/>
+												</PropertyList>
+											</MusicFade>
+										</SourceFadeOut>
+									</TransitionInfo>
+								</MusicTransition>
+							</ChildrenList>
+							<TransitionInfo/>
+						</MusicTransition>
+					</TransitionList>
+					<Playlist>
+						<MusicPlaylistItem Name="" ID="{AB33CF31-1C67-4483-BA8B-78603B9CC4B7}" ShortID="1042679147">
+							<ChildrenList>
+								<MusicPlaylistItem Name="" ID="{FD8186D6-1C36-4DF1-B13F-9E581C0FA0C0}" ShortID="845067479">
+									<PropertyList>
+										<Property Name="LoopCount" Type="int16" Value="0"/>
+										<Property Name="PlaylistItemType" Type="int16" Value="1"/>
+									</PropertyList>
+									<SegmentRef Name="Metal_Boss_01" ID="{B63DD0AD-5CEB-42A1-806C-B704B3F7097A}"/>
+								</MusicPlaylistItem>
+							</ChildrenList>
+						</MusicPlaylistItem>
+					</Playlist>
+				</MusicPlaylistContainer>
+			</ChildrenList>
+		</WorkUnit>
+	</InteractiveMusic>
+</WwiseDocument>

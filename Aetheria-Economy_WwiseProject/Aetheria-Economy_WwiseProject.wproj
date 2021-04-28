@@ -11,6 +11,7 @@
 				<Language Name="External" ID="{5B5BCC05-74F6-4109-A3FE-B7D42A0E9251}"/>
 				<Language Name="Mixed" ID="{1F3D5F01-8310-4A59-BAC0-F3E6E2F05CC9}"/>
 				<Language Name="SFX" ID="{D4AB3560-F992-4502-B564-1615B022A8BD}"/>
+				<Language Name="SoundSeed Grain" ID="{2310D29D-76B0-427B-858D-EF8CCD053639}"/>
 			</LanguageList>
 			<PropertyList>
 				<Property Name="ExternalSourcesInputPath" Type="string">
@@ -25,6 +26,7 @@
 						<Value Platform="Windows">GeneratedSoundBanks\Windows\</Value>
 					</ValueList>
 				</Property>
+				<Property Name="LicenseKey" Type="string" Value="PHByb2plY3QgaWQ9IjEwMTg3IiBtYXNrPSJBWUpMMjY3MSIgZW5jPSIwIj48bGlj ZW5zZSBpZD0iNDEiIG5hbWU9Ild3aXNlIChMaW1pdGVkIENvbW1lcmNpYWwgTGlj ZW5zZSkgKExpbWl0ZWQgdG8gNTAwIGFzc2V0cykiIHR5cGU9IjIiIHBsYXRmb3Jt cz0iNCwxMCwxMywxNCIgZXhwaXJlcz0iMjAyMi0wNC0wMSIgYXNzZXRzPSI1MDAi IC8+PGxpY2Vuc2UgaWQ9IjMxIiBuYW1lPSJTb3VuZFNlZWQgQWlyIiB0eXBlPSIx IiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxs aWNlbnNlIGlkPSI1NCIgbmFtZT0iU291bmRTZWVkIEdyYWluIiB0eXBlPSIxIiBw bGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxsaWNl bnNlIGlkPSIxMSIgbmFtZT0iaVpvdG9wZSBUcmFzaCBGaWx0ZXJzIiB0eXBlPSIx IiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxs aWNlbnNlIGlkPSIxMiIgbmFtZT0iaVpvdG9wZSBUcmFzaCBNdWx0aS1iYW5kIERp c3RvcnRpb25zIiB0eXBlPSIxIiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9 IjIwMjEtMDUtMTUiICAvPjxsaWNlbnNlIGlkPSIxMyIgbmFtZT0iaVpvdG9wZSBU cmFzaCBTaW5nbGUtYmFuZCBEaXN0b3J0aW9ucyIgdHlwZT0iMSIgcGxhdGZvcm1z PSI0LDEwLDE0IiBleHBpcmVzPSIyMDIxLTA1LTE1IiAgLz48bGljZW5zZSBpZD0i MTQiIG5hbWU9Imlab3RvcGUgVHJhc2ggQm94IE1vZGVscyIgdHlwZT0iMSIgcGxh dGZvcm1zPSI0LDEwLDE0IiBleHBpcmVzPSIyMDIxLTA1LTE1IiAgLz48bGljZW5z ZSBpZD0iMTUiIG5hbWU9Imlab3RvcGUgVHJhc2ggRHluYW1pY3MgKyBEZWxheSBC dW5kbGUiIHR5cGU9IjEiIHBsYXRmb3Jtcz0iNCwxMCwxNCIgZXhwaXJlcz0iMjAy MS0wNS0xNSIgIC8+PGxpY2Vuc2UgaWQ9IjE2IiBuYW1lPSJpWm90b3BlIEh5YnJp ZCBSZXZlcmIiIHR5cGU9IjEiIHBsYXRmb3Jtcz0iNCwxMCwxNCIgZXhwaXJlcz0i MjAyMS0wNS0xNSIgIC8+PC9wcm9qZWN0Pg==|uK+KeV3xm5FqPasDb4SxTSeO2zN XRZ60T5H105xAhHDZlAbco5jIPQxF1GECbZD19cvHJL38+9hFCxzLtvYhSX5zCEf bXML0PKaOhjOaexaJIb1hbmzssRLQiYQYPWGUqM8aYLYV50miOJFFttUYzHFRBXF lcWO85YivEt8vBmfAhXnWxPYquDlVKyb8JnuuZ53rRvVMOznF6+cjHCL1Puqer3M NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx 3DCFXPlSP6FQa8t4xiNRVcWDmXQW38WvPNW+c1yTEByvIzAbNS1TGveF0yg== "/>
 				<Property Name="SoundBankGenerateEstimatedDuration" Type="bool" Value="True"/>
 				<Property Name="SoundBankGenerateHeaderFile" Type="bool" Value="True"/>
 				<Property Name="SoundBankGenerateMaxAttenuationInfo" Type="bool" Value="True"/>
@@ -60,35 +62,6 @@
 					</ValueList>
 				</Property>
 				<Property Name="WwiseVersionWhenCreated" Type="string" Value="Branch=wwise_v2019.2|Build=7459|VersionName=v2019.2.9|Config=Release"/>
-			
-				<Property Name="LicenseKey" Type="string" Value="PHByb2plY3QgaWQ9IjEwMTg3IiBtYXNrPSJBWUpMMjY3MSIgZW5jPSIwIj48bGlj
-ZW5zZSBpZD0iNDEiIG5hbWU9Ild3aXNlIChMaW1pdGVkIENvbW1lcmNpYWwgTGlj
-ZW5zZSkgKExpbWl0ZWQgdG8gNTAwIGFzc2V0cykiIHR5cGU9IjIiIHBsYXRmb3Jt
-cz0iNCwxMCwxMywxNCIgZXhwaXJlcz0iMjAyMi0wNC0wMSIgYXNzZXRzPSI1MDAi
-IC8+PGxpY2Vuc2UgaWQ9IjMxIiBuYW1lPSJTb3VuZFNlZWQgQWlyIiB0eXBlPSIx
-IiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxs
-aWNlbnNlIGlkPSI1NCIgbmFtZT0iU291bmRTZWVkIEdyYWluIiB0eXBlPSIxIiBw
-bGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxsaWNl
-bnNlIGlkPSIxMSIgbmFtZT0iaVpvdG9wZSBUcmFzaCBGaWx0ZXJzIiB0eXBlPSIx
-IiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxs
-aWNlbnNlIGlkPSIxMiIgbmFtZT0iaVpvdG9wZSBUcmFzaCBNdWx0aS1iYW5kIERp
-c3RvcnRpb25zIiB0eXBlPSIxIiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9
-IjIwMjEtMDUtMTUiICAvPjxsaWNlbnNlIGlkPSIxMyIgbmFtZT0iaVpvdG9wZSBU
-cmFzaCBTaW5nbGUtYmFuZCBEaXN0b3J0aW9ucyIgdHlwZT0iMSIgcGxhdGZvcm1z
-PSI0LDEwLDE0IiBleHBpcmVzPSIyMDIxLTA1LTE1IiAgLz48bGljZW5zZSBpZD0i
-MTQiIG5hbWU9Imlab3RvcGUgVHJhc2ggQm94IE1vZGVscyIgdHlwZT0iMSIgcGxh
-dGZvcm1zPSI0LDEwLDE0IiBleHBpcmVzPSIyMDIxLTA1LTE1IiAgLz48bGljZW5z
-ZSBpZD0iMTUiIG5hbWU9Imlab3RvcGUgVHJhc2ggRHluYW1pY3MgKyBEZWxheSBC
-dW5kbGUiIHR5cGU9IjEiIHBsYXRmb3Jtcz0iNCwxMCwxNCIgZXhwaXJlcz0iMjAy
-MS0wNS0xNSIgIC8+PGxpY2Vuc2UgaWQ9IjE2IiBuYW1lPSJpWm90b3BlIEh5YnJp
-ZCBSZXZlcmIiIHR5cGU9IjEiIHBsYXRmb3Jtcz0iNCwxMCwxNCIgZXhwaXJlcz0i
-MjAyMS0wNS0xNSIgIC8+PC9wcm9qZWN0Pg==|uK+KeV3xm5FqPasDb4SxTSeO2zN
-XRZ60T5H105xAhHDZlAbco5jIPQxF1GECbZD19cvHJL38+9hFCxzLtvYhSX5zCEf
-bXML0PKaOhjOaexaJIb1hbmzssRLQiYQYPWGUqM8aYLYV50miOJFFttUYzHFRBXF
-lcWO85YivEt8vBmfAhXnWxPYquDlVKyb8JnuuZ53rRvVMOznF6+cjHCL1Puqer3M
-NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx
-3DCFXPlSP6FQa8t4xiNRVcWDmXQW38WvPNW+c1yTEByvIzAbNS1TGveF0yg==
-"/>
 			</PropertyList>
 			<SharedValues>
 				<SharedPropertyList ClassName="AudioSource" PluginType="0" CompanyID="1" PluginID="0">
@@ -7982,6 +7955,50 @@ NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx
 						</Property>
 					</PropertyList>
 				</SharedPropertyList>
+				<SharedPropertyList ClassName="McDSP ML1" PluginType="3" CompanyID="256" PluginID="103">
+					<PropertyList>
+						<Property Name="Ceiling" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Color" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Inclusion" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Knee" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Mode" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideColor" Type="bool">
+							<ValueList>
+								<Value>False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Release" Type="Real32">
+							<ValueList>
+								<Value>10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Threshold" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
 				<SharedPropertyList ClassName="Wwise Parametric EQ" PluginType="3" CompanyID="0" PluginID="105">
 					<PropertyList>
 						<Property Name="Color" Type="int16">
@@ -8291,6 +8308,225 @@ NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx
 							</ValueList>
 						</Property>
 						<Property Name="Threshold" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="McDSP FutzBox" PluginType="3" CompanyID="256" PluginID="110">
+					<PropertyList>
+						<Property Name="Balance" Type="Real32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Color" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionAmount" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionEnable" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionIntensity" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionMode" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistortionRectify" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQEnable" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQFilterType" Type="int32">
+							<ValueList>
+								<Value>1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQFreq" Type="Real32">
+							<ValueList>
+								<Value>1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQGain" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="EQQ" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersEnable" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersHPFFreq" Type="Real32">
+							<ValueList>
+								<Value>40</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersHPFQ" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersHPFSlope" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersLPFFreq" Type="Real32">
+							<ValueList>
+								<Value>18000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersLPFQ" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FiltersLPFSlope" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateAttackTime" Type="Real32">
+							<ValueList>
+								<Value>1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateEnable" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateHoldTime" Type="Real32">
+							<ValueList>
+								<Value>10</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateRange" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateReleaseTime" Type="Real32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="GateThreshold" Type="Real32">
+							<ValueList>
+								<Value>-40</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Inclusion" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="InputGain" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoFiBitDepthType" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoFiDownSampleIndex" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoFiEnable" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LoFiFilter" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseEnable" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseHPFFreq" Type="Real32">
+							<ValueList>
+								<Value>40</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseLPFFreq" Type="Real32">
+							<ValueList>
+								<Value>18000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseLevel" Type="Real32">
+							<ValueList>
+								<Value>-96</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseRange" Type="Real32">
+							<ValueList>
+								<Value>-20</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseRecovery" Type="Real32">
+							<ValueList>
+								<Value>20</Value>
+							</ValueList>
+						</Property>
+						<Property Name="NoiseThresh" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputGain" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideColor" Type="bool">
+							<ValueList>
+								<Value>False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SIMEnable" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SIMTuning" Type="Real32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SIMType" Type="int32">
 							<ValueList>
 								<Value>0</Value>
 							</ValueList>
@@ -10069,6 +10305,100 @@ NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx
 						</Property>
 					</PropertyList>
 				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Reflect" PluginType="3" CompanyID="0" PluginID="171">
+					<PropertyList>
+						<Property Name="BaseTextureFrequency" Type="Real32">
+							<ValueList>
+								<Value>250</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CenterPerc" Type="Real32">
+							<ValueList>
+								<Value>100</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Color" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="CursorNameCategory" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DistanceThreshold" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Dry" Type="Real32">
+							<ValueList>
+								<Value>-96</Value>
+							</ValueList>
+						</Property>
+						<Property Name="FadeOutNbFrames" Type="int32">
+							<ValueList>
+								<Value>3</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Inclusion" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxDistance" Type="Real32">
+							<ValueList>
+								<Value>1000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="MaxReflections" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OutputChannelConfig" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideColor" Type="bool">
+							<ValueList>
+								<Value>False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ParamFilterCutoff" Type="Real32">
+							<ValueList>
+								<Value>0.5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ParamFilterType" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PitchThreshold" Type="Real32">
+							<ValueList>
+								<Value>2400</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SpeedOfSound" Type="Real32">
+							<ValueList>
+								<Value>345</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ThresholdMode" Type="int32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Wet" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
 				<SharedPropertyList ClassName="System" PluginType="7" CompanyID="0" PluginID="174">
 					<PropertyList>
 						<Property Name="Color" Type="int16">
@@ -10207,7 +10537,7 @@ NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx
 						</Property>
 					</PropertyList>
 				</SharedPropertyList>
-				<SharedPropertyList ClassName="SoundSeed Grain" PluginType="2" CompanyID="0" PluginID="183">
+				<SharedPropertyList ClassName="" PluginType="2" CompanyID="0" PluginID="183">
 					<PropertyList>
 						<Property Name="Amplitude" Type="Real32">
 							<ValueList>
@@ -11091,7 +11421,7 @@ NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx
 						</Property>
 					</PropertyList>
 				</SharedPropertyList>
-				<SharedPropertyList ClassName="ParameterModulatorAssociation" PluginType="0" CompanyID="0" PluginID="185">
+				<SharedPropertyList ClassName="" PluginType="0" CompanyID="0" PluginID="185">
 					<PropertyList>
 						<Property Name="ModDisplayName" Type="string">
 							<ValueList>
@@ -11593,6 +11923,173 @@ NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx
 						</Property>
 					</PropertyList>
 				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Motion Generator (Deprecated)" PluginType="2" CompanyID="0" PluginID="405">
+					<PropertyList>
+						<Property Name="AttackTime" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DecayTime" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Duration" Type="Real32">
+							<ValueList>
+								<Value>1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DurationType" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Period" Type="Real32">
+							<ValueList>
+								<Value>1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="PeriodMultiplier" Type="Real32">
+							<ValueList>
+								<Value>1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ReleaseTime" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SustainLevel" Type="Real32">
+							<ValueList>
+								<Value>-12</Value>
+							</ValueList>
+						</Property>
+						<Property Name="SustainTime" Type="Real32">
+							<ValueList>
+								<Value>1</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Motion Source" PluginType="2" CompanyID="0" PluginID="409">
+					<PropertyList>
+						<Property Name="Channel1" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Channel2" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Channel3" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Channel4" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ChannelConfig" Type="int16">
+							<ValueList>
+								<Value>6</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DriverA" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DriverB" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DriverC" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DriverD" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DriverE" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DriverF" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DriverG" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="DriverH" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="High1" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="High2" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LeftTrigger" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Low1" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Low2" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="RightTrigger" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Wwise Motion" PluginType="7" CompanyID="0" PluginID="507">
+					<PropertyList>
+						<Property Name="Color" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Inclusion" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideColor" Type="bool">
+							<ValueList>
+								<Value>False</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
 				<SharedPropertyList ClassName="BatchRenameSettings" PluginType="0" CompanyID="0" PluginID="992">
 					<PropertyList>
 						<Property Name="ApplyOn" Type="int16">
@@ -11692,6 +12189,120 @@ NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx
 						<Property Name="Time" Type="Real64">
 							<ValueList>
 								<Value>0</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+				</SharedPropertyList>
+				<SharedPropertyList ClassName="Auro Headphone" PluginType="3" CompanyID="263" PluginID="1100">
+					<PropertyList>
+						<Property Name="Bypass" Type="bool">
+							<ValueList>
+								<Value>False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Bypass_offset" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Color" Type="int16">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ER_Delay" Type="Real32">
+							<ValueList>
+								<Value>1.4</Value>
+							</ValueList>
+						</Property>
+						<Property Name="ER_Level" Type="Real32">
+							<ValueList>
+								<Value>-6</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Inclusion" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="LFE_level" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Level" Type="Real32">
+							<ValueList>
+								<Value>0</Value>
+							</ValueList>
+						</Property>
+						<Property Name="OverrideColor" Type="bool">
+							<ValueList>
+								<Value>False</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Reverb" Type="bool">
+							<ValueList>
+								<Value>True</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Reverb_alpha" Type="Real32">
+							<ValueList>
+								<Value>0.5</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Reverb_fcut" Type="Real32">
+							<ValueList>
+								<Value>10000</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Reverb_level" Type="Real32">
+							<ValueList>
+								<Value>-6</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Reverb_predelay" Type="Real32">
+							<ValueList>
+								<Value>7</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Reverb_tr60" Type="Real32">
+							<ValueList>
+								<Value>1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Src_distance" Type="Real32">
+							<ValueList>
+								<Value>1</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Wall_back" Type="Real32">
+							<ValueList>
+								<Value>7.25</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Wall_bottom" Type="Real32">
+							<ValueList>
+								<Value>2.75</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Wall_front" Type="Real32">
+							<ValueList>
+								<Value>3.25</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Wall_left" Type="Real32">
+							<ValueList>
+								<Value>4.25</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Wall_right" Type="Real32">
+							<ValueList>
+								<Value>4.75</Value>
+							</ValueList>
+						</Property>
+						<Property Name="Wall_top" Type="Real32">
+							<ValueList>
+								<Value>3.75</Value>
 							</ValueList>
 						</Property>
 					</PropertyList>
