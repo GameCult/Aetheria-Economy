@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{19B54553-9790-45FE-AB59-449BE0663B11}" SchemaVersion="103">
+	<SoundBanks>
+		<WorkUnit Name="Music" ID="{19B54553-9790-45FE-AB59-449BE0663B11}" PersistMode="Standalone">
+			<ChildrenList>
+				<SoundBank Name="Boss" ID="{46958A74-94AA-4D83-84A2-5795A906E864}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Boss" ID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}" WorkUnitID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Boss" ID="{72536083-A3AC-4BB1-BEEC-AC6A48F749DC}" WorkUnitID="{E643E078-E4F2-4E72-BD3A-F0D6BABC03CD}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+				<SoundBank Name="Main_Menu" ID="{C9859C1F-8091-4698-B763-771998230C81}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Main Menu" ID="{843550BF-C9B7-429B-8AA8-8BB86A40213C}" WorkUnitID="{E643E078-E4F2-4E72-BD3A-F0D6BABC03CD}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Main_Menu" ID="{52FD8D73-17FB-445D-A484-9FA4BA1B8CF2}" WorkUnitID="{7CB722F4-389D-4867-87CA-00120A745A22}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList>
+						<ObjectRef Name="Generic" ID="{965684F1-9F1B-4517-B1A1-BE20AB8F937A}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+						<ObjectRef Name="Gen_OW_01" ID="{AAF59638-2F79-498D-A1F2-C52181563AD6}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+					</ObjectExclusionList>
+					<GameSyncExclusionList/>
+				</SoundBank>
+				<SoundBank Name="Overworld" ID="{8AEC9F6F-B532-40E4-B662-9EFBF432034F}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Overworld" ID="{C542C356-06F3-43D7-87B7-A3B17F65A159}" WorkUnitID="{E643E078-E4F2-4E72-BD3A-F0D6BABC03CD}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Overworld" ID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+				<SoundBank Name="Combat" ID="{AB6AD041-DF31-46C3-B978-84A3D5B2A678}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Combat" ID="{E6906D55-7AFE-47AB-93B5-99B35325610D}" WorkUnitID="{E643E078-E4F2-4E72-BD3A-F0D6BABC03CD}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Combat" ID="{88745582-E14B-4ADD-8B99-AB36C6547F65}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+			</ChildrenList>
+		</WorkUnit>
+	</SoundBanks>
+</WwiseDocument>

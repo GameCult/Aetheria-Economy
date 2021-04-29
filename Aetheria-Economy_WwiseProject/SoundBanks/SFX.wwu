@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{EAB143B8-96BA-4AB3-8259-B4E55B43523A}" SchemaVersion="103">
+	<SoundBanks>
+		<WorkUnit Name="SFX" ID="{EAB143B8-96BA-4AB3-8259-B4E55B43523A}" PersistMode="Standalone">
+			<ChildrenList>
+				<Folder Name="Weapons" ID="{9138D0EA-994E-4C94-A022-5009BB35FC3B}" ShortID="157298729">
+					<ChildrenList>
+						<SoundBank Name="Cannon" ID="{A9613B61-53BD-454E-9B6E-0E9F05875FFA}">
+							<ObjectInclusionList>
+								<ObjectRef Name="Cannon_gun" ID="{E5DFDBF4-5721-4187-8D25-D90903700EE9}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="Cannon" ID="{B0BB878B-5BFA-421B-B0BC-4D04506AA6DB}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+							</ObjectInclusionList>
+							<ObjectExclusionList/>
+							<GameSyncExclusionList/>
+						</SoundBank>
+						<SoundBank Name="IonCannon" ID="{972D8328-C881-4DD3-9EA4-1EF7BF60F95C}">
+							<ObjectInclusionList>
+								<ObjectRef Name="IonCannon" ID="{FD58627D-DA04-4181-8A2E-6995EE927024}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="Ion_cannon" ID="{29C6B342-4A84-46E2-9311-46294D25A37E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+							</ObjectInclusionList>
+							<ObjectExclusionList/>
+							<GameSyncExclusionList/>
+						</SoundBank>
+						<SoundBank Name="LightningGun" ID="{0247F340-669D-4697-A7D0-3527CBF58069}">
+							<ObjectInclusionList>
+								<ObjectRef Name="Lightning_gun" ID="{0FC523CF-7DA8-4156-B37B-BB22BFC6034A}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="LightningGun" ID="{098F1EE8-BF86-490A-8D8C-C9ECFA76ED2A}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+							</ObjectInclusionList>
+							<ObjectExclusionList/>
+							<GameSyncExclusionList/>
+						</SoundBank>
+						<SoundBank Name="RailGun" ID="{2968A512-4A01-444A-B05B-D7F01F2CC65F}">
+							<ObjectInclusionList>
+								<ObjectRef Name="Rail_gun" ID="{B4E48D54-A0B5-4172-8A61-013CCFB058F8}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="RailGun" ID="{EE77E8AF-613A-49A2-8C77-E37B3867E770}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+							</ObjectInclusionList>
+							<ObjectExclusionList/>
+							<GameSyncExclusionList/>
+						</SoundBank>
+						<SoundBank Name="MachineGun" ID="{E2E30C07-6258-4D66-BD0C-BF1A31C40AEE}">
+							<ObjectInclusionList>
+								<ObjectRef Name="MachineGun" ID="{3DE4F04E-24C3-4775-B730-D4925E9807A5}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="Machine_gun" ID="{4205255B-A77D-4F45-BA25-D66BF8239CD5}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+							</ObjectInclusionList>
+							<ObjectExclusionList/>
+							<GameSyncExclusionList/>
+						</SoundBank>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Thruster" ID="{651E9EF3-9B88-4FCC-B653-AAA61F3A2921}" ShortID="525323836">
+					<ChildrenList>
+						<SoundBank Name="Thruster" ID="{FB2F059E-F9F6-41B4-A3FD-C87B37379AB4}">
+							<ObjectInclusionList>
+								<ObjectRef Name="Thruster" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="Thruster" ID="{BA708E1B-0EA8-4378-A7FF-720F1D626E82}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+							</ObjectInclusionList>
+							<ObjectExclusionList/>
+							<GameSyncExclusionList/>
+						</SoundBank>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Reactor" ID="{F1D0D6EC-62D7-4D52-BB59-9FE8FADAA76D}" ShortID="71130905">
+					<ChildrenList>
+						<SoundBank Name="Reactor" ID="{0F317A91-4BAD-40A9-8EFB-82DAC25E5F7C}">
+							<ObjectInclusionList>
+								<ObjectRef Name="Reactor" ID="{9A336BE6-0931-408C-89BD-E8A650B73697}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="Reactor" ID="{A3877707-6AB2-416F-BD7D-6A63D41DB75E}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+							</ObjectInclusionList>
+							<ObjectExclusionList/>
+							<GameSyncExclusionList/>
+						</SoundBank>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Aetheric Drives" ID="{B4278476-C842-41E6-AD13-6AE47C1C558F}" ShortID="949338256">
+					<ChildrenList>
+						<SoundBank Name="Aetheric_Drive" ID="{350984ED-1B55-4087-A16C-1B70FE8A828B}">
+							<ObjectInclusionList>
+								<ObjectRef Name="Aetheric Drives" ID="{3796CE6F-3F3B-40E0-981C-67B7D155383A}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="Aetheric Drives" ID="{F215CA3C-1210-4E73-9ECD-3E6F7369235E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+							</ObjectInclusionList>
+							<ObjectExclusionList/>
+							<GameSyncExclusionList/>
+						</SoundBank>
+					</ChildrenList>
+				</Folder>
+				<SoundBank Name="General" ID="{2634D57C-243D-4917-8BB0-C85DC2E72F43}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Wormhole" ID="{10F9968E-0078-414C-B73D-21AA1CD09D38}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="sensor_ping" ID="{B035E54B-17CE-4195-B946-F8017BD764A4}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="General" ID="{487FD7FB-8121-4845-9AA4-55C1691BC6A9}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Shield" ID="{346555E1-7858-4E2A-B9AC-CC1E4990759E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+				<SoundBank Name="UI" ID="{86130C21-81DD-4DB8-902A-F172CCD79666}">
+					<ObjectInclusionList>
+						<ObjectRef Name="UI" ID="{D95283AF-710B-4027-B16C-1E66D2F3FE51}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="UI" ID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
+					<ObjectExclusionList/>
+					<GameSyncExclusionList/>
+				</SoundBank>
+			</ChildrenList>
+		</WorkUnit>
+	</SoundBanks>
+</WwiseDocument>

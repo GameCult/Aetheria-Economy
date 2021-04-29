@@ -6,6 +6,7 @@
 				<SoundBank Name="Ambience" ID="{9666AE65-5566-4CB3-8EBB-B13773790485}">
 					<ObjectInclusionList>
 						<ObjectRef Name="Ambience AM Unit" ID="{CA5C9672-2298-4659-B32D-52AE660403FF}" WorkUnitID="{CA5C9672-2298-4659-B32D-52AE660403FF}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Ambience" ID="{E3C68D3D-9917-4B0D-9D0A-E904D7B8FCF7}" WorkUnitID="{E3C68D3D-9917-4B0D-9D0A-E904D7B8FCF7}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>

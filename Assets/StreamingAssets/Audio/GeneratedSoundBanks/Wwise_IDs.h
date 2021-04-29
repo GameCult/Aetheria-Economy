@@ -13,19 +13,41 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID AMB_BASEDRONE = 1831661317U;
+        static const AkUniqueID AMB_LOW_ONESHOTS = 1514387320U;
+        static const AkUniqueID AMB_MID_AND_HIGH_ONESHOTS = 2618651523U;
+        static const AkUniqueID AMB_WEATHERLIKE_ONESHOTS = 2667303365U;
+        static const AkUniqueID BUY = 714721615U;
+        static const AkUniqueID CANNON_FIRE = 155513425U;
+        static const AkUniqueID CANNON_HIT = 1290210792U;
+        static const AkUniqueID CANNON_MISS = 3449722753U;
+        static const AkUniqueID CANNON_SHIP_DESTROYED = 582170835U;
         static const AkUniqueID DOCK = 1944958176U;
         static const AkUniqueID DOCK_FAIL = 2820966551U;
         static const AkUniqueID DROP = 1878686274U;
+        static const AkUniqueID ELECTRIC_DRIVE_PLAY = 3691930898U;
+        static const AkUniqueID ELECTRIC_DRIVE_STOP = 1108521100U;
         static const AkUniqueID EQUIP = 2412608643U;
+        static const AkUniqueID IONCANNON_CHARGE_START = 3397460648U;
+        static const AkUniqueID IONCANNON_CHARGE_STOP = 3179453300U;
+        static const AkUniqueID IONCANNON_FAIL = 216684405U;
+        static const AkUniqueID IONCANNON_FIRE = 299292453U;
+        static const AkUniqueID IONCANNON_HIT = 1028672300U;
+        static const AkUniqueID IONCANNON_MISS = 4133048765U;
+        static const AkUniqueID IONCANNON_SHIP_DESTROYED = 3465139343U;
         static const AkUniqueID LIGHTNINGGUN_CHARGE_START = 1965329713U;
         static const AkUniqueID LIGHTNINGGUN_CHARGE_STOP = 62119851U;
         static const AkUniqueID LIGHTNINGGUN_FAIL = 1293013044U;
         static const AkUniqueID LIGHTNINGGUN_FIRE = 1744728900U;
         static const AkUniqueID LIGHTNINGGUN_HIT = 2258493327U;
+        static const AkUniqueID LIGHTNINGGUN_HIT_SHIP_DESTROYED = 386277016U;
         static const AkUniqueID LIGHTNINGGUN_MISS = 2164260064U;
         static const AkUniqueID MACHINEGUN_FIRE = 631099533U;
         static const AkUniqueID MACHINEGUN_HIT = 4216521780U;
         static const AkUniqueID MACHINEGUN_MISS = 475195381U;
+        static const AkUniqueID MACHINEGUN_SHIP_DESTROYED = 2124104919U;
+        static const AkUniqueID NUCLEAR_DRIVE_PLAY = 1323767629U;
+        static const AkUniqueID NUCLEAR_DRIVE_STOP = 2440961691U;
         static const AkUniqueID PICKUP = 3978245845U;
         static const AkUniqueID PLAY_GEN_COMBAT_1 = 3953921183U;
         static const AkUniqueID PLAY_GEN_OW_01 = 3855478249U;
@@ -39,7 +61,14 @@ namespace AK
         static const AkUniqueID RAILGUN_FAIL = 3475584168U;
         static const AkUniqueID RAILGUN_FIRE = 3929859736U;
         static const AkUniqueID RAILGUN_HIT = 528420227U;
+        static const AkUniqueID RAILGUN_HIT_SHIP_DESTROYED = 4052131076U;
         static const AkUniqueID RAILGUN_MISS = 3546217468U;
+        static const AkUniqueID REACTOR_PLAY = 2609391158U;
+        static const AkUniqueID REACTOR_STOP = 3339928520U;
+        static const AkUniqueID SELL = 836804705U;
+        static const AkUniqueID SENSOR_PING = 2815033830U;
+        static const AkUniqueID SHIELD_DOWN = 1612530229U;
+        static const AkUniqueID SHIELD_UP_ACTIVE = 1310505943U;
         static const AkUniqueID STOP_GEN_COMBAT_1 = 13315505U;
         static const AkUniqueID STOP_GEN_OW_01 = 1938548259U;
         static const AkUniqueID STOP_KAWAII_FUTURE_BASS = 3844053294U;
@@ -47,12 +76,8 @@ namespace AK
         static const AkUniqueID STOP_METAL_BOSS_01 = 2121112483U;
         static const AkUniqueID STOP_METAL_COMBAT_01 = 1055950810U;
         static const AkUniqueID STOP_METAL_OW_01 = 3159624164U;
-        static const AkUniqueID THRUSTER_LARGE = 2370087034U;
-        static const AkUniqueID THRUSTER_LARGE_STOP = 1006509321U;
-        static const AkUniqueID THRUSTER_MEDIUM = 2528260676U;
-        static const AkUniqueID THRUSTER_MEDIUM_STOP = 2044992675U;
-        static const AkUniqueID THRUSTER_SMALL = 1944968294U;
-        static const AkUniqueID THRUSTER_SMALL_STOP = 1154341749U;
+        static const AkUniqueID THRUSTER_PLAY = 3178854387U;
+        static const AkUniqueID THRUSTER_STOP = 2308976345U;
         static const AkUniqueID UI_FAIL = 3050276906U;
         static const AkUniqueID UI_SUCCESS = 981465891U;
         static const AkUniqueID UNDOCK = 2826728501U;
@@ -61,6 +86,19 @@ namespace AK
         static const AkUniqueID WORMHOLE_JUMP_OUT = 1122693656U;
         static const AkUniqueID WORMHOLE_TRAVEL_LOOP = 3842220822U;
     } // namespace EVENTS
+
+    namespace SWITCHES
+    {
+        namespace SFX_DRIVE_TYPE
+        {
+            static const AkUniqueID GROUP = 2546207706U;
+
+            namespace SWITCH
+            {
+            } // namespace SWITCH
+        } // namespace SFX_DRIVE_TYPE
+
+    } // namespace SWITCHES
 
     namespace GAME_PARAMETERS
     {
@@ -89,21 +127,34 @@ namespace AK
     namespace BANKS
     {
         static const AkUniqueID INIT = 1355168291U;
+        static const AkUniqueID AETHERIC_DRIVE = 2492857755U;
+        static const AkUniqueID AMBIENCE = 85412153U;
         static const AkUniqueID BOSS = 1560169506U;
+        static const AkUniqueID CANNON = 2393348022U;
         static const AkUniqueID COMBAT = 2764240573U;
+        static const AkUniqueID GENERAL = 133642231U;
+        static const AkUniqueID IONCANNON = 3364802794U;
         static const AkUniqueID LIGHTNINGGUN = 772093933U;
         static const AkUniqueID MACHINEGUN = 3678545986U;
-        static const AkUniqueID MUSIC = 3991942870U;
+        static const AkUniqueID MAIN_MENU = 2005704188U;
         static const AkUniqueID OVERWORLD = 1562068129U;
         static const AkUniqueID RAILGUN = 639519169U;
-        static const AkUniqueID SHIP = 284967655U;
+        static const AkUniqueID REACTOR = 2204642885U;
+        static const AkUniqueID THRUSTER = 1758897770U;
         static const AkUniqueID UI = 1551306167U;
     } // namespace BANKS
 
     namespace BUSSES
     {
+        static const AkUniqueID AMBIENCE_BUS = 4202237879U;
+        static const AkUniqueID DEPTH_REVERB = 2717115764U;
         static const AkUniqueID MASTER_AUDIO_BUS = 3803692087U;
     } // namespace BUSSES
+
+    namespace AUX_BUSSES
+    {
+        static const AkUniqueID SPACE_REVERB = 1273427816U;
+    } // namespace AUX_BUSSES
 
     namespace AUDIO_DEVICES
     {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="Project" SchemaVersion="103" WwiseVersion="v2021.1.0" WwiseBuild="7575">
+<WwiseDocument Type="Project" SchemaVersion="103" WwiseVersion="v2021.1.1" WwiseBuild="7601">
 	<ProjectInfo>
 		<Project Name="Aetheria-Economy_WwiseProject" ID="{3865F6DF-4D71-4959-AB63-2666B1521D51}">
 			<Platforms>
@@ -33,7 +33,37 @@
 						<Value Platform="Windows">256</Value>
 					</ValueList>
 				</Property>
-				<Property Name="LicenseKey" Type="string" Value="PHByb2plY3QgaWQ9IjEwMTg3IiBtYXNrPSJBWUpMMjY3MSIgZW5jPSIwIj48bGlj ZW5zZSBpZD0iNDEiIG5hbWU9Ild3aXNlIChMaW1pdGVkIENvbW1lcmNpYWwgTGlj ZW5zZSkgKExpbWl0ZWQgdG8gNTAwIGFzc2V0cykiIHR5cGU9IjIiIHBsYXRmb3Jt cz0iNCwxMCwxMywxNCIgZXhwaXJlcz0iMjAyMi0wNC0wMSIgYXNzZXRzPSI1MDAi IC8+PGxpY2Vuc2UgaWQ9IjMxIiBuYW1lPSJTb3VuZFNlZWQgQWlyIiB0eXBlPSIx IiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxs aWNlbnNlIGlkPSI1NCIgbmFtZT0iU291bmRTZWVkIEdyYWluIiB0eXBlPSIxIiBw bGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxsaWNl bnNlIGlkPSIxMSIgbmFtZT0iaVpvdG9wZSBUcmFzaCBGaWx0ZXJzIiB0eXBlPSIx IiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxs aWNlbnNlIGlkPSIxMiIgbmFtZT0iaVpvdG9wZSBUcmFzaCBNdWx0aS1iYW5kIERp c3RvcnRpb25zIiB0eXBlPSIxIiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9 IjIwMjEtMDUtMTUiICAvPjxsaWNlbnNlIGlkPSIxMyIgbmFtZT0iaVpvdG9wZSBU cmFzaCBTaW5nbGUtYmFuZCBEaXN0b3J0aW9ucyIgdHlwZT0iMSIgcGxhdGZvcm1z PSI0LDEwLDE0IiBleHBpcmVzPSIyMDIxLTA1LTE1IiAgLz48bGljZW5zZSBpZD0i MTQiIG5hbWU9Imlab3RvcGUgVHJhc2ggQm94IE1vZGVscyIgdHlwZT0iMSIgcGxh dGZvcm1zPSI0LDEwLDE0IiBleHBpcmVzPSIyMDIxLTA1LTE1IiAgLz48bGljZW5z ZSBpZD0iMTUiIG5hbWU9Imlab3RvcGUgVHJhc2ggRHluYW1pY3MgKyBEZWxheSBC dW5kbGUiIHR5cGU9IjEiIHBsYXRmb3Jtcz0iNCwxMCwxNCIgZXhwaXJlcz0iMjAy MS0wNS0xNSIgIC8+PGxpY2Vuc2UgaWQ9IjE2IiBuYW1lPSJpWm90b3BlIEh5YnJp ZCBSZXZlcmIiIHR5cGU9IjEiIHBsYXRmb3Jtcz0iNCwxMCwxNCIgZXhwaXJlcz0i MjAyMS0wNS0xNSIgIC8+PC9wcm9qZWN0Pg==|uK+KeV3xm5FqPasDb4SxTSeO2zN XRZ60T5H105xAhHDZlAbco5jIPQxF1GECbZD19cvHJL38+9hFCxzLtvYhSX5zCEf bXML0PKaOhjOaexaJIb1hbmzssRLQiYQYPWGUqM8aYLYV50miOJFFttUYzHFRBXF lcWO85YivEt8vBmfAhXnWxPYquDlVKyb8JnuuZ53rRvVMOznF6+cjHCL1Puqer3M NwY9mvzqtU8dSxuo2DvaXKDPbTrE4PkjkryePUZjR1PfS/2sqcV97y4gFsU+qUwx 3DCFXPlSP6FQa8t4xiNRVcWDmXQW38WvPNW+c1yTEByvIzAbNS1TGveF0yg== "/>
+				<Property Name="LicenseKey" Type="string" Value="PHByb2plY3QgaWQ9IjEwMTg3IiBtYXNrPSJBWUpMMjY3MSIgZW5jPSIwIj48bGlj
+ZW5zZSBpZD0iNDEiIG5hbWU9Ild3aXNlIChMaW1pdGVkIENvbW1lcmNpYWwgTGlj
+ZW5zZSkgKExpbWl0ZWQgdG8gNTAwIGFzc2V0cykiIHR5cGU9IjIiIHBsYXRmb3Jt
+cz0iNCwxMCwxMywxNCIgZXhwaXJlcz0iMjAyMi0wNC0wMSIgYXNzZXRzPSI1MDAi
+IC8+PGxpY2Vuc2UgaWQ9IjMxIiBuYW1lPSJTb3VuZFNlZWQgQWlyIiB0eXBlPSIx
+IiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxs
+aWNlbnNlIGlkPSI1NCIgbmFtZT0iU291bmRTZWVkIEdyYWluIiB0eXBlPSIxIiBw
+bGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxsaWNl
+bnNlIGlkPSIxMSIgbmFtZT0iaVpvdG9wZSBUcmFzaCBGaWx0ZXJzIiB0eXBlPSIx
+IiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9IjIwMjEtMDUtMTUiICAvPjxs
+aWNlbnNlIGlkPSIxMiIgbmFtZT0iaVpvdG9wZSBUcmFzaCBNdWx0aS1iYW5kIERp
+c3RvcnRpb25zIiB0eXBlPSIxIiBwbGF0Zm9ybXM9IjQsMTAsMTQiIGV4cGlyZXM9
+IjIwMjEtMDUtMTUiICAvPjxsaWNlbnNlIGlkPSIxMyIgbmFtZT0iaVpvdG9wZSBU
+cmFzaCBTaW5nbGUtYmFuZCBEaXN0b3J0aW9ucyIgdHlwZT0iMSIgcGxhdGZvcm1z
+PSI0LDEwLDE0IiBleHBpcmVzPSIyMDIxLTA1LTE1IiAgLz48bGljZW5zZSBpZD0i
+MTQiIG5hbWU9Imlab3RvcGUgVHJhc2ggQm94IE1vZGVscyIgdHlwZT0iMSIgcGxh
+dGZvcm1zPSI0LDEwLDE0IiBleHBpcmVzPSIyMDIxLTA1LTE1IiAgLz48bGljZW5z
+ZSBpZD0iMTUiIG5hbWU9Imlab3RvcGUgVHJhc2ggRHluYW1pY3MgKyBEZWxheSBC
+dW5kbGUiIHR5cGU9IjEiIHBsYXRmb3Jtcz0iNCwxMCwxNCIgZXhwaXJlcz0iMjAy
+MS0wNS0xNSIgIC8+PGxpY2Vuc2UgaWQ9IjE2IiBuYW1lPSJpWm90b3BlIEh5YnJp
+ZCBSZXZlcmIiIHR5cGU9IjEiIHBsYXRmb3Jtcz0iNCwxMCwxNCIgZXhwaXJlcz0i
+MjAyMS0wNS0xNSIgIC8+PGxpY2Vuc2UgaWQ9IjEwIiBuYW1lPSJNY0RTUCBCdW5k
+bGUgKE1MMSwgRnV0ekJveCkiIHR5cGU9IjEiIHBsYXRmb3Jtcz0iNCwxMCwxNCIg
+ZXhwaXJlcz0iMjAyMS0wNi0yOCIgIC8+PC9wcm9qZWN0Pg==|K5pv7w2AJGKm83p
+ZMAMxyty1ESLzbmW/kMiZNzK6WxmAl63kl/vQT9NybW4Anib4hOoT9p6nax6iOnL
+olmxHcXcT7VhL3ZAYe2HnXZO7j9jcQoILzsdvwRKwtUdG8jRyVAhJ/GCFa6O3/OH
+Sb8+r9c0e2GPq914YdXNclK2emeWvZXamDNai1vosh9DI0DW9vG4sxQA1PTyLnNT
+kjDvR4kd7lUxaACRkowMxsarKav5ix4Ovf0V+oyZPA3V/8sOZnCsSo2Fvxh79Iun
+Uirl9wsxYhZHtekNGXE/6pZT5PkK+h53B3ixm5gKjuLte6lYV7cjIScvGCduRYpc
+8nscgwQ==
+"/>
 				<Property Name="SoundBankGenerateEstimatedDuration" Type="bool" Value="True"/>
 				<Property Name="SoundBankGenerateHeaderFile" Type="bool" Value="True"/>
 				<Property Name="SoundBankGenerateMaxAttenuationInfo" Type="bool" Value="True"/>
@@ -11927,7 +11957,7 @@
 						</Property>
 					</PropertyList>
 				</SharedPropertyList>
-				<SharedPropertyList ClassName="Impacter" PluginType="2" CompanyID="0" PluginID="184">
+				<SharedPropertyList ClassName="" PluginType="2" CompanyID="0" PluginID="184">
 					<PropertyList>
 						<Property Name="ExcitationMask" Type="Uint64">
 							<ValueList>
@@ -12837,7 +12867,7 @@
 						</Property>
 					</PropertyList>
 				</SharedPropertyList>
-				<SharedPropertyList ClassName="" PluginType="3" CompanyID="263" PluginID="1100">
+				<SharedPropertyList ClassName="Auro Headphone" PluginType="3" CompanyID="263" PluginID="1100">
 					<PropertyList>
 						<Property Name="Bypass" Type="bool">
 							<ValueList>

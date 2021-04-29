@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{E643E078-E4F2-4E72-BD3A-F0D6BABC03CD}" SchemaVersion="103">
+	<Events>
+		<WorkUnit Name="Music" ID="{E643E078-E4F2-4E72-BD3A-F0D6BABC03CD}" PersistMode="Standalone">
+			<ChildrenList>
+				<Folder Name="Overworld" ID="{C542C356-06F3-43D7-87B7-A3B17F65A159}" ShortID="365599058">
+					<ChildrenList>
+						<Event Name="Stop_Gen_OW_01" ID="{6A3916A1-90A8-4FE3-93EB-1E02A36AE304}">
+							<ChildrenList>
+								<Action Name="" ID="{6890D44C-7DE7-4125-B4AB-AAF7DBBFFA91}" ShortID="961438877">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+										<Property Name="FadeTime" Type="Real64" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Gen_OW_01" ID="{AAF59638-2F79-498D-A1F2-C52181563AD6}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Play_Metal_OW_01" ID="{1094EF98-562A-460B-B975-A61636956FC2}">
+							<ChildrenList>
+								<Action Name="" ID="{8B58B90F-B1F6-480F-9E02-6A7C9ABE5FF4}" ShortID="845722848">
+									<PropertyList>
+										<Property Name="FadeTime" Type="Real64" Value="1"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Metal_OW_01" ID="{7282DE71-9B0C-4E9B-960C-0EF0036250A4}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Play_Gen_OW_01" ID="{A7BDC53B-92FA-4156-A6DF-8F8B80B144BE}">
+							<ChildrenList>
+								<Action Name="" ID="{267F4ABF-6130-4FCF-BA14-6F016DB89356}" ShortID="817607046">
+									<PropertyList>
+										<Property Name="FadeTime" Type="Real64" Value="1"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Gen_OW_01" ID="{AAF59638-2F79-498D-A1F2-C52181563AD6}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Stop_Metal_OW_01" ID="{43F9794D-92EB-4B0D-A80B-3179124200AD}">
+							<ChildrenList>
+								<Action Name="" ID="{2C258DEA-F95B-4AA4-BD4D-75363863F2F9}" ShortID="621026846">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+										<Property Name="FadeTime" Type="Real64" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Metal_OW_01" ID="{7282DE71-9B0C-4E9B-960C-0EF0036250A4}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Play_Kawaii_Future_Bass" ID="{99F44592-FE4A-4A32-92A1-01FE5DD8C4D0}">
+							<ChildrenList>
+								<Action Name="" ID="{18020EBD-38D2-4902-B778-42AF9507D7D6}" ShortID="892850464">
+									<PropertyList>
+										<Property Name="FadeTime" Type="Real64" Value="1"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Kawaii Future Bass" ID="{586B920D-AA94-4B2C-828B-37B68C3F2982}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Stop_Kawaii_Future_Bass" ID="{CD80CCEC-B819-47AF-9D3E-7AC27CC32221}">
+							<ChildrenList>
+								<Action Name="" ID="{48F8BFAD-CCBA-49D5-830D-9F078C83DA2C}" ShortID="867751787">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+										<Property Name="FadeTime" Type="Real64" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Kawaii Future Bass" ID="{586B920D-AA94-4B2C-828B-37B68C3F2982}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Combat" ID="{E6906D55-7AFE-47AB-93B5-99B35325610D}" ShortID="1014707514">
+					<ChildrenList>
+						<Event Name="Play_Metal_Combat_01" ID="{0C78FC73-D934-4784-8F53-0DA94F3A3F03}">
+							<ChildrenList>
+								<Action Name="" ID="{B12E8A46-F609-44E4-AD16-9D10FB304312}" ShortID="854367943">
+									<PropertyList>
+										<Property Name="FadeTime" Type="Real64" Value="1"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Metal_Combat_01" ID="{065373CA-B6B7-4634-9C4B-6D6F79214FAA}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Play_Gen_Combat_1" ID="{46E9FFD3-34FA-4981-BB68-3444030D6D96}">
+							<ChildrenList>
+								<Action Name="" ID="{E883515D-5A32-4764-BD61-FACD0091A03B}" ShortID="278496761">
+									<PropertyList>
+										<Property Name="FadeTime" Type="Real64" Value="1"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Gen_Combat_1" ID="{37FA2177-60F1-4326-AF74-CD4928CEE0BE}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Stop_Gen_Combat_1" ID="{E47CBC86-A12F-44A7-88D8-37198C4AD4C9}">
+							<ChildrenList>
+								<Action Name="" ID="{FED54D72-6E09-4432-ADC0-592D30D31C19}" ShortID="651580044">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+										<Property Name="FadeTime" Type="Real64" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Gen_Combat_1" ID="{37FA2177-60F1-4326-AF74-CD4928CEE0BE}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Stop_Metal_Combat_01" ID="{EA22EB59-C69E-4AB3-873E-8E9F02393B69}">
+							<ChildrenList>
+								<Action Name="" ID="{094AB17B-165C-424B-8A12-BC248E8086C9}" ShortID="599593189">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+										<Property Name="FadeTime" Type="Real64" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Metal_Combat_01" ID="{065373CA-B6B7-4634-9C4B-6D6F79214FAA}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Boss" ID="{72536083-A3AC-4BB1-BEEC-AC6A48F749DC}" ShortID="515618777">
+					<ChildrenList>
+						<Event Name="Play_Metal_Boss_01" ID="{B262C0C5-661B-42DD-BD90-8DC54002C57E}">
+							<ChildrenList>
+								<Action Name="" ID="{B7191CEF-0635-4BBE-B007-D6962027E8BF}" ShortID="81631504">
+									<PropertyList>
+										<Property Name="FadeTime" Type="Real64" Value="1"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Metal_Boss_01" ID="{A63A6F6B-5A29-43FE-815C-1CE54D8891E4}" WorkUnitID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Stop_Metal_Boss_01" ID="{36D59E0E-8D99-4FFC-9F7F-AEE16A2A7612}">
+							<ChildrenList>
+								<Action Name="" ID="{DD3CAFC9-A356-4A6F-86EC-F1111F9892E9}" ShortID="131105348">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+										<Property Name="FadeTime" Type="Real64" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Metal_Boss_01" ID="{A63A6F6B-5A29-43FE-815C-1CE54D8891E4}" WorkUnitID="{7ACF63AB-5DA0-40AE-BC16-5B842BF95729}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Main Menu" ID="{843550BF-C9B7-429B-8AA8-8BB86A40213C}" ShortID="319581447">
+					<ChildrenList>
+						<Event Name="Stop_Main_Menu_01" ID="{7109DF3B-FFDD-4EC1-99EC-2E9DA3ADE174}">
+							<ChildrenList>
+								<Action Name="" ID="{6AAE3F61-B411-4777-A832-9BF2360B9E1F}" ShortID="1051525440">
+									<PropertyList>
+										<Property Name="ActionType" Type="int16" Value="2"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Main_Menu_01" ID="{59BA138D-D6DB-4F02-909A-8329475FE98D}" WorkUnitID="{7CB722F4-389D-4867-87CA-00120A745A22}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+						<Event Name="Play_Main_Menu_01" ID="{B0DECFF4-24C4-43E1-AB8A-8B8B98CDCAD3}">
+							<ChildrenList>
+								<Action Name="" ID="{FA9A6EB0-0E57-446C-B2CC-983F65E7EDBC}" ShortID="855697419">
+									<ReferenceList>
+										<Reference Name="Target">
+											<ObjectRef Name="Main_Menu_01" ID="{59BA138D-D6DB-4F02-909A-8329475FE98D}" WorkUnitID="{7CB722F4-389D-4867-87CA-00120A745A22}"/>
+										</Reference>
+									</ReferenceList>
+								</Action>
+							</ChildrenList>
+						</Event>
+					</ChildrenList>
+				</Folder>
+			</ChildrenList>
+		</WorkUnit>
+	</Events>
+</WwiseDocument>

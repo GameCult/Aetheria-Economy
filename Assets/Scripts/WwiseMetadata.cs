@@ -26,4 +26,5 @@ public class WwiseMetaObject
 {
     public int Id;
     public string Name;
+    public string ObjectPath;
 }
