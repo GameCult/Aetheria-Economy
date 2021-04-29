@@ -55,7 +55,7 @@
 								<RTPC Name="" ID="{B24C11FF-D920-4B2A-B11A-B074DCEC561C}" ShortID="536604729">
 									<ReferenceList>
 										<Reference Name="ControlInput">
-											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{7CD9C53D-64E9-47EF-B622-693D7ABD22A1}"/>
+											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 										</Reference>
 									</ReferenceList>
 									<Curve Name="" ID="{A643025C-5BC7-4831-9C76-1978512F2AB3}">
@@ -87,7 +87,7 @@
 								<RTPC Name="" ID="{B9EFAEEF-B415-413C-9386-57FA0A797391}" ShortID="727769987">
 									<ReferenceList>
 										<Reference Name="ControlInput">
-											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{7CD9C53D-64E9-47EF-B622-693D7ABD22A1}"/>
+											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 										</Reference>
 									</ReferenceList>
 									<Curve Name="" ID="{63759D02-776C-4B44-A57D-E224B0E071C5}">
@@ -115,7 +115,7 @@
 								<RTPC Name="" ID="{5BE13058-9621-4CB9-A150-D8E6351E8B16}" ShortID="232884332">
 									<ReferenceList>
 										<Reference Name="ControlInput">
-											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{7CD9C53D-64E9-47EF-B622-693D7ABD22A1}"/>
+											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 										</Reference>
 									</ReferenceList>
 									<Curve Name="" ID="{0BF40038-01E0-4774-877D-A9D7B8BE60E9}">
@@ -167,6 +167,12 @@
 						<Property Name="MicType" Type="int32" Value="2"/>
 					</PropertyList>
 					<ChildrenList>
+						<PluginMediaSource Name="" ID="{B3739E13-E140-4DD3-AAFA-74CE6C188A4A}">
+							<ParentPluginID>462899</ParentPluginID>
+							<MediaIDList>
+								<MediaID ID="435959294"/>
+							</MediaIDList>
+						</PluginMediaSource>
 						<PluginMediaSource Name="" ID="{04772C54-3308-4F54-8217-EB52E3BEBD18}">
 							<ParentPluginID>462899</ParentPluginID>
 							<MediaIDList>

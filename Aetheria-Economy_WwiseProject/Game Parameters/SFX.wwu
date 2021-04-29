@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WwiseDocument Type="WorkUnit" ID="{02152354-45CF-4389-B435-5367FA80C881}" SchemaVersion="103">
+	<GameParameters>
+		<WorkUnit Name="SFX" ID="{02152354-45CF-4389-B435-5367FA80C881}" PersistMode="Standalone">
+			<ChildrenList>
+				<Folder Name="Reactor" ID="{782E3206-8F28-4CE6-9087-9B0EAE5A0E58}" ShortID="472724612">
+					<ChildrenList>
+						<GameParameter Name="sfx_reactor_grain_speed" ID="{D962E3DD-1F06-4C09-B49B-B4158D76A581}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_reactor_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_reactor_distortion2" ID="{72651D5D-22E1-4AEE-87FA-9F706D12B1DC}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_reactor_distortion1" ID="{264C0657-8EE3-435B-9D01-246DABEB52D7}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_reactor_alarm" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="1"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="AethericDrives" ID="{D04C8C16-82AB-4895-B181-95D353956951}" ShortID="767368466">
+					<ChildrenList>
+						<GameParameter Name="sfx_ship_drive_nuclear_grain_speed_mod" ID="{73534BF8-0FC9-4F33-92A9-D9E445654891}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_ship_drive_nuclear_filterDuration" ID="{B54383F3-A1EF-4FCA-94D5-24A7E4AC228C}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_ship_rotor_plates_grain_filter" ID="{054DD684-3F0A-4629-BB94-1E5A662EED8A}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_ship_electric_speed" ID="{9D610C30-BA07-43EF-B2E3-6CEB72857C03}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Shared" ID="{0A182DBF-F98C-4F76-A7CE-9DC1AF65C897}" ShortID="166237294">
+					<ChildrenList>
+						<GameParameter Name="sfx_shared_lfo_intensity" ID="{4193E609-4585-49C0-8CCB-989754DC1284}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="1"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_shared_lfo_frequency" ID="{E9101997-FD09-41DC-8BB2-B7519B030AE8}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="1"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_shared_intensity" ID="{69088562-620A-4123-8C93-DDBD1437C6C9}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="1"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Thrusters" ID="{99A328B9-0C5C-4AE6-B868-C8FFCB1FFFC2}" ShortID="936568629">
+					<ChildrenList>
+						<GameParameter Name="sfx_thruster_gustiness" ID="{29928AF3-1DE3-475C-9CF6-9892FED27E34}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="1"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_thruster_variability" ID="{A5EACAF7-0E81-432C-A284-84437E8983B3}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="1"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="Weapons" ID="{735CC905-3DC0-4220-B37A-A23B4AEA5EDE}" ShortID="169211524">
+					<ChildrenList>
+						<GameParameter Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="target_locking" ID="{215424C5-9F3E-438A-AE24-4314B540C243}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<Folder Name="LightningGun" ID="{0AC92332-C880-4293-9B76-BD10652A3A79}" ShortID="84593047">
+							<ChildrenList>
+								<GameParameter Name="sfx_weapon_lightning_grain_filter" ID="{441AD5D1-8E39-451F-8505-8AF4C9DA76B0}">
+									<PropertyList>
+										<Property Name="InitialValue" Type="Real64" Value="0"/>
+										<Property Name="Max" Type="Real64" Value="1"/>
+									</PropertyList>
+								</GameParameter>
+								<GameParameter Name="sfx_weapon_lightning_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}">
+									<PropertyList>
+										<Property Name="InitialValue" Type="Real64" Value="0"/>
+										<Property Name="Max" Type="Real64" Value="1"/>
+									</PropertyList>
+								</GameParameter>
+							</ChildrenList>
+						</Folder>
+					</ChildrenList>
+				</Folder>
+			</ChildrenList>
+		</WorkUnit>
+	</GameParameters>
+</WwiseDocument>

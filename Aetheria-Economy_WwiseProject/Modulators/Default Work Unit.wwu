@@ -10,7 +10,7 @@
 						<Property Name="LfoWaveform" Type="int32" Value="5"/>
 					</PropertyList>
 				</ModulatorLfo>
-				<ModulatorLfo Name="LFO_durability" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" ShortID="995081500">
+				<ModulatorLfo Name="thruster_lfo" ID="{67C35EF9-BCE2-4304-95F2-8027121F6D2B}" ShortID="995081500">
 					<PropertyList>
 						<Property Name="LfoDepth" Type="Real64" Value="0">
 							<ModifierList>
@@ -26,7 +26,7 @@
 								<RTPC Name="" ID="{D4C001EF-8257-4BF6-A84C-07E881969789}" ShortID="974228159">
 									<ReferenceList>
 										<Reference Name="ControlInput">
-											<ObjectRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+											<ObjectRef Name="sfx_shared_lfo_intensity" ID="{4193E609-4585-49C0-8CCB-989754DC1284}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 										</Reference>
 									</ReferenceList>
 									<Curve Name="" ID="{D6A01942-6B11-4E11-BD65-BC257D3B5AE8}">
@@ -63,14 +63,14 @@
 						<Property Name="LfoWaveform" Type="int32" Value="5"/>
 					</PropertyList>
 				</ModulatorLfo>
-				<ModulatorLfo Name="New Modulator LFO_reactor_dur" ID="{C69F4ABE-3072-4370-AB85-36C0ADE1DD5C}" ShortID="1022088505">
+				<ModulatorLfo Name="sfx_reactor_lfo" ID="{C69F4ABE-3072-4370-AB85-36C0ADE1DD5C}" ShortID="1022088505">
 					<PropertyList>
 						<Property Name="LfoDepth" Type="Real64" Value="0">
 							<RTPCList>
 								<RTPC Name="" ID="{E8956056-D7D4-4D89-8619-3AD841EB45A6}" ShortID="1023085858">
 									<ReferenceList>
 										<Reference Name="ControlInput">
-											<ObjectRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+											<ObjectRef Name="sfx_shared_lfo_intensity" ID="{4193E609-4585-49C0-8CCB-989754DC1284}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 										</Reference>
 									</ReferenceList>
 									<Curve Name="" ID="{20BF2639-7255-47A5-980B-C248BE64AE89}">
@@ -98,7 +98,7 @@
 								<RTPC Name="" ID="{CB7A6950-C043-4BE8-986D-8D3897D1BD68}" ShortID="1061394024">
 									<ReferenceList>
 										<Reference Name="ControlInput">
-											<ObjectRef Name="performance_durability" ID="{5540312A-E87E-4E09-91E8-71A5D349779A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+											<ObjectRef Name="sfx_shared_lfo_frequency" ID="{E9101997-FD09-41DC-8BB2-B7519B030AE8}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 										</Reference>
 									</ReferenceList>
 									<Curve Name="" ID="{EDAA33F0-8E90-46D3-9E8E-85AE2CAE8EC9}">

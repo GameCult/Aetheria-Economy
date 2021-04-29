@@ -5,33 +5,30 @@
 			<ChildrenList>
 				<SoundBank Name="UI" ID="{86130C21-81DD-4DB8-902A-F172CCD79666}">
 					<ObjectInclusionList>
-						<ObjectRef Name="Dock" ID="{CC95135D-D17F-4088-B23C-BF8238FCA221}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Drop" ID="{507ECF50-2D22-4222-A984-367EF0411E8F}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="UI_Success" ID="{0E497EDC-A42D-4478-AF76-5114508A5B8B}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Pickup" ID="{A64914D4-7F8A-4586-BB48-8FA3137E2F1F}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Undock" ID="{89374ED6-A730-48E4-AAF7-0E1C575CE1C2}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="UI_Fail" ID="{7DB8939E-DD1B-4B8C-B787-8C4440712523}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Dock_Fail" ID="{BE28B971-A0E1-4D96-B576-1B68C4CA5AA9}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Equip" ID="{44FA1280-D160-4DB5-B7EB-AA6E4CFBB17A}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Unequip" ID="{3125BD51-8FFC-4E24-BD2E-D102896B8A0B}" WorkUnitID="{1140EE06-2469-4795-9250-0C72BFFAEF1B}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Dock" ID="{CC95135D-D17F-4088-B23C-BF8238FCA221}" WorkUnitID="{5300F8AD-E581-44C6-96C3-C0AA25B21A54}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Drop" ID="{507ECF50-2D22-4222-A984-367EF0411E8F}" WorkUnitID="{5300F8AD-E581-44C6-96C3-C0AA25B21A54}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="UI_Success" ID="{0E497EDC-A42D-4478-AF76-5114508A5B8B}" WorkUnitID="{5300F8AD-E581-44C6-96C3-C0AA25B21A54}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Pickup" ID="{A64914D4-7F8A-4586-BB48-8FA3137E2F1F}" WorkUnitID="{5300F8AD-E581-44C6-96C3-C0AA25B21A54}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Undock" ID="{89374ED6-A730-48E4-AAF7-0E1C575CE1C2}" WorkUnitID="{5300F8AD-E581-44C6-96C3-C0AA25B21A54}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="UI_Fail" ID="{7DB8939E-DD1B-4B8C-B787-8C4440712523}" WorkUnitID="{5300F8AD-E581-44C6-96C3-C0AA25B21A54}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Dock_Fail" ID="{BE28B971-A0E1-4D96-B576-1B68C4CA5AA9}" WorkUnitID="{5300F8AD-E581-44C6-96C3-C0AA25B21A54}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Equip" ID="{44FA1280-D160-4DB5-B7EB-AA6E4CFBB17A}" WorkUnitID="{5300F8AD-E581-44C6-96C3-C0AA25B21A54}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Unequip" ID="{3125BD51-8FFC-4E24-BD2E-D102896B8A0B}" WorkUnitID="{5300F8AD-E581-44C6-96C3-C0AA25B21A54}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
 				<SoundBank Name="Ship" ID="{FA8840A4-46A9-455E-BF88-D7239E2E6D72}">
 					<ObjectInclusionList>
-						<ObjectRef Name="reactor_type01_stop" ID="{ACD01933-582E-4049-B99E-8A202B5324F7}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="thruster_medium_stop" ID="{BDAB58BA-0893-41E9-B425-2FAA069219F0}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Aetheria_Wormhole_travel_jumpout" ID="{290B97E7-B057-42A4-9BCE-33220B7473A8}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Aetheria_Wormhole_travel_jumpin" ID="{393D96D3-4D2B-42BB-827D-10984647051F}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="thruster_small" ID="{63E66AEC-CFE1-4362-B99D-280AC043C538}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="thruster_large_stop" ID="{14D488A4-89B5-4582-B79C-D6032306F95E}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="thruster_medium" ID="{0F30DB3D-6A97-4659-BA04-13A267DC19EC}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="thruster_large" ID="{99504764-B63E-48E8-A9A0-717489DD3466}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="thruster_small_stop" ID="{11565353-AF3C-4C1E-A6C1-0C06D05C834D}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Spaceship" ID="{C6CE2D3B-502C-4CC5-815A-B01D11C157EE}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="reactor_type01" ID="{8A0DAB86-FAC0-4D8A-91E6-DD9E0C93259C}" WorkUnitID="{0A7217B3-52C7-4A0C-9966-F5AF7ECC98F0}" Origin="Manual" Filter="7"/>
-						<ObjectRef Name="Aetheria_Wormhole_travel" ID="{0EE417AB-A0FE-4E79-8031-FBE3B604C3AB}" WorkUnitID="{57D7F7EA-A41D-4B60-BBFE-8E62F7C303A8}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="thruster_medium_stop" ID="{BDAB58BA-0893-41E9-B425-2FAA069219F0}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Aetheria_Wormhole_travel_jumpout" ID="{290B97E7-B057-42A4-9BCE-33220B7473A8}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Aetheria_Wormhole_travel_jumpin" ID="{393D96D3-4D2B-42BB-827D-10984647051F}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="thruster_small" ID="{63E66AEC-CFE1-4362-B99D-280AC043C538}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="thruster_large_stop" ID="{14D488A4-89B5-4582-B79C-D6032306F95E}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="thruster_medium" ID="{0F30DB3D-6A97-4659-BA04-13A267DC19EC}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="thruster_large" ID="{99504764-B63E-48E8-A9A0-717489DD3466}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="thruster_small_stop" ID="{11565353-AF3C-4C1E-A6C1-0C06D05C834D}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+						<ObjectRef Name="Aetheria_Wormhole_travel" ID="{0EE417AB-A0FE-4E79-8031-FBE3B604C3AB}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
 					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
