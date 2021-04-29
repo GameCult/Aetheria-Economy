@@ -13,6 +13,10 @@ namespace AK
 {
     namespace EVENTS
     {
+        static const AkUniqueID AMB_BASEDRONE = 1831661317U;
+        static const AkUniqueID AMB_LOW_ONESHOTS = 1514387320U;
+        static const AkUniqueID AMB_MID_AND_HIGH_ONESHOTS = 2618651523U;
+        static const AkUniqueID AMB_WEATHERLIKE_ONESHOTS = 2667303365U;
         static const AkUniqueID DOCK = 1944958176U;
         static const AkUniqueID DOCK_FAIL = 2820966551U;
         static const AkUniqueID DROP = 1878686274U;
@@ -45,6 +49,7 @@ namespace AK
     namespace BANKS
     {
         static const AkUniqueID INIT = 1355168291U;
+        static const AkUniqueID AMBIENCE = 85412153U;
         static const AkUniqueID REACTOR_TYPE01 = 108700025U;
         static const AkUniqueID THRUSTER_LARGE = 2370087034U;
         static const AkUniqueID THRUSTER_MEDIUM = 2528260676U;
@@ -55,8 +60,15 @@ namespace AK
 
     namespace BUSSES
     {
+        static const AkUniqueID AMBIENCE_BUS = 4202237879U;
+        static const AkUniqueID DEPTH_REVERB = 2717115764U;
         static const AkUniqueID MASTER_AUDIO_BUS = 3803692087U;
     } // namespace BUSSES
+
+    namespace AUX_BUSSES
+    {
+        static const AkUniqueID SPACE_REVERB = 1273427816U;
+    } // namespace AUX_BUSSES
 
     namespace AUDIO_DEVICES
     {

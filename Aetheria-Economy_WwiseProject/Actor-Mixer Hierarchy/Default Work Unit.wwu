@@ -3,204 +3,6 @@
 	<AudioObjects>
 		<WorkUnit Name="Default Work Unit" ID="{076C9B1F-5546-43DA-8A92-E4A1C9B3FD42}" PersistMode="Standalone">
 			<ChildrenList>
-				<Sound Name="blip1" ID="{A0D4AB7B-D2D9-45FA-8ADF-638A67BCE5C0}" ShortID="800518723">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="blip1" ID="{F5A3F15C-1D51-4314-88F7-04EA738B09D8}">
-							<Language>SFX</Language>
-							<AudioFile>blip1.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="907378552"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="blip1" ID="{F5A3F15C-1D51-4314-88F7-04EA738B09D8}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="blip2" ID="{B86B7D38-A9E2-4F1D-AF93-9256FEBA8749}" ShortID="523228555">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="blip2" ID="{7C21BA67-5EBB-4734-893C-80F1F975BD61}">
-							<Language>SFX</Language>
-							<AudioFile>blip2.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="628544089"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="blip2" ID="{7C21BA67-5EBB-4734-893C-80F1F975BD61}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="equip" ID="{BD74AFA5-47B1-41A7-B0BE-7677521DA18B}" ShortID="229257772">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="equip" ID="{2EC8EAC7-D464-4CD3-8A02-E292D70EB2EA}">
-							<Language>SFX</Language>
-							<AudioFile>equip.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="286482309"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="equip" ID="{2EC8EAC7-D464-4CD3-8A02-E292D70EB2EA}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="mouseover" ID="{16533363-B415-40C4-837D-410E6BF66778}" ShortID="827497921">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="mouseover" ID="{75CEB2C0-E1AA-49B9-81F3-9D9A3E6B7353}">
-							<Language>SFX</Language>
-							<AudioFile>mouseover.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="481276855"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="mouseover" ID="{75CEB2C0-E1AA-49B9-81F3-9D9A3E6B7353}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="pickup" ID="{0324A4A7-54F5-43FB-ABFC-5396A50D2665}" ShortID="461091988">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="pickup" ID="{352A7549-46B3-46ED-99FE-6A4E06782B59}">
-							<Language>SFX</Language>
-							<AudioFile>pickup.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="375041892"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="pickup" ID="{352A7549-46B3-46ED-99FE-6A4E06782B59}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="putdown" ID="{1A9860A7-4977-4EAA-8A81-437C77FEF187}" ShortID="60132517">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="putdown" ID="{D637978A-CBFC-4CAA-BA7B-39686214DCDF}">
-							<Language>SFX</Language>
-							<AudioFile>putdown.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="409680203"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="putdown" ID="{D637978A-CBFC-4CAA-BA7B-39686214DCDF}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="unequip" ID="{0D9341D7-18F3-491F-80E7-D6F5932B87CB}" ShortID="312136069">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="unequip" ID="{C9CDFF70-33F9-4758-A169-0D52EC498508}">
-							<Language>SFX</Language>
-							<AudioFile>unequip.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="105294056"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="unequip" ID="{C9CDFF70-33F9-4758-A169-0D52EC498508}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="Aetheria_docking_spaceship_V2_1" ID="{032A1D4F-3BD6-4AC7-B619-799C3E968EC3}" ShortID="882150710">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="Aetheria_docking_spaceship_V2_1" ID="{1EDDBD3A-F0B3-4C92-8A32-C682B4A9BD47}">
-							<Language>SFX</Language>
-							<AudioFile>Aetheria_docking_spaceship_V2.1.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="741366116"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="Aetheria_docking_spaceship_V2_1" ID="{1EDDBD3A-F0B3-4C92-8A32-C682B4A9BD47}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
-				<Sound Name="Aetheria_undocking_spaceship_V2_1" ID="{8545BD8D-4232-45EC-B3BF-9FD8B4AE3598}" ShortID="884493620">
-					<ReferenceList>
-						<Reference Name="Conversion">
-							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-						</Reference>
-						<Reference Name="OutputBus">
-							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-						</Reference>
-					</ReferenceList>
-					<ChildrenList>
-						<AudioFileSource Name="Aetheria_undocking_spaceship_V2_1" ID="{2F310946-0054-4047-89FA-D9E572368CC9}">
-							<Language>SFX</Language>
-							<AudioFile>Aetheria_undocking_spaceship_V2.1.wav</AudioFile>
-							<MediaIDList>
-								<MediaID ID="217524873"/>
-							</MediaIDList>
-						</AudioFileSource>
-					</ChildrenList>
-					<ActiveSourceList>
-						<ActiveSource Name="Aetheria_undocking_spaceship_V2_1" ID="{2F310946-0054-4047-89FA-D9E572368CC9}" Platform="Linked"/>
-					</ActiveSourceList>
-				</Sound>
 				<Folder Name="spaceship" ID="{F558324A-DD8E-46D0-B9A7-E41CCE6DDEDF}" ShortID="623259964">
 					<ChildrenList>
 						<ActorMixer Name="Spaceship" ID="{C6CE2D3B-502C-4CC5-815A-B01D11C157EE}" ShortID="291090047">
@@ -2900,6 +2702,208 @@
 							</ChildrenList>
 							<ActiveSourceList>
 								<ActiveSource Name="Aetheria_Wormhole_travel" ID="{DA408B3D-CAD9-4B5F-8ADB-3886C3C122FD}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+				</Folder>
+				<Folder Name="UI SFX" ID="{DB5A0862-4EEA-4A65-BFF6-B7FF0BA4DA8C}" ShortID="842471446">
+					<ChildrenList>
+						<Sound Name="blip2" ID="{B86B7D38-A9E2-4F1D-AF93-9256FEBA8749}" ShortID="523228555">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="blip2" ID="{7C21BA67-5EBB-4734-893C-80F1F975BD61}">
+									<Language>SFX</Language>
+									<AudioFile>blip2.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="628544089"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="blip2" ID="{7C21BA67-5EBB-4734-893C-80F1F975BD61}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="equip" ID="{BD74AFA5-47B1-41A7-B0BE-7677521DA18B}" ShortID="229257772">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="equip" ID="{2EC8EAC7-D464-4CD3-8A02-E292D70EB2EA}">
+									<Language>SFX</Language>
+									<AudioFile>equip.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="286482309"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="equip" ID="{2EC8EAC7-D464-4CD3-8A02-E292D70EB2EA}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="blip1" ID="{A0D4AB7B-D2D9-45FA-8ADF-638A67BCE5C0}" ShortID="800518723">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="blip1" ID="{F5A3F15C-1D51-4314-88F7-04EA738B09D8}">
+									<Language>SFX</Language>
+									<AudioFile>blip1.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="907378552"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="blip1" ID="{F5A3F15C-1D51-4314-88F7-04EA738B09D8}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="putdown" ID="{1A9860A7-4977-4EAA-8A81-437C77FEF187}" ShortID="60132517">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="putdown" ID="{D637978A-CBFC-4CAA-BA7B-39686214DCDF}">
+									<Language>SFX</Language>
+									<AudioFile>putdown.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="409680203"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="putdown" ID="{D637978A-CBFC-4CAA-BA7B-39686214DCDF}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="unequip" ID="{0D9341D7-18F3-491F-80E7-D6F5932B87CB}" ShortID="312136069">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="unequip" ID="{C9CDFF70-33F9-4758-A169-0D52EC498508}">
+									<Language>SFX</Language>
+									<AudioFile>unequip.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="105294056"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="unequip" ID="{C9CDFF70-33F9-4758-A169-0D52EC498508}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="mouseover" ID="{16533363-B415-40C4-837D-410E6BF66778}" ShortID="827497921">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="mouseover" ID="{75CEB2C0-E1AA-49B9-81F3-9D9A3E6B7353}">
+									<Language>SFX</Language>
+									<AudioFile>mouseover.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="481276855"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="mouseover" ID="{75CEB2C0-E1AA-49B9-81F3-9D9A3E6B7353}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="Aetheria_undocking_spaceship_V2_1" ID="{8545BD8D-4232-45EC-B3BF-9FD8B4AE3598}" ShortID="884493620">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Aetheria_undocking_spaceship_V2_1" ID="{2F310946-0054-4047-89FA-D9E572368CC9}">
+									<Language>SFX</Language>
+									<AudioFile>Aetheria_undocking_spaceship_V2.1.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="217524873"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Aetheria_undocking_spaceship_V2_1" ID="{2F310946-0054-4047-89FA-D9E572368CC9}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="pickup" ID="{0324A4A7-54F5-43FB-ABFC-5396A50D2665}" ShortID="461091988">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="pickup" ID="{352A7549-46B3-46ED-99FE-6A4E06782B59}">
+									<Language>SFX</Language>
+									<AudioFile>pickup.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="375041892"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="pickup" ID="{352A7549-46B3-46ED-99FE-6A4E06782B59}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="Aetheria_docking_spaceship_V2_1" ID="{032A1D4F-3BD6-4AC7-B619-799C3E968EC3}" ShortID="882150710">
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="Aetheria_docking_spaceship_V2_1" ID="{1EDDBD3A-F0B3-4C92-8A32-C682B4A9BD47}">
+									<Language>SFX</Language>
+									<AudioFile>Aetheria_docking_spaceship_V2.1.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="741366116"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Aetheria_docking_spaceship_V2_1" ID="{1EDDBD3A-F0B3-4C92-8A32-C682B4A9BD47}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
 					</ChildrenList>
