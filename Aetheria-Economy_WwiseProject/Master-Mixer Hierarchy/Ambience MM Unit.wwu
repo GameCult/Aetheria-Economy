@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{A840C15E-F723-46FB-A6CF-9D8CDA869AEE}" SchemaVersion="97">
+<WwiseDocument Type="WorkUnit" ID="{A840C15E-F723-46FB-A6CF-9D8CDA869AEE}" SchemaVersion="103">
 	<Busses>
 		<WorkUnit Name="Ambience MM Unit" ID="{A840C15E-F723-46FB-A6CF-9D8CDA869AEE}" PersistMode="Standalone">
 			<ChildrenList>
@@ -26,6 +26,7 @@
 									<ObjectRef Name="Space_Reverb" ID="{BBC34EE4-5BCA-4840-A54A-7E82E4030CDA}" WorkUnitID="{A840C15E-F723-46FB-A6CF-9D8CDA869AEE}"/>
 								</Reference>
 							</ReferenceList>
+							<ObjectLists/>
 						</Bus>
 						<AuxBus Name="Space_Reverb" ID="{BBC34EE4-5BCA-4840-A54A-7E82E4030CDA}">
 							<PropertyList>
@@ -40,8 +41,10 @@
 									<ObjectRef Name="Space_Garage" ID="{1AF92D84-49DD-4BBC-8F29-6C6D10082B6E}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
 								</Reference>
 							</ReferenceList>
+							<ObjectLists/>
 						</AuxBus>
 					</ChildrenList>
+					<ObjectLists/>
 				</Bus>
 			</ChildrenList>
 		</WorkUnit>

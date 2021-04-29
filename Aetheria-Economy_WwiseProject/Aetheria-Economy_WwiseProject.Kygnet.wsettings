@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="UserProjectSettings" SchemaVersion="97">
+<WwiseDocument Type="UserProjectSettings" SchemaVersion="103">
 	<UserProjectSettingsInfo>
 		<UserProjectSettings Name="" ID="{A8E9CFD1-183E-47CC-804B-0B8B4C92B529}">
 			<PropertyList>
@@ -48,7 +48,7 @@
 				<Property Name="PluginUserAcknowledge\iZotope Trash Distortion" Type="bool" Value="True"/>
 				<Property Name="ProjectExplorer\FirstVisible_10_1" Type="string" Value="{4C96B38B-3DB4-40C7-91C9-665510E38993}"/>
 				<Property Name="ProjectExplorer\FirstVisible_11_1" Type="string" Value="{23EC2DE3-3ED8-4B82-AC99-92E25F2E4C6B}"/>
-				<Property Name="ProjectExplorer\FirstVisible_1_1" Type="string" Value="{2388DAEA-9775-46C6-A2ED-C5222A397756}"/>
+				<Property Name="ProjectExplorer\FirstVisible_1_1" Type="string" Value="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}"/>
 				<Property Name="ProjectExplorer\FirstVisible_3_1" Type="string" Value="{A69BF0FC-D84A-487C-ABDD-56F71CB2A126}"/>
 				<Property Name="ProjectExplorer\FirstVisible_4_1" Type="string" Value="{CB6175F1-6080-4A23-92EF-0807E304D0C1}"/>
 				<Property Name="ProjectExplorer\FirstVisible_6_1" Type="string" Value="{C98E673F-A24C-48A8-960F-10565FFE70A0}"/>
@@ -66,7 +66,7 @@
 				<Property Name="ProjectExplorer\x64_Expanded_1_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_20_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_21_1" Type="string" Value=""/>
-				<Property Name="ProjectExplorer\x64_Expanded_2_1" Type="string" Value="jpb5EHgATEG3PSGqHNCdOB+bbAdGVdpDipLkocmz/ULMHF+wY7QaRazZIQHl8TtahOpzl9wn4EWNTo0mE3p2mDa76TSSfTFGmW+S7kaWjHFyllzKmCJZRrMtUq5mBAP/SjJY9Y7d0Ea5p+Qczm3e3zstzsYsUMVMgVqwHRHBV+4="/>
+				<Property Name="ProjectExplorer\x64_Expanded_2_1" Type="string" Value="H5tsB0ZV2kOKkuShybP9QswcX7BjtBpFrNkhAeXxO1qE6nOX3CfgRY1OjSYTenaYNrvpNJJ9MUaZb5LuRpaMcXKWXMqYIllGsy1SrmYEA/9KMlj1jt3QRrmn5BzObd7fOy3OxixQxUyBWrAdEcFX7g=="/>
 				<Property Name="ProjectExplorer\x64_Expanded_3_1" Type="string" Value="sxdyCsdSDEqZZvWvfsyY8D2NxuMXmQ1LnQrpBNe4/Pc="/>
 				<Property Name="ProjectExplorer\x64_Expanded_4_1" Type="string" Value=""/>
 				<Property Name="ProjectExplorer\x64_Expanded_5_1" Type="string" Value=""/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{CA5C9672-2298-4659-B32D-52AE660403FF}" SchemaVersion="97">
+<WwiseDocument Type="WorkUnit" ID="{CA5C9672-2298-4659-B32D-52AE660403FF}" SchemaVersion="103">
 	<AudioObjects>
 		<WorkUnit Name="Ambience AM Unit" ID="{CA5C9672-2298-4659-B32D-52AE660403FF}" PersistMode="Standalone">
 			<ChildrenList>
@@ -71,6 +71,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_BaseDrone_1" ID="{0500E27A-D0DB-4BE6-BE95-1D41C246805A}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -93,6 +94,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_BaseDrone_2" ID="{C8F358CA-B6E6-443D-AC9F-F764AD1A859F}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -115,6 +117,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_BaseDrone_3" ID="{27C6A8C0-C2EC-4022-AA5B-6CAEFC653375}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -137,11 +140,13 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_BaseDrone_4" ID="{EA58F35D-FFE5-4808-B0A5-C098A8E35020}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
 					</ChildrenList>
+					<ObjectLists/>
 				</RandomSequenceContainer>
 				<RandomSequenceContainer Name="Amb Low Oneshots" ID="{F53FC63D-6B1A-46B0-B21C-4CC28B7F26E1}" ShortID="62478438">
 					<PropertyList>
@@ -262,6 +267,7 @@
 									</PropertyList>
 								</Panner>
 							</PositioningInfo>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Creak_1" ID="{671B46F0-7C72-4488-9D77-725FB08B3F6C}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -311,6 +317,7 @@
 									</PropertyList>
 								</Panner>
 							</PositioningInfo>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Creak_2" ID="{057C2308-AB2E-4976-AD36-392E2763C886}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -361,6 +368,7 @@
 									</PropertyList>
 								</Panner>
 							</PositioningInfo>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Boom_1" ID="{1505352F-70C5-41D0-B8F5-1A898FF63C16}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -411,6 +419,7 @@
 									</PropertyList>
 								</Panner>
 							</PositioningInfo>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Boom_2" ID="{975DFBAC-9571-414B-AC44-F97EDF6B02F7}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -461,6 +470,7 @@
 									</PropertyList>
 								</Panner>
 							</PositioningInfo>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Boom_3" ID="{E764A171-C0E2-4563-A85B-9FFAAE5B09A8}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -474,6 +484,7 @@
 							</PropertyList>
 						</Panner>
 					</PositioningInfo>
+					<ObjectLists/>
 				</RandomSequenceContainer>
 				<RandomSequenceContainer Name="Amb Mid and High Oneshots" ID="{B05F1CCC-B463-451A-ACD9-2101E5F13B5A}" ShortID="548418547">
 					<PropertyList>
@@ -561,6 +572,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_HiOmen_1" ID="{CC1E6D81-B554-4273-BB32-F4D7AE6FF814}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -583,6 +595,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_HiOmen_2" ID="{B758FFC2-5697-4C56-A0B9-85EA858318A1}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -605,6 +618,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_HiOmen_3" ID="{B4709499-F5E6-422C-B535-999A0B954C5D}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -627,6 +641,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_HiOmen_4" ID="{82B9C5D9-5B98-42E9-88A3-66C5430046D4}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -668,6 +683,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Hiss_1" ID="{DB45FC78-AB6A-4DFC-A6F3-8B80F6F23662}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -708,6 +724,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Hiss_2" ID="{ED48A94A-AA63-4105-8A50-8D3D57103487}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -737,11 +754,13 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Ping" ID="{42DAE4E4-E239-4170-A0A1-7C38547F3308}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
 					</ChildrenList>
+					<ObjectLists/>
 				</RandomSequenceContainer>
 				<RandomSequenceContainer Name="Amb Weatherlike Oneshots" ID="{9773EA84-27DC-45E0-8D4E-8D26137A7698}" ShortID="414024756">
 					<PropertyList>
@@ -828,6 +847,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Thunder_1" ID="{5087A3C0-7B35-4143-9773-8967BBC9F9AE}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -850,6 +870,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Thunder_2" ID="{4A1DB4AF-F2E9-4E42-ACF7-C988A7E1EAEC}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -872,6 +893,7 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Thunder_3" ID="{75F1E5A7-CDBC-45A1-82D5-13C66FD24984}" Platform="Linked"/>
 							</ActiveSourceList>
@@ -894,11 +916,13 @@
 									</MediaIDList>
 								</AudioFileSource>
 							</ChildrenList>
+							<ObjectLists/>
 							<ActiveSourceList>
 								<ActiveSource Name="Atmos_Thunder_4" ID="{44DF5D07-50FF-4A6C-9389-2E78CD3C627E}" Platform="Linked"/>
 							</ActiveSourceList>
 						</Sound>
 					</ChildrenList>
+					<ObjectLists/>
 				</RandomSequenceContainer>
 			</ChildrenList>
 		</WorkUnit>
