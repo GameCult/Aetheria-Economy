@@ -469,6 +469,10 @@ public class EntityInstance : MonoBehaviour
 
     public virtual void Update()
     {
+        foreach (var (source, item) in _audioSources)
+        {
+            AkSoundEngine.SetObjectPosition(source, source.transform);
+        }
         LocalSpace.localPosition = transform.localPosition;
         if (_currentPing.transform)
         {

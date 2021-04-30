@@ -434,6 +434,13 @@
 											</ReferenceList>
 										</Action>
 										<Action Name="" ID="{6E68BD96-F32A-4109-8F63-3ED2AC416043}" ShortID="978335520">
+											<PropertyList>
+												<Property Name="Inclusion" Type="bool">
+													<ValueList>
+														<Value>False</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
 													<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
@@ -441,6 +448,13 @@
 											</ReferenceList>
 										</Action>
 										<Action Name="" ID="{491B69A0-6AD3-4AF7-88C7-3412B526689C}" ShortID="440511318">
+											<PropertyList>
+												<Property Name="Inclusion" Type="bool">
+													<ValueList>
+														<Value>False</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
 													<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
@@ -559,6 +573,13 @@
 									</ReferenceList>
 								</Action>
 								<Action Name="" ID="{DD0BDADF-CA20-4F28-8423-5599F689CBFE}" ShortID="952690825">
+									<PropertyList>
+										<Property Name="Inclusion" Type="bool">
+											<ValueList>
+												<Value>False</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Target">
 											<ObjectRef Name="reactor" ID="{8D0ED9E5-D9D6-41E5-A093-CF203E6F2F95}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
@@ -612,6 +633,13 @@
 						<Event Name="thruster_play" ID="{99504764-B63E-48E8-A9A0-717489DD3466}">
 							<ChildrenList>
 								<Action Name="" ID="{AE15152D-2BC4-4BE2-8CC1-CE46A85F2139}" ShortID="131458033">
+									<PropertyList>
+										<Property Name="Inclusion" Type="bool">
+											<ValueList>
+												<Value>False</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Target">
 											<ObjectRef Name="Thruster" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>

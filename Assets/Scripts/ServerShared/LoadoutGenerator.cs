@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
@@ -44,7 +45,10 @@ public class LoadoutGenerator
     
     public EntityPack GenerateShipLoadout(Predicate<HullData> hullFilter = null)
     {
-        var hull = ItemManager.CreateInstance(RandomHull(HullType.Ship, hullFilter)) as EquippableItem;
+        var hullData = RandomHull(HullType.Ship, hullFilter);
+        var hull = ItemManager.CreateInstance(hullData) as EquippableItem;
+        if(hull==null)
+            ItemManager.Log("WHAT???");
         var entity = new Ship(ItemManager, null, hull, ItemManager.GameplaySettings.DefaultEntitySettings);
         entity.Faction = Faction;
         OutfitEntity(entity);

@@ -274,7 +274,7 @@
 						</MusicPlaylistItem>
 					</Playlist>
 				</MusicPlaylistContainer>
-				<MusicPlaylistContainer Name="Narrative" ID="{049E3E09-0B7D-43E8-959B-B7D3490BA9FF}" ShortID="987109786">
+				<MusicPlaylistContainer Name="KFB" ID="{049E3E09-0B7D-43E8-959B-B7D3490BA9FF}" ShortID="987109786">
 					<ReferenceList>
 						<Reference Name="Conversion">
 							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>

@@ -18,15 +18,15 @@
    {
     "Id": "85412153",
     "Language": "SFX",
-    "Hash": "1651316068",
+    "Hash": "4213172440",
     "ObjectPath": "\\SoundBanks\\Ambience SB Unit\\Ambience",
     "ShortName": "Ambience",
     "Path": "Ambience.bnk",
     "IncludedEvents": [
      {
-      "Id": "1831661317",
-      "Name": "Amb_BaseDrone",
-      "ObjectPath": "\\Events\\Ambience\\Amb_BaseDrone",
+      "Id": "1461213174",
+      "Name": "Amb_BaseDrone_play",
+      "ObjectPath": "\\Events\\Ambience\\Amb_BaseDrone_play",
       "DurationType": "Infinite",
       "IncludedMemoryFiles": [
        {
@@ -63,9 +63,18 @@
       ]
      },
      {
-      "Id": "1514387320",
-      "Name": "Amb_Low_Oneshots",
-      "ObjectPath": "\\Events\\Ambience\\Amb_Low_Oneshots",
+      "Id": "2233326984",
+      "Name": "Amb_BaseDrone_stop",
+      "ObjectPath": "\\Events\\Ambience\\Amb_BaseDrone_stop",
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
+     },
+     {
+      "Id": "3998400737",
+      "Name": "Amb_Low_Oneshots_play",
+      "ObjectPath": "\\Events\\Ambience\\Amb_Low_Oneshots_play",
       "DurationType": "Infinite",
       "IncludedMemoryFiles": [
        {
@@ -101,9 +110,18 @@
       ]
      },
      {
-      "Id": "2618651523",
-      "Name": "Amb_Mid_and_High_Oneshots",
-      "ObjectPath": "\\Events\\Ambience\\Amb_Mid_and_High_Oneshots",
+      "Id": "2065073079",
+      "Name": "Amb_Low_Oneshots_stop",
+      "ObjectPath": "\\Events\\Ambience\\Amb_Low_Oneshots_stop",
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
+     },
+     {
+      "Id": "4235174932",
+      "Name": "Amb_Mid_and_High_Oneshots_play",
+      "ObjectPath": "\\Events\\Ambience\\Amb_Mid_and_High_Oneshots_play",
       "DurationType": "Infinite",
       "IncludedMemoryFiles": [
        {
@@ -151,9 +169,18 @@
       ]
      },
      {
-      "Id": "2667303365",
-      "Name": "Amb_Weatherlike_Oneshots",
-      "ObjectPath": "\\Events\\Ambience\\Amb_Weatherlike_Oneshots",
+      "Id": "1644110318",
+      "Name": "Amb_Mid_and_High_Oneshots_stop",
+      "ObjectPath": "\\Events\\Ambience\\Amb_Mid_and_High_Oneshots_stop",
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
+     },
+     {
+      "Id": "936784054",
+      "Name": "Amb_Weatherlike_Oneshots_play",
+      "ObjectPath": "\\Events\\Ambience\\Amb_Weatherlike_Oneshots_play",
       "DurationType": "Infinite",
       "IncludedMemoryFiles": [
        {
@@ -188,6 +215,15 @@
         "ObjectPath": "\\Master-Mixer Hierarchy\\Ambience MM Unit\\Ambience Bus\\Space_Reverb"
        }
       ]
+     },
+     {
+      "Id": "1667321416",
+      "Name": "Amb_Weatherlike_Oneshots_stop",
+      "ObjectPath": "\\Events\\Ambience\\Amb_Weatherlike_Oneshots_stop",
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
      }
     ],
     "IncludedMemoryFiles": [
@@ -459,6 +495,49 @@
     ]
    },
    {
+    "Id": "237948771",
+    "Language": "SFX",
+    "Hash": "3592677944",
+    "ObjectPath": "\\SoundBanks\\Music\\Overworld\\Overworld_KFB",
+    "ShortName": "Overworld_KFB",
+    "Path": "Overworld_KFB.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "2854353632",
+      "Name": "Kawaii_Future_Bass_play",
+      "ObjectPath": "\\Events\\Music\\Overworld\\KFB\\Kawaii_Future_Bass_play",
+      "DurationType": "OneShot",
+      "DurationMin": "121.379318",
+      "DurationMax": "121.379318",
+      "IncludedMemoryFiles": [
+       {
+        "Id": "940954544",
+        "Language": "SFX",
+        "ShortName": "Kawaii Future Bass.wav",
+        "Path": "SFX\\Kawaii Future Bass_D79FB2B7.wem"
+       }
+      ]
+     },
+     {
+      "Id": "1197715810",
+      "Name": "Kawaii_Future_Bass_stop",
+      "ObjectPath": "\\Events\\Music\\Overworld\\KFB\\Kawaii_Future_Bass_stop",
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "940954544",
+      "Language": "SFX",
+      "ShortName": "Kawaii Future Bass.wav",
+      "Path": "SFX\\Kawaii Future Bass_D79FB2B7.wem"
+     }
+    ]
+   },
+   {
     "Id": "639519169",
     "Language": "SFX",
     "Hash": "2219541002",
@@ -647,6 +726,49 @@
       "Id": "1574608066",
       "Name": "charge_level",
       "ObjectPath": "\\Game Parameters\\SFX\\Weapons\\charge_level"
+     }
+    ]
+   },
+   {
+    "Id": "681474673",
+    "Language": "SFX",
+    "Hash": "2914118367",
+    "ObjectPath": "\\SoundBanks\\Music\\Combat\\Combat_Metal",
+    "ShortName": "Combat_Metal",
+    "Path": "Combat_Metal.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "1451435346",
+      "Name": "Metal_Combat_01_play",
+      "ObjectPath": "\\Events\\Music\\Combat\\Metal\\Metal_Combat_01_play",
+      "DurationType": "OneShot",
+      "DurationMin": "176.072922",
+      "DurationMax": "176.072922",
+      "IncludedMemoryFiles": [
+       {
+        "Id": "936702341",
+        "Language": "SFX",
+        "ShortName": "METAL COMBAT FINAL.wav",
+        "Path": "SFX\\METAL COMBAT FINAL_D79FB2B7.wem"
+       }
+      ]
+     },
+     {
+      "Id": "3121519308",
+      "Name": "Metal_Combat_01_stop",
+      "ObjectPath": "\\Events\\Music\\Combat\\Metal\\Metal_Combat_01_stop",
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "936702341",
+      "Language": "SFX",
+      "ShortName": "METAL COMBAT FINAL.wav",
+      "Path": "SFX\\METAL COMBAT FINAL_D79FB2B7.wem"
      }
     ]
    },
@@ -972,6 +1094,49 @@
     ]
    },
    {
+    "Id": "1516113159",
+    "Language": "SFX",
+    "Hash": "2116314950",
+    "ObjectPath": "\\SoundBanks\\Music\\Combat\\Combat_Generic",
+    "ShortName": "Combat_Generic",
+    "Path": "Combat_Generic.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "2766685641",
+      "Name": "Gen_Combat_1_play",
+      "ObjectPath": "\\Events\\Music\\Combat\\Generic\\Gen_Combat_1_play",
+      "DurationType": "OneShot",
+      "DurationMin": "177.230804",
+      "DurationMax": "177.230804",
+      "IncludedMemoryFiles": [
+       {
+        "Id": "203127691",
+        "Language": "SFX",
+        "ShortName": "Gen_Combat_01.wav",
+        "Path": "SFX\\Gen_Combat_01_D79FB2B7.wem"
+       }
+      ]
+     },
+     {
+      "Id": "4289205743",
+      "Name": "Gen_Combat_1_stop",
+      "ObjectPath": "\\Events\\Music\\Combat\\Generic\\Gen_Combat_1_stop",
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "203127691",
+      "Language": "SFX",
+      "ShortName": "Gen_Combat_01.wav",
+      "Path": "SFX\\Gen_Combat_01_D79FB2B7.wem"
+     }
+    ]
+   },
+   {
     "Id": "1551306167",
     "Language": "SFX",
     "Hash": "282532410",
@@ -1226,155 +1391,9 @@
     ]
    },
    {
-    "Id": "1560169506",
-    "Language": "SFX",
-    "Hash": "493917708",
-    "ObjectPath": "\\SoundBanks\\Music\\Boss",
-    "ShortName": "Boss",
-    "Path": "Boss.bnk",
-    "IncludedEvents": [
-     {
-      "Id": "826124593",
-      "Name": "Play_Metal_Boss_01",
-      "ObjectPath": "\\Events\\Music\\Boss\\Play_Metal_Boss_01",
-      "DurationType": "Infinite",
-      "IncludedMemoryFiles": [
-       {
-        "Id": "230464935",
-        "Language": "SFX",
-        "ShortName": "METAL BOSS FINAL.wav",
-        "Path": "SFX\\METAL BOSS FINAL_D79FB2B7.wem"
-       }
-      ]
-     },
-     {
-      "Id": "2121112483",
-      "Name": "Stop_Metal_Boss_01",
-      "ObjectPath": "\\Events\\Music\\Boss\\Stop_Metal_Boss_01",
-      "MaxAttenuation": "0.000000",
-      "DurationType": "OneShot",
-      "DurationMin": "0.000000",
-      "DurationMax": "0.000000"
-     }
-    ],
-    "IncludedMemoryFiles": [
-     {
-      "Id": "230464935",
-      "Language": "SFX",
-      "ShortName": "METAL BOSS FINAL.wav",
-      "Path": "SFX\\METAL BOSS FINAL_D79FB2B7.wem"
-     }
-    ]
-   },
-   {
-    "Id": "1562068129",
-    "Language": "SFX",
-    "Hash": "2938278144",
-    "ObjectPath": "\\SoundBanks\\Music\\Overworld",
-    "ShortName": "Overworld",
-    "Path": "Overworld.bnk",
-    "IncludedEvents": [
-     {
-      "Id": "3855478249",
-      "Name": "Play_Gen_OW_01",
-      "ObjectPath": "\\Events\\Music\\Overworld\\Play_Gen_OW_01",
-      "DurationType": "OneShot",
-      "DurationMin": "182.222229",
-      "DurationMax": "182.222229",
-      "IncludedMemoryFiles": [
-       {
-        "Id": "164977959",
-        "Language": "SFX",
-        "ShortName": "Gen_OW_01.wav",
-        "Path": "SFX\\Gen_OW_01_D79FB2B7.wem"
-       }
-      ]
-     },
-     {
-      "Id": "3324019292",
-      "Name": "Play_Kawaii_Future_Bass",
-      "ObjectPath": "\\Events\\Music\\Overworld\\Play_Kawaii_Future_Bass",
-      "DurationType": "OneShot",
-      "DurationMin": "121.379318",
-      "DurationMax": "121.379318",
-      "IncludedMemoryFiles": [
-       {
-        "Id": "940954544",
-        "Language": "SFX",
-        "ShortName": "Kawaii Future Bass.wav",
-        "Path": "SFX\\Kawaii Future Bass_D79FB2B7.wem"
-       }
-      ]
-     },
-     {
-      "Id": "1885982954",
-      "Name": "Play_Metal_OW_01",
-      "ObjectPath": "\\Events\\Music\\Overworld\\Play_Metal_OW_01",
-      "DurationType": "OneShot",
-      "DurationMin": "151.125000",
-      "DurationMax": "151.125000",
-      "IncludedMemoryFiles": [
-       {
-        "Id": "795357291",
-        "Language": "SFX",
-        "ShortName": "METAL OW.wav",
-        "Path": "SFX\\METAL OW_D79FB2B7.wem"
-       }
-      ]
-     },
-     {
-      "Id": "1938548259",
-      "Name": "Stop_Gen_OW_01",
-      "ObjectPath": "\\Events\\Music\\Overworld\\Stop_Gen_OW_01",
-      "MaxAttenuation": "0.000000",
-      "DurationType": "OneShot",
-      "DurationMin": "0.000000",
-      "DurationMax": "0.000000"
-     },
-     {
-      "Id": "3844053294",
-      "Name": "Stop_Kawaii_Future_Bass",
-      "ObjectPath": "\\Events\\Music\\Overworld\\Stop_Kawaii_Future_Bass",
-      "MaxAttenuation": "0.000000",
-      "DurationType": "OneShot",
-      "DurationMin": "0.000000",
-      "DurationMax": "0.000000"
-     },
-     {
-      "Id": "3159624164",
-      "Name": "Stop_Metal_OW_01",
-      "ObjectPath": "\\Events\\Music\\Overworld\\Stop_Metal_OW_01",
-      "MaxAttenuation": "0.000000",
-      "DurationType": "OneShot",
-      "DurationMin": "0.000000",
-      "DurationMax": "0.000000"
-     }
-    ],
-    "IncludedMemoryFiles": [
-     {
-      "Id": "164977959",
-      "Language": "SFX",
-      "ShortName": "Gen_OW_01.wav",
-      "Path": "SFX\\Gen_OW_01_D79FB2B7.wem"
-     },
-     {
-      "Id": "795357291",
-      "Language": "SFX",
-      "ShortName": "METAL OW.wav",
-      "Path": "SFX\\METAL OW_D79FB2B7.wem"
-     },
-     {
-      "Id": "940954544",
-      "Language": "SFX",
-      "ShortName": "Kawaii Future Bass.wav",
-      "Path": "SFX\\Kawaii Future Bass_D79FB2B7.wem"
-     }
-    ]
-   },
-   {
     "Id": "1758897770",
     "Language": "SFX",
-    "Hash": "358409923",
+    "Hash": "4192288262",
     "ObjectPath": "\\SoundBanks\\SFX\\Thruster\\Thruster",
     "ShortName": "Thruster",
     "Path": "Thruster.bnk",
@@ -1383,16 +1402,10 @@
       "Id": "3178854387",
       "Name": "thruster_play",
       "ObjectPath": "\\Events\\SFX\\Thruster\\thruster_play",
-      "MaxAttenuation": "2000.000000",
-      "DurationType": "Infinite",
-      "IncludedMemoryFiles": [
-       {
-        "Id": "274716874",
-        "Language": "SFX",
-        "ShortName": "Flamethrower SOUND.wav",
-        "Path": "SFX\\Flamethrower SOUND_D79FB2B7.wem"
-       }
-      ]
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
      },
      {
       "Id": "2308976345",
@@ -1443,15 +1456,15 @@
    {
     "Id": "2005704188",
     "Language": "SFX",
-    "Hash": "354191714",
+    "Hash": "3092388868",
     "ObjectPath": "\\SoundBanks\\Music\\Main_Menu",
     "ShortName": "Main_Menu",
     "Path": "Main_Menu.bnk",
     "IncludedEvents": [
      {
-      "Id": "449059865",
-      "Name": "Play_Main_Menu_01",
-      "ObjectPath": "\\Events\\Music\\Main Menu\\Play_Main_Menu_01",
+      "Id": "1453739531",
+      "Name": "Main_Menu_01_play",
+      "ObjectPath": "\\Events\\Music\\Main Menu\\Main_Menu_01_play",
       "DurationType": "OneShot",
       "DurationMin": "202.673615",
       "DurationMax": "202.673615",
@@ -1465,9 +1478,9 @@
       ]
      },
      {
-      "Id": "2563154575",
-      "Name": "Stop_Main_Menu_01",
-      "ObjectPath": "\\Events\\Music\\Main Menu\\Stop_Main_Menu_01",
+      "Id": "276402849",
+      "Name": "Main_Menu_01_stop",
+      "ObjectPath": "\\Events\\Music\\Main Menu\\Main_Menu_01_stop",
       "MaxAttenuation": "0.000000",
       "DurationType": "OneShot",
       "DurationMin": "0.000000",
@@ -1486,7 +1499,7 @@
    {
     "Id": "2204642885",
     "Language": "SFX",
-    "Hash": "722767414",
+    "Hash": "3448174730",
     "ObjectPath": "\\SoundBanks\\SFX\\Reactor\\Reactor",
     "ShortName": "Reactor",
     "Path": "Reactor.bnk",
@@ -1726,7 +1739,7 @@
    {
     "Id": "2492857755",
     "Language": "SFX",
-    "Hash": "1364004278",
+    "Hash": "205887325",
     "ObjectPath": "\\SoundBanks\\SFX\\Aetheric Drives\\Aetheric_Drive",
     "ShortName": "Aetheric_Drive",
     "Path": "Aetheric_Drive.bnk",
@@ -2035,58 +2048,31 @@
     ]
    },
    {
-    "Id": "2764240573",
+    "Id": "3119006570",
     "Language": "SFX",
-    "Hash": "666507945",
-    "ObjectPath": "\\SoundBanks\\Music\\Combat",
-    "ShortName": "Combat",
-    "Path": "Combat.bnk",
+    "Hash": "599847068",
+    "ObjectPath": "\\SoundBanks\\Music\\Boss\\Boss_Metal",
+    "ShortName": "Boss_Metal",
+    "Path": "Boss_Metal.bnk",
     "IncludedEvents": [
      {
-      "Id": "3953921183",
-      "Name": "Play_Gen_Combat_1",
-      "ObjectPath": "\\Events\\Music\\Combat\\Play_Gen_Combat_1",
-      "DurationType": "OneShot",
-      "DurationMin": "177.230804",
-      "DurationMax": "177.230804",
+      "Id": "3392706537",
+      "Name": "Metal_Boss_01_play",
+      "ObjectPath": "\\Events\\Music\\Boss\\Metal\\Metal_Boss_01_play",
+      "DurationType": "Infinite",
       "IncludedMemoryFiles": [
        {
-        "Id": "203127691",
+        "Id": "230464935",
         "Language": "SFX",
-        "ShortName": "Gen_Combat_01.wav",
-        "Path": "SFX\\Gen_Combat_01_D79FB2B7.wem"
+        "ShortName": "METAL BOSS FINAL.wav",
+        "Path": "SFX\\METAL BOSS FINAL_D79FB2B7.wem"
        }
       ]
      },
      {
-      "Id": "2406196",
-      "Name": "Play_Metal_Combat_01",
-      "ObjectPath": "\\Events\\Music\\Combat\\Play_Metal_Combat_01",
-      "DurationType": "OneShot",
-      "DurationMin": "176.072922",
-      "DurationMax": "176.072922",
-      "IncludedMemoryFiles": [
-       {
-        "Id": "936702341",
-        "Language": "SFX",
-        "ShortName": "METAL COMBAT FINAL.wav",
-        "Path": "SFX\\METAL COMBAT FINAL_D79FB2B7.wem"
-       }
-      ]
-     },
-     {
-      "Id": "13315505",
-      "Name": "Stop_Gen_Combat_1",
-      "ObjectPath": "\\Events\\Music\\Combat\\Stop_Gen_Combat_1",
-      "MaxAttenuation": "0.000000",
-      "DurationType": "OneShot",
-      "DurationMin": "0.000000",
-      "DurationMax": "0.000000"
-     },
-     {
-      "Id": "1055950810",
-      "Name": "Stop_Metal_Combat_01",
-      "ObjectPath": "\\Events\\Music\\Combat\\Stop_Metal_Combat_01",
+      "Id": "620259087",
+      "Name": "Metal_Boss_01_stop",
+      "ObjectPath": "\\Events\\Music\\Boss\\Metal\\Metal_Boss_01_stop",
       "MaxAttenuation": "0.000000",
       "DurationType": "OneShot",
       "DurationMin": "0.000000",
@@ -2095,23 +2081,60 @@
     ],
     "IncludedMemoryFiles": [
      {
-      "Id": "203127691",
+      "Id": "230464935",
       "Language": "SFX",
-      "ShortName": "Gen_Combat_01.wav",
-      "Path": "SFX\\Gen_Combat_01_D79FB2B7.wem"
+      "ShortName": "METAL BOSS FINAL.wav",
+      "Path": "SFX\\METAL BOSS FINAL_D79FB2B7.wem"
+     }
+    ]
+   },
+   {
+    "Id": "3285854189",
+    "Language": "SFX",
+    "Hash": "148185360",
+    "ObjectPath": "\\SoundBanks\\Music\\Overworld\\Overworld_Metal",
+    "ShortName": "Overworld_Metal",
+    "Path": "Overworld_Metal.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "1028170396",
+      "Name": "Metal_OW_01_play",
+      "ObjectPath": "\\Events\\Music\\Overworld\\Metal\\Metal_OW_01_play",
+      "DurationType": "OneShot",
+      "DurationMin": "151.125000",
+      "DurationMax": "151.125000",
+      "IncludedMemoryFiles": [
+       {
+        "Id": "795357291",
+        "Language": "SFX",
+        "ShortName": "METAL OW.wav",
+        "Path": "SFX\\METAL OW_D79FB2B7.wem"
+       }
+      ]
      },
      {
-      "Id": "936702341",
+      "Id": "4035368710",
+      "Name": "Metal_OW_01_stop",
+      "ObjectPath": "\\Events\\Music\\Overworld\\Metal\\Metal_OW_01_stop",
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "795357291",
       "Language": "SFX",
-      "ShortName": "METAL COMBAT FINAL.wav",
-      "Path": "SFX\\METAL COMBAT FINAL_D79FB2B7.wem"
+      "ShortName": "METAL OW.wav",
+      "Path": "SFX\\METAL OW_D79FB2B7.wem"
      }
     ]
    },
    {
     "Id": "3364802794",
     "Language": "SFX",
-    "Hash": "1816931111",
+    "Hash": "1545602546",
     "ObjectPath": "\\SoundBanks\\SFX\\Weapons\\IonCannon",
     "ShortName": "IonCannon",
     "Path": "IonCannon.bnk",
@@ -2575,6 +2598,49 @@
       "Language": "SFX",
       "ShortName": "SFX_weapon_machinegun_fire04.wav",
       "Path": "SFX\\SFX_weapon_machinegun_fire04_10C4C929.wem"
+     }
+    ]
+   },
+   {
+    "Id": "4016716019",
+    "Language": "SFX",
+    "Hash": "3294349064",
+    "ObjectPath": "\\SoundBanks\\Music\\Overworld\\Overworld_Generic",
+    "ShortName": "Overworld_Generic",
+    "Path": "Overworld_Generic.bnk",
+    "IncludedEvents": [
+     {
+      "Id": "4009869725",
+      "Name": "Gen_OW_01_play",
+      "ObjectPath": "\\Events\\Music\\Overworld\\Generic\\Gen_OW_01_play",
+      "DurationType": "OneShot",
+      "DurationMin": "182.222229",
+      "DurationMax": "182.222229",
+      "IncludedMemoryFiles": [
+       {
+        "Id": "164977959",
+        "Language": "SFX",
+        "ShortName": "Gen_OW_01.wav",
+        "Path": "SFX\\Gen_OW_01_D79FB2B7.wem"
+       }
+      ]
+     },
+     {
+      "Id": "1900744459",
+      "Name": "Gen_OW_01_stop",
+      "ObjectPath": "\\Events\\Music\\Overworld\\Generic\\Gen_OW_01_stop",
+      "MaxAttenuation": "0.000000",
+      "DurationType": "OneShot",
+      "DurationMin": "0.000000",
+      "DurationMax": "0.000000"
+     }
+    ],
+    "IncludedMemoryFiles": [
+     {
+      "Id": "164977959",
+      "Language": "SFX",
+      "ShortName": "Gen_OW_01.wav",
+      "Path": "SFX\\Gen_OW_01_D79FB2B7.wem"
      }
     ]
    }

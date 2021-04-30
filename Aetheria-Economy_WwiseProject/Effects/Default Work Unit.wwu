@@ -167,6 +167,18 @@
 						<Property Name="MicType" Type="int32" Value="2"/>
 					</PropertyList>
 					<ChildrenList>
+						<PluginMediaSource Name="" ID="{1F3B134D-785E-4F0C-A17E-56AFA6979FED}">
+							<ParentPluginID>462899</ParentPluginID>
+							<MediaIDList>
+								<MediaID ID="435959294"/>
+							</MediaIDList>
+						</PluginMediaSource>
+						<PluginMediaSource Name="" ID="{4A0446E0-5E0E-4641-A629-C39F62CCB01F}">
+							<ParentPluginID>462899</ParentPluginID>
+							<MediaIDList>
+								<MediaID ID="435959294"/>
+							</MediaIDList>
+						</PluginMediaSource>
 						<PluginMediaSource Name="" ID="{F19CE877-12D6-4A48-9353-EEF1DCF8BEC7}">
 							<ParentPluginID>462899</ParentPluginID>
 							<MediaIDList>

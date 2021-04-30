@@ -3105,7 +3105,7 @@
 							<ChildrenList>
 								<RandomSequenceContainer Name="IonCannon_fire" ID="{F342EF35-B9FB-43DF-AC49-9C25006D66F7}" ShortID="550015439">
 									<PropertyList>
-										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="3DSpatialization" Type="int16" Value="1"/>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
 										<Property Name="Pitch" Type="int32">
 											<ModifierList>

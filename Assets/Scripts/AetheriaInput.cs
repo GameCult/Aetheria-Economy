@@ -1234,7 +1234,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
             }
         }
     }
-    public PlayerActions Player => new PlayerActions(this);
+    public PlayerActions @Player => new PlayerActions(this);
 
     // UI
     private readonly InputActionMap m_UI;

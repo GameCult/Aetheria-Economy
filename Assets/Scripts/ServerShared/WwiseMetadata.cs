@@ -15,11 +15,17 @@ public class WwiseMetaSoundBanksInfo
     public WwiseMetaSoundBank[] SoundBanks;
 
     private Dictionary<uint, WwiseMetaSoundBank> _soundBanks;
-
     public WwiseMetaSoundBank GetSoundBank(uint id)
     {
         if (_soundBanks == null) _soundBanks = SoundBanks.ToDictionary(sb => sb.Id);
         return _soundBanks[id];
+    }
+
+    private Dictionary<string, WwiseMetaSoundBank> _soundBankNames;
+    public WwiseMetaSoundBank GetSoundBank(string name)
+    {
+        if (_soundBankNames == null) _soundBankNames = SoundBanks.ToDictionary(sb => sb.ShortName);
+        return _soundBankNames[name];
     }
 }
 
@@ -28,6 +34,7 @@ public class WwiseMetaSoundBank
 {
     public uint Id;
     public string ShortName;
+    public string ObjectPath;
     public WwiseMetaObject[] IncludedEvents;
     public WwiseMetaObject[] GameParameters;
 

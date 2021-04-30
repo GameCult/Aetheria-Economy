@@ -97,6 +97,7 @@ public class MainMenu : MonoBehaviour
                 _nextMenu.panel.AddButton("Continue",
                     () =>
                     {
+                        ActionGameManager.IsTutorial = ActionGameManager.PlayerSettings.SavedRun.IsTutorial;
                         ActionGameManager.CurrentSector = new Sector(
                             ActionGameManager.CultCache,
                             ActionGameManager.PlayerSettings.SavedRun);

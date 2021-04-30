@@ -240,9 +240,30 @@ public class WwiseSoundBankInspector : BaseInspector<uint, InspectableSoundBankA
         using (new HorizontalScope())
         {
             GUILayout.Label(label, GUILayout.Width(width));
+
+            IEnumerable<WwiseMetaSoundBank> soundBanks = ActionGameManager.SoundBanksInfo.SoundBanks;
             
-            var item = parent as EquippableItemData;
-            if (item == null)
+            if (parent is EquippableItemData item)
+            {
+                if (item.Behaviors.Any(b => b is WeaponData))
+                    soundBanks = soundBanks.Where(s => s.GetEvent(WeaponAudioEvent.Fire) != null);
+            
+                if (item.Behaviors.Any(b => b is ChargedWeaponData))
+                    soundBanks = soundBanks.Where(s => s.GetEvent(ChargedWeaponAudioEvent.Start) != null);
+
+                if (item.Behaviors.Any(b => b is ReactorData || b is ThrusterData || b is AetherDriveData))
+                    soundBanks = soundBanks.Where(s =>
+                        s.GetEvent(LoopingAudioEvent.Play) != null &&
+                        s.GetEvent(LoopingAudioEvent.Stop) != null &&
+                        s.GetParameter(SpecialAudioParameter.Intensity) != null);
+            }
+            else if (parent is Faction)
+            {
+                soundBanks = soundBanks.Where(s => s.ObjectPath.Contains("Music") &&
+                    s.GetEvent(LoopingAudioEvent.Play) != null &&
+                    s.GetEvent(LoopingAudioEvent.Stop) != null);
+            }
+            else
             {
                 using (new HorizontalScope(GUI.skin.box))
                 {
@@ -250,21 +271,7 @@ public class WwiseSoundBankInspector : BaseInspector<uint, InspectableSoundBankA
                     return value;
                 }
             }
-
-            IEnumerable<WwiseMetaSoundBank> soundBanks = ActionGameManager.SoundBanksInfo.SoundBanks;
-
-            if (item.Behaviors.Any(b => b is WeaponData))
-                soundBanks = soundBanks.Where(s => s.GetEvent(WeaponAudioEvent.Fire) != null);
             
-            if (item.Behaviors.Any(b => b is ChargedWeaponData))
-                soundBanks = soundBanks.Where(s => s.GetEvent(ChargedWeaponAudioEvent.Start) != null);
-
-            if (item.Behaviors.Any(b => b is ReactorData || b is ThrusterData || b is AetherDriveData))
-                soundBanks = soundBanks.Where(s =>
-                    s.GetEvent(LoopingAudioEvent.Play) != null &&
-                    s.GetEvent(LoopingAudioEvent.Stop) != null &&
-                    s.GetParameter(SpecialAudioParameter.Intensity) != null);
-
             var soundBanksArray = soundBanks.ToArray();
             
             if (soundBanksArray.Length==0)
@@ -278,8 +285,10 @@ public class WwiseSoundBankInspector : BaseInspector<uint, InspectableSoundBankA
 
             var selected = Array.FindIndex(soundBanksArray, o=>o.Id==value);
             if (selected == -1) selected = 0;
+            else selected++;
 
-            value = soundBanksArray[Popup(selected, soundBanksArray.Select(p => p.ShortName).ToArray())].Id;
+            var selection = Popup(selected, soundBanksArray.Select(p => p.ShortName).Prepend("None").ToArray());
+            value = selection != 0 ? soundBanksArray[selection - 1].Id : 0;
             return value;
         }
     }

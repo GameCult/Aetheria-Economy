@@ -47,6 +47,15 @@ public class Faction : DatabaseEntry, INamedEntry
     
     [InspectableDatabaseLink(typeof(Faction)), RangedFloat(0, 1), JsonProperty("allegiance"), Key(12)]  
     public Dictionary<Guid, float> Allegiance = new Dictionary<Guid, float>();
+
+    [InspectableSoundBank, JsonProperty("overworldMusic"), Key(13)]
+    public uint OverworldMusic;
+
+    [InspectableSoundBank, JsonProperty("combatMusic"), Key(14)]
+    public uint CombatMusic;
+
+    [InspectableSoundBank, JsonProperty("bossMusic"), Key(15)]
+    public uint BossMusic;
     
     [IgnoreMember] public string EntryName
     {

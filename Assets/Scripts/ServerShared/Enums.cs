@@ -199,3 +199,10 @@ public enum LoopingAudioEvent
     Play,
     Stop
 }
+
+public enum MusicType
+{
+    Overworld,
+    Combat,
+    Boss
+}

@@ -10,6 +10,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Sector Display Properties", menuName = "Aetheria/Sector Display Properties")]
 public class GameSettings : ScriptableObject
 {
+    public string DefaultOverworldSoundbank = "Overworld_Generic";
+    public string DefaultCombatSoundbank = "Combat_Generic";
+    public string DefaultBossSoundbank = "Boss_Metal";
+    public string AmbienceSoundBank = "Ambience";
     public string StartingHullName = "Longinus";
     public float PickupLifetime = 30;
     public float LootDropProbability = .25f;

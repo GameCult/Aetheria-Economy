@@ -52,6 +52,30 @@ public class ActionGameManager : MonoBehaviour
         }
     }
 
+    private static GameObject CurrentMusicGameObject;
+    private static uint CurrentMusicSoundbank;
+    public static void PlayMusic(uint soundBank, GameObject obj)
+    {
+        if (soundBank == CurrentMusicSoundbank) return;
+        if (CurrentMusicSoundbank != 0)
+            AkSoundEngine.PostEvent(SoundBanksInfo.GetSoundBank(CurrentMusicSoundbank)
+                    .GetEvent(LoopingAudioEvent.Stop).Id, CurrentMusicGameObject);
+        LoadSoundbank(soundBank);
+        CurrentMusicGameObject = obj;
+        CurrentMusicSoundbank = soundBank;
+        AkSoundEngine.PostEvent(SoundBanksInfo.GetSoundBank(CurrentMusicSoundbank)
+            .GetEvent(LoopingAudioEvent.Play).Id, CurrentMusicGameObject);
+    }
+
+    public static void StopMusic()
+    {
+        if (CurrentMusicSoundbank != 0)
+            AkSoundEngine.PostEvent(SoundBanksInfo.GetSoundBank(CurrentMusicSoundbank)
+                .GetEvent(LoopingAudioEvent.Stop).Id, CurrentMusicGameObject);
+        CurrentMusicGameObject = null;
+        CurrentMusicSoundbank = 0;
+    }
+
     private static CultCache _cultCache;
 
     public static CultCache CultCache
@@ -233,6 +257,13 @@ public class ActionGameManager : MonoBehaviour
     private void OnDisable()
     {
         Input.Dispose();
+        var ambience = SoundBanksInfo.GetSoundBank(Settings.AmbienceSoundBank);
+        foreach (var stopEvent in ambience.IncludedEvents.Where(e => e.Name.EndsWith("_stop")))
+        {
+            AkSoundEngine.PostEvent(stopEvent.Id, gameObject);
+        }
+        StopMusic();
+        AkSoundEngine.UnregisterGameObj(gameObject);
         ConsoleController.ClearCommands();
         EntityInstance.ClearWeaponManagers();
     }
@@ -243,6 +274,13 @@ public class ActionGameManager : MonoBehaviour
         EntityInstance.EffectManagerParent = EffectManagerParent;
         AkSoundEngine.RegisterGameObj(gameObject);
         ConsoleController.MessageReceiver = this;
+
+        var ambience = SoundBanksInfo.GetSoundBank(Settings.AmbienceSoundBank);
+        LoadSoundbank(ambience.Id);
+        foreach (var playEvent in ambience.IncludedEvents.Where(e => e.Name.EndsWith("_play")))
+        {
+            AkSoundEngine.PostEvent(playEvent.Id, gameObject);
+        }
         
         ItemManager = new ItemManager(CultCache, Settings.GameplaySettings, Debug.Log);
         ZoneRenderer.ItemManager = ItemManager;
@@ -630,6 +668,7 @@ public class ActionGameManager : MonoBehaviour
             sectorZone.Contents = new Zone(ItemManager, Settings.PlanetSettings, sectorZone.PackedContents, sectorZone);
         }
         Zone = sectorZone.Contents;
+        PlayMusic(MusicType.Overworld);
         
         Zone.Log = s => Debug.Log($"Zone: {s}");
 
@@ -939,6 +978,11 @@ public class ActionGameManager : MonoBehaviour
         foreach (var group in _articulationGroups)
             group.crosshair.gameObject.SetActive(true);
         
+        _shipSubscriptions.Add(CurrentEntity.TargetedByCount.Subscribe(count =>
+        {
+            PlayMusic(count > 0 ? MusicType.Combat : MusicType.Overworld);
+        }));
+        
         _shipSubscriptions.Add(CurrentEntity.Target.Subscribe(target =>
         {
             // Clear previous subscriptions related to currently targeted enemy
@@ -1069,6 +1113,26 @@ public class ActionGameManager : MonoBehaviour
             }
         else if (CurrentEntity != null)
             yield return CurrentEntity;
+    }
+
+    public void PlayMusic(MusicType type)
+    {
+        var soundbank = type switch
+        {
+            MusicType.Overworld => Zone.SectorZone.Owner?.OverworldMusic ?? 0,
+            MusicType.Combat => Zone.SectorZone.Owner?.CombatMusic ?? 0,
+            MusicType.Boss => Zone.SectorZone.Owner?.BossMusic ?? 0,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
+        if (soundbank == 0)
+            soundbank = type switch
+            {
+                MusicType.Overworld => SoundBanksInfo.GetSoundBank(Settings.DefaultOverworldSoundbank).Id,
+                MusicType.Combat => SoundBanksInfo.GetSoundBank(Settings.DefaultCombatSoundbank).Id,
+                MusicType.Boss => SoundBanksInfo.GetSoundBank(Settings.DefaultBossSoundbank).Id,
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
+        PlayMusic(soundbank, gameObject);
     }
 
     void Update()

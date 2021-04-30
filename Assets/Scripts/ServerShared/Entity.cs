@@ -125,6 +125,8 @@ public abstract class Entity
     public Subject<Unit> HeatstrokeDeath = new Subject<Unit>();
     public Subject<Unit> HypothermiaRisk = new Subject<Unit>();
     public Subject<Unit> HypothermiaDeath = new Subject<Unit>();
+    public Subject<Entity> TargetedBy = new Subject<Entity>();
+    public ReactiveProperty<int> TargetedByCount = new ReactiveProperty<int>(0);
     
     public UniRx.IObservable<EquippedItem> ItemDestroyed;
     public UniRx.IObservable<int2> HullArmorDepleted;
@@ -192,6 +194,13 @@ public abstract class Entity
             .Merge(HeatstrokeDeath.Select(_ => CauseOfDeath.Heatstroke))
             .Merge(HypothermiaDeath.Select(_ => CauseOfDeath.Hypothermia))
             .Merge(ItemDestroyed.Where(i=>i.GetBehavior<Cockpit>()!=null).Select(_ => CauseOfDeath.CockpitDestroyed));
+
+        Target.Subscribe(entity => entity?.TargetedBy.OnNext(this));
+        TargetedBy.Subscribe(enemy =>
+        {
+            TargetedByCount.Value++;
+            enemy.Target.Where(t => t != this).Take(1).Subscribe(_ => TargetedByCount.Value--);
+        });
 
         EntityInfoGathered.ObserveReplace().Subscribe(replace =>
         {
