@@ -83,7 +83,7 @@
 										<Local>
 											<MusicCue Name="Entry Cue" ID="{E3496FD5-0B56-4DEF-88B4-84ACC2723486}">
 												<PropertyList>
-													<Property Name="TimeMs" Type="Real64" Value="7385.30875097831"/>
+													<Property Name="TimeMs" Type="Real64" Value="7375"/>
 												</PropertyList>
 											</MusicCue>
 										</Local>
@@ -93,7 +93,7 @@
 											<MusicCue Name="Exit Cue" ID="{87650B22-66B3-4388-8205-4665F57B6899}">
 												<PropertyList>
 													<Property Name="CueType" Type="int16" Value="1"/>
-													<Property Name="TimeMs" Type="Real64" Value="170000"/>
+													<Property Name="TimeMs" Type="Real64" Value="169844.986943742"/>
 												</PropertyList>
 											</MusicCue>
 										</Local>
@@ -151,7 +151,7 @@
 					<ChildrenList>
 						<MusicSegment Name="Metal_Combat_01" ID="{065373CA-B6B7-4634-9C4B-6D6F79214FAA}" ShortID="921989608">
 							<PropertyList>
-								<Property Name="EndPosition" Type="Real64" Value="184072.916666667"/>
+								<Property Name="EndPosition" Type="Real64" Value="176072.916666667"/>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
