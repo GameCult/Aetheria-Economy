@@ -19,6 +19,9 @@ public class InspectableTextAssetAttribute : PreferredInspectorAttribute { }
 public class InspectableTemperatureAttribute : PreferredInspectorAttribute { }
 public class InspectableAnimationCurveAttribute : PreferredInspectorAttribute { }
 public class InspectableColorAttribute : PreferredInspectorAttribute { }
+public class InspectableSoundBankAttribute : PreferredInspectorAttribute { }
+public class InspectableAudioParameterAttribute : PreferredInspectorAttribute { }
+public class InspectableSchematicShapeAttribute : PreferredInspectorAttribute { }
 
 public class InspectableEnumValuesAttribute : PreferredInspectorAttribute
 {

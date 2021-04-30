@@ -72,6 +72,7 @@ public class Thruster : Behavior, IAnalogBehavior
 
     public override bool Execute(float dt)
     {
+        Item.SetAudioParameter(SpecialAudioParameter.Intensity, _input);
         if(_input > .01f && Entity.TryConsumeEnergy(_input * Evaluate(_data.EnergyUsage)))
         {
             Thrust = Evaluate(_data.Thrust);

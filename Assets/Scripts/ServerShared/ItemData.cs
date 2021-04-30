@@ -234,7 +234,7 @@ public abstract class ItemData : DatabaseEntry, INamedEntry
     [Inspectable, JsonProperty("mass"), Key(4)]
     public float Mass;
 
-    [Inspectable, JsonProperty("shape"), Key(5)]
+    [InspectableSchematicShape, JsonProperty("shape"), Key(5)]
     public Shape Shape;
 
     // Heat needed to change temperature of 1 gram by 1 degree
@@ -347,11 +347,17 @@ public abstract class EquippableItemData : CraftedItemData
     [Inspectable, JsonProperty("resilience"), Key(18)]
     public float ThermalResilience = 1;
     
-    [Inspectable, JsonProperty("sfx"), Key(19)]
-    public string SoundEffectTrigger;
+    // [Inspectable, JsonProperty("sfx"), Key(19)]
+    // public string SoundEffectTrigger;
     
     [InspectableTexture, JsonProperty("actionIcon"), Key(20)]
     public string ActionBarIcon;
+
+    [InspectableSoundBank, JsonProperty("soundBank"), Key(21)]
+    public uint SoundBank;
+
+    [Inspectable, JsonProperty("audioStats"), Key(22)]
+    public List<AudioStat> AudioStats = new List<AudioStat>();
     
     [IgnoreMember]
     public abstract HardpointType HardpointType { get; }
@@ -391,10 +397,20 @@ public abstract class EquippableItemData : CraftedItemData
     }
 }
 
+[Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class AudioStat
+{
+    [InspectableAudioParameter, JsonProperty("parameter"), Key(0)]
+    public uint Parameter;
+
+    [Inspectable, JsonProperty("stat"), Key(1)]
+    public PerformanceStat Stat = new PerformanceStat();
+}
+
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class GearData : EquippableItemData
 {
-    [Inspectable, JsonProperty("hardpointType"), Key(21)]
+    [Inspectable, JsonProperty("hardpointType"), Key(23)]
     public HardpointType Hardpoint;
 
     [IgnoreMember] public override HardpointType HardpointType => Hardpoint;
@@ -403,56 +419,57 @@ public class GearData : EquippableItemData
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class CargoBayData : EquippableItemData
 {
-    [Inspectable, JsonProperty("interiorShape"), Key(21)]
+    [Inspectable, JsonProperty("interiorShape"), Key(24)]
     public Shape InteriorShape;
+    
     [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class DockingBayData : CargoBayData
 {
-    [Inspectable, JsonProperty("maxSize"), Key(22)]
+    [Inspectable, JsonProperty("maxSize"), Key(25)]
     public int2 MaxSize;
 }
 
 [RethinkTable("Items"), MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class WeaponItemData : GearData
 {
-    [Inspectable, JsonProperty("range"), Key(22)]
+    [Inspectable, JsonProperty("range"), Key(24)]
     public WeaponRange WeaponRange;
     
-    [Inspectable, JsonProperty("caliber"), Key(23)]
+    [Inspectable, JsonProperty("caliber"), Key(25)]
     public WeaponCaliber WeaponCaliber;
     
-    [Inspectable, JsonProperty("weaponType"), Key(24)]
+    [Inspectable, JsonProperty("weaponType"), Key(26)]
     public WeaponType WeaponType;
     
-    [Inspectable, JsonProperty("fireTypes"), Key(25)]
+    [Inspectable, JsonProperty("fireTypes"), Key(27)]
     public WeaponFireType WeaponFireTypes;
     
-    [Inspectable, JsonProperty("modifiers"), Key(26)]
+    [Inspectable, JsonProperty("modifiers"), Key(28)]
     public WeaponModifiers WeaponModifiers;
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class HullData : EquippableItemData
 {
-    [Inspectable, JsonProperty("hardpoints"), Key(21)]  
+    [Inspectable, JsonProperty("hardpoints"), Key(23)]  
     public List<HardpointData> Hardpoints = new List<HardpointData>();
 
-    [InspectablePrefab, JsonProperty("prefab"), Key(22)]  
+    [InspectablePrefab, JsonProperty("prefab"), Key(24)]  
     public string Prefab;
 
-    [Inspectable, JsonProperty("hullType"), Key(23)]
+    [Inspectable, JsonProperty("hullType"), Key(25)]
     public HullType HullType;
 
-    [Inspectable, JsonProperty("gridOffset"), Key(24)]
+    [Inspectable, JsonProperty("gridOffset"), Key(26)]
     public float GridOffset;
 
-    [Inspectable, JsonProperty("armor"), Key(25)]
+    [Inspectable, JsonProperty("armor"), Key(27)]
     public float Armor;
 
-    [Inspectable, JsonProperty("drag"), Key(26)]
+    [Inspectable, JsonProperty("drag"), Key(28)]
     public float Drag;
 
     [IgnoreMember]

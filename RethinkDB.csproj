@@ -281,8 +281,8 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Extras\Dao\Document.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\WhereClauseParsers\PrimaryIndexParser.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Wednesday.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\AllSubQueryVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Log.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\AllSubQueryVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Values.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Keys.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Reduce.cs" />
@@ -596,11 +596,11 @@
  <Reference Include="UnityEditor.WindowsStandalone.Extensions">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.6f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
  </Reference>
- <Reference Include="System.Threading.Tasks.Extensions">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
- </Reference>
  <Reference Include="Remotion.Linq">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
+ </Reference>
+ <Reference Include="Substance.Editor">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
  </Reference>
  <Reference Include="System.Memory">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
@@ -623,14 +623,14 @@
  <Reference Include="QuickGraph">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/QuickGraph.dll</HintPath>
  </Reference>
+ <Reference Include="System.Threading.Tasks.Extensions">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Threading.Tasks.Extensions.dll</HintPath>
+ </Reference>
  <Reference Include="SourceUnityLib">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Source/Editor/SourceUnityLib.dll</HintPath>
  </Reference>
  <Reference Include="System.Runtime.CompilerServices.Unsafe">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Editor">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2020.2.6f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

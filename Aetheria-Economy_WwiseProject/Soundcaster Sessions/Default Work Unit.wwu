@@ -6,7 +6,7 @@
 				<SoundcasterSession Name="spaceship_sounds" ID="{8CD02381-704A-4881-9445-9A309D9B5B9E}">
 					<ModuleList>
 						<Module>
-							<ObjectRef Name="RailGun_charge_start" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<ObjectRef Name="RailGun_charge_play" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="0" Y="3"/>
 						</Module>
 						<Module>
@@ -94,7 +94,7 @@
 							<Position X="1" Y="1"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="RailGun_charge_start" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<ObjectRef Name="RailGun_charge_play" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="1" Y="2"/>
 						</Module>
 						<Module>
@@ -165,7 +165,7 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}"/>
-							<Value>0</Value>
+							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_thruster_variability" ID="{A5EACAF7-0E81-432C-A284-84437E8983B3}"/>
@@ -173,11 +173,11 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="target_locking" ID="{215424C5-9F3E-438A-AE24-4314B540C243}"/>
-							<Value>0</Value>
+							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_ship_electric_speed" ID="{9D610C30-BA07-43EF-B2E3-6CEB72857C03}"/>
-							<Value>0</Value>
+							<Value>0.54</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_weapon_lightning_grain_filter" ID="{441AD5D1-8E39-451F-8505-8AF4C9DA76B0}"/>
@@ -185,7 +185,7 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_ship_rotor_plates_grain_filter" ID="{054DD684-3F0A-4629-BB94-1E5A662EED8A}"/>
-							<Value>0.19</Value>
+							<Value>0.94</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_reactor_alarm" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}"/>
@@ -217,7 +217,7 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}"/>
-							<Value>0.86</Value>
+							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_reactor_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}"/>

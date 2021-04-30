@@ -13,7 +13,7 @@ using Unity.Mathematics;
  Union(1, typeof(LoginMessage)), 
  Union(2, typeof(RegisterMessage)),
  Union(3, typeof(VerifyMessage)), 
- Union(4, typeof(ErrorMessage)), 
+ Union(4, typeof(NetErrorMessage)), 
  Union(5, typeof(LoginSuccessMessage)),
  Union(6, typeof(ChatMessage)), 
  Union(7, typeof(ChatBroadcastMessage)), 
@@ -53,7 +53,7 @@ public class VerifyMessage : Message
 }
 
 [MessagePackObject]
-public class ErrorMessage : Message
+public class NetErrorMessage : Message
 {
     [Key(0)] public string Error;
 }

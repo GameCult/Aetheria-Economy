@@ -140,6 +140,8 @@ public class Reactor : Behavior, IOrderedBehavior, IDisposable
             CurrentLoadRatio = 1;
         }
         
+        Item.SetAudioParameter(SpecialAudioParameter.Intensity, max(.25f, 1 - 1 / CurrentLoadRatio));
+        
         AddHeat(heat);
         return true;
     }

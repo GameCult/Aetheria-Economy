@@ -75,7 +75,7 @@
 					<ChildrenList>
 						<SoundBank Name="Aetheric_Drive" ID="{350984ED-1B55-4087-A16C-1B70FE8A828B}">
 							<ObjectInclusionList>
-								<ObjectRef Name="Aetheric Drives" ID="{3796CE6F-3F3B-40E0-981C-67B7D155383A}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="Electric" ID="{E4F7CF4A-E48D-4D56-9517-6163AA4E8FB3}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
 								<ObjectRef Name="Aetheric Drives" ID="{F215CA3C-1210-4E73-9ECD-3E6F7369235E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
 							</ObjectInclusionList>
 							<ObjectExclusionList/>

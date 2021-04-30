@@ -171,3 +171,31 @@ public enum TemperatureUnit
     Celsius,
     Fahrenheit
 }
+
+public enum WeaponAudioEvent
+{
+    Fire,
+    Hit,
+    Miss
+}
+
+public enum ChargedWeaponAudioEvent
+{
+    Start,
+    Stop,
+    Fail
+}
+
+public enum SpecialAudioParameter
+{
+    ShipVelocity,
+    ChargeLevel,
+    TargetLock,
+    Intensity,
+}
+
+public enum LoopingAudioEvent
+{
+    Play,
+    Stop
+}

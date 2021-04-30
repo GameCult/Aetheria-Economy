@@ -99,7 +99,7 @@
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="IonCannon_charge_start" ID="{926CA47C-05B7-443F-92F1-7F99ED878BFE}">
+								<Event Name="IonCannon_charge_play" ID="{926CA47C-05B7-443F-92F1-7F99ED878BFE}">
 									<ChildrenList>
 										<Action Name="" ID="{739F5D09-3808-4D68-9B17-DFDAA22D3ABF}" ShortID="67337178">
 											<ReferenceList>
@@ -204,7 +204,7 @@
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="LightningGun_charge_start" ID="{C079F5B7-E84D-4949-A243-E3CEF7A9C3BB}">
+								<Event Name="LightningGun_charge_play" ID="{C079F5B7-E84D-4949-A243-E3CEF7A9C3BB}">
 									<ChildrenList>
 										<Action Name="" ID="{51FD9B7A-8611-4EA5-AFFC-46636D4B9CB3}" ShortID="203203463">
 											<ReferenceList>
@@ -292,7 +292,7 @@
 						</Folder>
 						<Folder Name="RailGun" ID="{EE77E8AF-613A-49A2-8C77-E37B3867E770}" ShortID="659032749">
 							<ChildrenList>
-								<Event Name="RailGun_charge_start" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}">
+								<Event Name="RailGun_charge_play" ID="{896BB1FF-E96F-44E2-ADAC-3FB552FECBE4}">
 									<ChildrenList>
 										<Action Name="" ID="{3B675650-DA3A-482C-ADBD-053E55526F80}" ShortID="629614386">
 											<ReferenceList>

@@ -28,14 +28,14 @@ namespace AK
         static const AkUniqueID ELECTRIC_DRIVE_PLAY = 3691930898U;
         static const AkUniqueID ELECTRIC_DRIVE_STOP = 1108521100U;
         static const AkUniqueID EQUIP = 2412608643U;
-        static const AkUniqueID IONCANNON_CHARGE_START = 3397460648U;
+        static const AkUniqueID IONCANNON_CHARGE_PLAY = 1733674570U;
         static const AkUniqueID IONCANNON_CHARGE_STOP = 3179453300U;
         static const AkUniqueID IONCANNON_FAIL = 216684405U;
         static const AkUniqueID IONCANNON_FIRE = 299292453U;
         static const AkUniqueID IONCANNON_HIT = 1028672300U;
         static const AkUniqueID IONCANNON_MISS = 4133048765U;
         static const AkUniqueID IONCANNON_SHIP_DESTROYED = 3465139343U;
-        static const AkUniqueID LIGHTNINGGUN_CHARGE_START = 1965329713U;
+        static const AkUniqueID LIGHTNINGGUN_CHARGE_PLAY = 2129771581U;
         static const AkUniqueID LIGHTNINGGUN_CHARGE_STOP = 62119851U;
         static const AkUniqueID LIGHTNINGGUN_FAIL = 1293013044U;
         static const AkUniqueID LIGHTNINGGUN_FIRE = 1744728900U;
@@ -56,7 +56,7 @@ namespace AK
         static const AkUniqueID PLAY_METAL_BOSS_01 = 826124593U;
         static const AkUniqueID PLAY_METAL_COMBAT_01 = 2406196U;
         static const AkUniqueID PLAY_METAL_OW_01 = 1885982954U;
-        static const AkUniqueID RAILGUN_CHARGE_START = 3058694461U;
+        static const AkUniqueID RAILGUN_CHARGE_PLAY = 95340409U;
         static const AkUniqueID RAILGUN_CHARGE_STOP = 2686405055U;
         static const AkUniqueID RAILGUN_FAIL = 3475584168U;
         static const AkUniqueID RAILGUN_FIRE = 3929859736U;

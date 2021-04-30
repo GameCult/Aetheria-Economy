@@ -10,7 +10,6 @@ public class ShipInstance : EntityInstance
     private class ThrusterInstance
     {
         public Thruster Thruster;
-        public GameObject SfxSource;
         public ParticleSystem System;
         public float BaseEmission;
         public int MaxParticleCount;
@@ -53,7 +52,6 @@ public class ShipInstance : EntityInstance
                 return new ThrusterInstance
                 {
                     Thruster = thruster,
-                    SfxSource = thrusterHardpoint?.gameObject,
                     System = particles,
                     BaseEmission = particles.emission.rateOverTimeMultiplier,
                     MaxParticleCount = 0
@@ -99,31 +97,8 @@ public class ShipInstance : EntityInstance
             var data = Entity.ItemManager.GetData(item);
             thrusterInstance.MaxParticleCount = thrusterInstance.System.particleCount;
             emissionModule.rateOverTimeMultiplier = thrusterInstance.BaseEmission * thrusterInstance.Thruster.Axis * (item.Durability / data.Durability);
-            // if (thrusterInstance.SfxSource)
-            // {
-            //     var throttle = 0f;
-            //     if (thrusterInstance.System.particleCount > 0)
-            //         throttle = (float) thrusterInstance.System.particleCount / thrusterInstance.MaxParticleCount;
-            //     AkSoundEngine.SetObjectPosition(thrusterInstance.SfxSource, thrusterInstance.SfxSource.transform);
-            //     AkSoundEngine.SetRTPCValue("thruster_throttle", throttle, thrusterInstance.SfxSource);
-            //     AkSoundEngine.SetRTPCValue("performance_durability", thrusterInstance.Thruster.Item.DurabilityPerformance, thrusterInstance.SfxSource);
-            //     AkSoundEngine.SetRTPCValue("performance_thermal", thrusterInstance.Thruster.Item.ThermalPerformance, thrusterInstance.SfxSource);
-            //     AkSoundEngine.SetRTPCValue("performance_quality", thrusterInstance.Thruster.Item.EquippableItem.Quality, thrusterInstance.SfxSource);
-            // }
         }
 
         transform.rotation = Ship.Rotation;
-    }
-
-    public override void OnDestroy()
-    {
-        foreach (var thrusterInstance in _thrusters)
-        {
-            if (thrusterInstance.SfxSource)
-            {
-                AkSoundEngine.PostEvent(thrusterInstance.Thruster.Item.Data.SoundEffectTrigger + "_stop", thrusterInstance.SfxSource);
-                AkSoundEngine.UnregisterGameObj(thrusterInstance.SfxSource);
-            }
-        }
     }
 }

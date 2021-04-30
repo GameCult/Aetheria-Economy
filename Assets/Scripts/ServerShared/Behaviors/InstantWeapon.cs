@@ -165,7 +165,8 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
                     OnCooldownComplete?.Invoke();
             }
         }
-        
+
+        var firedThisFrame = false;
         _burstTimer += dt;
         while (_burstRemaining > 0 && _burstTimer > 0)
         {
@@ -180,6 +181,11 @@ public class InstantWeapon : Weapon, IProgressBehavior, IEventBehavior
             _burstRemaining--;
             _burstTimer -= _burstInterval;
             OnFire?.Invoke();
+            if(!firedThisFrame)
+            {
+                Item.FireAudioEvent(WeaponAudioEvent.Fire);
+                firedThisFrame = true;
+            }
             CauseWearDamage(1);
             AddHeat(Heat);
             Entity.VisibilitySources[this] = Visibility;

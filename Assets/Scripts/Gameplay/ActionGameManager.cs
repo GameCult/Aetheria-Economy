@@ -11,6 +11,7 @@ using Cinemachine;
 using Ink;
 using Ink.Runtime;
 using MessagePack;
+using Newtonsoft.Json;
 using TMPro;
 using UniRx;
 using UnityEngine;
@@ -34,6 +35,21 @@ public class ActionGameManager : MonoBehaviour
     public static DirectoryInfo GameDataDirectory
     {
         get => _gameDataDirectory ??= new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
+    }
+
+    private static WwiseMetaSoundBanksInfo _soundBanksInfo;
+    public static WwiseMetaSoundBanksInfo SoundBanksInfo => _soundBanksInfo ??=
+        JsonConvert.DeserializeObject<WwiseMetadataFile>(File.ReadAllText(Path.Combine(GameDataDirectory.FullName, "SoundbanksInfo.json")))
+            .SoundBanksInfo;
+
+    private static HashSet<uint> _loadedSoundBanks = new HashSet<uint>();
+    public static void LoadSoundbank(uint soundBank)
+    {
+        if (!_loadedSoundBanks.Contains(soundBank))
+        {
+            AkSoundEngine.LoadBank(SoundBanksInfo.GetSoundBank(soundBank).ShortName, out _);
+            _loadedSoundBanks.Add(soundBank);
+        }
     }
 
     private static CultCache _cultCache;

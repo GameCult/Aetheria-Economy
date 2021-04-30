@@ -39,6 +39,12 @@ public class AetherDriveData : BehaviorData
     
     [Inspectable, JsonProperty("passiveCoupling"), Key(10), RuntimeInspectable]
     public PerformanceStat PassiveCoupling;
+
+    [InspectableAudioParameter, JsonProperty("rpmAudio"), Key(11), RuntimeInspectable]
+    public uint RpmAudioParameter;
+
+    [InspectableAudioParameter, JsonProperty("torqueAudio"), Key(12), RuntimeInspectable]
+    public uint TorqueRatioAudioParameter;
     
     public override Behavior CreateInstance(EquippedItem item)
     {
@@ -118,6 +124,10 @@ public class AetherDrive : Behavior
         var actualRpmDelta = min(MaximumRpm - Rpm, potentialRpmDelta);
         var torqueRatio = actualRpmDelta / potentialRpmDelta;
         var draw = torqueRatio * Evaluate(_data.EnergyDraw) / 3;
+        
+        Item.SetAudioParameter(SpecialAudioParameter.Intensity, max(max(_axis.x, _axis.y), _axis.z));
+        Item.SetAudioParameter(_data.RpmAudioParameter, (Rpm.x + Rpm.y + Rpm.z) / 3 / MaximumRpm);
+        Item.SetAudioParameter(_data.TorqueRatioAudioParameter, max(max(torqueRatio.x, torqueRatio.y), torqueRatio.z));
         
         if (Entity.TryConsumeEnergy((draw.x + draw.y + draw.z)*dt))
         {

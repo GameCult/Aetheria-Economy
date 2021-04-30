@@ -6937,6 +6937,13 @@ MonoBehaviour:
   - {fileID: 7082458133318971407}
   EquipmentHardpoints:
   - {fileID: 2469466822132512704}
+  - {fileID: 1146951631}
+  - {fileID: 1438588955}
+  - {fileID: 1710933325}
+  - {fileID: 3957237907279416794}
+  - {fileID: 253280912000941906}
+  - {fileID: 7393376835743981754}
+  - {fileID: 4372481120480406282}
   RadiatorHardpoints: []
   ThrusterHardpoints:
   - {fileID: 3048427942634017260}

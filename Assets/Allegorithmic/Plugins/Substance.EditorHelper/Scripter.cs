@@ -47,22 +47,41 @@ namespace Substance.EditorHelper
             public static bool IsURP()
             {
 #if UNITY_2019_3_OR_NEWER
-            bool bActive = false;
+                bool bActive = false;
 
-            UnityEngine.Rendering.RenderPipelineAsset asset;
-            asset = UnityEngine.Rendering.GraphicsSettings.renderPipelineAsset;
+                UnityEngine.Rendering.RenderPipelineAsset asset;
+                asset = UnityEngine.Rendering.GraphicsSettings.renderPipelineAsset;
 
-            if ((asset != null) &&
-                (asset.GetType().ToString().EndsWith(".UniversalRenderPipelineAsset")))
-            {
-                bActive = true;
-            }
+                if ((asset != null) &&
+                    (asset.GetType().ToString().EndsWith("UniversalRenderPipelineAsset")))
+                {
+                    bActive = true;
+                }
 
-            return bActive;
+                return bActive;
 #else
                 return false;
 #endif
             }
+
+            // Keep the following for PackageManager investigation:
+            /*
+            public static UnityEditor.PackageManager.PackageInfo GetPackageInfo(string pName)
+            {
+#if UNITY_2019_3_OR_NEWER
+                Debug.Log("New stuff...");
+
+                UnityEditor.PackageManager.PackageInfo info;
+
+                info = UnityEditor.PackageManager.PackageInfo.FindForAssetPath(pName);
+
+                return info;
+#else
+                Debug.Log("Old stuff...");
+                return null;
+#endif
+            }
+            */
         }
     }
 }

@@ -130,7 +130,7 @@ public static class CultClient {
                     case LoginSuccessMessage loginSuccess:
                         _token = loginSuccess.Session;
                         break;
-                    case ErrorMessage error:
+                    case NetErrorMessage error:
                         OnError?.Invoke(error.Error);
                         break;
                 }

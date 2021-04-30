@@ -80,25 +80,25 @@ public class DatabaseInspector : EditorWindow
         }
     }
     
-    public void Inspect(object obj, bool inspectablesOnly = true)
+    public void Inspect(object obj, object parent = null)
     {
         foreach (var field in obj.GetType().GetFields().OrderBy(f=>f.GetCustomAttribute<KeyAttribute>()?.IntKey ?? 0))
         {
-            Inspect(obj, field, inspectablesOnly);
+            Inspect(obj, field, parent);
         }
     }
     
-    public void Inspect(object obj, FieldInfo field, bool inspectablesOnly = true)
+    public void Inspect(object obj, FieldInfo field, object parent = null)
     {
         var inspectable = field.GetCustomAttribute<InspectableAttribute>();
-        if (inspectable == null && inspectablesOnly) return;
+        if (inspectable == null) return;
 
         var attributes = field.GetCustomAttributes(false);
 
         var type = field.FieldType;
         var value = field.GetValue(obj);
         
-        field.SetValue(obj, InspectMember(field.Name.SplitCamelCase(), value, obj, type, false, attributes));
+        field.SetValue(obj, InspectMember(field.Name.SplitCamelCase(), value, parent ?? obj, type, false, attributes));
     }
 
     public object InspectMember(string label, object value, object parent, Type type, bool suppressContainer = false, params object[] attributes)
@@ -159,7 +159,7 @@ public class DatabaseInspector : EditorWindow
                 else if (value == null) value = Activator.CreateInstance(type);
             }
 
-            if (value != null && (_foldouts.Contains(value) || suppressContainer)) Inspect(value);
+            if (value != null && (_foldouts.Contains(value) || suppressContainer)) Inspect(value, parent);
             if(!suppressContainer)
                 GUILayout.EndVertical();
             _listItemStyle = style;

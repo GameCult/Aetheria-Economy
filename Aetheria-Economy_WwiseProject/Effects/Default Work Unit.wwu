@@ -167,6 +167,12 @@
 						<Property Name="MicType" Type="int32" Value="2"/>
 					</PropertyList>
 					<ChildrenList>
+						<PluginMediaSource Name="" ID="{F19CE877-12D6-4A48-9353-EEF1DCF8BEC7}">
+							<ParentPluginID>462899</ParentPluginID>
+							<MediaIDList>
+								<MediaID ID="435959294"/>
+							</MediaIDList>
+						</PluginMediaSource>
 						<PluginMediaSource Name="" ID="{887F2160-14C2-436C-9E96-A353F04860A3}">
 							<ParentPluginID>462899</ParentPluginID>
 							<MediaIDList>

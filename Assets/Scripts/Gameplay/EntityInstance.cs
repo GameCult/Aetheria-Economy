@@ -42,9 +42,10 @@ public class EntityInstance : MonoBehaviour
     private (Transform transform, MeshRenderer meshRenderer) _currentPing;
     private float _pingBrightness;
     private Sensor _sensor;
-    
-    private (Reactor reactor, GameObject sfxSource) _reactor;
-    private Dictionary<Radiator, GameObject> _radiatorSfx = new Dictionary<Radiator, GameObject>();
+
+    private List<(GameObject source, EquippedItem item)> _audioSources = new List<(GameObject source, EquippedItem item)>();
+    // private (Reactor reactor, GameObject sfxSource) _reactor;
+    // private Dictionary<Radiator, GameObject> _radiatorSfx = new Dictionary<Radiator, GameObject>();
     
     private static Dictionary<InstantWeaponData, InstantWeaponEffectManager> _instantWeaponManagers = new Dictionary<InstantWeaponData, InstantWeaponEffectManager>();
     private static Dictionary<ConstantWeaponData, ConstantWeaponEffectManager> _constantWeaponManagers = new Dictionary<ConstantWeaponData, ConstantWeaponEffectManager>();
@@ -231,36 +232,24 @@ public class EntityInstance : MonoBehaviour
             }
             
             var hp = Entity.Hardpoints[item.Position.x, item.Position.y];
-            if (hp != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger))
+            if (hp != null && item.Data.SoundBank != 0)
             {
-                if(hp.Type == HardpointType.Radiator)
+                var hardpointTransform = EquipmentHardpoints.FirstOrDefault(x => x.name == hp.Transform);
+                if (hardpointTransform != null)
                 {
-                    var radiatorHardpoint = RadiatorHardpoints.FirstOrDefault(x => x.name == hp.Transform);
-                    if (radiatorHardpoint)
+                    var hardpointGameObject = hardpointTransform.gameObject;
+                    _audioSources.Add((hardpointGameObject, item));
+                    AkSoundEngine.RegisterGameObj(hardpointGameObject);
+                    ActionGameManager.LoadSoundbank(item.Data.SoundBank);
+                    _subscriptions.Add(item.AudioEvents.Subscribe(e=>AkSoundEngine.PostEvent(e, hardpointGameObject)));
+                    _subscriptions.Add(item.AudioParameters.Subscribe(p=>AkSoundEngine.SetRTPCValue(p.id, p.v, hardpointGameObject)));
+                    var soundBank = ActionGameManager.SoundBanksInfo.GetSoundBank(item.Data.SoundBank);
+                    item.SoundBank = soundBank;
+                    if (soundBank.GetEvent(LoopingAudioEvent.Play) != null && soundBank.GetEvent(ChargedWeaponAudioEvent.Start) == null)
                     {
-                        var rad = item.GetBehavior<Radiator>();
-                        if(rad != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger))
-                        {
-                            AkSoundEngine.RegisterGameObj(radiatorHardpoint.gameObject);
-                            AkSoundEngine.PostEvent(item.Data.SoundEffectTrigger, radiatorHardpoint.gameObject);
-                            _radiatorSfx[rad] = radiatorHardpoint.gameObject;
-                        }
+                        AkSoundEngine.PostEvent(soundBank.GetEvent(LoopingAudioEvent.Play).Id, hardpointGameObject);
                     }
                 }
-                // if(hp.Type == HardpointType.Reactor)
-                // {
-                //     var reactorHardpoint = EquipmentHardpoints.FirstOrDefault(x => x.name == hp.Transform);
-                //     if (reactorHardpoint)
-                //     {
-                //         var reactor = item.GetBehavior<Reactor>();
-                //         if( reactor != null && !string.IsNullOrEmpty(item.Data.SoundEffectTrigger) )
-                //         {
-                //             AkSoundEngine.RegisterGameObj(reactorHardpoint.gameObject);
-                //             AkSoundEngine.PostEvent(item.Data.SoundEffectTrigger, reactorHardpoint.gameObject);
-                //             _reactor = (reactor, reactorHardpoint.gameObject);
-                //         }
-                //     }
-                // }
             }
         }
         RadiatorMeshes = new Dictionary<Radiator, MeshRenderer>();
@@ -522,25 +511,6 @@ public class EntityInstance : MonoBehaviour
                 foreach(var material in _fadeMaterials) material.SetFloat("_Fade", _fade);
             }
         }
-
-        foreach (var r in _radiatorSfx)
-        {
-            r.Value.SetActive(r.Key.Item.Online.Value);
-            AkSoundEngine.SetObjectPosition(r.Value, r.Value.transform);
-            AkSoundEngine.SetRTPCValue("performance_durability", r.Key.Item.DurabilityPerformance, r.Value);
-            AkSoundEngine.SetRTPCValue("performance_thermal", r.Key.Item.ThermalPerformance, r.Value);
-            AkSoundEngine.SetRTPCValue("performance_quality", r.Key.Item.EquippableItem.Quality, r.Value);
-        }
-
-        // if (_reactor.reactor != null)
-        // {
-        //     _reactor.sfxSource.SetActive(_reactor.reactor.Item.Online.Value);
-        //     AkSoundEngine.SetObjectPosition(_reactor.sfxSource, _reactor.sfxSource.transform);
-        //     AkSoundEngine.SetRTPCValue("reactor_load", _reactor.reactor.CurrentLoadRatio, _reactor.sfxSource);
-        //     AkSoundEngine.SetRTPCValue("performance_durability", _reactor.reactor.Item.DurabilityPerformance, _reactor.sfxSource);
-        //     AkSoundEngine.SetRTPCValue("performance_thermal", _reactor.reactor.Item.ThermalPerformance, _reactor.sfxSource);
-        //     AkSoundEngine.SetRTPCValue("performance_quality", _reactor.reactor.Item.EquippableItem.Quality, _reactor.sfxSource);
-        // }
         
         foreach (var x in RadiatorMeshes)
         {
@@ -560,16 +530,14 @@ public class EntityInstance : MonoBehaviour
     public virtual void OnDestroy()
     {
         Destroy(LocalSpace.gameObject);
-        foreach (var r in _radiatorSfx)
+        foreach (var (source, item) in _audioSources)
         {
-            AkSoundEngine.PostEvent($"{r.Key.Item.Data.SoundEffectTrigger}_stop", r.Value);
-            AkSoundEngine.UnregisterGameObj(r.Value);
-        }
-
-        if (_reactor.reactor != null)
-        {
-            AkSoundEngine.PostEvent($"{_reactor.reactor.Item.Data.SoundEffectTrigger}_stop", _reactor.sfxSource);
-            AkSoundEngine.UnregisterGameObj(_reactor.sfxSource);
+            var soundBank = ActionGameManager.SoundBanksInfo.GetSoundBank(item.Data.SoundBank);
+            if (soundBank.GetEvent(LoopingAudioEvent.Stop) != null)
+            {
+                AkSoundEngine.PostEvent(soundBank.GetEvent(LoopingAudioEvent.Stop).Id, source);
+            }
+            AkSoundEngine.UnregisterGameObj(source);
         }
         foreach(var x in _subscriptions)
             x.Dispose();

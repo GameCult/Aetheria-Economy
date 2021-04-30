@@ -797,7 +797,7 @@
 										<ActiveSource Name="SoundSeed Grain" ID="{67039B8A-C316-4911-AD10-CF38B4D9E37A}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<BlendContainer Name="lightningGun_fire_lighting_discharge" ID="{31E53399-4CCE-43E0-B5F0-3EDF9865739E}" ShortID="641391425">
+								<BlendContainer Name="lightningGun_fire_lightning_discharge" ID="{31E53399-4CCE-43E0-B5F0-3EDF9865739E}" ShortID="641391425">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="InitialDelay" Type="Real64">
@@ -860,6 +860,34 @@
 														<Property Name="Attack" Type="Real32" Value="284"/>
 														<Property Name="Duration" Type="Real32" Value="405"/>
 														<Property Name="DurationLink" Type="int32" Value="1"/>
+														<Property Name="FilterFreq" Type="Real32">
+															<RTPCList>
+																<RTPC Name="" ID="{1F08712C-0F3F-4116-8091-0410D2B2F020}" ShortID="715472442">
+																	<ReferenceList>
+																		<Reference Name="ControlInput">
+																			<ObjectRef Name="sfx_weapon_lightning_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																		</Reference>
+																	</ReferenceList>
+																	<Curve Name="" ID="{AC7D90AD-332F-43DE-A452-5EB124DA52F1}">
+																		<PropertyList>
+																			<Property Name="Flags" Type="int32" Value="5"/>
+																		</PropertyList>
+																		<PointList>
+																			<Point>
+																				<XPos>0</XPos>
+																				<YPos>20000</YPos>
+																				<Flags>5</Flags>
+																			</Point>
+																			<Point>
+																				<XPos>1</XPos>
+																				<YPos>1206.2725</YPos>
+																				<Flags>37</Flags>
+																			</Point>
+																		</PointList>
+																	</Curve>
+																</RTPC>
+															</RTPCList>
+														</Property>
 														<Property Name="GrainRate" Type="Real32" Value="6.74"/>
 														<Property Name="MarkerSelectMod1Depth" Type="Real32" Value="100"/>
 														<Property Name="ModAmount2" Type="Real32" Value="-6.36"/>
