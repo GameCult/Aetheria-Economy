@@ -1,0 +1,25 @@
+{
+    "name": "AK.Wwise.Unity.API",
+    "references": [ 
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.addressables",
+            "expression": "1.8",
+            "define": "UNITY_ADDRESSABLES"
+        },
+        {
+            "name": "com.audiokinetic.wwise.addressables",
+            "expression": "1.0.0",
+            "define": "AK_WWISE_ADDRESSABLES"
+        }
+    ]
+}
