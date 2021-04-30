@@ -156,6 +156,8 @@ public class MainMenu : MonoBehaviour
                             Settings.TutorialBackgroundSettings,
                             Settings.NameGeneratorSettings,
                             ActionGameManager.CultCache,
+                            ActionGameManager.PlayerSettings,
+                            ActionGameManager.GameDataDirectory.CreateSubdirectory("Narrative"),
                             setState);
                         Observable.NextFrame().Subscribe(_ =>
                         {

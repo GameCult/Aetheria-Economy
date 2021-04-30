@@ -250,6 +250,7 @@ public class ActionGameManager : MonoBehaviour
         if(PlayerSettings.SavedRun != null)
         {
             PlayerSettings.SavedRun.IsTutorial = IsTutorial;
+            PlayerSettings.SavedRun.ActionBarBindings = _actionBarSlots.Select(slot => slot.Save()).ToArray();
         }
         SavePlayerSettings();
     }
@@ -284,8 +285,6 @@ public class ActionGameManager : MonoBehaviour
         
         ItemManager = new ItemManager(CultCache, Settings.GameplaySettings, Debug.Log);
         ZoneRenderer.ItemManager = ItemManager;
-
-        var narrativePath = GameDataDirectory.CreateSubdirectory("Narrative");
         // TODO: Process Stories
 
         // _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");
@@ -476,6 +475,14 @@ public class ActionGameManager : MonoBehaviour
             var num = createBinding($"<Keyboard>/{i}");
             num.InputIcon.gameObject.SetActive(false);
             num.InputLabel.text = i.ToString();
+        }
+        
+        if(PlayerSettings.SavedRun!=null)
+        {
+            for (var i = 0; i < _actionBarSlots.Count; i++)
+            {
+                _actionBarSlots[i].Restore(PlayerSettings.SavedRun.ActionBarBindings[i]);
+            }
         }
         
         #endregion

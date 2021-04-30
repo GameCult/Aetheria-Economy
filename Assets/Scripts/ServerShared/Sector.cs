@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -117,6 +118,8 @@ public class Sector
         SectorBackgroundSettings background,
         NameGeneratorSettings nameGeneratorSettings,
         CultCache cache,
+        PlayerSettings playerSettings, 
+        DirectoryInfo narrativeDirectory,
         Action<string> progressCallback = null,
         uint seed = 0)
     {
@@ -196,6 +199,14 @@ public class Sector
         CalculateFactionInfluence(progressCallback);
 
         GenerateNames(cache, nameGeneratorSettings, ref random, progressCallback);
+        
+        progressCallback?.Invoke("Weaving Narrative");
+        // var processor = new StoryProcessor(playerSettings, narrativeDirectory, this, ref random);
+        // var storyPlacement = processor.PlaceStories();
+        // foreach (var story in storyPlacement.Keys)
+        // {
+        //     storyPlacement[story]
+        // }
 
         progressCallback?.Invoke("Done!");
         if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao

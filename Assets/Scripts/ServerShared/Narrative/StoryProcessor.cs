@@ -44,9 +44,15 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
         _inkFileHandler = new AetheriaInkFileHandler(narrativeDirectory);
         
         _locationsPath = narrativeDirectory.CreateSubdirectory("Locations");
+    }
+
+    public Dictionary<Story, SectorZone> PlaceStories()
+    {
         var locationFiles = _locationsPath.EnumerateFiles("*.ink");
         foreach(var inkFile in locationFiles) PlaceStory(GetStory(inkFile));
+        return _placedStories;
     }
+    
     public SectorZone ResolveZone(string path)
     {
         // Handle special cases: "start" and "end"

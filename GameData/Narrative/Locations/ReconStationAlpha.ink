@@ -1,3 +1,6 @@
+#planet: ReconStationAlpha
+#constraint: DistanceFrom start < 1
+#trade: disabled
 
 INCLUDE TheActualFactualFactory.ink
 INCLUDE QuestTexts.ink
