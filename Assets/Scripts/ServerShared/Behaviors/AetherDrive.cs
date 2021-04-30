@@ -45,6 +45,9 @@ public class AetherDriveData : BehaviorData
 
     [InspectableAudioParameter, JsonProperty("torqueAudio"), Key(12), RuntimeInspectable]
     public uint TorqueRatioAudioParameter;
+
+    [InspectablePrefab, JsonProperty("particles"), Key(13)]
+    public string Particles;
     
     public override Behavior CreateInstance(EquippedItem item)
     {
@@ -65,6 +68,7 @@ public class AetherDrive : Behavior
     public float3 Thrust { get; private set; }
     public float3 Rpm { get; private set; }
     public float MaximumRpm { get; private set; }
+    public float2 ThrustDirection { get; private set; }
 
     public AetherDriveData DriveData => _data;
 
@@ -105,9 +109,10 @@ public class AetherDrive : Behavior
 
         var heat = rpmLoss * _data.RotorMass * (1 - couplingEfficiency);
         AddHeat((heat.x + heat.y + heat.z)*ItemManager.GameplaySettings.AetherHeatMultiplier);
+
+        ThrustDirection = forward * (_axis.x * force.x / Entity.Mass) + right * (_axis.y * force.y / Entity.Mass);
+        Entity.Velocity += ThrustDirection;
         
-        Entity.Velocity += forward * (_axis.x * force.x / Entity.Mass);
-        Entity.Velocity += right * (_axis.y * force.y / Entity.Mass);
         Entity.Direction = mul(Entity.Direction,
             Unity.Mathematics.float2x2.Rotate(force.z * _axis.z * ItemManager.GameplaySettings.AetherTorqueMultiplier / Entity.Mass));
 

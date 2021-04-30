@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 public class ShipInstance : EntityInstance
 {
@@ -14,8 +16,17 @@ public class ShipInstance : EntityInstance
         public float BaseEmission;
         public int MaxParticleCount;
     }
+
+    private class AetherDriveInstance
+    {
+        public AetherDrive Drive;
+        public ParticleSystem Particles;
+        public float BaseEmission;
+        public float BaseForce;
+    }
     
     private ThrusterInstance[] _thrusters;
+    private AetherDriveInstance _aetherDrive;
     
     public Ship Ship { get; private set; }
 
@@ -35,6 +46,20 @@ public class ShipInstance : EntityInstance
             return;
         }
         Ship = ship;
+        var drive = ship.GetBehavior<AetherDrive>();
+        if (drive != null)
+        {
+            var particles = Instantiate(UnityHelpers.LoadAsset<ParticleSystem>(drive.DriveData.Particles), transform, false);
+            var main = particles.main;
+            main.customSimulationSpace = LocalSpace;
+            _aetherDrive = new AetherDriveInstance
+            {
+                Drive = drive,
+                BaseEmission = particles.emission.rateOverTimeMultiplier,
+                Particles = particles,
+                BaseForce = particles.forceOverLifetime.z.curveMultiplier
+            };
+        }
         _thrusters = ship.GetBehaviors<Thruster>().Select(thruster =>
             {
                 var effectData = (ThrusterData) thruster.Data;
@@ -89,6 +114,18 @@ public class ShipInstance : EntityInstance
 
         TractorBeam.Power = Entity.TractorPower;
         TractorBeam.Direction = Entity.LookDirection;
+
+        if (_aetherDrive != null)
+        {
+            var thrust = length(_aetherDrive.Drive.ThrustDirection);
+            var forceOverLifetime = _aetherDrive.Particles.forceOverLifetime;
+            var curve = forceOverLifetime.z;
+            curve.curveMultiplier = thrust * _aetherDrive.BaseForce;
+            if(thrust > .01f)
+                _aetherDrive.Particles.transform.forward = new Vector3(_aetherDrive.Drive.ThrustDirection.x, 0, _aetherDrive.Drive.ThrustDirection.y);
+            var emissionModule = _aetherDrive.Particles.emission;
+            emissionModule.rateOverTimeMultiplier = _aetherDrive.BaseEmission * thrust;
+        }
         
         foreach (var thrusterInstance in _thrusters)
         {

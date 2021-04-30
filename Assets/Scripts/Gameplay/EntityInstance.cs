@@ -416,7 +416,7 @@ public class EntityInstance : MonoBehaviour
                 _destroyed = true;
                 foreach (var gear in Entity.Equipment)
                 {
-                    if (Random.value < ZoneRenderer.Settings.LootDropProbability)
+                    if (gear != Entity.EquippedHull && Random.value < ZoneRenderer.Settings.LootDropProbability)
                     {
                         ZoneRenderer.DropItem(
                             Entity.Position, 
