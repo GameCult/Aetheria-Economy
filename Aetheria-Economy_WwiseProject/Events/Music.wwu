@@ -16,7 +16,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Gen_OW_01" ID="{AAF59638-2F79-498D-A1F2-C52181563AD6}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+													<ObjectRef Name="Generic" ID="{965684F1-9F1B-4517-B1A1-BE20AB8F937A}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -30,7 +30,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Gen_OW_01" ID="{AAF59638-2F79-498D-A1F2-C52181563AD6}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+													<ObjectRef Name="Generic" ID="{965684F1-9F1B-4517-B1A1-BE20AB8F937A}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -49,7 +49,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Kawaii Future Bass" ID="{586B920D-AA94-4B2C-828B-37B68C3F2982}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+													<ObjectRef Name="KFB" ID="{049E3E09-0B7D-43E8-959B-B7D3490BA9FF}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -63,7 +63,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Kawaii Future Bass" ID="{586B920D-AA94-4B2C-828B-37B68C3F2982}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+													<ObjectRef Name="KFB" ID="{049E3E09-0B7D-43E8-959B-B7D3490BA9FF}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -81,7 +81,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Metal_OW_01" ID="{7282DE71-9B0C-4E9B-960C-0EF0036250A4}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+													<ObjectRef Name="Metal" ID="{C6B1FBBE-AA88-4FD8-9CFA-0CA4BB81701E}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -96,7 +96,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Metal_OW_01" ID="{7282DE71-9B0C-4E9B-960C-0EF0036250A4}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
+													<ObjectRef Name="Metal" ID="{C6B1FBBE-AA88-4FD8-9CFA-0CA4BB81701E}" WorkUnitID="{2A4B7328-3C61-4652-956B-15C31C6BD6D3}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -118,7 +118,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Gen_Combat_1" ID="{37FA2177-60F1-4326-AF74-CD4928CEE0BE}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+													<ObjectRef Name="Generic" ID="{7941F6A9-6948-41DA-8B46-8A33499165EB}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -133,7 +133,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Gen_Combat_1" ID="{37FA2177-60F1-4326-AF74-CD4928CEE0BE}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+													<ObjectRef Name="Generic" ID="{7941F6A9-6948-41DA-8B46-8A33499165EB}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -151,7 +151,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Metal_Combat_01" ID="{065373CA-B6B7-4634-9C4B-6D6F79214FAA}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+													<ObjectRef Name="Metal" ID="{6417DAE3-2CE0-4409-9D8B-AD00F5BD2B20}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -166,7 +166,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="Metal_Combat_01" ID="{065373CA-B6B7-4634-9C4B-6D6F79214FAA}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
+													<ObjectRef Name="Metal" ID="{6417DAE3-2CE0-4409-9D8B-AD00F5BD2B20}" WorkUnitID="{88745582-E14B-4ADD-8B99-AB36C6547F65}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -223,7 +223,7 @@
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Target">
-											<ObjectRef Name="Main_Menu_01" ID="{59BA138D-D6DB-4F02-909A-8329475FE98D}" WorkUnitID="{7CB722F4-389D-4867-87CA-00120A745A22}"/>
+											<ObjectRef Name="Main_Menu" ID="{52FD8D73-17FB-445D-A484-9FA4BA1B8CF2}" WorkUnitID="{7CB722F4-389D-4867-87CA-00120A745A22}"/>
 										</Reference>
 									</ReferenceList>
 								</Action>
@@ -234,7 +234,7 @@
 								<Action Name="" ID="{FA9A6EB0-0E57-446C-B2CC-983F65E7EDBC}" ShortID="855697419">
 									<ReferenceList>
 										<Reference Name="Target">
-											<ObjectRef Name="Main_Menu_01" ID="{59BA138D-D6DB-4F02-909A-8329475FE98D}" WorkUnitID="{7CB722F4-389D-4867-87CA-00120A745A22}"/>
+											<ObjectRef Name="Main_Menu" ID="{52FD8D73-17FB-445D-A484-9FA4BA1B8CF2}" WorkUnitID="{7CB722F4-389D-4867-87CA-00120A745A22}"/>
 										</Reference>
 									</ReferenceList>
 								</Action>

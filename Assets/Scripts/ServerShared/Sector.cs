@@ -188,8 +188,7 @@ public class Sector
         
         CalculateFactionInfluence(progressCallback);
 
-        Entrance = ConnectedRegion(HomeZones[protagonistFaction], 2)
-            .MaxBy(z => z.Distance[HomeZones[antagonistFaction]]);
+        Entrance = Zones.Where(z => z.Owner == null).MinBy(z => z.Distance[HomeZones[protagonistFaction]]);
         
         DiscoveredZones.Add(Entrance);
         foreach(var z in Entrance.AdjacentZones) DiscoveredZones.Add(z);
