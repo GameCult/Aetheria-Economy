@@ -75,7 +75,6 @@ Shader "UI/Isolines"
             #include "UnityCG.cginc"
             #include "UnityUI.cginc"
 
-            #pragma multi_compile_local _ UNITY_UI_CLIP_RECT
             #pragma multi_compile_local _ UNITY_UI_ALPHACLIP
 			#pragma shader_feature SCREEN_SPACE
 
@@ -197,10 +196,6 @@ Shader "UI/Isolines"
 					col += l * angcol;
 					// col += (1-smoothstep(_Angle2Width, _Angle2Width * _Angle2Fade, isoline / angmag)) * _AngleColor * blend; // Isoline
 				}
-
-                #ifdef UNITY_UI_CLIP_RECT
-                color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-                #endif
 
                 #ifdef UNITY_UI_ALPHACLIP
                 clip (color.a - 0.001);

@@ -13,7 +13,9 @@ public static class EntitySerializer
         if (entity is OrbitalEntity orbital)
             pack = new OrbitalEntityPack
             {
-                Orbit = orbital.OrbitData
+                Orbit = orbital.OrbitData,
+                SecurityLevel = orbital.SecurityLevel,
+                SecurityRadius = orbital.SecurityRadius
             };
         else if (entity is Ship ship)
             pack = new ShipPack
@@ -49,6 +51,7 @@ public static class EntitySerializer
         pack.Temperature = entity.Temperature;
         pack.Conductivity = entity.HullConductivity;
         pack.Children = entity.Children.Select(Pack).ToArray();
+        pack.WeaponGroups = entity.WeaponGroups.Select(wg => wg.items.Select(item => entity.Equipment.IndexOf(item)).ToArray()).ToArray();
         return pack;
     }
 
@@ -80,6 +83,8 @@ public static class EntitySerializer
     {
         var entity = new OrbitalEntity(itemManager, zone, instantiate ? (EquippableItem) itemManager.Instantiate(pack.Hull) : pack.Hull, pack.Orbit, pack.Settings);
         Restore(itemManager, zone, pack, entity, instantiate);
+        entity.SecurityLevel = pack.SecurityLevel;
+        entity.SecurityRadius = pack.SecurityRadius;
         return entity;
     }
 
@@ -133,35 +138,37 @@ public static class EntitySerializer
         
         foreach(var v in hullData.Shape.Coordinates)
             entity.HullConductivity[v.x,v.y] = pack.Conductivity[v.x,v.y];
+
+        entity.WeaponGroups = pack.WeaponGroups.Select(itemIndices =>
+        {
+            var items = itemIndices.Select(i => entity.Equipment[i]);
+            return (items.Select(i => i.GetBehavior<Weapon>()).ToList(), items.ToList());
+        }).ToArray();
     }
 }
 
 [MessagePackObject]
 public class SavedStory
 {
-    [Key(0)]
-    public string StoryJson;
-    
-    [Key(1)]
-    public string StateJson;
+    [Key(0)] public string StoryJson;
+    [Key(1)] public string StateJson;
 }
 
 [MessagePackObject]
 public class ShipPack : EntityPack
 {
-    [Key(16)] public float3 Position;
-    [Key(17)] public float2 Direction;
-    [Key(18)] public bool IsPlayerShip;
+    [Key(17)] public float3 Position;
+    [Key(18)] public float2 Direction;
+    [Key(19)] public bool IsPlayerShip;
 }
 
 [MessagePackObject]
 public class OrbitalEntityPack : EntityPack
 {
-    [Key(16)]
-    public Guid Orbit;
-
-    [Key(17)]
-    public SavedStory Story;
+    [Key(17)] public Guid Orbit;
+    [Key(18)] public SavedStory Story;
+    [Key(19)] public SecurityLevel SecurityLevel;
+    [Key(20)] public float SecurityRadius;
 }
 
 [MessagePackObject, 
@@ -169,50 +176,22 @@ public class OrbitalEntityPack : EntityPack
  Union(1, typeof(ShipPack))]
 public abstract class EntityPack
 {
-    [Key(0)]
-    public string Name;
-    
-    [Key(1)]
-    public EquippableItem Hull;
-    
-    [Key(2)]
-    public (int2 position, EquippableItem item)[] Equipment;
-    
-    [Key(3)]
-    public (int2 position, EquippableItem item)[] CargoBays;
-    
-    [Key(4)]
-    public (int2 position, EquippableItem item)[] DockingBays;
-
-    [Key(5)]
-    public Dictionary<int2, PersistentBehaviorData[]> PersistedBehaviors;
-
-    [Key(6)]
-    public float[,] Temperature;
-    
-    [Key(7)]
-    public float[,] Armor;
-    
-    [Key(8)]
-    public bool2[,] Conductivity;
-    
-    [Key(10)]
-    public int[] DockingBayAssignments;
-    
-    [Key(11)]
-    public (int2 position, ItemInstance item)[][] CargoContents;
-    
-    [Key(12)]
-    public (int2 position, ItemInstance item)[][] DockingBayContents;
-
-    [Key(13)]
-    public EntityPack[] Children;
-
-    [Key(14)]
-    public EntitySettings Settings;
-
-    [Key(15)]
-    public Guid Faction;
+    [Key(0)] public string Name;
+    [Key(1)] public EquippableItem Hull;
+    [Key(2)] public (int2 position, EquippableItem item)[] Equipment;
+    [Key(3)] public (int2 position, EquippableItem item)[] CargoBays;
+    [Key(4)] public (int2 position, EquippableItem item)[] DockingBays;
+    [Key(5)] public Dictionary<int2, PersistentBehaviorData[]> PersistedBehaviors;
+    [Key(6)] public float[,] Temperature;
+    [Key(7)] public float[,] Armor;
+    [Key(8)] public bool2[,] Conductivity;
+    [Key(10)] public int[] DockingBayAssignments;
+    [Key(11)] public (int2 position, ItemInstance item)[][] CargoContents;
+    [Key(12)] public (int2 position, ItemInstance item)[][] DockingBayContents;
+    [Key(13)] public EntityPack[] Children;
+    [Key(14)] public EntitySettings Settings;
+    [Key(15)] public Guid Faction;
+    [Key(16)] public int[][] WeaponGroups;
 
     private int _price;
 

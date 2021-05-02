@@ -55,16 +55,16 @@ public class LoadoutGenerator
         return EntitySerializer.Pack(entity);
     }
 
-    public EntityPack GenerateTurretLoadout()
+    public OrbitalEntityPack GenerateTurretLoadout()
     {
         var hull = ItemManager.CreateInstance(RandomHull(HullType.Turret)) as EquippableItem;
         var entity = new OrbitalEntity(ItemManager, null, hull, Guid.Empty, ItemManager.GameplaySettings.DefaultEntitySettings);
         entity.Faction = Faction;
         OutfitEntity(entity);
-        return EntitySerializer.Pack(entity);
+        return EntitySerializer.Pack(entity) as OrbitalEntityPack;
     }
 
-    public EntityPack GenerateStationLoadout()
+    public OrbitalEntityPack GenerateStationLoadout()
     {
         var hullData = RandomHull(HullType.Station);
         var hull = ItemManager.CreateInstance(hullData) as EquippableItem;
@@ -96,7 +96,7 @@ public class LoadoutGenerator
             cargo.TryStore(instance);
         }
         
-        return EntitySerializer.Pack(entity);
+        return EntitySerializer.Pack(entity) as OrbitalEntityPack;
     }
 
     public HullData RandomHull(HullType type, Predicate<HullData> hullFilter = null)

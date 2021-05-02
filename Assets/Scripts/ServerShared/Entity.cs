@@ -49,7 +49,7 @@ public abstract class Entity
     public readonly Dictionary<HardpointData, (float3 position, float3 direction)> HardpointTransforms = 
         new Dictionary<HardpointData, (float3 position, float3 direction)>();
     
-    public readonly (List<Weapon> weapons, List<EquippedItem> items)[] TriggerGroups;
+    public (List<Weapon> weapons, List<EquippedItem> items)[] WeaponGroups;
 
     public List<IPopulationAssignment> PopulationAssignments = new List<IPopulationAssignment>();
 
@@ -160,7 +160,8 @@ public abstract class Entity
         {
             if (Target.Value == remove.Value) Target.Value = null;
         }));
-        GenerateTriggerGroups();
+        if(WeaponGroups.All(wg=>!wg.items.Any()))
+            GenerateWeaponGroups();
     }
 
     public virtual void Deactivate()
@@ -183,9 +184,9 @@ public abstract class Entity
         HullData = itemManager.GetData(hull) as HullData;
         Name = HullData.Name;
         MapEntity();
-        TriggerGroups = new (List<Weapon> triggers, List<EquippedItem> items)[itemManager.GameplaySettings.TriggerGroupCount];
-        for(int i=0; i<itemManager.GameplaySettings.TriggerGroupCount; i++)
-            TriggerGroups[i] = (new List<Weapon>(), new List<EquippedItem>());
+        WeaponGroups = new (List<Weapon> weapons, List<EquippedItem> items)[itemManager.GameplaySettings.WeaponGroupCount];
+        for(int i=0; i<itemManager.GameplaySettings.WeaponGroupCount; i++)
+            WeaponGroups[i] = (new List<Weapon>(), new List<EquippedItem>());
 
         ItemDestroyed = ItemDamage.Where(x => x.item.EquippableItem.Durability < .01f).Select(x=>x.item);
         WeaponDestroyed = ItemDestroyed.Select(x => x.Behaviors.FirstOrDefault(b => b is Weapon) as Weapon).Where(x => x != null);
@@ -297,15 +298,15 @@ public abstract class Entity
         GearOccupancy = new EquippedItem[hullData.Shape.Width, hullData.Shape.Height];
     }
 
-    public void GenerateTriggerGroups()
+    public void GenerateWeaponGroups()
     {
         foreach (var group in Weapons
             .GroupBy(w => w.Item.EquippableItem.Data.LinkID)
             .OrderBy(wg=>wg.Average(w=>w.Range))
             .Select((weapons, index) => (weapons, index)))
         {
-            TriggerGroups[group.index].weapons = group.weapons.ToList();
-            TriggerGroups[group.index].items = group.weapons.Select(w=>w.Item).ToList();
+            WeaponGroups[group.index].weapons = group.weapons.ToList();
+            WeaponGroups[group.index].items = group.weapons.Select(w=>w.Item).ToList();
         }
     }
 

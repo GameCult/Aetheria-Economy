@@ -20,8 +20,6 @@ public class ActionBarSlot : MonoBehaviour
     public ObservablePointerExitTrigger PointerExitTrigger;
     private ActionBarBinding binding;
 
-    public Entity Entity { get; set; }
-
     public ActionBarBinding Binding
     {
         get => binding;
@@ -53,7 +51,7 @@ public class ActionBarSlot : MonoBehaviour
             },
             ActionBarGearBinding actionBarGearBinding => new SavedActionBarGearBinding
             {
-                EquipmentIndex = Entity.Equipment.IndexOf(actionBarGearBinding.Item),
+                EquipmentIndex = actionBarGearBinding.Entity.Equipment.IndexOf(actionBarGearBinding.Item),
                 BehaviorIndex = Array.IndexOf(actionBarGearBinding.Item.Behaviors, actionBarGearBinding.Behavior)
             },
             ActionBarWeaponGroupBinding actionBarWeaponGroupBinding => new SavedActionBarWeaponGroupBinding
@@ -64,24 +62,24 @@ public class ActionBarSlot : MonoBehaviour
         };
     }
 
-    public void Restore(SavedActionBarBinding binding)
+    public void Restore(SavedActionBarBinding binding, Entity entity)
     {
         Binding = binding switch
         {
             SavedActionBarConsumableBinding savedActionBarConsumableBinding =>
                 new ActionBarConsumableBinding(
-                    Entity,
+                    entity,
                     this,
                     savedActionBarConsumableBinding.Target.Value),
             SavedActionBarGearBinding savedActionBarGearBinding =>
                 new ActionBarGearBinding(
-                    Entity,
+                    entity,
                     this,
-                    Entity.Equipment[savedActionBarGearBinding.EquipmentIndex],
-                    Entity.Equipment[savedActionBarGearBinding.EquipmentIndex]
+                    entity.Equipment[savedActionBarGearBinding.EquipmentIndex],
+                    entity.Equipment[savedActionBarGearBinding.EquipmentIndex]
                         .Behaviors[savedActionBarGearBinding.BehaviorIndex] as IActivatedBehavior),
             SavedActionBarWeaponGroupBinding savedActionBarWeaponGroupBinding =>
-                new ActionBarWeaponGroupBinding(Entity, this, savedActionBarWeaponGroupBinding.Group),
+                new ActionBarWeaponGroupBinding(entity, this, savedActionBarWeaponGroupBinding.Group),
             _ => null
         };
     }
@@ -89,7 +87,7 @@ public class ActionBarSlot : MonoBehaviour
 
 public abstract class ActionBarBinding
 {
-    protected Entity Entity { get; }
+    public Entity Entity { get; }
     protected ActionBarSlot Slot { get; }
     public abstract void Activate();
     public abstract void Deactivate();
@@ -192,7 +190,7 @@ public class ActionBarWeaponGroupBinding : ActionBarBinding
 
     public override void Activate()
     {
-        foreach (var weapon in Entity.TriggerGroups[Group].weapons)
+        foreach (var weapon in Entity.WeaponGroups[Group].weapons)
         {
             weapon.Activate();
         }
@@ -200,7 +198,7 @@ public class ActionBarWeaponGroupBinding : ActionBarBinding
 
     public override void Deactivate()
     {
-        foreach (var weapon in Entity.TriggerGroups[Group].weapons)
+        foreach (var weapon in Entity.WeaponGroups[Group].weapons)
         {
             weapon.Deactivate();
         }

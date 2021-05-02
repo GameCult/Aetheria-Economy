@@ -12,6 +12,8 @@ using float2 = Unity.Mathematics.float2;
 public class OrbitalEntity : Entity
 {
     public Guid OrbitData;
+    public SecurityLevel SecurityLevel;
+    public float SecurityRadius;
     
     public OrbitalEntity(ItemManager itemManager, Zone zone, EquippableItem hull, Guid orbit, EntitySettings settings) : base(itemManager, zone, hull, settings)
     {

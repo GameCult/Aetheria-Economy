@@ -22,11 +22,11 @@ public class WeaponGroupAssignment : MonoBehaviour
     {
         var weapon = item.GetBehavior<Weapon>();
         if (weapon == null) throw new ArgumentException($"Attempted to inspect weapon groups on item \"{item.Data.Name}\" but no weapon is present!");
-        var groupCount = ActionGameManager.Instance.Settings.GameplaySettings.TriggerGroupCount;
+        var groupCount = ActionGameManager.Instance.Settings.GameplaySettings.WeaponGroupCount;
         for (int i = 0; i < groupCount; i++)
         {
             var i1 = i;
-            bool groupContainsItem() => item.Entity.TriggerGroups[i1].items.Contains(item);
+            bool groupContainsItem() => item.Entity.WeaponGroups[i1].items.Contains(item);
             var group = Instantiate(GroupPrefab, Container);
             Groups.Add(group);
             group.Label.text = $"G{i+1}";
@@ -35,14 +35,14 @@ public class WeaponGroupAssignment : MonoBehaviour
             {
                 if (groupContainsItem())
                 {
-                    item.Entity.TriggerGroups[i1].items.Remove(item);
-                    item.Entity.TriggerGroups[i1].weapons.Remove(weapon);
+                    item.Entity.WeaponGroups[i1].items.Remove(item);
+                    item.Entity.WeaponGroups[i1].weapons.Remove(weapon);
                     group.Label.color = InactiveColor;
                 }
                 else
                 {
-                    item.Entity.TriggerGroups[i1].items.Add(item);
-                    item.Entity.TriggerGroups[i1].weapons.Add(weapon);
+                    item.Entity.WeaponGroups[i1].items.Add(item);
+                    item.Entity.WeaponGroups[i1].weapons.Add(weapon);
                     group.Label.color = ActiveColor;
                 }
             });

@@ -24,6 +24,7 @@ public class Sector
     public SectorZone[] Zones { get; }
     public SectorZone Entrance { get; }
     public SectorZone Exit { get; }
+    public Dictionary<Faction, FactionRelationship> FactionRelationships { get; } = new Dictionary<Faction, FactionRelationship>();
 
     private HashSet<Guid> _containedFactions;
     private SectorZone[] _exitPath;
@@ -42,7 +43,13 @@ public class Sector
     public Sector(CultCache cultCache, SavedGame savedGame)
     {
         Background = savedGame.Background;
+        
         Factions = savedGame.Factions.Select(cultCache.Get<Faction>).ToArray();
+        for (var i = 0; i < Factions.Length; i++)
+        {
+            FactionRelationships[Factions[i]] = savedGame.Relationships[i];
+        }
+        
         Zones = savedGame.Zones.Select(zone =>
         {
             return new SectorZone
@@ -87,6 +94,7 @@ public class Sector
         var factions = cache.GetAll<Faction>();
         var random = new Random(seed == 0 ? (uint) (DateTime.Now.Ticks % uint.MaxValue) : seed);
         Factions = factions.OrderBy(x => random.NextFloat()).Take(settings.MegaCount).ToArray();
+        foreach (var f in Factions) FactionRelationships[f] = FactionRelationship.Neutral;
 
         Zones = GenerateZones(settings.ZoneCount, ref random, progressCallback);
 
@@ -148,7 +156,11 @@ public class Sector
         factions.AddRange(neutralFactions);
         
         Factions = factions.ToArray();
-        foreach (var faction in Factions) faction.InfluenceDistance = (faction.InfluenceDistance + 1) / 2;
+        foreach (var faction in Factions)
+        {
+            FactionRelationships[faction] = FactionRelationship.Neutral;
+            faction.InfluenceDistance = (faction.InfluenceDistance + 1) / 2;
+        }
 
         Zones = GenerateZones(settings.ZoneCount, ref random, progressCallback);
 
@@ -186,8 +198,13 @@ public class Sector
 
         var potentialQuestZones = Zones
             .Where(z => z.Factions.Contains(antagonistFaction) && z.Factions.Contains(bufferFaction));
-        HomeZones[questFaction] = potentialQuestZones
-            .MaxBy(z=>z.Distance[HomeZones[antagonistFaction]] * ConnectedRegion(z, questFaction.InfluenceDistance).Count);
+        if (potentialQuestZones.Any())
+            HomeZones[questFaction] = potentialQuestZones
+                .MaxBy(z => z.Distance[HomeZones[antagonistFaction]] * ConnectedRegion(z, questFaction.InfluenceDistance).Count);
+        else 
+            HomeZones[questFaction] = Zones
+                .Where(z => z.Factions.Contains(antagonistFaction))
+                .MinBy(z=>z.Distance[HomeZones[bufferFaction]]);
         
         CalculateFactionInfluence(progressCallback);
 

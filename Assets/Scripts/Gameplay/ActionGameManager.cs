@@ -477,14 +477,6 @@ public class ActionGameManager : MonoBehaviour
             num.InputLabel.text = i.ToString();
         }
         
-        if(PlayerSettings.SavedRun!=null)
-        {
-            for (var i = 0; i < _actionBarSlots.Count; i++)
-            {
-                _actionBarSlots[i].Restore(PlayerSettings.SavedRun.ActionBarBindings[i]);
-            }
-        }
-        
         #endregion
 
         #endregion
@@ -800,6 +792,11 @@ public class ActionGameManager : MonoBehaviour
                 {
                     //StartCoroutine(IntroCutscene(targetEntity as Ship));
                     BindToEntity(targetEntity);
+                }
+        
+                for (var i = 0; i < _actionBarSlots.Count; i++)
+                {
+                    _actionBarSlots[i].Restore(PlayerSettings.SavedRun.ActionBarBindings[i], CurrentEntity);
                 }
             }
         }

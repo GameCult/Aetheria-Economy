@@ -127,6 +127,7 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 		y * spacing + yt * spacing + perlinNoise1D(RandomValue()*1024+time)*spacing);
 	float2 puv = float2(.5,.5) - (particles[id.x].position.xz - transform.xy) / (transform.z);
     float gravDepth = Heightmap.SampleLevel(samplerHeightmap, puv, 0.0f).r;
-    particles[id.x].position.y = lerp(-gravDepth + floorHeight, ceilingHeight, pow(RandomValue(), heightExponent/(ceilingHeight+gravDepth))) + perlinNoise1D(RandomValue()*1024+time)*spacing/2;
+	float headroom = (ceilingHeight+gravDepth);
+    particles[id.x].position.y = -gravDepth + floorHeight + -floorHeight * 4 * pow(RandomValue(), max(1, heightExponent/(headroom*headroom))) + perlinNoise1D(RandomValue()*1024+time)*spacing/2;
 	particles[id.x].size = lerp(minimumSize, maximumSize, RandomValue());
 }

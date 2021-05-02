@@ -43,6 +43,9 @@ public class SavedGame
 
     [Key(11)]
     public bool IsTutorial;
+
+    [Key(12)]
+    public FactionRelationship[] Relationships;
     
     public SavedGame() { }
 
@@ -51,6 +54,7 @@ public class SavedGame
         DiscoveredZones = sector.DiscoveredZones.Select(dz => Array.IndexOf(sector.Zones, dz)).ToArray();
         Background = sector.Background;
         Factions = sector.HomeZones.Keys.Select(f => f.ID).ToArray();
+        Relationships = sector.Factions.Select(f => sector.FactionRelationships[f]).ToArray();
         
         HomeZones = sector.HomeZones.ToDictionary(
             x => Array.IndexOf(Factions, x.Key.ID),

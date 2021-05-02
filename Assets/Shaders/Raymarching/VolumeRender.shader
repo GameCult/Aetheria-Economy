@@ -155,7 +155,10 @@
 	
 	float4 RayMarch( in float3 origin, in float3 direction, in float zbuf, in float2 screenUV, out float scatterSum )
 	{
-        float rand = frac(tex2D(_DitheringTex, screenUV * _DitheringCoords.xy).r + _FrameNumber * 1.61803398875);
+		scatterSum = 0;
+		float blue = tex2D(_DitheringTex, screenUV * _DitheringCoords.xy).r;
+        float rand = frac(blue + _FrameNumber * 1.61803398875);
+		//return float4(rand, rand, rand, 1);
         //half rand = frac(nrand(screenUV) + _FrameNumber * 1.61803398875);
 		//half rand = nrand(screenUV + frac(_Time.x)) * 2;
 		float4 sum = (float4)0.;

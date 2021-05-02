@@ -58,6 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1306f57022ae47ceba7441145a065cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InfluencePrefab: {fileID: 0}
   PingPrefab: {fileID: 3496685214803260728, guid: bfcaa66e173f6a44cb640aabbcb5e429,
     type: 3}
   InvisibleMaterial: {fileID: 2100000, guid: c94a225de88e5ce42af01c34df3521e6, type: 2}
@@ -1730,6 +1731,7 @@ GameObject:
   - component: {fileID: 4028928668500718027}
   - component: {fileID: 6423368230359933839}
   - component: {fileID: 8693096897863455396}
+  - component: {fileID: 2748941174002375643}
   m_Layer: 0
   m_Name: Cube.043
   m_TagString: Untagged
@@ -1808,6 +1810,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2748941174002375643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8882633467169423962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc21c48ee370cb42a042622dd21640d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3244127278357174761
 PrefabInstance:
   m_ObjectHideFlags: 0

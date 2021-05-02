@@ -19,9 +19,11 @@ public class MapRenderer : MonoBehaviour
     public Camera MapOverlayCamera;
     public Camera GravityCamera;
     public Camera TintCamera;
+    public Camera InfluenceCamera;
     public Image OverlayDisplay;
     public Image GravityDisplay;
     public Image TintDisplay;
+    public Image InfluenceDisplay;
     public float Scale;
     public float2 Position;
 
@@ -29,6 +31,7 @@ public class MapRenderer : MonoBehaviour
     private RenderTexture _mapTexture;
     private RenderTexture _gravityTexture;
     private RenderTexture _tintTexture;
+    private RenderTexture _influenceTexture;
     private int2 _size;
     private bool _init;
     
@@ -43,6 +46,7 @@ public class MapRenderer : MonoBehaviour
         MapOverlayCamera.gameObject.SetActive(true);
         GravityCamera.gameObject.SetActive(true);
         TintCamera.gameObject.SetActive(true);
+        InfluenceCamera.gameObject.SetActive(true);
         Title.text = $"Zone: {GameManager.Zone.SectorZone.Name}";
     }
 
@@ -50,16 +54,24 @@ public class MapRenderer : MonoBehaviour
     {
         if (_mapTexture != null)
         {
-            _mapTexture.Release();
-            _mapTexture = null;
-            _gravityTexture.Release();
-            _gravityTexture = null;
-            _tintTexture.Release();
-            _tintTexture = null;
+            ReleaseTextures();
         }
         MapOverlayCamera.gameObject.SetActive(false);
         GravityCamera.gameObject.SetActive(false);
         TintCamera.gameObject.SetActive(false);
+        InfluenceCamera.gameObject.SetActive(false);
+    }
+
+    void ReleaseTextures()
+    {
+        _mapTexture.Release();
+        _mapTexture = null;
+        _gravityTexture.Release();
+        _gravityTexture = null;
+        _tintTexture.Release();
+        _tintTexture = null;
+        _influenceTexture.Release();
+        _influenceTexture = null;
     }
 
     void LateUpdate()
@@ -71,22 +83,24 @@ public class MapRenderer : MonoBehaviour
             _size = size;
             if (_mapTexture != null)
             {
-                _mapTexture.Release();
-                _mapTexture = null;
-                _gravityTexture.Release();
-                _gravityTexture = null;
-                _tintTexture.Release();
-                _tintTexture = null;
+                ReleaseTextures();
             }
+            
             _mapTexture = new RenderTexture(_size.x, _size.y, 0, RenderTextureFormat.Default);
             MapOverlayCamera.targetTexture = _mapTexture;
             OverlayDisplay.material.SetTexture("_DetailTex", _mapTexture);
+            
             _gravityTexture = new RenderTexture(_size.x, _size.y, 0, RenderTextureFormat.RFloat);
             GravityCamera.targetTexture = _gravityTexture;
             GravityDisplay.material.SetTexture("_DetailTex", _gravityTexture);
+            
             _tintTexture = new RenderTexture(_size.x / 2, _size.y / 2, 0, RenderTextureFormat.RGB111110Float);
             TintCamera.targetTexture = _tintTexture;
             TintDisplay.material.SetTexture("_DetailTex", _tintTexture);
+            
+            _influenceTexture = new RenderTexture(_size.x, _size.y, 0, RenderTextureFormat.RFloat);
+            InfluenceCamera.targetTexture = _influenceTexture;
+            InfluenceDisplay.material.SetTexture("_DetailTex", _influenceTexture);
         }
 
         var pos = ((Vector2) Position).Flatland(1);
@@ -100,5 +114,8 @@ public class MapRenderer : MonoBehaviour
         
         TintCamera.transform.position = pos;
         TintCamera.orthographicSize = _size.y * Scale * .5f;
+        
+        InfluenceCamera.transform.position = pos;
+        InfluenceCamera.orthographicSize = _size.y * Scale * .5f;
     }
 }

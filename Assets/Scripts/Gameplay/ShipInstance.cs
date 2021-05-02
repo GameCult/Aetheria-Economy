@@ -119,10 +119,8 @@ public class ShipInstance : EntityInstance
         {
             var thrust = length(_aetherDrive.Drive.ThrustDirection);
             var forceOverLifetime = _aetherDrive.Particles.forceOverLifetime;
-            var curve = forceOverLifetime.z;
-            curve.curveMultiplier = thrust * _aetherDrive.BaseForce;
-            if(thrust > .01f)
-                _aetherDrive.Particles.transform.forward = new Vector3(_aetherDrive.Drive.ThrustDirection.x, 0, _aetherDrive.Drive.ThrustDirection.y);
+            forceOverLifetime.xMultiplier = _aetherDrive.Drive.ThrustDirection.x * _aetherDrive.BaseForce;
+            forceOverLifetime.zMultiplier = _aetherDrive.Drive.ThrustDirection.y * _aetherDrive.BaseForce;
             var emissionModule = _aetherDrive.Particles.emission;
             emissionModule.rateOverTimeMultiplier = _aetherDrive.BaseEmission * thrust;
         }

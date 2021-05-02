@@ -133,7 +133,13 @@
 				<Property Name="MonitoringManager\GameObjectFilter\GameObjectFilterVersion" Type="int32" Value="1"/>
 				<Property Name="MonitoringManager\GameObjectFilter\GameObjectFiltersEnable" Type="bool" Value="True"/>
 				<Property Name="MonitoringManager\GameObjectFilter\x64_GameObjectFilters" Type="string" Value=""/>
+				<Property Name="Music Transition List\{049E3E09-0B7D-43E8-959B-B7D3490BA9FF}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Music Transition List\{52FD8D73-17FB-445D-A484-9FA4BA1B8CF2}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Music Transition List\{6417DAE3-2CE0-4409-9D8B-AD00F5BD2B20}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Music Transition List\{7941F6A9-6948-41DA-8B46-8A33499165EB}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Music Transition List\{965684F1-9F1B-4517-B1A1-BE20AB8F937A}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Music Transition List\{A63A6F6B-5A29-43FE-815C-1CE54D8891E4}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Music Transition List\{C6B1FBBE-AA88-4FD8-9CFA-0CA4BB81701E}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Music Transition List\{EE7EB190-D721-4534-9D41-AEF918FBC7D0}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="OverrideCacheFolder\Active" Type="bool" Value="False"/>
 				<Property Name="OverrideCacheFolder\Path" Type="string" Value=".cache"/>

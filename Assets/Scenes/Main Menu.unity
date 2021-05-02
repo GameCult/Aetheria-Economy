@@ -820,7 +820,6 @@ GameObject:
   m_Component:
   - component: {fileID: 750375534}
   - component: {fileID: 750375535}
-  - component: {fileID: 750375536}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -858,29 +857,16 @@ MonoBehaviour:
   ParticleCalculation: {fileID: 7200000, guid: f53a4ba56f0db2a49ad9f68150bf298a, type: 3}
   ParticleMaterial: {fileID: 2100000, guid: fc00c35c3c370774c88d55240b6538ce, type: 2}
   Span: 256
-  Speed: 0.125
-  MinimumSize: 0.25
-  MaximumSize: 1
-  Spacing: 2
+  Speed: 0.25
+  MinimumSize: 0.0025
+  MaximumSize: 0.005
+  Spacing: 4
   Ceiling: 0
-  Floor: -60
-  HeightExponent: 800
+  Floor: -40
+  HeightExponent: 1000
   Heightmap: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   ParticleColors: {fileID: 2800000, guid: 56db63da398b2d04394ddbccedce943c, type: 3}
   GravityCamera: {fileID: 2103364771}
---- !u!114 &750375536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 750375533}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13f1fa636e0245e42be783568a76e3d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NoiseTexture: {fileID: 2800000, guid: 7c0a392de8821f345824a79dea0d0d41, type: 3}
 --- !u!1 &765320284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1084,7 @@ GameObject:
   - component: {fileID: 850359438}
   - component: {fileID: 850359441}
   - component: {fileID: 850359439}
+  - component: {fileID: 850359440}
   m_Layer: 0
   m_Name: Persist
   m_TagString: Untagged
@@ -1170,6 +1157,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MusicSoundbankName: Main_Menu
+--- !u!114 &850359440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 850359435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13f1fa636e0245e42be783568a76e3d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoiseTexture: {fileID: 2800000, guid: 7c0a392de8821f345824a79dea0d0d41, type: 3}
 --- !u!114 &850359441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1207,9 +1207,12 @@ GameObject:
   - component: {fileID: 965376323}
   - component: {fileID: 965376327}
   - component: {fileID: 965376326}
+  - component: {fileID: 965376331}
   - component: {fileID: 965376325}
   - component: {fileID: 965376322}
   - component: {fileID: 965376328}
+  - component: {fileID: 965376330}
+  - component: {fileID: 965376329}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1262,7 +1265,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
-  m_projectionMatrixMode: 1
+  m_projectionMatrixMode: 0
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
@@ -1326,7 +1329,7 @@ MonoBehaviour:
     m_Bits: 256
   stopNaNPropagation: 1
   finalBlitToCameraTarget: 0
-  antialiasingMode: 3
+  antialiasingMode: 0
   temporalAntialiasing:
     jitterSpread: 1
     sharpness: 0.25
@@ -1418,6 +1421,66 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _volMaterial: {fileID: 2100000, guid: e21702a5e6e98b7409d6913663ceab7e, type: 2}
   GridTransform: {fileID: 1172538221}
+--- !u!114 &965376329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965376321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b642ff60407fe724bafa6602199213c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocityShader: {fileID: 4800000, guid: 0d7f09e63dd99504ca6e04212a21ec72, type: 3}
+  neighborMaxGen: 0
+  neighborMaxSupport: 1
+  numResident: 0
+  numRendered: 0
+  numDrawCalls: 0
+--- !u!114 &965376330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965376321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 899f97884c6d96b4ca20648ec109a37f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pattern: 12
+  patternScale: 1
+  activeSample: {x: -0.375, y: -0.055555552, z: 0.25, w: -0.3888889}
+  activeIndex: 3
+--- !u!114 &965376331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 965376321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65f5677aa325c184f801528d78a73827, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ditherTex: {fileID: 2800000, guid: 859f329ee8606864ea19dbf373a5ec56, type: 3}
+  reprojectionShader: {fileID: 4800000, guid: 7ca93c1a56ee0154b8c714591d6d211a, type: 3}
+  colorspace: 0
+  useHigherOrderFilteringMainColor: 0
+  useHigherOrderFilteringHistory: 1
+  historyRectification: 0
+  useVarianceClipping: 1
+  useAABBRounding: 1
+  dilation: 2
+  useMotionBlur: 1
+  feedbackMin: 0.88
+  feedbackMax: 0.97
+  motionBlurStrength: 1
+  motionBlurIgnoreFF: 0
 --- !u!4 &971662241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7852221720971737233, guid: 046dde0f4600bce41ad33c476f99b309,

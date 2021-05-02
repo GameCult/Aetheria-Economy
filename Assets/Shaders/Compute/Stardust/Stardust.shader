@@ -49,17 +49,19 @@
                 //Only transform world pos by view matrix
                 //To Create a billboarding effect
                 float3 worldPosition = particles[inst].position;
+                float dist = length(worldPosition - _WorldSpaceCameraPos);
                 
                 float4 cameraSpacePosition = mul(UNITY_MATRIX_V, float4(worldPosition, 1.0f));
+                //cameraSpacePosition.w /= dist;
                 
-                float3 quadPoint = float3(quadPoints[id].xy, 0.0f) * particles[inst].size;
+                float3 quadPoint = float3(quadPoints[id].xy, 0.0f) * particles[inst].size * dist;
                 o.pos = mul(UNITY_MATRIX_P, cameraSpacePosition + float4(quadPoint, 0.0f));
                 
                 //Shift coordinates for uvs
                 o.uv = quadPoints[id] + 0.5f;
                 
                 //transfer color of particle and global tint to vertex
-                o.color = float4(particles[inst].color, 1) * _TintColor;
+                o.color = float4(particles[inst].color, 1) * _TintColor * 10000 / (dist * dist);
 				o.screenPos = ComputeScreenPos(o.pos);
                 
                 return o;
@@ -124,17 +126,19 @@
                 //Only transform world pos by view matrix
                 //To Create a billboarding effect
                 float3 worldPosition = particles[inst].position;
+                float dist = length(worldPosition - _WorldSpaceCameraPos);
                 
                 float4 cameraSpacePosition = mul(UNITY_MATRIX_V, float4(worldPosition, 1.0f));
+                //cameraSpacePosition.w /= dist;
                 
-                float3 quadPoint = float3(quadPoints[id].xy, 0.0f) * particles[inst].size;
+                float3 quadPoint = float3(quadPoints[id].xy, 0.0f) * particles[inst].size * dist;
                 o.pos = mul(UNITY_MATRIX_P, cameraSpacePosition + float4(quadPoint, 0.0f));
                 
                 //Shift coordinates for uvs
                 o.uv = quadPoints[id] + 0.5f;
                 
                 //transfer color of particle and global tint to vertex
-                o.color = float4(particles[inst].color, 1) * _TintColor;
+                o.color = float4(particles[inst].color, 1) * _TintColor * 10000 / (dist * dist);
 				o.screenPos = ComputeScreenPos(o.pos);
                 
                 return o;

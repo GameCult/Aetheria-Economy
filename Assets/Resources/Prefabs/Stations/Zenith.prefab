@@ -154,8 +154,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170aefb3b5cd0e444826f3561d38a962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InfluencePrefab: {fileID: 7850317761668179092, guid: f1bbcf6a20e34d9418b869c8d676cc94,
+    type: 3}
+  PingPrefab: {fileID: 0}
   InvisibleMaterial: {fileID: 2100000, guid: c94a225de88e5ce42af01c34df3521e6, type: 2}
+  Shield: {fileID: 0}
   HullColliders: []
+  EquipmentHardpoints: []
   RadiatorHardpoints: []
   ThrusterHardpoints: []
   WeaponHardpoints: []

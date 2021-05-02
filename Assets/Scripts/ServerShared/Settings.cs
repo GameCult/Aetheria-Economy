@@ -172,7 +172,7 @@ public class GameplaySettings
     public float WormholeExitCurveStart = .8f;
     public float ThermalWearExponent = .01f;
     public float QualityWearExponent = 2;
-    public int TriggerGroupCount = 6;
+    public int WeaponGroupCount = 6;
     public float WarpDistance = 25;
     public float DockingDistance = 25;
     public float ProductionPersonalityLerp = .05f;

@@ -225,20 +225,73 @@ public static class ZoneGenerator
         var nearestFaction = sector.Factions.MinBy(f => sector.HomeZones[f].Distance[sectorZone]);
         var nearestFactionHomeZone = sector.HomeZones[nearestFaction];
         var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[sectorZone] + 1;
+
+        var stationCount = (int)(random.NextFloat() * (factionPresence + 1));
+        var potentialLagrangePoints = planets
+	        .Where(p => p.Parent != null && p.Parent.Children
+		        .TrueForAll(c => !(c != p && abs(c.Distance - p.Distance) < .1f))) // Filter Rosettes
+	        .OrderBy(p => p.Distance)
+	        .ToArray();
+        // Pick a selection from the middle of the distribution
+        var selectedStationOrbits = potentialLagrangePoints
+	        .Skip(potentialLagrangePoints.Length / 2)
+	        .Take(stationCount)
+	        .Select(p=>orbitMap[p])
+	        .ToArray();
         
         var loadoutGenerator = isTutorial ? new LoadoutGenerator(ref random, itemManager, nearestFaction, .5f) :
 	        new LoadoutGenerator(ref random, itemManager, sector, sectorZone, nearestFaction, .5f);
-        for (int i = 0; i < factionPresence; i++)
+        
+        foreach (var orbit in selectedStationOrbits)
+        {
+	        var security = (SecurityLevel) ((int) ((1f - pow(random.NextFloat(), factionPresence / 2f)) * 3f));
+	        var lagrangeOrbit = new OrbitData
+	        {
+		        ID = Guid.NewGuid(),
+		        Parent = orbit.Parent,
+		        Distance = new ReactiveProperty<float>(orbit.Distance.Value),
+		        Phase = orbit.Phase + PI / 3 * sign(random.NextFloat() - .5f)
+	        };
+	        pack.Orbits.Add(lagrangeOrbit);
+	        
+	        var station = loadoutGenerator.GenerateStationLoadout();
+	        station.Orbit = lagrangeOrbit.ID;
+	        station.SecurityLevel = security;
+	        station.SecurityRadius = pack.Radius * .75f;
+	        pack.Entities.Add(station);
+	        
+	        var turretPhase = 20f / lagrangeOrbit.Distance.Value;
+	        
+	        var leadingTurretOrbit = new OrbitData
+	        {
+		        ID = Guid.NewGuid(),
+		        Parent = orbit.Parent,
+		        Distance = new ReactiveProperty<float>(orbit.Distance.Value),
+		        Phase = lagrangeOrbit.Phase + turretPhase
+	        };
+	        pack.Orbits.Add(leadingTurretOrbit);
+	        var leadingTurret = loadoutGenerator.GenerateTurretLoadout();
+	        leadingTurret.Orbit = leadingTurretOrbit.ID;
+	        pack.Entities.Add(leadingTurret);
+	        
+	        var trailingTurretOrbit = new OrbitData
+	        {
+		        ID = Guid.NewGuid(),
+		        Parent = orbit.Parent,
+		        Distance = new ReactiveProperty<float>(orbit.Distance.Value),
+		        Phase = lagrangeOrbit.Phase - turretPhase
+	        };
+	        pack.Orbits.Add(trailingTurretOrbit);
+	        var trailingTurret = loadoutGenerator.GenerateTurretLoadout();
+	        trailingTurret.Orbit = trailingTurretOrbit.ID;
+	        pack.Entities.Add(trailingTurret);
+        }
+        
+        var enemyCount = (int)(random.NextFloat() * factionPresence * 2) + stationCount;
+        for (int i = 0; i < enemyCount; i++)
         {
 	        pack.Entities.Add(loadoutGenerator.GenerateShipLoadout());
         }
-        
-        var replacePlanet = pack.Planets.MinBy(p => p.Mass.Value);
-        pack.Planets.Remove(replacePlanet);
-        var stationOrbit = replacePlanet.Orbit;
-        var station = loadoutGenerator.GenerateStationLoadout();
-        ((OrbitalEntityPack) station).Orbit = stationOrbit;
-        pack.Entities.Add(station);
 
         return pack;
 	}

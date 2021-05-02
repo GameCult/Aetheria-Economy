@@ -165,6 +165,22 @@ public enum CompoundCommodityCategory
     Assemblies = 5
 }
 
+public enum FactionRelationship
+{
+    Hated = 0, // Kill on sight
+    Hostile = 1, // Can enter open areas
+    Neutral = 2, // Can dock in open areas, enter secure areas
+    Friendly = 3, // Can dock in secure areas, enter critical areas
+    Beloved = 4 // Cah dock even in critical areas
+}
+
+public enum SecurityLevel
+{
+    Open = 0,
+    Secure = 1,
+    Critical = 2
+}
+
 public enum TemperatureUnit
 {
     Kelvin,

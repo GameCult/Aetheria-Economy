@@ -33,9 +33,9 @@ public class CombatState : BaseState
         
         var toTarget = target.Position - _agent.Ship.Position;
         var targetDistance = length(toTarget);
-        for (var i = 0; i < _agent.Ship.TriggerGroups.Length; i++)
+        for (var i = 0; i < _agent.Ship.WeaponGroups.Length; i++)
         {
-            var group = _agent.Ship.TriggerGroups[i];
+            var group = _agent.Ship.WeaponGroups[i];
             var dps = 0f;
             foreach (var weapon in group.weapons)
                 if (weapon.Item.Online.Value && 
@@ -80,7 +80,7 @@ public class CombatState : BaseState
 
         if (selectedGroup >= 0)
         {
-            var testWeapon = _agent.Ship.TriggerGroups[selectedGroup].weapons.First();
+            var testWeapon = _agent.Ship.WeaponGroups[selectedGroup].weapons.First();
             if(testWeapon.Velocity > 1)
             {
                 var targetHullData = _agent.ItemManager.GetData(target.Hull) as HullData;
@@ -100,7 +100,7 @@ public class CombatState : BaseState
             var shouldFire = dot(
                 _agent.Ship.HardpointTransforms[_agent.Ship.Hardpoints[testWeapon.Item.Position.x, testWeapon.Item.Position.y]].direction,
                 toTarget) > .99f;
-            foreach (var weapon in _agent.Ship.TriggerGroups[selectedGroup].weapons)
+            foreach (var weapon in _agent.Ship.WeaponGroups[selectedGroup].weapons)
             {
                 if (shouldFire)
                     weapon.Activate();

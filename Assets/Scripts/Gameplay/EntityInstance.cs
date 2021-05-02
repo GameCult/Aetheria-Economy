@@ -11,6 +11,7 @@ using Random = UnityEngine.Random;
 
 public class EntityInstance : MonoBehaviour
 {
+    public Transform InfluencePrefab;
     public Transform PingPrefab;
     public Material InvisibleMaterial;
     public static Transform EffectManagerParent;
@@ -42,6 +43,7 @@ public class EntityInstance : MonoBehaviour
     private (Transform transform, MeshRenderer meshRenderer) _currentPing;
     private float _pingBrightness;
     private Sensor _sensor;
+    private Transform _influenceInstance;
 
     private List<(GameObject source, EquippedItem item)> _audioSources = new List<(GameObject source, EquippedItem item)>();
     // private (Reactor reactor, GameObject sfxSource) _reactor;
@@ -444,15 +446,12 @@ public class EntityInstance : MonoBehaviour
             }
         }));
 
-        // _subscriptions.Add(entity.Docked.Take(1).Subscribe(parent =>
-        // {
-        //     if (Visible)
-        //     {
-        //         FadeOut(sectorRenderer.EntityFadeTime);
-        //         OnFadedOut += () => entity.Zone.Entities.Remove(entity);
-        //     }
-        //     else entity.Zone.Entities.Remove(entity);
-        // }));
+        // TODO: ActionGameManager.CurrentSector.FactionRelationships[orbital.Faction]
+        if (entity is OrbitalEntity orbital && orbital.SecurityRadius > 1)// && (int) orbital.SecurityLevel > (int) SecurityLevel.Secure)
+        {
+            _influenceInstance = Instantiate(InfluencePrefab);
+            _influenceInstance.transform.localScale = Vector3.one * orbital.SecurityRadius;
+        }
     }
     
     public Transform GetBarrel(HardpointData hardpoint)
@@ -473,7 +472,6 @@ public class EntityInstance : MonoBehaviour
         {
             AkSoundEngine.SetObjectPosition(source, source.transform);
         }
-        LocalSpace.localPosition = transform.localPosition;
         if (_currentPing.transform)
         {
             _currentPing.transform.localScale = _sensor.PingRadius * Vector3.one;
@@ -518,7 +516,7 @@ public class EntityInstance : MonoBehaviour
         
         foreach (var x in RadiatorMeshes)
         {
-            x.Value.material.SetFloat("_Emission", Entity.ItemManager.GameplaySettings.TemperatureEmissionCurve.Evaluate(x.Key.Temperature));
+            x.Value.material.SetFloat("_Emission", Entity.ItemManager.GameplaySettings.TemperatureEmissionCurve.Evaluate(x.Key.RadiatorTemperature));
         }
 
         foreach (var x in Barrels)
@@ -528,11 +526,14 @@ public class EntityInstance : MonoBehaviour
 
         LookAtPoint.position = transform.position + (Vector3) Entity.LookDirection * 
             (Entity.Target.Value != null ? max(Entity.TargetRange,Entity.ItemManager.GameplaySettings.ConvergenceMinimumDistance) : 10000);
-        transform.position = Entity.Position;
+        LocalSpace.localPosition = transform.position = Entity.Position;
+        if (_influenceInstance)
+            _influenceInstance.position = new Vector3(Entity.Position.x, 0, Entity.Position.z);
     }
 
     public virtual void OnDestroy()
     {
+        if (_influenceInstance) Destroy(_influenceInstance.gameObject);
         Destroy(LocalSpace.gameObject);
         foreach (var (source, item) in _audioSources)
         {

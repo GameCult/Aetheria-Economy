@@ -126,6 +126,9 @@
 					<ObjectLists/>
 					<Playlist>
 						<MusicPlaylistItem Name="" ID="{AB33CF31-1C67-4483-BA8B-78603B9CC4B7}" ShortID="1042679147">
+							<PropertyList>
+								<Property Name="LoopCount" Type="int16" Value="0"/>
+							</PropertyList>
 							<ChildrenList>
 								<MusicPlaylistItem Name="" ID="{FD8186D6-1C36-4DF1-B13F-9E581C0FA0C0}" ShortID="845067479">
 									<PropertyList>
