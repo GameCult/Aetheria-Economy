@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class InputDisplayKey : MonoBehaviour
 {
-    public TextMeshProUGUI First;
-    public TextMeshProUGUI Second;
+    public TextMeshProUGUI MainLabel;
+    public TextMeshProUGUI AltLabel;
     public Image Fill;
     public Image Outline;
     public LayoutElement LayoutElement;

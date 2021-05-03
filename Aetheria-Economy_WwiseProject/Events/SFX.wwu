@@ -53,75 +53,75 @@
 								</Event>
 							</ChildrenList>
 						</Folder>
-						<Folder Name="IonCannon" ID="{FD58627D-DA04-4181-8A2E-6995EE927024}" ShortID="438738720">
+						<Folder Name="Laser" ID="{FD58627D-DA04-4181-8A2E-6995EE927024}" ShortID="438738720">
 							<ChildrenList>
-								<Event Name="IonCannon_hit" ID="{6EB479E4-48C4-481D-98EB-93C4689AF319}">
+								<Event Name="Laser_hit" ID="{6EB479E4-48C4-481D-98EB-93C4689AF319}">
 									<ChildrenList>
 										<Action Name="" ID="{CC64CB9C-D2CF-4CFA-8B65-50D58C7A6BCC}" ShortID="140328872">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="IonCannon_hit" ID="{D1773018-EB65-45CB-857B-1158EFED37A3}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Laser_hit" ID="{D1773018-EB65-45CB-857B-1158EFED37A3}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="IonCannon_ship_destroyed" ID="{9E66D8B7-AEC1-47DC-ADE4-2C830F5C4E87}">
+								<Event Name="Laser_ship_destroyed" ID="{9E66D8B7-AEC1-47DC-ADE4-2C830F5C4E87}">
 									<ChildrenList>
 										<Action Name="" ID="{245AF479-9936-4903-8E31-952A10E1043E}" ShortID="283819787">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="ionCannon_ship_destroyed" ID="{4410E0F9-FBD6-4B39-985B-CFA8D2385F93}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Laser_ship_destroyed" ID="{4410E0F9-FBD6-4B39-985B-CFA8D2385F93}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="IonCannon_fire" ID="{4E75BD76-EFDF-4729-B419-2CD3EFAC87ED}">
+								<Event Name="Laser_fire" ID="{4E75BD76-EFDF-4729-B419-2CD3EFAC87ED}">
 									<ChildrenList>
 										<Action Name="" ID="{F2F429D0-BCC4-4B5D-BBC2-3059D5AB6E19}" ShortID="872318280">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="IonCannon_fire" ID="{F342EF35-B9FB-43DF-AC49-9C25006D66F7}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Laser_fire" ID="{F342EF35-B9FB-43DF-AC49-9C25006D66F7}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="IonCannon_miss" ID="{EE886D7C-E644-4E41-918C-332FFC333B4E}">
+								<Event Name="Laser_miss" ID="{EE886D7C-E644-4E41-918C-332FFC333B4E}">
 									<ChildrenList>
 										<Action Name="" ID="{815946CD-5CC9-439B-BC4A-4C9DD96620BC}" ShortID="70575548">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="IonCanon_miss" ID="{A1EE3BC5-E24E-42FD-BC32-0B42BF2CAF89}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Laser_miss" ID="{A1EE3BC5-E24E-42FD-BC32-0B42BF2CAF89}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="IonCannon_charge_play" ID="{926CA47C-05B7-443F-92F1-7F99ED878BFE}">
+								<Event Name="Laser_charge_play" ID="{926CA47C-05B7-443F-92F1-7F99ED878BFE}">
 									<ChildrenList>
 										<Action Name="" ID="{739F5D09-3808-4D68-9B17-DFDAA22D3ABF}" ShortID="67337178">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="ionCannon_charge" ID="{AB1CDB93-B4E8-426C-988D-76F8F0A57434}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Laser_charge" ID="{AB1CDB93-B4E8-426C-988D-76F8F0A57434}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="IonCannon_fail" ID="{67274AD3-8D3A-4041-A799-9BE929F06BD1}">
+								<Event Name="Laser_fail" ID="{67274AD3-8D3A-4041-A799-9BE929F06BD1}">
 									<ChildrenList>
 										<Action Name="" ID="{5F0013C9-B73C-4066-9681-830BBC7746DC}" ShortID="748997812">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="ionCannon_fail" ID="{C6965B65-65A8-498F-80B0-B85675AAFDFE}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Laser_fail" ID="{C6965B65-65A8-498F-80B0-B85675AAFDFE}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="IonCannon_charge_stop" ID="{F041A256-D33B-4117-91CF-085BF306F5B4}">
+								<Event Name="Laser_charge_stop" ID="{F041A256-D33B-4117-91CF-085BF306F5B4}">
 									<ChildrenList>
 										<Action Name="" ID="{8352FBF7-3D17-4D49-B304-7509010C6D72}" ShortID="676779554">
 											<PropertyList>
@@ -129,7 +129,7 @@
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="ionCannon_charge" ID="{AB1CDB93-B4E8-426C-988D-76F8F0A57434}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Laser_charge" ID="{AB1CDB93-B4E8-426C-988D-76F8F0A57434}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -434,13 +434,6 @@
 											</ReferenceList>
 										</Action>
 										<Action Name="" ID="{6E68BD96-F32A-4109-8F63-3ED2AC416043}" ShortID="978335520">
-											<PropertyList>
-												<Property Name="Inclusion" Type="bool">
-													<ValueList>
-														<Value>False</Value>
-													</ValueList>
-												</Property>
-											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
 													<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
@@ -448,13 +441,6 @@
 											</ReferenceList>
 										</Action>
 										<Action Name="" ID="{491B69A0-6AD3-4AF7-88C7-3412B526689C}" ShortID="440511318">
-											<PropertyList>
-												<Property Name="Inclusion" Type="bool">
-													<ValueList>
-														<Value>False</Value>
-													</ValueList>
-												</Property>
-											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
 													<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
@@ -573,13 +559,6 @@
 									</ReferenceList>
 								</Action>
 								<Action Name="" ID="{DD0BDADF-CA20-4F28-8423-5599F689CBFE}" ShortID="952690825">
-									<PropertyList>
-										<Property Name="Inclusion" Type="bool">
-											<ValueList>
-												<Value>False</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Target">
 											<ObjectRef Name="reactor" ID="{8D0ED9E5-D9D6-41E5-A093-CF203E6F2F95}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
@@ -633,13 +612,6 @@
 						<Event Name="thruster_play" ID="{99504764-B63E-48E8-A9A0-717489DD3466}">
 							<ChildrenList>
 								<Action Name="" ID="{AE15152D-2BC4-4BE2-8CC1-CE46A85F2139}" ShortID="131458033">
-									<PropertyList>
-										<Property Name="Inclusion" Type="bool">
-											<ValueList>
-												<Value>False</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Target">
 											<ObjectRef Name="Thruster" ID="{35564C2D-1BC9-40BB-B365-D9C4A47AE5F1}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>

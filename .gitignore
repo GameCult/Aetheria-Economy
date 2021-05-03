@@ -10,6 +10,7 @@
 /[Ll]ogs/
 /[Mm]emoryCaptures/
 /Recordings/
+/Assets/StreamingAssets/Audio/GeneratedSoundBanks/
 
 # Wwise folders
 /Aetheria-Economy_WwiseProject/.backup

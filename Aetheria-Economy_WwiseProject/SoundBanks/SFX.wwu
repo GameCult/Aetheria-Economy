@@ -13,10 +13,10 @@
 							<ObjectExclusionList/>
 							<GameSyncExclusionList/>
 						</SoundBank>
-						<SoundBank Name="IonCannon" ID="{972D8328-C881-4DD3-9EA4-1EF7BF60F95C}">
+						<SoundBank Name="Laser" ID="{972D8328-C881-4DD3-9EA4-1EF7BF60F95C}">
 							<ObjectInclusionList>
-								<ObjectRef Name="IonCannon" ID="{FD58627D-DA04-4181-8A2E-6995EE927024}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
-								<ObjectRef Name="Ion_cannon" ID="{29C6B342-4A84-46E2-9311-46294D25A37E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="Laser" ID="{FD58627D-DA04-4181-8A2E-6995EE927024}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}" Origin="Manual" Filter="7"/>
+								<ObjectRef Name="Laser" ID="{29C6B342-4A84-46E2-9311-46294D25A37E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}" Origin="Manual" Filter="7"/>
 							</ObjectInclusionList>
 							<ObjectExclusionList/>
 							<GameSyncExclusionList/>

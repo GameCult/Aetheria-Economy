@@ -130,7 +130,7 @@ public class AetherDrive : Behavior
         var torqueRatio = actualRpmDelta / potentialRpmDelta;
         var draw = torqueRatio * Evaluate(_data.EnergyDraw) / 3;
         
-        Item.SetAudioParameter(SpecialAudioParameter.Intensity, max(max(_axis.x, _axis.y), _axis.z));
+        Item.SetAudioParameter(SpecialAudioParameter.Intensity, max(max(abs(_axis.x), abs(_axis.y)), abs(_axis.z)));
         Item.SetAudioParameter(_data.RpmAudioParameter, (Rpm.x + Rpm.y + Rpm.z) / 3 / MaximumRpm);
         Item.SetAudioParameter(_data.TorqueRatioAudioParameter, max(max(torqueRatio.x, torqueRatio.y), torqueRatio.z));
         

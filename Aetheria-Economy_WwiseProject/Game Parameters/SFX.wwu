@@ -11,12 +11,6 @@
 								<Property Name="Max" Type="Real64" Value="1"/>
 							</PropertyList>
 						</GameParameter>
-						<GameParameter Name="sfx_reactor_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}">
-							<PropertyList>
-								<Property Name="InitialValue" Type="Real64" Value="0"/>
-								<Property Name="Max" Type="Real64" Value="1"/>
-							</PropertyList>
-						</GameParameter>
 						<GameParameter Name="sfx_reactor_distortion2" ID="{72651D5D-22E1-4AEE-87FA-9F706D12B1DC}">
 							<PropertyList>
 								<Property Name="InitialValue" Type="Real64" Value="0"/>
@@ -93,6 +87,12 @@
 						<GameParameter Name="sfx_shared_intensity" ID="{69088562-620A-4123-8C93-DDBD1437C6C9}">
 							<PropertyList>
 								<Property Name="InitialValue" Type="Real64" Value="1"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="sfx_shared_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="0"/>
 								<Property Name="Max" Type="Real64" Value="1"/>
 							</PropertyList>
 						</GameParameter>

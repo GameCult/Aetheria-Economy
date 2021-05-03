@@ -77,4 +77,32 @@ public static class UnitySceneExtensions
 	
 	public static Vector3 Flatland(this Vector2 v, float y = 0) => new Vector3(v.x,y,v.y);
 	public static Vector2 Flatland(this Vector3 v) => new Vector2(v.x,v.z);
+	
+	// public static Rect ScreenSpaceRect(this RectTransform transform)
+	// {
+	// 	var size= Vector2.Scale(transform.rect.size, transform.lossyScale);
+	// 	var x= transform.position.x + transform.anchoredPosition.x;
+	// 	var y= Screen.height - transform.position.y - transform.anchoredPosition.y;
+ //
+	// 	return new Rect(x, y, size.x, size.y);
+	// }
+	
+	private static Vector3[] _worldCorners = new Vector3[4];
+
+	public static Bounds GetBounds(this RectTransform transform, float expand = 0)
+	{
+		transform.GetWorldCorners(_worldCorners);
+		var bounds = new Bounds(_worldCorners[0], Vector3.zero);
+		for(int i = 1; i < 4; ++i)
+		{
+			bounds.Encapsulate(_worldCorners[i]);
+		}
+		bounds.size += new Vector3(expand, expand, 0);
+		return bounds;
+	}
+	public static Rect ScreenSpaceRect(this RectTransform transform, float expand = 0)
+	{
+		var bounds = GetBounds(transform, expand);
+		return new Rect(bounds.min, bounds.size);
+	}
 }

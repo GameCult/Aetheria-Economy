@@ -3101,9 +3101,9 @@
 								</Sound>
 							</ChildrenList>
 						</Folder>
-						<Folder Name="Ion_cannon" ID="{29C6B342-4A84-46E2-9311-46294D25A37E}" ShortID="487576856">
+						<Folder Name="Laser" ID="{29C6B342-4A84-46E2-9311-46294D25A37E}" ShortID="487576856">
 							<ChildrenList>
-								<RandomSequenceContainer Name="IonCannon_fire" ID="{F342EF35-B9FB-43DF-AC49-9C25006D66F7}" ShortID="550015439">
+								<RandomSequenceContainer Name="Laser_fire" ID="{F342EF35-B9FB-43DF-AC49-9C25006D66F7}" ShortID="550015439">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="1"/>
 										<Property Name="NormalOrShuffle" Type="int16" Value="0"/>
@@ -3229,7 +3229,7 @@
 									</ChildrenList>
 									<ObjectLists/>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="IonCanon_miss" ID="{A1EE3BC5-E24E-42FD-BC32-0B42BF2CAF89}" ShortID="31284936">
+								<RandomSequenceContainer Name="Laser_miss" ID="{A1EE3BC5-E24E-42FD-BC32-0B42BF2CAF89}" ShortID="31284936">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="Lowpass" Type="int16">
@@ -3367,7 +3367,7 @@
 									</ChildrenList>
 									<ObjectLists/>
 								</RandomSequenceContainer>
-								<RandomSequenceContainer Name="IonCannon_hit" ID="{D1773018-EB65-45CB-857B-1158EFED37A3}" ShortID="727113654">
+								<RandomSequenceContainer Name="Laser_hit" ID="{D1773018-EB65-45CB-857B-1158EFED37A3}" ShortID="727113654">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="Highpass" Type="int16">
@@ -3501,7 +3501,7 @@
 									</ChildrenList>
 									<ObjectLists/>
 								</RandomSequenceContainer>
-								<Sound Name="ionCannon_ship_destroyed" ID="{4410E0F9-FBD6-4B39-985B-CFA8D2385F93}" ShortID="885246363">
+								<Sound Name="Laser_ship_destroyed" ID="{4410E0F9-FBD6-4B39-985B-CFA8D2385F93}" ShortID="885246363">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="Pitch" Type="int32">
@@ -3543,7 +3543,7 @@
 										<ActiveSource Name="SFX_weapon_ioncannon_ship_destroyed" ID="{06FC6DD8-E446-4481-8CC6-F6D06DE4D03C}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="ionCannon_charge" ID="{AB1CDB93-B4E8-426C-988D-76F8F0A57434}" ShortID="25665205">
+								<Sound Name="Laser_charge" ID="{AB1CDB93-B4E8-426C-988D-76F8F0A57434}" ShortID="25665205">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 									</PropertyList>
@@ -3695,7 +3695,7 @@
 										<ActiveSource Name="SoundSeed Grain" ID="{0B6801A8-8A69-4333-82C0-B9CC1C8C1BC9}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="ionCannon_fail" ID="{C6965B65-65A8-498F-80B0-B85675AAFDFE}" ShortID="38274307">
+								<Sound Name="Laser_fail" ID="{C6965B65-65A8-498F-80B0-B85675AAFDFE}" ShortID="38274307">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="OutputBusVolume" Type="Real64">
@@ -5524,7 +5524,7 @@
 												<RTPC Name="" ID="{C24276F7-4811-478B-950E-AD10001530EA}" ShortID="324897844">
 													<ReferenceList>
 														<Reference Name="ControlInput">
-															<ObjectRef Name="sfx_reactor_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+															<ObjectRef Name="sfx_shared_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 														</Reference>
 													</ReferenceList>
 													<Curve Name="" ID="{577E6ED0-82B9-43D7-8972-2AF5940AAEBA}">
@@ -6152,7 +6152,7 @@
 											<PropertyList>
 												<Property Name="Volume" Type="Real64">
 													<ValueList>
-														<Value>-4.4</Value>
+														<Value>4.6</Value>
 													</ValueList>
 												</Property>
 											</PropertyList>
@@ -6195,7 +6195,12 @@
 																</RTPC>
 															</RTPCList>
 														</Property>
+														<Property Name="FmAmount" Type="Real32" Value="12.1"/>
+														<Property Name="NoiseLevel" Type="Real32" Value="-11"/>
+														<Property Name="NoiseShape" Type="int32" Value="2"/>
+														<Property Name="OperationMode" Type="int32" Value="1"/>
 														<Property Name="Osc1Transpose" Type="int32" Value="-2387"/>
+														<Property Name="Osc2Pwm" Type="Real32" Value="69"/>
 														<Property Name="Osc2Transpose" Type="int32" Value="-909"/>
 														<Property Name="OutputLevel" Type="Real32" Value="-14">
 															<RTPCList>
@@ -6697,6 +6702,11 @@
 								</Sound>
 								<Sound Name="Flamethrower SOUND" ID="{43AA608E-5C5B-455F-9397-B5A4277F211E}" ShortID="102997625">
 									<PropertyList>
+										<Property Name="Inclusion" Type="bool">
+											<ValueList>
+												<Value>False</Value>
+											</ValueList>
+										</Property>
 										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
 										<Property Name="OverrideEffect" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">

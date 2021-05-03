@@ -83,14 +83,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""EnterWormhole"",
-                    ""type"": ""Button"",
-                    ""id"": ""c918ac22-b029-4805-9c85-e615a52641f2"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""Toggle Shield"",
                     ""type"": ""Button"",
                     ""id"": ""5566504f-ee89-4eb9-9bbb-03f4b22dfe7d"",
@@ -127,6 +119,14 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""e61d5d8e-eaf7-449d-8d54-624e15b6c964"",
                     ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Enter Wormhole"",
+                    ""type"": ""Button"",
+                    ""id"": ""b907857f-d1d2-455d-912b-8de9a64f0f3a"",
+                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 }
@@ -166,31 +166,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""8180e8bd-4097-4f4e-ab88-4523101a6ce9"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""down"",
                     ""id"": ""320bffee-a40b-4347-ac70-c210eb8bc73a"",
                     ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""1c5327b5-f71c-4f60-99c7-4e737386f1d1"",
-                    ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -210,31 +188,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""left"",
-                    ""id"": ""2e46982e-44cc-431b-9f0b-c11910bf467a"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": ""right"",
                     ""id"": ""fcfe95b8-67b9-4526-84b5-5d0bc98d6400"",
                     ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""77bff152-3580-4b21-b6de-dcd0c7e41164"",
-                    ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -311,7 +267,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""6e13d87d-e5bb-4363-b153-1e0c1e21e4eb"",
-                    ""path"": ""<Keyboard>/#(Y)"",
+                    ""path"": ""<Keyboard>/y"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -322,7 +278,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""e6e3164c-1b59-4eab-99d9-5a3bc294af0b"",
-                    ""path"": ""<Keyboard>/#(U)"",
+                    ""path"": ""<Keyboard>/u"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -333,7 +289,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b55dd143-367d-4842-82c8-593c301bcd69"",
-                    ""path"": ""<Keyboard>/#(T)"",
+                    ""path"": ""<Keyboard>/t"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -344,7 +300,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""71ac6088-1e18-4810-86be-1179918dd4a2"",
-                    ""path"": ""<Keyboard>/#(H)"",
+                    ""path"": ""<Keyboard>/h"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -354,19 +310,8 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""95817d40-4c8d-4660-bd68-a93afe74b6e1"",
-                    ""path"": ""<Keyboard>/#(V)"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""EnterWormhole"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""d59fb542-6ac5-466d-a668-67fd8c890232"",
-                    ""path"": ""<Keyboard>/#(G)"",
+                    ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -377,7 +322,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""8e8b5d19-20fd-43f3-88cf-6246f374e7cf"",
-                    ""path"": ""<Keyboard>/#(O)"",
+                    ""path"": ""<Keyboard>/o"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -388,7 +333,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""baa67cdf-3c91-46dd-965c-12370a897414"",
-                    ""path"": ""<Keyboard>/#(X)"",
+                    ""path"": ""<Keyboard>/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -415,6 +360,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Tractor Beam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""85857c0e-82fa-4889-895a-1e55c6dbe206"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Enter Wormhole"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -911,9 +867,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""MainMenu"",
+                    ""name"": ""Main Menu"",
                     ""type"": ""Button"",
-                    ""id"": ""a626132e-6205-4abb-9a45-4cce6446958b"",
+                    ""id"": ""0515c617-9dff-406f-ab3e-763971d532d3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -934,7 +890,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2eb827dd-4707-4648-b7e5-cf1fd8fa00da"",
-                    ""path"": ""<Keyboard>/#(I)"",
+                    ""path"": ""<Keyboard>/i"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -945,22 +901,11 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""3279cef8-8bd1-49f2-984a-637d1f8522f6"",
-                    ""path"": ""<Keyboard>/#(C)"",
+                    ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Dock"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7de0bb82-5492-49aa-aa56-8562b58ba8a8"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""MainMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -972,6 +917,17 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Galaxy Map"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""873dbfff-25b2-4747-ab9d-53d34324d660"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Main Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1029,12 +985,12 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player_TargetNext = m_Player.FindAction("Target Next", throwIfNotFound: true);
         m_Player_TargetNearest = m_Player.FindAction("Target Nearest", throwIfNotFound: true);
         m_Player_ToggleHeatsinks = m_Player.FindAction("Toggle Heatsinks", throwIfNotFound: true);
-        m_Player_EnterWormhole = m_Player.FindAction("EnterWormhole", throwIfNotFound: true);
         m_Player_ToggleShield = m_Player.FindAction("Toggle Shield", throwIfNotFound: true);
         m_Player_OverrideShutdown = m_Player.FindAction("Override Shutdown", throwIfNotFound: true);
         m_Player_Ping = m_Player.FindAction("Ping", throwIfNotFound: true);
         m_Player_HideUI = m_Player.FindAction("Hide UI", throwIfNotFound: true);
         m_Player_TractorBeam = m_Player.FindAction("Tractor Beam", throwIfNotFound: true);
+        m_Player_EnterWormhole = m_Player.FindAction("Enter Wormhole", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1052,7 +1008,7 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Global_GalaxyMap = m_Global.FindAction("Galaxy Map", throwIfNotFound: true);
         m_Global_Inventory = m_Global.FindAction("Inventory", throwIfNotFound: true);
         m_Global_Dock = m_Global.FindAction("Dock", throwIfNotFound: true);
-        m_Global_MainMenu = m_Global.FindAction("MainMenu", throwIfNotFound: true);
+        m_Global_MainMenu = m_Global.FindAction("Main Menu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1110,12 +1066,12 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_TargetNext;
     private readonly InputAction m_Player_TargetNearest;
     private readonly InputAction m_Player_ToggleHeatsinks;
-    private readonly InputAction m_Player_EnterWormhole;
     private readonly InputAction m_Player_ToggleShield;
     private readonly InputAction m_Player_OverrideShutdown;
     private readonly InputAction m_Player_Ping;
     private readonly InputAction m_Player_HideUI;
     private readonly InputAction m_Player_TractorBeam;
+    private readonly InputAction m_Player_EnterWormhole;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1128,12 +1084,12 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @TargetNext => m_Wrapper.m_Player_TargetNext;
         public InputAction @TargetNearest => m_Wrapper.m_Player_TargetNearest;
         public InputAction @ToggleHeatsinks => m_Wrapper.m_Player_ToggleHeatsinks;
-        public InputAction @EnterWormhole => m_Wrapper.m_Player_EnterWormhole;
         public InputAction @ToggleShield => m_Wrapper.m_Player_ToggleShield;
         public InputAction @OverrideShutdown => m_Wrapper.m_Player_OverrideShutdown;
         public InputAction @Ping => m_Wrapper.m_Player_Ping;
         public InputAction @HideUI => m_Wrapper.m_Player_HideUI;
         public InputAction @TractorBeam => m_Wrapper.m_Player_TractorBeam;
+        public InputAction @EnterWormhole => m_Wrapper.m_Player_EnterWormhole;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1167,9 +1123,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @ToggleHeatsinks.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleHeatsinks;
                 @ToggleHeatsinks.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleHeatsinks;
                 @ToggleHeatsinks.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleHeatsinks;
-                @EnterWormhole.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
-                @EnterWormhole.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
-                @EnterWormhole.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
                 @ToggleShield.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleShield;
                 @ToggleShield.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleShield;
                 @ToggleShield.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnToggleShield;
@@ -1185,6 +1138,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @TractorBeam.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
                 @TractorBeam.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
                 @TractorBeam.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
+                @EnterWormhole.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
+                @EnterWormhole.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
+                @EnterWormhole.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1213,9 +1169,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @ToggleHeatsinks.started += instance.OnToggleHeatsinks;
                 @ToggleHeatsinks.performed += instance.OnToggleHeatsinks;
                 @ToggleHeatsinks.canceled += instance.OnToggleHeatsinks;
-                @EnterWormhole.started += instance.OnEnterWormhole;
-                @EnterWormhole.performed += instance.OnEnterWormhole;
-                @EnterWormhole.canceled += instance.OnEnterWormhole;
                 @ToggleShield.started += instance.OnToggleShield;
                 @ToggleShield.performed += instance.OnToggleShield;
                 @ToggleShield.canceled += instance.OnToggleShield;
@@ -1231,6 +1184,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @TractorBeam.started += instance.OnTractorBeam;
                 @TractorBeam.performed += instance.OnTractorBeam;
                 @TractorBeam.canceled += instance.OnTractorBeam;
+                @EnterWormhole.started += instance.OnEnterWormhole;
+                @EnterWormhole.performed += instance.OnEnterWormhole;
+                @EnterWormhole.canceled += instance.OnEnterWormhole;
             }
         }
     }
@@ -1434,12 +1390,12 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnTargetNext(InputAction.CallbackContext context);
         void OnTargetNearest(InputAction.CallbackContext context);
         void OnToggleHeatsinks(InputAction.CallbackContext context);
-        void OnEnterWormhole(InputAction.CallbackContext context);
         void OnToggleShield(InputAction.CallbackContext context);
         void OnOverrideShutdown(InputAction.CallbackContext context);
         void OnPing(InputAction.CallbackContext context);
         void OnHideUI(InputAction.CallbackContext context);
         void OnTractorBeam(InputAction.CallbackContext context);
+        void OnEnterWormhole(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
