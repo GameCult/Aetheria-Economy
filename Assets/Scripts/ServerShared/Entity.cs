@@ -13,7 +13,7 @@ using int2 = Unity.Mathematics.int2;
 public abstract class Entity
 {
     public Zone Zone;
-    public Faction Faction;
+    public MegaCorporation Faction;
     public EquippableItem Hull;
     
     public float3 Position;
@@ -77,8 +77,6 @@ public abstract class Entity
                 heatsink.Item.Enabled.Value = value;
         }
     }
-    
-    public HullData HullData { get; }
     
     public EntitySettings Settings { get; }
     
@@ -164,7 +162,6 @@ public abstract class Entity
         ItemManager = itemManager;
         Zone = zone;
         Hull = hull;
-        HullData = itemManager.GetData(hull) as HullData;
         Name = hull.Name;
         MapEntity();
         TriggerGroups = new (List<Weapon> triggers, List<EquippedItem> items)[itemManager.GameplaySettings.TriggerGroupCount];
@@ -278,21 +275,6 @@ public abstract class Entity
     public EquippedCargoBay FindItemInCargo(Guid itemDataID)
     {
         return CargoBays.FirstOrDefault(c => c.ItemsOfType.ContainsKey(itemDataID));
-    }
-
-    public Shape UnoccupiedSpace
-    {
-        get
-        {
-            var emptyShape = new Shape(HullData.Shape.Width, HullData.Shape.Height);
-            foreach (var v in HullData.Shape.Coordinates)
-            {
-                if (HullData.InteriorCells[v] && GearOccupancy[v.x, v.y] == null && Hardpoints[v.x,v.y] == null)
-                    emptyShape[v] = true;
-            }
-
-            return emptyShape;
-        }
     }
 
     // Attempts to move a given number of items of the given type to the target Entity
@@ -1058,18 +1040,7 @@ public class EquippedCargoBay : EquippedItem
     public float Mass { get; private set; }
     public float ThermalMass { get; private set; }
     public string Name { get; }
-
-    public Shape UnoccupiedSpace
-    {
-        get
-        {
-            var unoccupied = new Shape(Data.InteriorShape.Width, Data.InteriorShape.Height);
-            foreach (var v in unoccupied.AllCoordinates)
-                unoccupied[v] = Occupancy[v.x, v.y] == null;
-            return unoccupied;
-        }
-    }
-
+    
     public EquippedCargoBay(ItemManager itemManager, EquippableItem item, int2 position, Entity entity, string name) : base(itemManager, item, position, entity)
     {
         Data = ItemManager.GetData(EquippableItem) as CargoBayData;
@@ -1130,7 +1101,6 @@ public class EquippedCargoBay : EquippedItem
             if (remainingQuantity == 0) return true;
         }
         
-        // TODO: Try alternate item rotations / use Shape.FitsWithin
         // Search all the space in the cargo bay for an empty space where the item fits
         foreach (var cargoCoord in Data.InteriorShape.Coordinates)
         {

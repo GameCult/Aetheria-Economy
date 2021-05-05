@@ -31,7 +31,7 @@ public interface INamedEntry
  //Union(10, typeof(ZoneData)), 
  Union(11, typeof(PlayerData)), 
  Union(12, typeof(Corporation)),
- Union(13, typeof(Faction)),
+ Union(13, typeof(MegaCorporation)),
  Union(14, typeof(OrbitalEntity)), 
  Union(15, typeof(OrbitData)), 
  Union(16, typeof(BodyData)),
@@ -49,7 +49,6 @@ public interface INamedEntry
  Union(28, typeof(PlanetData)), 
  Union(29, typeof(CargoBayData)), 
  Union(30, typeof(DockingBayData)), 
- Union(31, typeof(WeaponItemData)), 
  JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<DatabaseEntry>))]
 //[Union(21, typeof(ContractData))]
 //[Union(22, typeof(Station))]

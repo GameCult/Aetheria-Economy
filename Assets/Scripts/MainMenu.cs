@@ -14,7 +14,7 @@ using Random = UnityEngine.Random;
 
 public class MainMenu : MonoBehaviour
 {
-    public GameSettings Settings;
+    public SectorGenerationSettings Settings;
     public ConfirmationDialog Dialog;
     public bool InGame;
     public Prototype PanelPrototype;
@@ -114,9 +114,9 @@ public class MainMenu : MonoBehaviour
                 Dialog.Title.text = "Generating Galaxy";
                 Dialog.AddProperty(() => generatorState);
                 Dialog.Show();
-                Settings.SectorGenerationSettings.NoisePosition = Random.value * 100;
+                Settings.NoisePosition = Random.value * 100;
                 
-                var task = Task.Run(() => new Sector(Settings.SectorGenerationSettings, ActionGameManager.Database, 0, setState));
+                var task = Task.Run(() => new Sector(Settings, ActionGameManager.Database, 0, setState));
                 task.ContinueWith(task => Observable.NextFrame().Subscribe(_ =>
                 {
                     ActionGameManager.PlayerSettings.CurrentRun = null;

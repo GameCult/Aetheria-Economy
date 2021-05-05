@@ -362,7 +362,7 @@ public class PropertiesPanel : MonoBehaviour
 	{
 		var data = Context.ItemData.Get<ItemData>(item.Data);
 		AddProperty(data.Description);//.Label.fontStyle = FontStyles.Normal;
-		var manufacturer = Context.ItemData.Get<Faction>(data.Manufacturer);
+		var manufacturer = Context.ItemData.Get<MegaCorporation>(data.Manufacturer);
 		if (manufacturer != null)
 		{
 			AddProperty("Manufacturer", () => manufacturer.Name);
@@ -450,6 +450,21 @@ public class PropertiesPanel : MonoBehaviour
 	{
 		var data = Context.ItemData.Get<ItemData>(item.Data);
 		AddItemDataProperties(data);
+		// if (item is CraftedItemInstance craftedItemInstance)
+		// {
+		// 	var sourceEntity = Context.ItemData.Get<Entity>(craftedItemInstance.SourceEntity);
+		// 	if (sourceEntity != null)
+		// 	{
+		// 		var corporation = Context.ItemData.Get<Corporation>(sourceEntity.Corporation);
+		// 		AddProperty("Manufacturer", () => corporation.Name);
+		// 	}
+		// 	else
+		// 	{
+		// 		AddProperty("Manufacturer", () => "GameCult");
+		// 	}
+		// }
+		// if (item is SimpleCommodity simpleCommodity)
+		// 	AddProperty("Quantity", () => simpleCommodity.Quantity.ToString());
 		AddProperty("Mass", () => Context.GetMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
 		AddProperty("Thermal Mass", () => Context.GetThermalMass(item).SignificantDigits(Context.GameplaySettings.SignificantDigits));
 		if (item is EquippableItem gear)

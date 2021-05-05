@@ -236,11 +236,11 @@
 										<Effect Name="High_Freq_Cut_1" ID="{BA5BC68D-BCA7-4CE0-9878-1560F2D8B257}" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
 											<PropertyList>
 												<Property Name="FilterTypeBand1" Type="int32" Value="1"/>
-												<Property Name="FilterTypeBand2" Type="int32" Value="5"/>
+												<Property Name="FilterTypeBand2" Type="int32" Value="4"/>
 												<Property Name="FilterTypeBand3" Type="int32" Value="0"/>
-												<Property Name="FrequencyBand2" Type="Real32" Value="5809"/>
+												<Property Name="FrequencyBand2" Type="Real32" Value="15000"/>
 												<Property Name="FrequencyBand3" Type="Real32" Value="18000"/>
-												<Property Name="GainBand2" Type="Real32" Value="-9.5"/>
+												<Property Name="GainBand2" Type="Real32" Value="-2"/>
 												<Property Name="GainBand3" Type="Real32" Value="-3"/>
 												<Property Name="OnOffBand1" Type="bool" Value="False"/>
 											</PropertyList>

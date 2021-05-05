@@ -36,8 +36,8 @@ public class SectorMap : MonoBehaviour
     public float IconBackgroundSize = 3;
     public float LabelDistance = .4f;
 
-    private Dictionary<Faction, (RenderTexture influence, Material primaryMaterial, Material secondaryMaterial, Material linkMaterial)> _factionMaterials =
-        new Dictionary<Faction, (RenderTexture influence, Material primaryMaterial, Material secondaryMaterial, Material linkMaterial)>();
+    private Dictionary<MegaCorporation, (RenderTexture influence, Material primaryMaterial, Material secondaryMaterial, Material linkMaterial)> _factionMaterials =
+        new Dictionary<MegaCorporation, (RenderTexture influence, Material primaryMaterial, Material secondaryMaterial, Material linkMaterial)>();
 
     public void Start()
     {

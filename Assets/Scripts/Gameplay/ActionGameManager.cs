@@ -79,9 +79,8 @@ public class ActionGameManager : MonoBehaviour
     public PostProcessVolume DeathPP;
     public PostProcessVolume HeatstrokePP;
     public PostProcessVolume SevereHeatstrokePP;
-
+    
     [Header("Scene Links")]
-    public TradeMenu TradeMenu;
     public Prototype HostileTargetIndicator;
     public PlaceUIElementWorldspace ViewDot;
     public PlaceUIElementWorldspace TargetIndicator;
@@ -144,10 +143,6 @@ public class ActionGameManager : MonoBehaviour
         (float2(0, -1), "Rear")
     };
 
-    public EntitySettings NewEntitySettings
-    {
-        get => MessagePackSerializer.Deserialize<EntitySettings>(MessagePackSerializer.Serialize(Settings.GameplaySettings.DefaultEntitySettings));
-    }
 
     public void SaveLoadout(EntityPack pack)
     {
@@ -518,6 +513,26 @@ public class ActionGameManager : MonoBehaviour
                     BindToEntity(targetEntity);
             }
         }
+        
+        // var stationType = Database.GetAll<HullData>().First(x=>x.HullType==HullType.Station);
+        // var stationHull = ItemManager.CreateInstance(stationType) as EquippableItem;
+        // var stationParent = Zone.PlanetInstances.Values.OrderByDescending(p => p.BodyData.Mass.Value).ElementAt(3);
+        // var stationParentOrbit = stationParent.Orbit.Data.ID;
+        // var stationParentPos = Zone.GetOrbitPosition(stationParentOrbit);
+        // var stationPos = stationParentPos + ItemManager.Random.NextFloat2Direction() * stationParent.GravityWellRadius.Value * .1f;
+        // var stationOrbit = Zone.CreateOrbit(stationParentOrbit, stationPos);
+        // var station = new OrbitalEntity(ItemManager, Zone, stationHull, stationOrbit.ID, Settings.DefaultEntitySettings);
+        // Zone.Entities.Add(station);
+        // var dockingBayData = Database.GetAll<DockingBayData>().First();
+        // var dockingBay = ItemManager.CreateInstance(dockingBayData) as EquippableItem;
+        // station.TryEquip(dockingBay);
+        // station.Activate();
+        //
+        // DoDock(station, station.DockingBays.First());
+        
+        // ship.ExitWormhole(
+        //     SectorRenderer.WormholeInstances.Keys.First().Position,
+        //     ItemManager.Random.NextFloat2Direction() * Settings.GameplaySettings.WormholeExitVelocity);
     }
 
     public void Dock()
@@ -535,7 +550,6 @@ public class ActionGameManager : MonoBehaviour
                     {
                         UnbindEntity();
                         DoDock(entity, bay);
-                        TradeMenu.Inventory = entity.CargoBays.First();
                         AkSoundEngine.PostEvent("Dock", gameObject);
                         return;
                     }

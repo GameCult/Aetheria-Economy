@@ -87,7 +87,7 @@ public static class EntitySerializer
     private static void Restore(ItemManager itemManager, Zone zone, EntityPack pack, Entity entity, bool instantiate = false)
     {
         entity.Name = pack.Name;
-        entity.Faction = itemManager.ItemData.Get<Faction>(pack.Faction);
+        entity.Faction = itemManager.ItemData.Get<MegaCorporation>(pack.Faction);
         entity.Children = pack.Children.Select(c =>
         {
             var child = Unpack(itemManager, zone, c, instantiate);

@@ -221,22 +221,14 @@ public static class ZoneGenerator
             return planetData;
         }).ToList();
 
-        var nearestFaction = sector.Factions.MinBy(f => sector.HomeZones[f].Distance[sectorZone]);
-        var nearestFactionHomeZone = sector.HomeZones[nearestFaction];
-        var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[sectorZone];
-        
-        var loadoutGenerator = new LoadoutGenerator(ref random, itemManager, sector, sectorZone, nearestFaction, 1);
-        for (int i = 0; i < factionPresence; i++)
+        if (sectorZone.Owner != null)
         {
-	        pack.Entities.Add(loadoutGenerator.GenerateShipLoadout());
+	        var loadoutGenerator = new LoadoutGenerator(ref random, itemManager, sector, sectorZone, sectorZone.Owner, 1);
+	        for (int i = 0; i < 3; i++)
+	        {
+		        pack.Entities.Add(loadoutGenerator.GenerateShipLoadout());
+	        }
         }
-        
-        var replacePlanet = pack.Planets.MinBy(p => p.Mass.Value);
-        pack.Planets.Remove(replacePlanet);
-        var stationOrbit = replacePlanet.Orbit;
-        var station = loadoutGenerator.GenerateStationLoadout();
-        ((OrbitalEntityPack) station).Orbit = stationOrbit;
-        pack.Entities.Add(station);
 
         return pack;
 	}

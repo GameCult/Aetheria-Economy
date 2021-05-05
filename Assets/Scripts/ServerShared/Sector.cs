@@ -12,18 +12,18 @@ using Random = Unity.Mathematics.Random;
 
 public class Sector
 {
-    public Dictionary<Faction, SectorZone> HomeZones = new Dictionary<Faction, SectorZone>();
-    public Dictionary<Faction, SectorZone> BossZones = new Dictionary<Faction, SectorZone>();
+    public Dictionary<MegaCorporation, SectorZone> HomeZones = new Dictionary<MegaCorporation, SectorZone>();
+    public Dictionary<MegaCorporation, SectorZone> BossZones = new Dictionary<MegaCorporation, SectorZone>();
     
     public SectorGenerationSettings Settings { get; }
-    public Faction[] Factions { get; }
+    public MegaCorporation[] Factions { get; }
     public SectorZone[] Zones { get; }
     public SectorZone Entrance { get; }
     public SectorZone Exit { get; }
 
     private HashSet<Guid> _containedFactions;
     private SectorZone[] _exitPath;
-    private Dictionary<Faction, MarkovNameGenerator> _nameGenerators = new Dictionary<Faction, MarkovNameGenerator>();
+    private Dictionary<MegaCorporation, MarkovNameGenerator> _nameGenerators = new Dictionary<MegaCorporation, MarkovNameGenerator>();
 
     public SectorZone[] ExitPath
     {
@@ -36,7 +36,7 @@ public class Sector
     public Sector(DatabaseCache database, SavedGame savedGame)
     {
         Settings = savedGame.Settings;
-        Factions = savedGame.Factions.Select(database.Get<Faction>).ToArray();
+        Factions = savedGame.Factions.Select(database.Get<MegaCorporation>).ToArray();
         Zones = savedGame.Zones.Select(zone =>
         {
             return new SectorZone
@@ -70,7 +70,7 @@ public class Sector
     public Sector(SectorGenerationSettings settings, DatabaseCache database, uint seed = 0, Action<string> progressCallback = null, float minLineSeparation = .01f)
     {
         Settings = settings;
-        var megas = database.GetAll<Faction>();
+        var megas = database.GetAll<MegaCorporation>();
         var random = new Random(seed == 0 ? (uint) (DateTime.Now.Ticks % uint.MaxValue) : seed);
         Factions = megas.OrderBy(x => random.NextFloat()).Take(settings.MegaCount).ToArray();
 
@@ -382,8 +382,8 @@ public class SectorZone
     public List<SectorZone> AdjacentZones = new List<SectorZone>();
     public int Isolation;
     public Dictionary<SectorZone, int> Distance;
-    public Faction[] Factions;
-    public Faction Owner;
+    public MegaCorporation[] Factions;
+    public MegaCorporation Owner;
     public Zone Contents;
     public ZonePack PackedContents;
 }

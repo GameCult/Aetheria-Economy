@@ -272,12 +272,144 @@ public class ItemManager
         return result;
     }
 
-    public int GetPrice(CraftedItemInstance item)
-    {
-        var data = GetData(item);
-        return (int) (GameplaySettings.QualityPriceModifier.Evaluate(item.Quality) * data.Price);
-    }
-
+    // public Entity CreateEntity(Guid zoneID, Guid corporation, Guid loadout)
+    // {
+    //     if (!(ItemData.Get(loadout) is LoadoutData loadoutData))
+    //     {
+    //         _logger("Attempted to spawn invalid loadout ID");
+    //         return null;
+    //     }
+    //
+    //     if (!(ItemData.Get(loadoutData.Hull) is HullData hullData))
+    //     {
+    //         _logger("Attempted to spawn loadout with invalid hull ID");
+    //         return null;
+    //     }
+    //
+    //     if (!(ItemData.Get(zoneID) is ZoneData zoneData))
+    //     {
+    //         _logger("Attempted to spawn entity with invalid zone ID");
+    //         return null;
+    //     }
+    //
+    //     if (!(ItemData.Get(corporation) is Corporation corpData))
+    //     {
+    //         _logger("Attempted to spawn entity with invalid corporation ID");
+    //         return null;
+    //     }
+    //
+    //     var gearData = loadoutData.Gear
+    //         .Take(hullData.Hardpoints.Count)
+    //         .Where(id => id != Guid.Empty)
+    //         .Select(id => ItemData.Get<GearData>(id))
+    //         .ToArray();
+    //
+    //     if (gearData.Any(g=>g==null))
+    //     {
+    //         _logger("Attempted to spawn loadout with invalid gear ID");
+    //         return null;
+    //     }
+    //
+    //     var gear = gearData
+    //         .Select(gd => CreateInstance(gd.ID, GlobalData.StartingGearQualityMin, GlobalData.StartingGearQualityMax))
+    //         .ToArray();
+    //
+    //     if (gear.Any(g=>g==null))
+    //         return null;
+    //     
+    //     foreach(var g in gear)
+    //         ItemData.Add(g);
+    //
+    //     var cargoData = loadoutData.CompoundCargo
+    //         .SelectMany(x => Enumerable.Repeat(ItemData.Get<CraftedItemData>(x.Key), x.Value))
+    //         .ToArray();
+    //
+    //     if (cargoData.Any(g=>g==null))
+    //     {
+    //         _logger("Attempted to spawn loadout with invalid cargo ID");
+    //         return null;
+    //     }
+    //
+    //     var cargo = cargoData
+    //         .Select(gd => CreateInstance(gd.ID, GlobalData.StartingGearQualityMin, GlobalData.StartingGearQualityMax))
+    //         .ToArray();
+    //
+    //     if (cargo.Any(g=>g==null))
+    //         return null;
+    //     
+    //     foreach(var c in cargo)
+    //         ItemData.Add(c);
+    //
+    //     var simpleCargo = loadoutData.SimpleCargo?
+    //         .Select(x => CreateInstance(x.Key, x.Value))
+    //         .ToArray() ?? new SimpleCommodity[0];
+    //
+    //     if (simpleCargo.Any(g=>g==null))
+    //         return null;
+    //     
+    //     var hull = CreateInstance(loadoutData.Hull, GlobalData.StartingGearQualityMin, GlobalData.StartingGearQualityMax);
+    //     
+    //     if(hull==null)
+    //         return null;
+    //
+    //     // Get target zone
+    //     var zone = _zones[zoneID];
+    //
+    //     if (hullData.HullType == HullType.Ship)
+    //     {
+    //         var entity = CreateShip(hull.ID, gear.Select(g => g.ID),
+    //             cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), zone, corporation, Guid.Empty, loadoutData.Name);
+    //         entity.Active = true;
+    //         return entity;
+    //     }
+    //
+    //     if (hullData.HullType == HullType.Station)
+    //     {
+    //         var distance = lerp(.2f, .8f, Random.NextFloat()) * zoneData.Radius;
+    //         var orbit = new OrbitData
+    //         {
+    //             Context = this,
+    //             Distance = new ReactiveProperty<float>(distance),
+    //             Parent = zone.Orbits.Values.Select(o=>o.Data)
+    //                 .First(orbitData => orbitData.Parent == Guid.Empty).ID,
+    //             Phase = Random.NextFloat()
+    //         };
+    //         zone.AddOrbit(orbit);
+    //         
+    //         var entity = new OrbitalEntity(this, hull.ID, gear.Select(g => g.ID),
+    //             cargo.Select(c => c.ID).Concat(simpleCargo.Select(c => c.ID)), orbit.ID, zone, corporation)
+    //         {
+    //             Name = $"{loadoutData.Name} {Random.NextInt(1,255):X}",
+    //             Temperature = 293,
+    //             Population = 4
+    //         };
+    //         entity.Active = true;
+    //         var parentCorp = ItemData.Get<MegaCorporation>(corpData.Parent);
+    //         foreach (var attribute in parentCorp.Personality)
+    //             entity.Personality[attribute.Key] = attribute.Value;
+    //         ItemData.Add(entity);
+    //
+    //         zone.Entities[entity.ID] = entity;
+    //         return entity;
+    //     }
+    //
+    //     return null;
+    // }
+    //
+    // public Ship CreateShip(Guid hull, IEnumerable<Guid> gear, IEnumerable<Guid> cargo, Zone zone, Guid corporation, Guid homeEntity, string typeName)
+    // {
+    //
+    //     var ship = new Ship(this, hull, gear, cargo, zone, corporation)
+    //     {
+    //         Name = $"{typeName} {Random.NextInt(1,255):X}",
+    //         HomeEntity = homeEntity
+    //     };
+    //     ItemData.Add(ship);
+    //
+    //     zone.Entities[ship.ID] = ship;
+    //     return ship;
+    // }
+    
     public SimpleCommodity CreateInstance(SimpleCommodityData item, int count)
     {
         if (item != null)

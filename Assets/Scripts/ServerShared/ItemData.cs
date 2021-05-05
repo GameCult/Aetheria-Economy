@@ -219,7 +219,14 @@ public class Shape
     }
 }
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<ItemData>))]
+[MessagePackObject, 
+ Union(0, typeof(SimpleCommodityData)), 
+ Union(1, typeof(CompoundCommodityData)),
+ Union(2, typeof(GearData)), 
+ Union(3, typeof(HullData)), 
+ Union(4, typeof(CargoBayData)), 
+ Union(5, typeof(DockingBayData)), 
+ JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<ItemData>))]
 public abstract class ItemData : DatabaseEntry, INamedEntry
 {
     [InspectableField, JsonProperty("name"), Key(1)]
@@ -228,7 +235,7 @@ public abstract class ItemData : DatabaseEntry, INamedEntry
     [InspectableText, JsonProperty("description"), Key(2)]
     public string Description;
     
-    [InspectableDatabaseLink(typeof(Faction)), JsonProperty("creator"), Key(3)]
+    [InspectableDatabaseLink(typeof(MegaCorporation)), JsonProperty("creator"), Key(3)]
     public Guid Manufacturer;
 
     [InspectableField, JsonProperty("mass"), Key(4)]
@@ -281,7 +288,12 @@ public class SimpleCommodityData : ItemData
     public SimpleCommodityCategory Category;
 }
 
-[MessagePackObject, JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<CraftedItemData>))]
+[MessagePackObject, 
+ Union(0, typeof(CompoundCommodityData)), 
+ Union(1, typeof(GearData)), 
+ Union(2, typeof(HullData)),
+ JsonObject(MemberSerialization.OptIn),
+ JsonConverter(typeof(JsonKnownTypesConverter<CraftedItemData>))]
 public abstract class CraftedItemData : ItemData
 {
     [InspectableField, JsonProperty("ingredientQualityWeight"), Key(9)]  
@@ -298,7 +310,9 @@ public class CompoundCommodityData : CraftedItemData
     public CompoundCommodityCategory Category;
 }
 
-[JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<EquippableItemData>))]
+[Union(0, typeof(GearData)), 
+ Union(1, typeof(HullData)), 
+ JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<EquippableItemData>))]
 public abstract class EquippableItemData : CraftedItemData
 {
     [InspectableTexture, JsonProperty("schematic"), Key(10)]
@@ -391,25 +405,7 @@ public class DockingBayData : CargoBayData
 {
     [InspectableField, JsonProperty("maxSize"), Key(21)]
     public int2 MaxSize;
-}
-
-[RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class WeaponItemData : GearData
-{
-    [InspectableField, JsonProperty("range"), Key(21)]
-    public WeaponRange WeaponRange;
-    
-    [InspectableField, JsonProperty("caliber"), Key(22)]
-    public WeaponCaliber WeaponCaliber;
-    
-    [InspectableField, JsonProperty("weaponType"), Key(23)]
-    public WeaponType WeaponType;
-    
-    [InspectableField, JsonProperty("fireTypes"), Key(24)]
-    public WeaponFireType WeaponFireTypes;
-    
-    [InspectableField, JsonProperty("modifiers"), Key(25)]
-    public WeaponModifiers WeaponModifiers;
+    [IgnoreMember] public override HardpointType HardpointType => HardpointType.Tool;
 }
 
 [RethinkTable("Items"), Inspectable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]

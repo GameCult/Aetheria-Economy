@@ -134,7 +134,6 @@ public class GameplaySettings
 {
     public EntitySettings DefaultEntitySettings;
     public RarityTier[] Tiers;
-    public ExponentialLerp QualityPriceModifier;
     public float DefaultShutdownPerformance = .25f;
     public float SevereHeatstrokeRiskThreshold = .25f;
     public float WormholeDepth = 1000;

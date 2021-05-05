@@ -11,7 +11,7 @@ public class LoadoutGenerator
     public ItemManager ItemManager { get; }
     public Sector Sector { get; }
     public SectorZone Zone { get; }
-    public Faction Faction { get; }
+    public MegaCorporation Faction { get; }
     public float PriceExponent { get; }
 
     public LoadoutGenerator(
@@ -19,7 +19,7 @@ public class LoadoutGenerator
         ItemManager itemManager, 
         Sector sector, 
         SectorZone zone, 
-        Faction faction, 
+        MegaCorporation faction, 
         float priceExponent)
     {
         Random = random;
@@ -48,38 +48,6 @@ public class LoadoutGenerator
         return EntitySerializer.Pack(entity);
     }
 
-    public EntityPack GenerateStationLoadout()
-    {
-        var hullData = RandomHull(HullType.Station);
-        var hull = ItemManager.CreateInstance(hullData) as EquippableItem;
-        var entity = new OrbitalEntity(ItemManager, null, hull, Guid.Empty, ItemManager.GameplaySettings.DefaultEntitySettings);
-        entity.Faction = Faction;
-        OutfitEntity(entity);
-        
-        var emptyShape = entity.UnoccupiedSpace;
-        
-        var dockingBayData = RandomItem<DockingBayData>(item => item.Shape.FitsWithin(emptyShape, out _, out _));
-        if (dockingBayData == null) throw new InvalidLoadoutException("No compatible docking bay found for station!");
-
-        dockingBayData.Shape.FitsWithin(emptyShape, out var cargoRotation, out var cargoPosition);
-        var dockingBay = ItemManager.CreateInstance(dockingBayData) as EquippableItem;
-        dockingBay.Rotation = cargoRotation;
-        if (!entity.TryEquip(dockingBay, cargoPosition))
-        {
-            throw new InvalidLoadoutException("Failed to equip selected docking bay!");
-        }
-
-        var cargo = entity.CargoBays.First();
-        var inventory = RandomItems<EquippableItemData>(16, data => !(data is CargoBayData));
-        foreach (var item in inventory)
-        {
-            var instance = ItemManager.CreateInstance(item);
-            cargo.TryStore(instance);
-        }
-        
-        return EntitySerializer.Pack(entity);
-    }
-
     public HullData RandomHull(HullType type)
     {
         return ItemManager.ItemData.GetAll<HullData>()
@@ -87,13 +55,13 @@ public class LoadoutGenerator
             .WeightedRandomElements(ref Random,
                 item =>
                     (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) / // Prioritize items from allied manufacturers
-                    Zone.Distance[Sector.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] / // Penalize distance to manufacturer headquarters
+                    Zone.Distance[Sector.HomeZones[ItemManager.ItemData.Get<MegaCorporation>(item.Manufacturer)]] / // Penalize distance to manufacturer headquarters
                     pow(item.Price, PriceExponent), // Penalize item price to a controllable degree
                 1
             ).FirstOrDefault();
     }
     
-    public T[] RandomItems<T>(int count, Predicate<T> filter = null) where T : EquippableItemData
+    public T RandomItem<T>(Predicate<T> filter = null) where T : EquippableItemData
     {
         return ItemManager.ItemData.GetAll<T>()
             .Where(item => Sector.ContainsFaction(item.Manufacturer) &&
@@ -101,16 +69,11 @@ public class LoadoutGenerator
                            (filter?.Invoke(item) ?? true))
             .WeightedRandomElements(ref Random, item =>
                     (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) * // Prioritize items from allied manufacturers
-                    item.Shape.Coordinates.Length * item.Shape.Coordinates.Length / // Prioritize larger items
-                    Zone.Distance[Sector.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] / // Penalize distance to manufacturer headquarters
+                    item.Shape.Coordinates.Length / // Prioritize items that fill more of the hardpoint's slots
+                    Zone.Distance[Sector.HomeZones[ItemManager.ItemData.Get<MegaCorporation>(item.Manufacturer)]] / // Penalize distance to manufacturer headquarters
                     pow(item.Price, PriceExponent), // Penalize item price to a controllable degree
-                count
-            );
-    }
-
-    public T RandomItem<T>(Predicate<T> filter = null) where T : EquippableItemData
-    {
-        return RandomItems(1, filter).FirstOrDefault();
+                1
+            ).FirstOrDefault();
     }
     
     public T RandomItem<T>(HardpointData hardpoint, Predicate<T> filter = null) where T : EquippableItemData
@@ -125,7 +88,7 @@ public class LoadoutGenerator
         var hullData = ItemManager.GetData(entity.Hull) as HullData;
         foreach (var v in hullData.Shape.Coordinates) entity.HullConductivity[v.x, v.y] = true;
         var previousItems = new List<EquippableItemData>();
-        foreach (var hardpoint in hullData.Hardpoints.OrderByDescending(h=>h.Shape.Coordinates.Length))
+        foreach (var hardpoint in hullData.Hardpoints)
         {
             if (hardpoint.Type == HardpointType.ControlModule)
             {
@@ -140,7 +103,7 @@ public class LoadoutGenerator
             }
             else
             {
-                // If a previously selected item fits, use that one (this is why we must process larger hardpoints first)
+                // If a previously selected item fits, use that one
                 var itemData = previousItems
                     .FirstOrDefault(i => i.HardpointType == hardpoint.Type && i.Shape.FitsWithin(hardpoint.Shape, hardpoint.Rotation, out _));
                 itemData ??= RandomItem<GearData>(hardpoint);
@@ -158,31 +121,26 @@ public class LoadoutGenerator
             }
         }
 
-        var emptyShape = entity.UnoccupiedSpace;
-        
-        var cargoData = RandomItem<CargoBayData>(item =>
-            !(item is DockingBayData) &&
-            item.Shape.FitsWithin(emptyShape, out _, out _));
-        if (cargoData == null) throw new InvalidLoadoutException("No compatible cargo bay found for entity!");
-
-        cargoData.Shape.FitsWithin(emptyShape, out var cargoRotation, out var cargoPosition);
-        var cargo = ItemManager.CreateInstance(cargoData) as EquippableItem;
-        cargo.Rotation = cargoRotation;
-        if (!entity.TryEquip(cargo, cargoPosition))
-            throw new InvalidLoadoutException("Failed to equip selected cargo bay!");
-
-        emptyShape = entity.UnoccupiedSpace;
+        var emptyShape = new Shape(hullData.Shape.Width, hullData.Shape.Height);
+        foreach (var v in hullData.Shape.Coordinates)
+        {
+            if (hullData.InteriorCells[v] && entity.Hardpoints[v.x, v.y] == null)
+                emptyShape[v] = true;
+        }
 
         var capacitorData = RandomItem<GearData>(item =>
             item.Behaviors.Any(b => b is CapacitorData) &&
             item.Shape.FitsWithin(emptyShape, out _, out _));
         if (capacitorData == null) throw new InvalidLoadoutException("No compatible capacitor found for entity!");
 
-        capacitorData.Shape.FitsWithin(emptyShape, out var capacitorRotation, out var capacitorPosition);
+        if(!capacitorData.Shape.FitsWithin(emptyShape, out var capacitorRotation, out var capacitorPosition))
+            throw new InvalidLoadoutException("Failed to equip selected capacitor!");
         var capacitor = ItemManager.CreateInstance(capacitorData) as EquippableItem;
         capacitor.Rotation = capacitorRotation;
         if (!entity.TryEquip(capacitor, capacitorPosition))
+        {
             throw new InvalidLoadoutException("Failed to equip selected capacitor!");
+        }
     }
 }
 
