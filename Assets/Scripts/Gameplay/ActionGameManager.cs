@@ -96,12 +96,24 @@ public class ActionGameManager : MonoBehaviour
     {
         get => _playerSettings ??= File.Exists(_playerSettingsFilePath)
             ? MessagePackSerializer.Deserialize<PlayerSettings>(File.ReadAllBytes(_playerSettingsFilePath))
-            : new PlayerSettings {Name = Environment.UserName};
+            : GetDefaultPlayerSettings();
     }
     private static string _playerSettingsFilePath => Path.Combine(GameDataDirectory.FullName, "PlayerSettings.msgpack");
     public static void SavePlayerSettings()
     {
         File.WriteAllBytes(_playerSettingsFilePath, MessagePackSerializer.Serialize(_playerSettings));
+    }
+
+    private static PlayerSettings GetDefaultPlayerSettings()
+    {
+        var settings = new PlayerSettings();
+        settings.Name = Environment.UserName;
+        settings.InputSettings.ActionBarInputs.Add("<Keyboard>/leftShift");
+        settings.InputSettings.ActionBarInputs.Add("<Mouse>/leftButton");
+        settings.InputSettings.ActionBarInputs.Add("<Mouse>/rightButton");
+        settings.InputSettings.ActionBarInputs.Add("<Mouse>/middleButton");
+        for (int i = 1; i < 6; i++) settings.InputSettings.ActionBarInputs.Add($"<Keyboard>/{i}");
+        return settings;
     }
 
     public static Sector CurrentSector;
@@ -121,12 +133,6 @@ public class ActionGameManager : MonoBehaviour
     public PostProcessVolume HypothermiaPP;
     public PostProcessVolume SevereHeatstrokePP;
     public PostProcessVolume SevereHypothermiaPP;
-
-    [Header("Input Icons")]
-    public Sprite ShiftIcon;
-    public Sprite MouseLeftIcon;
-    public Sprite MouseRightIcon;
-    public Sprite MouseMiddleIcon;
 
     [Header("Scene Links")]
     public Transform ActionBar;
@@ -420,6 +426,19 @@ public class ActionGameManager : MonoBehaviour
             action.started += context => slot.Binding?.Activate();
             action.canceled += context => slot.Binding?.Deactivate();
 
+            var shortName = controlPath.Substring(controlPath.LastIndexOf('/') + 1);
+            var sprite = Resources.Load<Sprite>($"Sprites/Input/{shortName}");
+            if (sprite != null)
+            {
+                slot.InputIcon.sprite = sprite;
+                slot.InputLabel.gameObject.SetActive(false);
+            }
+            else
+            {
+                slot.InputLabel.text = shortName;
+                slot.InputIcon.gameObject.SetActive(false);
+            }
+
             slot.PointerEnterTrigger.OnPointerEnterAsObservable().Subscribe(_ =>
             {
                 //Debug.Log($"Pointer entered action bar slot {controlPath}");
@@ -453,29 +472,8 @@ public class ActionGameManager : MonoBehaviour
             return slot;
         }
 
-        var shift = createBinding("<Keyboard>/leftShift");
-        shift.InputIcon.sprite = ShiftIcon;
-        shift.InputLabel.gameObject.SetActive(false);
-        
-        var left = createBinding("<Mouse>/leftButton");
-        left.InputIcon.sprite = MouseLeftIcon;
-        left.InputLabel.gameObject.SetActive(false);
-        
-        var right = createBinding("<Mouse>/rightButton");
-        right.InputIcon.sprite = MouseRightIcon;
-        right.InputLabel.gameObject.SetActive(false);
-        
-        var middle = createBinding("<Mouse>/middleButton");
-        middle.InputIcon.sprite = MouseMiddleIcon;
-        middle.InputLabel.gameObject.SetActive(false);
+        foreach (var actionBarInput in PlayerSettings.InputSettings.ActionBarInputs) createBinding(actionBarInput);
 
-        for (int i = 1; i < 6; i++)
-        {
-            var num = createBinding($"<Keyboard>/{i}");
-            num.InputIcon.gameObject.SetActive(false);
-            num.InputLabel.text = i.ToString();
-        }
-        
         #endregion
 
         #endregion

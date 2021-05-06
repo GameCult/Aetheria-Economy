@@ -10,8 +10,8 @@ public class PlayerSettings
     [Key(1)] public SavedGame SavedRun;
     [Key(2)] public bool TutorialPassed;
     [Key(3)] public Dictionary<string, string> HashedStoryFiles = new Dictionary<string, string>();
-    [Key(4)] public PlayerGameplaySettings GameplaySettings;
-    [Key(5)] public PlayerInputSettings InputSettings;
+    [Key(4)] public PlayerGameplaySettings GameplaySettings = new PlayerGameplaySettings();
+    [Key(5)] public PlayerInputSettings InputSettings = new PlayerInputSettings();
 
     public string FormatTemperature(float t)
     {
@@ -19,7 +19,7 @@ public class PlayerSettings
         {
             TemperatureUnit.Kelvin => $"{Format(t)}°K",
             TemperatureUnit.Celsius => $"{Format(t - 273.15f)}°C",
-            TemperatureUnit.Fahrenheit => $"{Format((t - 273.15f) * (9f / 5) + 32)}°F",
+            TemperatureUnit.Fahrenheit => $"{Format(t * (9f / 5) - 459.67f)}°F",
             _ => throw new ArgumentOutOfRangeException()
         };
     }
@@ -58,5 +58,6 @@ public class PlayerGameplaySettings
 public class PlayerInputSettings
 {
     [Key(0)] public Dictionary<string, string> InputActionMap = new Dictionary<string, string>();
-    [Key(1)] public bool FiveButtonMouse;
+    [Key(1)] public List<string> ActionBarInputs = new List<string>();
+    [Key(2)] public bool FiveButtonMouse;
 }

@@ -53,6 +53,7 @@ public class InputDisplayLayout : MonoBehaviour
         public ActionMapping ActionMapping;
         public Rect ButtonRect;
         public UILineRenderer LabelLine;
+        public bool IsActionBarButton;
     }
 
     private class ActionMapping
@@ -71,13 +72,30 @@ public class InputDisplayLayout : MonoBehaviour
     void Start()
     {
         _canvas = transform.root.GetComponent<Canvas>();
-        var path = Path.Combine(ActionGameManager.GameDataDirectory.CreateSubdirectory("KeyboardLayouts").FullName, $"{LayoutFile.name}.msgpack");
+        var path = Path.Combine(ActionGameManager.GameDataDirectory.CreateSubdirectory("KeyboardLayouts").FullName, $"{LayoutFile.name}.json");
         // _inputLayout = ParseJson(LayoutFile.text);
-        RegisterResolver.Register();
-        _inputLayout = MessagePackSerializer.Deserialize<InputLayout>(File.ReadAllBytes(path));
+        //RegisterResolver.Register();
+        //_inputLayout = MessagePackSerializer.Deserialize<InputLayout>(File.ReadAllBytes(path));
+        _inputLayout = JsonConvert.DeserializeObject<InputLayout>(File.ReadAllText(path));
         DisplayLayout(_inputLayout);
+        
+        _buttonMappings.Add(MapMouseButton(MouseLeft, "<Mouse>/leftButton"));
+        _buttonMappings.Add(MapMouseButton(MouseRight, "<Mouse>/rightButton"));
+        _buttonMappings.Add(MapMouseButton(MouseMiddle, "<Mouse>/middleButton"));
+        _buttonMappings.Add(MapMouseButton(MouseForward, "<Mouse>/forwardButton"));
+        _buttonMappings.Add(MapMouseButton(MouseBack, "<Mouse>/backButton"));
 
         foreach (var buttonMapping in _buttonMappings) _bindButtons[buttonMapping.Button.InputSystemPath] = buttonMapping;
+        
+        foreach(var actionBarInput in ActionGameManager.PlayerSettings.InputSettings.ActionBarInputs)
+        {
+            if (!_bindButtons.ContainsKey(actionBarInput)) Debug.LogError($"Unable to find input button for \"{actionBarInput}\"");
+            else
+            {
+                _bindButtons[actionBarInput].IsActionBarButton = true;
+                AssignColor(_bindButtons[actionBarInput]);
+            }
+        }
 
         // foreach (var key in _inputLayout.GetBindableKeys())
         // {
@@ -121,6 +139,17 @@ public class InputDisplayLayout : MonoBehaviour
         //StartCoroutine(AssociateInputKeys(_inputLayout));
     }
 
+    private ButtonMapping MapMouseButton(InputDisplayButton button, string path)
+    {
+        var mapping = new ButtonMapping
+        {
+            Button = new InputLayoutMouseButton {Path = path},
+            DisplayButton = button
+        };
+        AssignUnboundColor(mapping.DisplayButton);
+        return mapping;
+    }
+
     private void ProcessActions(InputActionAsset input)
     {
         var nonUIActions = input.Where(a => a.actionMap.name != "UI").ToArray();
@@ -150,7 +179,17 @@ public class InputDisplayLayout : MonoBehaviour
 
     private void AssignColor(ButtonMapping buttonMapping)
     {
-        if(buttonMapping.ActionMapping!=null)
+        if (buttonMapping.IsActionBarButton)
+        {
+            var outlineColor = Color.white;
+            var fillColor = Color.white * FillBrightness;
+            fillColor.a = FillAlpha;
+            buttonMapping.DisplayButton.Fill.color = fillColor;
+            buttonMapping.DisplayButton.Outline.gameObject.SetActive(true);
+            buttonMapping.DisplayButton.Outline.color = outlineColor;
+            if (buttonMapping.DisplayButton is InputDisplayKey key) key.MainLabel.color = key.AltLabel.color = outlineColor;
+        }
+        else if(buttonMapping.ActionMapping!=null)
         {
             var outlineColor = Color.HSVToRGB(buttonMapping.ActionMapping.Hue, Saturation, 1);
             var fillColor = Color.HSVToRGB(buttonMapping.ActionMapping.Hue, 1, FillBrightness);
@@ -250,7 +289,7 @@ public class InputDisplayLayout : MonoBehaviour
     }
     
     private Rect[] Overlap(Rect rect) => _buttonMappings
-        .Where(b=>b.ActionMapping!=null)
+        .Where(b=>b.IsActionBarButton || b.ActionMapping!=null)
         .Select(b=>b.ButtonRect)
         .Concat(_actionMappings
             .Where(a=>a.LabelRect.width > .1f)
