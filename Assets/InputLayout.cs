@@ -62,14 +62,42 @@ public class InputLayoutColumnSpacer : InputLayoutColumn { }
 public class InputLayoutKey : InputLayoutColumn { }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
-public class InputLayoutBindableKey : InputLayoutKey
+public class InputLayoutBindableKey : InputLayoutKey, IBindableButton
 {
     [Key(1), JsonProperty("mainLabel")] public string MainLabel;
     [Key(2), JsonProperty("altLabel")] public string AltLabel;
-    [Key(3), JsonProperty("path")] public string InputSystemPath;
+    [Key(3), JsonProperty("path")] public string ShortPath;
+
+    [IgnoreMember]
+    public string InputSystemPath
+    {
+        get
+        {
+            return $"<Keyboard>/{ShortPath}";
+        }
+        set
+        {
+            ShortPath = value.Substring(value.LastIndexOf('/') + 1);
+        }
+    }
 }
 
 public class InputLayoutMultiRowKey : InputLayoutBindableKey
 {
     [Key(4), JsonProperty("height")] public int Height;
+}
+
+public class InputLayoutMouseButton : IBindableButton
+{
+    public string Path;
+    public string InputSystemPath
+    {
+        get => Path;
+        set => Path = value;
+    }
+}
+
+public interface IBindableButton
+{
+    public string InputSystemPath { get; set; }
 }

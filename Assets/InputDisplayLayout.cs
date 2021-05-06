@@ -16,6 +16,12 @@ using static Unity.Mathematics.math;
 
 public class InputDisplayLayout : MonoBehaviour
 {
+    public RectTransform UnassignedBindingsGroup;
+    public InputDisplayButton MouseLeft;
+    public InputDisplayButton MouseRight;
+    public InputDisplayButton MouseMiddle;
+    public InputDisplayButton MouseForward;
+    public InputDisplayButton MouseBack;
     public VerticalLayoutGroup RowContainer;
     public TextAsset LayoutFile;
     public Prototype LabelPrototype;
@@ -30,41 +36,51 @@ public class InputDisplayLayout : MonoBehaviour
     public float FillAlpha;
     public float FillMultiplier = .25f;
     public float InactiveMultiplier = .333f;
-    public int TestSteps = 5;
+    public int PlacementSearchArea = 4;
     public float TestPadding = 4;
     public float BoxLineExpand = -1;
-    public Color GlobalColor;
-    public float GlobalHueBuffer = .1f;
+    public float GlobalHue = .333f;
+    public float Saturation;
+    public float GlobalHueRange = .1f;
 
     private Canvas _canvas;
-    private Color _defaultInactiveColor;
     private InputLayout _inputLayout;
-    private Dictionary<InputLayoutBindableKey, InputDisplayKey> _displayKeys = new Dictionary<InputLayoutBindableKey, InputDisplayKey>();
-    private Dictionary<string, InputLayoutBindableKey> _bindKeys = new Dictionary<string, InputLayoutBindableKey>();
-    private Dictionary<InputDisplayKey, InputAction> _actionMap = new Dictionary<InputDisplayKey, InputAction>();
-    private Dictionary<InputAction, TextMeshProUGUI> _actionLabels = new Dictionary<InputAction, TextMeshProUGUI>();
-    private Dictionary<InputAction, Color> _actionColors = new Dictionary<InputAction, Color>();
-    private List<Rect> _reservedRects = new List<Rect>();
-    private List<LayoutGroup> _layoutGroups = new List<LayoutGroup>();
+
+    private class ButtonMapping
+    {
+        public IBindableButton Button;
+        public InputDisplayButton DisplayButton;
+        public ActionMapping ActionMapping;
+        public Rect ButtonRect;
+        public UILineRenderer LabelLine;
+    }
+
+    private class ActionMapping
+    {
+        public InputAction Action;
+        public TextMeshProUGUI Label;
+        public Rect LabelRect;
+        public float Hue;
+        public List<ButtonMapping> ButtonMappings = new List<ButtonMapping>();
+    }
     
-    private string FullKeyPath(string shortPath) => $"<Keyboard>/{shortPath}";
-    private string ShortKeyPath(string fullPath) => fullPath.Substring(fullPath.LastIndexOf('/') + 1);
+    private Dictionary<string, ButtonMapping> _bindButtons = new Dictionary<string, ButtonMapping>();
+    private List<ButtonMapping> _buttonMappings = new List<ButtonMapping>();
+    private List<ActionMapping> _actionMappings = new List<ActionMapping>();
     
     void Start()
     {
         _canvas = transform.root.GetComponent<Canvas>();
-        _defaultInactiveColor = DefaultColor;
-        _defaultInactiveColor.a *= InactiveMultiplier;
         var path = Path.Combine(ActionGameManager.GameDataDirectory.CreateSubdirectory("KeyboardLayouts").FullName, $"{LayoutFile.name}.msgpack");
         // _inputLayout = ParseJson(LayoutFile.text);
         RegisterResolver.Register();
         _inputLayout = MessagePackSerializer.Deserialize<InputLayout>(File.ReadAllBytes(path));
         DisplayLayout(_inputLayout);
-        
-        foreach (var key in _inputLayout.GetBindableKeys())
-        {
-            var fullInputPath = FullKeyPath(key.InputSystemPath);
-            _bindKeys[fullInputPath] = key;
+
+        foreach (var buttonMapping in _buttonMappings) _bindButtons[buttonMapping.Button.InputSystemPath] = buttonMapping;
+
+        // foreach (var key in _inputLayout.GetBindableKeys())
+        // {
             // var keyPress = new InputAction(binding: fullInputPath);
             // keyPress.started += context =>
             // {
@@ -85,129 +101,161 @@ public class InputDisplayLayout : MonoBehaviour
             //     displayKey.Fill.color = fillColor;
             // };
             // keyPress.Enable();
-        }
-
-        var input = new AetheriaInput();
-        // input.Global.Dock.performed += context => Debug.Log("Docking!");
-        // input.Global.GalaxyMap.performed += context => 
-        // {
-        //     input.Global.Dock.Disable();
-        //     var rebindOperation = input.Global.Dock.PerformInteractiveRebinding()
-        //         .WithControlsExcluding("Mouse")
-        //         .WithCancelingThrough("<Keyboard>/escape")
-        //         .OnMatchWaitForAnother(0.2f)
-        //         .Start();
-        //     Debug.Log("Rebinding Dock!");
-        //     rebindOperation.OnComplete(operation =>
-        //     {
-        //         Debug.Log("Rebinding Complete!");
-        //         input.Global.Dock.Enable();
-        //     });
-        // };
-        // input.Enable();
-        
-        _layoutGroups.Add(RowContainer);
-        // foreach (var group in _layoutGroups)
-        // {
-        //     group.CalculateLayoutInputHorizontal();
-        //     group.CalculateLayoutInputVertical();
-        //     group.SetLayoutHorizontal();
-        //     group.SetLayoutVertical();
-        //     LayoutRebuilder.ForceRebuildLayoutImmediate(group.GetComponent<RectTransform>());
         // }
-        // LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
+        
         Canvas.ForceUpdateCanvases();
 
-        Color.RGBToHSV(GlobalColor, out var hue, out var saturation, out var value);
-        var actionIndex = 0;
-        var actionCount = (float) input.asset.Count(a=>a.actionMap.name!="UI");
-        foreach (var action in input.asset)
-        {
-            if(action.actionMap.name=="UI") continue;
-            var h = frac(hue + GlobalHueBuffer + actionIndex++ / actionCount * (1 - GlobalHueBuffer * 2));
-            if (action.actionMap.name == "Global")
-            {
-                h = hue;
-                _actionColors[action] = GlobalColor;
-            }
-            else
-                _actionColors[action] = Color.HSVToRGB(h, saturation, value);
-            foreach (var binding in action.bindings)
-            {
-                if (_bindKeys.ContainsKey(binding.path))
-                {
-                    var displayKey = _displayKeys[_bindKeys[binding.path]];
-                    displayKey.Fill.color = Color.HSVToRGB(h, saturation, FillBrightness);
-                    displayKey.Outline.gameObject.SetActive(true);
-                    displayKey.Outline.color = displayKey.MainLabel.color = displayKey.AltLabel.color = _actionColors[action];
-                    _actionMap[displayKey] = action;
-                    _reservedRects.Add(displayKey.GetComponent<RectTransform>().ScreenSpaceRect());
-                }
-            }
-        }
-
-        var center = _actionMap.Keys.Aggregate(Vector2.zero, (v, displayKey) => v + (Vector2) displayKey.transform.position) / _actionMap.Keys.Count;
-
-        foreach (var x in _actionMap)
-        {
-            var key = x.Key;
-            var action = x.Value;
-            if(_actionLabels.ContainsKey(action)) continue;
-            
-            var label = LabelPrototype.Instantiate<TextMeshProUGUI>();
-            label.color = _actionColors[action];
-            _actionLabels[action] = label;
-            var labelRect = label.rectTransform;
-            label.text = _actionMap[key].name.Replace(' ', '\n');
-            LayoutRebuilder.ForceRebuildLayoutImmediate(labelRect);
-            var pos = (Vector2) key.transform.position;
-            var dir = (pos - center).normalized;
-            label.transform.position = FindLabelPosition(key.GetComponent<RectTransform>(), labelRect, dir);
-        }
+        foreach (var buttonMapping in _buttonMappings)
+            buttonMapping.ButtonRect = buttonMapping.DisplayButton.GetComponent<RectTransform>().ScreenSpaceRect();
         
-        foreach (var x in _actionMap)
-        {
-            var key = x.Key;
-            var action = x.Value;
-            
-            var keyBounds = key.Outline.rectTransform.GetBounds(BoxLineExpand);
-            var labelPoint = (Vector2) _actionLabels[action].rectTransform.GetBounds().ClosestPoint(key.Outline.transform.position);
-            var keyPoint = (Vector2) keyBounds.ClosestPoint(labelPoint);
+        var input = new AetheriaInput();
+        ProcessActions(input.asset);
 
-            var line = LinePrototype.Instantiate<UILineRenderer>();
-            line.color = _actionColors[action];
-            line.Points = new[] { keyPoint, labelPoint };
+        foreach (var actionMapping in _actionMappings)
+        {
+            actionMapping.Label = CreateLabel(actionMapping);
+            PlaceLabel(actionMapping);
+            foreach(var buttonMapping in actionMapping.ButtonMappings) ConnectButtonToLabel(buttonMapping);
         }
 
         //StartCoroutine(AssociateInputKeys(_inputLayout));
     }
 
-    private Vector2 FindLabelPosition(RectTransform key, RectTransform label, Vector2 dir)
+    private void ProcessActions(InputActionAsset input)
+    {
+        var nonUIActions = input.Where(a => a.actionMap.name != "UI").ToArray();
+        for (var i = 0; i < nonUIActions.Length; i++)
+        {
+            var action = nonUIActions[i];
+            var actionMapping = new ActionMapping
+            {
+                Action = action,
+                Hue = action.actionMap.name == "Global"
+                    ? GlobalHue
+                    : frac(GlobalHue + GlobalHueRange + (float) i / (nonUIActions.Length - 1) * (1 - GlobalHueRange * 2))
+            };
+            _actionMappings.Add(actionMapping);
+            foreach (var binding in action.bindings)
+            {
+                if (_bindButtons.ContainsKey(binding.path))
+                {
+                    var buttonMapping = _bindButtons[binding.path];
+                    buttonMapping.ActionMapping = actionMapping;
+                    AssignColor(buttonMapping);
+                    actionMapping.ButtonMappings.Add(buttonMapping);
+                }
+            }
+        }
+    }
+
+    private void AssignColor(ButtonMapping buttonMapping)
+    {
+        if(buttonMapping.ActionMapping!=null)
+        {
+            var outlineColor = Color.HSVToRGB(buttonMapping.ActionMapping.Hue, Saturation, 1);
+            var fillColor = Color.HSVToRGB(buttonMapping.ActionMapping.Hue, 1, FillBrightness);
+            fillColor.a = FillAlpha;
+            buttonMapping.DisplayButton.Fill.color = fillColor;
+            buttonMapping.DisplayButton.Outline.gameObject.SetActive(true);
+            buttonMapping.DisplayButton.Outline.color = outlineColor;
+            if (buttonMapping.DisplayButton is InputDisplayKey key) key.MainLabel.color = key.AltLabel.color = outlineColor;
+        }
+        else AssignUnboundColor(buttonMapping.DisplayButton);
+    }
+
+    private void AssignUnboundColor(InputDisplayButton button, bool bindable = true)
+    {
+        button.Outline.gameObject.SetActive(false);
+        var outlineColor = DefaultColor;
+        outlineColor.a *= InactiveMultiplier;
+        var fillColor = DefaultColor * FillBrightness;
+        fillColor *= FillBrightness;
+        if(!bindable)
+            fillColor *= InactiveMultiplier;
+        fillColor.a = FillAlpha;
+        button.Fill.color = fillColor;
+        if (button is InputDisplayKey key) key.MainLabel.color = key.AltLabel.color = Color.Lerp(outlineColor, fillColor, .5f);
+    }
+
+    private TextMeshProUGUI CreateLabel(ActionMapping actionMapping)
+    {
+        var label = LabelPrototype.Instantiate<TextMeshProUGUI>();
+        label.color = Color.HSVToRGB(actionMapping.Hue, Saturation, 1);
+        actionMapping.Label = label;
+        label.text = actionMapping.Action.name.Replace(' ', '\n');
+        return label;
+    }
+
+    private void PlaceLabel(ActionMapping actionMapping)
+    {
+        if(actionMapping.ButtonMappings.Any())
+        {
+            var labelRect = actionMapping.Label.rectTransform;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(labelRect);
+            var rect = FindLabelPosition(actionMapping.ButtonMappings.First().DisplayButton.GetComponent<RectTransform>(), labelRect);
+            actionMapping.LabelRect = rect;
+            actionMapping.Label.transform.position = rect.center;
+        }
+        else
+        {
+            actionMapping.Label.rectTransform.parent = UnassignedBindingsGroup;
+        }
+    }
+
+    private void ConnectButtonToLabel(ButtonMapping buttonMapping)
+    {
+        if (buttonMapping.ActionMapping != null)
+        {
+            var keyBounds = buttonMapping.DisplayButton.Outline.rectTransform.GetBounds(BoxLineExpand);
+            var labelPoint = (Vector2) buttonMapping.ActionMapping.Label.rectTransform.GetBounds().ClosestPoint(keyBounds.center);
+            var keyPoint = (Vector2) keyBounds.ClosestPoint(labelPoint);
+            labelPoint /= _canvas.scaleFactor;
+            keyPoint /= _canvas.scaleFactor;
+
+            buttonMapping.LabelLine ??= LinePrototype.Instantiate<UILineRenderer>();
+            buttonMapping.LabelLine.color = buttonMapping.ActionMapping.Label.color;
+            buttonMapping.LabelLine.Points = new[] {keyPoint, labelPoint};
+        }
+        else
+        {
+            buttonMapping.LabelLine?.GetComponent<Prototype>().ReturnToPool();
+            buttonMapping.LabelLine = null;
+        }
+    }
+
+    private Rect FindLabelPosition(RectTransform key, RectTransform label)
     {
         var keyRect = key.ScreenSpaceRect();
-        var labelRect = label.ScreenSpaceRect(TestPadding);
-        var localRects = Overlap(key.ScreenSpaceRect(TestSteps * KeySize));
+        var labelRect = label.ScreenSpaceRect(TestPadding*_canvas.scaleFactor);
+        var localRects = Overlap(key.ScreenSpaceRect(PlacementSearchArea * KeySize * _canvas.scaleFactor));
+        var centroid = localRects.Aggregate(Vector2.zero, (v, r) => v + r.center) / localRects.Length;
         var keyCenter = keyRect.center;
-        for (int dist = KeySize; dist < TestSteps * KeySize; dist++)
+        var dir = (keyCenter - centroid).normalized;
+        for (int dist = KeySize; dist < PlacementSearchArea * KeySize; dist++)
         {
             for (float theta = 0; theta < PI * 2; theta += PI / 32)
             {
                 for (int s = -1; s <= 1; s += 2)
                 {
-                    var testPos = keyCenter + dir.Rotate(theta * s) * dist;
+                    var testPos = keyCenter + dir.Rotate(theta * s) * dist * _canvas.scaleFactor;
                     var testRect = new Rect(testPos - labelRect.size / 2, labelRect.size);
                     if(!localRects.Any(r => r.Overlaps(testRect)))
                     {
-                        _reservedRects.Add(testRect);
-                        return testPos;
+                        return testRect;
                     }
                 }
             }
         }
-        return Vector2.zero;
+        return default;
     }
     
-    private Rect[] Overlap(Rect rect) => _reservedRects.Where(r => r.Overlaps(rect)).ToArray();
+    private Rect[] Overlap(Rect rect) => _buttonMappings
+        .Where(b=>b.ActionMapping!=null)
+        .Select(b=>b.ButtonRect)
+        .Concat(_actionMappings
+            .Where(a=>a.LabelRect.width > .1f)
+            .Select(a=>a.LabelRect))
+        .Where(r => r.Overlaps(rect)).ToArray();
 
     public void DisplayLayout(InputLayout layout)
     {
@@ -216,7 +264,6 @@ public class InputDisplayLayout : MonoBehaviour
             if (row is InputLayoutKeyRow keyRow)
             {
                 var displayRow = RowPrototype.Instantiate<InputDisplayRow>();
-                _layoutGroups.Add(displayRow.LayoutGroup);
                 foreach (var column in keyRow.Columns)
                 {
                     if (column is InputLayoutColumnSpacer)
@@ -230,14 +277,17 @@ public class InputDisplayLayout : MonoBehaviour
                         displayKey.LayoutElement.preferredWidth = KeySize * column.Width;
                         displayKey.Outline.gameObject.SetActive(false);
                         displayKey.Outline.color = DefaultColor;
-                        var fillColor = DefaultColor;
-                        fillColor *= FillMultiplier;
-                        fillColor.a = FillAlpha;
-                        displayKey.MainLabel.color = displayKey.AltLabel.color = Color.Lerp(_defaultInactiveColor, fillColor, .5f);
+                        AssignUnboundColor(displayKey, column is InputLayoutBindableKey);
 
                         if (column is InputLayoutBindableKey key)
                         {
-                            _displayKeys[key] = displayKey;
+                            var buttonMapping = new ButtonMapping
+                            {
+                                Button = key, 
+                                DisplayButton = displayKey
+                            };
+                            _bindButtons[key.InputSystemPath] = buttonMapping;
+                            _buttonMappings.Add(buttonMapping);
                             displayKey.MainLabel.text = key.MainLabel;
                             displayKey.AltLabel.text = key.AltLabel;
 
@@ -251,11 +301,9 @@ public class InputDisplayLayout : MonoBehaviour
                         }
                         else
                         {
-                            fillColor.a *= InactiveMultiplier;
                             displayKey.MainLabel.text = "";
                             displayKey.AltLabel.text = "";
                         }
-                        displayKey.Fill.color = fillColor;
                     }
                     else
                     {
@@ -348,51 +396,41 @@ public class InputDisplayLayout : MonoBehaviour
         return new InputLayout {Rows = rows.ToArray()};
     }
 
-    private IEnumerator AssociateInputKeys(InputLayout layout)
+    private IEnumerator AssociateInputKeys()
     {
         var path = "";
         var keyPress = new InputAction(binding: "/<Keyboard>/<button>");
         keyPress.performed += context =>
         {
-            var keyName = ShortKeyPath(context.control.path);
-            if (keyName == "anyKey") return;
-            path = keyName;
+            if (context.control.path.EndsWith("anyKey")) return;
+            path = context.control.path;
         };
         keyPress.Enable();
-        foreach (var row in layout.Rows)
+        foreach (var button in _buttonMappings)
         {
-            if (row is InputLayoutKeyRow keyRow)
-            {
-                foreach (var column in keyRow.Columns)
-                {
-                    if(column is InputLayoutBindableKey bindableKey)
-                    {
-                        _displayKeys[bindableKey].Outline.color = HighlightColor;
-                        var fillColor = HighlightColor;
-                        fillColor *= FillMultiplier;
-                        fillColor.a = FillAlpha;
-                        _displayKeys[bindableKey].Fill.color = fillColor;
+            button.DisplayButton.Outline.color = HighlightColor;
+            var fillColor = HighlightColor;
+            fillColor *= FillMultiplier;
+            fillColor.a = FillAlpha;
+            button.DisplayButton.Fill.color = fillColor;
                         
-                        path = "";
-                        while (string.IsNullOrEmpty(path)) yield return null;
-                        bindableKey.InputSystemPath = path;
-                        Debug.Log($"Bound \"{path}\" to \"{bindableKey.MainLabel}\"");
+            path = "";
+            while (string.IsNullOrEmpty(path)) yield return null;
+            button.Button.InputSystemPath = path;
+            //Debug.Log($"Bound \"{path}\" to \"{bindableKey.MainLabel}\"");
                         
-                        _displayKeys[bindableKey].Outline.color = DefaultColor;
-                        fillColor = DefaultColor;
-                        fillColor *= FillMultiplier;
-                        fillColor.a = FillAlpha;
-                        _displayKeys[bindableKey].Fill.color = fillColor;
-                    }
-                }
-            }
+            button.DisplayButton.Outline.color = DefaultColor;
+            fillColor = DefaultColor;
+            fillColor *= FillMultiplier;
+            fillColor.a = FillAlpha;
+            button.DisplayButton.Fill.color = fillColor;
         }
         keyPress.Disable();
 
         RegisterResolver.Register();
         File.WriteAllBytes(
             Path.Combine(ActionGameManager.GameDataDirectory.CreateSubdirectory("KeyboardLayouts").FullName, $"{LayoutFile.name}.msgpack"),
-            MessagePackSerializer.Serialize(layout));
+            MessagePackSerializer.Serialize(_inputLayout));
     }
 
     void Update()

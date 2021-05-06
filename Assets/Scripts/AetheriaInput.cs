@@ -121,14 +121,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
-                },
-                {
-                    ""name"": ""Enter Wormhole"",
-                    ""type"": ""Button"",
-                    ""id"": ""b907857f-d1d2-455d-912b-8de9a64f0f3a"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -355,22 +347,11 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""37683a7e-02b1-4daa-a990-a51a30e7f8e9"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Keyboard>/c"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Tractor Beam"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""85857c0e-82fa-4889-895a-1e55c6dbe206"",
-                    ""path"": ""<Keyboard>/v"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Enter Wormhole"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -859,17 +840,25 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Dock"",
+                    ""name"": ""Main Menu"",
                     ""type"": ""Button"",
-                    ""id"": ""d6e65ce8-149c-4009-ac38-66144cca311a"",
+                    ""id"": ""0515c617-9dff-406f-ab3e-763971d532d3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Main Menu"",
+                    ""name"": ""Input Screen"",
                     ""type"": ""Button"",
-                    ""id"": ""0515c617-9dff-406f-ab3e-763971d532d3"",
+                    ""id"": ""e76aa7e9-e24d-47e1-865d-ffe72ba5c1c2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""31f7b7e1-d15e-40e8-b74f-2d0dc4195d4d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -900,17 +889,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""3279cef8-8bd1-49f2-984a-637d1f8522f6"",
-                    ""path"": ""<Keyboard>/c"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Dock"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""f90929d5-d8d1-40dc-acc7-7ae294971d12"",
                     ""path"": ""<Keyboard>/m"",
                     ""interactions"": """",
@@ -928,6 +906,28 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Main Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1a786bc6-2cb5-4951-86f8-ef4e9607eab8"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Input Screen"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a03cee94-69c9-4a26-be58-46b26351c659"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -990,7 +990,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Player_Ping = m_Player.FindAction("Ping", throwIfNotFound: true);
         m_Player_HideUI = m_Player.FindAction("Hide UI", throwIfNotFound: true);
         m_Player_TractorBeam = m_Player.FindAction("Tractor Beam", throwIfNotFound: true);
-        m_Player_EnterWormhole = m_Player.FindAction("Enter Wormhole", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1007,8 +1006,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         m_Global_ZoneMap = m_Global.FindAction("Zone Map", throwIfNotFound: true);
         m_Global_GalaxyMap = m_Global.FindAction("Galaxy Map", throwIfNotFound: true);
         m_Global_Inventory = m_Global.FindAction("Inventory", throwIfNotFound: true);
-        m_Global_Dock = m_Global.FindAction("Dock", throwIfNotFound: true);
         m_Global_MainMenu = m_Global.FindAction("Main Menu", throwIfNotFound: true);
+        m_Global_InputScreen = m_Global.FindAction("Input Screen", throwIfNotFound: true);
+        m_Global_Interact = m_Global.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1071,7 +1071,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Ping;
     private readonly InputAction m_Player_HideUI;
     private readonly InputAction m_Player_TractorBeam;
-    private readonly InputAction m_Player_EnterWormhole;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1089,7 +1088,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @Ping => m_Wrapper.m_Player_Ping;
         public InputAction @HideUI => m_Wrapper.m_Player_HideUI;
         public InputAction @TractorBeam => m_Wrapper.m_Player_TractorBeam;
-        public InputAction @EnterWormhole => m_Wrapper.m_Player_EnterWormhole;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1138,9 +1136,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @TractorBeam.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
                 @TractorBeam.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
                 @TractorBeam.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
-                @EnterWormhole.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
-                @EnterWormhole.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
-                @EnterWormhole.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnterWormhole;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1184,9 +1179,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @TractorBeam.started += instance.OnTractorBeam;
                 @TractorBeam.performed += instance.OnTractorBeam;
                 @TractorBeam.canceled += instance.OnTractorBeam;
-                @EnterWormhole.started += instance.OnEnterWormhole;
-                @EnterWormhole.performed += instance.OnEnterWormhole;
-                @EnterWormhole.canceled += instance.OnEnterWormhole;
             }
         }
     }
@@ -1295,8 +1287,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Global_ZoneMap;
     private readonly InputAction m_Global_GalaxyMap;
     private readonly InputAction m_Global_Inventory;
-    private readonly InputAction m_Global_Dock;
     private readonly InputAction m_Global_MainMenu;
+    private readonly InputAction m_Global_InputScreen;
+    private readonly InputAction m_Global_Interact;
     public struct GlobalActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1304,8 +1297,9 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         public InputAction @ZoneMap => m_Wrapper.m_Global_ZoneMap;
         public InputAction @GalaxyMap => m_Wrapper.m_Global_GalaxyMap;
         public InputAction @Inventory => m_Wrapper.m_Global_Inventory;
-        public InputAction @Dock => m_Wrapper.m_Global_Dock;
         public InputAction @MainMenu => m_Wrapper.m_Global_MainMenu;
+        public InputAction @InputScreen => m_Wrapper.m_Global_InputScreen;
+        public InputAction @Interact => m_Wrapper.m_Global_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Global; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1324,12 +1318,15 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @Inventory.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInventory;
                 @Inventory.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInventory;
                 @Inventory.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInventory;
-                @Dock.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnDock;
-                @Dock.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnDock;
-                @Dock.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnDock;
                 @MainMenu.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMainMenu;
                 @MainMenu.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMainMenu;
                 @MainMenu.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnMainMenu;
+                @InputScreen.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInputScreen;
+                @InputScreen.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInputScreen;
+                @InputScreen.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInputScreen;
+                @Interact.started -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_GlobalActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_GlobalActionsCallbackInterface = instance;
             if (instance != null)
@@ -1343,12 +1340,15 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
                 @Inventory.started += instance.OnInventory;
                 @Inventory.performed += instance.OnInventory;
                 @Inventory.canceled += instance.OnInventory;
-                @Dock.started += instance.OnDock;
-                @Dock.performed += instance.OnDock;
-                @Dock.canceled += instance.OnDock;
                 @MainMenu.started += instance.OnMainMenu;
                 @MainMenu.performed += instance.OnMainMenu;
                 @MainMenu.canceled += instance.OnMainMenu;
+                @InputScreen.started += instance.OnInputScreen;
+                @InputScreen.performed += instance.OnInputScreen;
+                @InputScreen.canceled += instance.OnInputScreen;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -1395,7 +1395,6 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnPing(InputAction.CallbackContext context);
         void OnHideUI(InputAction.CallbackContext context);
         void OnTractorBeam(InputAction.CallbackContext context);
-        void OnEnterWormhole(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1414,7 +1413,8 @@ public class @AetheriaInput : IInputActionCollection, IDisposable
         void OnZoneMap(InputAction.CallbackContext context);
         void OnGalaxyMap(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
-        void OnDock(InputAction.CallbackContext context);
         void OnMainMenu(InputAction.CallbackContext context);
+        void OnInputScreen(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

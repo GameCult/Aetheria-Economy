@@ -4,11 +4,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InputDisplayKey : MonoBehaviour
+public class InputDisplayKey : InputDisplayButton
 {
     public TextMeshProUGUI MainLabel;
     public TextMeshProUGUI AltLabel;
-    public Image Fill;
-    public Image Outline;
     public LayoutElement LayoutElement;
 }

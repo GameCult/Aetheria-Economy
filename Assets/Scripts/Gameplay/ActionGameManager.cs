@@ -313,7 +313,7 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Global.GalaxyMap.performed += context => ToggleMenuTab(MenuTab.Galaxy);
 
-        Input.Global.Dock.performed += context =>
+        Input.Global.Interact.performed += context =>
         {
             if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null) return;
             if (MainMenu.gameObject.activeSelf) return;
@@ -325,20 +325,19 @@ public class ActionGameManager : MonoBehaviour
                 Dialog.Show();
                 Dialog.MoveToCursor();
             }
-            else if (CurrentEntity.Parent == null) Dock();
+            else if (CurrentEntity.Parent == null)
+            {
+                foreach (var wormhole in ZoneRenderer.WormholeInstances.Keys)
+                {
+                    if (!(length(wormhole.Position - CurrentEntity.Position.xz) < Settings.GameplaySettings.WormholeExitRadius)) continue;
+                    EnterWormhole(wormhole);
+                }
+                Dock();
+            }
             else Undock();
         };
 
         Input.Global.MainMenu.performed += context => ToggleMainMenu();
-
-        Input.Player.EnterWormhole.performed += context =>
-        {
-            foreach (var wormhole in ZoneRenderer.WormholeInstances.Keys)
-            {
-                if (!(length(wormhole.Position - CurrentEntity.Position.xz) < Settings.GameplaySettings.WormholeExitRadius)) continue;
-                EnterWormhole(wormhole);
-            }
-        };
 
         Input.Player.HideUI.performed += context =>
         {
@@ -617,12 +616,14 @@ public class ActionGameManager : MonoBehaviour
 
     public void EnablePlayerInput()
     {
+        Cursor.lockState = CursorLockMode.Locked;
         Input.Player.Enable();
         foreach (var a in _actionBarActions) a.Enable();
     }
 
     public void DisablePlayerInput()
     {
+        Cursor.lockState = CursorLockMode.None;
         Input.Player.Disable();
         foreach (var a in _actionBarActions) a.Disable();
     }
@@ -704,9 +705,10 @@ public class ActionGameManager : MonoBehaviour
             }
             else
             {
-                GameplayUI.gameObject.SetActive(true);
                 EnablePlayerInput();
-                Cursor.lockState = CursorLockMode.Locked;
+                UpdatePlayerPanel();
+                UpdateTargetPanel(CurrentEntity.Target.Value);
+                GameplayUI.gameObject.SetActive(true);
             }
         }
         else
@@ -722,7 +724,6 @@ public class ActionGameManager : MonoBehaviour
             else
             {
                 GameplayUI.gameObject.SetActive(false);
-                Cursor.lockState = CursorLockMode.None;
                 DisablePlayerInput();
             }
         }
@@ -734,20 +735,17 @@ public class ActionGameManager : MonoBehaviour
         if (MainMenu.gameObject.activeSelf) return;
         if (Menu.gameObject.activeSelf && Menu.CurrentTab == tab)
         {
-            Cursor.lockState = CursorLockMode.Locked;
             Menu.gameObject.SetActive(false);
             if (CurrentEntity != null && CurrentEntity.Parent == null)
             {
                 EnablePlayerInput();
+                UpdatePlayerPanel();
+                UpdateTargetPanel(CurrentEntity.Target.Value);
                 GameplayUI.gameObject.SetActive(true);
-                    
-                SchematicDisplay.ShowShip(CurrentEntity);
-                ShipPanel.Display(CurrentEntity, true);
             }
             return;
         }
 
-        Cursor.lockState = CursorLockMode.None;
         DisablePlayerInput();
         Menu.ShowTab(tab);
         GameplayUI.gameObject.SetActive(false);
@@ -852,7 +850,6 @@ public class ActionGameManager : MonoBehaviour
                 }
             }
         }
-        AkSoundEngine.PostEvent("Dock_Fail", gameObject);
     }
 
     private void DoDock(Entity entity, EquippedDockingBay dockingBay)
@@ -994,8 +991,7 @@ public class ActionGameManager : MonoBehaviour
                 subscription.Dispose();
             _targetSubscriptions.Clear();
 
-            TargetIndicator.gameObject.SetActive(CurrentEntity.Target.Value != null);
-            TargetShipPanel.gameObject.SetActive(target != null);
+            UpdateTargetPanel(target);
             if (target != null)
             {
                 if (target.Shield != null)
@@ -1010,8 +1006,6 @@ public class ActionGameManager : MonoBehaviour
                     TargetShieldsIcon.color = NoShieldColor;
                     TargetShieldsIcon.sprite = NoShieldIcon;
                 }
-                TargetShipPanel.Display(target, true);
-                TargetSchematicDisplay.ShowShip(target, CurrentEntity);
                 
                 // Subscribe to incoming hits from the player ship to display the hit marker
                 _targetSubscriptions.Add(target.IncomingHit.Where(e => e == CurrentEntity).Subscribe(_ =>
@@ -1048,6 +1042,23 @@ public class ActionGameManager : MonoBehaviour
                 var i = LockIndicator.Instantiate<PlaceUIElementWorldspace>();
                 return (x, i, i.GetComponent<Rotate>());
             }).ToArray();
+    }
+
+    private void UpdatePlayerPanel()
+    {
+        ShipPanel.Display(CurrentEntity, true);
+        SchematicDisplay.ShowShip(CurrentEntity);
+    }
+
+    private void UpdateTargetPanel(Entity target)
+    {
+        TargetIndicator.gameObject.SetActive(target != null);
+        TargetShipPanel.gameObject.SetActive(target != null);
+        if (target != null)
+        {
+            TargetShipPanel.Display(target, true);
+            TargetSchematicDisplay.ShowShip(target, CurrentEntity);
+        }
     }
 
     private void Die(CauseOfDeath cause)

@@ -108,14 +108,6 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "Enter Wormhole",
-                    "type": "Button",
-                    "id": "b907857f-d1d2-455d-912b-8de9a64f0f3a",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -342,22 +334,11 @@
                 {
                     "name": "",
                     "id": "37683a7e-02b1-4daa-a990-a51a30e7f8e9",
-                    "path": "<Keyboard>/f",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Tractor Beam",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "85857c0e-82fa-4889-895a-1e55c6dbe206",
-                    "path": "<Keyboard>/v",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Enter Wormhole",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -846,17 +827,25 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Dock",
+                    "name": "Main Menu",
                     "type": "Button",
-                    "id": "d6e65ce8-149c-4009-ac38-66144cca311a",
+                    "id": "0515c617-9dff-406f-ab3e-763971d532d3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
                 {
-                    "name": "Main Menu",
+                    "name": "Input Screen",
                     "type": "Button",
-                    "id": "0515c617-9dff-406f-ab3e-763971d532d3",
+                    "id": "e76aa7e9-e24d-47e1-865d-ffe72ba5c1c2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "31f7b7e1-d15e-40e8-b74f-2d0dc4195d4d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -887,17 +876,6 @@
                 },
                 {
                     "name": "",
-                    "id": "3279cef8-8bd1-49f2-984a-637d1f8522f6",
-                    "path": "<Keyboard>/c",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Dock",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "f90929d5-d8d1-40dc-acc7-7ae294971d12",
                     "path": "<Keyboard>/m",
                     "interactions": "",
@@ -915,6 +893,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Main Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1a786bc6-2cb5-4951-86f8-ef4e9607eab8",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Input Screen",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a03cee94-69c9-4a26-be58-46b26351c659",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
