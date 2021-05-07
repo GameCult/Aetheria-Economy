@@ -5,12 +5,15 @@ In the ARPG mode you control a single ship, engaging in combat, mining, trade an
 
 In the RTS mode you control the production, research, supply chains and actions of a corporation tasked with colonizing an alien galaxy. Control over your minions is indirect, like in Rimworld, and gameplay takes place over months as your production and tasks continue acting on the world even when you're offline.
 
-<img src="https://i.ibb.co/XxvYPfH/Unity-nr8ih-BUJ75.jpg" style="zoom:50%;" />
-<img src="https://i.ibb.co/Twbwk4M/screen-3056x1720-2018-11-18-18-23-01.png" style="zoom:50%;" />
-<img src="https://i.ibb.co/z6Tncgt/Unity-o7c-TT9vd-Om.jpg" style="zoom:50%;" />
-<img src="https://i.ibb.co/M1GH4wY/Unity-Ydd2l3lph8.jpg" style="zoom:50%;" />
-<img src="https://i.ibb.co/HBThbdf/Unity-HR2-A02-DGFq.jpg" style="zoom:50%;" />
-<img src="https://i.ibb.co/ZNDkQ7Z/Unity-B7cg-Ua-Vrt-V.jpg" style="zoom:50%;" />
+### Trailer
+[![Trailer](https://img.youtube.com/vi/6hg1w2vcwDc/0.jpg)](https://www.youtube.com/watch?v=6hg1w2vcwDc)
+### Screenshots
+<img src="https://i.ibb.co/3h1xrRw/main.png" style="zoom:50%;" />
+<img src="https://i.ibb.co/HzVd8kv/view.jpg" style="zoom:50%;" />
+<img src="https://i.ibb.co/z5vRz7M/map.jpg" style="zoom:50%;" />
+<img src="https://i.ibb.co/BnYxXVC/laser.jpg" style="zoom:50%;" />
+<img src="https://i.ibb.co/Fq4bNVK/flamethrower.jpg" style="zoom:50%;" />
+<img src="https://i.ibb.co/QFzxGHH/lightning.jpg" style="zoom:50%;" />
 
 ## Table of Contents
 
