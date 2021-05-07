@@ -94,10 +94,15 @@ public class ActionGameManager : MonoBehaviour
     private static PlayerSettings _playerSettings;
     public static PlayerSettings PlayerSettings
     {
-        get => _playerSettings ??= File.Exists(_playerSettingsFilePath)
-            ? MessagePackSerializer.Deserialize<PlayerSettings>(File.ReadAllBytes(_playerSettingsFilePath))
-            : GetDefaultPlayerSettings();
+        get
+        {
+            RegisterResolver.Register();
+            return _playerSettings ??= File.Exists(_playerSettingsFilePath)
+                ? MessagePackSerializer.Deserialize<PlayerSettings>(File.ReadAllBytes(_playerSettingsFilePath))
+                : GetDefaultPlayerSettings();
+        }
     }
+
     private static string _playerSettingsFilePath => Path.Combine(GameDataDirectory.FullName, "PlayerSettings.msgpack");
     public static void SavePlayerSettings()
     {

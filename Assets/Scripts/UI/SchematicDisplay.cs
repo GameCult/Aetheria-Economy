@@ -196,18 +196,22 @@ public class SchematicDisplay : MonoBehaviour
                     TurnRPMFill.anchorMax = new Vector2(_aetherDrive.Rpm.z / _aetherDrive.MaximumRpm, 1);
                 }
             }
-            else
+            // else
+            // {
+            //     DistanceLabel.text = $"{(int)length(_entity.Position - _player.Position)}";
+            // }
+
+            if(VisibilityLabel)
+                VisibilityLabel.text = ((int)_entity.Visibility).ToString();
+
+            if(HullDurabilityFill)
             {
-                DistanceLabel.text = $"{(int)length(_entity.Position - _player.Position)}";
+                _hull = _entity.Hull;
+                var hullData = _entity.ItemManager.GetData(_hull);
+                var dur = _hull.Durability / hullData.Durability;
+                HullDurabilityFill.anchorMax = new Vector2(dur, 1);
+                HullDurabilityLabel.text = $"{ActionGameManager.PlayerSettings.Format(dur * 100)}%";
             }
-
-            VisibilityLabel.text = ((int)_entity.Visibility).ToString();
-
-            _hull = _entity.Hull;
-            var hullData = _entity.ItemManager.GetData(_hull);
-            var dur = _hull.Durability / hullData.Durability;
-            HullDurabilityFill.anchorMax = new Vector2(dur, 1);
-            HullDurabilityLabel.text = $"{ActionGameManager.PlayerSettings.Format(dur*100)}%";
 
             foreach (var x in _schematicItems)
             {
@@ -229,7 +233,8 @@ public class SchematicDisplay : MonoBehaviour
 
                 if (x.Weapon.WeaponData != null)
                 {
-                    x.ListElement.RangeLabel.text = ((int) x.Weapon.Range).ToString();
+                    if(x.ListElement.RangeLabel)
+                        x.ListElement.RangeLabel.text = ((int) x.Weapon.Range).ToString();
                 }
             }
         }

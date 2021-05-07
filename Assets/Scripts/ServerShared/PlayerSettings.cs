@@ -49,12 +49,14 @@ public class PlayerSettings
     }
 }
 
+[MessagePackObject]
 public class PlayerGameplaySettings
 {
     [Key(0)] public TemperatureUnit TemperatureUnit = TemperatureUnit.Celsius;
     [Key(1)] public int SignificantDigits = 3;
 }
 
+[MessagePackObject]
 public class PlayerInputSettings
 {
     [Key(0)] public Dictionary<string, string> InputActionMap = new Dictionary<string, string>();

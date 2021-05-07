@@ -7,16 +7,19 @@ using MessagePack;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 using Unity.Mathematics;
+using UnityEngine.EventSystems;
 using static Unity.Mathematics.math;
 
 public class InputDisplayLayout : MonoBehaviour
 {
     public RectTransform UnassignedBindingsGroup;
+    public RectTransform AssignedBindingsGroup;
     public InputDisplayButton MouseLeft;
     public InputDisplayButton MouseRight;
     public InputDisplayButton MouseMiddle;
@@ -45,24 +48,30 @@ public class InputDisplayLayout : MonoBehaviour
 
     private Canvas _canvas;
     private InputLayout _inputLayout;
+    private ActionMapping _dragAction;
+    private ButtonMapping _originalButton;
+    private ButtonMapping _previewButton;
+    private ActionMapping _previewOriginalAction;
+    private bool _previewOriginallyActionBar;
 
     private class ButtonMapping
     {
+        public InputAction TestAction;
         public IBindableButton Button;
         public InputDisplayButton DisplayButton;
         public ActionMapping ActionMapping;
-        public Rect ButtonRect;
         public UILineRenderer LabelLine;
         public bool IsActionBarButton;
+        public Rect ButtonRect => DisplayButton.GetComponent<RectTransform>().ScreenSpaceRect();
     }
 
     private class ActionMapping
     {
         public InputAction Action;
-        public TextMeshProUGUI Label;
-        public Rect LabelRect;
+        public InputDisplayLabel Label;
         public float Hue;
         public List<ButtonMapping> ButtonMappings = new List<ButtonMapping>();
+        public Rect LabelRect => Label.GetComponent<RectTransform>().ScreenSpaceRect();
     }
     
     private Dictionary<string, ButtonMapping> _bindButtons = new Dictionary<string, ButtonMapping>();
@@ -84,8 +93,134 @@ public class InputDisplayLayout : MonoBehaviour
         _buttonMappings.Add(MapMouseButton(MouseMiddle, "<Mouse>/middleButton"));
         _buttonMappings.Add(MapMouseButton(MouseForward, "<Mouse>/forwardButton"));
         _buttonMappings.Add(MapMouseButton(MouseBack, "<Mouse>/backButton"));
+        
+        Canvas.ForceUpdateCanvases();
+        
+        void EndDrag(PointerEventData _)
+        {
+            if (_previewButton == null)
+            {
+                if(_originalButton!=null)
+                {
+                    _originalButton.ActionMapping = _dragAction;
+                    _dragAction.ButtonMappings.Add(_originalButton);
+                    AssignColor(_originalButton);
+                }
+                PlaceLabel(_dragAction);
+            }
+            else
+            {
+                // TODO: Assign New Binding
+            }
 
-        foreach (var buttonMapping in _buttonMappings) _bindButtons[buttonMapping.Button.InputSystemPath] = buttonMapping;
+            foreach(var action in _actionMappings)
+                action.Label.Label.raycastTarget = true;
+            _dragAction = null;
+            _originalButton = null;
+            _previewButton = null;
+            _previewOriginalAction = null;
+        }
+
+        foreach (var buttonMapping in _buttonMappings)
+        {
+            _bindButtons[buttonMapping.Button.InputSystemPath] = buttonMapping;
+            
+            buttonMapping.TestAction = new InputAction(binding: buttonMapping.Button.InputSystemPath);
+            buttonMapping.TestAction.started += context =>
+            {
+                buttonMapping.DisplayButton.Outline.color = HighlightColor;
+                buttonMapping.DisplayButton.Outline.gameObject.SetActive(true);
+                var fillColor = HighlightColor;
+                fillColor *= FillBrightness;
+                fillColor.a = FillAlpha;
+                buttonMapping.DisplayButton.Fill.color = fillColor;
+            };
+            buttonMapping.TestAction.canceled += context => AssignColor(buttonMapping);
+            buttonMapping.TestAction.Enable();
+
+            // On click: when a specific action is not assigned, toggle its availability on the action bar
+            buttonMapping.DisplayButton.ClickTrigger.OnPointerClickAsObservable()
+                .Where(_=>buttonMapping.ActionMapping==null)
+                .Subscribe(data =>
+            {
+                buttonMapping.IsActionBarButton = !buttonMapping.IsActionBarButton;
+                if (buttonMapping.IsActionBarButton)
+                {
+                    ActionGameManager.PlayerSettings.InputSettings.ActionBarInputs.Add(buttonMapping.Button.InputSystemPath);
+                    foreach(var overlap in OverlappingLabels(buttonMapping.ButtonRect))
+                        PlaceLabel(overlap);
+                }
+                else
+                {
+                    ActionGameManager.PlayerSettings.InputSettings.ActionBarInputs.Remove(buttonMapping.Button.InputSystemPath);
+                }
+                AssignColor(buttonMapping);
+            });
+
+            buttonMapping.DisplayButton.BeginDragTrigger.OnBeginDragAsObservable()
+                .Where(_ => buttonMapping.ActionMapping != null)
+                .Subscribe(_ =>
+                {
+                    _originalButton = buttonMapping;
+                    buttonMapping.LabelLine.Points = new Vector2[0];
+                    _dragAction = buttonMapping.ActionMapping;
+                    foreach(var action in _actionMappings)
+                        action.Label.Label.raycastTarget = false;
+                });
+
+            buttonMapping.DisplayButton.EnterTrigger.OnPointerEnterAsObservable()
+                .Where(_ => _dragAction != null)
+                .Subscribe(_ =>
+                {
+                    _previewButton = buttonMapping;
+                    _previewOriginalAction = buttonMapping.ActionMapping;
+                    _previewOriginallyActionBar = buttonMapping.IsActionBarButton;
+                    buttonMapping.IsActionBarButton = false;
+
+                    buttonMapping.ActionMapping?.ButtonMappings.Remove(buttonMapping);
+                    buttonMapping.ActionMapping = _dragAction;
+                    _dragAction.ButtonMappings.Add(buttonMapping);
+                    if(_previewOriginalAction!=null)
+                        PlaceLabel(_previewOriginalAction);
+                    PlaceLabel(_dragAction);
+                    AssignColor(buttonMapping);
+                    foreach(var overlap in OverlappingLabels(buttonMapping.ButtonRect))
+                        PlaceLabel(overlap);
+                });
+
+            buttonMapping.DisplayButton.ExitTrigger.OnPointerExitAsObservable()
+                .Where(_ => _dragAction != null)
+                .Subscribe(_ =>
+                {
+                    _dragAction.ButtonMappings.Remove(buttonMapping);
+                    if (buttonMapping == _originalButton)
+                    {
+                        buttonMapping.ActionMapping = null;
+                    }
+                    else if(buttonMapping == _previewButton)
+                    {
+                        buttonMapping.IsActionBarButton = _previewOriginallyActionBar;
+                        buttonMapping.ActionMapping = _previewOriginalAction;
+                        if (!_previewOriginallyActionBar)
+                        {
+                            if(_previewOriginalAction != null)
+                            {
+                                _previewOriginalAction.ButtonMappings.Add(buttonMapping);
+                                PlaceLabel(_previewOriginalAction);
+                            }
+                        }
+                    }
+
+                    ConnectButtonToLabel(buttonMapping);
+                    AssignColor(buttonMapping);
+                    _previewButton = null;
+                    _previewOriginalAction = null;
+                });
+
+            buttonMapping.DisplayButton.EndDragTrigger.OnEndDragAsObservable()
+                .Where(_ => _dragAction != null)
+                .Subscribe(EndDrag);
+        }
         
         foreach(var actionBarInput in ActionGameManager.PlayerSettings.InputSettings.ActionBarInputs)
         {
@@ -96,35 +231,6 @@ public class InputDisplayLayout : MonoBehaviour
                 AssignColor(_bindButtons[actionBarInput]);
             }
         }
-
-        // foreach (var key in _inputLayout.GetBindableKeys())
-        // {
-            // var keyPress = new InputAction(binding: fullInputPath);
-            // keyPress.started += context =>
-            // {
-            //     var displayKey = _displayKeys[key];
-            //     displayKey.Outline.color = HighlightColor;
-            //     var fillColor = HighlightColor;
-            //     fillColor *= FillMultiplier;
-            //     fillColor.a = FillAlpha;
-            //     displayKey.Fill.color = fillColor;
-            // };
-            // keyPress.canceled += context =>
-            // {
-            //     var displayKey = _displayKeys[key];
-            //     displayKey.Outline.color = DefaultColor;
-            //     var fillColor = DefaultColor;
-            //     fillColor *= FillMultiplier;
-            //     fillColor.a = FillAlpha;
-            //     displayKey.Fill.color = fillColor;
-            // };
-            // keyPress.Enable();
-        // }
-        
-        Canvas.ForceUpdateCanvases();
-
-        foreach (var buttonMapping in _buttonMappings)
-            buttonMapping.ButtonRect = buttonMapping.DisplayButton.GetComponent<RectTransform>().ScreenSpaceRect();
         
         var input = new AetheriaInput();
         ProcessActions(input.asset);
@@ -132,8 +238,25 @@ public class InputDisplayLayout : MonoBehaviour
         foreach (var actionMapping in _actionMappings)
         {
             actionMapping.Label = CreateLabel(actionMapping);
+            actionMapping.Label.BeginDragTrigger.OnBeginDragAsObservable().Subscribe(_ =>
+            {
+                _dragAction = actionMapping;
+                actionMapping.Label.transform.parent = AssignedBindingsGroup;
+                foreach(var action in _actionMappings)
+                    action.Label.Label.raycastTarget = false;
+                if (actionMapping.ButtonMappings.Count == 1)
+                {
+                    var buttonMapping = actionMapping.ButtonMappings[0];
+                    _originalButton = buttonMapping;
+                    buttonMapping.LabelLine.Points = new Vector2[0];
+                    buttonMapping.ActionMapping = null;
+                    actionMapping.ButtonMappings.Clear();
+                    ConnectButtonToLabel(buttonMapping);
+                    AssignColor(buttonMapping);
+                }
+            });
+            actionMapping.Label.EndDragTrigger.OnEndDragAsObservable().Subscribe(EndDrag);
             PlaceLabel(actionMapping);
-            foreach(var buttonMapping in actionMapping.ButtonMappings) ConnectButtonToLabel(buttonMapping);
         }
 
         //StartCoroutine(AssociateInputKeys(_inputLayout));
@@ -216,12 +339,12 @@ public class InputDisplayLayout : MonoBehaviour
         if (button is InputDisplayKey key) key.MainLabel.color = key.AltLabel.color = Color.Lerp(outlineColor, fillColor, .5f);
     }
 
-    private TextMeshProUGUI CreateLabel(ActionMapping actionMapping)
+    private InputDisplayLabel CreateLabel(ActionMapping actionMapping)
     {
-        var label = LabelPrototype.Instantiate<TextMeshProUGUI>();
-        label.color = Color.HSVToRGB(actionMapping.Hue, Saturation, 1);
+        var label = LabelPrototype.Instantiate<InputDisplayLabel>();
+        label.Label.color = Color.HSVToRGB(actionMapping.Hue, Saturation, 1);
         actionMapping.Label = label;
-        label.text = actionMapping.Action.name.Replace(' ', '\n');
+        label.Label.text = actionMapping.Action.name.Replace(' ', '\n');
         return label;
     }
 
@@ -229,16 +352,18 @@ public class InputDisplayLayout : MonoBehaviour
     {
         if(actionMapping.ButtonMappings.Any())
         {
-            var labelRect = actionMapping.Label.rectTransform;
+            var labelRect = actionMapping.Label.Label.rectTransform;
             LayoutRebuilder.ForceRebuildLayoutImmediate(labelRect);
             var rect = FindLabelPosition(actionMapping.ButtonMappings.First().DisplayButton.GetComponent<RectTransform>(), labelRect);
-            actionMapping.LabelRect = rect;
+            //actionMapping.LabelRect = rect;
+            actionMapping.Label.transform.parent = AssignedBindingsGroup;
             actionMapping.Label.transform.position = rect.center;
         }
         else
         {
-            actionMapping.Label.rectTransform.parent = UnassignedBindingsGroup;
+            actionMapping.Label.transform.parent = UnassignedBindingsGroup;
         }
+        foreach(var buttonMapping in actionMapping.ButtonMappings) ConnectButtonToLabel(buttonMapping);
     }
 
     private void ConnectButtonToLabel(ButtonMapping buttonMapping)
@@ -246,13 +371,13 @@ public class InputDisplayLayout : MonoBehaviour
         if (buttonMapping.ActionMapping != null)
         {
             var keyBounds = buttonMapping.DisplayButton.Outline.rectTransform.GetBounds(BoxLineExpand);
-            var labelPoint = (Vector2) buttonMapping.ActionMapping.Label.rectTransform.GetBounds().ClosestPoint(keyBounds.center);
+            var labelPoint = (Vector2) buttonMapping.ActionMapping.Label.Label.rectTransform.GetBounds().ClosestPoint(keyBounds.center);
             var keyPoint = (Vector2) keyBounds.ClosestPoint(labelPoint);
             labelPoint /= _canvas.scaleFactor;
             keyPoint /= _canvas.scaleFactor;
 
             buttonMapping.LabelLine ??= LinePrototype.Instantiate<UILineRenderer>();
-            buttonMapping.LabelLine.color = buttonMapping.ActionMapping.Label.color;
+            buttonMapping.LabelLine.color = buttonMapping.ActionMapping.Label.Label.color;
             buttonMapping.LabelLine.Points = new[] {keyPoint, labelPoint};
         }
         else
@@ -287,12 +412,15 @@ public class InputDisplayLayout : MonoBehaviour
         }
         return default;
     }
+
+    private ActionMapping[] OverlappingLabels(Rect rect) => _actionMappings
+        .Where(a => a.LabelRect.Overlaps(rect)).ToArray();
     
     private Rect[] Overlap(Rect rect) => _buttonMappings
         .Where(b=>b.IsActionBarButton || b.ActionMapping!=null)
         .Select(b=>b.ButtonRect)
         .Concat(_actionMappings
-            .Where(a=>a.LabelRect.width > .1f)
+            .Where(a=>a.Label && a.LabelRect.width > .1f)
             .Select(a=>a.LabelRect))
         .Where(r => r.Overlaps(rect)).ToArray();
 
@@ -474,6 +602,9 @@ public class InputDisplayLayout : MonoBehaviour
 
     void Update()
     {
-        
+        if (_dragAction != null && _previewButton == null)
+        {
+            _dragAction.Label.transform.position = Mouse.current.position.ReadValue();
+        }
     }
 }
