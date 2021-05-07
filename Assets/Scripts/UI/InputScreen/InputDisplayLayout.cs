@@ -67,6 +67,8 @@ public class InputDisplayLayout : MonoBehaviour
 
     private class ActionMapping
     {
+        public string Name;
+        public InputBinding Binding;
         public InputAction Action;
         public InputDisplayLabel Label;
         public float Hue;
@@ -110,6 +112,8 @@ public class InputDisplayLayout : MonoBehaviour
             }
             else
             {
+                _dragAction.Binding.overridePath = _previewButton.Button.InputSystemPath;
+                _dragAction.Action.ApplyBindingOverride(_dragAction.Binding);
                 // TODO: Assign New Binding
             }
 
@@ -234,6 +238,8 @@ public class InputDisplayLayout : MonoBehaviour
         
         var input = new AetheriaInput();
         ProcessActions(input.asset);
+        input.Enable();
+        input.Global.Interact.performed += context => Debug.Log($"Interact Performed! Time = {((int) (Time.time * 1000)).ToString()}ms");
 
         foreach (var actionMapping in _actionMappings)
         {
@@ -275,22 +281,27 @@ public class InputDisplayLayout : MonoBehaviour
 
     private void ProcessActions(InputActionAsset input)
     {
-        var nonUIActions = input.Where(a => a.actionMap.name != "UI").ToArray();
-        for (var i = 0; i < nonUIActions.Length; i++)
+        var bindableActions = input.Where(a => a.actionMap.name != "UI" && (a.type==InputActionType.Button || a.bindings.Any(b=>b.isComposite))).ToArray();
+        for (var i = 0; i < bindableActions.Length; i++)
         {
-            var action = nonUIActions[i];
-            var actionMapping = new ActionMapping
-            {
-                Action = action,
-                Hue = action.actionMap.name == "Global"
-                    ? GlobalHue
-                    : frac(GlobalHue + GlobalHueRange + (float) i / (nonUIActions.Length - 1) * (1 - GlobalHueRange * 2))
-            };
-            _actionMappings.Add(actionMapping);
+            var action = bindableActions[i];
             foreach (var binding in action.bindings)
             {
                 if (_bindButtons.ContainsKey(binding.path))
                 {
+                    var name = action.name.Replace(' ', '\n');
+                    if (binding.isPartOfComposite) name = $"{name} {binding.name}";
+                    var actionMapping = new ActionMapping
+                    {
+                        Name = name,
+                        Binding = binding,
+                        Action = action,
+                        Hue = action.actionMap.name == "Global"
+                            ? GlobalHue
+                            : frac(GlobalHue + GlobalHueRange + (float) i / (bindableActions.Length - 1) * (1 - GlobalHueRange * 2))
+                    };
+                    _actionMappings.Add(actionMapping);
+                    
                     var buttonMapping = _bindButtons[binding.path];
                     buttonMapping.ActionMapping = actionMapping;
                     AssignColor(buttonMapping);
@@ -344,7 +355,7 @@ public class InputDisplayLayout : MonoBehaviour
         var label = LabelPrototype.Instantiate<InputDisplayLabel>();
         label.Label.color = Color.HSVToRGB(actionMapping.Hue, Saturation, 1);
         actionMapping.Label = label;
-        label.Label.text = actionMapping.Action.name.Replace(' ', '\n');
+        label.Label.text = actionMapping.Name;
         return label;
     }
 
