@@ -75,179 +75,6 @@
 								</Reference>
 							</ReferenceList>
 							<ChildrenList>
-								<Sound Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" ShortID="900088191">
-									<PropertyList>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-8.5</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<SourcePlugin Name="SoundSeed Grain" ID="{03E523D5-1AFD-4FE4-B67F-46CE0282B6C7}" ShortID="255575945" PluginName="SoundSeed Grain" CompanyID="0" PluginID="183">
-											<PropertyList>
-												<Property Name="Amplitude" Type="Real32" Value="68"/>
-												<Property Name="Attack" Type="Real32" Value="32"/>
-												<Property Name="Duration" Type="Real32" Value="137"/>
-												<Property Name="DurationLink" Type="int32" Value="1"/>
-												<Property Name="EnvelopeType" Type="int32" Value="3"/>
-												<Property Name="FilterFreq" Type="Real32" Value="7962">
-													<RTPCList>
-														<RTPC Name="" ID="{A080E791-F36F-4BC1-AA69-301B9E0E13C9}" ShortID="316561590">
-															<ReferenceList>
-																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_ship_rotor_plates_grain_filter" ID="{054DD684-3F0A-4629-BB94-1E5A662EED8A}" WorkUnitID="{7CD9C53D-64E9-47EF-B622-693D7ABD22A1}"/>
-																</Reference>
-															</ReferenceList>
-															<Curve Name="" ID="{F9544586-02C7-449B-AFC0-C01451BBA14A}">
-																<PropertyList>
-																	<Property Name="Flags" Type="int32" Value="5"/>
-																</PropertyList>
-																<PointList>
-																	<Point>
-																		<XPos>0</XPos>
-																		<YPos>5558.379</YPos>
-																		<Flags>5</Flags>
-																		<SegmentShape>Exp1</SegmentShape>
-																	</Point>
-																	<Point>
-																		<XPos>1</XPos>
-																		<YPos>12034.8799</YPos>
-																		<Flags>37</Flags>
-																	</Point>
-																</PointList>
-															</Curve>
-														</RTPC>
-													</RTPCList>
-												</Property>
-												<Property Name="FilterQ" Type="Real32" Value="0.91"/>
-												<Property Name="GrainRate" Type="Real32" Value="16.14"/>
-												<Property Name="MarkerSelect" Type="Real32">
-													<RTPCList>
-														<RTPC Name="" ID="{64AFA9F2-90D6-417C-858B-682E5B32D460}" ShortID="692930521">
-															<ReferenceList>
-																<Reference Name="ControlInput">
-																	<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
-																</Reference>
-															</ReferenceList>
-															<Curve Name="" ID="{CBB53EB1-4400-4570-A178-F3763CB82ADD}">
-																<PropertyList>
-																	<Property Name="Flags" Type="int32" Value="1"/>
-																</PropertyList>
-																<PointList>
-																	<Point>
-																		<XPos>0</XPos>
-																		<YPos>0</YPos>
-																		<Flags>5</Flags>
-																	</Point>
-																	<Point>
-																		<XPos>100</XPos>
-																		<YPos>84</YPos>
-																		<Flags>37</Flags>
-																	</Point>
-																</PointList>
-															</Curve>
-														</RTPC>
-													</RTPCList>
-												</Property>
-												<Property Name="OutputLevel" Type="Real32">
-													<RTPCList>
-														<RTPC Name="" ID="{5B1A5A8A-6563-4D98-A480-484A7FF2FAD5}" ShortID="114593834">
-															<ReferenceList>
-																<Reference Name="ControlInput">
-																	<Custom>
-																		<ModulatorEnvelope Name="Modulator Envelope (Custom)" ID="{EC51F5DD-3522-4D84-92A1-5427E3A38275}" ShortID="222132598">
-																			<PropertyList>
-																				<Property Name="EnvelopeAttackTime" Type="Real64" Value="0.01"/>
-																			</PropertyList>
-																		</ModulatorEnvelope>
-																	</Custom>
-																</Reference>
-															</ReferenceList>
-															<Curve Name="" ID="{7EA6AD4B-1CFA-4A70-A222-4046E0CB899D}">
-																<PropertyList>
-																	<Property Name="Flags" Type="int32" Value="3"/>
-																</PropertyList>
-																<PointList>
-																	<Point>
-																		<XPos>0</XPos>
-																		<YPos>-96</YPos>
-																		<Flags>21</Flags>
-																	</Point>
-																	<Point>
-																		<XPos>1</XPos>
-																		<YPos>0</YPos>
-																		<Flags>53</Flags>
-																	</Point>
-																</PointList>
-															</Curve>
-														</RTPC>
-													</RTPCList>
-												</Property>
-												<Property Name="SelectFreqTimeGrain" Type="int32" Value="1"/>
-												<Property Name="Transpose" Type="Real32">
-													<RTPCList>
-														<RTPC Name="" ID="{AF5E31D4-7585-4A4A-BFF8-2E83E82465FD}" ShortID="368878021">
-															<ReferenceList>
-																<Reference Name="ControlInput">
-																	<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
-																</Reference>
-															</ReferenceList>
-															<Curve Name="" ID="{4EF3AACD-DE9A-42C5-A9BB-9F3FC737C66F}">
-																<PropertyList>
-																	<Property Name="Flags" Type="int32" Value="1"/>
-																</PropertyList>
-																<PointList>
-																	<Point>
-																		<XPos>0</XPos>
-																		<YPos>0</YPos>
-																		<Flags>5</Flags>
-																	</Point>
-																	<Point>
-																		<XPos>43.52732</XPos>
-																		<YPos>523.61146</YPos>
-																		<Flags>0</Flags>
-																	</Point>
-																	<Point>
-																		<XPos>100</XPos>
-																		<YPos>336</YPos>
-																		<Flags>37</Flags>
-																	</Point>
-																</PointList>
-															</Curve>
-														</RTPC>
-													</RTPCList>
-												</Property>
-											</PropertyList>
-											<ChildrenList>
-												<AudioFileSource Name="rotor_2" ID="{C77E4801-F24B-48CF-A0DC-08F22D339DAE}">
-													<PropertyList>
-														<Property Name="LoopBegin" Type="Real64" Value="4.42238648363253"/>
-														<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-														<Property Name="TrimBegin" Type="Real64" Value="4.42238648363253"/>
-													</PropertyList>
-													<Language>SoundSeed Grain</Language>
-													<AudioFile>rotor_2.wav</AudioFile>
-													<MediaIDList>
-														<MediaID ID="235705661"/>
-													</MediaIDList>
-												</AudioFileSource>
-											</ChildrenList>
-											<Language>SFX</Language>
-										</SourcePlugin>
-									</ChildrenList>
-									<ActiveSourceList>
-										<ActiveSource Name="SoundSeed Grain" ID="{03E523D5-1AFD-4FE4-B67F-46CE0282B6C7}" Platform="Linked"/>
-									</ActiveSourceList>
-								</Sound>
 								<RandomSequenceContainer Name="electric_suf01" ID="{54D2244A-2CAB-4983-8CD1-DA8C8AD9ED5C}" ShortID="602647811">
 									<PropertyList>
 										<Property Name="InitialDelay" Type="Real64">
@@ -327,13 +154,45 @@
 										</Property>
 										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
 										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+										<Property Name="Volume" Type="Real64">
+											<RTPCList>
+												<RTPC Name="" ID="{5ACC9B70-6188-4524-BB3B-21E2F9CD8217}" ShortID="90622668">
+													<ReferenceList>
+														<Reference Name="ControlInput">
+															<ObjectRef Name="performance_quality" ID="{BFC68604-C477-4B9B-B488-F5B4A9ADEAA4}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+														</Reference>
+													</ReferenceList>
+													<Curve Name="" ID="{90E131A7-C113-4BB1-93F8-A91874A29467}">
+														<PropertyList>
+															<Property Name="Flags" Type="int32" Value="3"/>
+														</PropertyList>
+														<PointList>
+															<Point>
+																<XPos>0</XPos>
+																<YPos>0</YPos>
+																<Flags>5</Flags>
+																<SegmentShape>Log2</SegmentShape>
+															</Point>
+															<Point>
+																<XPos>0.53938</XPos>
+																<YPos>-200</YPos>
+																<Flags>0</Flags>
+																<SegmentShape>Exp2</SegmentShape>
+															</Point>
+															<Point>
+																<XPos>1</XPos>
+																<YPos>-200</YPos>
+																<Flags>37</Flags>
+															</Point>
+														</PointList>
+													</Curve>
+												</RTPC>
+											</RTPCList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-										</Reference>
-										<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
-											<ObjectRef Name="New_Wwise_Parametric_EQhiP" ID="{E3BA261D-8463-43A5-BE7E-7F8BEA10EFFA}" WorkUnitID="{BF6DB01C-A79D-4B99-89E5-E47246AD6F26}"/>
 										</Reference>
 										<Reference Name="Effect1" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
 											<ObjectRef Name="High_Freq_Cut_1" ID="{BA5BC68D-BCA7-4CE0-9878-1560F2D8B257}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
@@ -588,12 +447,6 @@
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
 										</Reference>
-										<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
-											<ObjectRef Name="EQ_NueclearDrive" ID="{B886B6D8-78DF-4727-A605-5B5A868168CE}" WorkUnitID="{BF6DB01C-A79D-4B99-89E5-E47246AD6F26}"/>
-										</Reference>
-										<Reference Name="Effect1" PluginName="McDSP FutzBox" CompanyID="256" PluginID="110" PluginType="3">
-											<ObjectRef Name="New_McDSP_FutzBox" ID="{79691508-2007-47C2-A0AF-B57150F8EC56}" WorkUnitID="{BF6DB01C-A79D-4B99-89E5-E47246AD6F26}"/>
-										</Reference>
 										<Reference Name="OutputBus">
 											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
 										</Reference>
@@ -819,21 +672,13 @@
 								<Sound Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" ShortID="894145724">
 									<PropertyList>
 										<Property Name="OverrideEffect" Type="bool" Value="True"/>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>8</Value>
-											</ValueList>
-										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
 											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
 										</Reference>
 										<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
-											<ObjectRef Name="High_Freq_Cut_1" ID="{BA5BC68D-BCA7-4CE0-9878-1560F2D8B257}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
-										</Reference>
-										<Reference Name="Effect1" PluginName="McDSP FutzBox" CompanyID="256" PluginID="110" PluginType="3">
-											<ObjectRef Name="New_McDSP_FutzBox" ID="{79691508-2007-47C2-A0AF-B57150F8EC56}" WorkUnitID="{BF6DB01C-A79D-4B99-89E5-E47246AD6F26}"/>
+											<ObjectRef Name="High_Pass_60Hz" ID="{F9627628-0B10-4272-BC30-D4C20423CB38}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
 										</Reference>
 										<Reference Name="OutputBus">
 											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
@@ -842,19 +687,51 @@
 									<ChildrenList>
 										<SourcePlugin Name="SoundSeed Grain" ID="{6389EDF5-0863-4B01-AD89-19303289E4BD}" ShortID="826223786" PluginName="SoundSeed Grain" CompanyID="0" PluginID="183">
 											<PropertyList>
-												<Property Name="AmplitudeMod2Depth" Type="Real32" Value="24"/>
-												<Property Name="Attack" Type="Real32" Value="316.9"/>
-												<Property Name="Duration" Type="Real32" Value="353.5"/>
+												<Property Name="Attack" Type="Real32" Value="500"/>
+												<Property Name="Duration" Type="Real32" Value="368"/>
 												<Property Name="DurationLink" Type="int32" Value="1"/>
 												<Property Name="EnvelopeType" Type="int32" Value="3"/>
-												<Property Name="FilterFreq" Type="Real32" Value="3113"/>
+												<Property Name="FilterFreq" Type="Real32" Value="81"/>
 												<Property Name="FilterQ" Type="Real32" Value="0.52"/>
-												<Property Name="GrainRate" Type="Real32" Value="8.947"/>
-												<Property Name="MarkerSelectMod1Depth" Type="Real32" Value="100"/>
-												<Property Name="ModAmount1" Type="Real32" Value="73.7"/>
-												<Property Name="ModRate1" Type="Real32" Value="1.4"/>
+												<Property Name="FilterType" Type="int32" Value="2"/>
+												<Property Name="GrainRate" Type="Real32" Value="4.703"/>
+												<Property Name="GrainRateMod1Depth" Type="Real32" Value="0.22"/>
+												<Property Name="MarkerSelect" Type="Real32">
+													<RTPCList>
+														<RTPC Name="" ID="{0F6FE070-ADA5-4F9B-BA4A-66ABE2B7EF95}" ShortID="611582547">
+															<ReferenceList>
+																<Reference Name="ControlInput">
+																	<ObjectRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																</Reference>
+															</ReferenceList>
+															<Curve Name="" ID="{ACFD114B-9E99-4A92-A8C4-F9B01BF5CD41}">
+																<PropertyList>
+																	<Property Name="Flags" Type="int32" Value="1"/>
+																</PropertyList>
+																<PointList>
+																	<Point>
+																		<XPos>0</XPos>
+																		<YPos>78.33828</YPos>
+																		<Flags>5</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>0.43779</XPos>
+																		<YPos>55.11547</YPos>
+																		<Flags>0</Flags>
+																	</Point>
+																	<Point>
+																		<XPos>1</XPos>
+																		<YPos>0</YPos>
+																		<Flags>37</Flags>
+																	</Point>
+																</PointList>
+															</Curve>
+														</RTPC>
+													</RTPCList>
+												</Property>
+												<Property Name="ModAmount1" Type="Real32" Value="7.4"/>
+												<Property Name="ModRate1" Type="Real32" Value="17.28"/>
 												<Property Name="ModRate2" Type="Real32" Value="1064.78"/>
-												<Property Name="ModWaveform1" Type="int32" Value="0"/>
 												<Property Name="OutputLevel" Type="Real32">
 													<RTPCList>
 														<RTPC Name="" ID="{F36F7463-1F14-4C4B-B8DA-260E08BF9915}" ShortID="1014840176">
@@ -949,11 +826,11 @@
 												</Property>
 											</PropertyList>
 											<ChildrenList>
-												<AudioFileSource Name="sfx_spcp_drives_dc_scifi_electric" ID="{65E0B893-D03E-4175-9BEA-C808B31461B7}">
+												<AudioFileSource Name="rotor_electric4_iter001" ID="{65E0B893-D03E-4175-9BEA-C808B31461B7}">
 													<Language>SoundSeed Grain</Language>
-													<AudioFile>sfx_spcp_drives_dc_scifi_electric.wav</AudioFile>
+													<AudioFile>rotor_electric4_iter001.wav</AudioFile>
 													<MediaIDList>
-														<MediaID ID="361464832"/>
+														<MediaID ID="997980444"/>
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
@@ -963,11 +840,10 @@
 													<PluginInnerObject Name="" ID="{EA876A99-6CB8-4E71-BBCB-4D5A1FD778E9}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
 														<PropertyList>
 															<Property Name="ModDisplayName" Type="string" Value="Mod 1"/>
-															<Property Name="ModID" Type="int32" Value="151"/>
-															<Property Name="ModName" Type="string" Value="MarkerSelectMod1Depth"/>
-															<Property Name="ParamDisplayName" Type="string" Value="Position"/>
-															<Property Name="ParamID" Type="int32" Value="150"/>
-															<Property Name="ParamName" Type="string" Value="MarkerSelect"/>
+															<Property Name="ModID" Type="int32" Value="1"/>
+															<Property Name="ModName" Type="string" Value="GrainRateMod1Depth"/>
+															<Property Name="ParamDisplayName" Type="string" Value="Emissions per Second"/>
+															<Property Name="ParamName" Type="string" Value="GrainRate"/>
 														</PropertyList>
 													</PluginInnerObject>
 													<PluginInnerObject Name="" ID="{81F931E3-5229-42E2-A2C8-DF0C29839F67}" PluginName="ParameterModulatorAssociation" CompanyID="0" PluginID="185">
@@ -986,43 +862,6 @@
 									</ChildrenList>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{6389EDF5-0863-4B01-AD89-19303289E4BD}" Platform="Linked"/>
-									</ActiveSourceList>
-								</Sound>
-								<Sound Name="dc_start" ID="{0ACDD876-8065-4311-98C0-03D9E98661A1}" ShortID="599308393">
-									<PropertyList>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-8.2</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-										</Reference>
-										<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
-											<ObjectRef Name="High_Freq_Cut_1" ID="{BA5BC68D-BCA7-4CE0-9878-1560F2D8B257}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<AudioFileSource Name="sfx_spcp_drives_dc_start" ID="{06C068E2-E1E8-4495-BF6F-62EC1791B3EA}">
-											<PropertyList>
-												<Property Name="FadeOutDuration" Type="Real64" Value="0.1469651531151"/>
-												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.480358324533615"/>
-											</PropertyList>
-											<Language>SFX</Language>
-											<AudioFile>sfx_spcp_drives_dc_start.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="1048030719"/>
-											</MediaIDList>
-										</AudioFileSource>
-									</ChildrenList>
-									<ActiveSourceList>
-										<ActiveSource Name="sfx_spcp_drives_dc_start" ID="{06C068E2-E1E8-4495-BF6F-62EC1791B3EA}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
 								<RandomSequenceContainer Name="OneShot_nuclear_steam_short" ID="{A1C8078D-44A0-4DF4-9F53-2B70E20A612E}" ShortID="656633171">
