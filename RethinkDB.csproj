@@ -91,8 +91,8 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\GetAll.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\InnerJoin.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\MemberNameResolver.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Merge.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Get.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Merge.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Proto\ResponseNote.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Tuesday.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\ReqlUserError.cs" />
@@ -282,14 +282,14 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\WhereClauseParsers\PrimaryIndexParser.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Wednesday.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Log.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\AllSubQueryVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Values.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver.Linq\WhereClauseParsers\SubQueryVisitor\AllSubQueryVisitor.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Keys.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Reduce.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Net\IncrementalSHA256.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\ToGeojson.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Group.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Date.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Group.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Mul.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Model\ReqlFunction1.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Table.cs" />
@@ -315,11 +315,11 @@
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\SpliceAt.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Random.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\August.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Year.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\IndexList.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Net\Clustering\Server.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Json.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Model\ResultFormat.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Ast\Year.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Net\Awaiter.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Model\ReqlFunction4.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\RethinkDb\RethinkDb.Driver\Generated\Model\ReadMode.cs" />
@@ -599,6 +599,9 @@
  <Reference Include="Remotion.Linq">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
  </Reference>
+ <Reference Include="Substance.Editor">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
+ </Reference>
  <Reference Include="System.Memory">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
  </Reference>
@@ -628,9 +631,6 @@
  </Reference>
  <Reference Include="System.Runtime.CompilerServices.Unsafe">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Editor">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>E:/Applications/Unity Editors/2020.3.2f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

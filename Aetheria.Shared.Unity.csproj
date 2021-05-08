@@ -136,8 +136,8 @@
      <Compile Include="Assets\Scripts\ServerShared\Attributes.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\NetStatistics.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Agents\Tasks\PatrolOrbits.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\AnyAll.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LiteNetLib\Utils\NetSerializer.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\AnyAll.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\Collections.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Count.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Utils\ComparerMagic.cs" />
@@ -195,9 +195,9 @@
      <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\Utils\Mapper.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\MIConvexHull\ConvexHull\ObjectManager.cs" />
      <Compile Include="Assets\Scripts\ServerShared\CultCache\Serialization\JsonKnownTypes\JsonKnownThisTypeAttribute.cs" />
-     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thermotoggle.cs" />
      <Compile Include="Assets\Scripts\ServerShared\MarkovNameGenerator.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Where.cs" />
+     <Compile Include="Assets\Scripts\ServerShared\Behaviors\Thermotoggle.cs" />
      <Compile Include="Assets\Scripts\ServerShared\NIH\LinqFaster\Min.cs" />
      <Compile Include="Assets\Scripts\ServerShared\CultCache\CollectionExtensions.cs" />
      <Compile Include="Assets\Scripts\ServerShared\Behaviors\ParticleEffect.cs" />
@@ -263,6 +263,9 @@
  <Reference Include="Remotion.Linq">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
  </Reference>
+ <Reference Include="Substance.Editor">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
+ </Reference>
  <Reference Include="System.Memory">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
  </Reference>
@@ -292,9 +295,6 @@
  </Reference>
  <Reference Include="System.Runtime.CompilerServices.Unsafe">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Editor">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>E:/Applications/Unity Editors/2020.3.2f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

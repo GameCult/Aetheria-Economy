@@ -53,6 +53,8 @@ public class InputDisplayLayout : MonoBehaviour
     private ButtonMapping _previewButton;
     private ActionMapping _previewOriginalAction;
     private bool _previewOriginallyActionBar;
+    
+    public InputActionAsset Input { get; set; }
 
     private class ButtonMapping
     {
@@ -83,11 +85,12 @@ public class InputDisplayLayout : MonoBehaviour
     void Start()
     {
         _canvas = transform.root.GetComponent<Canvas>();
-        var path = Path.Combine(ActionGameManager.GameDataDirectory.CreateSubdirectory("KeyboardLayouts").FullName, $"{LayoutFile.name}.json");
+        var path = Path.Combine(ActionGameManager.GameDataDirectory.CreateSubdirectory("KeyboardLayouts").FullName, $"{LayoutFile.name}.msgpack");
         // _inputLayout = ParseJson(LayoutFile.text);
-        //RegisterResolver.Register();
-        //_inputLayout = MessagePackSerializer.Deserialize<InputLayout>(File.ReadAllBytes(path));
-        _inputLayout = JsonConvert.DeserializeObject<InputLayout>(File.ReadAllText(path));
+        RegisterResolver.Register();
+        _inputLayout = MessagePackSerializer.Deserialize<InputLayout>(File.ReadAllBytes(path));
+        // _inputLayout = JsonConvert.DeserializeObject<InputLayout>(File.ReadAllText(path));
+        // SaveLayout();
         DisplayLayout(_inputLayout);
         
         _buttonMappings.Add(MapMouseButton(MouseLeft, "<Mouse>/leftButton"));
@@ -97,33 +100,6 @@ public class InputDisplayLayout : MonoBehaviour
         _buttonMappings.Add(MapMouseButton(MouseBack, "<Mouse>/backButton"));
         
         Canvas.ForceUpdateCanvases();
-        
-        void EndDrag(PointerEventData _)
-        {
-            if (_previewButton == null)
-            {
-                if(_originalButton!=null)
-                {
-                    _originalButton.ActionMapping = _dragAction;
-                    _dragAction.ButtonMappings.Add(_originalButton);
-                    AssignColor(_originalButton);
-                }
-                PlaceLabel(_dragAction);
-            }
-            else
-            {
-                _dragAction.Binding.overridePath = _previewButton.Button.InputSystemPath;
-                _dragAction.Action.ApplyBindingOverride(_dragAction.Binding);
-                // TODO: Assign New Binding
-            }
-
-            foreach(var action in _actionMappings)
-                action.Label.Label.raycastTarget = true;
-            _dragAction = null;
-            _originalButton = null;
-            _previewButton = null;
-            _previewOriginalAction = null;
-        }
 
         foreach (var buttonMapping in _buttonMappings)
         {
@@ -141,89 +117,6 @@ public class InputDisplayLayout : MonoBehaviour
             };
             buttonMapping.TestAction.canceled += context => AssignColor(buttonMapping);
             buttonMapping.TestAction.Enable();
-
-            // On click: when a specific action is not assigned, toggle its availability on the action bar
-            buttonMapping.DisplayButton.ClickTrigger.OnPointerClickAsObservable()
-                .Where(_=>buttonMapping.ActionMapping==null)
-                .Subscribe(data =>
-            {
-                buttonMapping.IsActionBarButton = !buttonMapping.IsActionBarButton;
-                if (buttonMapping.IsActionBarButton)
-                {
-                    ActionGameManager.PlayerSettings.InputSettings.ActionBarInputs.Add(buttonMapping.Button.InputSystemPath);
-                    foreach(var overlap in OverlappingLabels(buttonMapping.ButtonRect))
-                        PlaceLabel(overlap);
-                }
-                else
-                {
-                    ActionGameManager.PlayerSettings.InputSettings.ActionBarInputs.Remove(buttonMapping.Button.InputSystemPath);
-                }
-                AssignColor(buttonMapping);
-            });
-
-            buttonMapping.DisplayButton.BeginDragTrigger.OnBeginDragAsObservable()
-                .Where(_ => buttonMapping.ActionMapping != null)
-                .Subscribe(_ =>
-                {
-                    _originalButton = buttonMapping;
-                    buttonMapping.LabelLine.Points = new Vector2[0];
-                    _dragAction = buttonMapping.ActionMapping;
-                    foreach(var action in _actionMappings)
-                        action.Label.Label.raycastTarget = false;
-                });
-
-            buttonMapping.DisplayButton.EnterTrigger.OnPointerEnterAsObservable()
-                .Where(_ => _dragAction != null)
-                .Subscribe(_ =>
-                {
-                    _previewButton = buttonMapping;
-                    _previewOriginalAction = buttonMapping.ActionMapping;
-                    _previewOriginallyActionBar = buttonMapping.IsActionBarButton;
-                    buttonMapping.IsActionBarButton = false;
-
-                    buttonMapping.ActionMapping?.ButtonMappings.Remove(buttonMapping);
-                    buttonMapping.ActionMapping = _dragAction;
-                    _dragAction.ButtonMappings.Add(buttonMapping);
-                    if(_previewOriginalAction!=null)
-                        PlaceLabel(_previewOriginalAction);
-                    PlaceLabel(_dragAction);
-                    AssignColor(buttonMapping);
-                    foreach(var overlap in OverlappingLabels(buttonMapping.ButtonRect))
-                        PlaceLabel(overlap);
-                });
-
-            buttonMapping.DisplayButton.ExitTrigger.OnPointerExitAsObservable()
-                .Where(_ => _dragAction != null)
-                .Subscribe(_ =>
-                {
-                    _dragAction.ButtonMappings.Remove(buttonMapping);
-                    if (buttonMapping == _originalButton)
-                    {
-                        buttonMapping.ActionMapping = null;
-                    }
-                    else if(buttonMapping == _previewButton)
-                    {
-                        buttonMapping.IsActionBarButton = _previewOriginallyActionBar;
-                        buttonMapping.ActionMapping = _previewOriginalAction;
-                        if (!_previewOriginallyActionBar)
-                        {
-                            if(_previewOriginalAction != null)
-                            {
-                                _previewOriginalAction.ButtonMappings.Add(buttonMapping);
-                                PlaceLabel(_previewOriginalAction);
-                            }
-                        }
-                    }
-
-                    ConnectButtonToLabel(buttonMapping);
-                    AssignColor(buttonMapping);
-                    _previewButton = null;
-                    _previewOriginalAction = null;
-                });
-
-            buttonMapping.DisplayButton.EndDragTrigger.OnEndDragAsObservable()
-                .Where(_ => _dragAction != null)
-                .Subscribe(EndDrag);
         }
         
         foreach(var actionBarInput in ActionGameManager.PlayerSettings.InputSettings.ActionBarInputs)
@@ -236,34 +129,25 @@ public class InputDisplayLayout : MonoBehaviour
             }
         }
         
-        var input = new AetheriaInput();
-        ProcessActions(input.asset);
-        input.Enable();
-        input.Global.Interact.performed += context => Debug.Log($"Interact Performed! Time = {((int) (Time.time * 1000)).ToString()}ms");
-
-        foreach (var actionMapping in _actionMappings)
+        if(Input==null)
         {
-            actionMapping.Label = CreateLabel(actionMapping);
-            actionMapping.Label.BeginDragTrigger.OnBeginDragAsObservable().Subscribe(_ =>
-            {
-                _dragAction = actionMapping;
-                actionMapping.Label.transform.parent = AssignedBindingsGroup;
-                foreach(var action in _actionMappings)
-                    action.Label.Label.raycastTarget = false;
-                if (actionMapping.ButtonMappings.Count == 1)
-                {
-                    var buttonMapping = actionMapping.ButtonMappings[0];
-                    _originalButton = buttonMapping;
-                    buttonMapping.LabelLine.Points = new Vector2[0];
-                    buttonMapping.ActionMapping = null;
-                    actionMapping.ButtonMappings.Clear();
-                    ConnectButtonToLabel(buttonMapping);
-                    AssignColor(buttonMapping);
-                }
-            });
-            actionMapping.Label.EndDragTrigger.OnEndDragAsObservable().Subscribe(EndDrag);
-            PlaceLabel(actionMapping);
+            var input = new AetheriaInput();
+            Input = input.asset;
         }
+        ProcessActions(Input);
+        // input.Enable();
+        // input.Global.Interact.performed += context => Debug.Log($"Interact Performed! Time = {((int) (Time.time * 1000)).ToString()}ms");
+
+        Observable.NextFrame().Subscribe(_ =>
+        {
+            foreach (var actionMapping in _actionMappings)
+            {
+                actionMapping.Label = CreateLabel(actionMapping);
+                PlaceLabel(actionMapping);
+            }
+
+            RegisterMouseCallbacks();
+        });
 
         //StartCoroutine(AssociateInputKeys(_inputLayout));
     }
@@ -287,7 +171,7 @@ public class InputDisplayLayout : MonoBehaviour
             var action = bindableActions[i];
             foreach (var binding in action.bindings)
             {
-                if (_bindButtons.ContainsKey(binding.path))
+                if (_bindButtons.ContainsKey(binding.effectivePath))
                 {
                     var name = action.name.Replace(' ', '\n');
                     if (binding.isPartOfComposite) name = $"{name} {binding.name}";
@@ -302,7 +186,7 @@ public class InputDisplayLayout : MonoBehaviour
                     };
                     _actionMappings.Add(actionMapping);
                     
-                    var buttonMapping = _bindButtons[binding.path];
+                    var buttonMapping = _bindButtons[binding.effectivePath];
                     buttonMapping.ActionMapping = actionMapping;
                     AssignColor(buttonMapping);
                     actionMapping.ButtonMappings.Add(buttonMapping);
@@ -605,10 +489,168 @@ public class InputDisplayLayout : MonoBehaviour
         }
         keyPress.Disable();
 
+        SaveLayout();
+    }
+
+    private void SaveLayout()
+    {
         RegisterResolver.Register();
         File.WriteAllBytes(
             Path.Combine(ActionGameManager.GameDataDirectory.CreateSubdirectory("KeyboardLayouts").FullName, $"{LayoutFile.name}.msgpack"),
             MessagePackSerializer.Serialize(_inputLayout));
+    }
+
+    private void OnEnable()
+    {
+        foreach(var buttonMapping in _buttonMappings)
+            buttonMapping.TestAction.Enable();
+        RegisterMouseCallbacks();
+    }
+
+    private void RegisterMouseCallbacks()
+    {
+        void EndDrag(PointerEventData _)
+        {
+            if (_previewButton == null)
+            {
+                if(_originalButton!=null)
+                {
+                    _originalButton.ActionMapping = _dragAction;
+                    _dragAction.ButtonMappings.Add(_originalButton);
+                    AssignColor(_originalButton);
+                }
+                PlaceLabel(_dragAction);
+            }
+            else
+            {
+                _dragAction.Binding.overridePath = _previewButton.Button.InputSystemPath;
+                _dragAction.Action.ApplyBindingOverride(_dragAction.Binding);
+                ActionGameManager.PlayerSettings.InputSettings.InputActionMap[(_dragAction.Action.name,
+                    _dragAction.Action.GetBindingIndex(_dragAction.Binding))] = _previewButton.Button.InputSystemPath;
+                // TODO: Assign New Binding
+            }
+
+            foreach(var action in _actionMappings)
+                action.Label.Label.raycastTarget = true;
+            _dragAction = null;
+            _originalButton = null;
+            _previewButton = null;
+            _previewOriginalAction = null;
+        }
+
+        foreach (var buttonMapping in _buttonMappings)
+        {
+            // On click: when a specific action is not assigned, toggle its availability on the action bar
+            buttonMapping.DisplayButton.ClickTrigger.OnPointerClickAsObservable()
+                .Where(_=>buttonMapping.ActionMapping==null)
+                .Subscribe(data =>
+            {
+                buttonMapping.IsActionBarButton = !buttonMapping.IsActionBarButton;
+                if (buttonMapping.IsActionBarButton)
+                {
+                    ActionGameManager.PlayerSettings.InputSettings.ActionBarInputs.Add(buttonMapping.Button.InputSystemPath);
+                    foreach(var overlap in OverlappingLabels(buttonMapping.ButtonRect))
+                        PlaceLabel(overlap);
+                }
+                else
+                {
+                    ActionGameManager.PlayerSettings.InputSettings.ActionBarInputs.Remove(buttonMapping.Button.InputSystemPath);
+                }
+                AssignColor(buttonMapping);
+            });
+
+            buttonMapping.DisplayButton.BeginDragTrigger.OnBeginDragAsObservable()
+                .Where(_ => buttonMapping.ActionMapping != null)
+                .Subscribe(_ =>
+                {
+                    _originalButton = buttonMapping;
+                    buttonMapping.LabelLine.Points = new Vector2[0];
+                    _dragAction = buttonMapping.ActionMapping;
+                    foreach(var action in _actionMappings)
+                        action.Label.Label.raycastTarget = false;
+                });
+
+            buttonMapping.DisplayButton.EnterTrigger.OnPointerEnterAsObservable()
+                .Where(_ => _dragAction != null)
+                .Subscribe(_ =>
+                {
+                    _previewButton = buttonMapping;
+                    _previewOriginalAction = buttonMapping.ActionMapping;
+                    _previewOriginallyActionBar = buttonMapping.IsActionBarButton;
+                    buttonMapping.IsActionBarButton = false;
+
+                    buttonMapping.ActionMapping?.ButtonMappings.Remove(buttonMapping);
+                    buttonMapping.ActionMapping = _dragAction;
+                    _dragAction.ButtonMappings.Add(buttonMapping);
+                    if(_previewOriginalAction!=null)
+                        PlaceLabel(_previewOriginalAction);
+                    PlaceLabel(_dragAction);
+                    AssignColor(buttonMapping);
+                    foreach(var overlap in OverlappingLabels(buttonMapping.ButtonRect))
+                        PlaceLabel(overlap);
+                });
+
+            buttonMapping.DisplayButton.ExitTrigger.OnPointerExitAsObservable()
+                .Where(_ => _dragAction != null)
+                .Subscribe(_ =>
+                {
+                    _dragAction.ButtonMappings.Remove(buttonMapping);
+                    if (buttonMapping == _originalButton)
+                    {
+                        buttonMapping.ActionMapping = null;
+                    }
+                    else if(buttonMapping == _previewButton)
+                    {
+                        buttonMapping.IsActionBarButton = _previewOriginallyActionBar;
+                        buttonMapping.ActionMapping = _previewOriginalAction;
+                        if (!_previewOriginallyActionBar)
+                        {
+                            if(_previewOriginalAction != null)
+                            {
+                                _previewOriginalAction.ButtonMappings.Add(buttonMapping);
+                                PlaceLabel(_previewOriginalAction);
+                            }
+                        }
+                    }
+
+                    ConnectButtonToLabel(buttonMapping);
+                    AssignColor(buttonMapping);
+                    _previewButton = null;
+                    _previewOriginalAction = null;
+                });
+
+            buttonMapping.DisplayButton.EndDragTrigger.OnEndDragAsObservable()
+                .Where(_ => _dragAction != null)
+                .Subscribe(EndDrag);
+        }
+        
+        foreach (var actionMapping in _actionMappings)
+        {
+            actionMapping.Label.BeginDragTrigger.OnBeginDragAsObservable().Subscribe(_ =>
+            {
+                _dragAction = actionMapping;
+                actionMapping.Label.transform.parent = AssignedBindingsGroup;
+                foreach (var action in _actionMappings)
+                    action.Label.Label.raycastTarget = false;
+                if (actionMapping.ButtonMappings.Count == 1)
+                {
+                    var buttonMapping = actionMapping.ButtonMappings[0];
+                    _originalButton = buttonMapping;
+                    buttonMapping.LabelLine.Points = new Vector2[0];
+                    buttonMapping.ActionMapping = null;
+                    actionMapping.ButtonMappings.Clear();
+                    ConnectButtonToLabel(buttonMapping);
+                    AssignColor(buttonMapping);
+                }
+            });
+            actionMapping.Label.EndDragTrigger.OnEndDragAsObservable().Subscribe(EndDrag);
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach(var buttonMapping in _buttonMappings)
+            buttonMapping.TestAction.Disable();
     }
 
     void Update()

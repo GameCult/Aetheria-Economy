@@ -308,6 +308,9 @@
  <Reference Include="Remotion.Linq">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/Remotion.Linq.dll</HintPath>
  </Reference>
+ <Reference Include="Substance.Editor">
+ <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
+ </Reference>
  <Reference Include="System.Memory">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Memory.dll</HintPath>
  </Reference>
@@ -337,9 +340,6 @@
  </Reference>
  <Reference Include="System.Runtime.CompilerServices.Unsafe">
  <HintPath>E:/Projects/Aetheria-Economy/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
- </Reference>
- <Reference Include="Substance.Editor">
- <HintPath>E:/Projects/Aetheria-Economy/Assets/Allegorithmic/Plugins/Substance/Substance Engine/Editor/Substance.Editor.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>E:/Applications/Unity Editors/2020.3.2f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

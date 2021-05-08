@@ -59,7 +59,6 @@ public class PlayerGameplaySettings
 [MessagePackObject]
 public class PlayerInputSettings
 {
-    [Key(0)] public Dictionary<string, string> InputActionMap = new Dictionary<string, string>();
+    [Key(0)] public Dictionary<(string action, int binding), string> InputActionMap = new Dictionary<(string action, int binding), string>();
     [Key(1)] public List<string> ActionBarInputs = new List<string>();
-    [Key(2)] public bool FiveButtonMouse;
 }

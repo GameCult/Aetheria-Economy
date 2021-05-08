@@ -140,6 +140,9 @@ public class ActionGameManager : MonoBehaviour
     public PostProcessVolume SevereHypothermiaPP;
 
     [Header("Scene Links")]
+    public GameObject UiRoot;
+    public GameObject HelpScreen;
+    public InputDisplayLayout InputDisplayLayout;
     public Transform ActionBar;
     public ActionBarSlot ActionBarSlot;
     public Transform EffectManagerParent;
@@ -305,6 +308,9 @@ public class ActionGameManager : MonoBehaviour
         #region Input Handling
 
         Input = new AetheriaInput();
+        foreach (var x in PlayerSettings.InputSettings.InputActionMap) Input.asset[x.Key.action].ApplyBindingOverride(x.Key.binding, x.Value);
+
+        InputDisplayLayout.Input = Input.asset;
         Input.Global.Enable();
 
         _zoomLevelIndex = Settings.DefaultMinimapZoom;
@@ -348,7 +354,9 @@ public class ActionGameManager : MonoBehaviour
             else Undock();
         };
 
-        Input.Global.MainMenu.performed += context => ToggleMainMenu();
+        Input.Global.MainMenu.performed += context => ToggleFullscreenMenu(MainMenu.gameObject);
+        
+        Input.Global.InputScreen.performed += context => ToggleFullscreenMenu(HelpScreen);
 
         Input.Player.HideUI.performed += context =>
         {
@@ -693,42 +701,31 @@ public class ActionGameManager : MonoBehaviour
         }
     }
 
-    private void ToggleMainMenu()
+    private void ToggleFullscreenMenu(GameObject menu)
     {
-        if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null) return;
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>() != null) return;
         if (CurrentEntity == null) return;
-        if (MainMenu.gameObject.activeSelf)
+        if (menu.activeSelf)
         {
             _paused = false;
             VolumeRenderer.EnableDepth = true;
-            MainMenu.gameObject.SetActive(false);
-            if (_menuShown)
-            {
-                Menu.gameObject.SetActive(true);
-            }
-            else
+            menu.SetActive(false);
+            UiRoot.SetActive(true);
+            if (!_menuShown)
             {
                 EnablePlayerInput();
                 UpdatePlayerPanel();
                 UpdateTargetPanel(CurrentEntity.Target.Value);
-                GameplayUI.gameObject.SetActive(true);
             }
         }
         else
         {
             _paused = true;
             VolumeRenderer.EnableDepth = false;
-            MainMenu.gameObject.SetActive(true);
+            menu.SetActive(true);
+            UiRoot.SetActive(false);
             _menuShown = Menu.gameObject.activeSelf;
-            if (_menuShown)
-            {
-                Menu.gameObject.SetActive(false);
-            }
-            else
-            {
-                GameplayUI.gameObject.SetActive(false);
-                DisablePlayerInput();
-            }
+            if (!_menuShown) DisablePlayerInput();
         }
     }
 
