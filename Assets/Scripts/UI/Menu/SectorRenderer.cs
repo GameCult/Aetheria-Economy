@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,10 +11,11 @@ using float2 = Unity.Mathematics.float2;
 
 public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IScrollHandler
 {
+    public ClickRaycaster Raycaster;
+    public PropertiesPanel Properties;
     public Canvas Canvas;
     public SectorMap Map;
     public ActionGameManager GameManager;
-    public Camera MainCamera;
     public Camera SectorCamera;
     public MeshRenderer SectorBackgroundRenderer;
     public float ZoomSpeed;
@@ -49,6 +51,61 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
         _sectorBackgroundDepth = _sectorBackgroundTransform.position.z;
         _sectorCameraTransform = SectorCamera.transform;
         _sectorCameraDepth = _sectorCameraTransform.position.z;
+        Raycaster.OnClickMiss += data =>
+        {
+            Properties.gameObject.SetActive(false);
+        };
+        Map.ZoneClicked.Subscribe(zone =>
+        {
+            Properties.gameObject.SetActive(true);
+            Properties.Clear();
+            Properties.Title.text = zone.Name;
+            Properties.AddProperty("Owner", () => zone.Owner?.Name ?? "None");
+            var otherFactions = zone.Factions
+                .Where(f => f.ID != zone.Owner?.ID)
+                .Select(f=>f.Name).ToArray();
+            if (otherFactions.Length > 0)
+                Properties.AddProperty("Factions Present", () => string.Join(", ", otherFactions));
+            var density = saturate(ActionGameManager.CurrentSector.Background.CloudDensity(zone.Position)/2);
+            var radius = GameManager.Settings.ZoneSettings.ZoneRadius.Evaluate(density);
+            var mass = GameManager.Settings.ZoneSettings.ZoneMass.Evaluate(density);
+            Properties.AddProperty("Mass", () => ActionGameManager.PlayerSettings.Format(mass));
+            Properties.AddProperty("Radius", () => ActionGameManager.PlayerSettings.Format(radius));
+            if (zone.PackedContents == null)
+            {
+                Properties.AddProperty(() => "Has not been visited");
+            }
+            else
+            {
+                var planetCount = zone.PackedContents.Planets.Count(body => body is PlanetData).ToString();
+                Properties.AddProperty("Planets", () => planetCount);
+
+                var beltCount = zone.PackedContents.Planets.Count(body => body is AsteroidBeltData).ToString();
+                Properties.AddProperty("Asteroid Belts", () => beltCount);
+
+                var giantCount = zone.PackedContents.Planets.Count(body => body is GasGiantData && !(body is SunData)).ToString();
+                Properties.AddProperty("Gas Giants", () => giantCount);
+
+                var starCount = zone.PackedContents.Planets.Count(body => body is SunData).ToString();
+                Properties.AddProperty("Stars", () => starCount);
+                
+                var stationCount = zone.PackedContents.Entities
+                    .Count(entity => ((HullData) entity.Hull.Data.Value).HullType == HullType.Ship)
+                    .ToString();
+                Properties.AddProperty("Stations", () => stationCount);
+                
+                var turretCount = zone.PackedContents.Entities
+                    .Count(entity => ((HullData) entity.Hull.Data.Value).HullType == HullType.Ship)
+                    .ToString();
+                Properties.AddProperty("Turrets", () => turretCount);
+                
+                var shipCount = zone.PackedContents.Entities
+                    .Count(entity => ((HullData) entity.Hull.Data.Value).HullType == HullType.Ship)
+                    .ToString();
+                Properties.AddProperty("Ships", () => shipCount);
+            }
+        });
+
         // PathAnimationButton.onClick.AddListener(() =>
         // {
         //     Map.StartCoroutine(AnimatePath());

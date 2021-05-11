@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170aefb3b5cd0e444826f3561d38a962, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MapIcon: {fileID: 1279711225872783832}
   InfluencePrefab: {fileID: 7850317761668179092, guid: f1bbcf6a20e34d9418b869c8d676cc94,
     type: 3}
   PingPrefab: {fileID: 0}

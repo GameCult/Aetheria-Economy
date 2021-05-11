@@ -46,7 +46,7 @@ public static class ZoneGenerator
 
 		var random = new Random(unchecked((uint) sectorZone.Name.GetHashCode()) ^ hash(sectorZone.Position));
 
-		var density = saturate(sector.Background.CloudDensity(sectorZone.Position));
+		var density = saturate(sector.Background.CloudDensity(sectorZone.Position)/2);
 		pack.Radius = zoneSettings.ZoneRadius.Evaluate(density);
 		pack.Mass = zoneSettings.ZoneMass.Evaluate(density);
 		var targetSubzoneCount = zoneSettings.SubZoneCount.Evaluate(density);

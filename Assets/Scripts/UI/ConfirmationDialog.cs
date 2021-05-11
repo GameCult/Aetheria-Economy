@@ -9,6 +9,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UniRx;
 
 public class ConfirmationDialog : PropertiesPanel
 {
@@ -29,11 +30,10 @@ public class ConfirmationDialog : PropertiesPanel
         Cancel.onClick.AddListener(() => End());
         Confirm.onClick.AddListener(() => End(true));
         if (CancelClickCatcher != null)
-            CancelClickCatcher.OnClick += data =>
+            CancelClickCatcher.OnClick.Subscribe(data =>
             {
-                if (LockDialog) return;
-                End();
-            };
+                if (!LockDialog) End();
+            });
 
         OnPropertyAdded += go =>
         {

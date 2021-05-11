@@ -291,7 +291,10 @@ public abstract class Entity
     public FactionRelationship GetFactionRelationship(Faction faction) => 
         this is Ship {IsPlayerShip: true} ? Zone.Sector.FactionRelationships[faction] : faction==Faction ? FactionRelationship.Beloved : FactionRelationship.Neutral;
     
-    public static bool IsPresencePermitted(FactionRelationship relationship, SecurityLevel securityLevel) => (int) relationship - (int) securityLevel > 0;
+    public static bool IsPresencePermitted(FactionRelationship relationship, SecurityLevel securityLevel) => 
+        (int) relationship - (int) securityLevel > 0;
+    public static bool IsDockingPermitted(FactionRelationship relationship, SecurityLevel securityLevel) => 
+        (int) relationship - (int) securityLevel > 1;
 
     public void ActivateConsumable(ConsumableItem item)
     {
@@ -700,6 +703,8 @@ public abstract class Entity
 
     public EquippedDockingBay TryDock(Ship ship)
     {
+        if (!IsDockingPermitted(ship.GetFactionRelationship(Faction), CurrentSecurityLevel.Value)) return null;
+        
         var bay = DockingBays.FirstOrDefault(x => x.DockedShip == null);
         if (bay != null)
         {
@@ -872,18 +877,10 @@ public abstract class Entity
         var localSecurityLevel = Zone.GetSecurityLevel(Position.xz);
         if (CurrentSecurityLevel.Value != localSecurityLevel) CurrentSecurityLevel.Value = localSecurityLevel;
 
-        foreach (var entity in Zone.Entities)
-        {
-            var previousHostility = EntityHostility[entity];
-            var newHostility = IsHostileTo(entity);
-            if (newHostility != previousHostility)
-                EntityHostility[entity] = newHostility;
-        }
-
         foreach (var v in VisibilitySources.Keys.ToArray())
         {
             VisibilitySources[v] = AetheriaMath.Decay(VisibilitySources[v], ItemManager.GameplaySettings.VisibilityDecay, delta);
-
+ 
             if (VisibilitySources[v] < 0.1f) VisibilitySources.Remove(v);
         }
 
@@ -893,6 +890,14 @@ public abstract class Entity
 
         if (_active)
         {
+            foreach (var entity in Zone.Entities)
+            {
+                var previousHostility = EntityHostility[entity];
+                var newHostility = IsHostileTo(entity);
+                if (newHostility != previousHostility)
+                    EntityHostility[entity] = newHostility;
+            }
+            
             if(Cockpit != null)
             {
                 var cockpitTemp = Cockpit.Temperature;

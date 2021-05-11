@@ -28,6 +28,7 @@ public class GameSettings : ScriptableObject
     public ExponentialCurve IconSize;
     public int AsteroidMeshCount = 5;
     public float MinimapAsteroidSize = 3;
+    public float MinimapIconSize = 1f / 32;
     public float PlanetRotationSpeed = 1;
     public NameGeneratorSettings NameGeneratorSettings;
     public TutorialGenerationSettings TutorialGenerationSettings;

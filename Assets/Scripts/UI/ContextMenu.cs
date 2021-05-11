@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UniRx;
 
 public class ContextMenu : MonoBehaviour
 {
@@ -32,14 +33,21 @@ public class ContextMenu : MonoBehaviour
     private bool _dropdownRight;
     private GameObject _dropdown;
     private ContextMenuOption _currentDropdown;
+    private IDisposable _backgroundClickSubscription;
 
-    private void Start()
+    private void OnEnable()
     {
         if (CancelClickCatcher != null)
-            CancelClickCatcher.OnClick += data =>
+            _backgroundClickSubscription = CancelClickCatcher.OnClick.Subscribe(data =>
             {
                 End();
-            };
+            });
+    }
+
+    private void OnDisable()
+    {
+        _backgroundClickSubscription?.Dispose();
+        _backgroundClickSubscription = null;
     }
 
     private void End()

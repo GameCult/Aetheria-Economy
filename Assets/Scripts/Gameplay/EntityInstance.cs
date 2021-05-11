@@ -11,6 +11,7 @@ using Random = UnityEngine.Random;
 
 public class EntityInstance : MonoBehaviour
 {
+    public MeshRenderer MapIcon;
     public Transform InfluencePrefab;
     public Transform PingPrefab;
     public Material InvisibleMaterial;

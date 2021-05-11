@@ -136,8 +136,15 @@ public class ZoneRenderer : MonoBehaviour
         {
             foreach (var camera in MinimapCameras)
                 camera.orthographicSize = value;
+            SetIconSize(value * Settings.MinimapIconSize);
             // MinimapGravityQuad.transform.localScale = value * 2 * Vector3.one;
         }
+    }
+
+    public void SetIconSize(float size)
+    {
+        foreach(var entityInstance in EntityInstances.Values) entityInstance.MapIcon.transform.localScale = Vector3.one * size;
+        foreach(var planet in Planets.Values) planet.Icon.transform.localScale = Vector3.one * size;
     }
 
     void Start()

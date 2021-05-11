@@ -26,6 +26,7 @@ public class MapRenderer : MonoBehaviour
     public Image InfluenceDisplay;
     public float Scale;
     public float2 Position;
+    public float IconSize = 1f/128;
 
     private RectTransform _rect;
     private RenderTexture _mapTexture;
@@ -117,5 +118,7 @@ public class MapRenderer : MonoBehaviour
         
         InfluenceCamera.transform.position = pos;
         InfluenceCamera.orthographicSize = _size.y * Scale * .5f;
+        
+        GameManager.ZoneRenderer.SetIconSize(IconSize * Scale);
     }
 }

@@ -11,4 +11,5 @@ public class SectorZoneUI : MonoBehaviour
     public MeshRenderer Influence;
     public TextMeshPro Label;
     public Transform IconContainer;
+    public ClickableCollider Clickable;
 }

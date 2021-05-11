@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using MessagePack;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
@@ -40,6 +41,8 @@ public class SectorMap : MonoBehaviour
     public AnimationCurve IconScaleAnimation;
     public Color PlayerLocationLabelColor;
     public float PlayerLocationIconSize = 1.25f;
+
+    public Subject<SectorZone> ZoneClicked = new Subject<SectorZone>();
 
     private SectorZone _currentPlayerLocation;
     private HashSet<SectorZone> _revealedZones = new HashSet<SectorZone>();
@@ -98,6 +101,7 @@ public class SectorMap : MonoBehaviour
             if (!_revealedZones.Contains(zone))
             {
                 var zoneInstance = ZonePrototype.Instantiate<SectorZoneUI>();
+                zoneInstance.Clickable.OnClick += (clickableCollider, data) => ZoneClicked.OnNext(zone);
                 if(zone == _currentPlayerLocation)
                     MarkPlayerLocation(zoneInstance);
                 _zoneInstances[zone] = zoneInstance;

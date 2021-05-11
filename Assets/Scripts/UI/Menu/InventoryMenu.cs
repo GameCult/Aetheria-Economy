@@ -20,8 +20,7 @@ public class InventoryMenu : MonoBehaviour
     public ActionGameManager GameManager;
     public RectTransform DragParent;
     public ConfirmationDialog Dialog;
-    public ObservablePointerEnterTrigger BackgroundEntered;
-    public ObservablePointerExitTrigger BackgroundExited;
+    // public ClickCatcher Background;
 
     private int _currentPanel = -1;
     
@@ -29,36 +28,37 @@ public class InventoryMenu : MonoBehaviour
     private InventoryPanel _selectedPanel;
     private ItemInstance _selectedItem;
     private ItemData _selectedItemData;
+    // private List<IDisposable> _backgroundSubscriptions;
 
-    private ItemInstance _dragItem;
-    private Transform[] _dragCells;
-    private Vector2[] _dragOffsets;
-    private int2 _dragCellOffset;
-    private ItemRotation _originalRotation;
-    //private Shape _previousFakeOccupancy;
-    private Shape _originalOccupancy;
-    private EquippedItem _originalEquippedItem;
-    private InventoryPanel _originalPanel;
-
-    private InventoryPanel _dragTargetPanel;
-    private int2 _dragTargetPosition;
-    private int2 _lastDragPosition;
-    private bool _dragTargetValid;
-    private bool _destroyItem;
+    // private ItemInstance _dragItem;
+    // private Transform[] _dragCells;
+    // private Vector2[] _dragOffsets;
+    // private int2 _dragCellOffset;
+    // private ItemRotation _originalRotation;
+    // //private Shape _previousFakeOccupancy;
+    // private Shape _originalOccupancy;
+    // private EquippedItem _originalEquippedItem;
+    // private InventoryPanel _originalPanel;
+    //
+    // private InventoryPanel _dragTargetPanel;
+    // private int2 _dragTargetPosition;
+    // private int2 _lastDragPosition;
+    // private bool _dragTargetValid;
+    // private bool _destroyItem;
 
     private void OnEnable()
     {
         AkSoundEngine.RegisterGameObj(gameObject);
-        BackgroundEntered.gameObject.SetActive(true);
+        // Background.gameObject.SetActive(true);
 
-        BackgroundEntered.OnPointerEnterAsObservable().Subscribe(enter =>
-        {
-            _destroyItem = true;
-        });
-        BackgroundExited.OnPointerExitAsObservable().Subscribe(enter =>
-        {
-            _destroyItem = false;
-        });
+        // Background.OnEnter.Subscribe(enter =>
+        // {
+        //     _destroyItem = true;
+        // });
+        // BackgroundExited.OnPointerExitAsObservable().Subscribe(enter =>
+        // {
+        //     _destroyItem = false;
+        // });
         var cargo = GameManager.DockingBay ?? GameManager.CurrentEntity.CargoBays.FirstOrDefault();
         if (cargo!=null)
             InventoryPanels[0].Display(cargo);
@@ -71,7 +71,7 @@ public class InventoryMenu : MonoBehaviour
     private void OnDisable()
     {
         AkSoundEngine.UnregisterGameObj(gameObject);
-        BackgroundEntered.gameObject.SetActive(false);
+        // Background.gameObject.SetActive(false);
     }
 
     void Start()
@@ -198,13 +198,13 @@ public class InventoryMenu : MonoBehaviour
 
     void Update()
     {
-        if (Keyboard.current.qKey.wasPressedThisFrame && _dragItem != null)
-        {
-            _dragItem.Rotation = (ItemRotation) (((int) _dragItem.Rotation + 1) % 4);
-        }
-        if (Keyboard.current.eKey.wasPressedThisFrame && _dragItem != null)
-        {
-            _dragItem.Rotation = (ItemRotation) (((int) _dragItem.Rotation + 3) % 4);
-        }
+        // if (Keyboard.current.qKey.wasPressedThisFrame && _dragItem != null)
+        // {
+        //     _dragItem.Rotation = (ItemRotation) (((int) _dragItem.Rotation + 1) % 4);
+        // }
+        // if (Keyboard.current.eKey.wasPressedThisFrame && _dragItem != null)
+        // {
+        //     _dragItem.Rotation = (ItemRotation) (((int) _dragItem.Rotation + 3) % 4);
+        // }
     }
 }

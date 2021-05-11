@@ -5,6 +5,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -15,11 +16,11 @@ public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	public bool PointerIsInside { get; private set; }
 	public float DragDistance = 25f;
 	
-	public event Action<PointerEventData> OnEnter;
-	public event Action<PointerEventData> OnExit;
-	public event Action<PointerEventData> OnClick;
+	public Subject<PointerEventData> OnEnter = new Subject<PointerEventData>();
+	public Subject<PointerEventData> OnExit = new Subject<PointerEventData>();
+	public Subject<PointerEventData> OnClick = new Subject<PointerEventData>();
 
-	private float downTime;
+	// private float downTime;
 
 	public static ClickCatcher Background
 	{
@@ -36,14 +37,14 @@ public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		//Debug.Log("Pointer Entered");
-		OnEnter?.Invoke(eventData);
+		OnEnter.OnNext(eventData);
 		PointerIsInside = true;
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		//Debug.Log("Pointer Exited");
-		OnExit?.Invoke(eventData);
+		OnExit.OnNext(eventData);
 		PointerIsInside = false;
 	}
 
@@ -61,6 +62,6 @@ public class ClickCatcher : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 	public void OnPointerClick(PointerEventData eventData)
 	{
 		if((eventData.pressPosition - eventData.position).sqrMagnitude < DragDistance)
-			OnClick?.Invoke(eventData);
+			OnClick.OnNext(eventData);
 	}
 }

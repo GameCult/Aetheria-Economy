@@ -5,11 +5,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class ClickRaycaster : MonoBehaviour
 {
+    public LayerMask Layers;
     public event Action<PointerEventData> OnClickMiss;
     public Camera RayCamera;
     private ClickCatcher _clickCatcher;
@@ -17,10 +19,10 @@ public class ClickRaycaster : MonoBehaviour
     void Start()
     {
         _clickCatcher = GetComponent<ClickCatcher>();
-        _clickCatcher.OnClick += pointer =>
+        _clickCatcher.OnClick.Subscribe(pointer =>
         {
             RaycastHit hit;
-            Physics.Raycast(RayCamera.ScreenPointToRay(pointer.position), out hit);
+            Physics.Raycast(RayCamera.ScreenPointToRay(pointer.position), out hit, 1000, Layers.value);
             if (hit.collider != null)
             {
                 var clickable = hit.collider.GetComponent<ClickableCollider>();
@@ -28,6 +30,6 @@ public class ClickRaycaster : MonoBehaviour
                     clickable.Click(pointer);
             }
             else OnClickMiss?.Invoke(pointer);
-        };
+        });
     }
 }

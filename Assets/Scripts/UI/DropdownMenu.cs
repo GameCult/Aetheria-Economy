@@ -9,6 +9,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UniRx;
 
 public class DropdownMenu : MonoBehaviour
 {
@@ -22,14 +23,21 @@ public class DropdownMenu : MonoBehaviour
     public float PaddingHeight;
     
     private List<GameObject> _options = new List<GameObject>();
+    private IDisposable _backgroundClickSubscription;
 
-    private void Start()
+    private void OnEnable()
     {
         if (CancelClickCatcher != null)
-            CancelClickCatcher.OnClick += data =>
+            _backgroundClickSubscription = CancelClickCatcher.OnClick.Subscribe(data =>
             {
                 End();
-            };
+            });
+    }
+
+    private void OnDisable()
+    {
+        _backgroundClickSubscription?.Dispose();
+        _backgroundClickSubscription = null;
     }
 
     private void End()
