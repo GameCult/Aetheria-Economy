@@ -11,7 +11,7 @@ public class Minion : Agent
             () => Task is PatrolOrbitsTask,
             () => patrolState.Task = Task as PatrolOrbitsTask);
 
-        Ship.VisibleHostiles.ObserveAdd().Where(_ => Ship.Target.Value == null).Subscribe(add => Ship.Target.Value = add.Value);
+        Ship.VisibleEnemies.ObserveAdd().Where(_ => Ship.Target.Value == null).Subscribe(add => Ship.Target.Value = add.Value);
 
         var combatState = new CombatState(this);
         _rootState.AddTransition(combatState,

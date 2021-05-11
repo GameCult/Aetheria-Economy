@@ -170,6 +170,7 @@ public class ActionGameManager : MonoBehaviour
     public CanvasGroup GameplayUI;
     public EventLog EventLog;
     public Prototype HostileTargetIndicator;
+    public Prototype FriendlyTargetIndicator;
     public PlaceUIElementWorldspace ViewDot;
     public Prototype LockIndicator;
     public PlaceUIElementWorldspace[] Crosshairs;
@@ -209,7 +210,8 @@ public class ActionGameManager : MonoBehaviour
     private float3 _viewDirection;
     private (HardpointData[] hardpoints, Transform[] barrels, PlaceUIElementWorldspace crosshair)[] _articulationGroups;
     private (LockWeapon targetLock, PlaceUIElementWorldspace indicator, Rotate spin)[] _lockingIndicators;
-    private Dictionary<Entity, VisibleHostileIndicator> _visibleHostileIndicators = new Dictionary<Entity, VisibleHostileIndicator>();
+    private Dictionary<Entity, VisibleTargetIndicator> _visibleHostileIndicators = new Dictionary<Entity, VisibleTargetIndicator>();
+    private Dictionary<Entity, VisibleTargetIndicator> _visibleFriendlyIndicators = new Dictionary<Entity, VisibleTargetIndicator>();
     private List<IDisposable> _shipSubscriptions = new List<IDisposable>();
     private List<IDisposable> _targetSubscriptions = new List<IDisposable>();
     private float _severeHeatstrokePhase;
@@ -362,6 +364,7 @@ public class ActionGameManager : MonoBehaviour
         {
             _uiHidden = !_uiHidden;
             GameplayUI.alpha = _uiHidden ? 0 : 1;
+            ActionBar.gameObject.SetActive(!_uiHidden);
         };
 
         Input.Player.OverrideShutdown.performed += context =>
@@ -393,33 +396,33 @@ public class ActionGameManager : MonoBehaviour
 
         Input.Player.TargetReticle.performed += context =>
         {
-            if (!CurrentEntity.VisibleHostiles.Any()) return;
-            var underReticle = CurrentEntity.VisibleHostiles.Where(x => x != CurrentEntity)
+            if (!CurrentEntity.VisibleEnemies.Any()) return;
+            var underReticle = CurrentEntity.VisibleEnemies.Where(x => x != CurrentEntity)
                 .MaxBy(x => dot(normalize(x.Position - CurrentEntity.Position), CurrentEntity.LookDirection));
             CurrentEntity.Target.Value = CurrentEntity.Target.Value == underReticle ? null : underReticle;
         };
 
         Input.Player.TargetNearest.performed += context =>
         {
-            if(CurrentEntity.VisibleHostiles.Any())
+            if(CurrentEntity.VisibleEnemies.Any())
             {
-                CurrentEntity.Target.Value = CurrentEntity.VisibleHostiles.Where(x => x != CurrentEntity)
+                CurrentEntity.Target.Value = CurrentEntity.VisibleEnemies.Where(x => x != CurrentEntity)
                     .MaxBy(x => length(x.Position - CurrentEntity.Position));
             }
         };
 
         Input.Player.TargetNext.performed += context =>
         {
-            if (!CurrentEntity.VisibleHostiles.Any()) return;
-            var targets = CurrentEntity.VisibleHostiles.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
+            if (!CurrentEntity.VisibleEnemies.Any()) return;
+            var targets = CurrentEntity.VisibleEnemies.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
             var currentTargetIndex = Array.IndexOf(targets, CurrentEntity.Target.Value);
             CurrentEntity.Target.Value = targets[(currentTargetIndex + 1) % targets.Length];
         };
 
         Input.Player.TargetPrevious.performed += context =>
         {
-            if (!CurrentEntity.VisibleHostiles.Any()) return;
-            var targets = CurrentEntity.VisibleHostiles.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
+            if (!CurrentEntity.VisibleEnemies.Any()) return;
+            var targets = CurrentEntity.VisibleEnemies.Where(x => x != CurrentEntity).OrderBy(x => length(x.Position - CurrentEntity.Position)).ToArray();
             var currentTargetIndex = Array.IndexOf(targets, CurrentEntity.Target.Value);
             CurrentEntity.Target.Value = targets[(currentTargetIndex + targets.Length - 1) % targets.Length];
         };
@@ -676,7 +679,7 @@ public class ActionGameManager : MonoBehaviour
                 sectorZone,
                 IsTutorial
             );
-            sectorZone.Contents = new Zone(ItemManager, Settings.PlanetSettings, sectorZone.PackedContents, sectorZone);
+            sectorZone.Contents = new Zone(ItemManager, Settings.PlanetSettings, sectorZone.PackedContents, sectorZone, CurrentSector);
         }
         Zone = sectorZone.Contents;
         PlayMusic(MusicType.Overworld);
@@ -916,12 +919,12 @@ public class ActionGameManager : MonoBehaviour
 
     private void UnbindEntity()
     {
-        foreach (var indicator in _visibleHostileIndicators)
-        {
-            Destroy(indicator.Value.gameObject);
-        }
-        
+        foreach (var indicator in _visibleHostileIndicators) Destroy(indicator.Value.gameObject);
         _visibleHostileIndicators.Clear();
+        
+        foreach (var indicator in _visibleFriendlyIndicators) Destroy(indicator.Value.gameObject);
+        _visibleFriendlyIndicators.Clear();
+        
         if(_lockingIndicators!=null) foreach(var (_, indicator, _) in _lockingIndicators)
             indicator.GetComponent<Prototype>().ReturnToPool();
         DisablePlayerInput();
@@ -1016,22 +1019,40 @@ public class ActionGameManager : MonoBehaviour
             }
         }));
 
-        foreach (var hostile in CurrentEntity.VisibleHostiles)
+        foreach (var hostile in CurrentEntity.VisibleEnemies)
         {
-            var indicator = HostileTargetIndicator.Instantiate<VisibleHostileIndicator>();
+            var indicator = HostileTargetIndicator.Instantiate<VisibleTargetIndicator>();
             _visibleHostileIndicators.Add(hostile, indicator);
         }
         
-        _shipSubscriptions.Add(CurrentEntity.VisibleHostiles.ObserveAdd().Subscribe(addEvent =>
+        _shipSubscriptions.Add(CurrentEntity.VisibleEnemies.ObserveAdd().Subscribe(addEvent =>
         {
-            var indicator = HostileTargetIndicator.Instantiate<VisibleHostileIndicator>();
+            var indicator = HostileTargetIndicator.Instantiate<VisibleTargetIndicator>();
             _visibleHostileIndicators.Add(addEvent.Value, indicator);
         }));
         
-        _shipSubscriptions.Add(CurrentEntity.VisibleHostiles.ObserveRemove().Subscribe(removeEvent =>
+        _shipSubscriptions.Add(CurrentEntity.VisibleEnemies.ObserveRemove().Subscribe(removeEvent =>
         {
             _visibleHostileIndicators[removeEvent.Value].GetComponent<Prototype>().ReturnToPool();
             _visibleHostileIndicators.Remove(removeEvent.Value);
+        }));
+
+        foreach (var friendly in CurrentEntity.VisibleFriendlies)
+        {
+            var indicator = FriendlyTargetIndicator.Instantiate<VisibleTargetIndicator>();
+            _visibleFriendlyIndicators.Add(friendly, indicator);
+        }
+        
+        _shipSubscriptions.Add(CurrentEntity.VisibleFriendlies.ObserveAdd().Subscribe(addEvent =>
+        {
+            var indicator = FriendlyTargetIndicator.Instantiate<VisibleTargetIndicator>();
+            _visibleFriendlyIndicators.Add(addEvent.Value, indicator);
+        }));
+        
+        _shipSubscriptions.Add(CurrentEntity.VisibleFriendlies.ObserveRemove().Subscribe(removeEvent =>
+        {
+            _visibleFriendlyIndicators[removeEvent.Value].GetComponent<Prototype>().ReturnToPool();
+            _visibleFriendlyIndicators.Remove(removeEvent.Value);
         }));
         
         _shipSubscriptions.Add(CurrentEntity.Death.Subscribe(Die));
@@ -1173,6 +1194,19 @@ public class ActionGameManager : MonoBehaviour
                         indicator.Value.Fill.enabled =
                             !(indicator.Key.EntityInfoGathered[CurrentEntity] > Settings.GameplaySettings.TargetDetectionInfoThreshold) ||
                             sin(TargetSpottedBlinkFrequency * Time.time) + TargetSpottedBlinkOffset > 0;
+                    }
+                }
+                foreach (var indicator in _visibleFriendlyIndicators)
+                {
+                    indicator.Value.gameObject.SetActive(indicator.Key!=CurrentEntity.Target.Value);
+                    indicator.Value.Place.Target = indicator.Key.Position;
+                    if (!indicator.Key.Active)
+                        indicator.Value.Fill.enabled = false;
+                    else
+                    {
+                        indicator.Value.Fill.enabled = true;
+                        indicator.Value.Fill.fillAmount =
+                            saturate(indicator.Key.EntityInfoGathered[CurrentEntity] / Settings.GameplaySettings.TargetDetectionInfoThreshold);
                     }
                 }
                 var look = Input.Player.Look.ReadValue<Vector2>();

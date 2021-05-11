@@ -30,7 +30,9 @@ public abstract class Entity
     public readonly ReactiveCollection<EquippedCargoBay> CargoBays = new ReactiveCollection<EquippedCargoBay>();
     public readonly ReactiveCollection<EquippedDockingBay> DockingBays = new ReactiveCollection<EquippedDockingBay>();
     public readonly ReactiveCollection<Entity> VisibleEntities = new ReactiveCollection<Entity>();
-    public readonly ReactiveCollection<Entity> VisibleHostiles = new ReactiveCollection<Entity>();
+    public readonly ReactiveDictionary<Entity, bool> EntityHostility = new ReactiveDictionary<Entity, bool>();
+    public readonly ReactiveCollection<Entity> VisibleEnemies = new ReactiveCollection<Entity>();
+    public readonly ReactiveCollection<Entity> VisibleFriendlies = new ReactiveCollection<Entity>();
 
     public Entity Parent;
     public List<Entity> Children = new List<Entity>();
@@ -127,6 +129,8 @@ public abstract class Entity
     public Subject<Unit> HypothermiaDeath = new Subject<Unit>();
     public Subject<Entity> TargetedBy = new Subject<Entity>();
     public ReactiveProperty<int> TargetedByCount = new ReactiveProperty<int>(0);
+    public ReactiveProperty<SecurityLevel> CurrentSecurityLevel = new ReactiveProperty<SecurityLevel>(SecurityLevel.Open);
+    public ReadOnlyReactiveProperty<bool> PresencePermitted;
     
     public UniRx.IObservable<EquippedItem> ItemDestroyed;
     public UniRx.IObservable<int2> HullArmorDepleted;
@@ -135,6 +139,7 @@ public abstract class Entity
     public UniRx.IObservable<CauseOfDeath> Death;
 
     private List<IDisposable> _subscriptions = new List<IDisposable>();
+    private Dictionary<Entity, List<IDisposable>> _watchedEntitySubscriptions = new Dictionary<Entity, List<IDisposable>>();
 
     public virtual void Activate()
     {
@@ -147,19 +152,84 @@ public abstract class Entity
             if(behavior is IInitializableBehavior initializableBehavior)
                 initializableBehavior.Initialize();
         }
-        foreach(var entity in Zone.Entities) EntityInfoGathered[entity] = 0;
-        _subscriptions.Add(Zone.Entities.ObserveAdd().Subscribe(add => EntityInfoGathered[add.Value] = 0));
+        foreach(var entity in Zone.Entities)
+        {
+            EntityInfoGathered[entity] = 0;
+            EntityHostility[entity] = IsHostileTo(entity);
+        }
+        _subscriptions.Add(Zone.Entities.ObserveAdd().Subscribe(add =>
+        {
+            EntityInfoGathered[add.Value] = 0;
+            EntityHostility[add.Value] = IsHostileTo(add.Value);
+        }));
         _subscriptions.Add(Zone.Entities.ObserveRemove().Subscribe(remove =>
         {
             if (Target.Value == remove.Value) Target.Value = null;
             EntityInfoGathered.Remove(remove.Value);
+            EntityHostility.Remove(remove.Value);
             VisibleEntities.Remove(remove.Value);
-            VisibleHostiles.Remove(remove.Value);
+            VisibleEnemies.Remove(remove.Value);
+            VisibleFriendlies.Remove(remove.Value);
         }));
-        _subscriptions.Add(VisibleEntities.ObserveRemove().Subscribe(remove =>
+        _subscriptions.Add(VisibleEnemies.ObserveRemove().Subscribe(remove =>
         {
             if (Target.Value == remove.Value) Target.Value = null;
         }));
+        _subscriptions.Add(Target.Subscribe(entity => entity?.TargetedBy.OnNext(this)));
+        _subscriptions.Add(TargetedBy.Subscribe(enemy =>
+        {
+            TargetedByCount.Value++;
+            enemy.Target.Where(t => t != this).Take(1).Subscribe(_ => TargetedByCount.Value--);
+        }));
+        
+        // 
+        _subscriptions.Add(EntityInfoGathered.ObserveReplace().Subscribe(replace =>
+        {
+            if (replace.OldValue < ItemManager.GameplaySettings.TargetDetectionInfoThreshold &&
+                replace.NewValue > ItemManager.GameplaySettings.TargetDetectionInfoThreshold)
+            {
+                VisibleEntities.Add(replace.Key);
+                if(EntityHostility[replace.Key])
+                    VisibleEnemies.Add(replace.Key);
+                else VisibleFriendlies.Add(replace.Key);
+            }
+            if (replace.OldValue > ItemManager.GameplaySettings.TargetDetectionInfoThreshold &&
+                replace.NewValue < ItemManager.GameplaySettings.TargetDetectionInfoThreshold)
+            {
+                VisibleEntities.Remove(replace.Key);
+                VisibleEnemies.Remove(replace.Key);
+                VisibleFriendlies.Remove(replace.Key);
+            }
+        }));
+        
+        // Create subscriptions to events occurring on any visible entity
+        _subscriptions.Add(VisibleEntities.ObserveAdd()
+            .Select(add=>add.Value)
+            .Subscribe(entity =>
+        {
+            var newVisibleEntitySubscriptions = new List<IDisposable>
+            {
+                // Respond to changes in the target's hostility status by updating the contents of VisibleEnemies and VisibleFriendlies
+                EntityHostility.ObserveReplace()
+                    .Where(replace => replace.Key == entity)
+                    .Select(replace => replace.NewValue)
+                    .Subscribe(isHostile =>
+                    {
+                        (isHostile ? VisibleEnemies : VisibleFriendlies).Add(entity);
+                        (isHostile ? VisibleFriendlies : VisibleEnemies).Remove(entity);
+                    })
+            };
+            
+            _watchedEntitySubscriptions[entity] = newVisibleEntitySubscriptions;
+        }));
+            
+        // Cleanup visible entity subscriptions
+        _subscriptions.Add(VisibleEntities.ObserveRemove().Subscribe(disappearingEntity =>
+        {
+            foreach(var subscription in _watchedEntitySubscriptions[disappearingEntity.Value]) subscription.Dispose();
+            _watchedEntitySubscriptions.Remove(disappearingEntity.Value);
+        }));
+        
         if(WeaponGroups.All(wg=>!wg.items.Any()))
             GenerateWeaponGroups();
     }
@@ -169,10 +239,13 @@ public abstract class Entity
         //ItemManager.Log($"Entity {Name} is deactivating!");
         foreach(var s in _subscriptions) s.Dispose();
         _subscriptions.Clear();
+        foreach(var ss in _watchedEntitySubscriptions.Values) foreach(var s in ss) s.Dispose();
+        _watchedEntitySubscriptions.Clear();
         _active = false;
         EntityInfoGathered.Clear();
         VisibleEntities.Clear();
-        VisibleHostiles.Clear();
+        VisibleEnemies.Clear();
+        VisibleFriendlies.Clear();
     }
 
     public Entity(ItemManager itemManager, Zone zone, EquippableItem hull, EntitySettings settings)
@@ -196,32 +269,29 @@ public abstract class Entity
             .Merge(HypothermiaDeath.Select(_ => CauseOfDeath.Hypothermia))
             .Merge(ItemDestroyed.Where(i=>i.GetBehavior<Cockpit>()!=null).Select(_ => CauseOfDeath.CockpitDestroyed));
 
-        Target.Subscribe(entity => entity?.TargetedBy.OnNext(this));
-        TargetedBy.Subscribe(enemy =>
-        {
-            TargetedByCount.Value++;
-            enemy.Target.Where(t => t != this).Take(1).Subscribe(_ => TargetedByCount.Value--);
-        });
-
-        EntityInfoGathered.ObserveReplace().Subscribe(replace =>
-        {
-            if (replace.OldValue < ItemManager.GameplaySettings.TargetDetectionInfoThreshold &&
-                replace.NewValue > ItemManager.GameplaySettings.TargetDetectionInfoThreshold)
-            {
-                VisibleEntities.Add(replace.Key);
-                if(IsHostileTo(replace.Key))
-                    VisibleHostiles.Add(replace.Key);
-            }
-            if (replace.OldValue > ItemManager.GameplaySettings.TargetDetectionInfoThreshold &&
-                replace.NewValue < ItemManager.GameplaySettings.TargetDetectionInfoThreshold)
-            {
-                VisibleEntities.Remove(replace.Key);
-                if(IsHostileTo(replace.Key))
-                    VisibleHostiles.Remove(replace.Key);
-            }
-        });
-        EntityInfoGathered.ObserveRemove().Subscribe(remove => VisibleEntities.Remove(remove.Key));
+        // The entity's presence is permitted when its faction owns the zone, or the current security level at its location is low enough
+        PresencePermitted = new ReadOnlyReactiveProperty<bool>(CurrentSecurityLevel.Select(security =>
+            IsPresencePermitted(GetFactionRelationship(Zone.SectorZone.Owner), security)), true);
     }
+
+    public bool IsHostileTo(Entity other, bool recursive = false)
+    {
+        if (Faction == null)
+            return !recursive && other.Faction != null && other.IsHostileTo(this, true);
+
+        // TODO: Inter-faction hostility
+        // When the entity faction owns the zone, they are hostile to trespassers or those hostile to them
+        if (Faction.ID == Zone.SectorZone.Owner.ID)
+            return recursive ? !other.PresencePermitted.Value : !other.PresencePermitted.Value || other.IsHostileTo(this, true);
+
+        return !recursive && other.IsHostileTo(this, true);
+    }
+
+    // TODO: Inter-faction relationships
+    public FactionRelationship GetFactionRelationship(Faction faction) => 
+        this is Ship {IsPlayerShip: true} ? Zone.Sector.FactionRelationships[faction] : faction==Faction ? FactionRelationship.Beloved : FactionRelationship.Neutral;
+    
+    public static bool IsPresencePermitted(FactionRelationship relationship, SecurityLevel securityLevel) => (int) relationship - (int) securityLevel > 0;
 
     public void ActivateConsumable(ConsumableItem item)
     {
@@ -249,16 +319,6 @@ public abstract class Entity
         ActivateConsumable(item);
         bay.Remove(item);
         return true;
-    }
-
-    public bool IsHostileTo(Entity other)
-    {
-        if (Faction == null)
-        {
-            return other.Faction != null;
-        }
-
-        return Faction.PlayerHostile && other.Faction == null;
     }
 
     private void MapEntity()
@@ -808,6 +868,17 @@ public abstract class Entity
         var hullData = ItemManager.GetData(Hull) as HullData;
 
         TargetRange = Target.Value == null ? -1 : length(Position - Target.Value.Position);
+
+        var localSecurityLevel = Zone.GetSecurityLevel(Position.xz);
+        if (CurrentSecurityLevel.Value != localSecurityLevel) CurrentSecurityLevel.Value = localSecurityLevel;
+
+        foreach (var entity in Zone.Entities)
+        {
+            var previousHostility = EntityHostility[entity];
+            var newHostility = IsHostileTo(entity);
+            if (newHostility != previousHostility)
+                EntityHostility[entity] = newHostility;
+        }
 
         foreach (var v in VisibilitySources.Keys.ToArray())
         {

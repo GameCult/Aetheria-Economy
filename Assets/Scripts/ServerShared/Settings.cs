@@ -31,6 +31,7 @@ public class PlanetSettings
     public ExponentialLerp AsteroidRespawnTime;
     public float GravityStrength;
     public float MiningDifficulty = 500f;
+    public float SecureAreaRadiusMultiplier = .45f;
 
     public ExponentialCurve OrbitPeriod;
 }

@@ -2307,7 +2307,7 @@
 						</Sound>
 						<Folder Name="Cannon_gun" ID="{E5DFDBF4-5721-4187-8D25-D90903700EE9}" ShortID="1060416587">
 							<ChildrenList>
-								<Sound Name="cannon_fire" ID="{CC8D2668-6F4F-4272-86B2-9674CAEE2FCF}" ShortID="512141866">
+								<Sound Name="Cannon_fire" ID="{CC8D2668-6F4F-4272-86B2-9674CAEE2FCF}" ShortID="512141866">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="Highpass" Type="int16">
@@ -2373,7 +2373,7 @@
 										<ActiveSource Name="SFX_weapon_cannon_fire" ID="{BC90198B-673F-4DA7-9EB4-67B4BC2453FB}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="cannon_hit" ID="{99F85F09-7AA1-4CFA-BD79-7789B22C8A8E}" ShortID="1068647667">
+								<Sound Name="Cannon_hit" ID="{99F85F09-7AA1-4CFA-BD79-7789B22C8A8E}" ShortID="1068647667">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="Highpass" Type="int16">
@@ -2440,7 +2440,7 @@
 										<ActiveSource Name="SFX_weapon_cannon_hit" ID="{29DE1CA9-7843-4B8A-81B2-255288EA24F3}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="cannon_ship_destroyed" ID="{A5A74A9F-967D-4624-AC4B-3AD0573FE1C9}" ShortID="371823711">
+								<Sound Name="Cannon_ship_destroyed" ID="{A5A74A9F-967D-4624-AC4B-3AD0573FE1C9}" ShortID="371823711">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="Highpass" Type="int16">
@@ -2503,7 +2503,7 @@
 										<ActiveSource Name="SFX_weapon_cannon_hit" ID="{4C561304-9CA6-4CA2-A3AC-7A280E1FC25C}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<RandomSequenceContainer Name="cannon_miss" ID="{481DB8D8-3BA3-428A-B8B3-DECF5A568D60}" ShortID="977076854">
+								<RandomSequenceContainer Name="Cannon_miss" ID="{481DB8D8-3BA3-428A-B8B3-DECF5A568D60}" ShortID="977076854">
 									<PropertyList>
 										<Property Name="3DSpatialization" Type="int16" Value="2"/>
 										<Property Name="Highpass" Type="int16">

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class VisibleHostileIndicator : MonoBehaviour
+public class VisibleTargetIndicator : MonoBehaviour
 {
     public RectTransform Transform;
     public Image Fill;

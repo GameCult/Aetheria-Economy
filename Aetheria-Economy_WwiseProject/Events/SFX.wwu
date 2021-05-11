@@ -12,7 +12,7 @@
 										<Action Name="" ID="{59A8D214-3A73-42B3-8497-E153E1B0802F}" ShortID="751616969">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="cannon_hit" ID="{99F85F09-7AA1-4CFA-BD79-7789B22C8A8E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Cannon_hit" ID="{99F85F09-7AA1-4CFA-BD79-7789B22C8A8E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -23,7 +23,7 @@
 										<Action Name="" ID="{127976EC-CD90-4439-A51B-0F23BCE5A61E}" ShortID="1057725604">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="cannon_fire" ID="{CC8D2668-6F4F-4272-86B2-9674CAEE2FCF}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Cannon_fire" ID="{CC8D2668-6F4F-4272-86B2-9674CAEE2FCF}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -34,7 +34,7 @@
 										<Action Name="" ID="{C021A046-E540-4833-B3FC-E427E56F799D}" ShortID="119140805">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="cannon_ship_destroyed" ID="{A5A74A9F-967D-4624-AC4B-3AD0573FE1C9}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Cannon_ship_destroyed" ID="{A5A74A9F-967D-4624-AC4B-3AD0573FE1C9}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -45,7 +45,7 @@
 										<Action Name="" ID="{82FFFDEC-C198-47D7-A92E-2CAA1ACB64A4}" ShortID="903929772">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="cannon_miss" ID="{481DB8D8-3BA3-428A-B8B3-DECF5A568D60}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Cannon_miss" ID="{481DB8D8-3BA3-428A-B8B3-DECF5A568D60}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -380,7 +380,7 @@
 					<ChildrenList>
 						<Folder Name="Electric" ID="{E4F7CF4A-E48D-4D56-9517-6163AA4E8FB3}" ShortID="815512515">
 							<ChildrenList>
-								<Event Name="electric_drive_stop" ID="{1098DC5B-9284-4AE8-A4AA-5795A99C565A}">
+								<Event Name="Electric_drive_stop" ID="{1098DC5B-9284-4AE8-A4AA-5795A99C565A}">
 									<ChildrenList>
 										<Action Name="" ID="{F59FB234-F55C-4609-B7FE-7F0371182A35}" ShortID="540391783">
 											<PropertyList>
@@ -424,7 +424,7 @@
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="electric_drive_play" ID="{C231C587-6292-47DD-BD73-AD4D8D14F12B}">
+								<Event Name="Electric_drive_play" ID="{C231C587-6292-47DD-BD73-AD4D8D14F12B}">
 									<ChildrenList>
 										<Action Name="" ID="{E3A24AA9-0C6A-4220-83FA-8FEF95E4B809}" ShortID="31310572">
 											<ReferenceList>
@@ -460,7 +460,7 @@
 						</Folder>
 						<Folder Name="Nuclear" ID="{B6CFCB5C-E6D0-4D12-8B5B-999E5714F839}" ShortID="340723961">
 							<ChildrenList>
-								<Event Name="nuclear_drive_stop" ID="{73F86CF2-764E-4EE6-83F3-A385BE96CCD1}">
+								<Event Name="Nuclear_drive_stop" ID="{73F86CF2-764E-4EE6-83F3-A385BE96CCD1}">
 									<ChildrenList>
 										<Action Name="" ID="{5680FA19-3671-4B8E-ADE2-B136DB0A9A8F}" ShortID="775093477">
 											<PropertyList>
@@ -504,7 +504,7 @@
 										</Action>
 									</ChildrenList>
 								</Event>
-								<Event Name="nuclear_drive_play" ID="{B92BC8AD-BEE8-4171-BDBF-AE18AEAEFF80}">
+								<Event Name="Nuclear_drive_play" ID="{B92BC8AD-BEE8-4171-BDBF-AE18AEAEFF80}">
 									<ChildrenList>
 										<Action Name="" ID="{55634FE4-3E11-467F-BA15-D1509ACD9749}" ShortID="58886145">
 											<ReferenceList>

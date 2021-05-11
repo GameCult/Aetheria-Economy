@@ -42,11 +42,13 @@ public class Zone
     }
     public ZonePack Pack { get; }
     public SectorZone SectorZone { get; }
+    public Sector Sector { get; }
 
-    public Zone(ItemManager itemManager, PlanetSettings settings, ZonePack pack, SectorZone sectorZone)
+    public Zone(ItemManager itemManager, PlanetSettings settings, ZonePack pack, SectorZone sectorZone, Sector sector)
     {
         _time = pack.Time;
         SectorZone = sectorZone;
+        Sector = sector;
         Pack = pack;
         _itemManager = itemManager;
         Settings = settings;
@@ -306,6 +308,24 @@ public class Zone
             //miner.AddCargo(newSimpleCommodity);
         }
     }
+
+    public SecurityLevel GetSecurityLevel(float2 pos)
+    {
+        if (SectorZone.Owner==null) return SecurityLevel.Open;
+        
+        var security = SecurityLevel.Open;
+        foreach (var entity in Entities)
+        {
+            if (entity is OrbitalEntity orbitalEntity && orbitalEntity.SecurityRadius > 1 && entity.Faction.ID == SectorZone.Owner.ID)
+            {
+                if (orbitalEntity.SecurityLevel > security && length(orbitalEntity.Position.xz - pos) < orbitalEntity.SecurityRadius * Settings.SecureAreaRadiusMultiplier)
+                    security = orbitalEntity.SecurityLevel;
+            }
+        }
+
+        return security;
+    }
+    
     public float GetHeight(float2 position)
     {
         var result = -PowerPulse(length(position)/(Pack.Radius*2), Settings.ZoneDepthExponent) * Settings.ZoneDepth;

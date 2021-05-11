@@ -74,7 +74,7 @@
 				<SoundcasterSession Name="spaceship02" ID="{901A806C-BACF-44C7-A74C-C5AB11105856}">
 					<ModuleList>
 						<Module>
-							<ObjectRef Name="electric_drive_play" ID="{C231C587-6292-47DD-BD73-AD4D8D14F12B}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<ObjectRef Name="Electric_drive_play" ID="{C231C587-6292-47DD-BD73-AD4D8D14F12B}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="0" Y="0"/>
 						</Module>
 						<Module>
@@ -86,7 +86,7 @@
 							<Position X="0" Y="4"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="electric_drive_stop" ID="{1098DC5B-9284-4AE8-A4AA-5795A99C565A}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<ObjectRef Name="Electric_drive_stop" ID="{1098DC5B-9284-4AE8-A4AA-5795A99C565A}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="1" Y="0"/>
 						</Module>
 						<Module>
@@ -102,7 +102,7 @@
 							<Position X="1" Y="3"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="nuclear_drive_play" ID="{B92BC8AD-BEE8-4171-BDBF-AE18AEAEFF80}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<ObjectRef Name="Nuclear_drive_play" ID="{B92BC8AD-BEE8-4171-BDBF-AE18AEAEFF80}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="2" Y="0"/>
 						</Module>
 						<Module>
@@ -118,7 +118,7 @@
 							<Position X="2" Y="4"/>
 						</Module>
 						<Module>
-							<ObjectRef Name="nuclear_drive_stop" ID="{73F86CF2-764E-4EE6-83F3-A385BE96CCD1}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
+							<ObjectRef Name="Nuclear_drive_stop" ID="{73F86CF2-764E-4EE6-83F3-A385BE96CCD1}" WorkUnitID="{79AC243A-4E47-49B9-A0E2-2B1628E6088C}"/>
 							<Position X="3" Y="0"/>
 						</Module>
 						<Module>

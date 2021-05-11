@@ -3,6 +3,7 @@ Properties {
 	_Color ("Color", Color) = (1,1,1,1)
 	_Depth ("Depth", Float) = 0.5
 	_Power("Power", Float) = 2
+	_Cutoff("Cutoff", Range(0,1)) = 1
 }
 
 Category {
@@ -23,7 +24,8 @@ Category {
 
 			fixed4 _Color;
 			float _Depth;
-			float _Power;
+			half _Power;
+			half _Cutoff;
 			
 			struct appdata_t {
 				float4 vertex : POSITION;
@@ -57,7 +59,7 @@ Category {
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float dist = length(i.texcoord-float2(.5,.5))*2;
-				return _Depth * powerPulse(dist,_Power) * _Color * smoothstep(1, .95, dist);
+				return _Depth * min(_Cutoff, powerPulse(dist,_Power)) * _Color * smoothstep(1, .95, dist);
 			}
 			ENDCG 
 		}

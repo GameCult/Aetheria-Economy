@@ -30,4 +30,14 @@ public class OrbitalEntity : Entity
         
         base.Update(delta);
     }
+
+    public bool IsSecureArea
+    {
+        get
+        {
+            if (SecurityRadius < 1) return false;
+            if (Faction == null) return false;
+            return !IsPresencePermitted(Zone.Sector.FactionRelationships[Faction], SecurityLevel);
+        }
+    }
 }

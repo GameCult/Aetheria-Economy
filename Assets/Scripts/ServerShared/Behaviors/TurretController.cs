@@ -96,7 +96,7 @@ public class TurretController : Behavior, IInitializableBehavior
                 if (x.Firing)
                     x.Deactivate();
             }
-            Entity.Target.Value = Entity.VisibleHostiles.FirstOrDefault(e => e is Ship);
+            Entity.Target.Value = Entity.VisibleEnemies.FirstOrDefault(e => e is Ship);
         }
         return true;
     }

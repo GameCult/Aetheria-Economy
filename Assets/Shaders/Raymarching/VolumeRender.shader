@@ -117,8 +117,8 @@
 		
 	    float surface = tex2Dlod(_Surface, half4(uv, 0, 0)).r;
 		float dist = pos.y + surface - _GridFloorOffset;
-			float4 lightTint = tex2Dlod(_TintTexture, half4(uv, 0, dist/30));
-			float fillDensity = saturate(-pos.y * _GridFillDensity);
+		float4 lightTint = tex2Dlod(_TintTexture, half4(uv, 0, dist/30));
+		float fillDensity = saturate(-pos.y * _GridFillDensity);
 
 		if(dist < _SafetyDistance)
 		{

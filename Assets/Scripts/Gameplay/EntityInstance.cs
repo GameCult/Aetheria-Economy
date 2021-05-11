@@ -446,8 +446,7 @@ public class EntityInstance : MonoBehaviour
             }
         }));
 
-        // TODO: ActionGameManager.CurrentSector.FactionRelationships[orbital.Faction]
-        if (entity is OrbitalEntity orbital && orbital.SecurityRadius > 1)// && (int) orbital.SecurityLevel > (int) SecurityLevel.Secure)
+        if (entity is OrbitalEntity orbital && orbital.IsSecureArea)
         {
             _influenceInstance = Instantiate(InfluencePrefab);
             _influenceInstance.transform.localScale = Vector3.one * orbital.SecurityRadius;

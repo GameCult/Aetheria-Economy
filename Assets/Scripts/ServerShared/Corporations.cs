@@ -27,8 +27,8 @@ public class Faction : DatabaseEntry, INamedEntry
     [InspectableDatabaseLink(typeof(PersonalityAttribute)), JsonProperty("personality"), Key(5)]  
     public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
 
-    [Inspectable, JsonProperty("hostile"), Key(6)]
-    public bool PlayerHostile;
+    // [Inspectable, JsonProperty("hostile"), Key(6)]
+    // public bool PlayerHostile;
 
     [InspectableColor, JsonProperty("primaryColor"), Key(7)]
     public float3 PrimaryColor;
