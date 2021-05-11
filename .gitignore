@@ -53,15 +53,29 @@ ExportedObj/
 
 # Unity3D generate project files
 Aetheria-Economy.sln
+Aetheria.Shared.Unity.csproj
+CultBase.csproj
+CultCache.csproj
+CultCache.Editor.csproj
 Assembly-CSharp.csproj
 Assembly-CSharp-Editor.csproj
 Assembly-CSharp-firstpass.csproj
-Economy.Shared.Unity.csproj
-MessagePack.csproj
+Assembly-CSharp-Editor-firstpass.csproj
 Substance.EditorHelper.csproj
 Substance.Platform.csproj
+RethinkDB.csproj
+MessagePack.csproj
 UniRx.csproj
-Assembly-CSharp-Editor-firstpass.csproj
+Ink.csproj
+Tests.csproj
+AK.Wwise.Unity.Timeline.Editor.csproj
+AK.Wwise.Unity.Timeline.csproj
+AK.Wwise.Unity.MonoBehaviour.Editor.csproj
+AK.Wwise.Unity.MonoBehaviour.csproj
+AK.Wwise.Unity.API.WwiseTypes.csproj
+AK.Wwise.Unity.API.Editor.csproj
+AK.Wwise.Unity.API.csproj
+Ak.Wwise.Api.WAAPI.csproj
 
 # Unity3D generated meta files
 *.pidb.meta

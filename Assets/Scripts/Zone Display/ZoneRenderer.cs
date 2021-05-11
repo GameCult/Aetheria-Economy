@@ -51,12 +51,14 @@ public class ZoneRenderer : MonoBehaviour
     // public Mesh[] AsteroidMeshes;
     // public Material AsteroidMaterial;
 
-    [Header("Prefabs")] public MeshFilter AsteroidBeltUI;
+    [Header("Prefabs")]
+    public MeshFilter AsteroidBeltUI;
     public PlanetObject Planet;
     public GasGiantObject GasGiant;
     public SunObject Sun;
 
-    [Header("Icons")] public Texture2D PlanetoidIcon;
+    [Header("Icons")]
+    public Texture2D PlanetoidIcon;
     public Texture2D PlanetIcon;
 
     [HideInInspector] public Dictionary<Entity, EntityInstance> EntityInstances = new Dictionary<Entity, EntityInstance>();
