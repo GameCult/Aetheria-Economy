@@ -217,6 +217,32 @@ public class Shape
         position = int2.zero;
         return false;
     }
+
+    // Set every cell on the line from a to b to true according to Bresenham's Line Algorithm
+    public void SetLine(float2 a, float2 b)
+    {
+        float dx = b.x - a.x;
+        float dy = b.y - a.y;
+        float derr = Math.Abs(dy / dx); // dx != 0
+        float error = 0f;
+        int y = (int) Math.Round(a.y);
+
+        for (int x = (int) Math.Round(a.x); x <= (int) Math.Round(b.x); x++)
+        {
+            if (x < Width && y < Height)
+            {
+                Cells[x, y] = true;
+            }
+            error += derr;
+            if (error >= 0.5f)
+            {
+                y += Math.Sign(dy);
+                error -= 1f;
+            }
+        }
+
+    }
+
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn), JsonConverter(typeof(JsonKnownTypesConverter<ItemData>))]
