@@ -288,9 +288,15 @@ public abstract class Entity
     }
 
     // TODO: Inter-faction relationships
-    public FactionRelationship GetFactionRelationship(Faction faction) => 
-        this is Ship {IsPlayerShip: true} ? Zone.Sector.FactionRelationships[faction] : faction==Faction ? FactionRelationship.Beloved : FactionRelationship.Neutral;
-    
+    public FactionRelationship GetFactionRelationship(Faction faction)
+    {
+        if (faction == null)
+            return FactionRelationship.Neutral;
+        if (this is Ship {IsPlayerShip: true})
+            return Zone.Sector.FactionRelationships[faction];
+        return faction.ID == Faction.ID ? FactionRelationship.Beloved : FactionRelationship.Neutral;
+    }
+
     public static bool IsPresencePermitted(FactionRelationship relationship, SecurityLevel securityLevel) => 
         (int) relationship - (int) securityLevel > 0;
     public static bool IsDockingPermitted(FactionRelationship relationship, SecurityLevel securityLevel) => 

@@ -839,7 +839,7 @@ public class ActionGameManager : MonoBehaviour
         {
             foreach (var entity in Zone.Entities.ToArray())
             {
-                if (lengthsq(entity.Position.xz - CurrentEntity.Position.xz) <
+                if (entity != CurrentEntity && lengthsq(entity.Position.xz - CurrentEntity.Position.xz) <
                     Settings.GameplaySettings.DockingDistance * Settings.GameplaySettings.DockingDistance)
                 {
                     var bay = entity.TryDock(ship);
