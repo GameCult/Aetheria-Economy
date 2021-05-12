@@ -59,8 +59,8 @@ public class ZoneRenderer : MonoBehaviour
     public Prototype CompassIconPrototype;
 
     [Header("Icons")]
-    public Texture2D PlanetoidIcon;
-    public Texture2D PlanetIcon;
+    public Sprite OrbitalIcon;
+    public Sprite WormholeIcon;
 
     [HideInInspector] public Dictionary<Entity, EntityInstance> EntityInstances = new Dictionary<Entity, EntityInstance>();
     [HideInInspector] public Dictionary<Guid, PlanetObject> Planets = new Dictionary<Guid, PlanetObject>();
@@ -83,7 +83,7 @@ public class ZoneRenderer : MonoBehaviour
     private List<IDisposable> _zoneSubscriptions = new List<IDisposable>();
     private PlanetObject[] _suns;
 
-    public Dictionary<Wormhole, (GameObject gravity, Transform icon)> WormholeInstances = new Dictionary<Wormhole, (GameObject, Transform)>();
+    public Dictionary<Wormhole, (GameObject gravity, CompassIcon icon)> WormholeInstances = new Dictionary<Wormhole, (GameObject, CompassIcon)>();
     private List<ItemPickup> _loot = new List<ItemPickup>();
 
     public Zone Zone { get; private set; }
@@ -215,7 +215,8 @@ public class ZoneRenderer : MonoBehaviour
     {
         var instance = Instantiate(WormholePrefab);
         instance.position = new Vector3(wormhole.Position.x, 0, wormhole.Position.y);
-        var icon = CompassIconPrototype.Instantiate<Transform>();
+        var icon = CompassIconPrototype.Instantiate<CompassIcon>();
+        icon.Icon.sprite = WormholeIcon;
         WormholeInstances.Add(wormhole, (instance.gameObject, icon));
     }
 
@@ -284,9 +285,15 @@ public class ZoneRenderer : MonoBehaviour
                 ItemManager.Log($"Failed to instantiate {hullData.Name} entity with invalid prefab: no EntityInstance component!");
                 return;
             }
+            if (entity.HullData.HullType == HullType.Station)
+            {
+                instance.CompassIcon = CompassIconPrototype.Instantiate<CompassIcon>();
+                instance.CompassIcon.Icon.sprite = OrbitalIcon;
+            }
         }
 
         instance.SetEntity(this, entity);
+        
         EntityInstances.Add(entity, instance);
     }
 
@@ -481,12 +488,26 @@ public class ZoneRenderer : MonoBehaviour
             else planet.Value.Body.transform.rotation *= Quaternion.AngleAxis(Settings.PlanetRotationSpeed, Vector3.up);
         }
 
+        foreach (var entityInstance in EntityInstances.Values)
+        {
+            if(entityInstance.CompassIcon)
+            {
+                var difference = entityInstance.Entity.Position.xz - PerspectiveEntity.Position.xz;
+                var distance = length(difference);
+                
+                entityInstance.CompassIcon.gameObject.SetActive(
+                    PerspectiveEntity.EntityInfoGathered[entityInstance.Entity] > Settings.GameplaySettings.TargetDetectionInfoThreshold &&
+                    distance > _minimapDistance);
+                entityInstance.CompassIcon.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg - 90);
+            }
+        }
+
         foreach (var wormhole in WormholeInstances.Values)
         {
             var difference = wormhole.gravity.transform.position.Flatland() - (Vector2)PerspectiveEntity.Position.xz;
             var distance = difference.magnitude;
             wormhole.icon.gameObject.SetActive(distance > _minimapDistance);
-            wormhole.icon.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg - 90);
+            wormhole.icon.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg - 90);
         }
 
         var fogPos = FogCameraParent.position;

@@ -4383,6 +4383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 336445423}
   - component: {fileID: 336445422}
+  - component: {fileID: 336445424}
   m_Layer: 5
   m_Name: IconPivot
   m_TagString: Untagged
@@ -4422,6 +4423,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &336445424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336445421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75b24e04994ddc14a83fc147dfc74181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 230026525}
 --- !u!1001 &342600466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16135,6 +16149,8 @@ MonoBehaviour:
     type: 3}
   Sun: {fileID: 2259714927540639794, guid: 046dde0f4600bce41ad33c476f99b309, type: 3}
   CompassIconPrototype: {fileID: 336445422}
+  OrbitalIcon: {fileID: 21300000, guid: 97bce58bfe43bfa40870ca062cfb7ec1, type: 3}
+  WormholeIcon: {fileID: 21300000, guid: 6d0b27330fdcc8347b1e09a2d17a0673, type: 3}
   PlanetoidIcon: {fileID: 2800000, guid: 823d8a1c4e071994087624c39f62b319, type: 3}
   PlanetIcon: {fileID: 2800000, guid: 0d2acbd593b7fd349b0b26b4844733ef, type: 3}
 --- !u!114 &1009503735
@@ -23707,7 +23723,7 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 55.675
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
@@ -24919,7 +24935,7 @@ PrefabInstance:
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 60.98
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 878382121558056004, guid: 2758dfa2744d7ad4d8877545189d116e,
         type: 3}

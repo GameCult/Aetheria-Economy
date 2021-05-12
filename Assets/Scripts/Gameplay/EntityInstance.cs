@@ -59,6 +59,7 @@ public class EntityInstance : MonoBehaviour
         _constantWeaponManagers.Clear();
     }
 
+    public CompassIcon CompassIcon { get; set; }
     public Dictionary<HardpointData, Transform[]> Barrels { get; private set; }
     public Dictionary<HardpointData, int> BarrelIndices { get; private set; }
     public Dictionary<Radiator, MeshRenderer> RadiatorMeshes { get; private set; }
