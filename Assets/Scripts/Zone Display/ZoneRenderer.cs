@@ -56,6 +56,7 @@ public class ZoneRenderer : MonoBehaviour
     public PlanetObject Planet;
     public GasGiantObject GasGiant;
     public SunObject Sun;
+    public Prototype CompassIconPrototype;
 
     [Header("Icons")]
     public Texture2D PlanetoidIcon;
@@ -69,6 +70,7 @@ public class ZoneRenderer : MonoBehaviour
     private Dictionary<Guid, Matrix4x4[][]> _beltMatrices = new Dictionary<Guid, Matrix4x4[][]>();
     private float _viewDistance;
     private float _maxDepth;
+    private float _minimapDistance;
 
     private int _tourIndex = -1;
     private float _tourTimer;
@@ -81,7 +83,7 @@ public class ZoneRenderer : MonoBehaviour
     private List<IDisposable> _zoneSubscriptions = new List<IDisposable>();
     private PlanetObject[] _suns;
 
-    public Dictionary<Wormhole, GameObject> WormholeInstances = new Dictionary<Wormhole, GameObject>();
+    public Dictionary<Wormhole, (GameObject gravity, Transform icon)> WormholeInstances = new Dictionary<Wormhole, (GameObject, Transform)>();
     private List<ItemPickup> _loot = new List<ItemPickup>();
 
     public Zone Zone { get; private set; }
@@ -134,6 +136,7 @@ public class ZoneRenderer : MonoBehaviour
     {
         set
         {
+            _minimapDistance = value;
             foreach (var camera in MinimapCameras)
                 camera.orthographicSize = value;
             SetIconSize(value * Settings.MinimapIconSize);
@@ -212,13 +215,18 @@ public class ZoneRenderer : MonoBehaviour
     {
         var instance = Instantiate(WormholePrefab);
         instance.position = new Vector3(wormhole.Position.x, 0, wormhole.Position.y);
-        WormholeInstances.Add(wormhole, instance.gameObject);
+        var icon = CompassIconPrototype.Instantiate<Transform>();
+        WormholeInstances.Add(wormhole, (instance.gameObject, icon));
     }
 
     public void ClearZone()
     {
         if (Zone == null) return;
-        foreach (var wormhole in WormholeInstances.Values) Destroy(wormhole);
+        foreach (var wormhole in WormholeInstances.Values)
+        {
+            Destroy(wormhole.gravity);
+            wormhole.icon.GetComponent<Prototype>().ReturnToPool();
+        }
         WormholeInstances.Clear();
 
         foreach (var subscription in _zoneSubscriptions)
@@ -471,6 +479,14 @@ public class ZoneRenderer : MonoBehaviour
                 }
             }
             else planet.Value.Body.transform.rotation *= Quaternion.AngleAxis(Settings.PlanetRotationSpeed, Vector3.up);
+        }
+
+        foreach (var wormhole in WormholeInstances.Values)
+        {
+            var difference = wormhole.gravity.transform.position.Flatland() - (Vector2)PerspectiveEntity.Position.xz;
+            var distance = difference.magnitude;
+            wormhole.icon.gameObject.SetActive(distance > _minimapDistance);
+            wormhole.icon.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg - 90);
         }
 
         var fogPos = FogCameraParent.position;
