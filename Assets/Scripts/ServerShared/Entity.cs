@@ -146,6 +146,15 @@ public abstract class Entity
         //ItemManager.Log($"Entity {Name} is activating!");
         _active = true;
         Heatstroke = 0;
+
+        // The entity's presence is permitted when its faction owns the zone, or the current security level at its location is low enough
+        PresencePermitted = new ReadOnlyReactiveProperty<bool>(CurrentSecurityLevel.Select(security =>
+        {
+            var factionRelationship = GetFactionRelationship(Zone.GalaxyZone.Owner);
+            var presencePermitted = IsPresencePermitted(factionRelationship, security);
+            return presencePermitted;
+        }), initialValue: true);
+        
         foreach (var item in Equipment)
         foreach (var behavior in item.Behaviors)
         {
@@ -269,9 +278,7 @@ public abstract class Entity
             .Merge(HypothermiaDeath.Select(_ => CauseOfDeath.Hypothermia))
             .Merge(ItemDestroyed.Where(i=>i.GetBehavior<Cockpit>()!=null).Select(_ => CauseOfDeath.CockpitDestroyed));
 
-        // The entity's presence is permitted when its faction owns the zone, or the current security level at its location is low enough
-        PresencePermitted = new ReadOnlyReactiveProperty<bool>(CurrentSecurityLevel.Select(security =>
-            IsPresencePermitted(GetFactionRelationship(Zone.SectorZone.Owner), security)), true);
+        //CurrentSecurityLevel.Value = SecurityLevel.Open;
     }
 
     public bool IsHostileTo(Entity other, bool recursive = false)
@@ -281,8 +288,8 @@ public abstract class Entity
 
         // TODO: Inter-faction hostility
         // When the entity faction owns the zone, they are hostile to trespassers or those hostile to them
-        if (Faction.ID == Zone.SectorZone.Owner.ID)
-            return recursive ? !other.PresencePermitted.Value : !other.PresencePermitted.Value || other.IsHostileTo(this, true);
+        if (Faction.ID == Zone.GalaxyZone.Owner.ID)
+            return recursive ? !(other.PresencePermitted?.Value ?? true) : !(other.PresencePermitted?.Value ?? true)|| other.IsHostileTo(this, true);
 
         return !recursive && other.IsHostileTo(this, true);
     }
@@ -293,7 +300,7 @@ public abstract class Entity
         if (faction == null)
             return FactionRelationship.Neutral;
         if (this is Ship {IsPlayerShip: true})
-            return Zone.Sector.FactionRelationships[faction];
+            return Zone.Galaxy.FactionRelationships[faction];
         return faction.ID == Faction.ID ? FactionRelationship.Beloved : FactionRelationship.Neutral;
     }
 

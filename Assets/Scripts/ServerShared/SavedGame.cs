@@ -49,35 +49,35 @@ public class SavedGame
     
     public SavedGame() { }
 
-    public SavedGame(Sector sector, Zone currentZone, Entity currentEntity)
+    public SavedGame(Galaxy galaxy, Zone currentZone, Entity currentEntity)
     {
-        DiscoveredZones = sector.DiscoveredZones.Select(dz => Array.IndexOf(sector.Zones, dz)).ToArray();
-        Background = sector.Background;
-        Factions = sector.HomeZones.Keys.Select(f => f.ID).ToArray();
-        Relationships = sector.Factions.Select(f => sector.FactionRelationships[f]).ToArray();
+        DiscoveredZones = galaxy.DiscoveredZones.Select(dz => Array.IndexOf(galaxy.Zones, dz)).ToArray();
+        Background = galaxy.Background;
+        Factions = galaxy.HomeZones.Keys.Select(f => f.ID).ToArray();
+        Relationships = galaxy.Factions.Select(f => galaxy.FactionRelationships[f]).ToArray();
         
-        HomeZones = sector.HomeZones.ToDictionary(
+        HomeZones = galaxy.HomeZones.ToDictionary(
             x => Array.IndexOf(Factions, x.Key.ID),
-            x => Array.IndexOf(sector.Zones, x.Value));
-        BossZones = sector.BossZones.ToDictionary(
+            x => Array.IndexOf(galaxy.Zones, x.Value));
+        BossZones = galaxy.BossZones.ToDictionary(
             x => Array.IndexOf(Factions, x.Key.ID),
-            x => Array.IndexOf(sector.Zones, x.Value));
+            x => Array.IndexOf(galaxy.Zones, x.Value));
         
-        Zones = sector.Zones.Select(zone => new SavedZone
+        Zones = galaxy.Zones.Select(zone => new SavedZone
         {
             Name = zone.Name,
             Position = zone.Position,
-            AdjacentZones = zone.AdjacentZones.Select(az=> Array.IndexOf(sector.Zones, az)).ToArray(),
+            AdjacentZones = zone.AdjacentZones.Select(az=> Array.IndexOf(galaxy.Zones, az)).ToArray(),
             Factions = zone.Factions.Select(f=> Array.IndexOf(Factions, f.ID)).ToArray(),
             Contents = zone.Contents?.PackZone(),
             Owner = zone.Owner == null ? -1 : Array.IndexOf(Factions, zone.Owner.ID)
         }).ToArray();
 
-        CurrentZone = Array.FindIndex(sector.Zones, zone => zone.Contents == currentZone);
+        CurrentZone = Array.FindIndex(galaxy.Zones, zone => zone.Contents == currentZone);
         CurrentZoneEntity = currentZone.Entities.IndexOf(currentEntity);
         
-        Entrance = Array.IndexOf(sector.Zones, sector.Entrance);
-        Exit = Array.IndexOf(sector.Zones, sector.Exit);
+        Entrance = Array.IndexOf(galaxy.Zones, galaxy.Entrance);
+        Exit = Array.IndexOf(galaxy.Zones, galaxy.Exit);
     }
 }
 

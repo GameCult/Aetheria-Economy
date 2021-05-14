@@ -197,11 +197,11 @@ public class ZoneRenderer : MonoBehaviour
             UnloadEntity(e.Value);
         }));
 
-        if (zone.SectorZone != null)
+        if (zone.GalaxyZone != null)
         {
-            foreach (var adjacentZone in zone.SectorZone.AdjacentZones)
+            foreach (var adjacentZone in zone.GalaxyZone.AdjacentZones)
             {
-                var dir = normalize(adjacentZone.Position - zone.SectorZone.Position);
+                var dir = normalize(adjacentZone.Position - zone.GalaxyZone.Position);
                 AddWormhole(new Wormhole
                 {
                     Target = adjacentZone,

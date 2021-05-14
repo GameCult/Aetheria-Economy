@@ -4,7 +4,7 @@ using System.Linq;
 
 public interface IZoneResolver
 {
-    public SectorZone ResolveZone(string path);
+    public GalaxyZone ResolveZone(string path);
 }
 
 public interface IFactionResolver
@@ -16,12 +16,12 @@ public abstract class ZoneConstraint
 {
     public bool Flip = false;
     
-    public bool Test(SectorZone zone)
+    public bool Test(GalaxyZone zone)
     {
         return Flip ^ TestZone(zone);
     }
     
-    protected abstract bool TestZone(SectorZone zone);
+    protected abstract bool TestZone(GalaxyZone zone);
 }
 
 public class FactionPresenceConstraint : ZoneConstraint
@@ -32,7 +32,7 @@ public class FactionPresenceConstraint : ZoneConstraint
         TargetFaction = resolver.ResolveFaction(args[0]);
     }
 
-    protected override bool TestZone(SectorZone zone)
+    protected override bool TestZone(GalaxyZone zone)
     {
         return zone.Factions.Any(f=>f.ID == TargetFaction?.ID);
     }
@@ -47,7 +47,7 @@ public class FactionOwnerConstraint : ZoneConstraint
         TargetFaction = resolver.ResolveFaction(args[0]);
     }
 
-    protected override bool TestZone(SectorZone zone)
+    protected override bool TestZone(GalaxyZone zone)
     {
         return zone.Owner.ID == TargetFaction?.ID;
     }
@@ -55,7 +55,7 @@ public class FactionOwnerConstraint : ZoneConstraint
 
 public class DistanceConstraint : ZoneConstraint
 {
-    private SectorZone _targetZone;
+    private GalaxyZone _targetZone;
     private Predicate<int> _test;
     
     public DistanceConstraint(string[] args, IZoneResolver zoneResolver)
@@ -82,7 +82,7 @@ public class DistanceConstraint : ZoneConstraint
         }
     }
 
-    protected override bool TestZone(SectorZone zone)
+    protected override bool TestZone(GalaxyZone zone)
     {
         return _targetZone != null && _test(zone.Distance[_targetZone]);
     }

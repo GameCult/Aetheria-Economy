@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Ink;
-using Ink.Runtime;
+using Ink.Parsed;
 using MessagePack;
 using Path = System.IO.Path;
 using Random = Unity.Mathematics.Random;
+using Story = Ink.Runtime.Story;
 
 public class StoryProcessor : IZoneResolver, IFactionResolver
 {
@@ -24,62 +25,67 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
         public string LoadInkFileContents (string fullFilename) => File.ReadAllText (fullFilename);
     }
 
-    private Dictionary<Story, SectorZone> _placedStories = new Dictionary<Story, SectorZone>();
+    private Dictionary<Story, string[]> _storyKnotPaths = new Dictionary<Story, string[]>();
+    private Dictionary<Story, GalaxyZone> _storyLocations = new Dictionary<Story, GalaxyZone>();
     private Dictionary<string, Story> _processedStories = new Dictionary<string, Story>();
     private DirectoryInfo _locationsPath;
+    private DirectoryInfo _questsPath;
     private IFileHandler _inkFileHandler;
 
     public DirectoryInfo NarrativeDirectory { get; }
     private Random _random;
-    public Sector Sector { get; }
+    public Galaxy Galaxy { get; }
     public PlayerSettings Settings { get; }
     
-    public StoryProcessor(PlayerSettings settings, DirectoryInfo narrativeDirectory, Sector sector, ref Random random)
+    public StoryProcessor(PlayerSettings settings, DirectoryInfo narrativeDirectory, Galaxy galaxy, ref Random random)
     {
         NarrativeDirectory = narrativeDirectory;
-        Sector = sector;
+        Galaxy = galaxy;
         _random = random;
         Settings = settings;
         
         _inkFileHandler = new AetheriaInkFileHandler(narrativeDirectory);
         
         _locationsPath = narrativeDirectory.CreateSubdirectory("Locations");
+        _questsPath = narrativeDirectory.CreateSubdirectory("Quests");
     }
 
-    public Dictionary<Story, SectorZone> PlaceStories()
+    public void ProcessStories()
     {
         var locationFiles = _locationsPath.EnumerateFiles("*.ink");
-        foreach(var inkFile in locationFiles) PlaceStory(GetStory(inkFile));
-        return _placedStories;
+        foreach(var inkFile in locationFiles) ProcessLocation(GetStory(inkFile), inkFile);
+
+        var questFiles = _questsPath.EnumerateFiles("*ink");
+        foreach(var inkFile in questFiles)  ProcessQuest(GetStory(inkFile));
     }
     
-    public SectorZone ResolveZone(string path)
+    public GalaxyZone ResolveZone(string path)
     {
         // Handle special cases: "start" and "end"
         if (path.Equals("start", StringComparison.InvariantCultureIgnoreCase))
-            return Sector.Entrance;
+            return Galaxy.Entrance;
         if (path.Equals("end", StringComparison.InvariantCultureIgnoreCase))
-            return Sector.Exit;
+            return Galaxy.Exit;
         
         // Handle faction home reference: format = "home.<faction>"
         if(path.StartsWith("home"))
         {
             var factionString = path.Substring(5);
             var faction = ResolveFaction(factionString);
-            return !Sector.HomeZones.ContainsKey(faction) ? null : Sector.HomeZones[faction];
+            return !Galaxy.HomeZones.ContainsKey(faction) ? null : Galaxy.HomeZones[faction];
         }
         
         var locationInkFile = new FileInfo(Path.Combine(_locationsPath.FullName, $"{path}.ink"));
         if (!locationInkFile.Exists) return null;
 
         var story = GetStory(locationInkFile);
-        PlaceStory(story);
-        return _placedStories.ContainsKey(story) ? _placedStories[story] : null;
+        ProcessLocation(story, locationInkFile);
+        return _storyLocations.ContainsKey(story) ? _storyLocations[story] : null;
     }
 
     public Faction ResolveFaction(string name)
     {
-        return Sector.Factions.FirstOrDefault(f => f.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
+        return Galaxy.Factions.FirstOrDefault(f => f.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
     }
 
     Story GetStory(FileInfo inkFile)
@@ -109,16 +115,30 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
             fileHandler = _inkFileHandler
         });
         var story = compiler.Compile();
+        var knots = compiler.parsedStory.FindAll<Knot>().Select(k=>k.runtimePath.ToString()).ToArray();
+        _storyKnotPaths[story] = knots;
         File.WriteAllText(compiledFileName, story.ToJson());
         return story;
     }
-    
-    public void PlaceStory(Story story)
-    {
-        if (_placedStories.ContainsKey(story)) return; // Don't place already placed stories, idiot!
-        _placedStories[story] = null; // Avoids potential for infinite loops when evaluating constraints
 
-        var contentTags = GetContentTags(story);
+    public void ProcessQuest(Story story)
+    {
+        var quest = new GalaxyQuest();
+        quest.Story = story;
+        foreach (var knot in _storyKnotPaths[story])
+        {
+            var tags = GetContentTags(story.TagsForContentAtPath(knot));
+            
+        }
+    }
+    
+    public void ProcessLocation(Story story, FileInfo inkFile)
+    {
+        if (_storyLocations.ContainsKey(story)) return; // Don't place already placed stories, idiot!
+        _storyLocations[story] = null; // Avoids potential for infinite loops when evaluating constraints
+        var fileName = Path.GetFileNameWithoutExtension(inkFile.FullName);
+
+        var contentTags = GetContentTags(story.globalTags);
 
         var constraints = new List<ZoneConstraint>();
         if(contentTags.ContainsKey("constraint"))
@@ -157,16 +177,34 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
         else
             selector = new RandomSelector(ref _random);
         
-        var zoneCandidates = new List<SectorZone>();
-        zoneCandidates.AddRange(Sector.Zones.Where(z=>constraints.All(c=>c.Test(z))));
-        _placedStories[story] = selector.SelectZone(zoneCandidates);
+        var zoneCandidates = new List<GalaxyZone>();
+        zoneCandidates.AddRange(Galaxy.Zones.Where(z=>!z.NamedZone && constraints.All(c=>c.Test(z))));
+        
+        var zone = selector.SelectZone(zoneCandidates);
+
+        var location = new LocationStory
+        {
+            FileName = fileName,
+            Name = contentTags.ContainsKey("name") ? contentTags["name"].First() : fileName,
+            Faction = contentTags.ContainsKey("faction") ? ResolveFaction(contentTags["faction"].First()) : zone.Owner,
+            Security = contentTags.ContainsKey("security")
+                ? (SecurityLevel) Enum.Parse(typeof(SecurityLevel), contentTags["security"].First(), true)
+                : SecurityLevel.Open,
+            Story = story,
+            Type = contentTags.ContainsKey("type")
+                ? (LocationType) Enum.Parse(typeof(LocationType), contentTags["type"].First(), true)
+                : LocationType.Station
+        };
+        zone.Locations.Add(location);
+
+        _storyLocations[story] = zone;
     }
 
     // Parse all tags of the format X:Y into a dictionary with a list of every Y for each X
-    public static Dictionary<string, List<string>> GetContentTags(Story story)
+    public static Dictionary<string, List<string>> GetContentTags(List<string> tags)
     {
         var contentTags = new Dictionary<string, List<string>>();
-        foreach (var tag in story.globalTags)
+        foreach (var tag in tags)
         {
             if (tag.IndexOf(':') == -1) continue;
             

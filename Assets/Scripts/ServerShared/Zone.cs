@@ -41,18 +41,18 @@ public class Zone
         get => (float) _time;
     }
     public ZonePack Pack { get; }
-    public SectorZone SectorZone { get; }
-    public Sector Sector { get; }
+    public GalaxyZone GalaxyZone { get; }
+    public Galaxy Galaxy { get; }
 
-    public Zone(ItemManager itemManager, PlanetSettings settings, ZonePack pack, SectorZone sectorZone, Sector sector)
+    public Zone(ItemManager itemManager, PlanetSettings settings, ZonePack pack, GalaxyZone galaxyZone, Galaxy galaxy)
     {
         _time = pack.Time;
-        SectorZone = sectorZone;
-        Sector = sector;
+        GalaxyZone = galaxyZone;
+        Galaxy = galaxy;
         Pack = pack;
         _itemManager = itemManager;
         Settings = settings;
-        _random = new Random(Convert.ToUInt32(abs(sectorZone?.Name.GetHashCode() ?? 1337)));
+        _random = new Random(Convert.ToUInt32(abs(galaxyZone?.Name.GetHashCode() ?? 1337)));
         
         foreach (var orbit in pack.Orbits)
         {
@@ -311,12 +311,12 @@ public class Zone
 
     public SecurityLevel GetSecurityLevel(float2 pos)
     {
-        if (SectorZone.Owner==null) return SecurityLevel.Open;
+        if (GalaxyZone.Owner==null) return SecurityLevel.Open;
         
         var security = SecurityLevel.Open;
         foreach (var entity in Entities)
         {
-            if (entity is OrbitalEntity orbitalEntity && orbitalEntity.SecurityRadius > 1 && entity.Faction.ID == SectorZone.Owner.ID)
+            if (entity is OrbitalEntity orbitalEntity && orbitalEntity.SecurityRadius > 1 && entity.Faction.ID == GalaxyZone.Owner.ID)
             {
                 if (orbitalEntity.SecurityLevel > security && length(orbitalEntity.Position.xz - pos) < orbitalEntity.SecurityRadius * Settings.SecureAreaRadiusMultiplier)
                     security = orbitalEntity.SecurityLevel;

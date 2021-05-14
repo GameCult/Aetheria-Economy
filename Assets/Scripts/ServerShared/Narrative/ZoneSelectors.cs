@@ -6,16 +6,16 @@ using Random = Unity.Mathematics.Random;
 
 public abstract class ZoneSelector
 {
-    public abstract SectorZone SelectZone(List<SectorZone> candidates);
+    public abstract GalaxyZone SelectZone(List<GalaxyZone> candidates);
 }
 
 public abstract class OrderedZoneSelector : ZoneSelector
 {
     public bool Flip = false;
     
-    protected abstract Func<SectorZone, IComparable> Comparison { get; }
+    protected abstract Func<GalaxyZone, IComparable> Comparison { get; }
 
-    public override SectorZone SelectZone(List<SectorZone> candidates)
+    public override GalaxyZone SelectZone(List<GalaxyZone> candidates)
     {
         var sorted = candidates.OrderBy(Comparison);
         return Flip ? sorted.Last() : sorted.First();
@@ -24,7 +24,7 @@ public abstract class OrderedZoneSelector : ZoneSelector
 
 public class DistanceSelector : OrderedZoneSelector
 {
-    private SectorZone Target { get; }
+    private GalaxyZone Target { get; }
     
     
     public DistanceSelector(string[] args, IZoneResolver zoneResolver)
@@ -32,7 +32,7 @@ public class DistanceSelector : OrderedZoneSelector
         Target = zoneResolver.ResolveZone(args[0].Trim());
     }
 
-    protected override Func<SectorZone, IComparable> Comparison => zone => Target?.Distance[zone] ?? 0;
+    protected override Func<GalaxyZone, IComparable> Comparison => zone => Target?.Distance[zone] ?? 0;
 }
 
 public class RandomSelector : ZoneSelector
@@ -44,7 +44,7 @@ public class RandomSelector : ZoneSelector
         Random = random;
     }
     
-    public override SectorZone SelectZone(List<SectorZone> candidates)
+    public override GalaxyZone SelectZone(List<GalaxyZone> candidates)
     {
         return candidates[Random.NextInt(candidates.Count)];
     }

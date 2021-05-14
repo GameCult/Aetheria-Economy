@@ -37,7 +37,7 @@ public class OrbitalEntity : Entity
         {
             if (SecurityRadius < 1) return false;
             if (Faction == null) return false;
-            return !IsPresencePermitted(Zone.Sector.FactionRelationships[Faction], SecurityLevel);
+            return !IsPresencePermitted(Zone.Galaxy.FactionRelationships[Faction], SecurityLevel);
         }
     }
 }

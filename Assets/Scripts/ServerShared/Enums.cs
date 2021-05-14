@@ -165,6 +165,12 @@ public enum CompoundCommodityCategory
     Assemblies = 5
 }
 
+public enum LocationType
+{
+    Station,
+    Planet
+}
+
 public enum FactionRelationship
 {
     Hated = 0, // Kill on sight

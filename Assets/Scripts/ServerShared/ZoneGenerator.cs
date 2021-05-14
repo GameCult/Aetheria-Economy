@@ -38,15 +38,15 @@ public static class ZoneGenerator
 	public static ZonePack GenerateZone(
 		ItemManager itemManager,
 		ZoneGenerationSettings zoneSettings,
-		Sector sector,
-		SectorZone sectorZone,
+		Galaxy galaxy,
+		GalaxyZone galaxyZone,
 		bool isTutorial = false)
 	{
 		var pack = new ZonePack();
 
-		var random = new Random(unchecked((uint) sectorZone.Name.GetHashCode()) ^ hash(sectorZone.Position));
+		var random = new Random(unchecked((uint) galaxyZone.Name.GetHashCode()) ^ hash(galaxyZone.Position));
 
-		var density = saturate(sector.Background.CloudDensity(sectorZone.Position)/2);
+		var density = saturate(galaxy.Background.CloudDensity(galaxyZone.Position)/2);
 		pack.Radius = zoneSettings.ZoneRadius.Evaluate(density);
 		pack.Mass = zoneSettings.ZoneMass.Evaluate(density);
 		var targetSubzoneCount = zoneSettings.SubZoneCount.Evaluate(density);
@@ -222,9 +222,9 @@ public static class ZoneGenerator
             return planetData;
         }).ToList();
 
-        var nearestFaction = sector.Factions.MinBy(f => sector.HomeZones[f].Distance[sectorZone]);
-        var nearestFactionHomeZone = sector.HomeZones[nearestFaction];
-        var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[sectorZone] + 1;
+        var nearestFaction = galaxy.Factions.MinBy(f => galaxy.HomeZones[f].Distance[galaxyZone]);
+        var nearestFactionHomeZone = galaxy.HomeZones[nearestFaction];
+        var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[galaxyZone] + 1;
 
         var stationCount = (int)(random.NextFloat() * (factionPresence + 1));
         var potentialLagrangePoints = planets
@@ -240,7 +240,7 @@ public static class ZoneGenerator
 	        .ToArray();
         
         var loadoutGenerator = isTutorial ? new LoadoutGenerator(ref random, itemManager, nearestFaction, .5f) :
-	        new LoadoutGenerator(ref random, itemManager, sector, sectorZone, nearestFaction, .5f);
+	        new LoadoutGenerator(ref random, itemManager, galaxy, galaxyZone, nearestFaction, .5f);
         
         foreach (var orbit in selectedStationOrbits)
         {

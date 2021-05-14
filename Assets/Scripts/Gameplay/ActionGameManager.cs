@@ -121,7 +121,7 @@ public class ActionGameManager : MonoBehaviour
         return settings;
     }
 
-    public static Sector CurrentSector;
+    public static Galaxy CurrentGalaxy;
     public static bool IsTutorial;
 
     public GameSettings Settings;
@@ -132,12 +132,12 @@ public class ActionGameManager : MonoBehaviour
     public float TargetSpottedBlinkOffset = -.25f;
     
     [Header("Postprocessing")]
-    public float DeathPPTransitionTime;
-    public PostProcessVolume DeathPP;
-    public PostProcessVolume HeatstrokePP;
-    public PostProcessVolume HypothermiaPP;
-    public PostProcessVolume SevereHeatstrokePP;
-    public PostProcessVolume SevereHypothermiaPP;
+    public float DeathPostTransitionTime;
+    public PostProcessVolume DeathPost;
+    public PostProcessVolume HeatstrokePost;
+    public PostProcessVolume HypothermiaPost;
+    public PostProcessVolume SevereHeatstrokePost;
+    public PostProcessVolume SevereHypothermiaPost;
 
     [Header("Scene Links")]
     public GameObject UiRoot;
@@ -262,7 +262,7 @@ public class ActionGameManager : MonoBehaviour
 
     public void SaveState()
     {
-        PlayerSettings.SavedRun = CurrentSector == null ? null : new SavedGame(CurrentSector, Zone, DockedEntity ?? CurrentEntity);
+        PlayerSettings.SavedRun = CurrentGalaxy == null ? null : new SavedGame(CurrentGalaxy, Zone, DockedEntity ?? CurrentEntity);
         if(PlayerSettings.SavedRun != null)
         {
             PlayerSettings.SavedRun.IsTutorial = IsTutorial;
@@ -499,9 +499,9 @@ public class ActionGameManager : MonoBehaviour
         ConsoleController.AddCommand("revealzones",
             _ =>
             {
-                foreach (var zones in CurrentSector.Zones
-                    .Where(z=>!CurrentSector.DiscoveredZones.Contains(z))
-                    .GroupBy(z=>z.Distance[CurrentSector.Entrance])
+                foreach (var zones in CurrentGalaxy.Zones
+                    .Where(z=>!CurrentGalaxy.DiscoveredZones.Contains(z))
+                    .GroupBy(z=>z.Distance[CurrentGalaxy.Entrance])
                     .OrderBy(g=>g.Key))
                 {
                     SectorMap.QueueZoneReveal(zones);
@@ -541,13 +541,13 @@ public class ActionGameManager : MonoBehaviour
         ConsoleController.AddCommand("spawnturret",
             _ =>
             {
-                var nearestFaction = CurrentSector.Factions.MinBy(f => CurrentSector.HomeZones[f].Distance[Zone.SectorZone]);
+                var nearestFaction = CurrentGalaxy.Factions.MinBy(f => CurrentGalaxy.HomeZones[f].Distance[Zone.GalaxyZone]);
 
                 var loadoutGenerator = IsTutorial ? new LoadoutGenerator(
                     ref ItemManager.Random,
                     ItemManager,
-                    CurrentSector,
-                    Zone.SectorZone,
+                    CurrentGalaxy,
+                    Zone.GalaxyZone,
                     nearestFaction,
                     .5f) : new LoadoutGenerator(
                     ref ItemManager.Random,
@@ -644,7 +644,7 @@ public class ActionGameManager : MonoBehaviour
 
     private void EnterWormhole(Wormhole wormhole)
     {
-        if (!(CurrentEntity is Ship ship)) return;
+        if (!(CurrentEntity is Ship ship) || ship.WormholeAnimationInProgress) return;
         // var wormholeCameraFollow = new GameObject("Wormhole Camera Follow").transform;
         // wormholeCameraFollow.position = new Vector3(wormhole.Position.x, -50, wormhole.Position.y);
         // wormholeCameraFollow.rotation = Quaternion.LookRotation(Vector3.down, ship.LookDirection);
@@ -657,31 +657,31 @@ public class ActionGameManager : MonoBehaviour
             var oldZone = Zone;
             PopulateLevel(wormhole.Target);
             foreach (var zone in wormhole.Target.AdjacentZones)
-                CurrentSector.DiscoveredZones.Add(zone);
+                CurrentGalaxy.DiscoveredZones.Add(zone);
             SectorMap.QueueZoneReveal(wormhole.Target.AdjacentZones);
-            ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w => w.Target == oldZone.SectorZone).Position,
+            ship.ExitWormhole(ZoneRenderer.WormholeInstances.Keys.First(w => w.Target == oldZone.GalaxyZone).Position,
                 Settings.GameplaySettings.WormholeExitVelocity * ItemManager.Random.NextFloat2Direction());
             CurrentEntity.Zone = Zone;
             SaveState();
         };
     }
 
-    public void PopulateLevel(SectorZone sectorZone)
+    public void PopulateLevel(GalaxyZone galaxyZone)
     {
-        if (sectorZone == null) throw new ArgumentNullException(nameof(sectorZone));
+        if (galaxyZone == null) throw new ArgumentNullException(nameof(galaxyZone));
         
-        if (sectorZone.Contents == null)
+        if (galaxyZone.Contents == null)
         {
-            sectorZone.PackedContents ??= ZoneGenerator.GenerateZone(
+            galaxyZone.PackedContents ??= ZoneGenerator.GenerateZone(
                 ItemManager,
                 Settings.ZoneSettings,
-                CurrentSector,
-                sectorZone,
+                CurrentGalaxy,
+                galaxyZone,
                 IsTutorial
             );
-            sectorZone.Contents = new Zone(ItemManager, Settings.PlanetSettings, sectorZone.PackedContents, sectorZone, CurrentSector);
+            galaxyZone.Contents = new Zone(ItemManager, Settings.PlanetSettings, galaxyZone.PackedContents, galaxyZone, CurrentGalaxy);
         }
-        Zone = sectorZone.Contents;
+        Zone = galaxyZone.Contents;
         PlayMusic(MusicType.Overworld);
         
         Zone.Log = s => Debug.Log($"Zone: {s}");
@@ -756,14 +756,14 @@ public class ActionGameManager : MonoBehaviour
 
     private void StartGame()
     {
-        if (CurrentSector != null)
+        if (CurrentGalaxy != null)
         {
             if (PlayerSettings.SavedRun == null)
             {
-                SectorMap.QueueZoneReveal(CurrentSector.Entrance.AdjacentZones.Prepend(CurrentSector.Entrance));
-                PopulateLevel(CurrentSector.Entrance);
+                SectorMap.QueueZoneReveal(CurrentGalaxy.Entrance.AdjacentZones.Prepend(CurrentGalaxy.Entrance));
+                PopulateLevel(CurrentGalaxy.Entrance);
                 var loadoutGenerator = IsTutorial ? new LoadoutGenerator(ref ItemManager.Random, ItemManager, null, 2) :
-                    new LoadoutGenerator(ref ItemManager.Random, ItemManager, CurrentSector, Zone.SectorZone, null, 2);
+                    new LoadoutGenerator(ref ItemManager.Random, ItemManager, CurrentGalaxy, Zone.GalaxyZone, null, 2);
                 var ship = EntitySerializer.Unpack(
                     ItemManager, 
                     Zone, 
@@ -779,10 +779,10 @@ public class ActionGameManager : MonoBehaviour
             }
             else
             {
-                foreach(var group in CurrentSector.DiscoveredZones
-                    .GroupBy(dz=>dz.Distance[CurrentSector.Entrance]))
+                foreach(var group in CurrentGalaxy.DiscoveredZones
+                    .GroupBy(dz=>dz.Distance[CurrentGalaxy.Entrance]))
                     SectorMap.QueueZoneReveal(group);
-                PopulateLevel(CurrentSector.Zones[PlayerSettings.SavedRun.CurrentZone]);
+                PopulateLevel(CurrentGalaxy.Zones[PlayerSettings.SavedRun.CurrentZone]);
                 var targetEntity = Zone.Entities[PlayerSettings.SavedRun.CurrentZoneEntity];
                 if (targetEntity is OrbitalEntity orbitalEntity)
                 {
@@ -944,7 +944,7 @@ public class ActionGameManager : MonoBehaviour
         }
         
         CurrentEntity = entity;
-        DeathPP.weight = 0;
+        DeathPost.weight = 0;
         ZoneRenderer.PerspectiveEntity = CurrentEntity;
         
         Menu.gameObject.SetActive(false);
@@ -1090,32 +1090,32 @@ public class ActionGameManager : MonoBehaviour
         VolumeRenderer.EnableDepth = false;
         MainMenu.gameObject.SetActive(true);
         Menu.gameObject.SetActive(false);
-        CurrentSector = null;
+        CurrentGalaxy = null;
         SavePlayerSettings();
         Observable.EveryUpdate()
-            .Where(_ => Time.time - deathTime < DeathPPTransitionTime)
+            .Where(_ => Time.time - deathTime < DeathPostTransitionTime)
             .Subscribe(_ =>
                 {
-                    var t = (Time.time - deathTime) / DeathPPTransitionTime;
+                    var t = (Time.time - deathTime) / DeathPostTransitionTime;
                     if(cause==CauseOfDeath.Heatstroke)
                     {
-                        HeatstrokePP.weight = 1 - t;
-                        SevereHeatstrokePP.weight = 1 - t;
+                        HeatstrokePost.weight = 1 - t;
+                        SevereHeatstrokePost.weight = 1 - t;
                     }
                     else if (cause == CauseOfDeath.Hypothermia)
                     {
-                        HypothermiaPP.weight = 1 - t;
-                        SevereHypothermiaPP.weight = 1 - t;
+                        HypothermiaPost.weight = 1 - t;
+                        SevereHypothermiaPost.weight = 1 - t;
                     }
-                    DeathPP.weight = t;
+                    DeathPost.weight = t;
                 },
                 () =>
                 {
-                    HeatstrokePP.weight = 0;
-                    SevereHeatstrokePP.weight = 0;
-                    HypothermiaPP.weight = 0;
-                    SevereHypothermiaPP.weight = 0;
-                    DeathPP.weight = 1;
+                    HeatstrokePost.weight = 0;
+                    SevereHeatstrokePost.weight = 0;
+                    HypothermiaPost.weight = 0;
+                    SevereHypothermiaPost.weight = 0;
+                    DeathPost.weight = 1;
                 });
     }
 
@@ -1155,9 +1155,9 @@ public class ActionGameManager : MonoBehaviour
     {
         var soundbank = type switch
         {
-            MusicType.Overworld => Zone.SectorZone.Owner?.OverworldMusic ?? 0,
-            MusicType.Combat => Zone.SectorZone.Owner?.CombatMusic ?? 0,
-            MusicType.Boss => Zone.SectorZone.Owner?.BossMusic ?? 0,
+            MusicType.Overworld => Zone.GalaxyZone.Owner?.OverworldMusic ?? 0,
+            MusicType.Combat => Zone.GalaxyZone.Owner?.CombatMusic ?? 0,
+            MusicType.Boss => Zone.GalaxyZone.Owner?.BossMusic ?? 0,
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
         if (soundbank == 0)
@@ -1213,9 +1213,9 @@ public class ActionGameManager : MonoBehaviour
                 _entityYawPitch = float2(_entityYawPitch.x + look.x * Sensitivity.x, clamp(_entityYawPitch.y + look.y * Sensitivity.y, -.45f * PI, .45f * PI));
                 _viewDirection = mul(float3(0, 0, 1), Unity.Mathematics.float3x3.Euler(float3(_entityYawPitch.yx, 0), RotationOrder.YXZ));
                 CurrentEntity.LookDirection = _viewDirection;
-                HeatstrokePP.weight = saturate(unlerp(0, Settings.GameplaySettings.SevereHeatstrokeRiskThreshold, CurrentEntity.Heatstroke));
+                HeatstrokePost.weight = saturate(unlerp(0, Settings.GameplaySettings.SevereHeatstrokeRiskThreshold, CurrentEntity.Heatstroke));
                 var severeHeatstrokeLerp = saturate(unlerp(Settings.GameplaySettings.SevereHeatstrokeRiskThreshold, 1, CurrentEntity.Heatstroke));
-                SevereHeatstrokePP.weight =
+                SevereHeatstrokePost.weight =
                     severeHeatstrokeLerp + severeHeatstrokeLerp * (1 - severeHeatstrokeLerp) *
                     max(Settings.HeatstrokePhasingFloor, sin(Time.time * Settings.HeatstrokePhasingFrequency));
                 

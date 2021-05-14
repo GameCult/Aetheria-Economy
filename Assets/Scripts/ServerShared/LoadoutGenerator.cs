@@ -10,22 +10,22 @@ public class LoadoutGenerator
 {
     public Random Random;
     public ItemManager ItemManager { get; }
-    public Sector Sector { get; }
-    public SectorZone Zone { get; }
+    public Galaxy Galaxy { get; }
+    public GalaxyZone Zone { get; }
     public Faction Faction { get; }
     public float PriceExponent { get; }
 
     public LoadoutGenerator(
         ref Random random, 
         ItemManager itemManager, 
-        Sector sector, 
-        SectorZone zone, 
+        Galaxy galaxy, 
+        GalaxyZone zone, 
         Faction faction, 
         float priceExponent)
     {
         Random = random;
         ItemManager = itemManager;
-        Sector = sector;
+        Galaxy = galaxy;
         Zone = zone;
         Faction = faction;
         PriceExponent = priceExponent;
@@ -107,12 +107,12 @@ public class LoadoutGenerator
                 (hullFilter?.Invoke(item) ?? true) &&
                 item.HullType == type &&
                 item.Manufacturer != Guid.Empty &&
-                (Sector?.ContainsFaction(item.Manufacturer) ?? true) &&
+                (Galaxy?.ContainsFaction(item.Manufacturer) ?? true) &&
                 (Faction == null || item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)))
             .WeightedRandomElements(ref Random,
                 item =>
                     (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) / // Prioritize items from allied manufacturers
-                    (Zone?.Distance[Sector.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] ?? 1) / // Penalize distance to manufacturer headquarters
+                    (Zone?.Distance[Galaxy.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] ?? 1) / // Penalize distance to manufacturer headquarters
                     pow(item.Price, PriceExponent), // Penalize item price to a controllable degree
                 1
             ).FirstOrDefault();
@@ -124,13 +124,13 @@ public class LoadoutGenerator
             .Where(item => 
                 item.Price > 0 &&
                 item.Manufacturer != Guid.Empty &&
-                (Sector?.ContainsFaction(item.Manufacturer) ?? true) &&
+                (Galaxy?.ContainsFaction(item.Manufacturer) ?? true) &&
                 (Faction == null || Faction.Allegiance.ContainsKey(item.Manufacturer)) &&
                 (filter?.Invoke(item) ?? true))
             .WeightedRandomElements(ref Random, item =>
                     (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) * // Prioritize items from allied manufacturers
                     pow(item.Shape.Coordinates.Length, sizeExponent) / // Prioritize larger items
-                    (Zone?.Distance[Sector.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] ?? 1) / // Penalize distance to manufacturer headquarters
+                    (Zone?.Distance[Galaxy.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] ?? 1) / // Penalize distance to manufacturer headquarters
                     pow(item.Price, PriceExponent), // Penalize item price to a controllable degree
                 count
             );

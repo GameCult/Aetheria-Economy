@@ -66,7 +66,7 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
                 .Select(f=>f.Name).ToArray();
             if (otherFactions.Length > 0)
                 Properties.AddProperty("Factions Present", () => string.Join(", ", otherFactions));
-            var density = saturate(ActionGameManager.CurrentSector.Background.CloudDensity(zone.Position)/2);
+            var density = saturate(ActionGameManager.CurrentGalaxy.Background.CloudDensity(zone.Position)/2);
             var radius = GameManager.Settings.ZoneSettings.ZoneRadius.Evaluate(density);
             var mass = GameManager.Settings.ZoneSettings.ZoneMass.Evaluate(density);
             Properties.AddProperty("Mass", () => ActionGameManager.PlayerSettings.Format(mass));
@@ -145,11 +145,11 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
     {
         _init = true;
         SectorCamera.gameObject.SetActive(true);
-        _position = GameManager.Zone.SectorZone.Position;
+        _position = GameManager.Zone.GalaxyZone.Position;
         _viewSize = .25f;
         
         Map.StartReveal(LinkAnimationDuration, IconAnimationDuration);
-        Map.MarkPlayerLocation(GameManager.CurrentEntity.Zone.SectorZone);
+        Map.MarkPlayerLocation(GameManager.CurrentEntity.Zone.GalaxyZone);
     }
 
     private void OnDisable()

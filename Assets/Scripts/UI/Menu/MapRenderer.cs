@@ -48,7 +48,7 @@ public class MapRenderer : MonoBehaviour
         GravityCamera.gameObject.SetActive(true);
         TintCamera.gameObject.SetActive(true);
         InfluenceCamera.gameObject.SetActive(true);
-        Title.text = $"Zone: {GameManager.Zone.SectorZone.Name}";
+        Title.text = $"Zone: {GameManager.Zone.GalaxyZone.Name}";
     }
 
     private void OnDisable()

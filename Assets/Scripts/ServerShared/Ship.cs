@@ -46,6 +46,7 @@ public class Ship : Entity
     private float2 _wormholePosition;
     private float2 _wormholeExitVelocity;
 
+    public bool WormholeAnimationInProgress => _enteringWormhole || _exitingWormhole;
     public float ForwardThrust { get; private set; }
     public float ReverseThrust { get; private set; }
     public float LeftStrafeThrust { get; private set; }

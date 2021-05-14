@@ -98,7 +98,7 @@ public class MainMenu : MonoBehaviour
                     () =>
                     {
                         ActionGameManager.IsTutorial = ActionGameManager.PlayerSettings.SavedRun.IsTutorial;
-                        ActionGameManager.CurrentSector = new Sector(
+                        ActionGameManager.CurrentGalaxy = new Galaxy(
                             ActionGameManager.CultCache,
                             ActionGameManager.PlayerSettings.SavedRun);
                         SceneManager.LoadScene("ARPG");
@@ -125,7 +125,7 @@ public class MainMenu : MonoBehaviour
                     ActionGameManager.IsTutorial = false;
                     Task.Run(() =>
                     {
-                        var sector = new Sector(
+                        var sector = new Galaxy(
                             Settings.SectorGenerationSettings,
                             Settings.SectorBackgroundSettings,
                             Settings.NameGeneratorSettings,
@@ -134,7 +134,7 @@ public class MainMenu : MonoBehaviour
                         Observable.NextFrame().Subscribe(_ =>
                         {
                             ActionGameManager.PlayerSettings.SavedRun = null;
-                            ActionGameManager.CurrentSector = sector;
+                            ActionGameManager.CurrentGalaxy = sector;
                             SceneManager.LoadScene("ARPG");
                         });
                     }).WrapErrors();
@@ -151,7 +151,7 @@ public class MainMenu : MonoBehaviour
                     ActionGameManager.IsTutorial = true;
                     Task.Run(() =>
                     {
-                        var sector = new Sector(
+                        var sector = new Galaxy(
                             Settings.TutorialGenerationSettings,
                             Settings.TutorialBackgroundSettings,
                             Settings.NameGeneratorSettings,
@@ -162,7 +162,7 @@ public class MainMenu : MonoBehaviour
                         Observable.NextFrame().Subscribe(_ =>
                         {
                             ActionGameManager.PlayerSettings.SavedRun = null;
-                            ActionGameManager.CurrentSector = sector;
+                            ActionGameManager.CurrentGalaxy = sector;
                             SceneManager.LoadScene("ARPG");
                         });
                     }).WrapErrors();
