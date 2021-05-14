@@ -221,17 +221,40 @@ public class Shape
     // Set every cell on the line from a to b to true according to Bresenham's Line Algorithm
     public void SetLine(float2 a, float2 b)
     {
+        if  (a.Equals(b))            
+        {            
+            return;
+        }
+        
+        // If line gradient is steep, swap x and y
+        bool steep = Math.Abs(b.y - a.y) > Math.Abs(b.x - a.x);
+        if (steep)
+        {
+            a = new float2(a.y, a.x);
+            b = new float2(b.y, b.x);
+        }
+
+        // If b is closer to the origin than a, swap a and b.
+        if (a.x > b.x)
+        {
+            var temp = a;
+            a = b;
+            b = temp;
+        }
+        
         float dx = b.x - a.x;
         float dy = b.y - a.y;
         float derr = Math.Abs(dy / dx); // dx != 0
-        float error = 0f;
+        
         int y = (int) Math.Round(a.y);
+        int xStart = (int) Math.Round(a.x);
+        float error = (a.y - y) + (xStart - a.x) * derr;
 
-        for (int x = (int) Math.Round(a.x); x <= (int) Math.Round(b.x); x++)
+        for (int x = xStart; x <= (int) Math.Round(b.x); x++)
         {
-            if (x < Width && y < Height)
+            if (x >= 0 && x < Width && y >= 0 && y < Height)
             {
-                Cells[x, y] = true;
+                Cells[steep ? y : x, steep ? x : y] = true;
             }
             error += derr;
             if (error >= 0.5f)
