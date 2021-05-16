@@ -226,7 +226,8 @@ public static class ZoneGenerator
         var nearestFactionHomeZone = galaxy.HomeZones[nearestFaction];
         var factionPresence = nearestFaction.InfluenceDistance - nearestFactionHomeZone.Distance[galaxyZone] + 1;
 
-        var stationCount = (int)(random.NextFloat() * (factionPresence + 1));
+        var storyStations = galaxyZone.Locations.Where(story => story.Type == LocationType.Station).ToArray();
+        var stationCount = (int)(random.NextFloat() * (factionPresence + 1)) + storyStations.Length;
         var potentialLagrangePoints = planets
 	        .Where(p => p.Parent != null && p.Parent.Children
 		        .TrueForAll(c => !(c != p && abs(c.Distance - p.Distance) < .1f))) // Filter Rosettes
@@ -238,59 +239,92 @@ public static class ZoneGenerator
 	        .Take(stationCount)
 	        .Select(p=>orbitMap[p])
 	        .ToArray();
-        
-        var loadoutGenerator = isTutorial ? new LoadoutGenerator(ref random, itemManager, nearestFaction, .5f) :
-	        new LoadoutGenerator(ref random, itemManager, galaxy, galaxyZone, nearestFaction, .5f);
-        
-        foreach (var orbit in selectedStationOrbits)
+
+        var loadoutGenerators = new Dictionary<Faction, LoadoutGenerator>();
+
+        LoadoutGenerator GetLoadoutGenerator(Faction faction)
         {
-	        var security = (SecurityLevel) ((int) ((1f - pow(random.NextFloat(), factionPresence / 2f)) * 3f));
+	        if (!loadoutGenerators.ContainsKey(faction))
+		        loadoutGenerators[faction] = isTutorial
+			        ? new LoadoutGenerator(ref random, itemManager, faction, .5f)
+			        : new LoadoutGenerator(ref random, itemManager, galaxy, galaxyZone, faction, .5f);
+	        return loadoutGenerators[faction];
+        }
+
+        OrbitData CreateLagrangeOrbit(OrbitData baseOrbit)
+        {
 	        var lagrangeOrbit = new OrbitData
 	        {
 		        ID = Guid.NewGuid(),
-		        Parent = orbit.Parent,
-		        Distance = new ReactiveProperty<float>(orbit.Distance.Value),
-		        Phase = orbit.Phase + PI / 3 * sign(random.NextFloat() - .5f)
+		        Parent = baseOrbit.Parent,
+		        Distance = new ReactiveProperty<float>(baseOrbit.Distance.Value),
+		        Phase = baseOrbit.Phase + PI / 3 * sign(random.NextFloat() - .5f)
 	        };
 	        pack.Orbits.Add(lagrangeOrbit);
+	        return lagrangeOrbit;
+        }
+
+        void PlaceTurret(OrbitData orbit, LoadoutGenerator loadoutGenerator, int distanceMultiplier)
+        {
+	        var phase = 20f * distanceMultiplier / orbit.Distance.Value;
 	        
-	        var station = loadoutGenerator.GenerateStationLoadout();
+	        var turretOrbit = new OrbitData
+	        {
+		        ID = Guid.NewGuid(),
+		        Parent = orbit.Parent,
+		        Distance = new ReactiveProperty<float>(orbit.Distance.Value),
+		        Phase = orbit.Phase + phase
+	        };
+	        pack.Orbits.Add(turretOrbit);
+	        var turret = loadoutGenerator.GenerateTurretLoadout();
+	        turret.Orbit = turretOrbit.ID;
+	        pack.Entities.Add(turret);
+        }
+
+        void PlaceTurrets(OrbitData orbit, LoadoutGenerator loadoutGenerator, int count)
+        {
+	        for(int t=0; t<count; t++)
+	        {
+		        var dist = t / 2;
+		        if (t % 2 == 0) dist = -dist;
+		        PlaceTurret(orbit, loadoutGenerator, dist);
+	        }
+        }
+
+        for (var i = 0; i < storyStations.Length; i++)
+        {
+	        var story = storyStations[i];
+	        var orbit = selectedStationOrbits[i];
+	        var lagrangeOrbit = CreateLagrangeOrbit(orbit);
+	        var station = GetLoadoutGenerator(story.Faction).GenerateStationLoadout();
+	        station.Orbit = lagrangeOrbit.ID;
+	        station.SecurityLevel = story.Security;
+	        station.SecurityRadius = pack.Radius;
+	        station.Story = i;
+	        pack.Entities.Add(station);
+
+	        PlaceTurrets(lagrangeOrbit, GetLoadoutGenerator(story.Faction), story.Turrets);
+        }
+
+        for (var i = storyStations.Length; i < selectedStationOrbits.Length; i++)
+        {
+	        var orbit = selectedStationOrbits[i];
+	        var security = (SecurityLevel) ((int) ((1f - pow(random.NextFloat(), factionPresence / 2f)) * 3f));
+
+	        var lagrangeOrbit = CreateLagrangeOrbit(orbit);
+	        var station = GetLoadoutGenerator(nearestFaction).GenerateStationLoadout();
 	        station.Orbit = lagrangeOrbit.ID;
 	        station.SecurityLevel = security;
-	        station.SecurityRadius = pack.Radius * .75f;
+	        station.SecurityRadius = pack.Radius;
 	        pack.Entities.Add(station);
-	        
-	        var turretPhase = 20f / lagrangeOrbit.Distance.Value;
-	        
-	        var leadingTurretOrbit = new OrbitData
-	        {
-		        ID = Guid.NewGuid(),
-		        Parent = orbit.Parent,
-		        Distance = new ReactiveProperty<float>(orbit.Distance.Value),
-		        Phase = lagrangeOrbit.Phase + turretPhase
-	        };
-	        pack.Orbits.Add(leadingTurretOrbit);
-	        var leadingTurret = loadoutGenerator.GenerateTurretLoadout();
-	        leadingTurret.Orbit = leadingTurretOrbit.ID;
-	        pack.Entities.Add(leadingTurret);
-	        
-	        var trailingTurretOrbit = new OrbitData
-	        {
-		        ID = Guid.NewGuid(),
-		        Parent = orbit.Parent,
-		        Distance = new ReactiveProperty<float>(orbit.Distance.Value),
-		        Phase = lagrangeOrbit.Phase - turretPhase
-	        };
-	        pack.Orbits.Add(trailingTurretOrbit);
-	        var trailingTurret = loadoutGenerator.GenerateTurretLoadout();
-	        trailingTurret.Orbit = trailingTurretOrbit.ID;
-	        pack.Entities.Add(trailingTurret);
+
+	        PlaceTurrets(lagrangeOrbit, GetLoadoutGenerator(nearestFaction), 2);
         }
-        
+
         var enemyCount = (int)(random.NextFloat() * factionPresence * 2) + stationCount;
         for (int i = 0; i < enemyCount; i++)
         {
-	        pack.Entities.Add(loadoutGenerator.GenerateShipLoadout());
+	        pack.Entities.Add(GetLoadoutGenerator(nearestFaction).GenerateShipLoadout());
         }
 
         return pack;

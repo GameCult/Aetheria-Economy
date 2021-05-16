@@ -14,6 +14,7 @@ public class OrbitalEntity : Entity
     public Guid OrbitData;
     public SecurityLevel SecurityLevel;
     public float SecurityRadius;
+    public LocationStory Story;
     
     public OrbitalEntity(ItemManager itemManager, Zone zone, EquippableItem hull, Guid orbit, EntitySettings settings) : base(itemManager, zone, hull, settings)
     {

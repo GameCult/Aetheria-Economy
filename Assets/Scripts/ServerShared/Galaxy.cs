@@ -26,6 +26,7 @@ public class Galaxy
     public GalaxyZone Entrance { get; }
     public GalaxyZone Exit { get; }
     public Dictionary<Faction, FactionRelationship> FactionRelationships { get; } = new Dictionary<Faction, FactionRelationship>();
+    private Action<string> Log { get; }
 
     private HashSet<Guid> _containedFactions;
     private GalaxyZone[] _exitPath;
@@ -41,8 +42,9 @@ public class Galaxy
         }
     }
 
-    public Galaxy(CultCache cultCache, SavedGame savedGame)
+    public Galaxy(CultCache cultCache, SavedGame savedGame, Action<string> log)
     {
+        Log = log;
         Background = savedGame.Background;
         
         Factions = savedGame.Factions.Select(cultCache.Get<Faction>).ToArray();
@@ -87,11 +89,13 @@ public class Galaxy
         SectorGenerationSettings settings, 
         SectorBackgroundSettings background, 
         NameGeneratorSettings nameGeneratorSettings, 
-        CultCache cache, 
+        CultCache cache,
+        Action<string> log,
         Action<string> progressCallback = null,
         uint seed = 0)
     {
         Background = background;
+        Log = log;
         var factions = cache.GetAll<Faction>();
         var random = new Random(seed == 0 ? (uint) (DateTime.Now.Ticks % uint.MaxValue) : seed);
         Factions = factions.OrderBy(x => random.NextFloat()).Take(settings.MegaCount).ToArray();
@@ -129,12 +133,14 @@ public class Galaxy
         CultCache cache,
         PlayerSettings playerSettings, 
         DirectoryInfo narrativeDirectory,
+        Action<string> log,
         Action<string> progressCallback = null,
         uint seed = 0)
     {
         Faction ResolveFaction(string name) => cache.GetAll<Faction>().FirstOrDefault(f => f.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
 
         Background = background;
+        Log = log;
         var random = new Random(seed == 0 ? (uint) (DateTime.Now.Ticks % uint.MaxValue) : seed);
         
         var factions = new List<Faction>();
@@ -219,12 +225,8 @@ public class Galaxy
         GenerateNames(cache, nameGeneratorSettings, ref random, progressCallback);
         
         progressCallback?.Invoke("Weaving Narrative");
-        // var processor = new StoryProcessor(playerSettings, narrativeDirectory, this, ref random);
-        // var storyPlacement = processor.PlaceStories();
-        // foreach (var story in storyPlacement.Keys)
-        // {
-        //     storyPlacement[story]
-        // }
+        var processor = new StoryProcessor(playerSettings, narrativeDirectory, this, ref random, Log);
+        processor.ProcessStories();
 
         progressCallback?.Invoke("Done!");
         if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
@@ -554,15 +556,18 @@ public class GalaxyZone
 public class GalaxyQuest
 {
     public Story Story;
-    public Dictionary<string, LocationStory> Locations = new Dictionary<string, LocationStory>();
+    public Dictionary<string, LocationStory> KnotLocations = new Dictionary<string, LocationStory>();
 }
 
 public class LocationStory
 {
+    public GalaxyZone Zone;
     public string FileName;
     public string Name;
     public Story Story;
     public Faction Faction;
     public SecurityLevel Security;
     public LocationType Type;
+    public int Turrets;
+    public Dictionary<string, List<GalaxyQuest>> KnotQuests = new Dictionary<string, List<GalaxyQuest>>();
 }

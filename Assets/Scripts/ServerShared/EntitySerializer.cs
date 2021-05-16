@@ -85,6 +85,7 @@ public static class EntitySerializer
         Restore(itemManager, zone, pack, entity, instantiate);
         entity.SecurityLevel = pack.SecurityLevel;
         entity.SecurityRadius = pack.SecurityRadius;
+        if (pack.Story >= 0) entity.Story = zone.GalaxyZone.Locations[pack.Story];
         return entity;
     }
 
@@ -166,7 +167,7 @@ public class ShipPack : EntityPack
 public class OrbitalEntityPack : EntityPack
 {
     [Key(17)] public Guid Orbit;
-    [Key(18)] public SavedStory Story;
+    [Key(18)] public int Story = -1;
     [Key(19)] public SecurityLevel SecurityLevel;
     [Key(20)] public float SecurityRadius;
 }

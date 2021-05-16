@@ -100,7 +100,8 @@ public class MainMenu : MonoBehaviour
                         ActionGameManager.IsTutorial = ActionGameManager.PlayerSettings.SavedRun.IsTutorial;
                         ActionGameManager.CurrentGalaxy = new Galaxy(
                             ActionGameManager.CultCache,
-                            ActionGameManager.PlayerSettings.SavedRun);
+                            ActionGameManager.PlayerSettings.SavedRun,
+                            Debug.Log);
                         SceneManager.LoadScene("ARPG");
                     });
             else
@@ -130,6 +131,7 @@ public class MainMenu : MonoBehaviour
                             Settings.SectorBackgroundSettings,
                             Settings.NameGeneratorSettings,
                             ActionGameManager.CultCache,
+                            Debug.Log,
                             setState);
                         Observable.NextFrame().Subscribe(_ =>
                         {
@@ -158,6 +160,7 @@ public class MainMenu : MonoBehaviour
                             ActionGameManager.CultCache,
                             ActionGameManager.PlayerSettings,
                             ActionGameManager.GameDataDirectory.CreateSubdirectory("Narrative"),
+                            Debug.Log,
                             setState);
                         Observable.NextFrame().Subscribe(_ =>
                         {

@@ -29,3 +29,5 @@ r.db('Aetheria').table('Items').filter(
 
 // Set required enum fields in weapons
 r.db('Aetheria').table('Items').filter({$type:"WeaponItemData"}).update({range:0, caliber:0, weaponType:0, fireTypes:0, modifiers:0})
+
+r.db('StreamPixels').table('Events').filter({id:"91cb76bb-41b6-4739-883b-5c6ad1fb1c78"}).update({viewers:18})

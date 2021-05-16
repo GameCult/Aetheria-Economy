@@ -26,22 +26,24 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
     }
 
     private Dictionary<Story, string[]> _storyKnotPaths = new Dictionary<Story, string[]>();
-    private Dictionary<Story, GalaxyZone> _storyLocations = new Dictionary<Story, GalaxyZone>();
+    private Dictionary<Story, LocationStory> _placedStories = new Dictionary<Story, LocationStory>();
     private Dictionary<string, Story> _processedStories = new Dictionary<string, Story>();
     private DirectoryInfo _locationsPath;
     private DirectoryInfo _questsPath;
     private IFileHandler _inkFileHandler;
-
     public DirectoryInfo NarrativeDirectory { get; }
     private Random _random;
     public Galaxy Galaxy { get; }
     public PlayerSettings Settings { get; }
+
+    private Action<string> Log { get; }
     
-    public StoryProcessor(PlayerSettings settings, DirectoryInfo narrativeDirectory, Galaxy galaxy, ref Random random)
+    public StoryProcessor(PlayerSettings settings, DirectoryInfo narrativeDirectory, Galaxy galaxy, ref Random random, Action<string> log)
     {
         NarrativeDirectory = narrativeDirectory;
         Galaxy = galaxy;
         _random = random;
+        Log = log;
         Settings = settings;
         
         _inkFileHandler = new AetheriaInkFileHandler(narrativeDirectory);
@@ -56,7 +58,7 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
         foreach(var inkFile in locationFiles) ProcessLocation(GetStory(inkFile), inkFile);
 
         var questFiles = _questsPath.EnumerateFiles("*ink");
-        foreach(var inkFile in questFiles)  ProcessQuest(GetStory(inkFile));
+        foreach(var inkFile in questFiles)  ProcessQuest(GetStory(inkFile), inkFile);
     }
     
     public GalaxyZone ResolveZone(string path)
@@ -74,13 +76,18 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
             var faction = ResolveFaction(factionString);
             return !Galaxy.HomeZones.ContainsKey(faction) ? null : Galaxy.HomeZones[faction];
         }
-        
+
+        return ResolveLocation(path)?.Zone;
+    }
+
+    public LocationStory ResolveLocation(string path)
+    {
         var locationInkFile = new FileInfo(Path.Combine(_locationsPath.FullName, $"{path}.ink"));
         if (!locationInkFile.Exists) return null;
 
         var story = GetStory(locationInkFile);
         ProcessLocation(story, locationInkFile);
-        return _storyLocations.ContainsKey(story) ? _storyLocations[story] : null;
+        return _placedStories.ContainsKey(story) ? _placedStories[story] : null;
     }
 
     public Faction ResolveFaction(string name)
@@ -95,20 +102,20 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
         // If the story has already been read / compiled, return it directly
         if (_processedStories.ContainsKey(fileName)) return _processedStories[fileName];
         
-        var compiledFileName = Path.Combine(inkFile.Directory.FullName, $"{fileName}.json");
-        
-        // Calculate a hash of the ink file
-        var hash = File.ReadAllBytes(inkFile.FullName).GetHashSHA1();
-        
-        if (File.Exists(compiledFileName) && // If a compiled version of the ink file exists
-            Settings.HashedStoryFiles.ContainsKey(fileName) && // And its hash has been saved
-            hash == Settings.HashedStoryFiles[fileName]) // And the saved hash matches the current hash
-        {
-            // Load the story from the existing compiled JSON representation
-            return new Story(File.ReadAllText(compiledFileName));
-        }
-
-        Settings.HashedStoryFiles[fileName] = hash;
+        // var compiledFileName = Path.Combine(inkFile.Directory.FullName, $"{fileName}.json");
+        //
+        // // Calculate a hash of the ink file
+        // var hash = File.ReadAllBytes(inkFile.FullName).GetHashSHA1();
+        //
+        // if (File.Exists(compiledFileName) && // If a compiled version of the ink file exists
+        //     Settings.HashedStoryFiles.ContainsKey(fileName) && // And its hash has been saved
+        //     hash == Settings.HashedStoryFiles[fileName]) // And the saved hash matches the current hash
+        // {
+        //     // Load the story from the existing compiled JSON representation
+        //     return new Story(File.ReadAllText(compiledFileName));
+        // }
+        //
+        // Settings.HashedStoryFiles[fileName] = hash;
         var compiler = new Compiler(File.ReadAllText(inkFile.FullName), new Compiler.Options
         {
             countAllVisits = true,
@@ -117,25 +124,45 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
         var story = compiler.Compile();
         var knots = compiler.parsedStory.FindAll<Knot>().Select(k=>k.runtimePath.ToString()).ToArray();
         _storyKnotPaths[story] = knots;
-        File.WriteAllText(compiledFileName, story.ToJson());
+        //File.WriteAllText(compiledFileName, story.ToJson());
+        _processedStories[fileName] = story;
         return story;
     }
 
-    public void ProcessQuest(Story story)
+    public void ProcessQuest(Story story, FileInfo inkFile)
     {
+        var fileName = Path.GetFileNameWithoutExtension(inkFile.FullName);
         var quest = new GalaxyQuest();
         quest.Story = story;
         foreach (var knot in _storyKnotPaths[story])
         {
-            var tags = GetContentTags(story.TagsForContentAtPath(knot));
-            
+            var tags = story.TagsForContentAtPath(knot);
+            if(tags==null) continue;
+            var contentTags = GetContentTags(tags);
+            if (contentTags.ContainsKey("location"))
+            {
+                var locationName = contentTags["location"].First();
+                var locationStory = ResolveLocation(locationName);
+                if (tags.Contains("required") && locationStory == null)
+                {
+                    Log($"Quest \"{fileName}\" unable to find required location \"{locationName}\" for knot \"{knot}\"");
+                    return;
+                }
+                quest.KnotLocations[knot] = locationStory;
+            }
+        }
+
+        foreach (var x in quest.KnotLocations)
+        {
+            if (!x.Value.KnotQuests.ContainsKey(x.Key)) x.Value.KnotQuests[x.Key] = new List<GalaxyQuest>();
+            x.Value.KnotQuests[x.Key].Add(quest);
         }
     }
     
     public void ProcessLocation(Story story, FileInfo inkFile)
     {
-        if (_storyLocations.ContainsKey(story)) return; // Don't place already placed stories, idiot!
-        _storyLocations[story] = null; // Avoids potential for infinite loops when evaluating constraints
+        if (_placedStories.ContainsKey(story)) return; // Don't place already placed stories, idiot!
+        _placedStories[story] = null; // Avoids potential for infinite loops when evaluating constraints
         var fileName = Path.GetFileNameWithoutExtension(inkFile.FullName);
 
         var contentTags = GetContentTags(story.globalTags);
@@ -184,6 +211,7 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
 
         var location = new LocationStory
         {
+            Zone = zone,
             FileName = fileName,
             Name = contentTags.ContainsKey("name") ? contentTags["name"].First() : fileName,
             Faction = contentTags.ContainsKey("faction") ? ResolveFaction(contentTags["faction"].First()) : zone.Owner,
@@ -193,11 +221,17 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
             Story = story,
             Type = contentTags.ContainsKey("type")
                 ? (LocationType) Enum.Parse(typeof(LocationType), contentTags["type"].First(), true)
-                : LocationType.Station
+                : LocationType.Station,
+            Turrets = contentTags.ContainsKey("turrets") ? int.Parse(contentTags["turrets"].First()) : 0
         };
         zone.Locations.Add(location);
 
-        _storyLocations[story] = zone;
+        if (contentTags.ContainsKey("namezone"))
+        {
+            zone.Name = contentTags["namezone"].First();
+        }
+
+        _placedStories[story] = location;
     }
 
     // Parse all tags of the format X:Y into a dictionary with a list of every Y for each X
@@ -209,7 +243,7 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
             if (tag.IndexOf(':') == -1) continue;
             
             var tokens = tag.Split(':');
-            var leftSide = tokens[0].Trim();
+            var leftSide = tokens[0].Trim().ToLowerInvariant();
             var rightSide = tokens[1].Trim();
             if (!contentTags.ContainsKey(leftSide)) contentTags[leftSide] = new List<string>();
             contentTags[leftSide].Add(rightSide);

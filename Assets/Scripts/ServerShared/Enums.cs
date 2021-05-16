@@ -168,6 +168,7 @@ public enum CompoundCommodityCategory
 public enum LocationType
 {
     Station,
+    Asteroid,
     Planet
 }
 

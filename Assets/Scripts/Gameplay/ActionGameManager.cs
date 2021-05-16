@@ -234,7 +234,6 @@ public class ActionGameManager : MonoBehaviour
     public ItemManager ItemManager { get; private set; }
     public Zone Zone { get; private set; }
     public List<EntityPack> Loadouts { get; } = new List<EntityPack>();
-    public IEnumerable<Story> GetStories => _stories;
 
     private readonly (float2 direction, string name)[] _directions = {
         (float2(0, 1), "Front"),
@@ -488,7 +487,7 @@ public class ActionGameManager : MonoBehaviour
             return slot;
         }
 
-        foreach (var actionBarInput in PlayerSettings.InputSettings.ActionBarInputs) createBinding(actionBarInput);
+        foreach (var actionBarInput in PlayerSettings.InputSettings.ActionBarInputs.OrderBy(i=>i)) createBinding(actionBarInput);
 
         #endregion
 

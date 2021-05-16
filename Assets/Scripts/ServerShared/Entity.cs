@@ -42,8 +42,8 @@ public abstract class Entity
     
     public string Name;
     
-    public int Population;
-    public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
+    // public int Population;
+    // public Dictionary<Guid, float> Personality = new Dictionary<Guid, float>();
     
     public readonly Dictionary<string, float> Messages = new Dictionary<string, float>();
     public readonly Dictionary<object, float> VisibilitySources = new Dictionary<object, float>();
@@ -288,7 +288,7 @@ public abstract class Entity
 
         // TODO: Inter-faction hostility
         // When the entity faction owns the zone, they are hostile to trespassers or those hostile to them
-        if (Faction.ID == Zone.GalaxyZone.Owner.ID)
+        if (Faction.ID == Zone.GalaxyZone.Owner?.ID)
             return recursive ? !(other.PresencePermitted?.Value ?? true) : !(other.PresencePermitted?.Value ?? true)|| other.IsHostileTo(this, true);
 
         return !recursive && other.IsHostileTo(this, true);

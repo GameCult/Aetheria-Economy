@@ -49,6 +49,7 @@ public class MenuPanel : MonoBehaviour
         {
             tabButton.gameObject.SetActive(!tabButton.RequireDock || GameManager.DockedEntity != null);
         }
+        _tabs[MenuTab.Local].gameObject.SetActive((GameManager.DockedEntity as OrbitalEntity)?.Story!=null);
     }
 
     private void Awake()
