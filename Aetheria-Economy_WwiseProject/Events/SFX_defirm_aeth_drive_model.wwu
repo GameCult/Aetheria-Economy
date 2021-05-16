@@ -5,57 +5,17 @@
 			<ChildrenList>
 				<Event Name="electric_drive_play" ID="{C231C587-6292-47DD-BD73-AD4D8D14F12B}">
 					<ChildrenList>
-						<Action Name="" ID="{CE8E6A0E-13B2-4432-8B71-7B777E199E54}" ShortID="162266677">
-							<PropertyList>
-								<Property Name="ActionType" Type="int16" Value="2"/>
-							</PropertyList>
+						<Action Name="" ID="{E10C0D09-04C6-49DD-8B7A-A0D3BD32CE78}" ShortID="779222921">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="nuclear" ID="{D3E5D2FC-628C-48A7-8CB6-35B7B12B107E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+									<ObjectRef Name="Decouplers" ID="{5931A528-C9F6-4E49-B867-E0DB8DA71A62}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
-						<Action Name="" ID="{491B69A0-6AD3-4AF7-88C7-3412B526689C}" ShortID="440511318">
+						<Action Name="" ID="{E263230B-0D9A-4810-8D11-30B03D177D7B}" ShortID="189938762">
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-						<Action Name="" ID="{E3A24AA9-0C6A-4220-83FA-8FEF95E4B809}" ShortID="31310572">
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="electric_suf01" ID="{54D2244A-2CAB-4983-8CD1-DA8C8AD9ED5C}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-						<Action Name="" ID="{5EE8FEB8-D823-4D41-9E42-A0111EF57DA5}" ShortID="371738681">
-							<PropertyList>
-								<Property Name="ActionType" Type="int16" Value="2"/>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="nuclear_start" ID="{FD939B3E-0658-43B4-B8C4-0DA5FDEA0D28}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-						<Action Name="" ID="{7FEC8BC1-1505-4006-9891-D98941DBDA97}" ShortID="337748478">
-							<PropertyList>
-								<Property Name="ActionType" Type="int16" Value="2"/>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="OneShot_neaclear_steam_long" ID="{681A4291-8662-4249-8E4D-8F991FF5E701}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
-								</Reference>
-							</ReferenceList>
-						</Action>
-						<Action Name="" ID="{D3073B65-DEE4-4213-8CD1-EA4DA09AA858}" ShortID="411966913">
-							<PropertyList>
-								<Property Name="ActionType" Type="int16" Value="2"/>
-							</PropertyList>
-							<ReferenceList>
-								<Reference Name="Target">
-									<ObjectRef Name="OneShot_nuclear_steam_short" ID="{A1C8078D-44A0-4DF4-9F53-2B70E20A612E}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+									<ObjectRef Name="decoupler_start" ID="{525D69F2-03B5-47E0-A141-AD3FFA4964CB}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -81,23 +41,23 @@
 				</Event>
 				<Event Name="electric_drive_stop" ID="{1098DC5B-9284-4AE8-A4AA-5795A99C565A}">
 					<ChildrenList>
-						<Action Name="" ID="{F59FB234-F55C-4609-B7FE-7F0371182A35}" ShortID="540391783">
+						<Action Name="" ID="{A80314D1-B020-4E4F-8614-D888DA828FC2}" ShortID="21515470">
 							<PropertyList>
 								<Property Name="ActionType" Type="int16" Value="2"/>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="electric_suf01" ID="{54D2244A-2CAB-4983-8CD1-DA8C8AD9ED5C}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+									<ObjectRef Name="Decouplers_start" ID="{EBD33D1D-9632-4A9E-B680-AE962875F4B7}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
-						<Action Name="" ID="{77DCFFD3-1F67-486E-9D1C-AA436C90D152}" ShortID="908260376">
+						<Action Name="" ID="{EF7167D5-A31E-4E24-85C8-1B7450A9D7FD}" ShortID="713406344">
 							<PropertyList>
 								<Property Name="ActionType" Type="int16" Value="2"/>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Target">
-									<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+									<ObjectRef Name="Decouplers" ID="{5931A528-C9F6-4E49-B867-E0DB8DA71A62}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>
@@ -559,6 +519,17 @@
 							<ReferenceList>
 								<Reference Name="Target">
 									<ObjectRef Name="ionCannon_ship_destroyed" ID="{4410E0F9-FBD6-4B39-985B-CFA8D2385F93}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
+				<Event Name="electric_drive_constant" ID="{7C2DC165-0517-4A3F-B19F-57E9C9B7B95E}">
+					<ChildrenList>
+						<Action Name="" ID="{64E04544-5006-458F-9A64-66B5360CCC76}" ShortID="797145920">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{92C1D593-D16F-421D-BBD9-F8B8BBFB1266}"/>
 								</Reference>
 							</ReferenceList>
 						</Action>

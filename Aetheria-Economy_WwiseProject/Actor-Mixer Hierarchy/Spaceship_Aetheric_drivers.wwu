@@ -1395,6 +1395,204 @@
 										</Sound>
 									</ChildrenList>
 								</RandomSequenceContainer>
+								<Sound Name="Decouplers" ID="{5931A528-C9F6-4E49-B867-E0DB8DA71A62}" ShortID="687404728">
+									<PropertyList>
+										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Aetheria_spaceship_drive_decouplers_iter001_3" ID="{0790F68E-5111-4FA2-8C96-5408505287F0}">
+											<PropertyList>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.876451953537487"/>
+												<Property Name="TrimEnd" Type="Real64" Value="8.70116156282999"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Aetheria_spaceship_drive_decouplers_iter001.3.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="856808140"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ActiveSourceList>
+										<ActiveSource Name="Aetheria_spaceship_drive_decouplers_iter001_3" ID="{0790F68E-5111-4FA2-8C96-5408505287F0}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<RandomSequenceContainer Name="decoupler_start" ID="{525D69F2-03B5-47E0-A141-AD3FFA4964CB}" ShortID="286236027">
+									<PropertyList>
+										<Property Name="PlayMechanismSpecialTransitions" Type="bool" Value="True"/>
+										<Property Name="PlayMechanismSpecialTransitionsValue" Type="Real64" Value="1.1">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{5BB13C77-8BFD-44FC-9104-07AFDDA2C26B}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Min" Type="Real64" Value="-0.8"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
+										<Property Name="RandomOrSequence" Type="int16" Value="0"/>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<Sound Name="Decouplers_start" ID="{EBD33D1D-9632-4A9E-B680-AE962875F4B7}" ShortID="21936781">
+											<PropertyList>
+												<Property Name="3DSpatialization" Type="int16" Value="2"/>
+												<Property Name="Highpass" Type="int16">
+													<ValueList>
+														<Value>51</Value>
+													</ValueList>
+													<ModifierList>
+														<ModifierInfo>
+															<Modifier Name="" ID="{AD88BFCF-2215-4134-BC3D-272CCB91630B}"/>
+														</ModifierInfo>
+													</ModifierList>
+												</Property>
+												<Property Name="OutputBusVolume" Type="Real64">
+													<ValueList>
+														<Value>8.5</Value>
+													</ValueList>
+												</Property>
+												<Property Name="Pitch" Type="int32">
+													<ModifierList>
+														<ModifierInfo>
+															<Modifier Name="" ID="{32E509B9-5153-4F2E-8796-9A7A91AB14D8}">
+																<PropertyList>
+																	<Property Name="Enabled" Type="bool" Value="True"/>
+																	<Property Name="Max" Type="Real64" Value="126"/>
+																	<Property Name="Min" Type="Real64" Value="-328"/>
+																</PropertyList>
+															</Modifier>
+														</ModifierInfo>
+													</ModifierList>
+												</Property>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-6</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Attenuation">
+													<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+												</Reference>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+													<ObjectRef Name="High_Freq_Cut_1" ID="{BA5BC68D-BCA7-4CE0-9878-1560F2D8B257}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Aetheria_spaceship_drive_decouplers_start_iter001" ID="{8A19AE3A-B0E3-4891-91CB-8C4849E40A6C}">
+													<PropertyList>
+														<Property Name="FadeOutDuration" Type="Real64" Value="0.0117228748680042"/>
+														<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+														<Property Name="TrimBegin" Type="Real64" Value="0.00794999560014079"/>
+														<Property Name="TrimEnd" Type="Real64" Value="0.065890641499472"/>
+													</PropertyList>
+													<Language>SFX</Language>
+													<AudioFile>Aetheria_spaceship_drive_decouplers_start_iter001.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="1026650037"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="Aetheria_spaceship_drive_decouplers_start_iter001" ID="{8A19AE3A-B0E3-4891-91CB-8C4849E40A6C}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+										<Sound Name="Decouplers_start_01" ID="{F6D6B78C-6969-4931-AA8B-EAF5796D2FAB}" ShortID="258044467">
+											<PropertyList>
+												<Property Name="3DSpatialization" Type="int16" Value="2"/>
+												<Property Name="Highpass" Type="int16">
+													<ValueList>
+														<Value>51</Value>
+													</ValueList>
+												</Property>
+												<Property Name="OutputBusVolume" Type="Real64">
+													<ValueList>
+														<Value>8.5</Value>
+													</ValueList>
+												</Property>
+												<Property Name="Pitch" Type="int32">
+													<ModifierList>
+														<ModifierInfo>
+															<Modifier Name="" ID="{AA5412B4-8742-4528-BC39-9C1482D2BD1D}">
+																<PropertyList>
+																	<Property Name="Enabled" Type="bool" Value="True"/>
+																	<Property Name="Max" Type="Real64" Value="253"/>
+																	<Property Name="Min" Type="Real64" Value="-126.8"/>
+																</PropertyList>
+															</Modifier>
+														</ModifierInfo>
+													</ModifierList>
+												</Property>
+												<Property Name="Volume" Type="Real64">
+													<ValueList>
+														<Value>-6</Value>
+													</ValueList>
+												</Property>
+											</PropertyList>
+											<ReferenceList>
+												<Reference Name="Attenuation">
+													<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+												</Reference>
+												<Reference Name="Conversion">
+													<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+												</Reference>
+												<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+													<ObjectRef Name="High_Freq_Cut_1" ID="{BA5BC68D-BCA7-4CE0-9878-1560F2D8B257}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
+												</Reference>
+												<Reference Name="OutputBus">
+													<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+												</Reference>
+											</ReferenceList>
+											<ChildrenList>
+												<AudioFileSource Name="Aetheria_spaceship_drive_decouplers_start_iter001" ID="{781ED9A0-3EC4-496A-9FFC-66FF8056627A}">
+													<PropertyList>
+														<Property Name="FadeInDuration" Type="Real64" Value="0.0168432110172475"/>
+														<Property Name="FadeOutDuration" Type="Real64" Value="0.00161694825765575"/>
+														<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+														<Property Name="TrimBegin" Type="Real64" Value="0.00242542238648363"/>
+													</PropertyList>
+													<Language>SFX</Language>
+													<AudioFile>Aetheria_spaceship_drive_decouplers_start_iter001.wav</AudioFile>
+													<MediaIDList>
+														<MediaID ID="1010938429"/>
+													</MediaIDList>
+												</AudioFileSource>
+											</ChildrenList>
+											<ActiveSourceList>
+												<ActiveSource Name="Aetheria_spaceship_drive_decouplers_start_iter001" ID="{781ED9A0-3EC4-496A-9FFC-66FF8056627A}" Platform="Linked"/>
+											</ActiveSourceList>
+										</Sound>
+									</ChildrenList>
+									<Playlist>
+										<ItemRef Name="Decouplers_start" ID="{EBD33D1D-9632-4A9E-B680-AE962875F4B7}"/>
+										<ItemRef Name="Decouplers_start_01" ID="{F6D6B78C-6969-4931-AA8B-EAF5796D2FAB}"/>
+									</Playlist>
+								</RandomSequenceContainer>
 							</ChildrenList>
 						</BlendContainer>
 					</ChildrenList>
