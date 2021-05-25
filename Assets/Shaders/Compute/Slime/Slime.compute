@@ -6,7 +6,9 @@
 #pragma kernel UpdateAgents
 #pragma kernel Diffuse
 #pragma kernel CreateAgentParticles
-#pragma kernel CreateParticleGeometry
+#pragma kernel UpdateTrailPoints
+#pragma kernel CreateTrailGeometry
+// #pragma kernel CreateParticleGeometry
 
 // Struct for storing the current state of each simulated slime agent
 struct Agent
@@ -18,8 +20,6 @@ struct Agent
 struct Particle
 {
     float3 start;
-    float3 middle;
-    float3 end;
     float intensity;
 };
 
@@ -76,6 +76,27 @@ int textureSize;
 int gravityTextureSize;
 float zoneRadius;
 int spawnPositionCount;
+
+// Buffer containing the leading position of the agent particle
+RWStructuredBuffer<Particle> particles;
+
+// Output buffer for particle trail geometry
+RWStructuredBuffer<Vertex> vertexBuffer;
+
+// Perlin noise parameters
+float noiseAmplitude;
+float time;
+float heightRange;
+float heightOffset;
+int particleCount;
+
+RWStructuredBuffer<float3> previousTrailBuffer;
+RWStructuredBuffer<float3> trailBuffer;
+
+int trailPoints;
+float trailStartWidth;
+float trailEndWidth;
+float3 cameraPos;
 
 // Hash function from H. Schechter & R. Bridson, goo.gl/RXiKaH
 inline uint hash(uint s)
@@ -165,14 +186,7 @@ void UpdateAgents (uint3 id : SV_DispatchThreadID)
     const float r = random(id.x + randomOffset);
 
     // Clamp position within bounds and randomize direction
-    if(dot(agent.position, agent.position) > zoneRadius * zoneRadius)
-    {
-        //agent.position = normalize(agent.position) * zoneRadius;
-        agent.position = float2(0,0);
-        agent.angle = r * UNITY_TWO_PI;
-    }
-
-    if(isnan(agent.position.x) || slope > .8)
+    if(dot(agent.position, agent.position) > zoneRadius * zoneRadius || isnan(agent.position.x) || slope > .8)
     {
         agent.position = spawnPositions[id.x%spawnPositionCount];
         agent.angle = r * UNITY_TWO_PI;
@@ -236,19 +250,6 @@ void Diffuse (uint3 id : SV_DispatchThreadID)
     diffusedAccumulation[id.xy] = lerp(previous, average, saturate(evaluate(settings.Diffusion, slope) * deltaTime)) * saturate(1-evaluate(settings.Decay, slope) * deltaTime);
 }
 
-// Buffer containing the leading position of the agent particle
-RWStructuredBuffer<Particle> particles;
-
-// Output buffer for particle trail geometry
-RWStructuredBuffer<Vertex> vertexBuffer;
-
-// Perlin noise parameters
-float noiseAmplitude;
-float time;
-float heightRange;
-float heightOffset;
-int particleCount;
-
 #define HASHSCALE 0.1031
 float hashp(float p)
 {
@@ -267,7 +268,23 @@ float grad(float hash, float p)
 float perlinNoise1D(float p)
 {
     const float pi = floor(p), pf = p - pi;
-    return lerp(grad(hashp(pi), pf), grad(hashp(pi + 1.0), pf - 1.0), fade(pf)) * 2.0;
+    return lerp(grad(hashp(pi), pf), grad(hashp(pi + 1.0), pf - 1.0), fade(pf)) * 2.0 - 1;
+}
+
+// fractal sum, range -1.0 - 1.0
+float fBm(float p, int octaves)
+{
+    float freq = 1, amp = .5;
+    float sum = 0;	
+    for(int i = 0; i < octaves; i++) 
+    {
+        if(i<4)
+            sum += (1-abs(perlinNoise1D(p * freq))) * amp;
+        else sum += abs(perlinNoise1D(p * freq)) * amp;
+        freq *= 2;
+        amp *= .75;
+    }
+    return (sum + 0)*noiseAmplitude;
 }
 
 [numthreads(NUM_THREAD_X,1,1)]
@@ -289,23 +306,36 @@ void CreateAgentParticles (uint3 id : SV_DispatchThreadID)
     Particle particle = particles[id.x];
     const float damping = evaluate(settings.TrailDamping, slope);
     const float3 targetPosition = float3(
-        agent.position.x + perlinNoise1D(id.x*3 + time + sequence) * noiseAmplitude,
-        particleHeight + perlinNoise1D(id.x*3 + 1 + time + sequence) * noiseAmplitude,
-        agent.position.y + perlinNoise1D(id.x*3 + 2 + time + sequence) * noiseAmplitude);
-    if(length(particle.start-targetPosition) > 256)
+        agent.position.x + fBm(id.x*3 + time + sequence, 4),
+        particleHeight + fBm(id.x*3 + 1 + time + sequence, 4),
+        agent.position.y + fBm(id.x*3 + 2 + time + sequence, 4));
+    if(length(particle.start-targetPosition) > 32)
     {
-        particle.end = targetPosition;
-        particle.middle = targetPosition;
         particle.start = targetPosition;
     }
     else
     {
-        particle.end = lerp(particle.end, particle.middle, damping);
-        particle.middle = lerp(particle.middle, particle.start, damping);
         particle.start = lerp(particle.start, targetPosition, damping);
     }
     particle.intensity = evaluate(settings.Intensity, slope);
     particles[id.x] = particle;
+}
+
+[numthreads(NUM_THREAD_X,1,1)]
+void UpdateTrailPoints (uint3 id : SV_DispatchThreadID)
+{
+    // give every trail position its own particle
+    const int idx = id.x;
+    const int particleIndex = idx / trailPoints;
+    const int trailIndex = idx % trailPoints;
+
+    const Particle particle = particles[particleIndex];
+
+    if(trailIndex==trailPoints-1)
+    {
+        trailBuffer[idx] = particle.start;
+    }
+    else trailBuffer[idx] = previousTrailBuffer[idx+1];
 }
     
 // https://catlikecoding.com/unity/tutorials/curves-and-splines/
@@ -325,22 +355,18 @@ inline float3 QuadraticSplineDerivative (float3 p0, float3 p1, float3 p2, float 
         2 * t * (p2 - p1);
 }
 
-int trailPoints;
-float trailStartWidth;
-float trailEndWidth;
-float3 cameraPos;
-
 inline float3 calcToCameraDir(float3 pos)
 {
     return normalize(cameraPos - pos);
 }
 
 [numthreads(NUM_THREAD_X,1,1)]
-void CreateParticleGeometry (uint3 id : SV_DispatchThreadID)
+void CreateTrailGeometry (uint3 id : SV_DispatchThreadID)
 {
     Vertex v0 = GetDefaultVertex();
     Vertex v1 = GetDefaultVertex();
 
+    // give every trail position its own particle
     const int idx = id.x;
     const int particleIndex = id.x / trailPoints;
     const int trailIndex = id.x % trailPoints;
@@ -348,12 +374,18 @@ void CreateParticleGeometry (uint3 id : SV_DispatchThreadID)
 
     const Particle particle = particles[particleIndex];
 
-    //float3 pos = float3(particle, 0, trailIndex);
-    //float3 dir = float3(0,0,1);
-    //float3 pos = lerp(particle.start, particle.end, trailLerp);
-    //float3 dir = normalize(particle.end-particle.start);
-    const float3 pos = QuadraticSplinePosition(particle.start, particle.middle, particle.end, trailLerp);
-    const float3 dir = QuadraticSplineDerivative(particle.start, particle.middle, particle.end, trailLerp);
+    float3 dirPrev = float3(0,0,0);
+    float3 dirNext = float3(0,0,0);
+
+    float3 pos = trailBuffer[idx];
+    
+    if ( trailIndex!=0 )
+        dirPrev = normalize(pos - trailBuffer[idx-1]);
+
+    if( trailIndex < trailPoints-1 )
+        dirNext = normalize(trailBuffer[idx+1] - pos);
+
+    const float3 dir = normalize(dirPrev + dirNext);
 
     const float width = lerp(trailStartWidth, trailEndWidth, trailLerp);
 
@@ -372,3 +404,38 @@ void CreateParticleGeometry (uint3 id : SV_DispatchThreadID)
     vertexBuffer[vId] = v0;
     vertexBuffer[vId+1] = v1;
 }
+
+// [numthreads(NUM_THREAD_X,1,1)]
+// void CreateParticleGeometry (uint3 id : SV_DispatchThreadID)
+// {
+//     Vertex v0 = GetDefaultVertex();
+//     Vertex v1 = GetDefaultVertex();
+//
+//     // give every trail position its own particle
+//     const int idx = id.x;
+//     const int particleIndex = id.x / trailPoints;
+//     const int trailIndex = id.x % trailPoints;
+//     float trailLerp = (float) trailIndex / trailPoints;
+//
+//     const Particle particle = particles[particleIndex];
+//
+//     const float3 pos = QuadraticSplinePosition(particle.start, particle.middle, particle.end, trailLerp);
+//     const float3 dir = QuadraticSplineDerivative(particle.start, particle.middle, particle.end, trailLerp);
+//
+//     const float width = lerp(trailStartWidth, trailEndWidth, trailLerp);
+//
+//     const float3 toCameraDir = calcToCameraDir(pos);
+//     const float3 right = normalize(cross(dir, toCameraDir)) * width * 0.5f / particle.intensity;
+//     
+//     v0.pos = pos - right;
+//     v0.uv = float2(trailLerp, 0);
+//     v0.intensity = particle.intensity;
+//
+//     v1.pos = pos + right;
+//     v1.uv = float2(trailLerp, 1);
+//     v1.intensity = particle.intensity;
+//
+//     const uint vId = idx * 2;
+//     vertexBuffer[vId] = v0;
+//     vertexBuffer[vId+1] = v1;
+// }

@@ -101,4 +101,7 @@ Economy.Shared/obj/
 # JetBrains Rider .idea folder
 .idea/
 
+# Blender backup files
+*.blend1
+
 Packages/packages-lock.json

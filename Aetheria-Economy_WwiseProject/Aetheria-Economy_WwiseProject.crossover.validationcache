@@ -1,76 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ValidationCache Version="1" SchemaVersion="97">
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Virtual Acoustics\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Triggers\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Switches\Default Work Unit.wwu" DateLow="1616943999" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Switches\def_test.wwu" DateLow="1617817958" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\States\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1618249245" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1616256084" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Queries\Factory Queries.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Queries\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Presets\Factory Spatial Audio.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Presets\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Modulators\Default Work Unit.wwu" DateLow="1617734525" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Game Parameters\weapon_events.wwu" DateLow="1618170759" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Game Parameters\ship_technology_parameters.wwu" DateLow="1618154053" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Game Parameters\item_properties.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1618068844" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\Ship Audio.wwu" DateLow="1618238667" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\SFX_Defirm_unit.wwu" DateLow="1616942922" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\SFX_defirm_NewUnit.wwu" DateLow="1618062730" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\SFX_defirm_aeth_drive_model.wwu" DateLow="1618247445" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\exp_def.wwu" DateLow="1616952051" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\enemy_ship.wwu" DateLow="1616938174" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\Default Work Unit.wwu" DateLow="1618249245" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Effects\Factory Effects.wwu" DateLow="1617817958" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Effects\Default Work Unit.wwu" DateLow="1618154054" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Conversion Settings\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Aetheria-Economy_WwiseProject.wproj" DateLow="1618071962" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Aetheria-Economy_WwiseProject.crossover.wsettings" DateLow="1618326738" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\Spaceship_Aetheric_drivers.wwu" DateLow="1618247445" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\SFX_Defirm_Unit.wwu" DateLow="1618071439" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\SFX_defirm_NewUnit.wwu" DateLow="1618062729" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\SFX_defirm_aeth_drive.wwu" DateLow="1618071754" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1616256083" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\def_tests.wwu" DateLow="1616952051" DateHigh="0"/>
-	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\copy_Unit.wwu" DateLow="1616178756" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Virtual Acoustics\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Triggers\Default Work Unit.wwu" DateLow="1615137344" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Switches\Default Work Unit.wwu" DateLow="1615056173" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\States\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Queries\Factory Queries.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Queries\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Presets\Factory Spatial Audio.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Presets\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Modulators\Default Work Unit.wwu" DateLow="1615142213" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Game Parameters\test_paramenters.wwu" DateLow="1615141125" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\test_sounds.wwu" DateLow="1615142213" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\Default Work Unit.wwu" DateLow="1615143383" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Effects\Factory Effects.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Effects\Default Work Unit.wwu" DateLow="1615130515" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Conversion Settings\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Aetheria-Economy_WwiseProject.wproj" DateLow="1615040261" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Aetheria-Economy_WwiseProject.crossover.wsettings" DateLow="1615143411" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1615143382" DateHigh="0"/>
-	<ValidationCacheItem File="Y:\Documents\Unity\repository\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\copy_Unit.wwu" DateLow="1615055411" DateHigh="0"/>
+<ValidationCache Version="1" SchemaVersion="103">
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Virtual Acoustics\Default Work Unit.wwu" DateLow="1621261237" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Triggers\Default Work Unit.wwu" DateLow="1621261237" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Switches\Default Work Unit.wwu" DateLow="1621261237" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\States\Default Work Unit.wwu" DateLow="1621261237" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1621685209" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\SoundBanks\SFX.wwu" DateLow="1621261237" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\SoundBanks\Music.wwu" DateLow="1621261237" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1621261237" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\SoundBanks\Ambience SB Unit.wwu" DateLow="1621261237" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Queries\Factory Queries.wwu" DateLow="1621261236" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Queries\Default Work Unit.wwu" DateLow="1621261236" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Presets\Factory Spatial Audio.wwu" DateLow="1621261236" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Presets\Default Work Unit.wwu" DateLow="1621261236" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Modulators\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Metadata\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Master-Mixer Hierarchy\Ambience MM Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Interactive Music Hierarchy\Overworld.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Interactive Music Hierarchy\Menu_Music.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Interactive Music Hierarchy\Combat.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Interactive Music Hierarchy\Boss.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Game Parameters\SFX.wwu" DateLow="1621278846" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\SFX.wwu" DateLow="1621278846" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\Music.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Events\Ambience.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Effects\Factory Effects.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Effects\Default Work Unit.wwu" DateLow="1621685209" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Conversion Settings\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Aetheria-Economy_WwiseProject.wproj" DateLow="1621261224" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Aetheria-Economy_WwiseProject.crossover.wsettings" DateLow="1621685220" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\UI.wwu" DateLow="1621261223" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\SFX.wwu" DateLow="1621685209" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1621261223" DateHigh="0"/>
+	<ValidationCacheItem File="Z:\Volumes\Backup Plus\Games\Aetheria-Economy\Aetheria-Economy_WwiseProject\Actor-Mixer Hierarchy\Ambience AM Unit.wwu" DateLow="1621261223" DateHigh="0"/>
 </ValidationCache>

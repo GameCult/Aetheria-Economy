@@ -105,7 +105,7 @@
 														<RTPC Name="" ID="{F8826790-A1C9-4B2D-9AC3-DDDB47C77988}" ShortID="238167901">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{CB386311-27B7-47AD-890C-F779D8325F70}">
@@ -143,7 +143,7 @@
 														<RTPC Name="" ID="{632AB786-EF1B-4538-AA7D-36FE737C370C}" ShortID="3196693">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{730DCFC7-9779-4E4B-92C2-F2C1C02CE5F1}">
@@ -652,7 +652,7 @@
 														<RTPC Name="" ID="{853DF0A7-E97A-480F-BD21-781E8774DB1A}" ShortID="111828025">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_weapon_lightning_grain_filter" ID="{441AD5D1-8E39-451F-8505-8AF4C9DA76B0}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_weapon_lightning_grain_filter" ID="{441AD5D1-8E39-451F-8505-8AF4C9DA76B0}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{AC6116ED-6D89-418B-9C40-1A31A4C81440}">
@@ -726,7 +726,7 @@
 														<RTPC Name="" ID="{DA7CD2D1-C1AD-4279-A1E5-B57CD1C53B61}" ShortID="757982261">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_weapon_lightning_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_weapon_lightning_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{97997096-E96E-430F-BE78-A960BA0ECF22}">
@@ -865,7 +865,7 @@
 																<RTPC Name="" ID="{1F08712C-0F3F-4116-8091-0410D2B2F020}" ShortID="715472442">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="sfx_weapon_lightning_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																			<ObjectRef Name="sfx_weapon_lightning_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{AC7D90AD-332F-43DE-A452-5EB124DA52F1}">
@@ -1032,7 +1032,7 @@
 																<RTPC Name="" ID="{30B38128-058B-446A-B32E-49BAD44ECC91}" ShortID="96195040">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="sfx_weapon_lightning_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																			<ObjectRef Name="sfx_weapon_lightning_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{0AE52A49-AC53-4263-90D2-5B268C4393A1}">
@@ -1975,7 +1975,7 @@
 														<RTPC Name="" ID="{58C2904A-C46B-4F1E-B6C0-78996E41E25D}" ShortID="825793503">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{AEC45B9E-A323-4AA8-93B7-B4FC6F122E56}">
@@ -2004,7 +2004,7 @@
 														<RTPC Name="" ID="{622AD780-EF5E-4B81-858B-9A7897E226D8}" ShortID="116178123">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{7179E7EA-CA39-4BD6-BD89-A9723D0C8DE8}">
@@ -2067,7 +2067,7 @@
 														<RTPC Name="" ID="{7513F978-5E37-41E2-B234-351CC2CF1671}" ShortID="463235266">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{C0B357CE-AA69-4738-841F-27A5EAA74D40}">
@@ -2197,7 +2197,7 @@
 												<RTPC Name="" ID="{B192D53D-ACE5-4EFA-A709-484AE5A75C7E}" ShortID="485307737">
 													<ReferenceList>
 														<Reference Name="ControlInput">
-															<ObjectRef Name="target_locking" ID="{215424C5-9F3E-438A-AE24-4314B540C243}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+															<ObjectRef Name="target_locking" ID="{215424C5-9F3E-438A-AE24-4314B540C243}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 														</Reference>
 													</ReferenceList>
 													<Curve Name="" ID="{55A4E13D-4234-463A-B640-10C443D54DF4}">
@@ -2262,7 +2262,7 @@
 												<RTPC Name="" ID="{62725E81-160D-4FD9-A286-CEC2827CA9B6}" ShortID="344168321">
 													<ReferenceList>
 														<Reference Name="ControlInput">
-															<ObjectRef Name="target_locking" ID="{215424C5-9F3E-438A-AE24-4314B540C243}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+															<ObjectRef Name="target_locking" ID="{215424C5-9F3E-438A-AE24-4314B540C243}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 														</Reference>
 													</ReferenceList>
 													<Curve Name="" ID="{E47A559B-4D69-4B67-9479-6E45A4785485}">
@@ -3570,7 +3570,7 @@
 														<RTPC Name="" ID="{A5BABDAC-B367-40F0-8F15-D519330DE290}" ShortID="72732069">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{64088E39-7B13-4602-801E-F8A798FF4ED8}">
@@ -3638,7 +3638,7 @@
 														<RTPC Name="" ID="{4A7E9340-B2C6-48B5-A7B6-A2736BCFC113}" ShortID="130556439">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="charge_level" ID="{082F199E-AA5F-42DE-A1D7-C9BFC973DB9D}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{5FEBDE34-B852-4FD3-B24E-185878F115F2}">
@@ -3766,7 +3766,7 @@
 										<RTPC Name="" ID="{61C45EBC-267A-41E9-8C44-2B6D7D9F5CF8}" ShortID="588709940">
 											<ReferenceList>
 												<Reference Name="ControlInput">
-													<ObjectRef Name="sfx_shared_intensity" ID="{69088562-620A-4123-8C93-DDBD1437C6C9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+													<ObjectRef Name="sfx_shared_intensity" ID="{69088562-620A-4123-8C93-DDBD1437C6C9}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 												</Reference>
 											</ReferenceList>
 											<Curve Name="" ID="{13BFA633-461B-4D7D-84EB-99E94C41B266}">
@@ -3805,181 +3805,6 @@
 								</Reference>
 							</ReferenceList>
 							<ChildrenList>
-								<Sound Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" ShortID="900088191">
-									<PropertyList>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-8.5</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<SourcePlugin Name="SoundSeed Grain" ID="{03E523D5-1AFD-4FE4-B67F-46CE0282B6C7}" ShortID="255575945" PluginName="SoundSeed Grain" CompanyID="0" PluginID="183">
-											<PropertyList>
-												<Property Name="Amplitude" Type="Real32" Value="68"/>
-												<Property Name="Attack" Type="Real32" Value="32"/>
-												<Property Name="Duration" Type="Real32" Value="137"/>
-												<Property Name="DurationLink" Type="int32" Value="1"/>
-												<Property Name="EnvelopeType" Type="int32" Value="3"/>
-												<Property Name="FilterFreq" Type="Real32" Value="7962">
-													<RTPCList>
-														<RTPC Name="" ID="{A080E791-F36F-4BC1-AA69-301B9E0E13C9}" ShortID="316561590">
-															<ReferenceList>
-																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_ship_rotor_plates_grain_filter" ID="{054DD684-3F0A-4629-BB94-1E5A662EED8A}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
-																</Reference>
-															</ReferenceList>
-															<Curve Name="" ID="{F9544586-02C7-449B-AFC0-C01451BBA14A}">
-																<PropertyList>
-																	<Property Name="Flags" Type="int32" Value="5"/>
-																</PropertyList>
-																<PointList>
-																	<Point>
-																		<XPos>0</XPos>
-																		<YPos>5558.379</YPos>
-																		<Flags>5</Flags>
-																		<SegmentShape>Exp1</SegmentShape>
-																	</Point>
-																	<Point>
-																		<XPos>1</XPos>
-																		<YPos>12034.8799</YPos>
-																		<Flags>37</Flags>
-																	</Point>
-																</PointList>
-															</Curve>
-														</RTPC>
-													</RTPCList>
-												</Property>
-												<Property Name="FilterQ" Type="Real32" Value="0.91"/>
-												<Property Name="GrainRate" Type="Real32" Value="16.14"/>
-												<Property Name="MarkerSelect" Type="Real32">
-													<RTPCList>
-														<RTPC Name="" ID="{64AFA9F2-90D6-417C-858B-682E5B32D460}" ShortID="692930521">
-															<ReferenceList>
-																<Reference Name="ControlInput">
-																	<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
-																</Reference>
-															</ReferenceList>
-															<Curve Name="" ID="{CBB53EB1-4400-4570-A178-F3763CB82ADD}">
-																<PropertyList>
-																	<Property Name="Flags" Type="int32" Value="1"/>
-																</PropertyList>
-																<PointList>
-																	<Point>
-																		<XPos>0</XPos>
-																		<YPos>0</YPos>
-																		<Flags>5</Flags>
-																	</Point>
-																	<Point>
-																		<XPos>100</XPos>
-																		<YPos>84</YPos>
-																		<Flags>37</Flags>
-																	</Point>
-																</PointList>
-															</Curve>
-														</RTPC>
-													</RTPCList>
-												</Property>
-												<Property Name="OutputLevel" Type="Real32">
-													<RTPCList>
-														<RTPC Name="" ID="{5B1A5A8A-6563-4D98-A480-484A7FF2FAD5}" ShortID="114593834">
-															<ReferenceList>
-																<Reference Name="ControlInput">
-																	<Custom>
-																		<ModulatorEnvelope Name="Modulator Envelope (Custom)" ID="{EC51F5DD-3522-4D84-92A1-5427E3A38275}" ShortID="222132598">
-																			<PropertyList>
-																				<Property Name="EnvelopeAttackTime" Type="Real64" Value="0.01"/>
-																			</PropertyList>
-																		</ModulatorEnvelope>
-																	</Custom>
-																</Reference>
-															</ReferenceList>
-															<Curve Name="" ID="{7EA6AD4B-1CFA-4A70-A222-4046E0CB899D}">
-																<PropertyList>
-																	<Property Name="Flags" Type="int32" Value="3"/>
-																</PropertyList>
-																<PointList>
-																	<Point>
-																		<XPos>0</XPos>
-																		<YPos>-96</YPos>
-																		<Flags>21</Flags>
-																	</Point>
-																	<Point>
-																		<XPos>1</XPos>
-																		<YPos>0</YPos>
-																		<Flags>53</Flags>
-																	</Point>
-																</PointList>
-															</Curve>
-														</RTPC>
-													</RTPCList>
-												</Property>
-												<Property Name="SelectFreqTimeGrain" Type="int32" Value="1"/>
-												<Property Name="Transpose" Type="Real32">
-													<RTPCList>
-														<RTPC Name="" ID="{AF5E31D4-7585-4A4A-BFF8-2E83E82465FD}" ShortID="368878021">
-															<ReferenceList>
-																<Reference Name="ControlInput">
-																	<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
-																</Reference>
-															</ReferenceList>
-															<Curve Name="" ID="{4EF3AACD-DE9A-42C5-A9BB-9F3FC737C66F}">
-																<PropertyList>
-																	<Property Name="Flags" Type="int32" Value="1"/>
-																</PropertyList>
-																<PointList>
-																	<Point>
-																		<XPos>0</XPos>
-																		<YPos>0</YPos>
-																		<Flags>5</Flags>
-																	</Point>
-																	<Point>
-																		<XPos>43.52732</XPos>
-																		<YPos>523.61146</YPos>
-																		<Flags>0</Flags>
-																	</Point>
-																	<Point>
-																		<XPos>100</XPos>
-																		<YPos>336</YPos>
-																		<Flags>37</Flags>
-																	</Point>
-																</PointList>
-															</Curve>
-														</RTPC>
-													</RTPCList>
-												</Property>
-											</PropertyList>
-											<ChildrenList>
-												<AudioFileSource Name="rotor_2" ID="{C77E4801-F24B-48CF-A0DC-08F22D339DAE}">
-													<PropertyList>
-														<Property Name="LoopBegin" Type="Real64" Value="4.42238648363253"/>
-														<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-														<Property Name="TrimBegin" Type="Real64" Value="4.42238648363253"/>
-													</PropertyList>
-													<Language>SoundSeed Grain</Language>
-													<AudioFile>rotor_2.wav</AudioFile>
-													<MediaIDList>
-														<MediaID ID="235705661"/>
-													</MediaIDList>
-												</AudioFileSource>
-											</ChildrenList>
-											<Language>SFX</Language>
-											<PluginData/>
-										</SourcePlugin>
-									</ChildrenList>
-									<ObjectLists/>
-									<ActiveSourceList>
-										<ActiveSource Name="SoundSeed Grain" ID="{03E523D5-1AFD-4FE4-B67F-46CE0282B6C7}" Platform="Linked"/>
-									</ActiveSourceList>
-								</Sound>
 								<RandomSequenceContainer Name="electric_suf01" ID="{54D2244A-2CAB-4983-8CD1-DA8C8AD9ED5C}" ShortID="602647811">
 									<PropertyList>
 										<Property Name="InitialDelay" Type="Real64">
@@ -4003,7 +3828,7 @@
 												<RTPC Name="" ID="{78CEF57A-A132-4C80-AFE3-0BF1003E1A96}" ShortID="397800632">
 													<ReferenceList>
 														<Reference Name="ControlInput">
-															<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+															<ObjectRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 														</Reference>
 													</ReferenceList>
 													<Curve Name="" ID="{761029E6-71DE-4906-9771-1CED874A21AD}">
@@ -4059,6 +3884,34 @@
 										</Property>
 										<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
 										<Property Name="RandomAvoidRepeatingCount" Type="int32" Value="2"/>
+										<Property Name="Volume" Type="Real64">
+											<RTPCList>
+												<RTPC Name="" ID="{79E09DEB-8173-4568-B9A4-AF166DA44BDE}" ShortID="880983359">
+													<ReferenceList>
+														<Reference Name="ControlInput">
+															<ObjectRef Name="sfx_shared_quality" ID="{32712EBC-F96D-4B83-AD77-B436B6BC825C}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
+														</Reference>
+													</ReferenceList>
+													<Curve Name="" ID="{878D3977-AEF4-47F6-AA19-C1FC8E85D027}">
+														<PropertyList>
+															<Property Name="Flags" Type="int32" Value="3"/>
+														</PropertyList>
+														<PointList>
+															<Point>
+																<XPos>0</XPos>
+																<YPos>0</YPos>
+																<Flags>5</Flags>
+															</Point>
+															<Point>
+																<XPos>1</XPos>
+																<YPos>-200</YPos>
+																<Flags>37</Flags>
+															</Point>
+														</PointList>
+													</Curve>
+												</RTPC>
+											</RTPCList>
+										</Property>
 									</PropertyList>
 									<ReferenceList>
 										<Reference Name="Conversion">
@@ -4354,7 +4207,7 @@
 														<RTPC Name="" ID="{CB55E557-E3CA-4A06-ADDF-0314721B813E}" ShortID="559443543">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_ship_drive_nuclear_filterDuration" ID="{B54383F3-A1EF-4FCA-94D5-24A7E4AC228C}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_ship_drive_nuclear_filterDuration" ID="{B54383F3-A1EF-4FCA-94D5-24A7E4AC228C}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{18F09EB2-F905-4419-912D-0E9CB997DDD8}">
@@ -4387,7 +4240,7 @@
 														<RTPC Name="" ID="{55E63C23-3253-4A7A-B1BD-DEF12C5C3021}" ShortID="808103651">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_ship_drive_nuclear_grain_speed_mod" ID="{73534BF8-0FC9-4F33-92A9-D9E445654891}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_ship_drive_nuclear_grain_speed_mod" ID="{73534BF8-0FC9-4F33-92A9-D9E445654891}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{A77F558A-ACDD-478F-A385-39C539276F68}">
@@ -4415,7 +4268,7 @@
 														<RTPC Name="" ID="{892F3782-3871-4AD4-A15D-70113F4CE9E5}" ShortID="212827298">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_ship_drive_nuclear_filterDuration" ID="{B54383F3-A1EF-4FCA-94D5-24A7E4AC228C}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_ship_drive_nuclear_filterDuration" ID="{B54383F3-A1EF-4FCA-94D5-24A7E4AC228C}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{E311A71F-26EE-4FEC-BF6A-CE811F8729C4}">
@@ -4484,7 +4337,7 @@
 														<RTPC Name="" ID="{9998DFF3-1E0C-4C1D-AF05-998E27AF0CA2}" ShortID="44437594">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{3F95268A-FC33-48BB-AF39-36278123FB3C}">
@@ -4561,12 +4414,12 @@
 										<ActiveSource Name="SoundSeed Grain" ID="{11CD630C-65EF-430C-878D-64AF35639FC7}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
-								<Sound Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" ShortID="894145724">
+								<Sound Name="dc_rotor" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" ShortID="894145724">
 									<PropertyList>
 										<Property Name="OverrideEffect" Type="bool" Value="True"/>
 										<Property Name="Volume" Type="Real64">
 											<ValueList>
-												<Value>8</Value>
+												<Value>0.9</Value>
 											</ValueList>
 										</Property>
 									</PropertyList>
@@ -4587,20 +4440,22 @@
 									<ChildrenList>
 										<SourcePlugin Name="SoundSeed Grain" ID="{6389EDF5-0863-4B01-AD89-19303289E4BD}" ShortID="826223786" PluginName="SoundSeed Grain" CompanyID="0" PluginID="183">
 											<PropertyList>
-												<Property Name="AmplitudeMod2Depth" Type="Real32" Value="24"/>
-												<Property Name="Attack" Type="Real32" Value="316.9"/>
-												<Property Name="Duration" Type="Real32" Value="353.5"/>
+												<Property Name="AmplitudeMod2Depth" Type="Real32" Value="3.2"/>
+												<Property Name="Attack" Type="Real32" Value="329"/>
+												<Property Name="Duration" Type="Real32" Value="194.5"/>
 												<Property Name="DurationLink" Type="int32" Value="1"/>
 												<Property Name="EnvelopeType" Type="int32" Value="3"/>
-												<Property Name="FilterFreq" Type="Real32" Value="3113"/>
+												<Property Name="FilterFreq" Type="Real32" Value="9544"/>
 												<Property Name="FilterQ" Type="Real32" Value="0.52"/>
-												<Property Name="GrainRate" Type="Real32" Value="8.947"/>
-												<Property Name="MarkerSelectMod1Depth" Type="Real32" Value="100"/>
-												<Property Name="ModAmount1" Type="Real32" Value="73.7"/>
-												<Property Name="ModRate1" Type="Real32" Value="1.4"/>
+												<Property Name="GrainRate" Type="Real32" Value="8.469"/>
+												<Property Name="MarkerSelect" Type="Real32" Value="51.49701"/>
+												<Property Name="MarkerSelectMod1Depth" Type="Real32" Value="22"/>
+												<Property Name="ModAmount1" Type="Real32" Value="13.73"/>
+												<Property Name="ModRate1" Type="Real32" Value="975.7"/>
 												<Property Name="ModRate2" Type="Real32" Value="1064.78"/>
 												<Property Name="ModWaveform1" Type="int32" Value="0"/>
-												<Property Name="OutputLevel" Type="Real32">
+												<Property Name="OutputChannelConfig" Type="int32" Value="12546"/>
+												<Property Name="OutputLevel" Type="Real32" Value="-9.1">
 													<RTPCList>
 														<RTPC Name="" ID="{F36F7463-1F14-4C4B-B8DA-260E08BF9915}" ShortID="1014840176">
 															<ReferenceList>
@@ -4635,12 +4490,12 @@
 													</RTPCList>
 												</Property>
 												<Property Name="SelectFreqTimeGrain" Type="int32" Value="1"/>
-												<Property Name="Speed" Type="Real32" Value="0.83">
+												<Property Name="Speed" Type="Real32">
 													<RTPCList>
 														<RTPC Name="" ID="{58063A57-6B41-4ECB-A2DC-BC913BF0C101}" ShortID="824492273">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_ship_electric_speed" ID="{9D610C30-BA07-43EF-B2E3-6CEB72857C03}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_ship_electric_speed" ID="{9D610C30-BA07-43EF-B2E3-6CEB72857C03}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{37240512-33D9-486E-A9C2-BAC02653B559}">
@@ -4669,7 +4524,7 @@
 														<RTPC Name="" ID="{AFAA096F-9A47-4866-9799-E17C40D468AE}" ShortID="997796073">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{46A37F1C-8CE9-409B-8779-A61EAACBF6D7}">
@@ -4684,7 +4539,7 @@
 																	</Point>
 																	<Point>
 																		<XPos>100</XPos>
-																		<YPos>176.47059</YPos>
+																		<YPos>539.351</YPos>
 																		<Flags>37</Flags>
 																	</Point>
 																</PointList>
@@ -4694,11 +4549,11 @@
 												</Property>
 											</PropertyList>
 											<ChildrenList>
-												<AudioFileSource Name="sfx_spcp_drives_dc_scifi_electric" ID="{65E0B893-D03E-4175-9BEA-C808B31461B7}">
+												<AudioFileSource Name="rotor_electric4_iter001" ID="{65E0B893-D03E-4175-9BEA-C808B31461B7}">
 													<Language>SoundSeed Grain</Language>
-													<AudioFile>sfx_spcp_drives_dc_scifi_electric.wav</AudioFile>
+													<AudioFile>rotor_electric4_iter001.wav</AudioFile>
 													<MediaIDList>
-														<MediaID ID="361464832"/>
+														<MediaID ID="997980444"/>
 													</MediaIDList>
 												</AudioFileSource>
 											</ChildrenList>
@@ -4733,44 +4588,6 @@
 									<ObjectLists/>
 									<ActiveSourceList>
 										<ActiveSource Name="SoundSeed Grain" ID="{6389EDF5-0863-4B01-AD89-19303289E4BD}" Platform="Linked"/>
-									</ActiveSourceList>
-								</Sound>
-								<Sound Name="dc_start" ID="{0ACDD876-8065-4311-98C0-03D9E98661A1}" ShortID="599308393">
-									<PropertyList>
-										<Property Name="Volume" Type="Real64">
-											<ValueList>
-												<Value>-8.2</Value>
-											</ValueList>
-										</Property>
-									</PropertyList>
-									<ReferenceList>
-										<Reference Name="Conversion">
-											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
-										</Reference>
-										<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
-											<ObjectRef Name="High_Freq_Cut_1" ID="{BA5BC68D-BCA7-4CE0-9878-1560F2D8B257}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
-										</Reference>
-										<Reference Name="OutputBus">
-											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
-										</Reference>
-									</ReferenceList>
-									<ChildrenList>
-										<AudioFileSource Name="sfx_spcp_drives_dc_start" ID="{06C068E2-E1E8-4495-BF6F-62EC1791B3EA}">
-											<PropertyList>
-												<Property Name="FadeOutDuration" Type="Real64" Value="0.1469651531151"/>
-												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
-												<Property Name="TrimEnd" Type="Real64" Value="0.480358324533615"/>
-											</PropertyList>
-											<Language>SFX</Language>
-											<AudioFile>sfx_spcp_drives_dc_start.wav</AudioFile>
-											<MediaIDList>
-												<MediaID ID="1048030719"/>
-											</MediaIDList>
-										</AudioFileSource>
-									</ChildrenList>
-									<ObjectLists/>
-									<ActiveSourceList>
-										<ActiveSource Name="sfx_spcp_drives_dc_start" ID="{06C068E2-E1E8-4495-BF6F-62EC1791B3EA}" Platform="Linked"/>
 									</ActiveSourceList>
 								</Sound>
 								<RandomSequenceContainer Name="OneShot_nuclear_steam_short" ID="{A1C8078D-44A0-4DF4-9F53-2B70E20A612E}" ShortID="656633171">
@@ -5325,6 +5142,184 @@
 							</ChildrenList>
 							<ObjectLists/>
 						</BlendContainer>
+						<RandomSequenceContainer Name="coupling_sound_combo" ID="{282FB94D-10A0-41F3-848A-53D61C9957DA}" ShortID="290584204">
+							<PropertyList>
+								<Property Name="PlayMechanismSpecialTransitions" Type="bool" Value="True"/>
+								<Property Name="PlayMechanismSpecialTransitionsType" Type="int16" Value="4"/>
+								<Property Name="PlayMechanismSpecialTransitionsValue" Type="Real64" Value="1.6"/>
+								<Property Name="PlayMechanismStepOrContinuous" Type="int16" Value="0"/>
+								<Property Name="RandomOrSequence" Type="int16" Value="0"/>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<Sound Name="Drive_start_coupling_sound" ID="{EFC1B380-DC1C-4E62-A46C-0161556F0CC2}" ShortID="20184854">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Highpass" Type="int16">
+											<ValueList>
+												<Value>61</Value>
+											</ValueList>
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{34530031-7807-4D76-98B2-A63FA67055E9}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Min" Type="Real64" Value="-20.2"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="OutputBusVolume" Type="Real64">
+											<ValueList>
+												<Value>8.5</Value>
+											</ValueList>
+										</Property>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{75061EF3-6FF3-4B60-9802-9F730933DB08}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="251.2"/>
+															<Property Name="Min" Type="Real64" Value="-151.9"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+											<ObjectRef Name="High_Freq_Cut_1" ID="{BA5BC68D-BCA7-4CE0-9878-1560F2D8B257}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Aetheria_spaceship_drive_decouplers_start_iter001" ID="{5EF41116-E082-421A-BFAA-52B79D5AC8FA}">
+											<Language>SFX</Language>
+											<AudioFile>Aetheria_spaceship_drive_decouplers_start_iter001.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="1009102217"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists/>
+									<ActiveSourceList>
+										<ActiveSource Name="Aetheria_spaceship_drive_decouplers_start_iter001" ID="{5EF41116-E082-421A-BFAA-52B79D5AC8FA}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+								<Sound Name="Drive_coupling_sound" ID="{61A9DC84-3A1E-403E-9C77-A985C362907C}" ShortID="233811053">
+									<PropertyList>
+										<Property Name="3DSpatialization" Type="int16" Value="2"/>
+										<Property Name="Highpass" Type="int16">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{470E2825-689F-480E-B613-AF2A96E8F529}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="12"/>
+															<Property Name="Min" Type="Real64" Value="-11"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+										<Property Name="Lowpass" Type="int16">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{D735E58F-CE9B-4350-9FB6-730D8C6B0F50}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="14"/>
+															<Property Name="Min" Type="Real64" Value="-14"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="OutputBusVolume" Type="Real64">
+											<ValueList>
+												<Value>8.5</Value>
+											</ValueList>
+										</Property>
+										<Property Name="Pitch" Type="int32">
+											<ModifierList>
+												<ModifierInfo>
+													<Modifier Name="" ID="{57CE98AA-6197-463D-BFEA-4AF9C967D4D2}">
+														<PropertyList>
+															<Property Name="Enabled" Type="bool" Value="True"/>
+															<Property Name="Max" Type="Real64" Value="142.2"/>
+															<Property Name="Min" Type="Real64" Value="-175.9"/>
+														</PropertyList>
+													</Modifier>
+												</ModifierInfo>
+											</ModifierList>
+										</Property>
+										<Property Name="Volume" Type="Real64">
+											<ValueList>
+												<Value>-8</Value>
+											</ValueList>
+										</Property>
+									</PropertyList>
+									<ReferenceList>
+										<Reference Name="Attenuation">
+											<ObjectRef Name="Global" ID="{5E898FAD-333F-4A95-8DE3-F822CADCB43E}" WorkUnitID="{E4509B27-E9F5-476A-9C34-332C4DF09EF7}"/>
+										</Reference>
+										<Reference Name="Conversion">
+											<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{499CA58A-C702-47D8-B39A-D2BA9F895A1F}"/>
+										</Reference>
+										<Reference Name="Effect0" PluginName="Wwise Parametric EQ" CompanyID="0" PluginID="105" PluginType="3">
+											<ObjectRef Name="High_Freq_Cut_1" ID="{BA5BC68D-BCA7-4CE0-9878-1560F2D8B257}" WorkUnitID="{E8613F7D-BAD3-45CD-A3ED-505576F31277}"/>
+										</Reference>
+										<Reference Name="OutputBus">
+											<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{1F437DD1-6486-4464-8395-A927FAD94FB4}"/>
+										</Reference>
+									</ReferenceList>
+									<ChildrenList>
+										<AudioFileSource Name="Aetheria_spaceship_Drivers_iter001_2" ID="{73F4D08A-6EC5-4042-9391-069C7A776010}">
+											<PropertyList>
+												<Property Name="FadeInDuration" Type="Real64" Value="0.00254216460474099"/>
+												<Property Name="FadeOutDuration" Type="Real64" Value="0.00171767878698681"/>
+												<Property Name="OverrideWavLoop" Type="bool" Value="True"/>
+												<Property Name="TrimBegin" Type="Real64" Value="0.99630718218984"/>
+												<Property Name="TrimEnd" Type="Real64" Value="6.22617998020184"/>
+											</PropertyList>
+											<Language>SFX</Language>
+											<AudioFile>Aetheria_spaceship_Drivers_iter001.2.wav</AudioFile>
+											<MediaIDList>
+												<MediaID ID="542471051"/>
+											</MediaIDList>
+										</AudioFileSource>
+									</ChildrenList>
+									<ObjectLists/>
+									<ActiveSourceList>
+										<ActiveSource Name="Aetheria_spaceship_Drivers_iter001_2" ID="{73F4D08A-6EC5-4042-9391-069C7A776010}" Platform="Linked"/>
+									</ActiveSourceList>
+								</Sound>
+							</ChildrenList>
+							<ObjectLists/>
+							<Playlist>
+								<ItemRef Name="Drive_start_coupling_sound" ID="{EFC1B380-DC1C-4E62-A46C-0161556F0CC2}"/>
+								<ItemRef Name="Drive_coupling_sound" ID="{61A9DC84-3A1E-403E-9C77-A985C362907C}"/>
+							</Playlist>
+						</RandomSequenceContainer>
 					</ChildrenList>
 				</Folder>
 				<Folder Name="Reactor" ID="{9A336BE6-0931-408C-89BD-E8A650B73697}" ShortID="139419840">
@@ -5367,7 +5362,7 @@
 										<RTPC Name="" ID="{F162BCCC-E82F-4672-871F-12B3EDBFBF46}" ShortID="27910110">
 											<ReferenceList>
 												<Reference Name="ControlInput">
-													<ObjectRef Name="sfx_shared_intensity" ID="{69088562-620A-4123-8C93-DDBD1437C6C9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+													<ObjectRef Name="sfx_shared_intensity" ID="{69088562-620A-4123-8C93-DDBD1437C6C9}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 												</Reference>
 											</ReferenceList>
 											<Curve Name="" ID="{5B95D436-2CCE-4858-86DF-3717F32E1778}">
@@ -5407,7 +5402,7 @@
 														<RTPC Name="" ID="{29920EEF-30D0-429C-BA2D-5CE68793D889}" ShortID="1020042898">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_reactor_distortion1" ID="{264C0657-8EE3-435B-9D01-246DABEB52D7}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_reactor_distortion1" ID="{264C0657-8EE3-435B-9D01-246DABEB52D7}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{368569CA-E365-4578-B66E-0DC509F33EA7}">
@@ -5438,7 +5433,7 @@
 														<RTPC Name="" ID="{4C1B607E-A848-42CD-BACB-41D66DC46E6C}" ShortID="624892036">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_reactor_distortion2" ID="{72651D5D-22E1-4AEE-87FA-9F706D12B1DC}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_reactor_distortion2" ID="{72651D5D-22E1-4AEE-87FA-9F706D12B1DC}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{5E568B2B-5D34-4924-8AF3-E6D253B17557}">
@@ -5490,13 +5485,14 @@
 										<Property Name="ModRate2" Type="Real32" Value="886.64"/>
 										<Property Name="ModWaveform1" Type="int32" Value="0"/>
 										<Property Name="ModWaveform2" Type="int32" Value="0"/>
+										<Property Name="OutputChannelConfig" Type="int32" Value="12546"/>
 										<Property Name="SelectFreqTimeGrain" Type="int32" Value="1"/>
 										<Property Name="Speed" Type="Real32">
 											<RTPCList>
 												<RTPC Name="" ID="{33DE498E-04F3-4455-A257-888D213EC508}" ShortID="168635505">
 													<ReferenceList>
 														<Reference Name="ControlInput">
-															<ObjectRef Name="sfx_reactor_grain_speed" ID="{D962E3DD-1F06-4C09-B49B-B4158D76A581}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+															<ObjectRef Name="sfx_reactor_grain_speed" ID="{D962E3DD-1F06-4C09-B49B-B4158D76A581}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 														</Reference>
 													</ReferenceList>
 													<Curve Name="" ID="{D4EF78AF-A51C-4B4F-B295-BA1272922315}">
@@ -5524,7 +5520,7 @@
 												<RTPC Name="" ID="{C24276F7-4811-478B-950E-AD10001530EA}" ShortID="324897844">
 													<ReferenceList>
 														<Reference Name="ControlInput">
-															<ObjectRef Name="sfx_shared_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+															<ObjectRef Name="sfx_shared_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 														</Reference>
 													</ReferenceList>
 													<Curve Name="" ID="{577E6ED0-82B9-43D7-8972-2AF5940AAEBA}">
@@ -5597,7 +5593,7 @@
 										<RTPC Name="" ID="{07A5A9FD-3E14-4880-A1A9-6CAEFBD7E5E5}" ShortID="129430478">
 											<ReferenceList>
 												<Reference Name="ControlInput">
-													<ObjectRef Name="sfx_reactor_alarm" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+													<ObjectRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 												</Reference>
 											</ReferenceList>
 											<Curve Name="" ID="{1A36A034-578C-4F79-8C35-E2239DFB11DA}">
@@ -5691,6 +5687,7 @@
 										<Property Name="ModAmount2" Type="Real32" Value="91.57"/>
 										<Property Name="ModRate1" Type="Real32" Value="1643.729"/>
 										<Property Name="ModRate2" Type="Real32" Value="1688.245"/>
+										<Property Name="OutputChannelConfig" Type="int32" Value="12546"/>
 										<Property Name="OutputLevel" Type="Real32">
 											<RTPCList>
 												<RTPC Name="" ID="{C2E7E17D-84B7-405E-AFC3-2738785F60B7}" ShortID="620095999">
@@ -5936,7 +5933,7 @@
 										<RTPC Name="" ID="{F597BEE0-D17B-4E58-90FB-65895394D5AF}" ShortID="255392150">
 											<ReferenceList>
 												<Reference Name="ControlInput">
-													<ObjectRef Name="sfx_shared_intensity" ID="{69088562-620A-4123-8C93-DDBD1437C6C9}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+													<ObjectRef Name="sfx_shared_intensity" ID="{69088562-620A-4123-8C93-DDBD1437C6C9}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 												</Reference>
 											</ReferenceList>
 											<Curve Name="" ID="{06F2C7D9-7CA3-43ED-8215-411E12D779FF}">
@@ -6080,7 +6077,7 @@
 																<RTPC Name="" ID="{9A2D3FA7-B8C0-4FFD-8DA0-AA960C063F40}" ShortID="63256601">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																			<ObjectRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{8E0A55B8-DAED-415D-BE08-E0E7FC8E33A8}">
@@ -6172,7 +6169,7 @@
 																<RTPC Name="" ID="{8A38F3FC-886A-468F-B8CA-A6B85B40BFFD}" ShortID="954779871">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																			<ObjectRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{F1E77763-0571-442B-8DDA-A472CA61658F}">
@@ -6262,7 +6259,7 @@
 																<RTPC Name="" ID="{189F2A82-9BE5-4D25-B9EA-B4C5B9E7276F}" ShortID="264674396">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																			<ObjectRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{983BA66C-041B-4431-BCF1-CE9E104C64F4}">
@@ -6347,7 +6344,7 @@
 																<RTPC Name="" ID="{3014B4C6-9A52-4CAF-B8C2-8598F53AC68B}" ShortID="1021684782">
 																	<ReferenceList>
 																		<Reference Name="ControlInput">
-																			<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																			<ObjectRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																		</Reference>
 																	</ReferenceList>
 																	<Curve Name="" ID="{CD049BDC-B84B-4CAE-8109-38D064EE8FAC}">
@@ -6466,7 +6463,7 @@
 														<RTPC Name="" ID="{802959E3-8480-41DF-8278-18A4E9E833C8}" ShortID="875865075">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{16AB408B-8B4D-4940-A20F-291CAC85DABA}">
@@ -6499,7 +6496,7 @@
 														<RTPC Name="" ID="{DEB9AC09-ECD8-4ECB-9F84-1739C2C6C3EC}" ShortID="496088037">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_thruster_gustiness" ID="{29928AF3-1DE3-475C-9CF6-9892FED27E34}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_thruster_gustiness" ID="{29928AF3-1DE3-475C-9CF6-9892FED27E34}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{E0CCEB62-F358-4A82-80F5-4FDFAF497E00}">
@@ -6527,7 +6524,7 @@
 														<RTPC Name="" ID="{3BCB41E5-B665-4F0F-BB83-0016EA1AF5FF}" ShortID="1052815589">
 															<ReferenceList>
 																<Reference Name="ControlInput">
-																	<ObjectRef Name="sfx_thruster_variability" ID="{A5EACAF7-0E81-432C-A284-84437E8983B3}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+																	<ObjectRef Name="sfx_thruster_variability" ID="{A5EACAF7-0E81-432C-A284-84437E8983B3}" WorkUnitID="{54C48120-C316-43E1-8026-ED35BDF7A231}"/>
 																</Reference>
 															</ReferenceList>
 															<Curve Name="" ID="{AF598AB2-6696-48C6-B6EC-24F99D15B774}">

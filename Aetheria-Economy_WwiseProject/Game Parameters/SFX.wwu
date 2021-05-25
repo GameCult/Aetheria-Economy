@@ -96,6 +96,12 @@
 								<Property Name="Max" Type="Real64" Value="1"/>
 							</PropertyList>
 						</GameParameter>
+						<GameParameter Name="sfx_shared_quality" ID="{32712EBC-F96D-4B83-AD77-B436B6BC825C}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="1"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
 					</ChildrenList>
 				</Folder>
 				<Folder Name="Thrusters" ID="{99A328B9-0C5C-4AE6-B868-C8FFCB1FFFC2}" ShortID="936568629">

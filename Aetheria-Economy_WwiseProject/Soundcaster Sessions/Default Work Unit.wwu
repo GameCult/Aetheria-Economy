@@ -48,11 +48,11 @@
 							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
-							<GameParameterRef Name="sfx_reactor_alarm" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}"/>
+							<GameParameterRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}"/>
 							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
-							<GameParameterRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}"/>
+							<GameParameterRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}"/>
 							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
@@ -157,7 +157,7 @@
 					<RTPCValueList ShowAll="true">
 						<RTPCValue>
 							<GameParameterRef Name="sfx_shared_intensity" ID="{69088562-620A-4123-8C93-DDBD1437C6C9}"/>
-							<Value>1</Value>
+							<Value>0.99</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_shared_lfo_frequency" ID="{E9101997-FD09-41DC-8BB2-B7519B030AE8}"/>
@@ -172,12 +172,16 @@
 							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
+							<GameParameterRef Name="sfx_reactor_distortion1" ID="{264C0657-8EE3-435B-9D01-246DABEB52D7}"/>
+							<Value>0</Value>
+						</RTPCValue>
+						<RTPCValue>
 							<GameParameterRef Name="target_locking" ID="{215424C5-9F3E-438A-AE24-4314B540C243}"/>
 							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_ship_electric_speed" ID="{9D610C30-BA07-43EF-B2E3-6CEB72857C03}"/>
-							<Value>0.66</Value>
+							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_weapon_lightning_grain_filter" ID="{441AD5D1-8E39-451F-8505-8AF4C9DA76B0}"/>
@@ -188,7 +192,7 @@
 							<Value>0.24</Value>
 						</RTPCValue>
 						<RTPCValue>
-							<GameParameterRef Name="sfx_reactor_alarm" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}"/>
+							<GameParameterRef Name="performance_thermal" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}"/>
 							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
@@ -196,8 +200,8 @@
 							<Value>1</Value>
 						</RTPCValue>
 						<RTPCValue>
-							<GameParameterRef Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}"/>
-							<Value>74</Value>
+							<GameParameterRef Name="ship_velocity_01" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}"/>
+							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_shared_lfo_intensity" ID="{4193E609-4585-49C0-8CCB-989754DC1284}"/>
@@ -208,8 +212,12 @@
 							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
+							<GameParameterRef Name="sfx_shared_quality" ID="{32712EBC-F96D-4B83-AD77-B436B6BC825C}"/>
+							<Value>0.99</Value>
+						</RTPCValue>
+						<RTPCValue>
 							<GameParameterRef Name="sfx_reactor_grain_speed" ID="{D962E3DD-1F06-4C09-B49B-B4158D76A581}"/>
-							<Value>0.01</Value>
+							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_weapon_lightning_pitch" ID="{64F012EA-795C-4DDF-82F0-00DFA345043A}"/>
@@ -217,7 +225,7 @@
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}"/>
-							<Value>0.96</Value>
+							<Value>0</Value>
 						</RTPCValue>
 						<RTPCValue>
 							<GameParameterRef Name="sfx_shared_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}"/>

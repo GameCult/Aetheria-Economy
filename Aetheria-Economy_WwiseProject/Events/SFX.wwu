@@ -392,33 +392,13 @@
 												</Reference>
 											</ReferenceList>
 										</Action>
-										<Action Name="" ID="{F4127363-69F5-4F05-865A-2B278CD1F2A2}" ShortID="691384053">
-											<PropertyList>
-												<Property Name="ActionType" Type="int16" Value="2"/>
-											</PropertyList>
-											<ReferenceList>
-												<Reference Name="Target">
-													<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
-												</Reference>
-											</ReferenceList>
-										</Action>
 										<Action Name="" ID="{77DCFFD3-1F67-486E-9D1C-AA436C90D152}" ShortID="908260376">
 											<PropertyList>
 												<Property Name="ActionType" Type="int16" Value="2"/>
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
-												</Reference>
-											</ReferenceList>
-										</Action>
-										<Action Name="" ID="{1E2A52FB-ABF7-4496-A883-297E1D65427A}" ShortID="1018872927">
-											<PropertyList>
-												<Property Name="ActionType" Type="int16" Value="2"/>
-											</PropertyList>
-											<ReferenceList>
-												<Reference Name="Target">
-													<ObjectRef Name="dc_start" ID="{0ACDD876-8065-4311-98C0-03D9E98661A1}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="dc_rotor" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -433,24 +413,10 @@
 												</Reference>
 											</ReferenceList>
 										</Action>
-										<Action Name="" ID="{6E68BD96-F32A-4109-8F63-3ED2AC416043}" ShortID="978335520">
-											<ReferenceList>
-												<Reference Name="Target">
-													<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
-												</Reference>
-											</ReferenceList>
-										</Action>
 										<Action Name="" ID="{491B69A0-6AD3-4AF7-88C7-3412B526689C}" ShortID="440511318">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
-												</Reference>
-											</ReferenceList>
-										</Action>
-										<Action Name="" ID="{4EB2AD0E-D348-463A-9A3A-E0942B316FEF}" ShortID="938117820">
-											<ReferenceList>
-												<Reference Name="Target">
-													<ObjectRef Name="dc_start" ID="{0ACDD876-8065-4311-98C0-03D9E98661A1}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="dc_rotor" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -469,16 +435,6 @@
 											<ReferenceList>
 												<Reference Name="Target">
 													<ObjectRef Name="nuclear" ID="{D3E5D2FC-628C-48A7-8CB6-35B7B12B107E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
-												</Reference>
-											</ReferenceList>
-										</Action>
-										<Action Name="" ID="{6A8AE9F4-33D5-4CA4-ABCB-F082E386811E}" ShortID="350405328">
-											<PropertyList>
-												<Property Name="ActionType" Type="int16" Value="2"/>
-											</PropertyList>
-											<ReferenceList>
-												<Reference Name="Target">
-													<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -510,13 +466,6 @@
 											<ReferenceList>
 												<Reference Name="Target">
 													<ObjectRef Name="nuclear" ID="{D3E5D2FC-628C-48A7-8CB6-35B7B12B107E}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
-												</Reference>
-											</ReferenceList>
-										</Action>
-										<Action Name="" ID="{288F867C-4606-48F1-A5B7-B2D27A23C4F1}" ShortID="474720117">
-											<ReferenceList>
-												<Reference Name="Target">
-													<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>

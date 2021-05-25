@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using MessagePack;
 using Unity.Mathematics;
@@ -47,6 +48,7 @@ public class Slime : MonoBehaviour
     private int _updateAgentsKernel;
     private int _diffuseKernel;
     private int _particleKernel;
+    private int _trailKernel;
     private int _geometryKernel;
     private string _settingsHash;
     private int _spawnBufferSize = 1;
@@ -65,6 +67,9 @@ public class Slime : MonoBehaviour
     private ComputeBuffer _parameterBuffer;
     private ComputeBuffer _particlesBuffer;
 
+    private ComputeBuffer _trailBuffer;
+    private ComputeBuffer _trailPreviousBuffer;
+    
     private ComputeBuffer _indexBuffer;
     private ComputeBuffer _vertexBuffer;
     
@@ -81,8 +86,6 @@ public class Slime : MonoBehaviour
     struct Particle
     {
         public Vector3 Start;
-        public Vector3 Middle;
-        public Vector3 End;
         public float Intensity;
     }
     
@@ -100,7 +103,8 @@ public class Slime : MonoBehaviour
         _updateAgentsKernel = SlimeCompute.FindKernel("UpdateAgents");
         _diffuseKernel = SlimeCompute.FindKernel("Diffuse");
         _particleKernel = SlimeCompute.FindKernel("CreateAgentParticles");
-        _geometryKernel = SlimeCompute.FindKernel("CreateParticleGeometry");
+        _trailKernel = SlimeCompute.FindKernel("UpdateTrailPoints");
+        _geometryKernel = SlimeCompute.FindKernel("CreateTrailGeometry");
 
         _accumulationTexture = new RenderTexture(TextureSize, TextureSize, 1, RenderTextureFormat.RFloat);
         _accumulationTexture.enableRandomWrite = true;
@@ -123,6 +127,12 @@ public class Slime : MonoBehaviour
         _parameterBuffer = new ComputeBuffer(1, Marshal.SizeOf(typeof(SlimeSettings)));
         _spawnBuffer = new ComputeBuffer(1, Marshal.SizeOf(typeof(Vector2)));
         _spawnBuffer.SetData(new [] {Vector2.zero});
+        
+        _trailBuffer = new ComputeBuffer(ParticleCount * TrailPoints, Marshal.SizeOf(typeof(Vector3)));
+        _trailPreviousBuffer = new ComputeBuffer(ParticleCount * TrailPoints, Marshal.SizeOf(typeof(Vector3)));
+        var trailData = Enumerable.Repeat(Vector3.zero, _trailBuffer.count).ToArray();
+        _trailBuffer.SetData(trailData);
+        _trailPreviousBuffer.SetData(trailData);
 
         _particlesBuffer = new ComputeBuffer(ParticleCount, Marshal.SizeOf(typeof(Particle)));
 
@@ -216,13 +226,23 @@ public class Slime : MonoBehaviour
         SlimeCompute.Dispatch(_particleKernel, numberOfGroups, 1, 1);
         
         SlimeCompute.SetInt("trailPoints", TrailPoints);
+        
+        numberOfGroups = ParticleCount * TrailPoints / GROUP_SIZE;
+        SlimeCompute.SetBuffer(_trailKernel, "previousTrailBuffer", _trailPreviousBuffer);
+        SlimeCompute.SetBuffer(_trailKernel, "particles", _particlesBuffer);
+        SlimeCompute.SetBuffer(_trailKernel, "trailBuffer", _trailBuffer);
+        SlimeCompute.Dispatch(_trailKernel, numberOfGroups, 1, 1);
+        var tempTrailBuffer = _trailBuffer;
+        _trailBuffer = _trailPreviousBuffer;
+        _trailPreviousBuffer = tempTrailBuffer;
+        
         SlimeCompute.SetFloat("trailStartWidth", TrailStartWidth);
         SlimeCompute.SetFloat("trailEndWidth", TrailEndWidth);
         SlimeCompute.SetVector("cameraPos", TargetCamera.transform.position);
         SlimeCompute.SetBuffer(_geometryKernel, "particles", _particlesBuffer);
+        SlimeCompute.SetBuffer(_geometryKernel, "trailBuffer", _trailBuffer);
         SlimeCompute.SetBuffer(_geometryKernel, "vertexBuffer", _vertexBuffer);
 
-        numberOfGroups = ParticleCount * TrailPoints / GROUP_SIZE;
         SlimeCompute.Dispatch(_geometryKernel, numberOfGroups, 1, 1);
         
         ParticleMaterial.SetBuffer("_IndexBuffer", _indexBuffer);
