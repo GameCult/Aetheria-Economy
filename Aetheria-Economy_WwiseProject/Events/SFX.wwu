@@ -392,33 +392,13 @@
 												</Reference>
 											</ReferenceList>
 										</Action>
-										<Action Name="" ID="{F4127363-69F5-4F05-865A-2B278CD1F2A2}" ShortID="691384053">
+										<Action Name="" ID="{2EC16F40-83C6-44D4-92C3-B59A4D4386BD}" ShortID="178709843">
 											<PropertyList>
 												<Property Name="ActionType" Type="int16" Value="2"/>
 											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
-												</Reference>
-											</ReferenceList>
-										</Action>
-										<Action Name="" ID="{77DCFFD3-1F67-486E-9D1C-AA436C90D152}" ShortID="908260376">
-											<PropertyList>
-												<Property Name="ActionType" Type="int16" Value="2"/>
-											</PropertyList>
-											<ReferenceList>
-												<Reference Name="Target">
-													<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
-												</Reference>
-											</ReferenceList>
-										</Action>
-										<Action Name="" ID="{1E2A52FB-ABF7-4496-A883-297E1D65427A}" ShortID="1018872927">
-											<PropertyList>
-												<Property Name="ActionType" Type="int16" Value="2"/>
-											</PropertyList>
-											<ReferenceList>
-												<Reference Name="Target">
-													<ObjectRef Name="dc_start" ID="{0ACDD876-8065-4311-98C0-03D9E98661A1}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Dc_rotor_sounds" ID="{911E4A59-D6F0-4276-92E2-BE214CB37534}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
@@ -433,24 +413,35 @@
 												</Reference>
 											</ReferenceList>
 										</Action>
-										<Action Name="" ID="{6E68BD96-F32A-4109-8F63-3ED2AC416043}" ShortID="978335520">
+										<Action Name="" ID="{BD67D5C9-722A-4D1C-865D-A7FC508B8512}" ShortID="136922865">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="rotor_plates" ID="{A37F3F85-4288-4EB1-81BD-69F2EEE878C6}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="Dc_rotor_sounds" ID="{911E4A59-D6F0-4276-92E2-BE214CB37534}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
-										<Action Name="" ID="{491B69A0-6AD3-4AF7-88C7-3412B526689C}" ShortID="440511318">
+									</ChildrenList>
+								</Event>
+								<Event Name="Electric_drive_coupling_play" ID="{E365B213-2474-4965-8B4B-70096CC11ED5}">
+									<ChildrenList>
+										<Action Name="" ID="{ED4A1C60-3CC7-41DB-A10E-393C8ABF8B96}" ShortID="303871122">
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="dc_scifi" ID="{A24984F6-89AB-4005-A389-1BAC49311538}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="DC_coupling" ID="{6A3DD8DE-BA84-467F-AE9C-C928082CA73D}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>
-										<Action Name="" ID="{4EB2AD0E-D348-463A-9A3A-E0942B316FEF}" ShortID="938117820">
+									</ChildrenList>
+								</Event>
+								<Event Name="Electric_drive_coupling_stop" ID="{E5882356-1114-4BFC-BC11-10F8E25BB845}">
+									<ChildrenList>
+										<Action Name="" ID="{A0B6776F-B1B3-488F-9E1A-E61C6448B786}" ShortID="463347098">
+											<PropertyList>
+												<Property Name="ActionType" Type="int16" Value="2"/>
+											</PropertyList>
 											<ReferenceList>
 												<Reference Name="Target">
-													<ObjectRef Name="dc_start" ID="{0ACDD876-8065-4311-98C0-03D9E98661A1}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
+													<ObjectRef Name="DC_coupling" ID="{6A3DD8DE-BA84-467F-AE9C-C928082CA73D}" WorkUnitID="{9A5FC1F4-79BA-4A06-9984-65A4DD1C8167}"/>
 												</Reference>
 											</ReferenceList>
 										</Action>

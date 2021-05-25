@@ -3,7 +3,7 @@
 	<UserProjectSettingsInfo>
 		<UserProjectSettings Name="" ID="{E9AF1243-6FDC-4EB8-8AAB-2828E7D411A9}">
 			<PropertyList>
-				<Property Name="AudioFilesImporter\Path" Type="string" Value="Z:\Volumes\Backup Plus\production saves\games\Aetheria\SFX_weapon_ioncannon Project\exprts\"/>
+				<Property Name="AudioFilesImporter\Path" Type="string" Value="Z:\Volumes\Backup Plus\production saves\games\Aetheria\Aetheria_spaceship_trusters Project\exprts\decoupling sounds\"/>
 				<Property Name="Event Action List\{007CE28E-D8DA-4342-A797-F664EC341FA0}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{024B1FD8-BEA0-4265-A083-F7583D4883BC}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{03AFFAC6-3402-48FC-B54D-7FF80212161A}\x64_Expand States" Type="string" Value=""/>
@@ -80,6 +80,8 @@
 				<Property Name="Event Action List\{D81161C5-05A1-4819-B211-E9ADDCF29274}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{DD974325-C14E-43CC-B4A5-EA0F57348FD6}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{E0F70C0D-8DDA-4811-A87A-462972871E1A}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Event Action List\{E365B213-2474-4965-8B4B-70096CC11ED5}\x64_Expand States" Type="string" Value=""/>
+				<Property Name="Event Action List\{E5882356-1114-4BFC-BC11-10F8E25BB845}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{E9B80512-0184-48FB-A298-BE9C088B6CC9}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{EA25ABB1-985D-4B76-88D1-8867BA139BDD}\x64_Expand States" Type="string" Value=""/>
 				<Property Name="Event Action List\{EB924EA5-6CC2-4D4D-B6B6-893A2998A1BB}\x64_Expand States" Type="string" Value=""/>
@@ -125,6 +127,7 @@
 				<Property Name="PluginUserAcknowledge\McDspFutzBox" Type="bool" Value="True"/>
 				<Property Name="PluginUserAcknowledge\iZotope Box Modeler" Type="bool" Value="True"/>
 				<Property Name="PluginUserAcknowledge\iZotope Hybrid Reverb" Type="bool" Value="True"/>
+				<Property Name="PluginUserAcknowledge\iZotope Trash Box Modeler" Type="bool" Value="True"/>
 				<Property Name="PluginUserAcknowledge\iZotope Trash Distortion" Type="bool" Value="True"/>
 				<Property Name="PluginUserAcknowledge\iZotope Trash Dynamics Mono" Type="bool" Value="True"/>
 				<Property Name="PluginUserAcknowledge\iZotope Trash Filters" Type="bool" Value="True"/>
