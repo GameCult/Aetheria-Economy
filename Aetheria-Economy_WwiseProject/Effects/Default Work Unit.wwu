@@ -114,6 +114,12 @@
 						</Property>
 					</PropertyList>
 					<ChildrenList>
+						<PluginMediaSource Name="" ID="{3FD04865-03DD-4113-9BB8-0ED67998B615}">
+							<ParentPluginID>462899</ParentPluginID>
+							<MediaIDList>
+								<MediaID ID="435959294"/>
+							</MediaIDList>
+						</PluginMediaSource>
 						<PluginMediaSource Name="" ID="{695D605A-9964-4EEB-A2F1-383EA6F4EA19}">
 							<ParentPluginID>462899</ParentPluginID>
 							<MediaIDList>
