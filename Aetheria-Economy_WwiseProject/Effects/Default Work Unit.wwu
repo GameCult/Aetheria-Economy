@@ -50,94 +50,12 @@
 				</Effect>
 				<Effect Name="New_McDSP_FutzBox" ID="{79691508-2007-47C2-A0AF-B57150F8EC56}" PluginName="McDSP FutzBox" CompanyID="256" PluginID="110" PluginType="3">
 					<PropertyList>
-						<Property Name="Balance" Type="Real32">
-							<RTPCList>
-								<RTPC Name="" ID="{B24C11FF-D920-4B2A-B11A-B074DCEC561C}" ShortID="536604729">
-									<ReferenceList>
-										<Reference Name="ControlInput">
-											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
-										</Reference>
-									</ReferenceList>
-									<Curve Name="" ID="{A643025C-5BC7-4831-9C76-1978512F2AB3}">
-										<PropertyList>
-											<Property Name="Flags" Type="int32" Value="1"/>
-										</PropertyList>
-										<PointList>
-											<Point>
-												<XPos>0</XPos>
-												<YPos>0</YPos>
-												<Flags>5</Flags>
-											</Point>
-											<Point>
-												<XPos>1</XPos>
-												<YPos>100</YPos>
-												<Flags>37</Flags>
-											</Point>
-										</PointList>
-									</Curve>
-								</RTPC>
-							</RTPCList>
-						</Property>
 						<Property Name="DistortionAmount" Type="Real32" Value="42.4"/>
 						<Property Name="DistortionMode" Type="int32" Value="2"/>
 						<Property Name="DistortionRectify" Type="Real32" Value="59.6"/>
 						<Property Name="EQFreq" Type="Real32" Value="376.7038"/>
-						<Property Name="FiltersHPFFreq" Type="Real32" Value="1230.439">
-							<RTPCList>
-								<RTPC Name="" ID="{B9EFAEEF-B415-413C-9386-57FA0A797391}" ShortID="727769987">
-									<ReferenceList>
-										<Reference Name="ControlInput">
-											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
-										</Reference>
-									</ReferenceList>
-									<Curve Name="" ID="{63759D02-776C-4B44-A57D-E224B0E071C5}">
-										<PropertyList>
-											<Property Name="Flags" Type="int32" Value="5"/>
-										</PropertyList>
-										<PointList>
-											<Point>
-												<XPos>0</XPos>
-												<YPos>20</YPos>
-												<Flags>5</Flags>
-											</Point>
-											<Point>
-												<XPos>1</XPos>
-												<YPos>654.11216</YPos>
-												<Flags>37</Flags>
-											</Point>
-										</PointList>
-									</Curve>
-								</RTPC>
-							</RTPCList>
-						</Property>
-						<Property Name="FiltersLPFFreq" Type="Real32" Value="4521.396">
-							<RTPCList>
-								<RTPC Name="" ID="{5BE13058-9621-4CB9-A150-D8E6351E8B16}" ShortID="232884332">
-									<ReferenceList>
-										<Reference Name="ControlInput">
-											<ObjectRef Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
-										</Reference>
-									</ReferenceList>
-									<Curve Name="" ID="{0BF40038-01E0-4774-877D-A9D7B8BE60E9}">
-										<PropertyList>
-											<Property Name="Flags" Type="int32" Value="5"/>
-										</PropertyList>
-										<PointList>
-											<Point>
-												<XPos>0</XPos>
-												<YPos>20000</YPos>
-												<Flags>5</Flags>
-											</Point>
-											<Point>
-												<XPos>1</XPos>
-												<YPos>2338.78964</YPos>
-												<Flags>37</Flags>
-											</Point>
-										</PointList>
-									</Curve>
-								</RTPC>
-							</RTPCList>
-						</Property>
+						<Property Name="FiltersHPFFreq" Type="Real32" Value="1230.439"/>
+						<Property Name="FiltersLPFFreq" Type="Real32" Value="4521.396"/>
 						<Property Name="FiltersLPFQ" Type="Real32" Value="34"/>
 						<Property Name="GateEnable" Type="bool" Value="False"/>
 						<Property Name="GateRange" Type="Real32" Value="-12.8"/>
@@ -163,10 +81,51 @@
 				</Effect>
 				<Effect Name="New_iZotope_Trash_Box_Modeler01" ID="{4CA5C296-2673-426F-ADC6-0B7C29E937B7}" PluginName="iZotope Trash Box Modeler" CompanyID="259" PluginID="7" PluginType="3">
 					<PropertyList>
-						<Property Name="BoxModel" Type="int32" Value="47"/>
+						<Property Name="BoxModel" Type="int32" Value="43"/>
 						<Property Name="MicType" Type="int32" Value="2"/>
+						<Property Name="Mix" Type="Real32" Value="0">
+							<RTPCList>
+								<RTPC Name="" ID="{B2ADEF3C-5573-4DF6-99CE-465C3BA572BB}" ShortID="812003473">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="SFX_ship_drive_electric_trashMix" ID="{ED469A85-1CA8-4BF5-A47B-782559B4D4F6}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{9D09AD4E-C870-4F92-AEFD-4991711498C5}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="1"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>0</YPos>
+												<Flags>5</Flags>
+												<SegmentShape>Exp1</SegmentShape>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>100</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
 					</PropertyList>
 					<ChildrenList>
+						<PluginMediaSource Name="" ID="{3FD04865-03DD-4113-9BB8-0ED67998B615}">
+							<ParentPluginID>462899</ParentPluginID>
+							<MediaIDList>
+								<MediaID ID="435959294"/>
+							</MediaIDList>
+						</PluginMediaSource>
+						<PluginMediaSource Name="" ID="{695D605A-9964-4EEB-A2F1-383EA6F4EA19}">
+							<ParentPluginID>462899</ParentPluginID>
+							<MediaIDList>
+								<MediaID ID="435959294"/>
+							</MediaIDList>
+						</PluginMediaSource>
 						<PluginMediaSource Name="" ID="{6E4BC67A-DE30-4E29-837B-7550129EE600}">
 							<ParentPluginID>462899</ParentPluginID>
 							<MediaIDList>
@@ -234,6 +193,70 @@
 							</MediaIDList>
 						</PluginMediaSource>
 					</ChildrenList>
+				</Effect>
+				<Effect Name="New_iZotope_Trash_Distortion" ID="{A82BCEEF-7DA7-49BB-8A09-55FAB0327073}" PluginName="iZotope Trash Distortion" CompanyID="259" PluginID="3" PluginType="3">
+					<PropertyList>
+						<Property Name="Distortion1Mix" Type="Real32" Value="0">
+							<RTPCList>
+								<RTPC Name="" ID="{60C65AF0-F735-4265-82AB-CC6EF37AFBBD}" ShortID="75099243">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="Sfx_shared_quality" ID="{1DEF0300-5EB9-4B83-9B3A-43B98123BD51}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{A8F51142-5E61-4EF9-82D3-6A223B7518F4}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="1"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>100</YPos>
+												<Flags>5</Flags>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>0</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+						<Property Name="Distortion1OutputGain" Type="Real32">
+							<RTPCList>
+								<RTPC Name="" ID="{8A3FF4F3-DA91-4048-BF9F-D700CCB473FE}" ShortID="704300755">
+									<ReferenceList>
+										<Reference Name="ControlInput">
+											<ObjectRef Name="Sfx_shared_quality" ID="{1DEF0300-5EB9-4B83-9B3A-43B98123BD51}" WorkUnitID="{02152354-45CF-4389-B435-5367FA80C881}"/>
+										</Reference>
+									</ReferenceList>
+									<Curve Name="" ID="{3933A4AD-7122-4061-8770-129AE72B69AF}">
+										<PropertyList>
+											<Property Name="Flags" Type="int32" Value="3"/>
+										</PropertyList>
+										<PointList>
+											<Point>
+												<XPos>0</XPos>
+												<YPos>-3.567</YPos>
+												<Flags>5</Flags>
+											</Point>
+											<Point>
+												<XPos>1</XPos>
+												<YPos>0</YPos>
+												<Flags>37</Flags>
+											</Point>
+										</PointList>
+									</Curve>
+								</RTPC>
+							</RTPCList>
+						</Property>
+						<Property Name="Distortion1Overdrive" Type="Real32" Value="1"/>
+						<Property Name="Distortion1Trash" Type="Real32" Value="0.2"/>
+						<Property Name="Distortion1Type" Type="int32" Value="7"/>
+						<Property Name="Distortion2Mix" Type="Real32" Value="0"/>
+					</PropertyList>
 				</Effect>
 			</ChildrenList>
 		</WorkUnit>

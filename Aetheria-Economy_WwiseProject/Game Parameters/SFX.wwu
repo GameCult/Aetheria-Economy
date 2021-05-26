@@ -39,25 +39,19 @@
 								<Property Name="Max" Type="Real64" Value="1"/>
 							</PropertyList>
 						</GameParameter>
-						<GameParameter Name="sfx_ship_drive_electric_fuzzbox_filter" ID="{0FCABA25-DB66-4E12-ABEC-6E75E92AD397}">
-							<PropertyList>
-								<Property Name="InitialValue" Type="Real64" Value="0"/>
-								<Property Name="Max" Type="Real64" Value="1"/>
-							</PropertyList>
-						</GameParameter>
 						<GameParameter Name="sfx_ship_drive_nuclear_filterDuration" ID="{B54383F3-A1EF-4FCA-94D5-24A7E4AC228C}">
 							<PropertyList>
 								<Property Name="InitialValue" Type="Real64" Value="0"/>
 								<Property Name="Max" Type="Real64" Value="1"/>
 							</PropertyList>
 						</GameParameter>
-						<GameParameter Name="sfx_ship_rotor_plates_grain_filter" ID="{054DD684-3F0A-4629-BB94-1E5A662EED8A}">
+						<GameParameter Name="SFX_ship_drive_electric_trashMix" ID="{ED469A85-1CA8-4BF5-A47B-782559B4D4F6}">
 							<PropertyList>
 								<Property Name="InitialValue" Type="Real64" Value="0"/>
 								<Property Name="Max" Type="Real64" Value="1"/>
 							</PropertyList>
 						</GameParameter>
-						<GameParameter Name="sfx_ship_electric_speed" ID="{9D610C30-BA07-43EF-B2E3-6CEB72857C03}">
+						<GameParameter Name="sfx_drive_electric_filter" ID="{83360648-BBCC-48B3-84BA-01730915BDD1}">
 							<PropertyList>
 								<Property Name="InitialValue" Type="Real64" Value="0"/>
 								<Property Name="Max" Type="Real64" Value="1"/>
@@ -93,6 +87,12 @@
 						<GameParameter Name="sfx_shared_pitch" ID="{DB985387-9685-4E6D-BF7E-AAE3C0C79457}">
 							<PropertyList>
 								<Property Name="InitialValue" Type="Real64" Value="0"/>
+								<Property Name="Max" Type="Real64" Value="1"/>
+							</PropertyList>
+						</GameParameter>
+						<GameParameter Name="Sfx_shared_quality" ID="{1DEF0300-5EB9-4B83-9B3A-43B98123BD51}">
+							<PropertyList>
+								<Property Name="InitialValue" Type="Real64" Value="1"/>
 								<Property Name="Max" Type="Real64" Value="1"/>
 							</PropertyList>
 						</GameParameter>
