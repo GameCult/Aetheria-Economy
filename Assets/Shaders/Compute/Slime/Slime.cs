@@ -262,8 +262,19 @@ public class Slime : MonoBehaviour
 
     private void OnDisable()
     {
-        _accumulationTexture.Release();
         _agentsBuffer.Release();
+        _accumulationTexture.Release();
+        _previousAccumulationTexture.Release();
+        
+        _spawnBuffer.Release();
+        _parameterBuffer.Release();
+        _particlesBuffer.Release();
+        
+        _trailBuffer.Release();
+        _trailPreviousBuffer.Release();
+        
+        _indexBuffer.Release();
+        _vertexBuffer.Release();
     }
 }
 
