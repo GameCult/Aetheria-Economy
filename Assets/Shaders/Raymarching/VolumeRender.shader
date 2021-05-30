@@ -20,7 +20,11 @@
 		_DepthBlend("Depth Blend", float) = 100
 		_NoiseStrength("Noise Strength", float) = 1
 		_NoiseFrequency("Noise Frequency", float) = 1
+		_NoiseExponent("Noise Exponent", float) = 2
 		_NoiseSpeed("Noise Speed", float) = 1
+		_TurbulenceScale("Turbulence Scale", float) = 1
+		_TurbulenceAmplitude("Turbulence Amplitude", float) = 1
+		_FlowSpeed("Flow Speed", float) = 1
 		_SafetyDistance("Safety Distance", float) = 20
 		_Scattering("Scattering", float) = 1
 		_ScatteringMinDist("ScatteringMinDist", float) = 1
@@ -32,14 +36,9 @@
 
 	uniform sampler2D _MainTex;
 	uniform sampler2D _CameraDepthTexture;
-	
-	uniform sampler2D _Surface;
-	uniform sampler2D _Patch;
-	uniform sampler2D _Displacement;
-	uniform sampler2D _TintTexture;
-	//uniform sampler3D _NoiseTex;
 
 	#include "UnityCG.cginc"
+	#include "Assets/Shaders/Volumetric.cginc"
 	
 	// the number of volume samples to take
 	#define SAMPLE_COUNT 128
@@ -56,28 +55,12 @@
 	
 	uniform float  _StepExponent;
 	
-	uniform float3 _GridTransform;
-	
-	uniform half4 _Tint;
-	
-    uniform half _GridFillDensity,
-		        _GridFloorDensity,
-		        _GridPatchDensity,
-		        _GridFloorOffset,
-		        _GridFloorBlend,
-		        _GridPatchBlend,
-				_Gamma,
-				_TintExponent,
+    uniform half _Gamma,
 				_DepthCeiling,
-				_DepthBlend,
-				_NoiseFrequency,
-				_NoiseStrength,
-				_NoiseSpeed,
 				_Scattering,
 				_ScatteringDensityExponent,
 				_ScatteringDistExponent,
-				_ScatteringMinDist,
-				_SafetyDistance;
+				_ScatteringMinDist;
 	
 	// Dithering
 	sampler2D _DitheringTex;
@@ -88,69 +71,13 @@
 		return frac(sin(ScreenUVs.x * 12.9898 + ScreenUVs.y * 78.233) * 43758.5453);
 	}
 	
-	float tri(in float x){return abs(frac(x)-.5);}
-	float3 tri3(in float3 p){return float3( tri(p.z+tri(p.y*1.)), tri(p.z+tri(p.x*1.)), tri(p.y+tri(p.x*1.)));}
-
-	float triNoise3d(in float3 p)
-	{
-	    float z=1.4;
-		float rz = 0.;
-	    float3 bp = p;
-		for (float i=0.; i<=2.; i++ )
-		{
-	        float3 dg = tri3(bp * 2.);
-	        p += dg + _Time.y * _NoiseSpeed;
-
-	        bp *= 1.8;
-			z *= 1.5;
-			p *= 1.2;
-	        
-	        rz+= (tri(p.z+tri(p.x+tri(p.y))))/z;
-	        bp += 0.14;
-		}
-		return rz;
-	}
-
-	float4 VolumeSampleColor(float3 pos)
-	{
-	    float2 uv = -(pos.xz-_GridTransform.xy)/_GridTransform.z + float2(.5,.5);
-		
-	    float surface = tex2Dlod(_Surface, half4(uv, 0, 0)).r;
-		float dist = pos.y + surface - _GridFloorOffset;
-		float4 lightTint = tex2Dlod(_TintTexture, half4(uv, 0, dist/30));
-		float fillDensity = saturate(-pos.y * _GridFillDensity);
-
-		if(dist < _SafetyDistance)
-		{
-			float patch = tex2Dlod(_Patch, half4(uv, 0, 0)).r;
-			float displacement = tex2Dlod(_Displacement, half4(uv, 0, 0)).r;
-
-			//float noise = tex3D(_NoiseTex, pos*_NoiseFrequency);
-			float noise = pow(triNoise3d(pos*_NoiseFrequency),2)* _NoiseStrength;// + triNoise3d(pos*_NoiseFrequency*2, _NoiseSpeed * 2) * .5;
-			pos.y += noise;
-			float patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
-			float floorDist = -pos.y-surface+_GridFloorOffset;
-			float floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
-			float fogDensity = patchDensity + max(0,floorDensity);
-			float alpha = min(max(fogDensity, 0) + fillDensity, .99);
-			float albedo = pow(1-alpha, _TintExponent) * smoothstep(0,-250,pos.y);
-			return float4((albedo*_Tint*lightTint).rgb, alpha);
-		}
-
-		float albedo = pow(1-fillDensity, _TintExponent);
-		return float4((albedo*_Tint*lightTint).rgb, fillDensity);
-	}
-	
 	void RaymarchStep( in float3 pos, in float stepSize, in float weight, inout float4 sum, in float scatter, inout float scatterSum)
 	{
-		if( sum.a <= 0.99 )
-		{
-			float4 col = VolumeSampleColor( pos );
-			col.rgb *= weight * (1.0 - sum.a);
+		float4 col = VolumeSampleColor( pos );
+		col.rgb *= weight * (1.0 - sum.a);
 
-			sum += stepSize * col * col.a;
-			scatterSum += pow(col.a, _ScatteringDensityExponent) * scatter;
-		}
+		sum += stepSize * col * col.a;
+		scatterSum += pow(col.a, _ScatteringDensityExponent) * scatter;
 	}
 	
 	float4 RayMarch( in float3 origin, in float3 direction, in float zbuf, in float2 screenUV, out float scatterSum )
