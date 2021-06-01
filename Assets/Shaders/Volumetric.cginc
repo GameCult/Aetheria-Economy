@@ -1,3 +1,4 @@
+
 //
 //  Value Noise 3D Deriv
 //  Return value range of 0.0->1.0, with format float4( value, xderiv, yderiv, zderiv )
@@ -35,9 +36,11 @@ float4 Value3D_Deriv( float3 P )
 }
 
 uniform sampler2D _Surface;
+float4 _Surface_TexelSize;
 uniform sampler2D _Patch;
 uniform sampler2D _Displacement;
 uniform sampler2D _TintTexture;
+float4 _TintTexture_TexelSize;
 
 uniform float3 _GridTransform;
 	
@@ -50,7 +53,6 @@ uniform half _GridFillDensity,
             _GridFloorBlend,
             _GridPatchBlend,
             _TintExponent,
-            _DepthBlend,
             _NoiseFrequency,
             _NoiseExponent,
             _NoiseStrength,
@@ -94,22 +96,47 @@ float f(float3 pos)
     const float surface = tex2Dlod(_Surface, half4(uv, 0, 0)).r;
     const float dist = pos.y + surface - _GridFloorOffset;
 
-    const float fillDensity = saturate(-pos.y * _GridFillDensity);
+    const float fillDensity = smoothstep(_SafetyDistance,0,dist) * _GridFillDensity;
 
-    // if(dist < _SafetyDistance)
-    // {
+    if(dist < _SafetyDistance)
+    {
         const float patch = tex2Dlod(_Patch, half4(uv, 0, 0)).r;
         const float displacement = tex2Dlod(_Displacement, half4(uv, 0, 0)).r;
 
         const float patchDensity = saturate((-abs(pos.y+displacement)+patch)/_GridPatchBlend)*_GridPatchDensity;
-        const float floorDist = -pos.y-surface+_GridFloorOffset;
+        const float floorDist = -dist;
         const float floorDensity = floorDist/_GridFloorBlend*_GridFloorDensity;
         const float fogDensity = patchDensity + max(0,floorDensity);
-        return min(max(fogDensity, 0) + fillDensity, .99);
-    // }
+        return fogDensity + fillDensity;
+    }
 
-    // return fillDensity;
+    return fillDensity;
     
+}
+
+float3 calcNormal (float3 pos, float2 uv)
+{
+    float3 n = float3(pos.x, 
+                      tex2D(_Surface, float2(uv.x, uv.y + _Surface_TexelSize.y)).x, 
+                      pos.z + _Surface_TexelSize.y * _GridTransform.z);
+    float3 me = float3(pos.x, 
+                     tex2D(_Surface, float2(uv.x, uv.y)).x, 
+                     pos.z);
+    float3 e = float3(pos.x + _Surface_TexelSize.x * _GridTransform.z, 
+                     tex2D(_Surface, float2(uv.x + _Surface_TexelSize.x, uv.y)).x, 
+                     pos.z);
+    float3 norm = cross(normalize(n-me),normalize(e-me));
+    return norm;
+}
+
+float2 tintGradient (float3 pos, float2 uv, float mip, out float3 tint)
+{
+    tint = tex2Dlod(_TintTexture, float4(uv.x, uv.y, 0, mip));
+    float me = length(tint);
+    return float2(
+        length(tex2Dlod(_TintTexture, float4(uv.x + 0.001953125, uv.y, 0, mip))) - me,
+        length(tex2Dlod(_TintTexture, float4(uv.x, uv.y + 0.001953125, 0, mip))) - me
+    );
 }
 
 float3 calcNormal( float3 p ) // for function f(p)
@@ -122,25 +149,35 @@ float3 calcNormal( float3 p ) // for function f(p)
                       k.xxx*f( p + k.xxx*h ) );
 }
 
-float d(float3 pos)
+float3 flow(float3 pos, out float3 normal)
 {
+    //float2 uv = -(pos.xz-_GridTransform.xy)/_GridTransform.z + float2(.5,.5);
+    normal = calcNormal(pos);
+    //return normalize(float3(-normal.x,0,-normal.z)) * _TurbulenceAmplitude;
     const float4 simplex = Value3D_Deriv( pos / _TurbulenceScale - float3(0,_Time.x,0) );
-    const float3 normal = calcNormal(pos);
-    const float3 turbulence = cross(normalize(simplex.yzw), normal) * _TurbulenceAmplitude;
-    //const float3 turbulence = (simplex.yzw) * _TurbulenceAmplitude;
+    return cross(normalize(simplex.yzw), normal) * _TurbulenceAmplitude * simplex.x;
+}
+
+float d(float3 pos, out float3 normal)
+{
+    const float3 turbulence = flow(pos, normal);
     const float lerp1 = frac(_Time.x * _FlowSpeed);
     const float lerp2 = frac(_Time.x * _FlowSpeed + .5);
     const float noise1 = pow(triNoise3d((pos+turbulence * lerp1)*_NoiseFrequency),_NoiseExponent) * _NoiseStrength * parabola(lerp1, 2);
     const float noise2 = pow(triNoise3d((pos+turbulence * lerp2)*_NoiseFrequency),_NoiseExponent) * _NoiseStrength * parabola(lerp2, 2);
-    //pos.y += noise1 + noise2;
-    return f(pos - normalize(turbulence) * (noise1 + noise2));
+    pos.y += (noise1 + noise2);
+    return f(pos);
 }
 
 float4 VolumeSampleColor(float3 pos)
 {
     float2 uv = -(pos.xz-_GridTransform.xy)/_GridTransform.z + float2(.5,.5);
-	float density = d(pos);
-    const float4 tint = tex2Dlod(_TintTexture, half4(uv, 0, 1 / density)) * density;
-    const float albedo = pow(1-density, _TintExponent) * smoothstep(0,-250,pos.y);
-    return float4((albedo*_Tint*tint).rgb, density) ;
+    float3 normal;
+	float density = d(pos, normal);
+    float3 tint = tex2Dlod(_TintTexture, float4(uv.x, uv.y, 0, 1 / pow(density, .25)));
+    //float2 tintGrad = tintGradient(pos, uv, 1 / pow(density, .25), tint);
+    //float3 tintNormal = normalize(float3(tintGrad.x, 0, tintGrad.y));
+    tint *= max(0, dot(normal, float3(0,-1,0)));
+    const float albedo = pow(1/max(.01,density), _TintExponent) * smoothstep(0,-250,pos.y);
+    return float4(albedo*_Tint.rgb*tint, density);
 }
