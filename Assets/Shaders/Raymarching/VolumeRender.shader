@@ -14,6 +14,7 @@
         _GridFloorOffset("Floor Offset", float) = 1
         _GridFloorBlend("Floor Blend", float) = 1
         _GridPatchBlend("Patch Blend", float) = 1
+		_Exposure("Exposure", float) = 1
 		_Gamma("Gamma", float) = .5
 		_TintExponent("Tint Exponent", float) = .5
 		_DepthCeiling("Depth Ceiling", float) = 1000
@@ -56,6 +57,7 @@
 	uniform float  _StepExponent;
 	
     uniform half _Gamma,
+				_Exposure,
 				_DepthCeiling,
 				_DepthBlend,
 				_Scattering,
@@ -109,7 +111,7 @@
 			RaymarchStep( origin + rayDist * direction, step, 1-rayDist/_DepthCeiling, sum, _Scattering/pow(max(rayDist,_ScatteringMinDist),_ScatteringDistExponent), scatterSum);
 		}
 
-		sum.rgb = pow( sum.rgb, 1 / _Gamma );
+		sum.rgb = pow( sum.rgb, 1 / _Gamma ) * _Exposure;
 		return sum;
 	}
 

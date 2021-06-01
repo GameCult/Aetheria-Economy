@@ -155,7 +155,7 @@ float3 flow(float3 pos, out float3 normal)
     normal = calcNormal(pos);
     //return normalize(float3(-normal.x,0,-normal.z)) * _TurbulenceAmplitude;
     const float4 simplex = Value3D_Deriv( pos / _TurbulenceScale - float3(0,_Time.x,0) );
-    return cross(normalize(simplex.yzw), normal) * _TurbulenceAmplitude * simplex.x;
+    return cross(normalize(simplex.yzw), normal) * _TurbulenceAmplitude * (simplex.x-.5);
 }
 
 float d(float3 pos, out float3 normal)
@@ -177,7 +177,7 @@ float4 VolumeSampleColor(float3 pos)
     float3 tint = tex2Dlod(_TintTexture, float4(uv.x, uv.y, 0, 1 / pow(density, .25)));
     //float2 tintGrad = tintGradient(pos, uv, 1 / pow(density, .25), tint);
     //float3 tintNormal = normalize(float3(tintGrad.x, 0, tintGrad.y));
-    tint *= max(0, dot(normal, float3(0,-1,0)));
+    //tint *= abs(dot(normal, float3(0,-1,0)));
     const float albedo = pow(1/max(.01,density), _TintExponent) * smoothstep(0,-250,pos.y);
     return float4(albedo*_Tint.rgb*tint, density);
 }

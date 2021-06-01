@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Fog Marching
+  m_Name: Fog Marching 1
   m_Shader: {fileID: 4800000, guid: 7a890b6ceccf53c44bfc54b18b5daa58, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -43,32 +43,31 @@ Material:
     - _AlphaFloor: 0.01
     - _DepthBlend: 512
     - _DepthCeiling: 4096
-    - _Exposure: 0.001
-    - _FlowSpeed: 5
+    - _FlowSpeed: 2
     - _Gamma: 0.5
     - _GridCeilingBlend: -300
     - _GridCeilingDensity: 0.01
     - _GridCeilingFollow: 0
     - _GridCeilingOffset: 0
-    - _GridFillDensity: 0.0005
-    - _GridFloorBlend: 50
+    - _GridFillDensity: 0.001
+    - _GridFloorBlend: 100
     - _GridFloorDensity: 2
-    - _GridFloorOffset: 10
-    - _GridPatchBlend: 150
+    - _GridFloorOffset: 20
+    - _GridPatchBlend: 50
     - _GridPatchDensity: 2
     - _NoiseExponent: 2.25
-    - _NoiseFrequency: 0.02
+    - _NoiseFrequency: 0.015
     - _NoiseSpeed: 0
-    - _NoiseStrength: 50
-    - _SafetyDistance: 100
-    - _Scattering: 100
-    - _ScatteringDensityExponent: 0.175
-    - _ScatteringDistExponent: 2
-    - _ScatteringMinDist: 50
+    - _NoiseStrength: 500
+    - _SafetyDistance: 20
+    - _Scattering: 0
+    - _ScatteringDensityExponent: 0.5
+    - _ScatteringDistExponent: 0.5
+    - _ScatteringMinDist: 500
     - _StepExponent: 2
-    - _TintExponent: 2
+    - _TintExponent: 0.1
     - _TurbulenceAmplitude: 100
-    - _TurbulenceScale: 30
+    - _TurbulenceScale: 100
     m_Colors:
-    - _Tint: {r: 0.01, g: 0.01, b: 0.01, a: 1}
+    - _Tint: {r: 0.0627451, g: 0.0627451, b: 0.0627451, a: 1}
   m_BuildTextureStacks: []
