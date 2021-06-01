@@ -233,7 +233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47e64413aeb5ae740b410d70fb05d20c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotSpeed: {x: 0, y: 5, z: 0}
+  rotSpeed: {x: 0, y: 2, z: 0}
 --- !u!4 &335549372
 Transform:
   m_ObjectHideFlags: 0
@@ -802,8 +802,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 741153267}
-  m_LocalRotation: {x: 0.015506903, y: 0.9502416, z: -0.30741313, w: 0.04793323}
-  m_LocalPosition: {x: -117.51999, y: -77.08743, z: 149.09026}
+  m_LocalRotation: {x: 0.015506901, y: 0.9502416, z: -0.30741307, w: 0.047933236}
+  m_LocalPosition: {x: -117.51998, y: -77.08744, z: 149.09026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 412917866}
@@ -1207,12 +1207,10 @@ GameObject:
   - component: {fileID: 965376323}
   - component: {fileID: 965376327}
   - component: {fileID: 965376326}
-  - component: {fileID: 965376331}
   - component: {fileID: 965376325}
   - component: {fileID: 965376322}
   - component: {fileID: 965376328}
   - component: {fileID: 965376330}
-  - component: {fileID: 965376329}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1265,7 +1263,7 @@ Camera:
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
-  m_projectionMatrixMode: 0
+  m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
@@ -1304,8 +1302,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 965376321}
-  m_LocalRotation: {x: 0.015506903, y: 0.9502416, z: -0.30741313, w: 0.04793323}
-  m_LocalPosition: {x: -117.51999, y: -77.08743, z: 149.09026}
+  m_LocalRotation: {x: 0.015506901, y: 0.9502416, z: -0.30741307, w: 0.047933236}
+  m_LocalPosition: {x: -117.51998, y: -77.08744, z: 149.09026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1329,12 +1327,12 @@ MonoBehaviour:
     m_Bits: 256
   stopNaNPropagation: 1
   finalBlitToCameraTarget: 0
-  antialiasingMode: 0
+  antialiasingMode: 3
   temporalAntialiasing:
     jitterSpread: 1
-    sharpness: 0.25
-    stationaryBlending: 0.99
-    motionBlending: 0.85
+    sharpness: 0.5
+    stationaryBlending: 0.975
+    motionBlending: 0.95
   subpixelMorphologicalAntialiasing:
     quality: 2
   fastApproximateAntialiasing:
@@ -1423,24 +1421,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _volMaterial: {fileID: 2100000, guid: e21702a5e6e98b7409d6913663ceab7e, type: 2}
   GridTransform: {fileID: 1172538221}
---- !u!114 &965376329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 965376321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b642ff60407fe724bafa6602199213c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocityShader: {fileID: 4800000, guid: 0d7f09e63dd99504ca6e04212a21ec72, type: 3}
-  neighborMaxGen: 0
-  neighborMaxSupport: 1
-  numResident: 0
-  numRendered: 0
-  numDrawCalls: 0
 --- !u!114 &965376330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1455,34 +1435,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pattern: 12
   patternScale: 1
-  activeSample: {x: -0.375, y: -0.055555552, z: 0.25, w: -0.3888889}
-  activeIndex: 3
---- !u!114 &965376331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 965376321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65f5677aa325c184f801528d78a73827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ditherTex: {fileID: 2800000, guid: 859f329ee8606864ea19dbf373a5ec56, type: 3}
-  reprojectionShader: {fileID: 4800000, guid: 7ca93c1a56ee0154b8c714591d6d211a, type: 3}
-  colorspace: 0
-  useHigherOrderFilteringMainColor: 0
-  useHigherOrderFilteringHistory: 1
-  historyRectification: 0
-  useVarianceClipping: 1
-  useAABBRounding: 1
-  dilation: 2
-  useMotionBlur: 1
-  feedbackMin: 0.88
-  feedbackMax: 0.97
-  motionBlurStrength: 1
-  motionBlurIgnoreFF: 0
+  activeSample: {x: 0.4375, y: -0.24074075, z: -0.0625, w: 0.3148148}
+  activeIndex: 14
 --- !u!4 &971662241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7852221720971737233, guid: 046dde0f4600bce41ad33c476f99b309,

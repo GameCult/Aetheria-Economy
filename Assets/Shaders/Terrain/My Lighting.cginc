@@ -257,19 +257,6 @@ UnityIndirect CreateIndirectLight (Interpolators i, float3 viewDir) {
 		
 float3 calcNormal (float3 pos, float2 uv)
 {
-    /*float3 n = float3(pos.x, 
-                      tex2D(_DisplacementMap, float2(uv.x, uv.y + _DisplacementMap_TexelSize.y * _DisplacementStep)).x * -_DisplacementStrength, 
-                      pos.z + _DisplacementMap_TexelSize.y * unity_ObjectToWorld._m00 * _DisplacementStep);
-    float3 s = float3(pos.x, 
-                     tex2D(_DisplacementMap, float2(uv.x, uv.y - _DisplacementMap_TexelSize.y * _DisplacementStep)).x * -_DisplacementStrength, 
-                     pos.z - _DisplacementMap_TexelSize.y * unity_ObjectToWorld._m00 * _DisplacementStep);
-    float3 e = float3(pos.x + _DisplacementMap_TexelSize.x * unity_ObjectToWorld._m00 * _DisplacementStep, 
-                     tex2D(_DisplacementMap, float2(uv.x + _DisplacementMap_TexelSize.x * _DisplacementStep, uv.y)).x * -_DisplacementStrength, 
-                     pos.z);
-    float3 w = float3(pos.x - _DisplacementMap_TexelSize.x * unity_ObjectToWorld._m00 * _DisplacementStep, 
-                     tex2D(_DisplacementMap, float2(uv.x - _DisplacementMap_TexelSize.x * _DisplacementStep, uv.y)).x * -_DisplacementStrength, 
-                     pos.z);
-    float3 norm = cross(normalize(n-s),normalize(e-w));*/
     float3 n = float3(pos.x, 
                       tex2D(_DisplacementMap, float2(uv.x, uv.y + _DisplacementMap_TexelSize.y * _DisplacementStep)).x * -_DisplacementStrength, 
                       pos.z + _DisplacementMap_TexelSize.y * unity_ObjectToWorld._m00 * _DisplacementStep);
@@ -279,7 +266,6 @@ float3 calcNormal (float3 pos, float2 uv)
     float3 e = float3(pos.x + _DisplacementMap_TexelSize.x * unity_ObjectToWorld._m00 * _DisplacementStep, 
                      tex2D(_DisplacementMap, float2(uv.x + _DisplacementMap_TexelSize.x * _DisplacementStep, uv.y)).x * -_DisplacementStrength, 
                      pos.z);
-    //float3 norm = cross(normalize(n-s),normalize(e-w));
     float3 norm = cross(normalize(n-me),normalize(e-me));
     return norm;
 }

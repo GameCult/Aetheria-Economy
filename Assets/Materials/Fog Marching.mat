@@ -43,31 +43,31 @@ Material:
     - _AlphaFloor: 0.01
     - _DepthBlend: 512
     - _DepthCeiling: 4096
-    - _FlowSpeed: 2.5
+    - _FlowSpeed: 2
     - _Gamma: 0.5
     - _GridCeilingBlend: -300
     - _GridCeilingDensity: 0.01
     - _GridCeilingFollow: 0
     - _GridCeilingOffset: 0
-    - _GridFillDensity: 0.00002
-    - _GridFloorBlend: 50
-    - _GridFloorDensity: 3
-    - _GridFloorOffset: 0
-    - _GridPatchBlend: 50
-    - _GridPatchDensity: 0.5
+    - _GridFillDensity: 0.0025
+    - _GridFloorBlend: 100
+    - _GridFloorDensity: 2
+    - _GridFloorOffset: 22.8
+    - _GridPatchBlend: 30
+    - _GridPatchDensity: 0.25
     - _NoiseExponent: 1
-    - _NoiseFrequency: 0.02
+    - _NoiseFrequency: 0.01
     - _NoiseSpeed: 0
-    - _NoiseStrength: 250
-    - _SafetyDistance: 53.73
-    - _Scattering: 1.25
+    - _NoiseStrength: 100
+    - _SafetyDistance: 40
+    - _Scattering: 0
     - _ScatteringDensityExponent: 0.5
     - _ScatteringDistExponent: 0.5
     - _ScatteringMinDist: 500
     - _StepExponent: 2
-    - _TintExponent: 9
-    - _TurbulenceAmplitude: 25
+    - _TintExponent: 1.5
+    - _TurbulenceAmplitude: 100
     - _TurbulenceScale: 100
     m_Colors:
-    - _Tint: {r: 6.525489, g: 6.525489, b: 6.525489, a: 1}
+    - _Tint: {r: 0.0014705883, g: 0.0014705883, b: 0.0014705883, a: 1}
   m_BuildTextureStacks: []

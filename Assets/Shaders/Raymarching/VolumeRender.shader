@@ -41,7 +41,7 @@
 	#include "Assets/Shaders/Volumetric.cginc"
 	
 	// the number of volume samples to take
-	#define SAMPLE_COUNT 128
+	#define SAMPLE_COUNT 96
 
 	// Shared shader code for pixel view rays, given screen pos and camera frame vectors.
 	// Camera vectors are passed in as this shader is run from a post proc camera, so the unity built-in values are not useful.
@@ -57,6 +57,7 @@
 	
     uniform half _Gamma,
 				_DepthCeiling,
+				_DepthBlend,
 				_Scattering,
 				_ScatteringDensityExponent,
 				_ScatteringDistExponent,
@@ -74,31 +75,31 @@
 	void RaymarchStep( in float3 pos, in float stepSize, in float weight, inout float4 sum, in float scatter, inout float scatterSum)
 	{
 		float4 col = VolumeSampleColor( pos );
-		col.rgb *= weight * (1.0 - sum.a);
-
-		sum += stepSize * col * col.a;
+		col.a *= stepSize * weight;
+		sum.rgb += col.rgb * col.a * (1.0 - sum.a);
+		sum.a += col.a;
 		scatterSum += pow(col.a, _ScatteringDensityExponent) * scatter;
 	}
 	
 	float4 RayMarch( in float3 origin, in float3 direction, in float zbuf, in float2 screenUV, out float scatterSum )
 	{
 		scatterSum = 0;
-		float blue = tex2D(_DitheringTex, screenUV * _DitheringCoords.xy).r;
-        float rand = frac(blue + _FrameNumber * 1.61803398875);
+		float blue = tex2D(_DitheringTex, screenUV * _DitheringCoords.xy + _DitheringCoords.zw).r;
+        //float rand = frac(blue + _FrameNumber * 1.61803398875);
 		//return float4(rand, rand, rand, 1);
         //half rand = frac(nrand(screenUV) + _FrameNumber * 1.61803398875);
-		//half rand = nrand(screenUV + frac(_Time.x)) * 2;
+		//half rand = nrand(screenUV + frac(_Time.x));
+		half rand = blue;
 		float4 sum = (float4)0.;
 		scatterSum = 0.;
 
 		// setup sampling
 
-		float offset = rand/SAMPLE_COUNT;
 		float rayDist = 0;
 		for( int i = 0; i < SAMPLE_COUNT; i++ )
 		{
 			float prevRayDist = rayDist;
-			rayDist = pow((float)i/SAMPLE_COUNT + offset,_StepExponent) * _DepthCeiling;
+			rayDist = pow((i+rand)/SAMPLE_COUNT,_StepExponent) * _DepthCeiling + 1;
 			float distToSurf = zbuf - rayDist;
 			if( distToSurf <= 0.001 || sum.a > .99) break;
 
@@ -106,8 +107,6 @@
 			//float wt = (distToSurf >= step) ? 1. : distToSurf / step;
 
 			RaymarchStep( origin + rayDist * direction, step, 1-rayDist/_DepthCeiling, sum, _Scattering/pow(max(rayDist,_ScatteringMinDist),_ScatteringDistExponent), scatterSum);
-
-			rayDist += step;
 		}
 
 		sum.rgb = pow( sum.rgb, 1 / _Gamma );

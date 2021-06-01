@@ -30670,15 +30670,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2115559090}
   - component: {fileID: 2115559089}
-  - component: {fileID: 2115559098}
   - component: {fileID: 2115559091}
   - component: {fileID: 2115559092}
   - component: {fileID: 2115559093}
   - component: {fileID: 2115559094}
   - component: {fileID: 2115559095}
   - component: {fileID: 2115559088}
-  - component: {fileID: 2115559097}
-  - component: {fileID: 2115559096}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -30778,9 +30775,9 @@ MonoBehaviour:
   antialiasingMode: 3
   temporalAntialiasing:
     jitterSpread: 1
-    sharpness: 0
+    sharpness: 0.5
     stationaryBlending: 0.98
-    motionBlending: 0.98
+    motionBlending: 0.95
   subpixelMorphologicalAntialiasing:
     quality: 2
   fastApproximateAntialiasing:
@@ -30904,66 +30901,6 @@ MonoBehaviour:
     positionOffset: {x: 0, y: 0, z: 0}
   m_posOffsetData: {fileID: 0}
   listenerMask: 1
---- !u!114 &2115559096
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2115559087}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b642ff60407fe724bafa6602199213c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocityShader: {fileID: 4800000, guid: 0d7f09e63dd99504ca6e04212a21ec72, type: 3}
-  neighborMaxGen: 0
-  neighborMaxSupport: 1
-  numResident: 0
-  numRendered: 0
-  numDrawCalls: 0
---- !u!114 &2115559097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2115559087}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 899f97884c6d96b4ca20648ec109a37f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pattern: 9
-  patternScale: 1
-  activeSample: {x: 0, y: 0, z: 0, w: 0}
-  activeIndex: -2
---- !u!114 &2115559098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2115559087}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65f5677aa325c184f801528d78a73827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ditherTex: {fileID: 2800000, guid: 859f329ee8606864ea19dbf373a5ec56, type: 3}
-  reprojectionShader: {fileID: 4800000, guid: 7ca93c1a56ee0154b8c714591d6d211a, type: 3}
-  colorspace: 1
-  useHigherOrderFilteringMainColor: 1
-  useHigherOrderFilteringHistory: 1
-  historyRectification: 0
-  useVarianceClipping: 1
-  useAABBRounding: 1
-  dilation: 2
-  useMotionBlur: 0
-  feedbackMin: 0.99
-  feedbackMax: 0.999
-  motionBlurStrength: 1
-  motionBlurIgnoreFF: 0
 --- !u!1 &2117796865
 GameObject:
   m_ObjectHideFlags: 0
