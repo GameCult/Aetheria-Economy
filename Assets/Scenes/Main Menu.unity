@@ -399,8 +399,8 @@ MonoBehaviour:
   m_LookaheadIgnoreY: 0
   m_HorizontalDamping: 0.5
   m_VerticalDamping: 0.5
-  m_ScreenX: 0.19
-  m_ScreenY: 0.18
+  m_ScreenX: 0.75
+  m_ScreenY: 0.33
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_SoftZoneWidth: 0.8
@@ -440,8 +440,8 @@ MonoBehaviour:
   m_YDamping: 0
   m_ZDamping: 0
   m_TargetMovementOnly: 0
-  m_ScreenX: 0.74
-  m_ScreenY: 0.26
+  m_ScreenX: 0.25
+  m_ScreenY: 0.57
   m_CameraDistance: 146.53
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
@@ -450,7 +450,7 @@ MonoBehaviour:
   m_SoftZoneWidth: 0.8
   m_SoftZoneHeight: 0.8
   m_BiasX: -0.000000074505806
-  m_BiasY: 0
+  m_BiasY: -0.00000007450581
   m_CenterOnActivate: 1
   m_GroupFramingMode: 2
   m_AdjustmentMode: 0
@@ -802,8 +802,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 741153267}
-  m_LocalRotation: {x: 0.015506901, y: 0.9502416, z: -0.30741307, w: 0.047933236}
-  m_LocalPosition: {x: -117.51998, y: -77.08744, z: 149.09026}
+  m_LocalRotation: {x: 0.32744318, y: 0.17597876, z: -0.062211014, w: 0.92625177}
+  m_LocalPosition: {x: -144.10971, y: -28.69563, z: -126.68646}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 412917866}
@@ -862,7 +862,7 @@ MonoBehaviour:
   MaximumSize: 0.005
   Spacing: 4
   Ceiling: 0
-  Floor: -40
+  Floor: -50
   HeightExponent: 1000
   Heightmap: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   ParticleColors: {fileID: 2800000, guid: 56db63da398b2d04394ddbccedce943c, type: 3}
@@ -1302,8 +1302,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 965376321}
-  m_LocalRotation: {x: 0.015506901, y: 0.9502416, z: -0.30741307, w: 0.047933236}
-  m_LocalPosition: {x: -117.51998, y: -77.08744, z: 149.09026}
+  m_LocalRotation: {x: 0.32744318, y: 0.17597876, z: -0.062211014, w: 0.92625177}
+  m_LocalPosition: {x: -144.10971, y: -28.69563, z: -126.68646}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1435,8 +1435,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pattern: 12
   patternScale: 1
-  activeSample: {x: 0.4375, y: -0.24074075, z: -0.0625, w: 0.3148148}
-  activeIndex: 14
+  activeSample: {x: -0.25, y: 0.16666669, z: 0, w: -0.16666666}
+  activeIndex: 1
 --- !u!4 &971662241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7852221720971737233, guid: 046dde0f4600bce41ad33c476f99b309,
