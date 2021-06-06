@@ -224,6 +224,8 @@ public class ActionGameManager : MonoBehaviour
     public AetheriaInput Input { get; private set; }
     public EquippedDockingBay DockingBay { get; private set; }
     public Entity DockedEntity { get; private set; }
+    //if better place, please move
+    public Entity TowingStation { get; private set; }
 
     public Entity CurrentEntity
     {
@@ -561,7 +563,9 @@ public class ActionGameManager : MonoBehaviour
                 Zone.Entities.Add(turret);
                 turret.Activate();
             });
-        
+        //Temporary, or not
+        ConsoleController.AddCommand("tow", _ => TowShip());
+
         // ConsoleController.AddCommand("pingscene",
         //     _ =>
         //     {
@@ -770,6 +774,7 @@ public class ActionGameManager : MonoBehaviour
                     true);
                 // EntitySerializer.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
                 ((Ship) ship).IsPlayerShip = true;
+                ((Ship) ship).CanTow = true;
                 ship.Position = float3.zero;
                 ship.Zone = Zone;
                 Zone.Entities.Add(ship);
@@ -869,6 +874,8 @@ public class ActionGameManager : MonoBehaviour
         if (ZoneRenderer.Planets.ContainsKey(parentOrbitPlanet))
             DockCamera.LookAt = ZoneRenderer.Planets[parentOrbitPlanet].Body.transform;
         else DockCamera.LookAt = ZoneRenderer.ZoneRoot;
+        if (dockingBay.DockedShip.CanTow)
+            TowingStation = entity;
         Menu.ShowTab(MenuTab.Inventory);
     }
 
@@ -912,6 +919,32 @@ public class ActionGameManager : MonoBehaviour
                 Dialog.Show();
                 Dialog.MoveToCursor();
                 AkSoundEngine.PostEvent("UI_Fail", gameObject);
+            }
+        }
+    }
+
+    public void TowShip()
+    {
+        if (CurrentEntity.Parent != null) return;
+        if (CurrentEntity is Ship ship)
+        {
+            if (Zone.Equals(TowingStation.Zone))
+            {
+                var distance = (int)length(TowingStation.Position.xz - CurrentEntity.Position.xz);
+                CurrentEntity.Position.xz = TowingStation.Position.xz;
+                Dock();
+                //Debug.Log($"${distance}");
+                //payment = distance * TowingZoneRate;
+            }
+            else
+            {
+                var distance = Zone.GalaxyZone.Distance[TowingStation.Zone.GalaxyZone];
+                PopulateLevel(TowingStation.Zone.GalaxyZone);
+                CurrentEntity.Zone = Zone;
+                CurrentEntity.Position.xz = TowingStation.Position.xz;
+                Dock();
+                //Debug.Log($"${distance * 1000}");
+                //payment = distance * TowingGalaxyRate;
             }
         }
     }

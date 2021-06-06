@@ -26,6 +26,7 @@ public class Ship : Entity
     public Entity HomeEntity;
     public float2 MovementDirection;
     public bool IsPlayerShip;
+    public bool CanTow;
 
     private HashSet<EquippedItem> _thrusterItems;
     private Thruster[] _allThrusters;
