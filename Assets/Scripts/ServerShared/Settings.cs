@@ -172,6 +172,7 @@ public class GameplaySettings
     public float WormholeAnimationDuration = 4;
     public float WormholeExitCurveStart = .8f;
     public float ThermalWearExponent = .01f;
+    public float DeltaTempWearExponent = .01f;
     public float QualityWearExponent = 2;
     public int WeaponGroupCount = 6;
     public float WarpDistance = 25;

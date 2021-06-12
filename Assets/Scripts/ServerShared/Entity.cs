@@ -1157,6 +1157,7 @@ public class EquippedItem
     public Subject<(uint id, float v)> AudioParameters { get; } = new Subject<(uint id, float v)>();
     public Dictionary<uint, float> AudioParameterValues { get; } = new Dictionary<uint, float>();
 
+    private float oldTemperature;
     public float Temperature
     {
         get
@@ -1256,6 +1257,7 @@ public class EquippedItem
             pow(item.Quality, ItemManager.GameplaySettings.DurabilityQualityExponent));
         var hullData = itemManager.GetData(entity.Hull);
         InsetShape = hullData.Shape.Inset(Data.Shape, position, item.Rotation);
+        if (Entity.Temperature != null) oldTemperature = Temperature;
 
         Online = new ReadOnlyReactiveProperty<bool>(ThermalOnline
             .CombineLatest(DurabilityOnline, (thermal, durability) => thermal && durability).DistinctUntilChanged());
@@ -1310,17 +1312,20 @@ public class EquippedItem
     }
 
     public void UpdatePerformance()
-    {
+    {        
         var temp = Temperature;
         ThermalPerformance = Data.Performance(temp);
+        var deltaTemp = math.abs(temp - oldTemperature);
         DurabilityPerformance = EquippableItem.Durability / Data.Durability;
         var performanceThreshold = Entity.Settings.ShutdownPerformance;
         Wear = (1 - pow(ThermalPerformance,
                 (1 - pow(EquippableItem.Quality, ItemManager.GameplaySettings.QualityWearExponent)) *
-                ItemManager.GameplaySettings.ThermalWearExponent)
+                ItemManager.GameplaySettings.ThermalWearExponent) +
+                deltaTemp * ItemManager.GameplaySettings.DeltaTempWearExponent            
             ) * Data.Durability / Data.ThermalResilience;
         ThermalOnline.Value = ThermalPerformance > performanceThreshold || Entity.OverrideShutdown && EquippableItem.OverrideShutdown;
         DurabilityOnline.Value = EquippableItem.Durability > .01f;
+        oldTemperature = temp;
     }
 
     public void Update(float delta)
