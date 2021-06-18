@@ -45,6 +45,7 @@ public class GameSettings : ScriptableObject
     public Color GearHitColor;
     public Gradient ArmorGradient;
     public Gradient DurabilityGradient;
+    public ZoneEnvironment DefaultEnvironment;
     [HideInInspector] public Sprite[] ItemIcons;
     [HideInInspector] public Sprite[] WeaponTypeIcons;
     [HideInInspector] public Sprite[] WeaponCaliberIcons;

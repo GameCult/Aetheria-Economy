@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<WwiseDocument Type="WorkUnit" ID="{02152354-45CF-4389-B435-5367FA80C881}" SchemaVersion="103">
+<WwiseDocument Type="WorkUnit" ID="{CB1C4FF0-039F-4939-858E-CD82BB8B4A21}" SchemaVersion="103">
 	<GameParameters>
-		<WorkUnit Name="SFX" ID="{02152354-45CF-4389-B435-5367FA80C881}" PersistMode="Standalone">
+		<WorkUnit Name="SFX" ID="{CB1C4FF0-039F-4939-858E-CD82BB8B4A21}" PersistMode="Standalone">
 			<ChildrenList>
 				<Folder Name="Reactor" ID="{782E3206-8F28-4CE6-9087-9B0EAE5A0E58}" ShortID="472724612">
 					<ChildrenList>
@@ -23,7 +23,7 @@
 								<Property Name="Max" Type="Real64" Value="1"/>
 							</PropertyList>
 						</GameParameter>
-						<GameParameter Name="sfx_reactor_alarm" ID="{778F5836-B82F-46F8-936A-E8581E9DA7A9}">
+						<GameParameter Name="sfx_reactor_alarm" ID="{FCC9D97B-7F69-4F48-9342-BC379DF3F60A}">
 							<PropertyList>
 								<Property Name="InitialValue" Type="Real64" Value="1"/>
 								<Property Name="Max" Type="Real64" Value="1"/>
@@ -79,7 +79,7 @@
 								<Property Name="Max" Type="Real64" Value="1"/>
 							</PropertyList>
 						</GameParameter>
-						<GameParameter Name="ship_velocity" ID="{B907BE30-367C-4955-AF3B-AF6B2806F9D5}">
+						<GameParameter Name="ship_velocity" ID="{D5D4294D-5ECC-4A95-B006-2FCD260DE9F9}">
 							<PropertyList>
 								<Property Name="InitialValue" Type="Real64" Value="0"/>
 							</PropertyList>

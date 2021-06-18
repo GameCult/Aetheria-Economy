@@ -1,13 +1,32 @@
-﻿Shader "VolSample/Volume Render Auto" {
+﻿Shader "VolSample/Volume Render" {
 	Properties {
 		_MainTex( "", 2D ) = "white" {}
 		_StepExponent("Step Exponent", float) = 1
+		_NebulaSurfaceHeight("Surface Displacement", 2D) = "black" {}
+		_NebulaPatch("Patch", 2D) = "black" {}
+		_NebulaPatchHeight("Patch Displacement", 2D) = "black" {}
+		_NebulaTint("Tint Texture", 2D ) = "white" {}
+		[HDR]_Tint("Tint Color", Color) = (1,1,1,1)
 		//_GridTransform("Grid Transform", Vector) = (0,0,0,0)
+		_NebulaFillDensity("Fill Density", float) = 1
+        _NebulaFloorDensity("Floor Density", float) = 1
+        _NebulaPatchDensity("Patch Density", float) = 1
+        _NebulaFloorOffset("Floor Offset", float) = 1
+        _NebulaFloorBlend("Floor Blend", float) = 1
+        _NebulaPatchBlend("Patch Blend", float) = 1
 		_Exposure("Exposure", float) = 1
 		_Gamma("Gamma", float) = .5
 		_TintExponent("Tint Exponent", float) = .5
 		_DepthCeiling("Depth Ceiling", float) = 1000
 		_DepthBlend("Depth Blend", float) = 100
+		_NoiseAmplitude("Noise Amplitude", float) = 1
+		_NoiseScale("Noise Scale", float) = 100
+		_NoiseExponent("Noise Exponent", float) = 2
+		_NoiseSpeed("Noise Speed", float) = 1
+		_FlowScroll("Flow Scroll", float) = 1
+		_FlowScale("Flow Scale", float) = 1
+		_FlowAmplitude("Flow Amplitude", float) = 1
+		_FlowSpeed("Flow Speed", float) = 1
 		_SafetyDistance("Safety Distance", float) = 20
 		_Scattering("Scattering", float) = 1
 		_ScatteringMinDist("ScatteringMinDist", float) = 1
@@ -62,7 +81,7 @@
 		col.a *= stepSize * weight;
 		sum.rgb += col.rgb * col.a * (1.0 - sum.a);
 		sum.a += col.a;
-		scatterSum += pow(sum.a, _ScatteringDensityExponent) * scatter;
+		scatterSum += pow(col.a, _ScatteringDensityExponent) * scatter;
 	}
 	
 	float4 RayMarch( in float3 origin, in float3 direction, in float zbuf, in float2 screenUV, out float scatterSum )
@@ -93,7 +112,7 @@
 			RaymarchStep( origin + rayDist * direction, step, 1-rayDist/_DepthCeiling, sum, _Scattering/pow(max(rayDist,_ScatteringMinDist),_ScatteringDistExponent), scatterSum);
 		}
 
-		sum.rgb = pow( sum.rgb / pow(100,_TintExponent), 1 / _Gamma ) * _Exposure;
+		sum.rgb = pow( sum.rgb, 1 / _Gamma ) * _Exposure;
 		return sum;
 	}
 

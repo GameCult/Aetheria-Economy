@@ -802,8 +802,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 741153267}
-  m_LocalRotation: {x: 0.32744318, y: 0.17597876, z: -0.062211014, w: 0.92625177}
-  m_LocalPosition: {x: -144.10971, y: -28.69563, z: -126.68646}
+  m_LocalRotation: {x: 0.3274431, y: 0.17597422, z: -0.06220931, w: 0.9262527}
+  m_LocalPosition: {x: -144.10849, y: -28.695732, z: -126.68623}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 412917866}
@@ -853,17 +853,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d9e94d9c84cb6d46a2811d6a0e5e32e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   TargetCamera: {fileID: 965376323}
   ParticleCalculation: {fileID: 7200000, guid: f53a4ba56f0db2a49ad9f68150bf298a, type: 3}
   ParticleMaterial: {fileID: 2100000, guid: fc00c35c3c370774c88d55240b6538ce, type: 2}
   Span: 256
-  Speed: 0.25
+  Speed: -0.25
   MinimumSize: 0.0025
   MaximumSize: 0.005
-  Spacing: 4
+  Spacing: 2
   Ceiling: 0
   Floor: -50
   HeightExponent: 1000
+  NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
+  NebulaPatchHeight: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
+  NebulaPatch: {fileID: 8400000, guid: 06ec5ef8a5830fc44b1ac1a6e123add5, type: 2}
+  NebulaTint: {fileID: 8400000, guid: d196505464047f04a97f28689041209b, type: 2}
   Heightmap: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   ParticleColors: {fileID: 2800000, guid: 56db63da398b2d04394ddbccedce943c, type: 3}
   GravityCamera: {fileID: 2103364771}
@@ -1210,7 +1215,6 @@ GameObject:
   - component: {fileID: 965376325}
   - component: {fileID: 965376322}
   - component: {fileID: 965376328}
-  - component: {fileID: 965376330}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1302,8 +1306,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 965376321}
-  m_LocalRotation: {x: 0.32744318, y: 0.17597876, z: -0.062211014, w: 0.92625177}
-  m_LocalPosition: {x: -144.10971, y: -28.69563, z: -126.68646}
+  m_LocalRotation: {x: 0.3274431, y: 0.17597422, z: -0.06220931, w: 0.9262527}
+  m_LocalPosition: {x: -144.10849, y: -28.695732, z: -126.68623}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1419,24 +1423,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c03374f22d0a3d4882018de66894a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _volMaterial: {fileID: 2100000, guid: e21702a5e6e98b7409d6913663ceab7e, type: 2}
+  VolMaterial: {fileID: 2100000, guid: e21702a5e6e98b7409d6913663ceab7e, type: 2}
   GridTransform: {fileID: 1172538221}
---- !u!114 &965376330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 965376321}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 899f97884c6d96b4ca20648ec109a37f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pattern: 12
-  patternScale: 1
-  activeSample: {x: -0.25, y: 0.16666669, z: 0, w: -0.16666666}
-  activeIndex: 1
+  Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
+  NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
+  NebulaPatchHeight: {fileID: 8400000, guid: 06ec5ef8a5830fc44b1ac1a6e123add5, type: 2}
+  NebulaPatch: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
+  NebulaTint: {fileID: 8400000, guid: d196505464047f04a97f28689041209b, type: 2}
 --- !u!4 &971662241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7852221720971737233, guid: 046dde0f4600bce41ad33c476f99b309,

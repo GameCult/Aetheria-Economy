@@ -520,6 +520,9 @@ public class HullData : EquippableItemData
 
     [Inspectable, JsonProperty("drag"), Key(28)]
     public float Drag;
+    
+    [Inspectable, JsonProperty("canTow"), Key(29)]
+    public bool CanTow;
 
     [IgnoreMember]
     public Shape InteriorCells

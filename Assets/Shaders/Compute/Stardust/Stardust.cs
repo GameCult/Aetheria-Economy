@@ -10,6 +10,7 @@ public class Stardust : MonoBehaviour
     #region variables
     //public bool debugLog = false;
     //public float proxyPersistTime = 2;
+    public GameSettings Settings;
     public Camera TargetCamera;
     public ComputeShader ParticleCalculation;
     public Material ParticleMaterial;
@@ -24,11 +25,16 @@ public class Stardust : MonoBehaviour
     public float Floor = -25.0f;
     public float HeightExponent = 4;
 
+    public RenderTexture NebulaSurfaceHeight;
+    public RenderTexture NebulaPatchHeight;
+    public RenderTexture NebulaPatch;
+    public RenderTexture NebulaTint;
     public Texture Heightmap;
     public Texture2D ParticleColors;
     //public Transform TargetTransform;
     public Camera GravityCamera;
 
+    private float _flowScroll;
     private const int GROUP_SIZE = 128;
     private int _updateParticlesKernel;
     #endregion
@@ -67,7 +73,7 @@ public class Stardust : MonoBehaviour
         for (int i = 0; i < Span * Span; ++i)
         {
             particles[i].Position = Random.insideUnitSphere * 100;
-            particles[i].Color = Vector3.one;//white
+            particles[i].Color = Vector3.one; //white
             particles[i].Size = Random.value;
         }
 
@@ -98,7 +104,7 @@ public class Stardust : MonoBehaviour
         ParticleCalculation.SetFloat("time", Time.time * Speed);
 
         var pos = GravityCamera.transform.position;
-        ParticleCalculation.SetVector("transform", new Vector4(pos.x,pos.z,GravityCamera.orthographicSize*2));
+        ParticleCalculation.SetVector("_GridTransform", new Vector4(pos.x,pos.z,GravityCamera.orthographicSize*2));
         ParticleCalculation.SetFloat("spacing", Spacing);
         ParticleCalculation.SetFloat("ceilingHeight", Ceiling);
         ParticleCalculation.SetFloat("floorHeight", Floor);
@@ -109,6 +115,29 @@ public class Stardust : MonoBehaviour
         
         ParticleCalculation.SetTexture(_updateParticlesKernel, "Heightmap", Heightmap);
         ParticleCalculation.SetTexture(_updateParticlesKernel, "HueTexture", ParticleColors);
+        
+        ParticleCalculation.SetTexture(_updateParticlesKernel, "_NebulaSurfaceHeight", NebulaSurfaceHeight);
+        ParticleCalculation.SetTexture(_updateParticlesKernel, "_NebulaPatchHeight", NebulaPatchHeight);
+        ParticleCalculation.SetTexture(_updateParticlesKernel, "_NebulaPatch", NebulaPatch);
+        ParticleCalculation.SetTexture(_updateParticlesKernel, "_NebulaTint", NebulaTint);
+        
+        ParticleCalculation.SetFloat("_NebulaFillDensity", Settings.DefaultEnvironment.Nebula.FillDensity);
+        ParticleCalculation.SetFloat("_SafetyDistance", Settings.DefaultEnvironment.Nebula.FillDistance);
+        ParticleCalculation.SetFloat("_NebulaFloorDensity", Settings.DefaultEnvironment.Nebula.FloorDensity);
+        ParticleCalculation.SetFloat("_NebulaPatchDensity", Settings.DefaultEnvironment.Nebula.PatchDensity);
+        ParticleCalculation.SetFloat("_NebulaFloorOffset", Settings.DefaultEnvironment.Nebula.FloorOffset);
+        ParticleCalculation.SetFloat("_NebulaFloorBlend", Settings.DefaultEnvironment.Nebula.FloorBlend);
+        ParticleCalculation.SetFloat("_NebulaPatchBlend", Settings.DefaultEnvironment.Nebula.PatchBlend);
+        // Shader.SetGlobalFloat("_TintExponent", Settings.DefaultEnvironment.);
+        ParticleCalculation.SetFloat("_NoiseScale", Settings.DefaultEnvironment.Noise.Scale);
+        ParticleCalculation.SetFloat("_NoiseExponent", Settings.DefaultEnvironment.Noise.Exponent);
+        ParticleCalculation.SetFloat("_NoiseAmplitude", Settings.DefaultEnvironment.Noise.Amplitude);
+        ParticleCalculation.SetFloat("_NoiseSpeed", Settings.DefaultEnvironment.Noise.Speed);
+        ParticleCalculation.SetFloat("_FlowScale", Settings.DefaultEnvironment.Flow.Scale);
+        ParticleCalculation.SetFloat("_FlowAmplitude", Settings.DefaultEnvironment.Flow.Amplitude);
+        _flowScroll += Settings.DefaultEnvironment.Flow.ScrollSpeed * Time.deltaTime;
+        ParticleCalculation.SetFloat("_FlowScroll", _flowScroll);
+        ParticleCalculation.SetFloat("_FlowSpeed", Settings.DefaultEnvironment.Flow.Speed);
 
         //Dispatch, launch threads on GPU
         int numberOfGroups = Mathf.CeilToInt((float)Span * Span / GROUP_SIZE);
@@ -116,7 +145,7 @@ public class Stardust : MonoBehaviour
         
         ParticleMaterial.SetBuffer("particles", _particlesBuffer);
         ParticleMaterial.SetBuffer("quadPoints", _quadPoints);
-        Graphics.DrawProcedural(ParticleMaterial, new Bounds(pos, Spacing * Span * Vector3.one), MeshTopology.Triangles, 6, Span * Span, TargetCamera, null, ShadowCastingMode.Off, false, 0);
+        Graphics.DrawProcedural(ParticleMaterial, new Bounds(pos, new Vector3(Spacing * Span, 2048, Spacing * Span)), MeshTopology.Triangles, 6, Span * Span, TargetCamera, null, ShadowCastingMode.Off, false, 0);
     }
     #endregion
 

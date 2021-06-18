@@ -95,6 +95,8 @@ public class LoadoutGenerator
             var instance = ItemManager.CreateInstance(item);
             cargo.TryStore(instance);
         }
+
+        entity.CanTow = hullData.CanTow;
         
         return EntitySerializer.Pack(entity) as OrbitalEntityPack;
     }

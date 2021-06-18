@@ -1,4 +1,6 @@
-﻿//Tell unity that we have defined a kernel
+﻿#include "Assets/Shaders/Volumetric.cginc"
+
+//Tell unity that we have defined a kernel
 #pragma kernel UpdateParticles
 
 //Store Particle data in a struct
@@ -22,7 +24,6 @@ SamplerState samplerHueTexture;
 //uniform float4x4 noiseOffsetMatrix;
 
 float time;
-float3 transform;
 float spacing;
 float ceilingHeight;
 float floorHeight;
@@ -115,19 +116,26 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 	int x = id % span - span / 2;
 	int y = id / span - span / 2;
 
-	int xt = (int)(transform.x / spacing);
-	int yt = (int)(transform.y / spacing);
+	int xt = (int)(_GridTransform.x / spacing);
+	int yt = (int)(_GridTransform.y / spacing);
 	uint xp = x + xt + offset;
 	uint yp = y + yt + offset;
-
-	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomFirst(xp, yp), 0.0f), 0.0f).rgb;
+	
+	const float l = frac(time+RandomFirst(xp, yp));
 	
 	particles[id.x].position = float3(
-		x * spacing + xt * spacing + perlinNoise1D(RandomValue()*1024+time)*spacing, 0,
-		y * spacing + yt * spacing + perlinNoise1D(RandomValue()*1024+time)*spacing);
-	float2 puv = float2(.5,.5) - (particles[id.x].position.xz - transform.xy) / (transform.z);
-    float gravDepth = Heightmap.SampleLevel(samplerHeightmap, puv, 0.0f).r;
-	float headroom = (ceilingHeight+gravDepth);
-    particles[id.x].position.y = -gravDepth + floorHeight + -floorHeight * 4 * pow(RandomValue(), max(1, heightExponent/(headroom*headroom))) + perlinNoise1D(RandomValue()*1024+time)*spacing/2;
-	particles[id.x].size = lerp(minimumSize, maximumSize, RandomValue());
+		x * spacing + xt * spacing + perlinNoise1D(RandomValue()*1024)*spacing, 0,
+		y * spacing + yt * spacing + perlinNoise1D(RandomValue()*1024)*spacing);
+	float n;
+	const float2 puv = float2(.5,.5) - (particles[id.x].position.xz - _GridTransform.xy) / _GridTransform.z;
+	const float gravDepth = Heightmap.SampleLevel(samplerHeightmap, puv, 0.0f).r;
+	const float headroom = ceilingHeight + gravDepth;
+	particles[id.x].position.y = -gravDepth + floorHeight + -floorHeight * 4 *
+			pow(RandomValue(), max(1, heightExponent/(headroom*headroom))) +
+			perlinNoise1D(RandomValue()*1024)*spacing/2;
+	const float3 f = flow(particles[id.x].position, n);
+	particles[id.x].position += f * (l * n);
+	const float density = d(particles[id.x].position);
+	particles[id.x].size = lerp(minimumSize, maximumSize, RandomValue() * n * density) * parabola(l, 2);
+	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomValue(), 0.0f), 0.0f).rgb;
 }

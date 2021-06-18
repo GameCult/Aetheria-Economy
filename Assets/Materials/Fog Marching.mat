@@ -27,6 +27,22 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NebulaPatch:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NebulaPatchHeight:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NebulaSurfaceHeight:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NebulaTint:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Patch:
         m_Texture: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
         m_Scale: {x: 1, y: 1}
@@ -43,8 +59,11 @@ Material:
     - _AlphaFloor: 0.01
     - _DepthBlend: 512
     - _DepthCeiling: 4096
-    - _Exposure: 0.001
-    - _FlowSpeed: 5
+    - _Exposure: 2
+    - _FlowAmplitude: 512
+    - _FlowScale: 1024
+    - _FlowScroll: 0
+    - _FlowSpeed: 1
     - _Gamma: 0.5
     - _GridCeilingBlend: -300
     - _GridCeilingDensity: 0.01
@@ -52,23 +71,29 @@ Material:
     - _GridCeilingOffset: 0
     - _GridFillDensity: 0.0005
     - _GridFloorBlend: 50
-    - _GridFloorDensity: 2
+    - _GridFloorDensity: 1
     - _GridFloorOffset: 10
     - _GridPatchBlend: 150
-    - _GridPatchDensity: 2
-    - _NoiseExponent: 2.25
-    - _NoiseFrequency: 0.02
+    - _GridPatchDensity: 1
+    - _NebulaFillDensity: 0.00075
+    - _NebulaFloorBlend: 150
+    - _NebulaFloorDensity: 1
+    - _NebulaFloorOffset: 0
+    - _NebulaPatchBlend: 51.47
+    - _NebulaPatchDensity: 0.25
+    - _NoiseExponent: 3
+    - _NoiseFrequency: 0.005
     - _NoiseSpeed: 0
-    - _NoiseStrength: 50
-    - _SafetyDistance: 100
-    - _Scattering: 100
-    - _ScatteringDensityExponent: 0.175
-    - _ScatteringDistExponent: 2
-    - _ScatteringMinDist: 50
+    - _NoiseStrength: -400
+    - _SafetyDistance: 200
+    - _Scattering: 50
+    - _ScatteringDensityExponent: 1
+    - _ScatteringDistExponent: 1.5
+    - _ScatteringMinDist: 10
     - _StepExponent: 2
-    - _TintExponent: 2
-    - _TurbulenceAmplitude: 100
-    - _TurbulenceScale: 30
+    - _TintExponent: 1.2
+    - _TurbulenceAmplitude: 20
+    - _TurbulenceScale: 60
     m_Colors:
     - _Tint: {r: 0.01, g: 0.01, b: 0.01, a: 1}
   m_BuildTextureStacks: []

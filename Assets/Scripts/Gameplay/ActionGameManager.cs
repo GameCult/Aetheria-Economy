@@ -774,7 +774,6 @@ public class ActionGameManager : MonoBehaviour
                     true);
                 // EntitySerializer.Unpack(ItemManager, Zone, Loadouts.First(x => x.Name == StarterShipTemplate), true);
                 ((Ship) ship).IsPlayerShip = true;
-                ((Ship) ship).CanTow = true;
                 ship.Position = float3.zero;
                 ship.Zone = Zone;
                 Zone.Entities.Add(ship);
@@ -874,7 +873,7 @@ public class ActionGameManager : MonoBehaviour
         if (ZoneRenderer.Planets.ContainsKey(parentOrbitPlanet))
             DockCamera.LookAt = ZoneRenderer.Planets[parentOrbitPlanet].Body.transform;
         else DockCamera.LookAt = ZoneRenderer.ZoneRoot;
-        if (dockingBay.DockedShip.CanTow)
+        if (entity is OrbitalEntity {CanTow: true})
             TowingStation = entity;
         Menu.ShowTab(MenuTab.Inventory);
     }

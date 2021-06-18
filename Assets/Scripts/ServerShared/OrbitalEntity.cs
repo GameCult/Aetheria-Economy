@@ -15,6 +15,7 @@ public class OrbitalEntity : Entity
     public SecurityLevel SecurityLevel;
     public float SecurityRadius;
     public LocationStory Story;
+    public bool CanTow;
     
     public OrbitalEntity(ItemManager itemManager, Zone zone, EquippableItem hull, Guid orbit, EntitySettings settings) : base(itemManager, zone, hull, settings)
     {

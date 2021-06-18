@@ -229,3 +229,13 @@ public enum MusicType
     Combat,
     Boss
 }
+
+[Flags]
+public enum BrushLayer
+{
+    Gravity = 1 << 0,
+    Displacement = 1 << 1,
+    FogHeight = 1 << 2,
+    CloudHeight = 1 << 3,
+    CloudDepth = 1 << 4
+}

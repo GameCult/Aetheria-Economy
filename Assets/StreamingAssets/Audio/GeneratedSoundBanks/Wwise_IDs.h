@@ -36,15 +36,15 @@ namespace AK
         static const AkUniqueID GEN_COMBAT_1_STOP = 4289205743U;
         static const AkUniqueID GEN_OW_01_PLAY = 4009869725U;
         static const AkUniqueID GEN_OW_01_STOP = 1900744459U;
-        static const AkUniqueID IONCANNON_CHARGE_PLAY = 1733674570U;
-        static const AkUniqueID IONCANNON_CHARGE_STOP = 3179453300U;
-        static const AkUniqueID IONCANNON_FAIL = 216684405U;
-        static const AkUniqueID IONCANNON_FIRE = 299292453U;
-        static const AkUniqueID IONCANNON_HIT = 1028672300U;
-        static const AkUniqueID IONCANNON_MISS = 4133048765U;
-        static const AkUniqueID IONCANNON_SHIP_DESTROYED = 3465139343U;
         static const AkUniqueID KAWAII_FUTURE_BASS_PLAY = 2854353632U;
         static const AkUniqueID KAWAII_FUTURE_BASS_STOP = 1197715810U;
+        static const AkUniqueID LASER_CHARGE_PLAY = 2438116838U;
+        static const AkUniqueID LASER_CHARGE_STOP = 4247541464U;
+        static const AkUniqueID LASER_FAIL = 2129362585U;
+        static const AkUniqueID LASER_FIRE = 1675087065U;
+        static const AkUniqueID LASER_HIT = 2023124656U;
+        static const AkUniqueID LASER_MISS = 2058729561U;
+        static const AkUniqueID LASER_SHIP_DESTROYED = 304646619U;
         static const AkUniqueID LIGHTNINGGUN_CHARGE_PLAY = 2129771581U;
         static const AkUniqueID LIGHTNINGGUN_CHARGE_STOP = 62119851U;
         static const AkUniqueID LIGHTNINGGUN_FAIL = 1293013044U;
@@ -107,14 +107,19 @@ namespace AK
     namespace GAME_PARAMETERS
     {
         static const AkUniqueID CHARGE_LEVEL = 1574608066U;
+        static const AkUniqueID PERFORMANCE_DURABILITY = 965148665U;
+        static const AkUniqueID PERFORMANCE_QUALITY = 875134311U;
+        static const AkUniqueID PERFORMANCE_THERMAL = 3835443961U;
+        static const AkUniqueID REACTOR_LOAD = 3735272724U;
         static const AkUniqueID SFX_REACTOR_ALARM = 2441699439U;
         static const AkUniqueID SFX_REACTOR_DISTORTION1 = 364563454U;
         static const AkUniqueID SFX_REACTOR_DISTORTION2 = 364563453U;
         static const AkUniqueID SFX_REACTOR_GRAIN_SPEED = 1663874485U;
-        static const AkUniqueID SFX_REACTOR_PITCH = 12206642U;
         static const AkUniqueID SFX_SHARED_INTENSITY = 211338040U;
         static const AkUniqueID SFX_SHARED_LFO_FREQUENCY = 3222479589U;
         static const AkUniqueID SFX_SHARED_LFO_INTENSITY = 561757932U;
+        static const AkUniqueID SFX_SHARED_PITCH = 2398401357U;
+        static const AkUniqueID SFX_SHARED_QUALITY = 3813090976U;
         static const AkUniqueID SFX_SHIP_DRIVE_ELECTRIC_FUZZBOX_FILTER = 2008207144U;
         static const AkUniqueID SFX_SHIP_DRIVE_NUCLEAR_FILTERDURATION = 255764574U;
         static const AkUniqueID SFX_SHIP_DRIVE_NUCLEAR_GRAIN_SPEED_MOD = 675480480U;
@@ -125,7 +130,9 @@ namespace AK
         static const AkUniqueID SFX_WEAPON_LIGHTNING_GRAIN_FILTER = 3528347615U;
         static const AkUniqueID SFX_WEAPON_LIGHTNING_PITCH = 1365951697U;
         static const AkUniqueID SHIP_VELOCITY = 3579545711U;
+        static const AkUniqueID SHIP_VELOCITY_01 = 2790036083U;
         static const AkUniqueID TARGET_LOCKING = 3288537160U;
+        static const AkUniqueID THRUSTER_THROTTLE = 4116566921U;
     } // namespace GAME_PARAMETERS
 
     namespace BANKS
@@ -138,7 +145,7 @@ namespace AK
         static const AkUniqueID COMBAT_GENERIC = 1516113159U;
         static const AkUniqueID COMBAT_METAL = 681474673U;
         static const AkUniqueID GENERAL = 133642231U;
-        static const AkUniqueID IONCANNON = 3364802794U;
+        static const AkUniqueID LASER = 3982605422U;
         static const AkUniqueID LIGHTNINGGUN = 772093933U;
         static const AkUniqueID MACHINEGUN = 3678545986U;
         static const AkUniqueID MAIN_MENU = 2005704188U;

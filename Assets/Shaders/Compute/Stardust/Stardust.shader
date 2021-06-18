@@ -138,7 +138,7 @@
                 o.uv = quadPoints[id] + 0.5f;
                 
                 //transfer color of particle and global tint to vertex
-                o.color = float4(particles[inst].color, 1) * _TintColor * 10000 / (dist * dist);
+                o.color = float4(particles[inst].color * _TintColor.rgb, 10000 / (dist * dist));
 				o.screenPos = ComputeScreenPos(o.pos);
                 
                 return o;
