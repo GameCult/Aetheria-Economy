@@ -59,12 +59,12 @@ Material:
     - _AlphaFloor: 0.01
     - _DepthBlend: 512
     - _DepthCeiling: 4096
-    - _Exposure: 2
+    - _Exposure: 10
     - _FlowAmplitude: 512
     - _FlowScale: 1024
     - _FlowScroll: 0
     - _FlowSpeed: 1
-    - _Gamma: 0.5
+    - _Gamma: 0.3
     - _GridCeilingBlend: -300
     - _GridCeilingDensity: 0.01
     - _GridCeilingFollow: 0
@@ -91,7 +91,7 @@ Material:
     - _ScatteringDistExponent: 1.5
     - _ScatteringMinDist: 10
     - _StepExponent: 2
-    - _TintExponent: 1.2
+    - _TintExponent: 2
     - _TurbulenceAmplitude: 20
     - _TurbulenceScale: 60
     m_Colors:

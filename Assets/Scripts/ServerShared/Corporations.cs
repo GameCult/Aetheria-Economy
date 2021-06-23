@@ -64,7 +64,7 @@ public class Faction : DatabaseEntry, INamedEntry
     }
 }
 
-[Inspectable, MessagePackObject, ExternalEntry]
+[Inspectable, MessagePackObject]
 public class NameFile : DatabaseEntry, INamedEntry
 {
     [Key(1)] public string Name;

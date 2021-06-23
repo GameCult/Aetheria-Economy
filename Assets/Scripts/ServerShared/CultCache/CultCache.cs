@@ -3,85 +3,64 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 using System;
+using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using MessagePack;
+using Newtonsoft.Json;
+using RethinkDb.Driver;
+using RethinkDb.Driver.Net;
+using UniRx;
 
 public class CultCache
 {
-    public event Action<DatabaseEntry> OnDataInsertLocal;
-    public event Action<DatabaseEntry> OnDataUpdateLocal;
-    public event Action<DatabaseEntry> OnDataRemoveLocal;
-    public event Action<DatabaseEntry> OnDataInsertRemote;
-    public event Action<DatabaseEntry> OnDataUpdateRemote;
-    public event Action<DatabaseEntry> OnDataRemoveRemote;
 
     private readonly object addLock = new object();
 
     //public Action<string> Logger = Console.WriteLine;
-    private string _filePath;
+    //private string _filePath;
+
+    public event Action<DatabaseEntry, DatabaseEntry> OnUpdate;
+
+    private List<CacheBackingStore> _backingStores = new List<CacheBackingStore>();
+    
+    private readonly Dictionary<Type, CacheBackingStore> _typeStores = new Dictionary<Type, CacheBackingStore>();
+    private readonly Dictionary<CacheBackingStore, Type[]> _storeTypes = new Dictionary<CacheBackingStore, Type[]>();
 
     private readonly Dictionary<Guid, DatabaseEntry> _entries = new Dictionary<Guid, DatabaseEntry>();
 
     private readonly Dictionary<Type, DatabaseEntry> _globals = new Dictionary<Type, DatabaseEntry>();
     private readonly Dictionary<Type, HashSet<DatabaseEntry>> _types = new Dictionary<Type, HashSet<DatabaseEntry>>();
 
-    private readonly Dictionary<Type, (DirectoryInfo directory, List<Guid> entries)> _externalTypes = new Dictionary<Type, (DirectoryInfo directory, List<Guid> entries)>();
+    // private readonly Dictionary<Type, (DirectoryInfo directory, List<Guid> entries)> _externalTypes = new Dictionary<Type, (DirectoryInfo directory, List<Guid> entries)>();
 
-    private class ExternalEntry
-    {
-        public string FilePath;
-        public DatabaseEntry Entry;
-
-        public ExternalEntry(string filePath, DatabaseEntry entry)
-        {
-            FilePath = filePath;
-            Entry = entry;
-        }
-    }
-    private readonly Dictionary<Guid, ExternalEntry> _externalEntries = new Dictionary<Guid, ExternalEntry>();
-    private readonly Dictionary<Type, FieldInfo[]> _linkFields = new Dictionary<Type, FieldInfo[]>();
+    // private class ExternalEntry
+    // {
+    //     public string FilePath;
+    //     public DatabaseEntry Entry;
+    //
+    //     public ExternalEntry(string filePath, DatabaseEntry entry)
+    //     {
+    //         FilePath = filePath;
+    //         Entry = entry;
+    //     }
+    // }
+    // private readonly Dictionary<Guid, ExternalEntry> _externalEntries = new Dictionary<Guid, ExternalEntry>();
 
     public IEnumerable<DatabaseEntry> AllEntries => _entries.Values;
 
-    public CultCache(string filePath)
+    public CultCache()
     {
         DatabaseLinkBase.Cache = this;
-        RegisterResolver.Register();
-        _filePath = filePath;
-        var fileInfo = new FileInfo(filePath);
-        var dataDirectory = fileInfo.Directory;
         
-        // Entry types can be marked external
-        // External entries are stored individually and loaded on demand
-        // This is mainly to accomodate large files like datasets
         foreach (var type in typeof(DatabaseEntry).GetAllChildClasses())
         {
-            var linkFields = type.GetFields().Where(f => f.FieldType.IsAssignableToGenericType(typeof(DatabaseLink<>))).ToArray();
-            if(linkFields.Length > 0)
-                _linkFields[type] = linkFields;
-            
-            if (type.GetCustomAttribute<ExternalEntryAttribute>() != null)
-            {
-                var typeDirectory = dataDirectory.CreateSubdirectory(type.Name);
-                _externalTypes[type] = (typeDirectory, new List<Guid>());
-
-                // Cache the GUIDs for all available external entries for querying
-                // Initially set values to null to indicate they haven't been loaded yet
-                foreach (var file in typeDirectory.EnumerateFiles("*.msgpack"))
-                {
-                    Guid id;
-                    if (Guid.TryParse(file.Name.Substring(0, file.Name.IndexOf('.')), out id))
-                    {
-                        _externalEntries.Add(id, new ExternalEntry(file.FullName, null));
-                        _externalTypes[type].entries.Add(id);
-                    }
-                }
-            }
-            else _types[type] = new HashSet<DatabaseEntry>();
+            _types[type] = new HashSet<DatabaseEntry>();
             
             if (type.GetCustomAttribute<GlobalSettingsAttribute>() != null)
             {
@@ -91,7 +70,42 @@ public class CultCache
         }
     }
 
-    public void Add(DatabaseEntry entry, bool remote = false)
+    public void AddBackingStore(CacheBackingStore store, params Type[] domain)
+    {
+        if (domain.Length > 0)
+        {
+            _storeTypes[store] = domain;
+            foreach (var t in domain) _typeStores[t] = store;
+        }
+        else
+        {
+            foreach(var existingStore in _backingStores) store.SubscribeTo(existingStore);
+            _backingStores.Add(store);
+        }
+        store.EntryAdded.Subscribe(entry =>
+        {
+            Add(entry, store);
+            OnUpdate?.Invoke(null, entry);
+        });
+        store.EntryUpdated.Subscribe(entry =>
+        {
+            Add(entry, store);
+            OnUpdate?.Invoke(entry, entry);
+        });
+        store.EntryDeleted.Subscribe(entry =>
+        {
+            Remove(entry, store);
+            OnUpdate?.Invoke(entry, null);
+        });
+    }
+
+    public void PullAllBackingStores()
+    {
+        foreach(var store in _backingStores) store.PullAll();
+        foreach(var store in _storeTypes.Keys) store.PullAll();
+    }
+
+    public void Add(DatabaseEntry entry, CacheBackingStore source = null)
     {
         lock(addLock)
         {
@@ -101,85 +115,49 @@ public class CultCache
                 
                 var type = entry.GetType();
 
-                // If an external entry is added, store it separately
-                if (_externalTypes.ContainsKey(type))
+                if (_globals.ContainsKey(type))
                 {
-                    if (_externalEntries.ContainsKey(entry.ID))
+                    if(_globals[type]!=null)
                     {
-                        _externalEntries[entry.ID].Entry = entry;
+                        Remove(_globals[type]);
+                        exists = true;
                     }
-                    else
-                    {
-                        _externalTypes[type].entries.Add(entry.ID);
-                        _externalEntries[entry.ID] = new ExternalEntry(
-                            Path.Combine(_externalTypes[type].directory.FullName, $"{entry.ID.ToString()}.msgpack"),
-                            entry);
-                    }
+                    _globals[type] = entry;
                 }
+                
+                if(_typeStores.ContainsKey(type))
+                    _typeStores[type].Push(entry);
                 else
                 {
-                    if (_globals.ContainsKey(type))
-                    {
-                        if(_globals[type]!=null)
-                        {
-                            Remove(_globals[type], remote);
-                            exists = true;
-                        }
-                        _globals[type] = entry;
-                    }
-                    
-                    _entries[entry.ID] = entry;
-                    _types[type].Add(entry);
-                    foreach (var parentType in type.GetParentTypes())
-                    {
-                        if(_types.ContainsKey(parentType))
-                            _types[parentType].Add(entry);
-                    }
-
-                    if (remote)
-                    {
-                        if (exists)
-                            OnDataUpdateRemote?.Invoke(entry);
-                        else
-                            OnDataInsertRemote?.Invoke(entry);
-                    }
-                    else
-                    {
-                        if (exists)
-                            OnDataUpdateLocal?.Invoke(entry);
-                        else
-                            OnDataInsertLocal?.Invoke(entry);
-                    }
+                    var masterStore = _backingStores.First();
+                    if(masterStore!=source)
+                        masterStore.Push(entry);
                 }
+                
+                _entries[entry.ID] = entry;
+                _types[type].Add(entry);
+                foreach (var parentType in type.GetParentTypes())
+                {
+                    if(_types.ContainsKey(parentType))
+                        _types[parentType].Add(entry);
+                }
+
             }
         }
     }
 
-    public bool IsExternal(DatabaseEntry entry) => _externalTypes.ContainsKey(entry.GetType());
     public bool IsGlobal(DatabaseEntry entry) => _globals.ContainsKey(entry.GetType());
 
-    public void AddAll(IEnumerable<DatabaseEntry> entries, bool remote = false)
+    public void AddAll(IEnumerable<DatabaseEntry> entries)
     {
         foreach (var entry in entries)
         {
-            Add(entry, remote);
+            Add(entry);
         }
     }
 
     public DatabaseEntry Get(Guid guid)
     {
-        if (_externalEntries.ContainsKey(guid))
-        {
-            if(_externalEntries[guid].Entry == null)
-            {
-                var bytes = File.ReadAllBytes(_externalEntries[guid].FilePath);
-                var e = MessagePackSerializer.Deserialize<DatabaseEntry>(bytes);
-                _externalEntries[guid].Entry = e;
-            }
-
-            return _externalEntries[guid].Entry;
-        }
-
         DatabaseEntry entry;
         _entries.TryGetValue(guid, out entry);
         return entry;
@@ -203,56 +181,394 @@ public class CultCache
 
     public IEnumerable<DatabaseEntry> GetAll(Type type)
     {
-        if (_externalTypes.ContainsKey(type))
-        {
-            return _externalTypes[type].entries.Select(Get);
-        }
         return !_types.ContainsKey(type) ? Enumerable.Empty<DatabaseEntry>() : _types[type];
     }
 
     public IEnumerable<T> GetAll<T>() where T : DatabaseEntry
     {
         var type = typeof(T);
-        if (_externalTypes.ContainsKey(type))
-        {
-            return _externalTypes[type].entries.Select(Get<T>);
-        }
         return !_types.ContainsKey(type) ? Enumerable.Empty<T>() : _types[type].Cast<T>();
     }
 
-    public void Remove(DatabaseEntry entry, bool remote = false)
+    public void Remove(DatabaseEntry entry, CacheBackingStore source = null)
     {
         _entries.Remove(entry.ID);
-        foreach (var parentType in entry.GetType().GetParentTypes())
+        var type = entry.GetType();
+        if(_typeStores.ContainsKey(type))
+            _typeStores[type].Delete(entry);
+        else foreach(var store in _backingStores)
+        {
+            if(store != source)
+                store.Delete(entry);
+        }
+        foreach (var parentType in type.GetParentTypes())
         {
             if(_types.ContainsKey(parentType))
                 _types[parentType].Remove(entry);
         }
+    }
+}
 
-        if (remote)
-            OnDataRemoveRemote?.Invoke(entry);
-        else
-            OnDataRemoveLocal?.Invoke(entry);
+public interface RealtimeBackingStore
+{
+    public void ObserveChanges();
+}
+
+public abstract class CacheBackingStore
+{
+    protected CacheBackingStore()
+    {
+        EntryAdded = new Subject<DatabaseEntry>();
+        EntryDeleted = new Subject<DatabaseEntry>();
+        EntryUpdated = new Subject<DatabaseEntry>();
     }
 
-    public void Load()
-    {
-        var bytes = File.ReadAllBytes(_filePath);
-        var entries = MessagePackSerializer.Deserialize<DatabaseEntry[]>(bytes);
-        AddAll(entries);
-    }
+    public abstract void PullAll();
+    public abstract void Push(DatabaseEntry entry);
+    public abstract void Delete(DatabaseEntry entry);
+    public abstract void PushAll(bool soft = false);
+    
+    public Subject<DatabaseEntry> EntryAdded { get; }
+    public Subject<DatabaseEntry> EntryDeleted { get; }
+    public Subject<DatabaseEntry> EntryUpdated { get; }
 
-    public void Save()
+    protected Dictionary<Guid, DatabaseEntry> Entries = new Dictionary<Guid, DatabaseEntry>();
+
+    public void SubscribeTo(CacheBackingStore targetStore)
     {
-        var entries = AllEntries.ToArray();
-        File.WriteAllBytes(_filePath, MessagePackSerializer.Serialize(entries));
-        
-        foreach (var external in _externalEntries.Values)
+        targetStore.EntryAdded.Subscribe(Push);
+        targetStore.EntryDeleted.Subscribe(Delete);
+        targetStore.EntryUpdated.Subscribe(Push);
+    }
+}
+
+public abstract class MultiFileBackingStore : CacheBackingStore, RealtimeBackingStore
+{
+    public DirectoryInfo DirectoryInfo { get; }
+    protected Dictionary<Type, DirectoryInfo> _entryTypeDirectories = new Dictionary<Type, DirectoryInfo>();
+    
+    public abstract byte[] Serialize(DatabaseEntry entry);
+    public abstract DatabaseEntry Deserialize(byte[] data);
+    public abstract string Extension { get; }
+
+    public MultiFileBackingStore(string path)
+    {
+        DirectoryInfo = new DirectoryInfo(path);
+        foreach (var type in typeof(DatabaseEntry).GetAllChildClasses())
         {
-            if (external.Entry != null)
+            _entryTypeDirectories[type] = DirectoryInfo.CreateSubdirectory(type.Name);
+        }
+    }
+    
+    public override void PullAll()
+    {
+        if (!DirectoryInfo.Exists) return;
+
+        foreach (var directory in _entryTypeDirectories.Values)
+        {
+            foreach (var file in directory.EnumerateFiles($"*.{Extension}"))
             {
-                File.WriteAllBytes(external.FilePath, MessagePackSerializer.Serialize(external.Entry));
+                var entry = Deserialize(File.ReadAllBytes(file.FullName));
+                Entries[entry.ID] = entry;
+                EntryAdded.OnNext(entry);
             }
         }
+    }
+
+    private string GetFileName(DatabaseEntry entry) =>
+        $"{(entry is INamedEntry namedEntry ? namedEntry.EntryName : entry.ID.ToString())}.{Extension}";
+
+    public override void Push(DatabaseEntry entry)
+    {
+        var type = entry.GetType();
+        Entries[entry.ID] = entry;
+        var directory = _entryTypeDirectories[type];
+        File.WriteAllBytes(Path.Combine(directory.FullName, GetFileName(entry)), Serialize(entry));
+    }
+
+    public override void Delete(DatabaseEntry entry)
+    {
+        if(Entries.ContainsKey(entry.ID))
+        {
+            var type = entry.GetType();
+            Entries.Remove(entry.ID);
+            var directory = _entryTypeDirectories[type];
+            var file = new FileInfo(Path.Combine(directory.FullName, GetFileName(entry)));
+            if (file.Exists)
+                file.Delete();
+        }
+    }
+
+    public override void PushAll(bool soft = false)
+    {
+        foreach(var entry in Entries.Values.ToArray()) Push(entry);
+    }
+
+    public void ObserveChanges()
+    {
+        foreach (var directory in _entryTypeDirectories.Values)
+        {
+            var watcher = new FileSystemWatcher(directory.FullName);
+            watcher.Changed += (sender, args) =>
+            {
+                var entry = Deserialize(File.ReadAllBytes(args.FullPath));
+                Entries[entry.ID] = entry;
+                EntryUpdated.OnNext(entry);
+            };
+            watcher.Created += (sender, args) =>
+            {
+                var entry = Deserialize(File.ReadAllBytes(args.FullPath));
+                Entries[entry.ID] = entry;
+                EntryAdded.OnNext(entry);
+            };
+            watcher.Deleted += (sender, args) =>
+            {
+                var entry = Deserialize(File.ReadAllBytes(args.FullPath));
+                Entries[entry.ID] = entry;
+                EntryDeleted.OnNext(entry);
+            };
+        }
+    }
+}
+
+public class MultiFileJsonBackingStore : MultiFileBackingStore
+{
+    public MultiFileJsonBackingStore(string path) : base(path)
+    {
+        RegisterResolver.Register();
+    }
+
+    public override byte[] Serialize(DatabaseEntry entry)
+    {
+        return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(entry));
+    }
+
+    public override DatabaseEntry Deserialize(byte[] data)
+    {
+        return JsonConvert.DeserializeObject<DatabaseEntry>(Encoding.UTF8.GetString(data));
+    }
+
+    public override string Extension => "json";
+}
+
+public class MultiFileMessagePackBackingStore : MultiFileBackingStore
+{
+    public MultiFileMessagePackBackingStore(string path) : base(path)
+    {
+        RegisterResolver.Register();
+    }
+
+    public override byte[] Serialize(DatabaseEntry entry)
+    {
+        return MessagePackSerializer.Serialize(entry);
+    }
+
+    public override DatabaseEntry Deserialize(byte[] data)
+    {
+        return MessagePackSerializer.Deserialize<DatabaseEntry>(data);
+    }
+
+    public override string Extension => "msgpack";
+}
+
+public abstract class SingleFileBackingStore : CacheBackingStore
+{
+    public FileInfo FileInfo { get; }
+
+    public abstract byte[] Serialize(DatabaseEntry[] entries);
+    public abstract DatabaseEntry[] Deserialize(byte[] data);
+
+    public SingleFileBackingStore(string filePath)
+    {
+        FileInfo = new FileInfo(filePath);
+    }
+
+    public override void PullAll()
+    {
+        if (!FileInfo.Exists) return;
+
+        foreach (var entry in Deserialize(File.ReadAllBytes(FileInfo.FullName)))
+        {
+            Entries[entry.ID] = entry;
+            EntryAdded.OnNext(entry);
+        }
+    }
+
+    public override void Push(DatabaseEntry entry)
+    {
+        var type = entry.GetType();
+        Entries[entry.ID] = entry;
+        PushAll();
+    }
+
+    public override void Delete(DatabaseEntry entry)
+    {
+        if(Entries.ContainsKey(entry.ID))
+        {
+            Entries.Remove(entry.ID);
+            PushAll();
+        }
+    }
+
+    public override void PushAll(bool soft = false)
+    {
+        var entriesArray = Entries.Values.ToArray();
+        File.WriteAllBytes(FileInfo.FullName, Serialize(entriesArray));
+    }
+}
+
+public class SingleFileMessagePackBackingStore : SingleFileBackingStore
+{
+    public SingleFileMessagePackBackingStore(string filePath) : base(filePath)
+    {
+        RegisterResolver.Register();
+    }
+
+    public override byte[] Serialize(DatabaseEntry[] entries)
+    {
+        return MessagePackSerializer.Serialize(entries);
+    }
+
+    public override DatabaseEntry[] Deserialize(byte[] data)
+    {
+        return MessagePackSerializer.Deserialize<DatabaseEntry[]>(data);
+    }
+}
+
+public class SingleFileJsonBackingStore : SingleFileBackingStore
+{
+    public SingleFileJsonBackingStore(string filePath) : base(filePath)
+    {
+        RegisterResolver.Register();
+    }
+
+    public override byte[] Serialize(DatabaseEntry[] entries)
+    {
+        return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(entries));
+    }
+
+    public override DatabaseEntry[] Deserialize(byte[] data)
+    {
+        return JsonConvert.DeserializeObject<DatabaseEntry[]>(Encoding.UTF8.GetString(data));
+    }
+}
+
+public class RethinkBackingStore : CacheBackingStore, RealtimeBackingStore
+{
+    public const string DEFAULT_TABLE = "Default";
+    public static RethinkDB R = RethinkDB.R;
+    public string DatabaseName { get; }
+    public string ConnectionString { get; }
+    
+    private string[] _syncTables;
+    private Connection _connection;
+    private Dictionary<DatabaseEntry, string> _entryHashes = new Dictionary<DatabaseEntry, string>();
+    
+    public void ObserveChanges()
+    {
+        foreach (var table in _syncTables)
+        {
+            // Subscribe to changes from RethinkDB
+            Task.Run(async () =>
+            {
+                var result = await R
+                    .Db(DatabaseName)
+                    .Table(table)
+                    .Changes()
+                    .RunChangesAsync<DatabaseEntry>(_connection);
+                while (await result.MoveNextAsync())
+                {
+                    var change = result.Current;
+                    if(change.NewValue==null)
+                        EntryDeleted.OnNext(change.OldValue);
+                    else if(change.OldValue==null)
+                        EntryAdded.OnNext(change.NewValue);
+                    else EntryUpdated.OnNext(change.NewValue);
+                }
+            }).WrapAwait();
+        }
+    }
+
+    public RethinkBackingStore(string databaseName, string connectionString)
+    {
+        DatabaseName = databaseName;
+        ConnectionString = connectionString;
+        
+        RegisterResolver.Register();
+
+        var connectionStringDomainLength = connectionString.IndexOf(':');
+        if (connectionStringDomainLength < 1)
+            throw new ArgumentException("Illegal Connection String: must include port!");
+        
+        var portString = connectionString.Substring(connectionStringDomainLength + 1);
+        if (!int.TryParse(portString, out var port))
+            throw new ArgumentException($"Illegal connection string! \"{portString}\" is not a valid port number!");
+        
+        _connection = R.Connection()
+            .Hostname(connectionString.Substring(0,connectionStringDomainLength))
+            .Port(port).Timeout(60).Connect();
+
+        var tables = R.Db(DatabaseName).TableList().RunAtom<string[]>(_connection);
+
+        _syncTables = typeof(DatabaseEntry).GetAllChildClasses()
+            .Select(t => t.GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? DEFAULT_TABLE).Distinct().ToArray();
+
+        foreach (var st in _syncTables.Where(st => !tables.Contains(st)))
+            R.Db(DatabaseName).TableCreate(st).RunNoReply(_connection);
+    }
+    
+    public override void PullAll()
+    {
+        foreach (var table in _syncTables)
+        {
+            // Get entries from RethinkDB
+            Task.Run(async () =>
+            {
+                var result = await R
+                    .Db(DatabaseName)
+                    .Table(table)
+                    .RunCursorAsync<DatabaseEntry>(_connection);
+                
+                while (await result.MoveNextAsync())
+                {
+                    var entry = result.Current;
+                    EntryAdded.OnNext(entry);
+                }
+            }).WrapAwait();
+        }
+    }
+
+    public override async void Push(DatabaseEntry entry)
+    {
+        var type = entry.GetType();
+        //(Entries.ContainsKey(entry.ID) ? EntryUpdated : EntryAdded).OnNext(entry);
+        var table = type.GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? DEFAULT_TABLE;
+        var result = await R
+            .Db(DatabaseName)
+            .Table(table)
+            .Get(entry.ID)
+            .Replace(entry)
+            .RunAsync(_connection);
+    }
+
+    public override async void Delete(DatabaseEntry entry)
+    {
+        if(Entries.ContainsKey(entry.ID))
+        {
+            var type = entry.GetType();
+            var table = type.GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? DEFAULT_TABLE;
+            var result = await R
+                .Db(DatabaseName)
+                .Table(table)
+                .Get(entry.ID)
+                .Delete()
+                .RunAsync(_connection);
+        }
+    }
+
+    public override void PushAll(bool soft = false)
+    {
+        foreach(var entry in Entries.Values)
+            Push(entry);
     }
 }

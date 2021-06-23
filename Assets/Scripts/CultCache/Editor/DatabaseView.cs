@@ -96,6 +96,8 @@ public abstract class DatabaseListView : EditorWindow
     public Color LabelColor => EditorGUIUtility.isProSkin ? Color.white : Color.black;
 
     private bool _listItemStyle;
+    private SingleFileMessagePackBackingStore _msgPackStore;
+    private MultiFileJsonBackingStore _jsonStore;
     public GUIStyle ListItemStyle => (_listItemStyle = !_listItemStyle) ? ListStyleEven : ListStyleOdd;
     
     void OnEnable()
@@ -110,16 +112,16 @@ public abstract class DatabaseListView : EditorWindow
             normal = {background = EditorGUIUtility.isProSkin ? Color.Lerp(XKCDColors.DarkGrey,Color.black,.5f).ToTexture() : Color.Lerp(XKCDColors.LightGrey,Color.white,.5f).ToTexture()},
             margin = new RectOffset(0, 0, 0, 0)
         };
-        
-        cultCache = new CultCache(FilePath);
-        
-        cultCache.OnDataUpdateLocal += _ => Repaint();
-        cultCache.OnDataInsertLocal += _ => Repaint();
-        cultCache.OnDataRemoveLocal += _ => Repaint();
-        cultCache.OnDataUpdateRemote += _ => EditorDispatcher.Dispatch(Repaint);
-        cultCache.OnDataInsertRemote += _ => EditorDispatcher.Dispatch(Repaint);
-        cultCache.OnDataRemoveRemote += _ => EditorDispatcher.Dispatch(Repaint);
 
+        _jsonStore = new MultiFileJsonBackingStore(FilePath);
+        _msgPackStore = new SingleFileMessagePackBackingStore(Path.Combine(FilePath, "AetherDB.msgpack"));
+        cultCache = new CultCache();
+        cultCache.AddBackingStore(_jsonStore);
+        cultCache.AddBackingStore(_msgPackStore);
+        cultCache.AddBackingStore(new MultiFileMessagePackBackingStore(FilePath), typeof(NameFile));
+        cultCache.PullAllBackingStores();
+
+        cultCache.OnUpdate += (_,__) => EditorDispatcher.Dispatch(Repaint);
         DatabaseInspector.CultCache = cultCache;
         _inspector = DatabaseInspector.Instance;
         _inspector.Show();
@@ -128,8 +130,7 @@ public abstract class DatabaseListView : EditorWindow
             .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null && t.GetCustomAttribute<GlobalSettingsAttribute>() != null).ToArray();
         _tables = typeof(DatabaseEntry).GetAllChildClasses()
             .Where(t => t.GetCustomAttribute<InspectableAttribute>() != null && t.GetCustomAttribute<GlobalSettingsAttribute>() == null)
-            .GroupBy(t=>t.GetCustomAttribute<RethinkTableAttribute>()?.TableName ??
-                        (t.GetCustomAttribute<ExternalEntryAttribute>() != null ? "External" : "Default"))
+            .GroupBy(t=>t.GetCustomAttribute<RethinkTableAttribute>()?.TableName ?? "Default")
             .ToDictionary(group=>group.Key, group=> (false, group.Select(t=>(t, false)).ToArray()));
 
         if (EditorPrefs.HasKey("RethinkDB.URL"))
@@ -170,17 +171,18 @@ public abstract class DatabaseListView : EditorWindow
         }
         using (new HorizontalScope())
         {
+            GUILayout.Label("Export");
             //_fileName = TextField(_fileName);
-            if (GUILayout.Button("Save"))
+            if (GUILayout.Button("JSON"))
             {
-                cultCache.Save();
-                Debug.Log("Local DB Cache Saved!");
+                _jsonStore.PushAll();
+                Debug.Log("Exported DB to JSON!");
             }
 
-            if (GUILayout.Button("Load"))
+            if (GUILayout.Button("MsgPack"))
             {
-                cultCache.Load();
-                Debug.Log("Loaded DB From Local Cache!");
+                _msgPackStore.PushAll();
+                Debug.Log("Exported DB to MessagePack!");
             }
         }
 

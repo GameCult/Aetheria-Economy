@@ -84,8 +84,13 @@ public class ActionGameManager : MonoBehaviour
         {
             if (_cultCache != null) return _cultCache;
 
-            _cultCache = new CultCache(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack"));
-            _cultCache.Load();
+            _cultCache = new CultCache();
+            _cultCache.AddBackingStore(new MultiFileJsonBackingStore(GameDataDirectory.FullName));
+            _cultCache.AddBackingStore(
+                new SingleFileMessagePackBackingStore(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack")));
+            // _cultCache.AddBackingStore(
+            //     new MultiFileMessagePackBackingStore(GameDataDirectory.FullName), typeof(NameFile));
+            _cultCache.PullAllBackingStores();
             
             return _cultCache;
         }

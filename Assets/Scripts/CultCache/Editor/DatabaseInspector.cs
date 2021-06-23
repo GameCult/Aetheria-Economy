@@ -44,8 +44,7 @@ public class DatabaseInspector : EditorWindow
     void OnEnable()
     {
         _instance = this;
-        CultCache.OnDataUpdateLocal += _ => Repaint();
-        CultCache.OnDataUpdateRemote += _ => EditorDispatcher.Dispatch(Repaint);
+        CultCache.OnUpdate += (_,__) => EditorDispatcher.Dispatch(Repaint);
         wantsMouseMove = true;
         _warning = new GUIStyle(EditorStyles.boldLabel);
         _warning.normal.textColor = Color.red;

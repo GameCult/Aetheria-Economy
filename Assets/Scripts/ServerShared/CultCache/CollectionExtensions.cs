@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 public static class CollectionExtensions
 {
@@ -63,5 +64,13 @@ public static class CollectionExtensions
         }
 
         return maxItem;
+    }
+}
+
+public static class AsyncAwaitExtensions
+{
+    public static async void WrapAwait(this Task task)
+    {
+        await task;
     }
 }

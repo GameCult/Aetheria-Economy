@@ -55,7 +55,11 @@ public class StoryProcessor : IZoneResolver, IFactionResolver
     public void ProcessStories()
     {
         var locationFiles = _locationsPath.EnumerateFiles("*.ink");
-        foreach(var inkFile in locationFiles) ProcessLocation(GetStory(inkFile), inkFile);
+        foreach(var inkFile in locationFiles)
+        {
+            Log($"Processing story file at {inkFile.FullName}");
+            ProcessLocation(GetStory(inkFile), inkFile);
+        }
 
         var questFiles = _questsPath.EnumerateFiles("*ink");
         foreach(var inkFile in questFiles)  ProcessQuest(GetStory(inkFile), inkFile);

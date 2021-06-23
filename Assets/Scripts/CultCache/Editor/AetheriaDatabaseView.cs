@@ -18,7 +18,7 @@ public class AetheriaDatabaseView : DatabaseListView
 
     protected override string DatabaseName => "Aetheria";
 
-    protected override string FilePath => Path.Combine(new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData").FullName, "AetherDB.msgpack");
+    protected override string FilePath => new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData").FullName;
 
     protected override DatabaseEntryGroup[] Groupers => new DatabaseEntryGroup[]
     {
