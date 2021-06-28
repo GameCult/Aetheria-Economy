@@ -1294,8 +1294,6 @@ public class EquippedItem
 
         var scaleModifier = 1.0f;
         var scaleModifiers = stat.GetScaleModifiers(Entity).Values;
-        var a = float3(0, 0, 1);
-        var b = dot(a, float3(0, 0, 1));
         foreach (var value in scaleModifiers) scaleModifier *= value;
 
         float constantModifier = 0;
