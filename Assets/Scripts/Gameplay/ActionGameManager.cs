@@ -86,8 +86,9 @@ public class ActionGameManager : MonoBehaviour
 
             _cultCache = new CultCache();
             _cultCache.AddBackingStore(new MultiFileJsonBackingStore(GameDataDirectory.FullName));
-            _cultCache.AddBackingStore(
-                new SingleFileMessagePackBackingStore(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack")));
+            // _cultCache.AddBackingStore(
+            //     new SingleFileMessagePackBackingStore(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack")));
+            _cultCache.AddBackingStore(new MultiFileMessagePackBackingStore(GameDataDirectory.FullName), typeof(NameFile));
             // _cultCache.AddBackingStore(
             //     new MultiFileMessagePackBackingStore(GameDataDirectory.FullName), typeof(NameFile));
             _cultCache.PullAllBackingStores();

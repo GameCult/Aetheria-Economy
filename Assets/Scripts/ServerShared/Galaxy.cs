@@ -224,9 +224,9 @@ public class Galaxy
 
         GenerateNames(cache, nameGeneratorSettings, ref random, progressCallback);
         
-        progressCallback?.Invoke("Weaving Narrative");
-        var processor = new StoryProcessor(playerSettings, narrativeDirectory, this, ref random, Log);
-        processor.ProcessStories();
+        // progressCallback?.Invoke("Weaving Narrative");
+        // var processor = new StoryProcessor(playerSettings, narrativeDirectory, this, ref random, Log);
+        // processor.ProcessStories();
 
         progressCallback?.Invoke("Done!");
         if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
