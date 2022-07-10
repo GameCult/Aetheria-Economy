@@ -50,7 +50,7 @@ namespace JsonKnownTypes
             }
             else
             {
-                throw new NotImplementedException();
+                throw new ArgumentException($"Json Known Types: Type Unknown {objectType.FullName}!");
             }
         }
     }

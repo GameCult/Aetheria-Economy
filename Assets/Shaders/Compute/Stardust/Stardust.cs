@@ -122,7 +122,7 @@ public class Stardust : MonoBehaviour
         ParticleCalculation.SetTexture(_updateParticlesKernel, "_NebulaTint", NebulaTint);
         
         ParticleCalculation.SetFloat("_NebulaFillDensity", Settings.DefaultEnvironment.Nebula.FillDensity);
-        ParticleCalculation.SetFloat("_SafetyDistance", Settings.DefaultEnvironment.Nebula.FillDistance);
+        ParticleCalculation.SetFloat("_SafetyDistance", Settings.DefaultEnvironment.Nebula.SafetyDistance);
         ParticleCalculation.SetFloat("_NebulaFloorDensity", Settings.DefaultEnvironment.Nebula.FloorDensity);
         ParticleCalculation.SetFloat("_NebulaPatchDensity", Settings.DefaultEnvironment.Nebula.PatchDensity);
         ParticleCalculation.SetFloat("_NebulaFloorOffset", Settings.DefaultEnvironment.Nebula.FloorOffset);

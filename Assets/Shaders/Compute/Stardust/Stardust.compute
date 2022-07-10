@@ -121,21 +121,21 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 	uint xp = x + xt + offset;
 	uint yp = y + yt + offset;
 	
-	const float l = frac(time+RandomFirst(xp, yp));
+	const float lifetime = frac(time+RandomFirst(xp, yp));
 	
 	particles[id.x].position = float3(
 		x * spacing + xt * spacing + perlinNoise1D(RandomValue()*1024)*spacing, 0,
 		y * spacing + yt * spacing + perlinNoise1D(RandomValue()*1024)*spacing);
-	float n;
 	const float2 puv = float2(.5,.5) - (particles[id.x].position.xz - _GridTransform.xy) / _GridTransform.z;
-	const float gravDepth = Heightmap.SampleLevel(samplerHeightmap, puv, 0.0f).r;
+	const float gravDepth = Heightmap.SampleLevel(samplerHeightmap, puv, 0.0f).r + _NebulaFloorOffset;
 	const float headroom = ceilingHeight + gravDepth;
-	particles[id.x].position.y = -gravDepth + floorHeight + -floorHeight * 4 *
+	particles[id.x].position.y = -gravDepth + floorHeight + headroom *
 			pow(RandomValue(), max(1, heightExponent/(headroom*headroom))) +
 			perlinNoise1D(RandomValue()*1024)*spacing/2;
-	const float3 f = flow(particles[id.x].position, n);
-	particles[id.x].position += f * (l * n);
-	const float density = d(particles[id.x].position);
-	particles[id.x].size = lerp(minimumSize, maximumSize, RandomValue() * n * density) * parabola(l, 2);
-	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomValue(), 0.0f), 0.0f).rgb;
+	float noise;
+	const float3 flowDir = flow(particles[id.x].position, noise);
+	particles[id.x].position += flowDir * (lifetime * noise);
+	const float density = pow(d(particles[id.x].position) + .01, .25);
+	particles[id.x].size = lerp(minimumSize, maximumSize, saturate(RandomValue() * density)) * parabola(lifetime, 2);
+	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomValue(), 0.0f), 0.0f).rgb * density;
 }

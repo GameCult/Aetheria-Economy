@@ -223,7 +223,7 @@ public class ItemManager
     {
         if (item == null)
         {
-            _logger("Attempted to create crafted item instance using missing or incorrect item data!");
+            throw new NullReferenceException("Attempted to create crafted item instance using missing or incorrect item data!");
             return null;
         }
 

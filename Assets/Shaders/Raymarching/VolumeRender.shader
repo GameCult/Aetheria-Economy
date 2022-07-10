@@ -111,7 +111,7 @@
 		return o;
 	}
 
-	void computeCamera( in float2 q, out float3 rayOrigin, out float3 rd )
+	void computeCamera( in float2 q, out float3 rayOrigin, out float3 rayDirection )
 	{
 		rayOrigin = _WorldSpaceCameraPos;
 		
@@ -119,7 +119,7 @@
 		float4 d = mul(_CamProj, float4(p, 0, 1));
 		d.xyz /= d.w;
 		//rd = (d - rayOrigin);
-		rd = normalize(d - rayOrigin);
+		rayDirection = normalize(d - rayOrigin);
 		rayOrigin = d;
 		//rayOrigin += _ProjectionParams.y * rd;
 	}

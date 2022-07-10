@@ -8,7 +8,7 @@ public class MainMenuMusic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        AkSoundEngine.RegisterGameObj(gameObject);
-        ActionGameManager.PlayMusic(ActionGameManager.SoundBanksInfo.GetSoundBank(MusicSoundbankName).Id, gameObject);
+        // TODO: SFX: Menu Music
+        //ActionGameManager.PlayMusic(ActionGameManager.SoundBanksInfo.GetSoundBank(MusicSoundbankName).Id, gameObject);
     }
 }

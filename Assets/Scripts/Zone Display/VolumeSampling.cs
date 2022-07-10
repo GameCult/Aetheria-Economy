@@ -13,11 +13,11 @@ using static Unity.Mathematics.noise;
 /// <summary>
 /// Drives the volume render.
 /// </summary>
-//[ExecuteInEditMode]
-[RequireComponent( typeof( Camera ) ), ImageEffectAllowedInSceneView]
+[ExecuteInEditMode]
+[RequireComponent( typeof( Camera ) )]
 public class VolumeSampling : MonoBehaviour
 {
-    [FormerlySerializedAs("_volMaterial")] public Material VolMaterial;
+    public Material VolMaterial;
     public Transform GridTransform;
     public GameSettings Settings;
     //public int DownsampleBlurMask = 2;
@@ -44,31 +44,35 @@ public class VolumeSampling : MonoBehaviour
         _disabledBlurMask = Color.black.ToTexture();
     }
 
-    [ImageEffectOpaque]
-    void OnRenderImage(RenderTexture source, RenderTexture destination)
+    private void OnPreRender()
     {
-        // check for no shader / shader compile error
-        if( VolMaterial == null )
-        {
-            Graphics.Blit(source, destination);
-            return;
-        }
-        
         // Shader needs this matrix to generate world space rays
-        VolMaterial.SetMatrix("_CamProj", (_camera.projectionMatrix * _camera.worldToCameraMatrix).inverse);
-        VolMaterial.SetMatrix("_CamInvProj", (_camera.projectionMatrix * _camera.worldToCameraMatrix).inverse);
+        Shader.SetGlobalMatrix("_CamProj", (Camera.current.projectionMatrix * Camera.current.worldToCameraMatrix).inverse);
+        Shader.SetGlobalMatrix("_CamInvProj", (Camera.current.projectionMatrix * Camera.current.worldToCameraMatrix).inverse);
+    }
+
+    //[ImageEffectOpaque]
+    void Update()
+    {
+        // // check for no shader / shader compile error
+        // if( VolMaterial == null )
+        // {
+        //     Graphics.Blit(source, destination);
+        //     return;
+        // }
+        //
         
         // Shader needs to know the position and scale of cameras used to render input textures
         if(GridTransform != null)
-            VolMaterial.SetVector("_GridTransform", new Vector4(GridTransform.position.x,GridTransform.position.z,GridTransform.localScale.x));
-        
-        _mrt[0] = destination.colorBuffer;
-        _mrt[1] = _blurMask.colorBuffer;
-
-        // Blit with a MRT.
-        Graphics.SetRenderTarget(_mrt, source.depthBuffer);
-        
-        Graphics.Blit( source, VolMaterial, 0 );
+            Shader.SetGlobalVector("_GridTransform", new Vector4(GridTransform.position.x,GridTransform.position.z,GridTransform.localScale.x));
+        //
+        // _mrt[0] = destination.colorBuffer;
+        // _mrt[1] = _blurMask.colorBuffer;
+        //
+        // // Blit with a MRT.
+        // Graphics.SetRenderTarget(_mrt, source.depthBuffer);
+        //
+        // Graphics.Blit( source, VolMaterial, 0 );
         
         //Graphics.Blit(rt1, destination);
         
@@ -89,16 +93,20 @@ public class VolumeSampling : MonoBehaviour
         Shader.SetGlobalFloat("_NebulaFloorOffset", Settings.DefaultEnvironment.Nebula.FloorOffset);
         Shader.SetGlobalFloat("_NebulaFloorBlend", Settings.DefaultEnvironment.Nebula.FloorBlend);
         Shader.SetGlobalFloat("_NebulaPatchBlend", Settings.DefaultEnvironment.Nebula.PatchBlend);
-        // Shader.SetGlobalFloat("_TintExponent", Settings.DefaultEnvironment.);
+        Shader.SetGlobalFloat("_NebulaLuminance", Settings.DefaultEnvironment.Nebula.Luminance);
+        Shader.SetGlobalFloat("_TintExponent", Settings.DefaultEnvironment.Nebula.TintExponent);
+        Shader.SetGlobalFloat("_TintLodExponent", Settings.DefaultEnvironment.Nebula.TintLodExponent);
+        Shader.SetGlobalFloat("_SafetyDistance", Settings.DefaultEnvironment.Nebula.SafetyDistance);
+        
         Shader.SetGlobalFloat("_NoiseScale", Settings.DefaultEnvironment.Noise.Scale);
         Shader.SetGlobalFloat("_NoiseExponent", Settings.DefaultEnvironment.Noise.Exponent);
         Shader.SetGlobalFloat("_NoiseAmplitude", Settings.DefaultEnvironment.Noise.Amplitude);
         Shader.SetGlobalFloat("_NoiseSpeed", Settings.DefaultEnvironment.Noise.Speed);
+        
         Shader.SetGlobalFloat("_FlowScale", Settings.DefaultEnvironment.Flow.Scale);
         Shader.SetGlobalFloat("_FlowAmplitude", Settings.DefaultEnvironment.Flow.Amplitude);
         _flowScroll += Settings.DefaultEnvironment.Flow.ScrollSpeed * Time.deltaTime;
         Shader.SetGlobalFloat("_FlowScroll", _flowScroll);
         Shader.SetGlobalFloat("_FlowSpeed", Settings.DefaultEnvironment.Flow.Speed);
-        // Shader.SetGlobalFloat("_SafetyDistance", Settings.DefaultEnvironment.);
     }
 }

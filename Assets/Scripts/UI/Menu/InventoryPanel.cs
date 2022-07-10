@@ -379,7 +379,8 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                                     RefreshCells();
                                     _originalRotation = item.EquippableItem.Rotation;
                                     GameManager.BeginDrag(new EquippedItemDragObject(item, entity, item.Position - v));
-                                    AkSoundEngine.PostEvent("Pickup", gameObject);
+                                    //AkSoundEngine.PostEvent("Pickup", gameObject);
+                                    // TODO: SFX: Pickup Item
                                 }
                             });
                         cell.DragTrigger.OnDragAsObservable()
@@ -425,15 +426,17 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                                         {
                                             if(equippedItemDragObject.OriginEntity.TryUnequip(equippedItemDragObject.EquippedItem) == null)
                                             {
-                                                AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                                                // AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                                                // TODO: SFX: Fail
                                                 Dialog.Clear();
                                                 Dialog.Title.text = "Unable to move item!";
                                                 Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
                                                 Dialog.Show();
                                                 Dialog.MoveToCursor();
                                             }
-                                            else 
-                                                AkSoundEngine.PostEvent("Unequip", gameObject);
+                                            // else 
+                                            //     AkSoundEngine.PostEvent("Unequip", gameObject);
+                                            // TODO: SFX: Unequip
                                         }
                                         else if (GameManager.DragObject is ItemInstanceDragObject itemInstanceDragObject)
                                             itemInstanceDragObject.OriginInventory.Remove(itemInstanceDragObject.Item);
@@ -441,7 +444,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                                         FakeOccupancy = null;
                                         entity.TryEquip(equippableItem, placementPosition);
                                         RefreshCells();
-                                        AkSoundEngine.PostEvent("Equip", gameObject);
+                                        // TODO: SFX: Equip
                                         return false;
                                     });
                                 }
@@ -601,7 +604,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                             RefreshCells();
                             _originalRotation = item.Rotation;
                             GameManager.BeginDrag(new ItemInstanceDragObject(item, cargo, cargo.Cargo[item] - v));
-                            AkSoundEngine.PostEvent("Pickup", gameObject);
+                            // TODO: SFX: Pickup
                         }
                     });
                 cell.DragTrigger.OnDragAsObservable()
@@ -644,21 +647,21 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                                 {
                                     if(equippedItemDragObject.OriginEntity.TryUnequip(equippedItemDragObject.EquippedItem) == null)
                                     {
-                                        AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                                        // TODO: SFX: Fail
                                         Dialog.Clear();
                                         Dialog.Title.text = "Unable to move item!";
                                         Dialog.AddProperty("Verify that cargo bays are empty before un-equipping them.");
                                         Dialog.Show();
                                         Dialog.MoveToCursor();
                                     }
-                                    else 
-                                        AkSoundEngine.PostEvent("Unequip", gameObject);
+                                    //else 
+                                    // TODO: SFX: Unequip
                                 }
                                 else if (GameManager.DragObject is ItemInstanceDragObject itemInstanceDragObject)
                                     itemInstanceDragObject.OriginInventory.Remove(itemInstanceDragObject.Item);
                                 cargo.TryStore(item, placementPosition);
                                 FakeOccupancy = null;
-                                AkSoundEngine.PostEvent("Drop", gameObject);
+                                // TODO: SFX: Drop
                                 return true;
                             });
                         }

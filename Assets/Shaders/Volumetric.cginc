@@ -51,7 +51,9 @@ uniform half _NebulaFillDensity,
             _NebulaFloorOffset,
             _NebulaFloorBlend,
             _NebulaPatchBlend,
+            _NebulaLuminance,
             _TintExponent,
+            _TintLodExponent,
             _NoiseScale,
             _NoiseExponent,
             _NoiseAmplitude,
@@ -65,12 +67,32 @@ uniform half _NebulaFillDensity,
 float tri(in float x){return abs(frac(x)-.5);}
 float3 tri3(in float3 p){return float3( tri(p.z+tri(p.y*1.)), tri(p.z+tri(p.x*1.)), tri(p.y+tri(p.x*1.)));}
 
+// float tri3l(in float3 p)
+// {
+//     float z=1.4;
+//     float rz = 0.;
+//     float3 bp = p;
+//     for (float i=0.; i<=4.; i++ )
+//     {
+//         float3 dg = tri3(bp * 2.);
+//         p = (p + dg + _Time.y * _NoiseSpeed);
+//
+//         bp *= 1.8;
+//         z *= 1.5;
+//         p *= 1.2;
+// 	        
+//         return (tri(p.z+tri(p.x+tri(p.y))))/2;
+//         bp += 0.14;
+//     }
+//     return rz;
+// }
+
 float triNoise3d(in float3 p)
 {
     float z=1.4;
-    float rz = 0.;
+    float rz = 0.001;
     float3 bp = p;
-    for (float i=0.; i<=2.; i++ )
+    for (float i=0.; i<=1.; i++ )
     {
         float3 dg = tri3(bp * 2.);
         p += dg + _Time.y * _NoiseSpeed;
@@ -151,37 +173,41 @@ float3 calcNormal( float3 p ) // for function f(p)
 
 float3 flow(float3 pos, out float noise)
 {
-    //float2 uv = -(pos.xz-_GridTransform.xy)/_GridTransform.z + float2(.5,.5);
-    //normal = calcNormal(pos);
-    //return normalize(float3(-normal.x,0,-normal.z)) * _TurbulenceAmplitude;
     const float4 noiseSample1 = Value3D_Deriv( pos / _FlowScale - float3(0,_FlowScroll,0) );
-    const float4 noiseSample2 = Value3D_Deriv( (pos / _FlowScale - float3(0,_FlowScroll,0)) / 1.61803398875 ); // make it golden
+    const float4 noiseSample2 = Value3D_Deriv( pos / (_FlowScale * 1.61803398875) - float3(0,_FlowScroll,0) ); // make it golden
     noise = noiseSample1.x;
     return cross(normalize(noiseSample2.yzw), normalize(noiseSample1.yzw)) * _FlowAmplitude;
-    //return BitangentNoise3D(pos / _FlowScale - float3(0,_FlowScroll,0)) * _FlowAmplitude;
 }
+
+float tri2(in float x){return 1-2*abs(frac(x)-.5);}
 
 float d(float3 pos)
 {
     float noise;
     const float3 fl = flow(pos, noise);
     const float lerp1 = frac(_Time.x * _FlowSpeed + noise);
-    const float lerp2 = frac(_Time.x * _FlowSpeed + noise + .5);
-    const float noise1 = pow(triNoise3d((pos+fl * lerp1) / _NoiseScale),_NoiseExponent) * _NoiseAmplitude * parabola(lerp1, 2);
-    const float noise2 = pow(triNoise3d((pos+fl * lerp2) / _NoiseScale),_NoiseExponent) * _NoiseAmplitude * parabola(lerp2, 2);
+    const float lerp2 = frac(_Time.x * _FlowSpeed + .5 + noise);
+    const float noise1 = pow(triNoise3d((pos+fl * lerp1) / _NoiseScale),_NoiseExponent) * _NoiseAmplitude * tri2(lerp1);
+    const float noise2 = pow(triNoise3d((pos+fl * lerp2) / _NoiseScale),_NoiseExponent) * _NoiseAmplitude * tri2(lerp2);
     pos.y += (noise1 + noise2);
+    const float lerp3 = frac(_Time.x * _FlowSpeed * 2);
+    const float lerp4 = frac(_Time.x * _FlowSpeed * 2 + .5);
+    const float noise3 = pow(triNoise3d((pos-fl * lerp3) / _NoiseScale * 2), _NoiseExponent) * _NoiseAmplitude * tri2(lerp3) / 2;
+    const float noise4 = pow(triNoise3d((pos-fl * lerp4) / _NoiseScale * 2), _NoiseExponent) * _NoiseAmplitude * tri2(lerp4) / 2;
+    pos.y -= (noise3 + noise4);
     return f(pos);
 }
 
 float4 VolumeSampleColor(float3 pos)
 {
-    float2 uv = -(pos.xz-_GridTransform.xy)/_GridTransform.z + float2(.5,.5);
 	float density = d(pos);
-    float3 tint = tex2Dlod(_NebulaTint, float4(uv.x, uv.y, 0, 1 / pow(density, .25)));
+    float clampedDensity = max(.01,density);
+    float2 uv = -(pos.xz-_GridTransform.xy)/_GridTransform.z + float2(.5,.5);
+    float3 tint = tex2Dlod(_NebulaTint, float4(uv.x, uv.y, 0, 1 / pow(clampedDensity, _TintLodExponent)));
     //float2 tintGrad = tintGradient(pos, uv, 1 / pow(density, .25), tint);
     //float3 tintNormal = normalize(float3(tintGrad.x, 0, tintGrad.y));
     //tint *= abs(dot(normal, float3(0,-1,0)));
     // pow(abs(1-density), _TintExponent)
-    const float albedo = smoothstep(0,-250,pos.y) * pow(1/max(.01,density), _TintExponent);
+    const float albedo = smoothstep(0,-250,pos.y) * pow(1/clampedDensity, _TintExponent) * _NebulaLuminance;
     return float4(albedo*tint, density);
 }

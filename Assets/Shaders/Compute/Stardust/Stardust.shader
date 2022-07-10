@@ -2,6 +2,8 @@
 {
 	Properties {
 		[HDR] _TintColor("Tint Color", Color) = (0.5,0.5,0.5,0.5)
+		_DistanceSizeExponent("Distance Size Exponent", Float) = 1
+		_DistanceIntensityExponent("Distance Intensity Exponent", Float) = 1
 		_EmissionGain("Emission Gain", Range(0, 1)) = 0.3
 		_Power("Power", Float) = 2
 	}
@@ -31,6 +33,8 @@
             float4 _TintColor;
             float _EmissionGain;
 			float _Power;
+			float _DistanceSizeExponent;
+			float _DistanceIntensityExponent;
             
             struct v2f 
             {
@@ -54,14 +58,14 @@
                 float4 cameraSpacePosition = mul(UNITY_MATRIX_V, float4(worldPosition, 1.0f));
                 //cameraSpacePosition.w /= dist;
                 
-                float3 quadPoint = float3(quadPoints[id].xy, 0.0f) * particles[inst].size * dist;
+                float3 quadPoint = float3(quadPoints[id].xy, 0.0f) * particles[inst].size * pow(dist, _DistanceSizeExponent) / pow(100, _DistanceSizeExponent);
                 o.pos = mul(UNITY_MATRIX_P, cameraSpacePosition + float4(quadPoint, 0.0f));
                 
                 //Shift coordinates for uvs
                 o.uv = quadPoints[id] + 0.5f;
                 
                 //transfer color of particle and global tint to vertex
-                o.color = float4(particles[inst].color, 1) * _TintColor * 10000 / (dist * dist);
+                o.color = float4(particles[inst].color, 1) * _TintColor * pow(100, _DistanceIntensityExponent) / pow(dist, _DistanceIntensityExponent);
 				o.screenPos = ComputeScreenPos(o.pos);
                 
                 return o;
@@ -108,6 +112,8 @@
             float4 _TintColor;
             float _EmissionGain;
 			float _Power;
+			float _DistanceSizeExponent;
+			float _DistanceIntensityExponent;
             
             struct v2f 
             {
@@ -131,14 +137,14 @@
                 float4 cameraSpacePosition = mul(UNITY_MATRIX_V, float4(worldPosition, 1.0f));
                 //cameraSpacePosition.w /= dist;
                 
-                float3 quadPoint = float3(quadPoints[id].xy, 0.0f) * particles[inst].size * dist;
+                float3 quadPoint = float3(quadPoints[id].xy, 0.0f) * particles[inst].size * pow(dist, _DistanceSizeExponent) / pow(100, _DistanceSizeExponent);
                 o.pos = mul(UNITY_MATRIX_P, cameraSpacePosition + float4(quadPoint, 0.0f));
                 
                 //Shift coordinates for uvs
                 o.uv = quadPoints[id] + 0.5f;
                 
                 //transfer color of particle and global tint to vertex
-                o.color = float4(particles[inst].color * _TintColor.rgb, 10000 / (dist * dist));
+                o.color = float4(particles[inst].color * _TintColor.rgb, pow(100, _DistanceIntensityExponent) / pow(dist, _DistanceIntensityExponent));
 				o.screenPos = ComputeScreenPos(o.pos);
                 
                 return o;

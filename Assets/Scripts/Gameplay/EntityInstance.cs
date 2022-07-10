@@ -46,7 +46,7 @@ public class EntityInstance : MonoBehaviour
     private Sensor _sensor;
     private Transform _influenceInstance;
 
-    private List<(GameObject source, EquippedItem item)> _audioSources = new List<(GameObject source, EquippedItem item)>();
+    //private List<(GameObject source, EquippedItem item)> _audioSources = new List<(GameObject source, EquippedItem item)>();
     // private (Reactor reactor, GameObject sfxSource) _reactor;
     // private Dictionary<Radiator, GameObject> _radiatorSfx = new Dictionary<Radiator, GameObject>();
     
@@ -242,17 +242,6 @@ public class EntityInstance : MonoBehaviour
                 if (hardpointTransform != null)
                 {
                     var hardpointGameObject = hardpointTransform.gameObject;
-                    _audioSources.Add((hardpointGameObject, item));
-                    AkSoundEngine.RegisterGameObj(hardpointGameObject);
-                    ActionGameManager.LoadSoundbank(item.Data.SoundBank);
-                    _subscriptions.Add(item.AudioEvents.Subscribe(e=>AkSoundEngine.PostEvent(e, hardpointGameObject)));
-                    _subscriptions.Add(item.AudioParameters.Subscribe(p=>AkSoundEngine.SetRTPCValue(p.id, p.v, hardpointGameObject)));
-                    var soundBank = ActionGameManager.SoundBanksInfo.GetSoundBank(item.Data.SoundBank);
-                    item.SoundBank = soundBank;
-                    if (soundBank.GetEvent(LoopingAudioEvent.Play) != null && soundBank.GetEvent(ChargedWeaponAudioEvent.Start) == null)
-                    {
-                        AkSoundEngine.PostEvent(soundBank.GetEvent(LoopingAudioEvent.Play).Id, hardpointGameObject);
-                    }
                 }
             }
         }
@@ -469,10 +458,6 @@ public class EntityInstance : MonoBehaviour
 
     public virtual void Update()
     {
-        foreach (var (source, item) in _audioSources)
-        {
-            AkSoundEngine.SetObjectPosition(source, source.transform);
-        }
         if (_currentPing.transform)
         {
             _currentPing.transform.localScale = _sensor.PingRadius * Vector3.one;
@@ -536,15 +521,6 @@ public class EntityInstance : MonoBehaviour
     {
         if (_influenceInstance) Destroy(_influenceInstance.gameObject);
         Destroy(LocalSpace.gameObject);
-        foreach (var (source, item) in _audioSources)
-        {
-            var soundBank = ActionGameManager.SoundBanksInfo.GetSoundBank(item.Data.SoundBank);
-            if (soundBank.GetEvent(LoopingAudioEvent.Stop) != null)
-            {
-                AkSoundEngine.PostEvent(soundBank.GetEvent(LoopingAudioEvent.Stop).Id, source);
-            }
-            AkSoundEngine.UnregisterGameObj(source);
-        }
         foreach(var x in _subscriptions)
             x.Dispose();
     }

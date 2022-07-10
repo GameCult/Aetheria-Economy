@@ -48,7 +48,6 @@ public class InventoryMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        AkSoundEngine.RegisterGameObj(gameObject);
         // Background.gameObject.SetActive(true);
 
         // Background.OnEnter.Subscribe(enter =>
@@ -70,7 +69,6 @@ public class InventoryMenu : MonoBehaviour
 
     private void OnDisable()
     {
-        AkSoundEngine.UnregisterGameObj(gameObject);
         // Background.gameObject.SetActive(false);
     }
 
@@ -92,12 +90,13 @@ public class InventoryMenu : MonoBehaviour
                             if (otherPanel.CanDropItem(item))
                             {
                                 otherPanel.DropItem(item);
-                                AkSoundEngine.PostEvent("Equip", gameObject);
+                                // TODO: SFX: Equip
                                 cargoEvent.CargoBay.Remove(item);
                                 panel.RefreshCells();
                                 otherPanel.RefreshCells();
                             }
-                            else AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                            // else
+                            // TODO: SFX: Fail
                         }
                         else
                         {
@@ -124,7 +123,7 @@ public class InventoryMenu : MonoBehaviour
                                 var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
                                 _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
                             }
-                            AkSoundEngine.PostEvent("UI_Success", gameObject);
+                            // TODO: SFX: Success
                         }
                     }
                 }
@@ -143,13 +142,15 @@ public class InventoryMenu : MonoBehaviour
                                     if (entityEvent.Entity.TryUnequip(item) != null)
                                     {
                                         otherPanel.DropItem(item.EquippableItem);
-                                        AkSoundEngine.PostEvent("Unequip", gameObject);
+                                        // TODO: SFX: Unequip
                                         panel.RefreshCells();
                                         otherPanel.RefreshCells();
                                     }
-                                    else AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                                    // else
+                                    // TODO: SFX: Fail
                                 }
-                                else AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                                // else
+                                // TODO: SFX: Fail
                             }
                         }
                         else
@@ -176,7 +177,7 @@ public class InventoryMenu : MonoBehaviour
                                 var v2 = _selectedItemData.Shape.Rotate(v, _selectedItem.Rotation) + _selectedPosition;
                                 _selectedPanel.CellInstances[v2].Icon.color = _selectedPanel.GetColor(v2, true);
                             }
-                            AkSoundEngine.PostEvent("UI_Success", gameObject);
+                            // TODO: SFX: Success
                         }
                     }
                 }

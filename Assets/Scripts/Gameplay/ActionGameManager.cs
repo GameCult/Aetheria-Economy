@@ -37,45 +37,6 @@ public class ActionGameManager : MonoBehaviour
         get => _gameDataDirectory ??= new DirectoryInfo(Application.dataPath).Parent.CreateSubdirectory("GameData");
     }
 
-    private static WwiseMetaSoundBanksInfo _soundBanksInfo;
-    public static WwiseMetaSoundBanksInfo SoundBanksInfo => _soundBanksInfo ??=
-        JsonConvert.DeserializeObject<WwiseMetadataFile>(File.ReadAllText(Path.Combine(GameDataDirectory.FullName, "SoundbanksInfo.json")))
-            .SoundBanksInfo;
-
-    private static HashSet<uint> _loadedSoundBanks = new HashSet<uint>();
-    public static void LoadSoundbank(uint soundBank)
-    {
-        if (!_loadedSoundBanks.Contains(soundBank))
-        {
-            AkSoundEngine.LoadBank(SoundBanksInfo.GetSoundBank(soundBank).ShortName, out _);
-            _loadedSoundBanks.Add(soundBank);
-        }
-    }
-
-    private static GameObject CurrentMusicGameObject;
-    private static uint CurrentMusicSoundbank;
-    public static void PlayMusic(uint soundBank, GameObject obj)
-    {
-        if (soundBank == CurrentMusicSoundbank) return;
-        if (CurrentMusicSoundbank != 0)
-            AkSoundEngine.PostEvent(SoundBanksInfo.GetSoundBank(CurrentMusicSoundbank)
-                    .GetEvent(LoopingAudioEvent.Stop).Id, CurrentMusicGameObject);
-        LoadSoundbank(soundBank);
-        CurrentMusicGameObject = obj;
-        CurrentMusicSoundbank = soundBank;
-        AkSoundEngine.PostEvent(SoundBanksInfo.GetSoundBank(CurrentMusicSoundbank)
-            .GetEvent(LoopingAudioEvent.Play).Id, CurrentMusicGameObject);
-    }
-
-    public static void StopMusic()
-    {
-        if (CurrentMusicSoundbank != 0)
-            AkSoundEngine.PostEvent(SoundBanksInfo.GetSoundBank(CurrentMusicSoundbank)
-                .GetEvent(LoopingAudioEvent.Stop).Id, CurrentMusicGameObject);
-        CurrentMusicGameObject = null;
-        CurrentMusicSoundbank = 0;
-    }
-
     private static CultCache _cultCache;
 
     public static CultCache CultCache
@@ -281,13 +242,6 @@ public class ActionGameManager : MonoBehaviour
     private void OnDisable()
     {
         Input.Dispose();
-        var ambience = SoundBanksInfo.GetSoundBank(Settings.AmbienceSoundBank);
-        foreach (var stopEvent in ambience.IncludedEvents.Where(e => e.Name.EndsWith("_stop")))
-        {
-            AkSoundEngine.PostEvent(stopEvent.Id, gameObject);
-        }
-        StopMusic();
-        AkSoundEngine.UnregisterGameObj(gameObject);
         ConsoleController.ClearCommands();
         EntityInstance.ClearWeaponManagers();
     }
@@ -296,15 +250,7 @@ public class ActionGameManager : MonoBehaviour
     {
         Instance = this;
         EntityInstance.EffectManagerParent = EffectManagerParent;
-        AkSoundEngine.RegisterGameObj(gameObject);
         ConsoleController.MessageReceiver = this;
-
-        var ambience = SoundBanksInfo.GetSoundBank(Settings.AmbienceSoundBank);
-        LoadSoundbank(ambience.Id);
-        foreach (var playEvent in ambience.IncludedEvents.Where(e => e.Name.EndsWith("_play")))
-        {
-            AkSoundEngine.PostEvent(playEvent.Id, gameObject);
-        }
         
         ItemManager = new ItemManager(CultCache, Settings.GameplaySettings, Debug.Log);
         ZoneRenderer.ItemManager = ItemManager;
@@ -345,7 +291,7 @@ public class ActionGameManager : MonoBehaviour
             if (MainMenu.gameObject.activeSelf) return;
             if (CurrentEntity == null)
             {
-                AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                // TODO: SFX: Fail
                 Dialog.Clear();
                 Dialog.Title.text = "Can't undock. You dont have a ship!";
                 Dialog.Show();
@@ -387,7 +333,7 @@ public class ActionGameManager : MonoBehaviour
         Input.Player.ToggleHeatsinks.performed += context =>
         {
             CurrentEntity.HeatsinksEnabled = !CurrentEntity.HeatsinksEnabled;
-            AkSoundEngine.PostEvent(CurrentEntity.HeatsinksEnabled ? "UI_Success" : "UI_Fail", gameObject);
+            // TODO: SFX: Success/Fail
         };
 
         Input.Player.ToggleShield.performed += context =>
@@ -395,7 +341,7 @@ public class ActionGameManager : MonoBehaviour
             if (CurrentEntity.Shield != null)
             {
                 CurrentEntity.Shield.Item.Enabled.Value = !CurrentEntity.Shield.Item.Enabled.Value;
-                AkSoundEngine.PostEvent(CurrentEntity.Shield.Item.Enabled.Value ? "UI_Success" : "UI_Fail", gameObject);
+                // TODO: SFX: Success/Fail
             }
         };
 
@@ -856,7 +802,8 @@ public class ActionGameManager : MonoBehaviour
                     {
                         UnbindEntity();
                         DoDock(entity, bay);
-                        AkSoundEngine.PostEvent("Dock", gameObject);
+                        // TODO: SFX: Docking
+                        //AkSoundEngine.PostEvent("Dock", gameObject);
                         return;
                     }
                 }
@@ -895,7 +842,7 @@ public class ActionGameManager : MonoBehaviour
                 Dialog.Title.text = "Can't undock. Missing cockpit component!";
                 Dialog.Show();
                 Dialog.MoveToCursor();
-                AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                // TODO: SFX: Fail
             }
             else if (CurrentEntity.GetBehavior<Thruster>() == null && CurrentEntity.GetBehavior<AetherDrive>() == null)
             {
@@ -903,7 +850,7 @@ public class ActionGameManager : MonoBehaviour
                 Dialog.Title.text = "Can't undock. Missing thruster component!";
                 Dialog.Show();
                 Dialog.MoveToCursor();
-                AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                // TODO: SFX: Fail
             }
             else if (CurrentEntity.GetBehavior<Reactor>() == null)
             {
@@ -911,19 +858,19 @@ public class ActionGameManager : MonoBehaviour
                 Dialog.Title.text = "Can't undock. Missing reactor component!";
                 Dialog.Show();
                 Dialog.MoveToCursor();
-                AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                // TODO: SFX: Fail
             }
             else if (CurrentEntity.Parent.TryUndock(ship))
             {
                 BindToEntity(ship);
-                AkSoundEngine.PostEvent("Undock", gameObject);
+                // TODO: SFX: Undock
             }
             else
             {
                 Dialog.Title.text = "Can't undock. Must empty docking bay!";
                 Dialog.Show();
                 Dialog.MoveToCursor();
-                AkSoundEngine.PostEvent("UI_Fail", gameObject);
+                // TODO: SFX: Fail
             }
         }
     }
@@ -1190,22 +1137,7 @@ public class ActionGameManager : MonoBehaviour
 
     public void PlayMusic(MusicType type)
     {
-        var soundbank = type switch
-        {
-            MusicType.Overworld => Zone.GalaxyZone.Owner?.OverworldMusic ?? 0,
-            MusicType.Combat => Zone.GalaxyZone.Owner?.CombatMusic ?? 0,
-            MusicType.Boss => Zone.GalaxyZone.Owner?.BossMusic ?? 0,
-            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-        };
-        if (soundbank == 0)
-            soundbank = type switch
-            {
-                MusicType.Overworld => SoundBanksInfo.GetSoundBank(Settings.DefaultOverworldSoundbank).Id,
-                MusicType.Combat => SoundBanksInfo.GetSoundBank(Settings.DefaultCombatSoundbank).Id,
-                MusicType.Boss => SoundBanksInfo.GetSoundBank(Settings.DefaultBossSoundbank).Id,
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
-            };
-        PlayMusic(soundbank, gameObject);
+        // TODO: SFX: Music
     }
 
     void Update()
