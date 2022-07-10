@@ -67,26 +67,6 @@ uniform half _NebulaFillDensity,
 float tri(in float x){return abs(frac(x)-.5);}
 float3 tri3(in float3 p){return float3( tri(p.z+tri(p.y*1.)), tri(p.z+tri(p.x*1.)), tri(p.y+tri(p.x*1.)));}
 
-// float tri3l(in float3 p)
-// {
-//     float z=1.4;
-//     float rz = 0.;
-//     float3 bp = p;
-//     for (float i=0.; i<=4.; i++ )
-//     {
-//         float3 dg = tri3(bp * 2.);
-//         p = (p + dg + _Time.y * _NoiseSpeed);
-//
-//         bp *= 1.8;
-//         z *= 1.5;
-//         p *= 1.2;
-// 	        
-//         return (tri(p.z+tri(p.x+tri(p.y))))/2;
-//         bp += 0.14;
-//     }
-//     return rz;
-// }
-
 float triNoise3d(in float3 p)
 {
     float z=1.4;
