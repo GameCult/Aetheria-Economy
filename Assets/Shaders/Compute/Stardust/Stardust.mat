@@ -60,10 +60,10 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DistanceIntensityExponent: 1
-    - _DistanceSizeExponent: 0.1
+    - _DistanceIntensityExponent: 3.5
+    - _DistanceSizeExponent: 0.5
     - _DstBlend: 0
-    - _EmissionGain: 0.156
+    - _EmissionGain: 0.268
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -71,7 +71,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Power: 0.5
+    - _Power: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -80,5 +80,5 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _TintColor: {r: 5.992157, g: 5.992157, b: 5.992157, a: 1}
+    - _TintColor: {r: 1.4980392, g: 1.4980392, b: 1.4980392, a: 1}
   m_BuildTextureStacks: []

@@ -10,10 +10,12 @@ float GetDensity(float3 startPos, float3 dir, float maxSampleDistance, float ray
 	[loop]
 	for (int j = 0; j < SAMPLE_COUNT; j++) {
 		float prevRayDist = raymarchDistance;
-		raymarchDistance = pow((j+raymarchOffset)/SAMPLE_COUNT,2) * maxSampleDistance;
+		raymarchDistance = pow((j+raymarchOffset)/SAMPLE_COUNT,2) * _ProjectionParams.z;
+		if(raymarchDistance > maxSampleDistance) break;
 		float step = raymarchDistance - prevRayDist;
 		float3 rayPos = startPos + dir * raymarchDistance;
-		IntegrateRaymarch(startPos, rayPos, dir, step, result);
+		float fade = smoothstep(_ProjectionParams.z*.75,_ProjectionParams.z*.95, raymarchDistance);
+		IntegrateRaymarch(startPos, rayPos, fade, step, result);
 		if (result.intTransmittance < 0.01f) {
 			result.intTransmittance = 0;
 			break;

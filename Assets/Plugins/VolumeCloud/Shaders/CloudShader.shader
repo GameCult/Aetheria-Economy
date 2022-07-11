@@ -45,8 +45,7 @@ Shader "Yangrc/CloudShader"
 		{
 
 			CGINCLUDE
-			float GetRaymarchEndFromSceneDepth(float sceneDepth) {
-				float raymarchEnd = 0.0f;
+			float GetRaymarchEndFromSceneDepth(float sceneDepth, out float raymarchEnd) {
 	#if ALLOW_CLOUD_FRONT_OBJECT
 				raymarchEnd = sceneDepth * _ProjectionParams.z;	//raymarch to scene depth.
 	#else
@@ -54,7 +53,7 @@ Shader "Yangrc/CloudShader"
 				//Note: In horizon:zero dawn, they clip some part using lod(use max operator) z-buffer. 
 				//I don't implement here cause that's exactly what hi-z buffer does, and any production rendering pipeline should share a hi-z buffer by their own.
 	#endif
-				return raymarchEnd;
+				return sceneDepth<.99;
 			}
 			ENDCG
 
@@ -126,7 +125,8 @@ Shader "Yangrc/CloudShader"
 				worldPos /= worldPos.w;
 				
 				float sceneDepth = Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenPos)).r);
-				float raymarchEnd = GetRaymarchEndFromSceneDepth(sceneDepth);
+				float raymarchEnd;
+				bool occluded = GetRaymarchEndFromSceneDepth(sceneDepth, raymarchEnd);
 				float3 viewDir = normalize(worldPos.xyz - _WorldSpaceCameraPos);
 
 				float2 screenPos = i.screenPos.xy / i.screenPos.w;
@@ -142,8 +142,9 @@ Shader "Yangrc/CloudShader"
 				int iteration_count;
 				float density = HierarchicalRaymarch(worldPos, viewDir, raymarchEnd, offset, /*out*/intensity, /*out*/distance, /*out*/iteration_count);
 #else
-				float density = GetDensity(worldPos, viewDir, raymarchEnd, offset, /*out*/intensity, /*out*/distance);
+				float density = GetDensity(_WorldSpaceCameraPos, viewDir, raymarchEnd, offset, /*out*/intensity, /*out*/distance);
 #endif
+				if(!occluded) density = 1;
 				return float4(intensity, pack(distance, density));
 			}
 
@@ -269,7 +270,7 @@ Shader "Yangrc/CloudShader"
 							}
 						}
 						//Code from https://zhuanlan.zhihu.com/p/64993622.
-						float gamma = 1.5f;
+						float gamma = 0.5f;
 						float4 mu = m1 / 9;
 						float4 sigma = sqrt(abs(m2 / 9 - mu * mu));
 						float4 minc = mu - gamma * sigma;
@@ -277,7 +278,7 @@ Shader "Yangrc/CloudShader"
 						prevSample = ClipAABB(minc, maxc, prevSample);	
 					
 						//Blend
-						raymarchResult = lerp(float4(prevSample.rgb, density), float4(raymarchResult.rgb, density2), max(0.1f, outOfBound));
+						raymarchResult = lerp(float4(prevSample.rgb, density), float4(raymarchResult.rgb, density2), max(0.05f, outOfBound));
 					}
 					return 	raymarchResult;
 				}
@@ -338,7 +339,7 @@ Shader "Yangrc/CloudShader"
 				half4 frag(v2f i) : SV_Target
 				{
 					float3 vspos = float3(i.vsray, 1.0);
-					float4 worldPos = mul(unity_CameraToWorld,float4(vspos,1.0));
+					//float4 worldPos = mul(unity_CameraToWorld,float4(vspos,1.0));
 
 					half4 mcol = tex2D(_MainTex,i.uv);
 					float4 currSample = tex2D(_CloudTex, i.uv);
@@ -351,7 +352,7 @@ Shader "Yangrc/CloudShader"
 					float4 result;
 					result = currSample;
 
-					return half4(mcol.rgb * (1 - result.a) + result.rgb * result.a, 1);
+					return half4(mcol.rgb * (1 - result.a) + result.rgb, 1);
 				}
 					ENDCG
 				}

@@ -23,7 +23,7 @@ public class VolumeSampling : MonoBehaviour
     //public int DownsampleBlurMask = 2;
     private Camera _camera;
     private RenderBuffer[] _mrt;
-    private RenderTexture _blurMask;
+    private Texture2D _blurMask;
     private Texture2D _disabledBlurMask;
     private float _flowScroll;
 
@@ -40,15 +40,13 @@ public class VolumeSampling : MonoBehaviour
         //Debug.Log($"Supported MRT count: {SystemInfo.supportedRenderTargetCount}");
         _camera = GetComponent<Camera>();
         _mrt = new RenderBuffer[2];
-        _blurMask = new RenderTexture(Screen.width, Screen.height, 0, GraphicsFormat.R8_UNorm);
+        //_blurMask = new RenderTexture(Screen.width, Screen.height, 0, GraphicsFormat.R8_UNorm);
+        _blurMask = Color.white.ToTexture();
         _disabledBlurMask = Color.black.ToTexture();
     }
 
     private void OnPreRender()
     {
-        // Shader needs this matrix to generate world space rays
-        Shader.SetGlobalMatrix("_CamProj", (Camera.current.projectionMatrix * Camera.current.worldToCameraMatrix).inverse);
-        Shader.SetGlobalMatrix("_CamInvProj", (Camera.current.projectionMatrix * Camera.current.worldToCameraMatrix).inverse);
     }
 
     //[ImageEffectOpaque]
@@ -66,6 +64,9 @@ public class VolumeSampling : MonoBehaviour
         if(GridTransform != null)
             Shader.SetGlobalVector("_GridTransform", new Vector4(GridTransform.position.x,GridTransform.position.z,GridTransform.localScale.x));
         //
+        // Shader needs this matrix to generate world space rays
+        // Shader.SetGlobalMatrix("_CamProj", (Camera.current.projectionMatrix * Camera.current.worldToCameraMatrix).inverse);
+        // Shader.SetGlobalMatrix("_CamInvProj", (Camera.current.projectionMatrix * Camera.current.worldToCameraMatrix).inverse);
         // _mrt[0] = destination.colorBuffer;
         // _mrt[1] = _blurMask.colorBuffer;
         //
@@ -87,7 +88,6 @@ public class VolumeSampling : MonoBehaviour
         Shader.SetGlobalTexture("_NebulaTint", NebulaTint);
         
         Shader.SetGlobalFloat("_NebulaFillDensity", Settings.DefaultEnvironment.Nebula.FillDensity);
-        Shader.SetGlobalFloat("_SafetyDistance", Settings.DefaultEnvironment.Nebula.FillDistance);
         Shader.SetGlobalFloat("_NebulaFloorDensity", Settings.DefaultEnvironment.Nebula.FloorDensity);
         Shader.SetGlobalFloat("_NebulaPatchDensity", Settings.DefaultEnvironment.Nebula.PatchDensity);
         Shader.SetGlobalFloat("_NebulaFloorOffset", Settings.DefaultEnvironment.Nebula.FloorOffset);

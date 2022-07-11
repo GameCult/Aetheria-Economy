@@ -290,7 +290,7 @@ void InitRaymarchStatus(inout RaymarchStatus result){
 	result.depth = 0.0f;
 }
 
-void IntegrateRaymarch(float3 startPos, float3 rayPos, float3 viewdir, float stepsize, inout RaymarchStatus result){
+void IntegrateRaymarch(float3 startPos, float3 rayPos, float fade, float stepsize, inout RaymarchStatus result){
 	float4 c = VolumeSampleColor(rayPos);
 	float density = c.a;//SampleDensity(rayPos, 0, false, wetness);
 	if (density <= 0.0f)
@@ -299,8 +299,8 @@ void IntegrateRaymarch(float3 startPos, float3 rayPos, float3 viewdir, float ste
 
 	float clampedExtinction = max(extinction, 1e-7);
 	float transmittance = exp(-extinction * stepsize);
-			
-	float3 luminance = c.rgb;//SampleEnergy(rayPos, viewdir);
+	
+	float3 luminance = c.rgb * (1-fade);//SampleEnergy(rayPos, viewdir);
 	float3 integScatt = (luminance - luminance * transmittance) / clampedExtinction;
 	float depthWeight = result.intTransmittance * (1-transmittance);		//Is it a better idead to use (1-transmittance) * intTransmittance as depth weight?
 

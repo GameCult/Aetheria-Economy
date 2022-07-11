@@ -5177,7 +5177,7 @@ MonoBehaviour:
     FieldOfView: 60
     OrthographicSize: 5
     NearClipPlane: 0.3
-    FarClipPlane: 4096
+    FarClipPlane: 2048
     Dutch: 0
     LensShift: {x: 0, y: 0}
   m_Transitions:
@@ -13660,7 +13660,7 @@ MonoBehaviour:
     FieldOfView: 60
     OrthographicSize: 5
     NearClipPlane: 0.3
-    FarClipPlane: 8192
+    FarClipPlane: 4096
     Dutch: 0
     LensShift: {x: 0, y: 0}
   m_Transitions:
@@ -15934,6 +15934,7 @@ GameObject:
   - component: {fileID: 1009503731}
   - component: {fileID: 1009503735}
   - component: {fileID: 1009503736}
+  - component: {fileID: 1009503728}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -15941,6 +15942,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1009503728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1009503727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13f1fa636e0245e42be783568a76e3d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NoiseTexture: {fileID: 2800000, guid: 7c0a392de8821f345824a79dea0d0d41, type: 3}
 --- !u!114 &1009503729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16062,7 +16076,7 @@ MonoBehaviour:
   - {fileID: 2095741464}
   FogMaterial: {fileID: 2100000, guid: 2ff39f5d101241043ba1dcde19d92f77, type: 2}
   FogFarFadeFraction: 0.125
-  FarPlaneDistanceMultiplier: 2
+  FarPlaneDistanceMultiplier: 1
   AsteroidMeshes:
   - Mesh: {fileID: 4300004, guid: bdb4c719a85f3f2419f6c573dd1daf15, type: 3}
     Material: {fileID: 2100000, guid: ce975d2d2ccd0914b9260b7d66319aaa, type: 2}
@@ -16167,17 +16181,17 @@ MonoBehaviour:
   TargetCamera: {fileID: 2115559089}
   ParticleCalculation: {fileID: 7200000, guid: f53a4ba56f0db2a49ad9f68150bf298a, type: 3}
   ParticleMaterial: {fileID: 2100000, guid: fc00c35c3c370774c88d55240b6538ce, type: 2}
-  Span: 256
-  Speed: -0.25
-  MinimumSize: 0.0025
-  MaximumSize: 0.005
-  Spacing: 1.5
-  Ceiling: -430
-  Floor: -50
-  HeightExponent: 100000
+  Span: 128
+  Speed: -0.15
+  MinimumSize: 0
+  MaximumSize: 0.5
+  Spacing: 6
+  Ceiling: -200
+  Floor: -40
+  HeightExponent: 1000000
   NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
-  NebulaPatchHeight: {fileID: 8400000, guid: 06ec5ef8a5830fc44b1ac1a6e123add5, type: 2}
-  NebulaPatch: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
+  NebulaPatchHeight: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
+  NebulaPatch: {fileID: 8400000, guid: 06ec5ef8a5830fc44b1ac1a6e123add5, type: 2}
   NebulaTint: {fileID: 8400000, guid: d196505464047f04a97f28689041209b, type: 2}
   Heightmap: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   ParticleColors: {fileID: 2800000, guid: 56db63da398b2d04394ddbccedce943c, type: 3}
@@ -30679,7 +30693,6 @@ GameObject:
   - component: {fileID: 2115559092}
   - component: {fileID: 2115559093}
   - component: {fileID: 2115559094}
-  - component: {fileID: 2115559095}
   - component: {fileID: 2115559088}
   m_Layer: 0
   m_Name: Main Camera
@@ -30697,11 +30710,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 2115559087}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ae335524e949404bb57f1612ec4b9b5, type: 3}
+  m_Script: {fileID: 11500000, guid: 9f1db61281524fb40bc9a1f6acce6baf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDefaultListener: 1
-  listenerId: 0
+  configuration: {fileID: 11400000, guid: a15886e93ac3e7847861da392782f13d, type: 2}
+  downSample: 0
+  quality: 0
+  allowCloudFrontObject: 1
+  useApSystem: 0
+  useHierarchicalHeightMap: 0
+  cloudShader: {fileID: 4800000, guid: 84e97169589c5e94e8521fe4deb2e3f8, type: 3}
+  heightPreprocessShader: {fileID: 7200000, guid: 40276bd53f35a694e8d4e025ca310775,
+    type: 3}
+  cloudHeightProcessShader: {fileID: 4800000, guid: b80bf04ca56d3d642a6b925cff3f5ddf,
+    type: 3}
 --- !u!20 &2115559089
 Camera:
   m_ObjectHideFlags: 0
@@ -30726,7 +30748,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 4096
+  far clip plane: 2048
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -30779,7 +30801,7 @@ MonoBehaviour:
   finalBlitToCameraTarget: 0
   antialiasingMode: 3
   temporalAntialiasing:
-    jitterSpread: 1
+    jitterSpread: 0.1
     sharpness: 0
     stationaryBlending: 0.99
     motionBlending: 0.99
@@ -30889,28 +30911,6 @@ MonoBehaviour:
   _shader: {fileID: 4800000, guid: 2d020ca820b3647479e78b8c3d26e3a6, type: 3}
   _downSampleMode: 2
   _iteration: 4
---- !u!114 &2115559095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2115559087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f27db6b94e477054e96392f94dc50c9d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_listeners:
-    initialListenerList: []
-    useDefaultListeners: 1
-  isEnvironmentAware: 0
-  isStaticObject: 0
-  m_positionOffsetData:
-    KeepMe: 0
-    positionOffset: {x: 0, y: 0, z: 0}
-  m_posOffsetData: {fileID: 0}
-  listenerMask: 1
 --- !u!1 &2117796865
 GameObject:
   m_ObjectHideFlags: 0

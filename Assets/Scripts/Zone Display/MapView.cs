@@ -58,22 +58,22 @@ public class MapView : MonoBehaviour
 
     void SetZoom()
     {
-        ZoneRenderer.ViewDistance = _viewDistance * _aspectRatio;
+        //ZoneRenderer.ViewDistance = _viewDistance * _aspectRatio;
         Minimap.orthographicSize = MinimapGravity.orthographicSize = _viewDistance;
         _gravityRendererTransform.localScale = new Vector3(_viewDistance*_aspectRatio*2, _viewDistance*2, 1);
     }
 
-    public void BindInput(AetheriaInput.UIActions input)
-    {
-        _input = input;
-        _input.ScrollWheel.performed += OnScroll;
-    }
+    // public void BindInput(AetheriaInput.UIActions input)
+    // {
+    //     _input = input;
+    //     _input.ScrollWheel.performed += OnScroll;
+    // }
 
-    private void OnScroll(InputAction.CallbackContext context)
-    {
-        _viewDistance *= (1 - context.ReadValue<Vector2>().y * ZoomSpeed);
-        SetZoom();
-    }
+    // private void OnScroll(InputAction.CallbackContext context)
+    // {
+    //     _viewDistance *= (1 - context.ReadValue<Vector2>().y * ZoomSpeed);
+    //     SetZoom();
+    // }
 
     void Update()
     {
@@ -96,7 +96,7 @@ public class MapView : MonoBehaviour
 
     private void OnDisable()
     {
-        _input.ScrollWheel.performed -= OnScroll;
+        // _input.ScrollWheel.performed -= OnScroll;
         
         Main.gameObject.SetActive(true);
         _minimapGravityCopyTransform.enabled = true;

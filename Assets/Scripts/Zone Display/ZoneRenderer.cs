@@ -439,12 +439,12 @@ public class ZoneRenderer : MonoBehaviour
             loot.ViewDirection = PerspectiveEntity.LookDirection;
         }
         
-        if (SlimeRenderer.SpawnPositions.Length != _suns.Length)
-            SlimeRenderer.SpawnPositions = new Vector2[_suns.Length];
-        for (var i = 0; i < _suns.Length; i++)
-        {
-            SlimeRenderer.SpawnPositions[i] = _suns[i].Body.transform.position.Flatland();
-        }
+        // if (SlimeRenderer.SpawnPositions.Length != _suns.Length)
+        //     SlimeRenderer.SpawnPositions = new Vector2[_suns.Length];
+        // for (var i = 0; i < _suns.Length; i++)
+        // {
+        //     SlimeRenderer.SpawnPositions[i] = _suns[i].Body.transform.position.Flatland();
+        // }
 
         foreach (var belt in Zone.AsteroidBelts)
         {
@@ -518,8 +518,8 @@ public class ZoneRenderer : MonoBehaviour
         var depthRange = Settings.PlanetSettings.ZoneDepth - startDepth + _maxDepth;
         // MinimapGravityQuad.material.SetFloat("_StartDepth", startDepth);
         // MinimapGravityQuad.material.SetFloat("_DepthRange", depthRange);
-        FogMaterial.SetFloat("_GridOffset", Settings.PlanetSettings.ZoneBoundaryFog);
-        FogMaterial.SetVector("_GridTransform", new Vector4(fogPos.x, fogPos.z, _viewDistance * 2));
+        Shader.SetGlobalFloat("_GridOffset", Settings.PlanetSettings.ZoneBoundaryFog);
+        Shader.SetGlobalVector("_GridTransform", new Vector4(fogPos.x, fogPos.z, _viewDistance * 2));
         // var gravPos = MinimapGravityQuad.transform.position;
         // gravPos.y = -Settings.PlanetSettings.ZoneDepth - _maxDepth;
         // MinimapGravityQuad.transform.position = gravPos;

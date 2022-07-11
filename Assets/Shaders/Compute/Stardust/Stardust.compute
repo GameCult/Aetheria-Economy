@@ -127,15 +127,15 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 		x * spacing + xt * spacing + perlinNoise1D(RandomValue()*1024)*spacing, 0,
 		y * spacing + yt * spacing + perlinNoise1D(RandomValue()*1024)*spacing);
 	const float2 puv = float2(.5,.5) - (particles[id.x].position.xz - _GridTransform.xy) / _GridTransform.z;
-	const float gravDepth = Heightmap.SampleLevel(samplerHeightmap, puv, 0.0f).r + _NebulaFloorOffset;
-	const float headroom = ceilingHeight + gravDepth;
-	particles[id.x].position.y = -gravDepth + floorHeight + headroom *
+	const float gravHeight = -Heightmap.SampleLevel(samplerHeightmap, puv, 0.0f).r + _NebulaFloorOffset;
+	const float headroom = ceilingHeight - gravHeight;
+	particles[id.x].position.y = gravHeight + floorHeight + headroom *
 			pow(RandomValue(), max(1, heightExponent/(headroom*headroom))) +
 			perlinNoise1D(RandomValue()*1024)*spacing/2;
 	float noise;
 	const float3 flowDir = flow(particles[id.x].position, noise);
 	particles[id.x].position += flowDir * (lifetime * noise);
-	const float density = pow(d(particles[id.x].position) + .01, .25);
+	const float density = pow(f(particles[id.x].position) + .01, 0.15);
 	particles[id.x].size = lerp(minimumSize, maximumSize, saturate(RandomValue() * density)) * parabola(lifetime, 2);
 	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomValue(), 0.0f), 0.0f).rgb * density;
 }
