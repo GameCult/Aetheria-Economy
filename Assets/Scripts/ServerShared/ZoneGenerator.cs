@@ -277,6 +277,7 @@ public static class ZoneGenerator
 	        };
 	        pack.Orbits.Add(turretOrbit);
 	        var turret = loadoutGenerator.GenerateTurretLoadout();
+	        if (turret == null) return;
 	        turret.Orbit = turretOrbit.ID;
 	        pack.Entities.Add(turret);
         }
@@ -313,6 +314,7 @@ public static class ZoneGenerator
 
 	        var lagrangeOrbit = CreateLagrangeOrbit(orbit);
 	        var station = GetLoadoutGenerator(nearestFaction).GenerateStationLoadout();
+	        if (station == null) continue;
 	        station.Orbit = lagrangeOrbit.ID;
 	        station.SecurityLevel = security;
 	        station.SecurityRadius = pack.Radius;
@@ -324,7 +326,9 @@ public static class ZoneGenerator
         var enemyCount = (int)(random.NextFloat() * factionPresence * 2) + stationCount;
         for (int i = 0; i < enemyCount; i++)
         {
-	        pack.Entities.Add(GetLoadoutGenerator(nearestFaction).GenerateShipLoadout());
+	        var ship = GetLoadoutGenerator(nearestFaction).GenerateShipLoadout();
+	        if (ship == null) continue;
+	        pack.Entities.Add(ship);
         }
 
         return pack;

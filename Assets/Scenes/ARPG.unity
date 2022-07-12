@@ -16184,11 +16184,11 @@ MonoBehaviour:
   Span: 128
   Speed: -0.15
   MinimumSize: 0
-  MaximumSize: 0.5
+  MaximumSize: 0.75
   Spacing: 6
-  Ceiling: -200
-  Floor: -40
-  HeightExponent: 1000000
+  Ceiling: -300
+  Floor: -20
+  HeightExponent: 100000
   NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   NebulaPatchHeight: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
   NebulaPatch: {fileID: 8400000, guid: 06ec5ef8a5830fc44b1ac1a6e123add5, type: 2}

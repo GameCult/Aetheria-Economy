@@ -46,6 +46,11 @@ public class LoadoutGenerator
     public EntityPack GenerateShipLoadout(Predicate<HullData> hullFilter = null)
     {
         var hullData = RandomHull(HullType.Ship, hullFilter);
+        if(hullData==null)
+        {
+            ItemManager.Log("Unable to generate ship loadout: no compatible hull found!");
+            return null;
+        }
         var hull = ItemManager.CreateInstance(hullData) as EquippableItem;
         if(hull==null)
             ItemManager.Log("WHAT???");
@@ -57,7 +62,13 @@ public class LoadoutGenerator
 
     public OrbitalEntityPack GenerateTurretLoadout()
     {
-        var hull = ItemManager.CreateInstance(RandomHull(HullType.Turret)) as EquippableItem;
+        var hullData = RandomHull(HullType.Turret);
+        if(hullData==null)
+        {
+            ItemManager.Log("Unable to generate turret loadout: no compatible hull found!");
+            return null;
+        }
+        var hull = ItemManager.CreateInstance(hullData) as EquippableItem;
         var entity = new OrbitalEntity(ItemManager, null, hull, Guid.Empty, ItemManager.GameplaySettings.DefaultEntitySettings);
         entity.Faction = Faction;
         OutfitEntity(entity);
@@ -67,6 +78,11 @@ public class LoadoutGenerator
     public OrbitalEntityPack GenerateStationLoadout()
     {
         var hullData = RandomHull(HullType.Station);
+        if(hullData==null)
+        {
+            ItemManager.Log("Unable to generate station loadout: no compatible hull found!");
+            return null;
+        }
         var hull = ItemManager.CreateInstance(hullData) as EquippableItem;
         var entity = new OrbitalEntity(ItemManager, null, hull, Guid.Empty, ItemManager.GameplaySettings.DefaultEntitySettings);
         entity.Faction = Faction;
