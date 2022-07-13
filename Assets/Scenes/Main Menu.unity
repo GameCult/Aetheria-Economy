@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 1.162106, g: 1.162106, b: 1.162106, a: 1}
+  m_IndirectSpecularColor: {r: 0.99999905, g: 0, b: 0.99999905, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -864,9 +864,9 @@ MonoBehaviour:
   MinimumSize: 0
   MaximumSize: 0.5
   Spacing: 6
-  Ceiling: 200
-  Floor: -10
-  HeightExponent: 300000
+  Ceiling: -0.1
+  Floor: -30
+  HeightExponent: 200000
   NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   NebulaPatchHeight: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
   NebulaPatch: {fileID: 8400000, guid: 06ec5ef8a5830fc44b1ac1a6e123add5, type: 2}
@@ -1333,7 +1333,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c03374f22d0a3d4882018de66894a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VolMaterial: {fileID: 2100000, guid: e21702a5e6e98b7409d6913663ceab7e, type: 2}
   GridTransform: {fileID: 1172538221}
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
@@ -1352,17 +1351,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f1db61281524fb40bc9a1f6acce6baf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  configuration: {fileID: 11400000, guid: a15886e93ac3e7847861da392782f13d, type: 2}
   downSample: 0
   quality: 2
-  allowCloudFrontObject: 1
-  useApSystem: 0
-  useHierarchicalHeightMap: 0
   cloudShader: {fileID: 4800000, guid: 84e97169589c5e94e8521fe4deb2e3f8, type: 3}
-  heightPreprocessShader: {fileID: 7200000, guid: 40276bd53f35a694e8d4e025ca310775,
-    type: 3}
-  cloudHeightProcessShader: {fileID: 4800000, guid: b80bf04ca56d3d642a6b925cff3f5ddf,
-    type: 3}
 --- !u!4 &971662241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7852221720971737233, guid: 046dde0f4600bce41ad33c476f99b309,
