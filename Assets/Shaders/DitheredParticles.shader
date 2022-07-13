@@ -8,66 +8,83 @@ Shader "Aetheria/Dithered Particles"
     {
         [HDR]_Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Albedo (RGB)", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
     }
+    
+    CGINCLUDE
+
+    #include "UnityCG.cginc"
+    #include "Dither Functions.cginc"
+    
+    struct appdata_particles {
+        float4 vertex : POSITION;
+        float4 color : COLOR;
+        float4 texcoord : TEXCOORD0;
+    };
+
+    struct v2f
+    {
+        float4 position : SV_POSITION;
+        float4 color : COLOR;
+        float2 texcoord : TEXCOORD0;
+        float2 ditherOffset : TEXCOORD1;
+        float4 screenPos : TEXCOORD2;
+    };
+
+    sampler2D _MainTex;
+    float4 _MainTex_ST;
+    float4 _Color;
+    float _Cutoff;
+
+    v2f vert(appdata_particles v)
+    {
+        v2f o;
+        o.position = UnityObjectToClipPos(v.vertex);
+        o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
+        o.ditherOffset = v.texcoord.zw;
+        o.color = v.color;
+        o.screenPos = ComputeScreenPos(o.position);
+        return o;
+    }
+
+    float4 frag(v2f i) : COLOR
+    {
+        float4 c = tex2D(_MainTex, i.texcoord) * _Color * i.color;
+        // Apply screen space dithering
+		float2 screenUV = i.screenPos.xy / i.screenPos.w;
+        ditherClip(screenUV + i.ditherOffset, c.a);
+        return c;
+    }
+    
+    float4 frag_shadow(v2f i) : COLOR
+    {
+        float4 c = tex2D(_MainTex, i.texcoord) * _Color.a * i.color.a;
+        // Apply screen space dithering
+		float2 screenUV = i.screenPos.xy / i.screenPos.w;
+        ditherClip(screenUV + i.ditherOffset, c.a);
+        SHADOW_CASTER_FRAGMENT(i)
+    }
+
+    ENDCG
+
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 200
-        Cull Off
-
-        CGPROGRAM
-        #include "Dither Functions.cginc"
-        // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard vertex:vert
-
-        // Use shader model 3.0 target, to get nicer looking lighting
-        #pragma target 3.0
-
-        sampler2D _MainTex;
-
-        struct appdata_particles {
-            float4 vertex : POSITION;
-            float3 normal : NORMAL;
-            float4 color : COLOR;
-            float4 texcoord : TEXCOORD0;
-        };
-
-        struct Input {
-            float2 uv_MainTex;
-            float2 ditherOffset;
-            float4 color;
-            float4 screenPos;
-        };
-
-        void vert(inout appdata_particles v, out Input o) {
-            UNITY_INITIALIZE_OUTPUT(Input,o);
-            o.uv_MainTex = v.texcoord.xy;
-            o.ditherOffset = v.texcoord.zw;
-            o.color = v.color;
-        }
-
-        half _Glossiness;
-        half _Metallic;
-        fixed4 _Color;
-
-        void surf (Input IN, inout SurfaceOutputStandard o)
+        Tags { "Queue"="AlphaTest" "RenderType"="TransparentCutout" "IgnoreProjector"="True" }
+        Pass
         {
-            // Albedo comes from a texture tinted by color
-            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color * IN.color;
-
-            // Apply screen space dithering
-		    float2 screenUV = IN.screenPos.xy / IN.screenPos.w;
-            ditherClip(screenUV + IN.ditherOffset, c.a);
-            o.Emission = c.rgb;
-            
-            // Metallic and smoothness come from slider variables
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
-            o.Alpha = 1;
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            ENDCG
         }
-        ENDCG
-    }
+        Pass
+        {
+            Name "ShadowCaster"
+            Tags { "LightMode" = "ShadowCaster" }
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag_shadow
+            ENDCG
+        }
+    } 
     FallBack "Diffuse"
 }
