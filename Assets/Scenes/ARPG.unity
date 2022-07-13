@@ -16181,13 +16181,13 @@ MonoBehaviour:
   TargetCamera: {fileID: 2115559089}
   ParticleCalculation: {fileID: 7200000, guid: f53a4ba56f0db2a49ad9f68150bf298a, type: 3}
   ParticleMaterial: {fileID: 2100000, guid: fc00c35c3c370774c88d55240b6538ce, type: 2}
-  Span: 128
-  Speed: -0.15
+  Span: 256
+  Speed: -0.5
   MinimumSize: 0
-  MaximumSize: 0.75
+  MaximumSize: 0.5
   Spacing: 6
-  Ceiling: -300
-  Floor: -20
+  Ceiling: -250
+  Floor: -25
   HeightExponent: 100000
   NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   NebulaPatchHeight: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
@@ -30715,7 +30715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   configuration: {fileID: 11400000, guid: a15886e93ac3e7847861da392782f13d, type: 2}
   downSample: 0
-  quality: 0
+  quality: 2
   allowCloudFrontObject: 1
   useApSystem: 0
   useHierarchicalHeightMap: 0

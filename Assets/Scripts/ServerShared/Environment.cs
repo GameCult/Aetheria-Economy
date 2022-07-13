@@ -19,6 +19,8 @@ public class NebulaSettings
 {
     [JsonProperty("fillDensity"), Key(0)] public float FillDensity;
     [JsonProperty("fillDistance"), Key(1)] public float FillDistance;
+    [JsonProperty("fillExponent"), Key(11)] public float FillExponent;
+    [JsonProperty("fillOffset"), Key(12)] public float FillOffset;
     [JsonProperty("fogDensity"), Key(2)] public float FloorDensity;
     [JsonProperty("cloudDensity"), Key(3)] public float PatchDensity;
     [JsonProperty("fogOffset"), Key(4)] public float FloorOffset;

@@ -135,7 +135,7 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 	float noise;
 	const float3 flowDir = flow(particles[id.x].position, noise);
 	particles[id.x].position += flowDir * (lifetime * noise);
-	const float d = pow(density(particles[id.x].position) + .01, 0.15);
-	particles[id.x].size = lerp(minimumSize, maximumSize, saturate(RandomValue() * d)) * parabola(lifetime, 2);
+	const float d = pow(density(particles[id.x].position) + .01, 0.1);
+	particles[id.x].size = lerp(minimumSize, maximumSize, saturate(RandomValue())) * parabola(lifetime, 2);
 	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomValue(), 0.0f), 0.0f).rgb * d;
 }

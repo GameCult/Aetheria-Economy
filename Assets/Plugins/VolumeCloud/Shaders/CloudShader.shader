@@ -343,16 +343,8 @@ Shader "Yangrc/CloudShader"
 
 					half4 mcol = tex2D(_MainTex,i.uv);
 					float4 currSample = tex2D(_CloudTex, i.uv);
-					// float distance;
-					// float density;
-					// unpack(currSample.a, distance, density);
-					// float packed = pack(1,1);
-					// unpack(packed, distance, density);
-					
-					float4 result;
-					result = currSample;
 
-					return half4(mcol.rgb * (1 - result.a) + result.rgb, 1);
+					return half4(mcol.rgb * (1 - currSample.a) + currSample.rgb, 1);
 				}
 					ENDCG
 				}

@@ -88,6 +88,9 @@ public class VolumeSampling : MonoBehaviour
         Shader.SetGlobalTexture("_NebulaTint", NebulaTint);
         
         Shader.SetGlobalFloat("_NebulaFillDensity", Settings.DefaultEnvironment.Nebula.FillDensity);
+        Shader.SetGlobalFloat("_NebulaFillDistance", Settings.DefaultEnvironment.Nebula.FillDistance);
+        Shader.SetGlobalFloat("_NebulaFillExponent", Settings.DefaultEnvironment.Nebula.FillExponent);
+        Shader.SetGlobalFloat("_NebulaFillOffset", Settings.DefaultEnvironment.Nebula.FillOffset);
         Shader.SetGlobalFloat("_NebulaFloorDensity", Settings.DefaultEnvironment.Nebula.FloorDensity);
         Shader.SetGlobalFloat("_NebulaPatchDensity", Settings.DefaultEnvironment.Nebula.PatchDensity);
         Shader.SetGlobalFloat("_NebulaFloorOffset", Settings.DefaultEnvironment.Nebula.FloorOffset);

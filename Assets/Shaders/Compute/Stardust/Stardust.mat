@@ -60,10 +60,10 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _DistanceIntensityExponent: 3.5
-    - _DistanceSizeExponent: 0.5
+    - _DistanceIntensityExponent: 1
+    - _DistanceSizeExponent: 0.33
     - _DstBlend: 0
-    - _EmissionGain: 0.268
+    - _EmissionGain: 0.496
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1

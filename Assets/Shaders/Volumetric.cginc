@@ -46,6 +46,9 @@ float4 _NebulaTint_TexelSize;
 uniform float3 _GridTransform;
 
 uniform half _NebulaFillDensity,
+            _NebulaFillDistance,
+            _NebulaFillExponent,
+            _NebulaFillOffset,
             _NebulaFloorDensity,
             _NebulaPatchDensity,
             _NebulaFloorOffset,
@@ -125,7 +128,8 @@ float density(float3 pos)
     float2 uv = getUV(pos);
     const float surfaceDisp = tex2Dlod(_NebulaSurfaceHeight, half4(uv, 0, 0)).r;
     const float dist = pos.y + surfaceDisp;
-    float d = pow((dist+20)/300,-2) * _NebulaFillDensity;
+    float d = pow(abs(dist+_NebulaFillOffset)/_NebulaFillDistance,-_NebulaFillExponent) * _NebulaFillDensity;
+    //d += pow(abs(dist+_NebulaFillOffset)/(_NebulaFillDistance*10),1/_NebulaFillExponent) * _NebulaFillDensity/4;
     if(dist < _SafetyDistance)
     {
         const float heightFade = smoothstep(_SafetyDistance,_SafetyDistance*.75,dist);
@@ -138,8 +142,8 @@ float density(float3 pos)
         pos.y += (noise1 + noise2) * heightFade;
         const float lerp3 = frac(_Time.x * _FlowSpeed * 2);
         const float lerp4 = frac(_Time.x * _FlowSpeed * 2 + .5);
-        const float noise3 = pow(triNoise3d((pos+fl * lerp3) / _NoiseScale * 4), _NoiseExponent) * _NoiseAmplitude * tri2(lerp3) / 2;
-        const float noise4 = pow(triNoise3d((pos+fl * lerp4) / _NoiseScale * 4), _NoiseExponent) * _NoiseAmplitude * tri2(lerp4) / 2;
+        const float noise3 = pow(triNoise3d((pos+fl * lerp3) / _NoiseScale * 8), _NoiseExponent) * _NoiseAmplitude * tri2(lerp3) / 2;
+        const float noise4 = pow(triNoise3d((pos+fl * lerp4) / _NoiseScale * 8), _NoiseExponent) * _NoiseAmplitude * tri2(lerp4) / 2;
         pos.y -= (noise3 + noise4) * heightFade;
         d += cloudDensity(pos, surfaceDisp);
     }

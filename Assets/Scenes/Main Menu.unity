@@ -1354,7 +1354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   configuration: {fileID: 11400000, guid: a15886e93ac3e7847861da392782f13d, type: 2}
   downSample: 0
-  quality: 0
+  quality: 2
   allowCloudFrontObject: 1
   useApSystem: 0
   useHierarchicalHeightMap: 0
