@@ -27,6 +27,7 @@ public class NebulaSettings
     [JsonProperty("fogBlend"), Key(5)] public float FloorBlend;
     [JsonProperty("cloudBlend"), Key(6)] public float PatchBlend;
     [JsonProperty("luminance"), Key(7)] public float Luminance;
+    [JsonProperty("extinction"), Key(13)] public float Extinction;
     [JsonProperty("tintExponent"), Key(8)] public float TintExponent;
     [JsonProperty("tintLodExponent"), Key(9)] public float TintLodExponent;
     [JsonProperty("safetyDistance"), Key(10)] public float SafetyDistance;

@@ -115,60 +115,6 @@ float ApplyCoverageToDensity(float sampleResult, float coverage){
 
 #include "Assets/Shaders/Volumetric.cginc"
 
-float SampleDensity(float3 worldPos,int lod, bool cheap, out float wetness) {
-	wetness = 0;
-	return density(worldPos)*_CloudOverallDensity*10;
-	// //Store the pos without wind applied.
-	// float3 unwindWorldPos = worldPos;
-	//
-	// //Sample the weather map.
-	// half4 coverageSampleUV = half4((unwindWorldPos.xz / _WeatherTexSize), 0, 2.5);
-	// coverageSampleUV.xy = (coverageSampleUV.xy + 0.5);
-	// float3 weatherData = tex2Dlod(_WeatherTex, coverageSampleUV);
-	// weatherData *= float3(_CloudCoverageModifier, 1.0, _CloudTypeModifier);
-	// float cloudCoverage = RemapClamped(weatherData.r, 0.0 ,1.0, 0.3, 1.0);
-	// float cloudType = weatherData.b;
-	// wetness = weatherData.g;
-	//
-	// //Calculate the normalized height between[0,1]
-	// float heightPercent = HeightPercent(worldPos);
-	// if (heightPercent <= 0.0f || heightPercent >= 1.0f)
-	// 	return 0.0;
-	//
-	// //Sample base noise.
-	// fixed4 tempResult;
-	// worldPos = ApplyWind(worldPos);
-	// tempResult = tex3Dlod(_BaseTex, half4(worldPos / _CloudSize * _BaseTile, lod)).rgba;
-	// float low_freq_fBm = (tempResult.g * .625) + (tempResult.b * 0.25) + (tempResult.a * 0.125);
-	// float sampleResult = RemapClamped(tempResult.r, 0.0, .1, .0, 1.0);	//perlin-worley
-	// sampleResult = RemapClamped(low_freq_fBm, -0.5 * sampleResult, 1.0, 0.0, 1.0);
-	//
-	// //Sample Height-Density map.
-	// float2 densityAndErodeness = tex2Dlod(_HeightDensity, float4(cloudType, heightPercent, 0.0, 0.0)).rg;
-	//
-	// sampleResult *= densityAndErodeness.x;
-	// //Clip the result using coverage map.
-	// sampleResult = ApplyCoverageToDensity(sampleResult, cloudCoverage);
-	//
-	// if (!cheap) {
-	// 	float2 curl_noise = tex2Dlod(_CurlNoise, float4(unwindWorldPos.xz / _CloudSize * _CurlTile, 0.0, 1.0)).rg;
-	// 	worldPos.xz += curl_noise.rg * (1.0 - heightPercent) * _CloudSize * _CurlStrength;
-	//
-	// 	float3 tempResult2;
-	// 	tempResult2 = tex3Dlod(_DetailTex, half4(worldPos / _CloudSize * _DetailTile, lod)).rgb;
-	// 	float detailsampleResult = (tempResult2.r * 0.625) + (tempResult2.g * 0.25) + (tempResult2.b * 0.125);
-	// 	//Detail sample result here is worley-perlin fbm.
-	//
-	// 	//On cloud marked with low erodness, we see cauliflower style, so when doing erodness, we use 1.0f - detail.
-	// 	//On cloud marked with high erodness, we see thin line style, so when doing erodness we use detail.
-	// 	float detail_modifier = lerp(1.0f - detailsampleResult, detailsampleResult, densityAndErodeness.y);
-	// 	sampleResult = RemapClamped(sampleResult, min(0.8, detail_modifier * _DetailStrength), 1.0, 0.0, 1.0);
-	// }
-	//
-	// //sampleResult = pow(sampleResult, 1.2);
-	// return max(0, sampleResult) * _CloudOverallDensity;
-}
-
 float _MultiScatteringA;
 float _MultiScatteringB;
 float _MultiScatteringC;

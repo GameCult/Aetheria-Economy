@@ -1,62 +1,14 @@
-﻿// Upgrade NOTE: commented out 'float4x4 _CameraToWorld', a built-in variable
-// Upgrade NOTE: replaced '_CameraToWorld' with 'unity_CameraToWorld'
+﻿// Based on github.com/yangrc1234/VolumeCloud
 
-Shader "Yangrc/CloudShader"
+Shader "Aetheria/CloudShader"
 {
 	Properties
 	{
 		_MainTex("MainTex",2D) = "white"{}
-		_HeightDensity("HeightDensity", 2D) = "white"{}
-		_BaseTex("BaseTex", 3D) = "white" {}
-		_BaseTile("BaseTile", float) = 3.0
-		_DetailTex("Detail", 3D) = "white" {}
-		_DetailTile("DetailTile", float) = 10.0
-		_DetailStrength("DetailStrength", float) = 0.2
-		_CurlNoise("CurlNoise", 2D) = "white"{}
-		_CurlTile("CurlTile", float) = .2
-		_CurlStrength("CurlStrength", float) = 1
-		_CloudTopOffset("TopOffset",float) = 100
-		_CloudSize("CloudSize", float) = 50000
-
-		_CloudStartHeight("CloudStartHeight", float) = 2000
-		_CloudEndHeight("CloudEndHeight", float) = 8000
-
-		_CloudOverallDensity("CloudOverallDensity",float) = .1
-		_CloudCoverageModifier("CloudCoverageModifier", float) = 1.0
-		_CloudTypeModifier("CloudTypeModifier", float) = 1.0
-
-		_WeatherTex("WeatherTex", 2D) = "white" {}
-		_WeatherTexSize("WeatherTexSize", float) = 50000
-		_WindDirection("WindDirection",Vector) = (1,1,0,0)
-		_SilverIntensity("SilverIntensity",float) = .8
-		_ScatteringCoefficient("ScatteringCoefficient",float) = .04
-		_ExtinctionCoefficient("ExtinctionCoefficient",float) = .04
-		_MultiScatteringA("MultiScatteringA",float) = 0.5
-		_MultiScatteringB("MultiScatteringB",float) = 0.5
-		_MultiScatteringC("MultiScatteringC",float) = 0.5
-		_SilverSpread("SilverSpread",float) = .75
-		_RaymarchOffset("RaymarchOffset", float) = 0.0
-		_AmbientColor("AmbientColor", Color) = (1,1,1,1)
-		_AtmosphereColor("AtmosphereColor" , Color) = (1,1,1,1)
-		_AtmosphereColorSaturateDistance("AtmosphereColorSaturateDistance", float) = 80000
 	}
 
 		SubShader
 		{
-
-			CGINCLUDE
-			float GetRaymarchEndFromSceneDepth(float sceneDepth, out float raymarchEnd) {
-	#if ALLOW_CLOUD_FRONT_OBJECT
-				raymarchEnd = sceneDepth * _ProjectionParams.z;	//raymarch to scene depth.
-	#else
-				raymarchEnd = 1e8;	//Always raymarch. 
-				//Note: In horizon:zero dawn, they clip some part using lod(use max operator) z-buffer. 
-				//I don't implement here cause that's exactly what hi-z buffer does, and any production rendering pipeline should share a hi-z buffer by their own.
-	#endif
-				return sceneDepth<.99;
-			}
-			ENDCG
-
 			Cull Off ZWrite Off ZTest Always
 			//Pass1, Render a undersampled buffer. The buffer is dithered using bayer matrix(every 3x3 pixel) and halton sequence.
 			//Why does it need a bayer matrix as offset? See technical overview on github page.
@@ -64,14 +16,14 @@ Shader "Yangrc/CloudShader"
 			{
 			CGPROGRAM
 			#pragma target 5.0
-			#pragma multi_compile _ ALLOW_CLOUD_FRONT_OBJECT		//When enabled, raymarch is marched until scene depth. This will bring some artifacts when objects move in front of cloud.
-																//Or disable, cloud is always behind object, and raymarch is ended if any z is detected.
-			#pragma multi_compile LOW_QUALITY MEDIUM_QUALITY HIGH_QUALITY	//High quality uses more samples.
-			#pragma multi_compile _ USE_HI_HEIGHT
+			#pragma multi_compile LOW_QUALITY MEDIUM_QUALITY HIGH_QUALITY ULTRA_QUALITY	//High quality uses more samples.
 			#pragma vertex vert
 			#pragma fragment frag
 
 
+#if defined(ULTRA_QUALITY)
+			#define SAMPLE_COUNT 256
+#endif	
 #if defined(HIGH_QUALITY)
 			#define SAMPLE_COUNT 128
 #endif	
@@ -82,17 +34,12 @@ Shader "Yangrc/CloudShader"
 			#define SAMPLE_COUNT 32
 #endif
 			
-#if USE_HI_HEIGHT
-			#include "./CloudHierarchicalRaymarch.cginc"
-#else
 			#include "./CloudNormalRaymarch.cginc"
-#endif	
 			#include "UnityCG.cginc"
 			#include "Assets/Shaders/PackFloat.cginc"
 			sampler2D _CameraDepthTexture;
 			float _RaymarchOffset;	//raymarch offset by halton sequence, [0,1]
 			float4 _ProjectionExtents;
-			float2 _TexelSize;	//Texelsize used to decide offset by bayer matrix.
 			sampler2D _DitheringTex;
 			float4 _DitheringCoords;
 
@@ -116,6 +63,11 @@ Shader "Yangrc/CloudShader"
 				o.screenPos = ComputeScreenPos(o.vertex);
 				o.vsray = (2.0 * v.uv - 1.0) * _ProjectionExtents.xy + _ProjectionExtents.zw;
 				return o;
+			}
+			
+			float GetRaymarchEndFromSceneDepth(float sceneDepth, out float raymarchEnd) {
+				raymarchEnd = sceneDepth * _ProjectionParams.z;	//raymarch to scene depth.
+				return sceneDepth<.99;
 			}
 
 			float4 frag (Interpolator i) : SV_Target
@@ -157,7 +109,6 @@ Shader "Yangrc/CloudShader"
 				#pragma target 5.0
 				#pragma vertex vert
 				#pragma fragment frag
-				#pragma multi_compile _ ALLOW_CLOUD_FRONT_OBJECT
 				#pragma multi_compile LOW_QUALITY MEDIUM_QUALITY HIGH_QUALITY
 
 				#include "./CloudShaderHelper.cginc"
@@ -174,7 +125,6 @@ Shader "Yangrc/CloudShader"
 				//These values are needed for doing extra raymarch when out of bound.
 				sampler2D _CameraDepthTexture;
 				float4 _ProjectionExtents;
-				float2 _TexelSize;
 
 				struct appdata
 				{
@@ -285,20 +235,15 @@ Shader "Yangrc/CloudShader"
 				ENDCG
 			}
 
-			//Pass3, Calculate lighting, blend final cloud image with final image.
+			//Pass3, Blend final cloud image with final image.
 			Pass{
 				Cull Off ZWrite Off ZTest Always
 				CGPROGRAM
 				#pragma target 5.0
 				#pragma vertex vert
 				#pragma fragment frag
-				#pragma multi_compile _ ALLOW_CLOUD_FRONT_OBJECT
-				#pragma multi_compile _ USE_YANGRC_AP
 
 				#include "UnityCG.cginc"
-				#include "Lighting.cginc"
-				#include "Assets/Shaders/PackFloat.cginc"
-				#include "Assets/Shaders/Volumetric.cginc"
 
 				sampler2D _MainTex;	//Final image without cloud.
 				sampler2D _CloudTex;	//The full resolution cloud tex we generated.
@@ -328,12 +273,6 @@ Shader "Yangrc/CloudShader"
 					o.vsray = (2.0 * v.uv - 1.0) * _ProjectionExtents.xy + _ProjectionExtents.zw;
 					return o;
 				}
-				half3 _AmbientColor;
-#ifdef USE_YANGRC_AP	//Use value from AP system.
-				#include "Assets/Plugins/AtmosphereScattering/Shaders/AerialPerspectiveHelper.cginc"
-#else
-				float _AtmosphereColorSaturateDistance;
-#endif	
 
 				
 				half4 frag(v2f i) : SV_Target

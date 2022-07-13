@@ -17,12 +17,12 @@ using static Unity.Mathematics.noise;
 [RequireComponent( typeof( Camera ) )]
 public class VolumeSampling : MonoBehaviour
 {
-    public Material VolMaterial;
+    //public Material VolMaterial;
     public Transform GridTransform;
     public GameSettings Settings;
     //public int DownsampleBlurMask = 2;
-    private Camera _camera;
-    private RenderBuffer[] _mrt;
+    // private Camera _camera;
+    // private RenderBuffer[] _mrt;
     private Texture2D _blurMask;
     private Texture2D _disabledBlurMask;
     private float _flowScroll;
@@ -38,15 +38,11 @@ public class VolumeSampling : MonoBehaviour
     private void Start()
     {
         //Debug.Log($"Supported MRT count: {SystemInfo.supportedRenderTargetCount}");
-        _camera = GetComponent<Camera>();
-        _mrt = new RenderBuffer[2];
+        // _camera = GetComponent<Camera>();
+        // _mrt = new RenderBuffer[2];
         //_blurMask = new RenderTexture(Screen.width, Screen.height, 0, GraphicsFormat.R8_UNorm);
         _blurMask = Color.white.ToTexture();
         _disabledBlurMask = Color.black.ToTexture();
-    }
-
-    private void OnPreRender()
-    {
     }
 
     //[ImageEffectOpaque]
@@ -97,6 +93,7 @@ public class VolumeSampling : MonoBehaviour
         Shader.SetGlobalFloat("_NebulaFloorBlend", Settings.DefaultEnvironment.Nebula.FloorBlend);
         Shader.SetGlobalFloat("_NebulaPatchBlend", Settings.DefaultEnvironment.Nebula.PatchBlend);
         Shader.SetGlobalFloat("_NebulaLuminance", Settings.DefaultEnvironment.Nebula.Luminance);
+        Shader.SetGlobalFloat("_ExtinctionCoefficient", Settings.DefaultEnvironment.Nebula.Extinction);
         Shader.SetGlobalFloat("_TintExponent", Settings.DefaultEnvironment.Nebula.TintExponent);
         Shader.SetGlobalFloat("_TintLodExponent", Settings.DefaultEnvironment.Nebula.TintLodExponent);
         Shader.SetGlobalFloat("_SafetyDistance", Settings.DefaultEnvironment.Nebula.SafetyDistance);
