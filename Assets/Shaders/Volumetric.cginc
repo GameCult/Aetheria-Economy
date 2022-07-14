@@ -155,10 +155,6 @@ float4 VolumeSampleColor(float3 pos)
 	float d = density(pos);
     float2 uv = getUV(pos);
     float3 tint = tex2Dlod(_NebulaTint, float4(uv.x, uv.y, 0, pow(max(.01,d), _TintLodExponent)));
-    //float2 tintGrad = tintGradient(pos, uv, 1 / pow(density, .25), tint);
-    //float3 tintNormal = normalize(float3(tintGrad.x, 0, tintGrad.y));
-    //tint *= abs(dot(normal, float3(0,-1,0)));
-    // pow(abs(1-density), _TintExponent)
     const float albedo = smoothstep(0,-250,pos.y) * pow(max(.1,d), _TintExponent) * _NebulaLuminance;
     return float4(albedo*tint, d);
 }

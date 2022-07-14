@@ -10,7 +10,8 @@ using UnityEngine.Rendering;
 /// Generate halton sequence.
 /// code from unity post-processing stack.
 /// </summary>
-public class HaltonSequence {
+public class HaltonSequence
+{
     public int radix = 3;
     private int storedIndex = 0;
     public float Get() {
@@ -28,7 +29,8 @@ public class HaltonSequence {
     }
 }
 
-public enum Quality {
+public enum Quality
+{
     Low,
     Normal,    //Low sample count
     High,       //High sample count and high shadow sample count.
@@ -41,7 +43,8 @@ public enum Quality {
 [ImageEffectAllowedInSceneView]
 [ExecuteInEditMode,RequireComponent(typeof(Camera))]
 [ImageEffectOpaque]
-    public class VolumeCloudRenderer : EffectBase {
+public class VolumeCloudRenderer : EffectBase
+{
     [Header("Render Settings")]
     [Range(0, 2)]
     public int downSample = 1;
@@ -56,7 +59,6 @@ public enum Quality {
     private HaltonSequence sequence = new HaltonSequence() { radix = 3 };
     // The index of 4x4 pixels.
     private int frameIndex = 0;
-    private float bayerOffsetIndex = 0;
     private bool firstFrame = true;
 
     [SerializeField]
