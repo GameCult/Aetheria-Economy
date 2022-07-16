@@ -405,9 +405,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpeedMultiplier: 0.005
-  FirstOffsetDomainRotationSpeed: 5
+  FirstOffsetDomainRotationSpeed: 1
   FirstOffsetRotationSpeed: 20
-  SecondOffsetDomainRotationSpeed: 10
-  SecondOffsetRotationSpeed: -50
-  AlbedoRotationSpeed: 15
-  LightingDirection: {x: 1, y: 0, z: 1}
+  SecondOffsetDomainRotationSpeed: -2
+  SecondOffsetRotationSpeed: 10
+  AlbedoRotationSpeed: -3
+  LightingDirection: {x: -0.9826859, y: 0, z: -0.18527949}

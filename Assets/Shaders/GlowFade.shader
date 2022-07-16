@@ -61,15 +61,6 @@ Shader "Aetheria/GlowFade"
             float3 ambientColor;
         };
         
-        float4 VolumeSampleColorSimple(float3 pos, float3 normal)
-        {
-	        float d = density(pos);
-            float2 uv = getUV(pos);
-            const float lodRange = 3;
-            float3 tint = tex2Dlod(_NebulaTint, float4(uv.x, uv.y, 0, 3 + lodRange + dot(normal, float3(0,1,0))*lodRange));
-            return float4(tint, d);
-        }
-        
         void vert (inout appdata_full v, out Input o) {
             UNITY_INITIALIZE_OUTPUT(Input,o);
             float3 worldPos = mul(unity_ObjectToWorld, v.vertex);
@@ -87,7 +78,7 @@ Shader "Aetheria/GlowFade"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            half f = tex2D (_FadeTex, IN.uv_FadeTex).r + (1-_FadeEdge - UNITY_ACCESS_INSTANCED_PROP(_Fade_arr, _Fade));
+            half f = tex2D (_FadeTex, IN.uv_FadeTex).r + (1-_FadeEdge - UNITY_ACCESS_INSTANCED_PROP(Props, _Fade));
             
             // Apply screen space dithering
 		    float2 screenUV = IN.screenPos.xy / IN.screenPos.w;

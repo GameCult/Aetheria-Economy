@@ -40,7 +40,7 @@ public enum Quality
 /// <summary>
 /// Cloud renderer post processing.
 /// </summary>
-[ImageEffectAllowedInSceneView]
+//[ImageEffectAllowedInSceneView]
 [ExecuteInEditMode,RequireComponent(typeof(Camera))]
 [ImageEffectOpaque]
 public class VolumeCloudRenderer : EffectBase

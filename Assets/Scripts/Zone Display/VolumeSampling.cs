@@ -31,6 +31,7 @@ public class VolumeSampling : MonoBehaviour
     public RenderTexture NebulaPatchHeight;
     public RenderTexture NebulaPatch;
     public RenderTexture NebulaTint;
+    private Camera _camera;
 
     public bool EnableDepth { get; set; } = true;
     
@@ -38,7 +39,7 @@ public class VolumeSampling : MonoBehaviour
     private void Start()
     {
         //Debug.Log($"Supported MRT count: {SystemInfo.supportedRenderTargetCount}");
-        // _camera = GetComponent<Camera>();
+        _camera = GetComponent<Camera>();
         // _mrt = new RenderBuffer[2];
         //_blurMask = new RenderTexture(Screen.width, Screen.height, 0, GraphicsFormat.R8_UNorm);
         _blurMask = Color.white.ToTexture();
@@ -61,8 +62,8 @@ public class VolumeSampling : MonoBehaviour
             Shader.SetGlobalVector("_GridTransform", new Vector4(GridTransform.position.x,GridTransform.position.z,GridTransform.localScale.x));
         //
         // Shader needs this matrix to generate world space rays
-        // Shader.SetGlobalMatrix("_CamProj", (Camera.current.projectionMatrix * Camera.current.worldToCameraMatrix).inverse);
-        // Shader.SetGlobalMatrix("_CamInvProj", (Camera.current.projectionMatrix * Camera.current.worldToCameraMatrix).inverse);
+        Shader.SetGlobalMatrix("_CamProj", (_camera.projectionMatrix * _camera.worldToCameraMatrix).inverse);
+        Shader.SetGlobalMatrix("_CamInvProj", (_camera.projectionMatrix * _camera.worldToCameraMatrix).inverse);
         // _mrt[0] = destination.colorBuffer;
         // _mrt[1] = _blurMask.colorBuffer;
         //
@@ -97,11 +98,15 @@ public class VolumeSampling : MonoBehaviour
         Shader.SetGlobalFloat("_TintExponent", Settings.DefaultEnvironment.Nebula.TintExponent);
         Shader.SetGlobalFloat("_TintLodExponent", Settings.DefaultEnvironment.Nebula.TintLodExponent);
         Shader.SetGlobalFloat("_SafetyDistance", Settings.DefaultEnvironment.Nebula.SafetyDistance);
+        Shader.SetGlobalFloat("_DynamicSkyBoost", Settings.DefaultEnvironment.Nebula.DynamicSkyBoost);
+        Shader.SetGlobalFloat("_DynamicLodRange", Settings.DefaultEnvironment.Nebula.DynamicLodRange);
+        Shader.SetGlobalFloat("_DynamicLodBias", Settings.DefaultEnvironment.Nebula.DynamicLodBias);
+        Shader.SetGlobalFloat("_DynamicIntensity", Settings.DefaultEnvironment.Nebula.DynamicIntensity);
         
-        Shader.SetGlobalFloat("_NoiseScale", Settings.DefaultEnvironment.Noise.Scale);
-        Shader.SetGlobalFloat("_NoiseExponent", Settings.DefaultEnvironment.Noise.Exponent);
-        Shader.SetGlobalFloat("_NoiseAmplitude", Settings.DefaultEnvironment.Noise.Amplitude);
-        Shader.SetGlobalFloat("_NoiseSpeed", Settings.DefaultEnvironment.Noise.Speed);
+        Shader.SetGlobalFloat("_NebulaNoiseScale", Settings.DefaultEnvironment.Noise.Scale);
+        Shader.SetGlobalFloat("_NebulaNoiseExponent", Settings.DefaultEnvironment.Noise.Exponent);
+        Shader.SetGlobalFloat("_NebulaNoiseAmplitude", Settings.DefaultEnvironment.Noise.Amplitude);
+        Shader.SetGlobalFloat("_NebulaNoiseSpeed", Settings.DefaultEnvironment.Noise.Speed);
         
         Shader.SetGlobalFloat("_FlowScale", Settings.DefaultEnvironment.Flow.Scale);
         Shader.SetGlobalFloat("_FlowAmplitude", Settings.DefaultEnvironment.Flow.Amplitude);

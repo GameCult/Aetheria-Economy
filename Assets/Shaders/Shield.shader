@@ -58,7 +58,7 @@ Shader "Aetheria/Shield"
 		float tri(in float x){return abs(frac(x)-.5);}
 		float3 tri3(in float3 p){return float3( tri(p.z+tri(p.y*1.)), tri(p.z+tri(p.x*1.)), tri(p.y+tri(p.x*1.)));}
 
-		float triNoise3d(in float3 p, in float spd)
+		float volumeNoise(in float3 p, in float spd)
 		{
 		    float z=1.4;
 			float rz = 0.;
@@ -105,7 +105,7 @@ Shader "Aetheria/Shield"
             float a = pow(tex2D (_MainTex, IN.uv_MainTex).a, _TextureGamma);// * _Color * IN.color;
 
         	float3 pos = normalize(IN.objectPos);
-			float noise = triNoise3d(pos*_NoiseScale, _NoiseSpeed) * _NoiseAmplitude;
+			float noise = volumeNoise(pos*_NoiseScale, _NoiseSpeed) * _NoiseAmplitude;
 			float3 offset = normalize(texCUBElod(_Offset, float4(pos + noise, 0)).rgb - float3(.5,.5,.5));
 			float albedo = pow(texCUBElod (_Albedo, float4(pos + offset * _OffsetSize, 0)).x, _AlbedoGamma);
             

@@ -73,13 +73,13 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DensityAlbedoExponent: 3
-    - _DensityDepthExponent: 1.85
+    - _DensityDepthExponent: 2
     - _DepthBoost: 0.5
     - _DepthBoostPower: 0.68
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EdgeTransparency: 1
-    - _Emission: 100
+    - _Emission: 50
     - _EmissionFadePower: 2
     - _FadePower: 1
     - _FirstOffsetDepthExponent: 4
@@ -90,7 +90,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _LightingAmbient: 0.01
+    - _LightingAmbient: 50
     - _LightingPower: 8.158
     - _LightingWrap: 1
     - _LimbDarkening: 0.1
@@ -103,7 +103,7 @@ Material:
     - _OffsetDistance: 0.2
     - _OffsetFadePower: -0.75
     - _Parallax: 0.02
-    - _RayStepSize: -0.00625
+    - _RayStepSize: -0.003125
     - _SecondOffsetDepthExponent: -2
     - _SecondOffsetDistance: -0.05
     - _SecondOffsetFadePower: -8

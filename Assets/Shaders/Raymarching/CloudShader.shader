@@ -42,6 +42,8 @@ Shader "Aetheria/CloudShader"
 			float4 _ProjectionExtents;
 			sampler2D _DitheringTex;
 			float4 _DitheringCoords;
+			uniform float4x4 _CamProj;
+			uniform float4x4 _CamInvProj;
 
 			struct appdata
 			{
@@ -64,6 +66,19 @@ Shader "Aetheria/CloudShader"
 				o.vsray = (2.0 * v.uv - 1.0) * _ProjectionExtents.xy + _ProjectionExtents.zw;
 				return o;
 			}
+	
+			float3 DepthToWorld(float2 uv, float depth) {
+				float z = (1-depth) * 2.0 - 1.0;
+
+				float4 clipSpacePosition = float4(uv * 2.0 - 1.0, z, 1.0);
+
+				float4 viewSpacePosition = mul(_CamInvProj,clipSpacePosition);
+				viewSpacePosition /= viewSpacePosition.w;
+
+				float4 worldSpacePosition = mul(unity_ObjectToWorld,viewSpacePosition);
+
+				return worldSpacePosition.xyz;
+			}
 			
 			float GetRaymarchEndFromSceneDepth(float sceneDepth, out float raymarchEnd) {
 				raymarchEnd = sceneDepth * _ProjectionParams.z;	//raymarch to scene depth.
@@ -75,28 +90,26 @@ Shader "Aetheria/CloudShader"
 				float3 vspos = float3(i.vsray, 1.0);
 				float4 worldPos = mul(unity_CameraToWorld,float4(vspos,1.0));
 				worldPos /= worldPos.w;
+				float4 screenPos = UNITY_PROJ_COORD( i.screenPos );
+				float depthSample = tex2Dproj( _CameraDepthTexture, screenPos ).r;
+				float3 worldDepth = DepthToWorld(screenPos, depthSample);
+				float raymarchEnd = length(worldDepth-worldPos.xyz);
 				
-				float sceneDepth = Linear01Depth(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.screenPos)).r);
-				float raymarchEnd;
-				bool occluded = GetRaymarchEndFromSceneDepth(sceneDepth, raymarchEnd);
+				float sceneDepth = Linear01Depth(depthSample);
+				//bool occluded = GetRaymarchEndFromSceneDepth(sceneDepth, raymarchEnd);
 				float3 viewDir = normalize(worldPos.xyz - _WorldSpaceCameraPos);
 
-				float2 screenPos = i.screenPos.xy / i.screenPos.w;
+				float2 screenUV = i.screenPos.xy / i.screenPos.w;
 
 				//float blue = tex2D(_DitheringTex, screenPos * _DitheringCoords.xy + _DitheringCoords.zw).r;
-				float dither = tex2D(_DitheringTex, screenPos * _DitheringCoords.xy).r;
+				float dither = tex2D(_DitheringTex, screenUV * _DitheringCoords.xy).r;
 				float offset = -fmod(_RaymarchOffset + dither, 1.0f);			//final offset combined. The value will be multiplied by sample step in GetDensity.
 
 				float3 intensity;
 				float distance;
 				//TODO: sceneDepth here is distance in camera z-axis, but the parameter should be radial distance.
-#if USE_HI_HEIGHT
-				int iteration_count;
-				float density = HierarchicalRaymarch(worldPos, viewDir, raymarchEnd, offset, /*out*/intensity, /*out*/distance, /*out*/iteration_count);
-#else
 				float density = GetDensity(_WorldSpaceCameraPos, viewDir, raymarchEnd, offset, /*out*/intensity, /*out*/distance);
-#endif
-				if(!occluded) density = 1;
+				if(depthSample > .99) density = 1;
 				return float4(intensity, pack(distance, density));
 			}
 
@@ -259,9 +272,7 @@ Shader "Aetheria/CloudShader"
 				struct v2f
 				{
 					float2 uv : TEXCOORD0;
-					float4 screenPos : TEXCOORD1;
 					float4 vertex : SV_POSITION;
-					float2 vsray : TEXCOORD2;
 				};
 
 				v2f vert(appdata v)
@@ -269,15 +280,12 @@ Shader "Aetheria/CloudShader"
 					v2f o;
 					o.vertex = UnityObjectToClipPos(v.vertex);
 					o.uv = v.uv;
-					o.screenPos = ComputeScreenPos(o.vertex);
-					o.vsray = (2.0 * v.uv - 1.0) * _ProjectionExtents.xy + _ProjectionExtents.zw;
 					return o;
 				}
-
 				
 				half4 frag(v2f i) : SV_Target
 				{
-					float3 vspos = float3(i.vsray, 1.0);
+					//float3 vspos = float3(i.vsray, 1.0);
 					//float4 worldPos = mul(unity_CameraToWorld,float4(vspos,1.0));
 
 					half4 mcol = tex2D(_MainTex,i.uv);

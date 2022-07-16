@@ -44,7 +44,6 @@ Shader "Aetheria/Volume Sun"
 			float4 screenPos;
 			float3 worldNormal;
 			float3 viewDir;
-			float3 objPos;
 		};
 
 		half _Glossiness;
@@ -75,7 +74,6 @@ Shader "Aetheria/Volume Sun"
 
 		void vert (inout appdata_full v, out Input o) {
 			UNITY_INITIALIZE_OUTPUT(Input,o);
-			o.objPos = v.vertex;
 		}
 
 		float tri(in float x){return abs(frac(x)-.5);}

@@ -31,6 +31,10 @@ public class NebulaSettings
     [JsonProperty("tintExponent"), Key(8)] public float TintExponent;
     [JsonProperty("tintLodExponent"), Key(9)] public float TintLodExponent;
     [JsonProperty("safetyDistance"), Key(10)] public float SafetyDistance;
+    [JsonProperty("dynamicSkyBoost"), Key(14)] public float DynamicSkyBoost;
+    [JsonProperty("dynamicLodRange"), Key(15)] public float DynamicLodRange;
+    [JsonProperty("dynamicLodBias"), Key(16)] public float DynamicLodBias;
+    [JsonProperty("dynamicIntensity"), Key(17)] public float DynamicIntensity;
 }
 
 [Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]

@@ -37,10 +37,11 @@ Shader "Aetheria/Volume Jupiter"
 
 		CGPROGRAM
 
-		#pragma surface surf Standard vertex:vert NoLighting noambient noforwardadd
+		#pragma surface surf Lambert vertex:vert noambient 
 		#pragma target 3.0
         #include "UnityPBSLighting.cginc"
         #include "Assets/Shaders/Dither Functions.cginc"
+        #include "Assets/Shaders/Volumetric.cginc"
 
 		sampler2D _ColorRamp;
 		samplerCUBE _Offset;
@@ -50,7 +51,7 @@ Shader "Aetheria/Volume Jupiter"
 			float4 screenPos;
 			float3 worldNormal;
 			float3 viewDir;
-			float3 objPos;
+			float3 ambientColor;
 		};
 
 		half _Glossiness;
@@ -85,7 +86,9 @@ Shader "Aetheria/Volume Jupiter"
 
 		void vert (inout appdata_full v, out Input o) {
 			UNITY_INITIALIZE_OUTPUT(Input,o);
-			o.objPos = v.vertex;
+            float3 worldPos = mul(unity_ObjectToWorld, v.vertex);
+            float3 worldNormal = UnityObjectToWorldNormal(v.normal);
+            o.ambientColor = VolumeSampleColorSimple(worldPos, worldNormal).rgb * 10;
 		}
  
         // #define UINT_MAXF 4294967290.0f
@@ -107,30 +110,34 @@ Shader "Aetheria/Volume Jupiter"
         //     return (float)rngState / UINT_MAXF;
         // }
 
-		float tri(in float x){return abs(frac(x)-.5);}
-		float3 tri3(in float3 p){return float3( tri(p.z+tri(p.y*1.)), tri(p.z+tri(p.x*1.)), tri(p.y+tri(p.x*1.)));}
-
-		float triNoise3d(in float3 p, in float spd)
-		{
-		    float z=1.4;
-			float rz = 0.;
-		    float3 bp = p;
-			for (float i=0.; i<=2.; i++ )
-			{
-		        float3 dg = tri3(bp*2.);
-		        p += (dg+_Time.y*spd);
-
-		        bp *= 1.8;
-				z *= 1.5;
-				p *= 1.2;
-		        
-		        rz+= (tri(p.z+tri(p.x+tri(p.y))))/z;
-		        bp += 0.14;
-			}
-			return rz;
-		}
+		// float tri(in float x){return abs(frac(x)-.5);}
+		// float3 tri3(in float3 p){return float3( tri(p.z+tri(p.y*1.)), tri(p.z+tri(p.x*1.)), tri(p.y+tri(p.x*1.)));}
+		//
+		// float triNoise3d(in float3 p, in float spd)
+		// {
+		//     float z=1.4;
+		// 	float rz = 0.;
+		//     float3 bp = p;
+		// 	for (float i=0.; i<=2.; i++ )
+		// 	{
+		//         float3 dg = tri3(bp*2.);
+		//         p += (dg+_Time.y*spd);
+		//
+		//         bp *= 1.8;
+		// 		z *= 1.5;
+		// 		p *= 1.2;
+		//         
+		//         rz+= (tri(p.z+tri(p.x+tri(p.y))))/z;
+		//         bp += 0.14;
+		// 	}
+		// 	return rz;
+		// }
+		// void modifyColor (Input IN, SurfaceOutput o, inout fixed4 color)
+		// {
+		// 	color *= _ColorTint;
+		// }
 		
-		void surf (Input IN, inout SurfaceOutputStandard o)
+		void surf (Input IN, inout SurfaceOutput o)
 		{
 			float rim = saturate(dot(IN.viewDir,IN.worldNormal));
         	float2 screenPos = IN.screenPos.xy / IN.screenPos.w;
@@ -157,21 +164,19 @@ Shader "Aetheria/Volume Jupiter"
 									 _SecondOffsetDistance * (pow(length(rayPos),_SecondOffsetDepthExponent)) * turbulence;
 
 				// float gradientPos = Random(((rayPos + offset).y+1)*_Striations+_StriationOffset);
-				float albedo = texCUBElod (_Albedo, float4(mul((float3x3)_AlbedoRotation,normalize(rayPos + offset2)) ,i/4)).x;
-				float noise = triNoise3d(firstSamplePosition * _NoiseFrequency, _NoiseSpeed) * _NoiseAmplitude;
+				float albedo = texCUBElod (_Albedo, float4(mul((float3x3)_AlbedoRotation,normalize(rayPos + offset2)) ,i/8)).x;
+				//float noise = triNoise3d(firstSamplePosition * _NoiseFrequency, _NoiseSpeed) * _NoiseAmplitude;
 
-				float density = pow(max(depth,0),_DensityDepthExponent) * pow(albedo,_DensityAlbedoExponent) * max(1 - noise,0.01);
-				float lighting = pow(saturate(dot(normalize(rayPos),_LightingDirection)+_LightingWrap),_LightingPower) + _LightingAmbient;
+				float density = pow(max(depth,0),_DensityDepthExponent) * pow(albedo,_DensityAlbedoExponent);// * max(1 - noise,0.01);
 				alphaAccum += density;
-				accum += tex2D(_ColorRamp, secondSamplePosition.y+.5f) * lighting * density / depth;
+				accum += tex2D(_ColorRamp, secondSamplePosition.y+.5f) * density / depth;
 				            
 				rayPos += rayStep;
 			}
         	ditherClip(screenPos, alphaAccum * _Alpha);
 
-            o.Smoothness = _Glossiness;
-        	o.Albedo = o.Emission = accum*_Emission;
-            o.Metallic = _Metallic;
+        	o.Albedo = accum * _Emission;
+			o.Emission = accum * IN.ambientColor * _LightingAmbient;
 //            float4 envSample = UNITY_SAMPLE_TEXCUBE(unity_SpecCube0, IN.worldNormal);
 //            float3 spec = DecodeHDR(envSample, unity_SpecCube0_HDR).rgb;
 			//o.Emission = lerp(envSample.rgb,accum*_Emission,saturate(length(accum)*_AlphaPower));

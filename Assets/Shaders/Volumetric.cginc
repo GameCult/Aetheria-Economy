@@ -57,15 +57,19 @@ uniform half _NebulaFillDensity,
             _NebulaLuminance,
             _TintExponent,
             _TintLodExponent,
-            _NoiseScale,
-            _NoiseExponent,
-            _NoiseAmplitude,
-            _NoiseSpeed,
+            _NebulaNoiseScale,
+            _NebulaNoiseExponent,
+            _NebulaNoiseAmplitude,
+            _NebulaNoiseSpeed,
             _FlowScale,
             _FlowAmplitude,
             _FlowScroll,
             _FlowSpeed,
-            _SafetyDistance;
+            _SafetyDistance,
+            _DynamicLodRange,
+            _DynamicLodBias,
+            _DynamicIntensity,
+            _DynamicSkyBoost;
 
 float tri(in float x){return abs(frac(x)-.5);}
 float3 tri3(in float3 p){return float3( tri(p.z+tri(p.y*1.)), tri(p.z+tri(p.x*1.)), tri(p.y+tri(p.x*1.)));}
@@ -78,7 +82,7 @@ float triNoise3d(in float3 p)
     for (float i=0.; i<=1.; i++ )
     {
         float3 dg = tri3(bp * 2.);
-        p += dg + _Time.y * _NoiseSpeed;
+        p += dg + _Time.y * _NebulaNoiseSpeed;
 
         bp *= 1.8;
         z *= 1.5;
@@ -137,13 +141,13 @@ float density(float3 pos)
         const float3 fl = flow(pos, noise);
         const float lerp1 = frac(_Time.x * _FlowSpeed + noise);
         const float lerp2 = frac(_Time.x * _FlowSpeed + .5 + noise);
-        const float noise1 = pow(triNoise3d((pos+fl * lerp1) / _NoiseScale),_NoiseExponent) * _NoiseAmplitude * tri2(lerp1);
-        const float noise2 = pow(triNoise3d((pos+fl * lerp2) / _NoiseScale),_NoiseExponent) * _NoiseAmplitude * tri2(lerp2);
+        const float noise1 = pow(triNoise3d((pos+fl * lerp1) / _NebulaNoiseScale),_NebulaNoiseExponent) * _NebulaNoiseAmplitude * tri2(lerp1);
+        const float noise2 = pow(triNoise3d((pos+fl * lerp2) / _NebulaNoiseScale),_NebulaNoiseExponent) * _NebulaNoiseAmplitude * tri2(lerp2);
         pos.y += (noise1 + noise2) * heightFade;
         const float lerp3 = frac(_Time.x * _FlowSpeed * 2);
         const float lerp4 = frac(_Time.x * _FlowSpeed * 2 + .5);
-        const float noise3 = pow(triNoise3d((pos+fl * lerp3) / _NoiseScale * 8), _NoiseExponent) * _NoiseAmplitude * tri2(lerp3) / 2;
-        const float noise4 = pow(triNoise3d((pos+fl * lerp4) / _NoiseScale * 8), _NoiseExponent) * _NoiseAmplitude * tri2(lerp4) / 2;
+        const float noise3 = pow(triNoise3d((pos+fl * lerp3) / _NebulaNoiseScale * 8), _NebulaNoiseExponent) * _NebulaNoiseAmplitude * tri2(lerp3) / 2;
+        const float noise4 = pow(triNoise3d((pos+fl * lerp4) / _NebulaNoiseScale * 8), _NebulaNoiseExponent) * _NebulaNoiseAmplitude * tri2(lerp4) / 2;
         pos.y -= (noise3 + noise4) * heightFade;
         d += cloudDensity(pos, surfaceDisp);
     }
@@ -157,4 +161,22 @@ float4 VolumeSampleColor(float3 pos)
     float3 tint = tex2Dlod(_NebulaTint, float4(uv.x, uv.y, 0, pow(max(.01,d), _TintLodExponent)));
     const float albedo = smoothstep(0,-250,pos.y) * pow(max(.1,d), _TintExponent) * _NebulaLuminance;
     return float4(albedo*tint, d);
+}
+
+float2 tintGradient (float2 uv)
+{
+    return float2(
+        length(tex2Dlod(_NebulaTint, float4(uv.x + _NebulaTint_TexelSize.x, uv.y, 0, 0))) - length(tex2Dlod(_NebulaTint, float4(uv.x - _NebulaTint_TexelSize.x, uv.y, 0, 0))),
+        length(tex2Dlod(_NebulaTint, float4(uv.x, uv.y + _NebulaTint_TexelSize.y, 0, 0))) - length(tex2Dlod(_NebulaTint, float4(uv.x, uv.y - _NebulaTint_TexelSize.y, 0, 0)))
+    );
+}
+        
+float3 VolumeSampleColorSimple(float3 pos, float3 normal)
+{
+    float2 uv = getUV(pos);
+    float3 low = tex2Dlod(_NebulaTint, float4(uv.x, uv.y, 0, _DynamicLodBias)).rgb;
+    float3 high = tex2Dlod(_NebulaTint, float4(uv.x, uv.y, 0, _DynamicLodBias + _DynamicLodRange)).rgb * _DynamicSkyBoost;
+    float upness = dot(normal, float3(0,1,0));
+    //float lambert = 2 - dot(normalize(normal.xz), normalize(tintGradient(uv)));
+    return lerp(low,high,(upness+1)/2) * _DynamicIntensity / (density(pos)+1);
 }
