@@ -666,7 +666,6 @@ public class ActionGameManager : MonoBehaviour
         if (menu.activeSelf)
         {
             _paused = false;
-            VolumeRenderer.EnableDepth = true;
             menu.SetActive(false);
             UiRoot.SetActive(true);
             if (!_menuShown)
@@ -679,7 +678,6 @@ public class ActionGameManager : MonoBehaviour
         else
         {
             _paused = true;
-            VolumeRenderer.EnableDepth = false;
             menu.SetActive(true);
             UiRoot.SetActive(false);
             _menuShown = Menu.gameObject.activeSelf;
@@ -1071,7 +1069,6 @@ public class ActionGameManager : MonoBehaviour
         var deathTime = Time.time;
         UnbindEntity();
         CurrentEntity = null;
-        VolumeRenderer.EnableDepth = false;
         MainMenu.gameObject.SetActive(true);
         Menu.gameObject.SetActive(false);
         CurrentGalaxy = null;

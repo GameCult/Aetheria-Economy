@@ -6,6 +6,7 @@ using System;
 using UnityEngine;
 using Unity.Mathematics;
 using UnityEngine.Experimental.Rendering;
+using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 using static Unity.Mathematics.math;
 using static Unity.Mathematics.noise;
@@ -17,68 +18,22 @@ using static Unity.Mathematics.noise;
 [RequireComponent( typeof( Camera ) )]
 public class VolumeSampling : MonoBehaviour
 {
-    //public Material VolMaterial;
     public Transform GridTransform;
     public GameSettings Settings;
-    //public int DownsampleBlurMask = 2;
-    // private Camera _camera;
-    // private RenderBuffer[] _mrt;
-    private Texture2D _blurMask;
-    private Texture2D _disabledBlurMask;
     private float _flowScroll;
 
     public RenderTexture NebulaSurfaceHeight;
     public RenderTexture NebulaPatchHeight;
     public RenderTexture NebulaPatch;
     public RenderTexture NebulaTint;
-    private Camera _camera;
 
-    public bool EnableDepth { get; set; } = true;
-    
-
-    private void Start()
-    {
-        //Debug.Log($"Supported MRT count: {SystemInfo.supportedRenderTargetCount}");
-        _camera = GetComponent<Camera>();
-        // _mrt = new RenderBuffer[2];
-        //_blurMask = new RenderTexture(Screen.width, Screen.height, 0, GraphicsFormat.R8_UNorm);
-        _blurMask = Color.white.ToTexture();
-        _disabledBlurMask = Color.black.ToTexture();
-    }
-
-    //[ImageEffectOpaque]
     void Update()
     {
-        // // check for no shader / shader compile error
-        // if( VolMaterial == null )
-        // {
-        //     Graphics.Blit(source, destination);
-        //     return;
-        // }
-        //
-        
         // Shader needs to know the position and scale of cameras used to render input textures
         if(GridTransform != null)
             Shader.SetGlobalVector("_GridTransform", new Vector4(GridTransform.position.x,GridTransform.position.z,GridTransform.localScale.x));
-        //
-        // Shader needs this matrix to generate world space rays
-        Shader.SetGlobalMatrix("_CamProj", (_camera.projectionMatrix * _camera.worldToCameraMatrix).inverse);
-        Shader.SetGlobalMatrix("_CamInvProj", (_camera.projectionMatrix * _camera.worldToCameraMatrix).inverse);
-        // _mrt[0] = destination.colorBuffer;
-        // _mrt[1] = _blurMask.colorBuffer;
-        //
-        // // Blit with a MRT.
-        // Graphics.SetRenderTarget(_mrt, source.depthBuffer);
-        //
-        // Graphics.Blit( source, VolMaterial, 0 );
-        
-        //Graphics.Blit(rt1, destination);
-        
-        if(EnableDepth)
-            Shader.SetGlobalTexture("_DoFBlurTex", _blurMask);
-        else
-            Shader.SetGlobalTexture("_DoFBlurTex", _disabledBlurMask);
-        
+
+        // Volumetric sampling parameters are used by several shaders
         Shader.SetGlobalTexture("_NebulaSurfaceHeight", NebulaSurfaceHeight);
         Shader.SetGlobalTexture("_NebulaPatchHeight", NebulaPatchHeight);
         Shader.SetGlobalTexture("_NebulaPatch", NebulaPatch);

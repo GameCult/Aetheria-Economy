@@ -42,7 +42,6 @@ Shader "Aetheria/CloudShader"
 			float4 _ProjectionExtents;
 			sampler2D _DitheringTex;
 			float4 _DitheringCoords;
-			uniform float4x4 _CamProj;
 			uniform float4x4 _CamInvProj;
 
 			struct appdata
@@ -95,7 +94,7 @@ Shader "Aetheria/CloudShader"
 				float3 worldDepth = DepthToWorld(screenPos, depthSample);
 				float raymarchEnd = length(worldDepth-worldPos.xyz);
 				
-				float sceneDepth = Linear01Depth(depthSample);
+				//float sceneDepth = Linear01Depth(depthSample);
 				//bool occluded = GetRaymarchEndFromSceneDepth(sceneDepth, raymarchEnd);
 				float3 viewDir = normalize(worldPos.xyz - _WorldSpaceCameraPos);
 

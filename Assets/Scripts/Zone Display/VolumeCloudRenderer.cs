@@ -40,7 +40,7 @@ public enum Quality
 /// <summary>
 /// Cloud renderer post processing.
 /// </summary>
-//[ImageEffectAllowedInSceneView]
+[ImageEffectAllowedInSceneView]
 [ExecuteInEditMode,RequireComponent(typeof(Camera))]
 [ImageEffectOpaque]
 public class VolumeCloudRenderer : EffectBase
@@ -134,6 +134,7 @@ public class VolumeCloudRenderer : EffectBase
             mat.EnableKeyword("LOW_QUALITY");
         }
 
+        mat.SetMatrix("_CamInvProj", (Camera.current.projectionMatrix * Camera.current.worldToCameraMatrix).inverse);
         mat.SetVector("_ProjectionExtents", mcam.GetProjectionExtents());
         mat.SetFloat("_RaymarchOffset", sequence.Get());
         mat.SetVector("_TexelSize", undersampleBuffer.texelSize);
