@@ -78,7 +78,7 @@ public abstract class CelestialBodyShading : ScriptableObject {
 		if (texture == null) {
 			texture = new Texture2D (width, 1);
 		} else if (texture.width != width) {
-			texture.Resize (width, 1);
+			texture.Reinitialize (width, 1);
 		}
 		if (gradient == null) {
 			gradient = new Gradient ();

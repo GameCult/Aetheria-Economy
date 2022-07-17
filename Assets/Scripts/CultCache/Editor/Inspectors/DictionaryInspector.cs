@@ -52,8 +52,8 @@ public class FloatDictionaryInspector : BaseInspector<Dictionary<Guid, float>, I
             if (v.rect.Contains(Event.current.mousePosition))
             {
                 var dragData = DragAndDrop.GetGenericData("Item");
-                var isId = dragData is Guid guid;
-                var dragEntry = isId ? DatabaseInspector.CultCache.Get(guid) : null;
+                var isId = dragData is Guid;
+                var dragEntry = isId ? DatabaseInspector.CultCache.Get((Guid)dragData) : null;
                 var correctType = attribute.EntryType.IsInstanceOfType(dragEntry);
                 if(Event.current.type == EventType.DragUpdated)
                     DragAndDrop.visualMode = correctType ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
@@ -62,7 +62,7 @@ public class FloatDictionaryInspector : BaseInspector<Dictionary<Guid, float>, I
                     if (isId && correctType)
                     {
                         DragAndDrop.AcceptDrag();
-                        value[guid] = 1;
+                        value[(Guid)dragData] = 1;
                         GUI.changed = true;
                     }
                 }
@@ -121,8 +121,8 @@ public class RangedFloatDictionaryInspector : BaseInspector<Dictionary<Guid, flo
             if (v.rect.Contains(Event.current.mousePosition))
             {
                 var dragData = DragAndDrop.GetGenericData("Item");
-                var isId = dragData is Guid guid;
-                var dragEntry = isId ? DatabaseInspector.CultCache.Get(guid) : null;
+                var isId = dragData is Guid;
+                var dragEntry = isId ? DatabaseInspector.CultCache.Get((Guid)dragData) : null;
                 var correctType = link.EntryType.IsInstanceOfType(dragEntry);
                 if(Event.current.type == EventType.DragUpdated)
                     DragAndDrop.visualMode = correctType ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
@@ -131,7 +131,7 @@ public class RangedFloatDictionaryInspector : BaseInspector<Dictionary<Guid, flo
                     if (isId && correctType)
                     {
                         DragAndDrop.AcceptDrag();
-                        value[guid] = range.Max;
+                        value[(Guid)dragData] = range.Max;
                         GUI.changed = true;
                     }
                 }
@@ -189,8 +189,8 @@ public class IntDictionaryInspector : BaseInspector<Dictionary<Guid, int>, Inspe
             if (v.rect.Contains(Event.current.mousePosition))
             {
                 var dragData = DragAndDrop.GetGenericData("Item");
-                var isId = dragData is Guid guid;
-                var dragEntry = isId ? DatabaseInspector.CultCache.Get(guid) : null;
+                var isId = dragData is Guid;
+                var dragEntry = isId ? DatabaseInspector.CultCache.Get((Guid)dragData) : null;
                 var correctType = attribute.EntryType.IsInstanceOfType(dragEntry);
                 if(Event.current.type == EventType.DragUpdated)
                     DragAndDrop.visualMode = correctType ? DragAndDropVisualMode.Copy : DragAndDropVisualMode.Rejected;
@@ -199,7 +199,7 @@ public class IntDictionaryInspector : BaseInspector<Dictionary<Guid, int>, Inspe
                     if (isId && correctType)
                     {
                         DragAndDrop.AcceptDrag();
-                        value[guid] = 1;
+                        value[(Guid)dragData] = 1;
                         GUI.changed = true;
                     }
                 }

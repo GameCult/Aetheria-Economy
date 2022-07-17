@@ -65,7 +65,7 @@ ScriptedImporter:
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-      shaderKeywords: _MAINTEX _METALLICGLOSSMAP _NORMALMAP _OCCLUSIONMAP _PARALLAXMAP
+      shaderKeywords: 
       lightmapFlags: 4
       enableInstancingVariants: 0
       doubleSidedGI: 0
