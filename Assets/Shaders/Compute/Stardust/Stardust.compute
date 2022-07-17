@@ -13,16 +13,11 @@ struct Particle
 
 RWStructuredBuffer<Particle> particles;
 
-// Use this texture to spawn particles over terrain
-Texture2D Heightmap;
-SamplerState samplerHeightmap;
-
 // Use this texture to choose the color of the particle
 Texture2D HueTexture;
-SamplerState samplerHueTexture; 
+SamplerState samplerHueTexture;
 
-//uniform float4x4 noiseOffsetMatrix;
-
+float period;
 float time;
 float spacing;
 float ceilingHeight;
@@ -121,20 +116,20 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 	uint xp = x + xt + offset;
 	uint yp = y + yt + offset;
 	
-	const float lifetime = frac(time+RandomFirst(xp, yp));
+	const float lifetime = frac(time / period + RandomFirst(xp, yp));
 	
 	particles[id.x].position = float3(
 		x * spacing + xt * spacing + perlinNoise1D(RandomValue()*1024)*spacing, 0,
 		y * spacing + yt * spacing + perlinNoise1D(RandomValue()*1024)*spacing);
-	const float2 puv = float2(.5,.5) - (particles[id.x].position.xz - _GridTransform.xy) / _GridTransform.z;
-	const float gravHeight = -Heightmap.SampleLevel(samplerHeightmap, puv, 0.0f).r + _NebulaFloorOffset;
+	const float2 puv = getUV(particles[id.x].position.xz);
+	const float gravHeight = -tex2Dlod(_NebulaSurfaceHeight, float4(puv, 0, 0)).x + _NebulaFloorOffset;
 	const float headroom = ceilingHeight - gravHeight;
 	particles[id.x].position.y = gravHeight + floorHeight + headroom *
 			pow(RandomValue(), max(1, heightExponent/(headroom*headroom))) +
 			perlinNoise1D(RandomValue()*1024)*spacing/2;
 	float noise;
-	const float3 flowDir = flow(particles[id.x].position, noise);
-	particles[id.x].position += flowDir * (lifetime * noise);
+	const float3 flowVec = flow(particles[id.x].position, noise);
+	particles[id.x].position -= flowVec * lifetime * period;
 	const float fade = smoothstep(0,ceilingHeight, particles[id.x].position.y);
 	const float d = pow(density(particles[id.x].position) + .01, 0.1);
 	particles[id.x].size = lerp(minimumSize, maximumSize, saturate(RandomValue()*fade)) * parabola(lifetime, 2);

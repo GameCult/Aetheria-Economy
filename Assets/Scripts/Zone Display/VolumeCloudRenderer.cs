@@ -110,7 +110,7 @@ public class VolumeCloudRenderer : EffectBase
 
         /* Some code is from playdead TAA. */
 
-        //1. Pass1, Render a undersampled buffer. The buffer is dithered using bayer matrix(every 3x3 pixel) and halton sequence.
+        //1. Pass1, Render a undersampled buffer. The buffer is dithered using blue noise and halton sequence.
         //If it's first frame, force a high quality sample to make the initial history buffer good enough.
         if (firstFrame || quality == Quality.Ultra) {
             mat.EnableKeyword("ULTRA_QUALITY");

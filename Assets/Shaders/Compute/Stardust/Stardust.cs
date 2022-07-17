@@ -15,7 +15,7 @@ public class Stardust : MonoBehaviour
     public ComputeShader ParticleCalculation;
     public Material ParticleMaterial;
     public int Span = 512;
-    public float Speed = .25f;
+    public float Period = .25f;
 
     public float MinimumSize = .1f;
     public float MaximumSize = 2;
@@ -99,12 +99,11 @@ public class Stardust : MonoBehaviour
     {
         //Bind resources to compute shader
         ParticleCalculation.SetBuffer(_updateParticlesKernel, "particles", _particlesBuffer);
-//        ParticleCalculation.SetBuffer(_updateParticlesKernel, "temperature", _temperature);
 
-        ParticleCalculation.SetFloat("time", Time.time * Speed);
+        ParticleCalculation.SetFloat("time", Time.time);
 
         var pos = GravityCamera.transform.position;
-        ParticleCalculation.SetVector("_GridTransform", new Vector4(pos.x,pos.z,GravityCamera.orthographicSize*2));
+        ParticleCalculation.SetFloat("period", Period);
         ParticleCalculation.SetFloat("spacing", Spacing);
         ParticleCalculation.SetFloat("ceilingHeight", Ceiling);
         ParticleCalculation.SetFloat("floorHeight", Floor);
@@ -113,31 +112,7 @@ public class Stardust : MonoBehaviour
         ParticleCalculation.SetFloat("minimumSize", MinimumSize);
         ParticleCalculation.SetInt("span", Span);
         
-        ParticleCalculation.SetTexture(_updateParticlesKernel, "Heightmap", Heightmap);
         ParticleCalculation.SetTexture(_updateParticlesKernel, "HueTexture", ParticleColors);
-        
-        ParticleCalculation.SetTexture(_updateParticlesKernel, "_NebulaSurfaceHeight", NebulaSurfaceHeight);
-        ParticleCalculation.SetTexture(_updateParticlesKernel, "_NebulaPatchHeight", NebulaPatchHeight);
-        ParticleCalculation.SetTexture(_updateParticlesKernel, "_NebulaPatch", NebulaPatch);
-        ParticleCalculation.SetTexture(_updateParticlesKernel, "_NebulaTint", NebulaTint);
-        
-        ParticleCalculation.SetFloat("_NebulaFillDensity", Settings.DefaultEnvironment.Nebula.FillDensity);
-        ParticleCalculation.SetFloat("_SafetyDistance", Settings.DefaultEnvironment.Nebula.SafetyDistance);
-        ParticleCalculation.SetFloat("_NebulaFloorDensity", Settings.DefaultEnvironment.Nebula.FloorDensity);
-        ParticleCalculation.SetFloat("_NebulaPatchDensity", Settings.DefaultEnvironment.Nebula.PatchDensity);
-        ParticleCalculation.SetFloat("_NebulaFloorOffset", Settings.DefaultEnvironment.Nebula.FloorOffset);
-        ParticleCalculation.SetFloat("_NebulaFloorBlend", Settings.DefaultEnvironment.Nebula.FloorBlend);
-        ParticleCalculation.SetFloat("_NebulaPatchBlend", Settings.DefaultEnvironment.Nebula.PatchBlend);
-        // Shader.SetGlobalFloat("_TintExponent", Settings.DefaultEnvironment.);
-        ParticleCalculation.SetFloat("_NoiseScale", Settings.DefaultEnvironment.Noise.Scale);
-        ParticleCalculation.SetFloat("_NoiseExponent", Settings.DefaultEnvironment.Noise.Exponent);
-        ParticleCalculation.SetFloat("_NoiseAmplitude", Settings.DefaultEnvironment.Noise.Amplitude);
-        ParticleCalculation.SetFloat("_NoiseSpeed", Settings.DefaultEnvironment.Noise.Speed);
-        ParticleCalculation.SetFloat("_FlowScale", Settings.DefaultEnvironment.Flow.Scale);
-        ParticleCalculation.SetFloat("_FlowAmplitude", Settings.DefaultEnvironment.Flow.Amplitude);
-        _flowScroll += Settings.DefaultEnvironment.Flow.ScrollSpeed * Time.deltaTime;
-        ParticleCalculation.SetFloat("_FlowScroll", _flowScroll);
-        ParticleCalculation.SetFloat("_FlowSpeed", Settings.DefaultEnvironment.Flow.Speed);
 
         //Dispatch, launch threads on GPU
         int numberOfGroups = Mathf.CeilToInt((float)Span * Span / GROUP_SIZE);

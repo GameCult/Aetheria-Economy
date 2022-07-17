@@ -67,6 +67,6 @@ public class VolumeSampling : MonoBehaviour
         Shader.SetGlobalFloat("_FlowAmplitude", Settings.DefaultEnvironment.Flow.Amplitude);
         _flowScroll += Settings.DefaultEnvironment.Flow.ScrollSpeed * Time.deltaTime;
         Shader.SetGlobalFloat("_FlowScroll", _flowScroll);
-        Shader.SetGlobalFloat("_FlowSpeed", Settings.DefaultEnvironment.Flow.Speed);
+        Shader.SetGlobalFloat("_FlowPeriod", Settings.DefaultEnvironment.Flow.Period);
     }
 }

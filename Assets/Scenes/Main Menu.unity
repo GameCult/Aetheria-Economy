@@ -860,9 +860,9 @@ MonoBehaviour:
   ParticleCalculation: {fileID: 7200000, guid: f53a4ba56f0db2a49ad9f68150bf298a, type: 3}
   ParticleMaterial: {fileID: 2100000, guid: fc00c35c3c370774c88d55240b6538ce, type: 2}
   Span: 128
-  Speed: -0.05
+  Period: 2
   MinimumSize: 0
-  MaximumSize: 0.5
+  MaximumSize: 0.75
   Spacing: 6
   Ceiling: -0.1
   Floor: -30

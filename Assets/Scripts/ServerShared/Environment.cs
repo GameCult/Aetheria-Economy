@@ -43,7 +43,7 @@ public class FlowSettings
     [JsonProperty("scale"), Key(0)] public float Scale;
     [JsonProperty("amplitude"), Key(1)] public float Amplitude;
     [JsonProperty("scrollSpeed"), Key(2)] public float ScrollSpeed;
-    [JsonProperty("velocity"), Key(3)] public float Speed;
+    [JsonProperty("period"), Key(3)] public float Period;
 }
 
 [Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
