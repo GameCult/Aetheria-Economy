@@ -866,7 +866,7 @@ MonoBehaviour:
   Spacing: 6
   Ceiling: -0.1
   Floor: -30
-  HeightExponent: 200000
+  HeightExponent: 3
   NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   NebulaPatchHeight: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
   NebulaPatch: {fileID: 8400000, guid: 06ec5ef8a5830fc44b1ac1a6e123add5, type: 2}

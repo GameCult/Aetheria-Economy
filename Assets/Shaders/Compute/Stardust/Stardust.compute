@@ -123,9 +123,9 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 		y * spacing + yt * spacing + perlinNoise1D(RandomValue()*1024)*spacing);
 	const float2 puv = getUV(particles[id.x].position.xz);
 	const float gravHeight = -tex2Dlod(_NebulaSurfaceHeight, float4(puv, 0, 0)).x + _NebulaFloorOffset;
-	const float headroom = ceilingHeight - gravHeight;
+	const float headroom = clamp(ceilingHeight - gravHeight, 25, 150);
 	particles[id.x].position.y = gravHeight + floorHeight + headroom *
-			pow(RandomValue(), max(1, heightExponent/(headroom*headroom))) +
+			pow(RandomValue(), heightExponent) +
 			perlinNoise1D(RandomValue()*1024)*spacing/2;
 	float noise;
 	const float3 flowVec = flow(particles[id.x].position, noise);

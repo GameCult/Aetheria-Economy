@@ -16,7 +16,7 @@ float DeltaTime;
 
 // Adjustment
 int2 Delta;
-float Fade;
+float Damping;
 
 // External force
 float2 ForceOrigin;
@@ -73,7 +73,7 @@ void Adjust(uint2 tid : SV_DispatchThreadID)
 
     if(any(prevUV<0)||any(prevUV>1))
         W_out[tid] = f.xz;
-    else W_out[tid] = lerp(U_in.SampleLevel(samplerU_in, prevUV, 0), f.xz, Fade);
+    else W_out[tid] = lerp(U_in.SampleLevel(samplerU_in, prevUV, 0), f.xz, Damping);
 }
 
 // Advect step

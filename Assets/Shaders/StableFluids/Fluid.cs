@@ -16,6 +16,7 @@ namespace StableFluids
 
         [SerializeField] int _resolution = 512;
         [SerializeField] float _viscosity = 1e-6f;
+        [SerializeField] float _damping = .05f;
         [SerializeField] float _range = 512;
         [SerializeField] Transform _camera;
 
@@ -49,6 +50,7 @@ namespace StableFluids
             public const int PFinish = 3;
             public const int Jacobi1 = 4;
             public const int Jacobi2 = 5;
+            public const int Adjust = 6;
         }
 
         int ThreadCount { get { return (_resolution + 7) / 8; } }
@@ -132,13 +134,18 @@ namespace StableFluids
             Shader.SetGlobalVector("_FluidTransform", new Vector4(cameraPosition.x, cameraPosition.y, _range));
 
             var delta = (float2)(cameraIntPosition - _previousCameraIntPosition) / Resolution;
+            _compute.SetVector("Delta", new Vector4(delta.x,delta.y));
+            _compute.SetFloat("Damping", _damping);
+            _compute.SetTexture(Kernels.Adjust, "U_in", VFB.V1);
+            _compute.SetTexture(Kernels.Adjust, "W_out", VFB.V3);
+            _compute.Dispatch(Kernels.Adjust, ThreadCount, ThreadCount, 1);
 
             // Common variables
             _compute.SetFloat("Time", Time.time);
             _compute.SetFloat("DeltaTime", dt);
 
             // Advection
-            _compute.SetTexture(Kernels.Advect, "U_in", VFB.V1);
+            _compute.SetTexture(Kernels.Advect, "U_in", VFB.V3);
             _compute.SetTexture(Kernels.Advect, "W_out", VFB.V2);
             _compute.Dispatch(Kernels.Advect, ThreadCount, ThreadCount, 1);
 
