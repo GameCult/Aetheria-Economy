@@ -12,7 +12,7 @@ MonoImporter:
   - HueTexture: {instanceID: 0}
   - Heightmap: {fileID: 8400000, guid: 55786e8a3fda620489070358940e3c04, type: 2}
   - Target: {instanceID: 0}
-  executionOrder: 0
+  executionOrder: -5
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

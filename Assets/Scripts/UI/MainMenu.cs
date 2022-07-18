@@ -15,6 +15,7 @@ using Random = UnityEngine.Random;
 
 public class MainMenu : MonoBehaviour
 {
+    public VolumeCloudRenderer CloudRenderer;
     public GameSettings Settings;
     public ConfirmationDialog Dialog;
     public bool InGame;
@@ -243,6 +244,17 @@ public class MainMenu : MonoBehaviour
     {
         _nextMenu.panel.Clear();
         _nextMenu.panel.Title.text = TitleSubtitle("graphics", "settings");
+        _nextMenu.panel.AddField("Nebula Quality",
+            () => (int)ActionGameManager.PlayerSettings.GraphicsSettings.NebulaQuality,
+            i =>
+            {
+                ActionGameManager.PlayerSettings.GraphicsSettings.NebulaQuality = (Quality)i;
+                CloudRenderer.quality = ActionGameManager.PlayerSettings.GraphicsSettings.NebulaQuality;
+            },
+            Enum.GetNames(typeof(Quality)));
+        _nextMenu.panel.AddField("Show Asteroids in Minimap",
+            () => ActionGameManager.PlayerSettings.GraphicsSettings.ShowAsteroidsInMinimap,
+            b => ActionGameManager.PlayerSettings.GraphicsSettings.ShowAsteroidsInMinimap = b);
         _nextMenu.panel.AddButton("Back",
             () =>
             {

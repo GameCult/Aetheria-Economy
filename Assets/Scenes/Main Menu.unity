@@ -1355,7 +1355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c03374f22d0a3d4882018de66894a84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GridTransform: {fileID: 1172538221}
+  GridCamera: {fileID: 2103364771}
   Settings: {fileID: 11400000, guid: cd2344e2001a37544aab0960c164d4ff, type: 2}
   NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   NebulaPatchHeight: {fileID: 8400000, guid: 06ec5ef8a5830fc44b1ac1a6e123add5, type: 2}
@@ -1374,7 +1374,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   downSample: 0
-  quality: 1
+  quality: 2
   cloudShader: {fileID: 4800000, guid: 84e97169589c5e94e8521fe4deb2e3f8, type: 3}
 --- !u!4 &971662241 stripped
 Transform:
@@ -2493,6 +2493,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4533226043457584178, guid: 3d8d9cbf10b12214e98891c1f03c1e99,
+        type: 3}
+      propertyPath: CloudRenderer
+      value: 
+      objectReference: {fileID: 965376329}
     - target: {fileID: 4533226043457584179, guid: 3d8d9cbf10b12214e98891c1f03c1e99,
         type: 3}
       propertyPath: m_Pivot.x

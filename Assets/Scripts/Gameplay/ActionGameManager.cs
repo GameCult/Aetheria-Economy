@@ -254,6 +254,11 @@ public class ActionGameManager : MonoBehaviour
         
         ItemManager = new ItemManager(CultCache, Settings.GameplaySettings, Debug.Log);
         ZoneRenderer.ItemManager = ItemManager;
+        
+        // If hiding minimap asteroids, turn them off to start with
+        if (!PlayerSettings.GraphicsSettings.ShowAsteroidsInMinimap)
+            ZoneRenderer.ShowAsteroidUI = false;
+        
         // TODO: Process Stories
 
         // _loadoutPath = GameDataDirectory.CreateSubdirectory("Loadouts");

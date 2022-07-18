@@ -29,14 +29,6 @@ public class HaltonSequence
     }
 }
 
-public enum Quality
-{
-    Low,
-    Normal,    //Low sample count
-    High,       //High sample count and high shadow sample count.
-    Ultra
-}
-
 /// <summary>
 /// Cloud renderer post processing.
 /// </summary>
@@ -85,6 +77,8 @@ public class VolumeCloudRenderer : EffectBase
 
     private void Start() {
         this.EnsureMaterial(true);
+        if (Application.isPlaying)
+            quality = ActionGameManager.PlayerSettings.GraphicsSettings.NebulaQuality;
     }
 
     [ImageEffectOpaque]

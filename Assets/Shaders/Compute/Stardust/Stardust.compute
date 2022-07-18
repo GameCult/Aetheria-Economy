@@ -127,8 +127,7 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 	particles[id.x].position.y = gravHeight + floorHeight + headroom *
 			pow(RandomValue(), heightExponent) +
 			perlinNoise1D(RandomValue()*1024)*spacing/2;
-	float noise;
-	const float3 flowVec = flow(particles[id.x].position, noise);
+	const float3 flowVec = flow(particles[id.x].position);
 	particles[id.x].position -= flowVec * lifetime * period;
 	const float fade = smoothstep(0,ceilingHeight, particles[id.x].position.y);
 	const float d = pow(density(particles[id.x].position) + .01, 0.1);

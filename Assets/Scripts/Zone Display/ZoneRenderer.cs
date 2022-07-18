@@ -82,6 +82,7 @@ public class ZoneRenderer : MonoBehaviour
     private IDisposable[] _perspectiveSubscriptions = new IDisposable[2];
     private List<IDisposable> _zoneSubscriptions = new List<IDisposable>();
     private PlanetObject[] _suns;
+    private bool _showAsteroidUI;
 
     public Dictionary<Wormhole, (GameObject gravity, CompassIcon icon)> WormholeInstances = new Dictionary<Wormhole, (GameObject, CompassIcon)>();
     private List<ItemPickup> _loot = new List<ItemPickup>();
@@ -141,6 +142,22 @@ public class ZoneRenderer : MonoBehaviour
                 camera.orthographicSize = value;
             SetIconSize(value * Settings.MinimapIconSize);
             // MinimapGravityQuad.transform.localScale = value * 2 * Vector3.one;
+        }
+    }
+
+    public bool ShowAsteroidUI
+    {
+        get { return _showAsteroidUI; }
+        set
+        {
+            if (value != _showAsteroidUI)
+            {
+                _showAsteroidUI = value;
+                foreach (var beltUI in _beltObjects.Values)
+                {
+                    beltUI.Filter.gameObject.SetActive(_showAsteroidUI);
+                }
+            }
         }
     }
 
@@ -466,7 +483,8 @@ public class ZoneRenderer : MonoBehaviour
                 Graphics.DrawMeshInstanced(meshes[i].Mesh, 0, meshes[i].Material, _beltMatrices[belt.Key][i]);
             }
 
-            _beltObjects[belt.Key].Update(belt.Value.Positions);
+            if(_showAsteroidUI)
+                _beltObjects[belt.Key].Update(belt.Value.Positions);
         }
 
         foreach (var planet in Planets)
@@ -510,16 +528,15 @@ public class ZoneRenderer : MonoBehaviour
             wormhole.icon.transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg - 90);
         }
 
-        var fogPos = FogCameraParent.position;
+        //var fogPos = FogCameraParent.position;
         SectorBoundaryBrush.material.SetFloat("_Power", Settings.PlanetSettings.ZoneDepthExponent);
         SectorBoundaryBrush.material.SetFloat("_Depth", Settings.PlanetSettings.ZoneDepth + Settings.PlanetSettings.ZoneBoundaryFog);
-        var startDepth = Zone.PowerPulse(Settings.MinimapZoneGravityRange, Settings.PlanetSettings.ZoneDepthExponent) *
-                         Settings.PlanetSettings.ZoneDepth;
-        var depthRange = Settings.PlanetSettings.ZoneDepth - startDepth + _maxDepth;
+        // var startDepth = Zone.PowerPulse(Settings.MinimapZoneGravityRange, Settings.PlanetSettings.ZoneDepthExponent) *
+        //                  Settings.PlanetSettings.ZoneDepth;
+        //var depthRange = Settings.PlanetSettings.ZoneDepth - startDepth + _maxDepth;
         // MinimapGravityQuad.material.SetFloat("_StartDepth", startDepth);
         // MinimapGravityQuad.material.SetFloat("_DepthRange", depthRange);
-        Shader.SetGlobalFloat("_GridOffset", Settings.PlanetSettings.ZoneBoundaryFog);
-        Shader.SetGlobalVector("_GridTransform", new Vector4(fogPos.x, fogPos.z, _viewDistance * 2));
+        //Shader.SetGlobalFloat("_GridOffset", Settings.PlanetSettings.ZoneBoundaryFog);
         // var gravPos = MinimapGravityQuad.transform.position;
         // gravPos.y = -Settings.PlanetSettings.ZoneDepth - _maxDepth;
         // MinimapGravityQuad.transform.position = gravPos;

@@ -18,20 +18,24 @@ using static Unity.Mathematics.noise;
 [RequireComponent( typeof( Camera ) )]
 public class VolumeSampling : MonoBehaviour
 {
-    public Transform GridTransform;
+    public Camera GridCamera;
     public GameSettings Settings;
-    private float _flowScroll;
 
     public RenderTexture NebulaSurfaceHeight;
     public RenderTexture NebulaPatchHeight;
     public RenderTexture NebulaPatch;
     public RenderTexture NebulaTint;
+    
+    private float _flowScroll;
+    private Transform _gridTransform;
 
     void Update()
     {
+        if(_gridTransform==null)
+            _gridTransform = GridCamera?.transform;
         // Shader needs to know the position and scale of cameras used to render input textures
-        if(GridTransform != null)
-            Shader.SetGlobalVector("_GridTransform", new Vector4(GridTransform.position.x,GridTransform.position.z,GridTransform.localScale.x));
+        if(GridCamera != null)
+            Shader.SetGlobalVector("_GridTransform", new Vector4(_gridTransform.position.x,_gridTransform.position.z,GridCamera.orthographicSize*2));
 
         // Volumetric sampling parameters are used by several shaders
         Shader.SetGlobalTexture("_NebulaSurfaceHeight", NebulaSurfaceHeight);

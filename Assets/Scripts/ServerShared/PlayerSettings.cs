@@ -12,6 +12,7 @@ public class PlayerSettings
     [Key(3)] public Dictionary<string, string> HashedStoryFiles = new Dictionary<string, string>();
     [Key(4)] public PlayerGameplaySettings GameplaySettings = new PlayerGameplaySettings();
     [Key(5)] public PlayerInputSettings InputSettings = new PlayerInputSettings();
+    [Key(6)] public PlayerGraphicsSettings GraphicsSettings = new PlayerGraphicsSettings();
 
     public string FormatTemperature(float t)
     {
@@ -57,8 +58,23 @@ public class PlayerGameplaySettings
 }
 
 [MessagePackObject]
+public class PlayerGraphicsSettings
+{
+    [Key(0)] public Quality NebulaQuality = Quality.Normal;
+    [Key(1)] public bool ShowAsteroidsInMinimap;
+}
+
+[MessagePackObject]
 public class PlayerInputSettings
 {
     [Key(0)] public Dictionary<(string action, int binding), string> InputActionMap = new Dictionary<(string action, int binding), string>();
     [Key(1)] public List<string> ActionBarInputs = new List<string>();
+}
+
+public enum Quality
+{
+    Low,
+    Normal,
+    High,
+    Ultra
 }

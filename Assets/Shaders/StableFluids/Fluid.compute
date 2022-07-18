@@ -55,27 +55,6 @@ Texture2D<float2> X2_in;
 Texture2D<float2> B2_in;
 RWTexture2D<float2> X2_out;
 
-// Adjust step (translate & fade towards global velocity field)
-[numthreads(8, 8, 1)]
-void Adjust(uint2 tid : SV_DispatchThreadID)
-{
-    uint2 dim;
-    W_out.GetDimensions(dim.x, dim.y);
-
-    float2 uv = (tid + 0.5) / dim;
-    float2 globalUV = (uv - .5) * _FluidTransform.z + _FluidTransform.xy;
-    float2 gravUV = getUV(globalUV);
-    float3 globalPos = float3(globalUV.x, -tex2Dlod(_NebulaSurfaceHeight, float4(gravUV, 0, 0)).x, globalUV.x);
-    float noise;
-    float3 f = flow(globalPos, noise);
-    
-    float2 prevUV = uv - Delta;
-
-    if(any(prevUV<0)||any(prevUV>1))
-        W_out[tid] = f.xz;
-    else W_out[tid] = lerp(U_in.SampleLevel(samplerU_in, prevUV, 0), f.xz, Damping);
-}
-
 // Advect step
 [numthreads(8, 8, 1)]
 void Advect(uint2 tid : SV_DispatchThreadID)
@@ -153,4 +132,24 @@ void Jacobi2(uint2 tid : SV_DispatchThreadID)
 {
     X2_out[tid] = (X2_in[tid - int2(1, 0)] + X2_in[tid + int2(1, 0)] +
                    X2_in[tid - int2(0, 1)] + X2_in[tid + int2(0, 1)] + Alpha * B2_in[tid]) / Beta;
+}
+
+// Adjust step (translate & fade towards global velocity field)
+[numthreads(8, 8, 1)]
+void Adjust(uint2 tid : SV_DispatchThreadID)
+{
+    uint2 dim;
+    W_out.GetDimensions(dim.x, dim.y);
+
+    float2 uv = (tid + float2(.5,.5)) / dim;
+    float2 globalPosXZ = (uv - .5) * _FluidTransform.z + _FluidTransform.xy;
+    float2 gravUV = getUV(globalPosXZ);
+    float3 globalPos = float3(globalPosXZ.x, -tex2Dlod(_NebulaSurfaceHeight, float4(gravUV, 0, 0)).x, globalPosXZ.y);
+    float2 f = flow(globalPos).xz * (_FluidTransform.z / dim.x);
+    
+    float2 prevUV = uv - Delta;
+
+    //if(any(prevUV<0)||any(prevUV>1))
+        W_out[tid] = f;
+    //else W_out[tid] = lerp(U_in.SampleLevel(samplerU_in, prevUV, 0), f, Damping);
 }

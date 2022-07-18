@@ -15,6 +15,7 @@ using int2 = Unity.Mathematics.int2;
 public class MapRenderer : MonoBehaviour
 {
     public ActionGameManager GameManager;
+    public ZoneRenderer ZoneRenderer;
     public TextMeshProUGUI Title;
     public Camera MapOverlayCamera;
     public Camera GravityCamera;
@@ -49,6 +50,10 @@ public class MapRenderer : MonoBehaviour
         TintCamera.gameObject.SetActive(true);
         InfluenceCamera.gameObject.SetActive(true);
         Title.text = $"Zone: {GameManager.Zone.GalaxyZone.Name}";
+        
+        // If hiding minimap asteroids, turn them back on for the map screen
+        if (!ActionGameManager.PlayerSettings.GraphicsSettings.ShowAsteroidsInMinimap)
+            ZoneRenderer.ShowAsteroidUI = true;
     }
 
     private void OnDisable()
@@ -61,6 +66,10 @@ public class MapRenderer : MonoBehaviour
         GravityCamera.gameObject.SetActive(false);
         TintCamera.gameObject.SetActive(false);
         InfluenceCamera.gameObject.SetActive(false);
+        
+        // If hiding minimap asteroids, turn them back off when leaving the map screen
+        if (!ActionGameManager.PlayerSettings.GraphicsSettings.ShowAsteroidsInMinimap)
+            ZoneRenderer.ShowAsteroidUI = false;
     }
 
     void ReleaseTextures()
