@@ -105,3 +105,4 @@ Economy.Shared/obj/
 *.blend1
 
 Packages/packages-lock.json
+GameData/PlayerSettings.msgpack
