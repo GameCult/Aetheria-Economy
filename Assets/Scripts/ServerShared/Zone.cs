@@ -138,11 +138,9 @@ public class Zone
 
         foreach (var belt in AsteroidBelts)
         {
-            Array.Copy(belt.Value.NewPositions, belt.Value.Positions, belt.Value.Positions.Length);
-            Array.Copy(belt.Value.NewVelocities, belt.Value.Velocities, belt.Value.Velocities.Length);
-            Array.Copy(belt.Value.NewScales, belt.Value.Scales, belt.Value.Scales.Length);
-            Array.Copy(belt.Value.NewRotations, belt.Value.Rotations, belt.Value.Rotations.Length);
-            BeltUpdates.Add(Task.Run(() => UpdateAsteroidTransformsAsync(belt.Key)));
+            Array.Copy(belt.Value.NewTransforms, belt.Value.Transforms, belt.Value.Transforms.Length);
+            belt.Value.OrbitPosition = belt.Value.NewOrbitPosition;
+            BeltUpdates.Add(Task.Run(() => UpdateAsteroidTransforms(belt.Key)));
         }
         
         foreach(var agent in Agents)
@@ -200,7 +198,7 @@ public class Zone
     {
         var beltData = Planets[planetDataID] as AsteroidBeltData;
 
-        var asteroidPositions = AsteroidBelts[planetDataID].Positions;
+        var asteroidPositions = AsteroidBelts[planetDataID].Transforms;
 
         int nearest = 0;
         float nearestDistance = Single.MaxValue;
@@ -219,14 +217,14 @@ public class Zone
 
     public bool AsteroidExists(Guid planetDataID, int asteroid) => ((AsteroidBeltData) Planets[planetDataID]).Asteroids.Length > asteroid && asteroid >= 0;
 
-    private void UpdateAsteroidTransformsAsync(Guid planetDataID)
+    private void UpdateAsteroidTransforms(Guid planetDataID)
     {
         var beltData = Planets[planetDataID] as AsteroidBeltData;
         
         var belt = AsteroidBelts[planetDataID];
 
         var orbitData = Orbits[beltData.Orbit].Data;
-        var orbitPosition = GetOrbitPosition(orbitData.Parent);
+        belt.NewOrbitPosition = GetOrbitPosition(orbitData.Parent);
         for (var i = 0; i < beltData.Asteroids.Length; i++)
         {
             float size;
@@ -239,12 +237,11 @@ public class Zone
             }
             else size = Settings.AsteroidSize.Evaluate(beltData.Asteroids[i].Size);
 
-            belt.NewRotations[i] = (float) (_time * beltData.Asteroids[i].RotationSpeed % (PI * 2));
-            belt.NewScales[i] = size;
+            var rot = (float) (_time * beltData.Asteroids[i].RotationSpeed % (PI * 2));
             var pos = OrbitData.Evaluate((float) frac(_time / Settings.OrbitPeriod.Evaluate(beltData.Asteroids[i].Distance) +
-                                                      beltData.Asteroids[i].Phase)) * beltData.Asteroids[i].Distance + orbitPosition;
-            belt.NewVelocities[i] = pos - belt.Positions[i].xz;
-            belt.NewPositions[i] = float3(pos.x, GetHeight(pos) + Settings.AsteroidVerticalOffset, pos.y);
+                                                      beltData.Asteroids[i].Phase)) * beltData.Asteroids[i].Distance + belt.NewOrbitPosition;
+            //belt.NewPositions[i] = float3(pos.x, GetHeight(pos) + Settings.AsteroidVerticalOffset, pos.y);
+            belt.NewTransforms[i] = float4(pos.x, pos.y, rot, size);
         }
     }
 
@@ -470,14 +467,11 @@ public class Sun : GasGiant
 public class AsteroidBelt
 {
     public AsteroidBeltData Data;
-    public float3[] Positions; // x, y, rotation, scale
-    public float3[] NewPositions; // x, y, rotation, scale
-    public float2[] Velocities;
-    public float2[] NewVelocities;
-    public float[] Rotations;
-    public float[] NewRotations;
-    public float[] Scales;
-    public float[] NewScales;
+    public float4[] Transforms; // x, y, rotation, scale
+    public float4[] NewTransforms; // x, y, rotation, scale
+    public float Radius { get; }
+    public float2 OrbitPosition;
+    public float2 NewOrbitPosition;
     public Dictionary<int, float> RespawnTimers = new Dictionary<int, float>();
     public Dictionary<int, float> Damage = new Dictionary<int, float>();
     public Dictionary<(Entity, int), float> MiningAccumulator = new Dictionary<(Entity, int), float>();
@@ -485,14 +479,9 @@ public class AsteroidBelt
     public AsteroidBelt(AsteroidBeltData data)
     {
         Data = data;
-        Positions = new float3[data.Asteroids.Length];
-        NewPositions = new float3[data.Asteroids.Length];
-        Velocities = new float2[data.Asteroids.Length];
-        NewVelocities = new float2[data.Asteroids.Length];
-        Rotations = new float[data.Asteroids.Length];
-        NewRotations = new float[data.Asteroids.Length];
-        Scales = new float[data.Asteroids.Length];
-        NewScales = new float[data.Asteroids.Length];
+        Transforms = new float4[data.Asteroids.Length];
+        NewTransforms = new float4[data.Asteroids.Length];
+        Radius = data.Asteroids.Max(a => a.Distance);
     }
 }
 

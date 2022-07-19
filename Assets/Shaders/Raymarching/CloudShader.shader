@@ -123,7 +123,6 @@ Shader "Aetheria/CloudShader"
 				#pragma fragment frag
 				#pragma multi_compile LOW_QUALITY MEDIUM_QUALITY HIGH_QUALITY
 
-				#include "./CloudShaderHelper.cginc"
 				#include "UnityCG.cginc"
 				#include "Assets/Shaders/PackFloat.cginc"
 				

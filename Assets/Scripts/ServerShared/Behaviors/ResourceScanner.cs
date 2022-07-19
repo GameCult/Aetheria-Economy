@@ -76,7 +76,7 @@ public class ResourceScanner : Behavior, IAlwaysUpdatedBehavior
             {
                 if(Asteroid > -1 &&
                    Asteroid < beltData.Asteroids.Length &&
-                   length(Entity.Position.xz - Entity.Zone.AsteroidBelts[ScanTarget].Positions[Asteroid].xz) < Range)
+                   length(Entity.Position.xz - Entity.Zone.AsteroidBelts[ScanTarget].Transforms[Asteroid].xy) < Range)
                 {
                     _scanTime += dt;
                     if (_scanTime > ScanDuration)

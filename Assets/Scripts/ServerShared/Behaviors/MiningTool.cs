@@ -58,7 +58,7 @@ public class MiningTool : Behavior
         var belt = Entity.Zone.AsteroidBelts[AsteroidBelt];
         if (AsteroidBelt != Guid.Empty && 
             Entity.Zone.AsteroidExists(AsteroidBelt, Asteroid) && 
-            length(Entity.Position.xz - belt.Positions[Asteroid].xz) - belt.Scales[Asteroid] < Range)
+            length(Entity.Position.xz - belt.Transforms[Asteroid].xy) - belt.Transforms[Asteroid].w < Range)
         {
             Entity.Zone.MineAsteroid(
                 Entity,
