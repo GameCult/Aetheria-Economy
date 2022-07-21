@@ -30,6 +30,7 @@ using Random = UnityEngine.Random;
 
 public class ActionGameManager : MonoBehaviour
 {
+    // Always check for null if accessing from anywhere that might not be in-game (e.g. menu UI)
     public static ActionGameManager Instance { get; private set; }
     private static DirectoryInfo _gameDataDirectory;
     public static DirectoryInfo GameDataDirectory
@@ -49,9 +50,11 @@ public class ActionGameManager : MonoBehaviour
             _cultCache.AddBackingStore(new MultiFileJsonBackingStore(GameDataDirectory.FullName));
             // _cultCache.AddBackingStore(
             //     new SingleFileMessagePackBackingStore(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack")));
+            
+            // Particularly heavy objects should be stored in / retrieved from MsgPack files as it's much tighter than JSON
+            // Such as NameFiles, which are just huge collections of geonames used to condition Markov chains
             _cultCache.AddBackingStore(new MultiFileMessagePackBackingStore(GameDataDirectory.FullName), typeof(NameFile));
-            // _cultCache.AddBackingStore(
-            //     new MultiFileMessagePackBackingStore(GameDataDirectory.FullName), typeof(NameFile));
+            
             _cultCache.PullAllBackingStores();
             
             return _cultCache;
@@ -119,7 +122,6 @@ public class ActionGameManager : MonoBehaviour
     public CinemachineVirtualCamera WormholeCamera;
     //public SectorRenderer SectorRenderer;
     public SectorMap SectorMap;
-    public VolumeSampling VolumeRenderer;
     
     [Header("Menu UI")]
     public MainMenu MainMenu;
@@ -193,6 +195,14 @@ public class ActionGameManager : MonoBehaviour
     public Entity DockedEntity { get; private set; }
     //if better place, please move
     public Entity TowingStation { get; private set; }
+
+    public ZoneEnvironment CurrentEnvironment
+    {
+        get
+        {
+            return Settings.DefaultEnvironment;
+        }
+    }
 
     public Entity CurrentEntity
     {

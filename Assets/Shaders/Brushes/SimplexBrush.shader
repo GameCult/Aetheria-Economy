@@ -74,5 +74,4 @@ Category {
 		}
 	}	
 }
-CustomEditor "CellBrushEditor"
 }

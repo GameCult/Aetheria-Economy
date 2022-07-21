@@ -1,7 +1,14 @@
-﻿#include "Assets/Shaders/Volumetric.cginc"
+﻿// Global keywords defining environment settings shared between shaders
+// Would rather just #include_with_pragmas
+// but it's broken in compute due to a bug that has been fixed but not backported yet
+#pragma multi_compile __ FLOW_GLOBAL 
+#pragma multi_compile __ FLOW_SLOPE
+#pragma multi_compile __ NOISE_SLOPE
 
 //Tell unity that we have defined a kernel
 #pragma kernel UpdateParticles
+
+#include "Assets/Shaders/Volumetric.cginc"
 
 //Store Particle data in a struct
 struct Particle
@@ -24,6 +31,8 @@ float ceilingHeight;
 float floorHeight;
 float maximumSize;
 float minimumSize;
+float minHeadroom;
+float maxHeadroom;
 float heightExponent;
 uint span;
 
@@ -122,15 +131,15 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 		x * spacing + xt * spacing + perlinNoise1D(RandomValue()*1024)*spacing, 0,
 		y * spacing + yt * spacing + perlinNoise1D(RandomValue()*1024)*spacing);
 	const float2 puv = getUV(particles[id.x].position.xz);
-	const float gravHeight = -tex2Dlod(_NebulaSurfaceHeight, float4(puv, 0, 0)).x + _NebulaFloorOffset;
-	const float headroom = clamp(ceilingHeight - gravHeight, 25, 150);
-	particles[id.x].position.y = gravHeight + floorHeight + headroom *
+	const float gravHeight = -tex2Dlod(_NebulaSurfaceHeight, float4(puv, 0, 0)).x + floorHeight;
+	const float headroom = clamp(ceilingHeight - gravHeight, minHeadroom, maxHeadroom);
+	particles[id.x].position.y = gravHeight + headroom *
 			pow(RandomValue(), heightExponent) +
 			perlinNoise1D(RandomValue()*1024)*spacing/2;
 	const float3 flowVec = flow(particles[id.x].position);
 	particles[id.x].position -= flowVec * lifetime * period;
-	const float fade = smoothstep(0,ceilingHeight, particles[id.x].position.y);
+	//const float fade = smoothstep(0,ceilingHeight, particles[id.x].position.y);
 	const float d = pow(density(particles[id.x].position) + .01, 0.1);
-	particles[id.x].size = lerp(minimumSize, maximumSize, saturate(RandomValue()*fade)) * parabola(lifetime, 2);
+	particles[id.x].size = lerp(minimumSize, maximumSize, saturate(RandomValue())) * parabola(lifetime, 2);
 	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomValue(), 0.0f), 0.0f).rgb * d;
 }

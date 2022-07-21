@@ -11,7 +11,7 @@ Shader "Aetheria/Asteroid"
     #pragma vertex vert
     #pragma fragment frag
     #include "UnityCG.cginc" // for UnityObjectToWorldNormal
-    #include "Assets/Shaders/Volumetric.cginc"
+    #include_with_pragmas "Assets/Shaders/Volumetric.cginc"
     uniform float _AsteroidVerticalOffset;
 
     struct v2f

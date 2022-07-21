@@ -10,13 +10,11 @@ Shader "Aetheria/CloudShader"
 		SubShader
 		{
 			Cull Off ZWrite Off ZTest Always
-			//Pass1, Render a undersampled buffer. The buffer is dithered using bayer matrix(every 3x3 pixel) and halton sequence.
-			//Why does it need a bayer matrix as offset? See technical overview on github page.
 			Pass
 			{
 			CGPROGRAM
 			#pragma target 5.0
-			#pragma multi_compile LOW_QUALITY MEDIUM_QUALITY HIGH_QUALITY ULTRA_QUALITY	//High quality uses more samples.
+			#pragma multi_compile LOW_QUALITY MEDIUM_QUALITY HIGH_QUALITY ULTRA_QUALITY	//Higher quality uses more samples.
 			#pragma vertex vert
 			#pragma fragment frag
 
@@ -33,8 +31,8 @@ Shader "Aetheria/CloudShader"
 #if defined(LOW_QUALITY)
 			#define SAMPLE_COUNT 32
 #endif
-			
-			#include "./CloudNormalRaymarch.cginc"
+
+			#include_with_pragmas "Assets/Shaders/Volumetric.cginc"
 			#include "UnityCG.cginc"
 			#include "Assets/Shaders/PackFloat.cginc"
 			sampler2D _CameraDepthTexture;
@@ -43,6 +41,8 @@ Shader "Aetheria/CloudShader"
 			sampler2D _DitheringTex;
 			float4 _DitheringCoords;
 			uniform float4x4 _CamInvProj;
+
+			float _ExtinctionCoefficient;
 
 			struct appdata
 			{
@@ -65,6 +65,74 @@ Shader "Aetheria/CloudShader"
 				o.vsray = (2.0 * v.uv - 1.0) * _ProjectionExtents.xy + _ProjectionExtents.zw;
 				return o;
 			}
+
+			struct RaymarchStatus {
+				float3 intensity;
+				float depth;
+				float depthweightsum;
+				float intTransmittance;
+			};
+
+			void InitRaymarchStatus(inout RaymarchStatus result){
+				result.intTransmittance = 1.0f;
+				result.intensity = 0.0f;
+				result.depthweightsum = 0.00001f;
+				result.depth = 0.0f;
+			}
+
+			void IntegrateRaymarch(float3 startPos, float3 rayPos, float fade, float stepsize, inout RaymarchStatus result){
+				float4 c = VolumeSampleColor(rayPos);
+				float density = c.a;
+				if (density <= 0.0f)
+				{
+					result.intTransmittance = 0;
+					return;
+				}
+				float extinction = _ExtinctionCoefficient * density / (1-fade);
+
+				float clampedExtinction = max(extinction, 1e-7);
+				float transmittance = exp(-extinction * stepsize);
+				
+				float3 luminance = c.rgb * _NebulaLuminance;
+				float3 integScatt = (luminance - luminance * transmittance) / clampedExtinction;
+				float depthWeight = result.intTransmittance * (1-transmittance);		//Is it a better idea to use (1-transmittance) * intTransmittance as depth weight?
+
+				result.intensity += result.intTransmittance * integScatt;
+				result.depth += depthWeight * length(rayPos - startPos);
+				result.depthweightsum += depthWeight;
+				result.intTransmittance *= transmittance;
+			}
+			 
+			float GetDensity(float3 startPos, float3 dir, float maxSampleDistance, float raymarchOffset, out float3 intensity,out float depth) {
+				float raymarchDistance = 0;
+				float totalRaymarchDistance = _ProjectionParams.z - _ProjectionParams.y;
+
+				RaymarchStatus result;
+				InitRaymarchStatus(result);
+
+				[loop]
+				for (int j = 1; j < SAMPLE_COUNT; j++) {
+					float prevRayDist = raymarchDistance;
+					raymarchDistance = _ProjectionParams.y + pow((j+raymarchOffset)/SAMPLE_COUNT,2) * totalRaymarchDistance;
+					if(raymarchDistance > maxSampleDistance) break;
+					float step = raymarchDistance - prevRayDist;
+					float3 rayPos = startPos + dir * raymarchDistance;
+					float fade = smoothstep(_ProjectionParams.z*.8,_ProjectionParams.z, raymarchDistance);
+					IntegrateRaymarch(startPos, rayPos, fade, step, result);
+					if (result.intTransmittance < 0.01f) {
+						result.intTransmittance = 0;
+						break;
+					}
+				}
+
+				depth = result.depth / result.depthweightsum / _ProjectionParams.z;
+				if (depth == 0.0f) {
+					depth = maxSampleDistance;
+				}
+				intensity = result.intensity;
+				return (1.0f - result.intTransmittance);	
+			}
+
 	
 			float3 DepthToWorld(float2 uv, float depth) {
 				float z = (1-depth) * 2.0 - 1.0;
@@ -93,6 +161,7 @@ Shader "Aetheria/CloudShader"
 				float depthSample = tex2Dproj( _CameraDepthTexture, screenPos ).r;
 				float3 worldDepth = DepthToWorld(screenPos, depthSample);
 				float raymarchEnd = length(worldDepth-worldPos.xyz);
+				float raymarchStart = _ProjectionParams.y;
 				
 				//float sceneDepth = Linear01Depth(depthSample);
 				//bool occluded = GetRaymarchEndFromSceneDepth(sceneDepth, raymarchEnd);

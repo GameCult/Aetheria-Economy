@@ -33,6 +33,9 @@ Shader "Aetheria/GlowFade"
         
         // Physically based Standard lighting model, and enable shadows on all light types
         #pragma surface surf Standard fullforwardshadows noambient vertex:vert
+        #pragma multi_compile __ FLOW_GLOBAL 
+        #pragma multi_compile __ FLOW_SLOPE
+        #pragma multi_compile __ NOISE_SLOPE
 
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0

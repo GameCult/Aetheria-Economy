@@ -28,6 +28,16 @@ public class VolumeSampling : MonoBehaviour
     
     private float _flowScroll;
     private Transform _gridTransform;
+    private GlobalKeyword _keywordFlowGlobal;
+    private GlobalKeyword _keywordFlowSlope;
+    private GlobalKeyword _keywordNoiseSlope;
+
+    private void Start()
+    {
+        _keywordFlowGlobal = GlobalKeyword.Create("FLOW_GLOBAL");
+        _keywordFlowSlope = GlobalKeyword.Create("FLOW_SLOPE");
+        _keywordNoiseSlope = GlobalKeyword.Create("NOISE_SLOPE");
+    }
 
     void Update()
     {
@@ -37,40 +47,48 @@ public class VolumeSampling : MonoBehaviour
         if(GridCamera != null)
             Shader.SetGlobalVector("_GridTransform", new Vector4(_gridTransform.position.x,_gridTransform.position.z,GridCamera.orthographicSize*2));
 
+        var environment = ActionGameManager.Instance?.CurrentEnvironment ?? Settings.DefaultEnvironment;
+        
         // Volumetric sampling parameters are used by several shaders
         Shader.SetGlobalTexture("_NebulaSurfaceHeight", NebulaSurfaceHeight);
         Shader.SetGlobalTexture("_NebulaPatchHeight", NebulaPatchHeight);
         Shader.SetGlobalTexture("_NebulaPatch", NebulaPatch);
         Shader.SetGlobalTexture("_NebulaTint", NebulaTint);
         
-        Shader.SetGlobalFloat("_NebulaFillDensity", Settings.DefaultEnvironment.Nebula.FillDensity);
-        Shader.SetGlobalFloat("_NebulaFillDistance", Settings.DefaultEnvironment.Nebula.FillDistance);
-        Shader.SetGlobalFloat("_NebulaFillExponent", Settings.DefaultEnvironment.Nebula.FillExponent);
-        Shader.SetGlobalFloat("_NebulaFillOffset", Settings.DefaultEnvironment.Nebula.FillOffset);
-        Shader.SetGlobalFloat("_NebulaFloorDensity", Settings.DefaultEnvironment.Nebula.FloorDensity);
-        Shader.SetGlobalFloat("_NebulaPatchDensity", Settings.DefaultEnvironment.Nebula.PatchDensity);
-        Shader.SetGlobalFloat("_NebulaFloorOffset", Settings.DefaultEnvironment.Nebula.FloorOffset);
-        Shader.SetGlobalFloat("_NebulaFloorBlend", Settings.DefaultEnvironment.Nebula.FloorBlend);
-        Shader.SetGlobalFloat("_NebulaPatchBlend", Settings.DefaultEnvironment.Nebula.PatchBlend);
-        Shader.SetGlobalFloat("_NebulaLuminance", Settings.DefaultEnvironment.Nebula.Luminance);
-        Shader.SetGlobalFloat("_ExtinctionCoefficient", Settings.DefaultEnvironment.Nebula.Extinction);
-        Shader.SetGlobalFloat("_TintExponent", Settings.DefaultEnvironment.Nebula.TintExponent);
-        Shader.SetGlobalFloat("_TintLodExponent", Settings.DefaultEnvironment.Nebula.TintLodExponent);
-        Shader.SetGlobalFloat("_SafetyDistance", Settings.DefaultEnvironment.Nebula.SafetyDistance);
-        Shader.SetGlobalFloat("_DynamicSkyBoost", Settings.DefaultEnvironment.Nebula.DynamicSkyBoost);
-        Shader.SetGlobalFloat("_DynamicLodRange", Settings.DefaultEnvironment.Nebula.DynamicLodRange);
-        Shader.SetGlobalFloat("_DynamicLodBias", Settings.DefaultEnvironment.Nebula.DynamicLodBias);
-        Shader.SetGlobalFloat("_DynamicIntensity", Settings.DefaultEnvironment.Nebula.DynamicIntensity);
+        Shader.SetGlobalFloat("_NebulaFillDensity", environment.Nebula.FillDensity);
+        Shader.SetGlobalFloat("_NebulaFillDistance", environment.Nebula.FillDistance);
+        Shader.SetGlobalFloat("_NebulaFillExponent", environment.Nebula.FillExponent);
+        Shader.SetGlobalFloat("_NebulaFillOffset", environment.Nebula.FillOffset);
+        Shader.SetGlobalFloat("_NebulaPatchDensity", environment.Nebula.PatchDensity);
+        Shader.SetGlobalFloat("_NebulaFloorOffset", environment.Nebula.FloorOffset);
+        Shader.SetGlobalFloat("_NebulaFloorBlend", environment.Nebula.FloorBlend);
+        Shader.SetGlobalFloat("_NebulaPatchBlend", environment.Nebula.PatchBlend);
+        Shader.SetGlobalFloat("_NebulaLuminance", environment.Nebula.Luminance);
+        Shader.SetGlobalFloat("_ExtinctionCoefficient", environment.Nebula.Extinction);
+        Shader.SetGlobalFloat("_TintLodExponent", environment.Nebula.TintLodExponent);
+        Shader.SetGlobalFloat("_SafetyDistance", environment.Nebula.SafetyDistance);
         
-        Shader.SetGlobalFloat("_NebulaNoiseScale", Settings.DefaultEnvironment.Noise.Scale);
-        Shader.SetGlobalFloat("_NebulaNoiseExponent", Settings.DefaultEnvironment.Noise.Exponent);
-        Shader.SetGlobalFloat("_NebulaNoiseAmplitude", Settings.DefaultEnvironment.Noise.Amplitude);
-        Shader.SetGlobalFloat("_NebulaNoiseSpeed", Settings.DefaultEnvironment.Noise.Speed);
+        Shader.SetGlobalFloat("_DynamicSkyBoost", environment.Lighting.DynamicSkyBoost);
+        Shader.SetGlobalFloat("_DynamicLodHigh", environment.Lighting.DynamicLodHigh);
+        Shader.SetGlobalFloat("_DynamicLodLow", environment.Lighting.DynamicLodLow);
+        Shader.SetGlobalFloat("_DynamicIntensity", environment.Lighting.DynamicIntensity);
         
-        Shader.SetGlobalFloat("_FlowScale", Settings.DefaultEnvironment.Flow.Scale);
-        Shader.SetGlobalFloat("_FlowAmplitude", Settings.DefaultEnvironment.Flow.Amplitude);
-        _flowScroll += Settings.DefaultEnvironment.Flow.ScrollSpeed * Time.deltaTime;
+        Shader.SetGlobalFloat("_NebulaNoiseScale", environment.Noise.Scale);
+        Shader.SetGlobalFloat("_NebulaNoiseExponent", environment.Noise.Exponent);
+        Shader.SetGlobalFloat("_NebulaNoiseAmplitude", environment.Noise.Amplitude);
+        Shader.SetGlobalFloat("_NebulaNoiseSpeed", environment.Noise.Speed);
+        Shader.SetGlobalFloat("_NebulaNoiseSlopeExponent", environment.Noise.SlopeExponent);
+        
+        Shader.SetGlobalFloat("_FlowScale", environment.Flow.GlobalScale);
+        Shader.SetGlobalFloat("_FlowAmplitude", environment.Flow.GlobalAmplitude);
+        Shader.SetGlobalFloat("_FlowSlopeAmplitude", environment.Flow.SlopeAmplitude);
+        Shader.SetGlobalFloat("_FlowSwirlAmplitude", environment.Flow.SwirlAmplitude);
+        _flowScroll += environment.Flow.GlobalScrollSpeed * Time.deltaTime;
         Shader.SetGlobalFloat("_FlowScroll", _flowScroll);
-        Shader.SetGlobalFloat("_FlowPeriod", Settings.DefaultEnvironment.Flow.Period);
+        Shader.SetGlobalFloat("_FlowPeriod", environment.Flow.Period);
+        
+        Shader.SetKeyword(_keywordFlowGlobal, environment.Flow.GlobalAmplitude != 0);
+        Shader.SetKeyword(_keywordFlowSlope, environment.Flow.SlopeAmplitude != 0 || environment.Flow.SwirlAmplitude != 0);
+        Shader.SetKeyword(_keywordNoiseSlope, environment.Noise.SlopeExponent != 0);
     }
 }

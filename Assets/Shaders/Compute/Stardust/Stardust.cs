@@ -23,6 +23,8 @@ public class Stardust : MonoBehaviour
     public float Spacing = 4.0f;
     public float Ceiling = -250.0f;
     public float Floor = -25.0f;
+    public float MinHeadroom = 25;
+    public float MaxHeadroom = 100;
     public float HeightExponent = 4;
 
     public RenderTexture NebulaSurfaceHeight;
@@ -110,6 +112,8 @@ public class Stardust : MonoBehaviour
         ParticleCalculation.SetFloat("heightExponent", HeightExponent);
         ParticleCalculation.SetFloat("maximumSize", MaximumSize);
         ParticleCalculation.SetFloat("minimumSize", MinimumSize);
+        ParticleCalculation.SetFloat("minHeadroom", MinHeadroom);
+        ParticleCalculation.SetFloat("maxHeadroom", MaxHeadroom);
         ParticleCalculation.SetInt("span", Span);
         
         ParticleCalculation.SetTexture(_updateParticlesKernel, "HueTexture", ParticleColors);

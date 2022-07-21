@@ -42,6 +42,7 @@ public class ZoneRenderer : MonoBehaviour
     public GridObject CompoundCommodityPickup;
     public GridObject GearPickup;
     public GridObject WeaponPickup;
+    public Material[] MapGravityMaterials;
 
     [Header("Tour")] public bool Tour;
     public float TourSwitchTime = 5f;
@@ -547,11 +548,14 @@ public class ZoneRenderer : MonoBehaviour
         //var fogPos = FogCameraParent.position;
         SectorBoundaryBrush.material.SetFloat("_Power", Settings.PlanetSettings.ZoneDepthExponent);
         SectorBoundaryBrush.material.SetFloat("_Depth", Settings.PlanetSettings.ZoneDepth + Settings.PlanetSettings.ZoneBoundaryFog);
-        // var startDepth = Zone.PowerPulse(Settings.MinimapZoneGravityRange, Settings.PlanetSettings.ZoneDepthExponent) *
-        //                  Settings.PlanetSettings.ZoneDepth;
-        //var depthRange = Settings.PlanetSettings.ZoneDepth - startDepth + _maxDepth;
-        // MinimapGravityQuad.material.SetFloat("_StartDepth", startDepth);
-        // MinimapGravityQuad.material.SetFloat("_DepthRange", depthRange);
+        var startDepth = Zone.PowerPulse(Settings.MinimapZoneGravityRange, Settings.PlanetSettings.ZoneDepthExponent) *
+                          Settings.PlanetSettings.ZoneDepth;
+        var depthRange = Settings.PlanetSettings.ZoneDepth - startDepth + _maxDepth;
+        foreach (var mat in MapGravityMaterials)
+        {
+            mat.SetFloat("_StartDepth", startDepth);
+            mat.SetFloat("_DepthRange", depthRange);
+        }
         //Shader.SetGlobalFloat("_GridOffset", Settings.PlanetSettings.ZoneBoundaryFog);
         // var gravPos = MinimapGravityQuad.transform.position;
         // gravPos.y = -Settings.PlanetSettings.ZoneDepth - _maxDepth;

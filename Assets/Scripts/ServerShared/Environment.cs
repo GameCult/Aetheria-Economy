@@ -12,6 +12,7 @@ public class ZoneEnvironment
     [JsonProperty("nebula"), Key(0)] public NebulaSettings Nebula;
     [JsonProperty("flow"), Key(1)] public FlowSettings Flow;
     [JsonProperty("noise"), Key(2)] public NoiseSettings Noise;
+    [JsonProperty("lighting"), Key(2)] public AmbientLightingSettings Lighting;
 }
 
 [Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -19,31 +20,37 @@ public class NebulaSettings
 {
     [JsonProperty("fillDensity"), Key(0)] public float FillDensity;
     [JsonProperty("fillDistance"), Key(1)] public float FillDistance;
-    [JsonProperty("fillExponent"), Key(11)] public float FillExponent;
+    [JsonProperty("fillExponent"), Key(2)] public float FillExponent;
     [JsonProperty("fillOffset"), Key(12)] public float FillOffset;
-    [JsonProperty("fogDensity"), Key(2)] public float FloorDensity;
     [JsonProperty("cloudDensity"), Key(3)] public float PatchDensity;
     [JsonProperty("fogOffset"), Key(4)] public float FloorOffset;
     [JsonProperty("fogBlend"), Key(5)] public float FloorBlend;
     [JsonProperty("cloudBlend"), Key(6)] public float PatchBlend;
     [JsonProperty("luminance"), Key(7)] public float Luminance;
     [JsonProperty("extinction"), Key(13)] public float Extinction;
-    [JsonProperty("tintExponent"), Key(8)] public float TintExponent;
+    //[JsonProperty("tintExponent"), Key(8)] public float TintExponent;
     [JsonProperty("tintLodExponent"), Key(9)] public float TintLodExponent;
     [JsonProperty("safetyDistance"), Key(10)] public float SafetyDistance;
-    [JsonProperty("dynamicSkyBoost"), Key(14)] public float DynamicSkyBoost;
-    [JsonProperty("dynamicLodRange"), Key(15)] public float DynamicLodRange;
-    [JsonProperty("dynamicLodBias"), Key(16)] public float DynamicLodBias;
-    [JsonProperty("dynamicIntensity"), Key(17)] public float DynamicIntensity;
+}
+
+[Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class AmbientLightingSettings
+{
+    [JsonProperty("dynamicSkyBoost"), Key(0)] public float DynamicSkyBoost;
+    [JsonProperty("dynamicLodHigh"), Key(1)] public float DynamicLodHigh;
+    [JsonProperty("dynamicLodLow"), Key(2)] public float DynamicLodLow;
+    [JsonProperty("dynamicIntensity"), Key(3)] public float DynamicIntensity;
 }
 
 [Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class FlowSettings
 {
-    [JsonProperty("scale"), Key(0)] public float Scale;
-    [JsonProperty("amplitude"), Key(1)] public float Amplitude;
-    [JsonProperty("scrollSpeed"), Key(2)] public float ScrollSpeed;
+    [JsonProperty("scale"), Key(0)] public float GlobalScale;
+    [JsonProperty("amplitudeGlobal"), Key(1)] public float GlobalAmplitude;
+    [JsonProperty("scrollSpeed"), Key(2)] public float GlobalScrollSpeed;
     [JsonProperty("period"), Key(3)] public float Period;
+    [JsonProperty("amplitudeSlope"), Key(4)] public float SlopeAmplitude;
+    [JsonProperty("amplitudeSwirl"), Key(4)] public float SwirlAmplitude;
 }
 
 [Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -53,6 +60,7 @@ public class NoiseSettings
     [JsonProperty("amplitude"), Key(1)] public float Amplitude;
     [JsonProperty("exponent"), Key(2)] public float Exponent;
     [JsonProperty("speed"), Key(3)] public float Speed;
+    [JsonProperty("slopeExponent"), Key(4)] public float SlopeExponent;
 }
 
 [Union(0, typeof(PowerBrush)), 

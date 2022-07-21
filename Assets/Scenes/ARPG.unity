@@ -13809,7 +13809,7 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 5
-    NearClipPlane: 0.3
+    NearClipPlane: 1
     FarClipPlane: 4096
     Dutch: 0
     ModeOverride: 0
@@ -16335,6 +16335,9 @@ MonoBehaviour:
     type: 3}
   WeaponPickup: {fileID: 8842807112802394818, guid: d2cec1d8c3d94074e9d2e6088e1c02d7,
     type: 3}
+  MapGravityMaterials:
+  - {fileID: 2100000, guid: 841e4091d19548347bd59115047b4e49, type: 2}
+  - {fileID: 2100000, guid: a92fc6d958edb9f46b6e58134f609cc0, type: 2}
   Tour: 0
   TourSwitchTime: 10
   TourFollowDistance: 100
@@ -16367,11 +16370,13 @@ MonoBehaviour:
   ParticleMaterial: {fileID: 2100000, guid: fc00c35c3c370774c88d55240b6538ce, type: 2}
   Span: 256
   Period: 2
-  MinimumSize: 0
+  MinimumSize: 0.25
   MaximumSize: 0.75
   Spacing: 6
-  Ceiling: -250
+  Ceiling: 0
   Floor: -10
+  MinHeadroom: 25
+  MaxHeadroom: 100
   HeightExponent: 3
   NebulaSurfaceHeight: {fileID: 8400000, guid: 2fc21a9d3e9647948b56e384cd9378b3, type: 2}
   NebulaPatchHeight: {fileID: 8400000, guid: c618a6b20b3c7394590c59a9fa467e86, type: 2}
@@ -18017,7 +18022,7 @@ Transform:
   m_GameObject: {fileID: 1108843908}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 1, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 677960092}
@@ -31067,7 +31072,7 @@ Camera:
   m_GameObject: {fileID: 2115559087}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
