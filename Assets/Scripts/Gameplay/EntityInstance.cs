@@ -183,7 +183,7 @@ public class EntityInstance : MonoBehaviour
                         _pingBrightness = pingMesh.material.GetFloat("_Depth");
                         _currentPing = (pingInstance, pingMesh);
                     };
-                    sensor.OnPingEnd += () => Destroy(_currentPing.transform.gameObject);
+                    sensor.OnPingEnd += OnSensorPingEnd;
                 }
                 
                 if (behavior is InstantWeapon instantWeapon)
@@ -443,7 +443,12 @@ public class EntityInstance : MonoBehaviour
             _influenceInstance.transform.localScale = Vector3.one * orbital.SecurityRadius;
         }
     }
-    
+
+    private void OnSensorPingEnd()
+    {
+        Destroy(_currentPing.transform.gameObject);
+    }
+
     public Transform GetBarrel(HardpointData hardpoint)
     {
         if (Barrels.ContainsKey(hardpoint))
@@ -519,6 +524,8 @@ public class EntityInstance : MonoBehaviour
 
     public virtual void OnDestroy()
     {
+        if(_sensor!=null)
+            _sensor.OnPingEnd -= OnSensorPingEnd;
         if (_influenceInstance) Destroy(_influenceInstance.gameObject);
         Destroy(LocalSpace.gameObject);
         foreach(var x in _subscriptions)

@@ -30,18 +30,18 @@ public class LoadoutGenerator
         Faction = faction;
         PriceExponent = priceExponent;
     }
-
-    public LoadoutGenerator(
-        ref Random random, 
-        ItemManager itemManager, 
-        Faction faction, 
-        float priceExponent)
-    {
-        Random = random;
-        ItemManager = itemManager;
-        Faction = faction;
-        PriceExponent = priceExponent;
-    }
+    //
+    // public LoadoutGenerator(
+    //     ref Random random, 
+    //     ItemManager itemManager, 
+    //     Faction faction, 
+    //     float priceExponent)
+    // {
+    //     Random = random;
+    //     ItemManager = itemManager;
+    //     Faction = faction;
+    //     PriceExponent = priceExponent;
+    // }
     
     public EntityPack GenerateShipLoadout(Predicate<HullData> hullFilter = null)
     {
@@ -86,7 +86,6 @@ public class LoadoutGenerator
         var hull = ItemManager.CreateInstance(hullData) as EquippableItem;
         var entity = new OrbitalEntity(ItemManager, null, hull, Guid.Empty, ItemManager.GameplaySettings.DefaultEntitySettings);
         entity.Faction = Faction;
-        OutfitEntity(entity);
         
         var emptyShape = entity.UnoccupiedSpace;
         
@@ -100,6 +99,8 @@ public class LoadoutGenerator
         {
             throw new InvalidLoadoutException("Failed to equip selected docking bay!");
         }
+        
+        OutfitEntity(entity);
 
         var cargo = entity.CargoBays.First();
         IEnumerable<EquippableItemData> inventory = RandomItems<EquippableItemData>(16, 1, 
@@ -119,21 +120,9 @@ public class LoadoutGenerator
 
     public HullData RandomHull(HullType type, Predicate<HullData> hullFilter = null)
     {
-        return ItemManager.ItemData.GetAll<HullData>()
-            .Where(item =>
-                item.Price > 0 &&
+        return RandomItem<HullData>(0, item => 
                 (hullFilter?.Invoke(item) ?? true) &&
-                item.HullType == type &&
-                item.Manufacturer != Guid.Empty &&
-                (Galaxy?.ContainsFaction(item.Manufacturer) ?? true) &&
-                (Faction == null || item.Manufacturer == Faction.ID || Faction.Allegiance.ContainsKey(item.Manufacturer)))
-            .WeightedRandomElements(ref Random,
-                item =>
-                    (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) / // Prioritize items from allied manufacturers
-                    (Zone?.Distance[Galaxy.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] ?? 1) / // Penalize distance to manufacturer headquarters
-                    pow(item.Price, PriceExponent), // Penalize item price to a controllable degree
-                1
-            ).FirstOrDefault();
+                item.HullType == type);
     }
     
     public T[] RandomItems<T>(int count, float sizeExponent, Predicate<T> filter = null) where T : EquippableItemData
@@ -142,13 +131,14 @@ public class LoadoutGenerator
             .Where(item => 
                 item.Price > 0 &&
                 item.Manufacturer != Guid.Empty &&
-                (Galaxy?.ContainsFaction(item.Manufacturer) ?? true) &&
-                (Faction == null || Faction.Allegiance.ContainsKey(item.Manufacturer)) &&
+                (Galaxy.IsPrelude || Galaxy.ContainsFaction(item.Manufacturer) &&
+                    (Faction == null || Faction.Allegiance.ContainsKey(item.Manufacturer))) &&
                 (filter?.Invoke(item) ?? true))
             .WeightedRandomElements(ref Random, item =>
-                    (Faction == null || item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance[item.Manufacturer]) * // Prioritize items from allied manufacturers
+                    Faction == null ? 1 : 
+                        (item.Manufacturer == Faction.ID ? 1 : Faction.Allegiance.ContainsKey(item.Manufacturer) ? Faction.Allegiance[item.Manufacturer] : 0.0f / // Prioritize items from allied manufacturers
+                            (Galaxy?.ContainsFaction(item.Manufacturer) ?? false ? Zone?.Distance[Galaxy.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] ?? 1 : 1)) * // Penalize distance to manufacturer headquarters
                     pow(item.Shape.Coordinates.Length, sizeExponent) / // Prioritize larger items
-                    (Zone?.Distance[Galaxy.HomeZones[ItemManager.ItemData.Get<Faction>(item.Manufacturer)]] ?? 1) / // Penalize distance to manufacturer headquarters
                     pow(item.Price, PriceExponent), // Penalize item price to a controllable degree
                 count
             );

@@ -245,9 +245,7 @@ public static class ZoneGenerator
         LoadoutGenerator GetLoadoutGenerator(Faction faction)
         {
 	        if (!loadoutGenerators.ContainsKey(faction))
-		        loadoutGenerators[faction] = isTutorial
-			        ? new LoadoutGenerator(ref random, itemManager, faction, .5f)
-			        : new LoadoutGenerator(ref random, itemManager, galaxy, galaxyZone, faction, .5f);
+		        loadoutGenerators[faction] = new LoadoutGenerator(ref random, itemManager, galaxy, galaxyZone, faction, .5f);
 	        return loadoutGenerators[faction];
         }
 

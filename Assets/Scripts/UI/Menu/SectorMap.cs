@@ -101,7 +101,7 @@ public class SectorMap : MonoBehaviour
             if (!_revealedZones.Contains(zone))
             {
                 var zoneInstance = ZonePrototype.Instantiate<SectorZoneUI>();
-                zoneInstance.Clickable.OnClick += (clickableCollider, data) => ZoneClicked.OnNext(zone);
+                zoneInstance.Clickable.OnClick += (clickableCollider, data, ray, hit) => ZoneClicked.OnNext(zone);
                 if(zone == _currentPlayerLocation)
                     MarkPlayerLocation(zoneInstance);
                 _zoneInstances[zone] = zoneInstance;

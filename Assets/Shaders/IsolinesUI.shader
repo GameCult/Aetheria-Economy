@@ -139,7 +139,8 @@ Shader "UI/Isolines"
                 OUT.color = v.color * _Color;
                 return OUT;
             }
-        
+
+			// Sample heightmap texture to find the gradient of the distance field
             float2 calcGrad (float2 uv, float me)
             {
                 float n = -tex2D(_DetailTex, float2(uv.x, uv.y + _DetailTex_TexelSize.y)).x;
@@ -157,25 +158,27 @@ Shader "UI/Isolines"
                 float2 q = IN.texcoord;
             	#endif
             	
-				float h = -tex2D(_DetailTex, q).r;
+				float height = -tex2D(_DetailTex, q).r;
             	//half4 c = tex2D(_TintTex, q);
 
 				float4 col = float4(0,0,0,0);
-				float blend = smoothstep(_StartDepth, _StartDepth + _DepthRange / 32, -h);
+				float blend = smoothstep(_StartDepth, _StartDepth + _DepthRange / 32, -height);
 				
 				// Calculate the direction in which the surface is facing
-				float2 plan = calcGrad(q, h);
+				// Can replace with float2(ddx_fine(h),ddy_fine(h)) for more speed but lower quality
+				float2 plan = calcGrad(q, height);
 				
-				float planmag = length(plan);
+				float slope = length(plan);
 				
-				float dangerblend = smoothstep(0,_DangerSteepness, pow(planmag / _Scale, 2));
+				float dangerblend = smoothstep(0,_DangerSteepness, pow(slope / _Scale, 2));
 
             	half4 linecol = lerp(_Color,_DangerColor,dangerblend) * blend; 
-				// Loop over isolines, computing a pseudo distance field for a number of height values
+				// Loop over isolines to sum their color contribution,
+            	// Computing a distance field for a number of height values
 				float spacing = _DepthRange / 20;
 				for (int ih = 1; ih <= 21; ih++) {
-					float isoline = abs(h + _StartDepth + (ih*spacing));
-					col += (1-smoothstep(_LineWidth, _LineWidth * _LineFade, isoline / planmag)) * linecol; // Isoline
+					float isoline = abs(height + _StartDepth + (ih*spacing));
+					col += (1-smoothstep(_LineWidth, _LineWidth * _LineFade, isoline / slope)) * linecol; // Isoline
 				}
 				
 				float angle = atan2(plan.y,plan.x) / 3.1415926536 + 1;
@@ -186,13 +189,13 @@ Shader "UI/Isolines"
 				// float angle2 = atan2(plan2.y,plan2.x) / 3.1415926536 + 1;
 				// float angmag = abs(angle-angle2);
 				// angmag = min(angmag,0.025);
-				half4 angcol = blend * (planmag / _Scale) * (lerp(_AngleColor, _DangerColor, dangerblend));
+				half4 angcol = blend * (slope / _Scale) * (lerp(_AngleColor, _DangerColor, dangerblend));
             	// + pow(c,_TintExponent) * _TintIntensity
 				// Loop over angle isolines
 				for (float ia = 0.5; ia < 13; ia++) {
 				    float isoline = abs(angle - ia / 6.0);
 					float l = 1-smoothstep(_AngleWidth, _AngleWidth * _AngleFade, isoline);
-					l *= smoothstep(-_StartDepth - _DepthRange, -_StartDepth, h);
+					l *= smoothstep(-_StartDepth - _DepthRange, -_StartDepth, height);
 					col += l * angcol;
 					// col += (1-smoothstep(_Angle2Width, _Angle2Width * _Angle2Fade, isoline / angmag)) * _AngleColor * blend; // Isoline
 				}

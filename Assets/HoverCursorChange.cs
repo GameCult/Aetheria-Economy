@@ -13,7 +13,6 @@ public class HoverCursorChange : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         CursorObject.gameObject.SetActive(true);
         _active = true;
-        Cursor.visible = false;
     }
 
     private void Update()
@@ -24,9 +23,7 @@ public class HoverCursorChange : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        Cursor.visible = true;
         _active = false;
         CursorObject.gameObject.SetActive(false);
-        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 }

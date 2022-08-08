@@ -137,9 +137,11 @@ void UpdateParticles(uint3 id : SV_DispatchThreadID, int3 groupID : SV_GroupThre
 			pow(RandomValue(), heightExponent) +
 			perlinNoise1D(RandomValue()*1024)*spacing/2;
 	const float3 flowVec = flow(particles[id.x].position);
+    const float3 lighting = tex2Dlod(_NebulaTint, float4(puv.x, puv.y, 0, _DynamicLodHigh)).rgb +
+    	tex2Dlod(_NebulaTint, float4(puv.x, puv.y, 0, _DynamicLodLow)).rgb;
 	particles[id.x].position -= flowVec * lifetime * period;
 	//const float fade = smoothstep(0,ceilingHeight, particles[id.x].position.y);
-	const float d = pow(density(particles[id.x].position) + .01, 0.1);
+	//const float d = pow(density(particles[id.x].position) + .01, 0.1);
 	particles[id.x].size = lerp(minimumSize, maximumSize, saturate(RandomValue())) * parabola(lifetime, 2);
-	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomValue(), 0.0f), 0.0f).rgb * d;
+	particles[id.x].color = HueTexture.SampleLevel(samplerHueTexture, float2(RandomValue(), 0.0f), 0.0f).rgb * lighting;
 }

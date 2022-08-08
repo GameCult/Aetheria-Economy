@@ -10,9 +10,9 @@ using UnityEngine.EventSystems;
 
 public class ClickableCollider : MonoBehaviour
 {
-    public event Action<ClickableCollider, PointerEventData> OnClick;
+    public event Action<ClickableCollider, PointerEventData, Ray, RaycastHit> OnClick;
 
-    public void Click(PointerEventData eventData) => OnClick?.Invoke(this, eventData);
+    public void Click(PointerEventData eventData, Ray ray, RaycastHit raycastHit) => OnClick?.Invoke(this, eventData, ray, raycastHit);
 
     public void Clear()
     {

@@ -71,7 +71,7 @@ Material:
     - _ColorMask: 15
     - _Cutoff: 0.5
     - _DangerSteepness: 1.5
-    - _DepthRange: 264.0017
+    - _DepthRange: 284.9062
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1

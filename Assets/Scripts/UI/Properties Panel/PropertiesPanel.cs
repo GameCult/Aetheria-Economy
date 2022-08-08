@@ -585,78 +585,74 @@ public class PropertiesPanel : MonoBehaviour
 		}
 	}
 
-	// public void Inspect(object obj, bool inspectablesOnly = false, bool readWrite = false, bool topLevel = true)
-	// {
-	// 	if(topLevel)
-	// 		Clear();
-	//
-	// 	var fields = obj.GetType().GetFields();
-	// 	foreach (var field in fields)
-	// 		Inspect(obj, field, inspectablesOnly, readWrite);
-	// 	
-	// 	if(topLevel)
-	// 		foreach (var field in _propertyFields) 
-	// 			field.transform.SetSiblingIndex(_propertyFields.IndexOf(field));
-	//
-	// 	RefreshValues();
-	// }
-	//
-	// public void Inspect(object obj, FieldInfo field, bool inspectablesOnly = false, bool readWrite = false)
-	// {
-	// 	var inspectable = field.GetCustomAttribute<InspectableFieldAttribute>();
-	// 	if (inspectable == null && inspectablesOnly) return;
-	// 	var type = field.FieldType;
-	// 	
-	// 	if (type == typeof(float))
-	// 	{
-	// 		if (readWrite)
-	// 		{
-	// 			var ranged = inspectable as RangedFloatInspectableAttribute;
-	// 			if (ranged != null)
-	// 				Inspect(field.Name.SplitCamelCase(), () => (float) field.GetValue(obj), f => field.SetValue(obj, f),
-	// 					ranged.Min, ranged.Max);
-	// 			else
-	// 				Inspect(field.Name.SplitCamelCase(), () => (float) field.GetValue(obj), f => field.SetValue(obj, f));
-	// 		} else Inspect(field.Name.SplitCamelCase(), () => ((float) field.GetValue(obj)).ToString("0.##"));
-	// 	} 
-	// 	else if (type == typeof(int))
-	// 	{
-	// 		if (readWrite)
-	// 		{
-	// 			var ranged = inspectable as RangedIntInspectableAttribute;
-	// 			if (ranged != null)
-	// 				Inspect(field.Name.SplitCamelCase(), () => (int) field.GetValue(obj), f => field.SetValue(obj, f),
-	// 					ranged.Min, ranged.Max);
-	// 			else
-	// 				Inspect(field.Name.SplitCamelCase(), () => (int) field.GetValue(obj), f => field.SetValue(obj, f));
-	// 		} else Inspect(field.Name.SplitCamelCase(), () => ((int) field.GetValue(obj)).ToString());
-	// 	}
-	// 	else if (type.IsEnum)
-	// 	{
-	// 		if (readWrite)
-	// 			Inspect(field.Name.SplitCamelCase(), () => (int) field.GetValue(obj), i => field.SetValue(obj, i),
-	// 				Enum.GetNames(field.FieldType));
-	// 		else
-	// 			Inspect(field.Name.SplitCamelCase(), () => Enum.GetName(type, field.GetValue(obj)).SplitCamelCase());
-	// 	}
-	// 	else if (type == typeof(string))
-	// 	{
-	// 		if (readWrite)
-	// 			Inspect(field.Name.SplitCamelCase(), () => (string) field.GetValue(obj), i => field.SetValue(obj, i));
-	// 		else
-	// 			Inspect(field.Name.SplitCamelCase(), () => (string) field.GetValue(obj));
-	// 	}
-	// 	//else if (field.FieldType == typeof(Color)) Inspect(field.Name, () => (Color) field.GetValue(obj), c => field.SetValue(obj, c));
-	// 	else if (field.FieldType == typeof(bool)) Inspect(field.Name, () => (bool) field.GetValue(obj), b => field.SetValue(obj, b));
-	// 	else if (type.GetCustomAttribute<InspectableFieldAttribute>() != null)
-	// 	{
-	// 		if(!_propertyFields.Any() || !_propertyFields.Last().gameObject.name.ToUpper().Contains("DIVIDER"))
-	// 			_propertyFields.Add(Divider.Instantiate<Prototype>());
-	// 		Inspect(field.GetValue(obj), inspectablesOnly, readWrite, false);
-	// 	}
-	// 	else 
-	// 		Debug.Log($"Field \"{field.Name}\" has unknown type {field.FieldType.Name}. No inspector was generated.");
-	// }
+	public void Inspect(object obj, bool inspectablesOnly = false, bool readWrite = false, bool topLevel = true)
+	{
+		var fields = obj.GetType().GetFields();
+		foreach (var field in fields)
+			Inspect(obj, field, inspectablesOnly, readWrite);
+		
+		// if(topLevel)
+		// 	foreach (var field in _propertyFields) 
+		// 		field.transform.SetSiblingIndex(_propertyFields.IndexOf(field));
+	
+		RefreshValues();
+	}
+	
+	public void Inspect(object obj, FieldInfo field, bool inspectablesOnly = false, bool readWrite = false)
+	{
+		var inspectable = field.GetCustomAttribute<InspectableAttribute>();
+		if (inspectable == null && inspectablesOnly) return;
+		var type = field.FieldType;
+		
+		if (type == typeof(float))
+		{
+			if (readWrite)
+			{
+				if (inspectable is InspectableRangedFloatAttribute ranged)
+					AddField(field.Name.SplitCamelCase(), () => (float) field.GetValue(obj), f => field.SetValue(obj, f),
+						ranged.Min, ranged.Max);
+				else
+					AddField(field.Name.SplitCamelCase(), () => (float) field.GetValue(obj), f => field.SetValue(obj, f));
+			} else AddProperty(field.Name.SplitCamelCase(), () => ((float) field.GetValue(obj)).ToString("0.##"));
+		} 
+		else if (type == typeof(int))
+		{
+			if (readWrite)
+			{
+				if (inspectable is InspectableRangedIntAttribute ranged)
+					AddField(field.Name.SplitCamelCase(), () => (int) field.GetValue(obj), f => field.SetValue(obj, f),
+						ranged.Min, ranged.Max);
+				else
+					AddField(field.Name.SplitCamelCase(), () => (int) field.GetValue(obj), f => field.SetValue(obj, f));
+			} else AddProperty(field.Name.SplitCamelCase(), () => ((int) field.GetValue(obj)).ToString());
+		}
+		else if (type.IsEnum)
+		{
+			if (readWrite)
+				AddField(field.Name.SplitCamelCase(), () => (int) field.GetValue(obj), i => field.SetValue(obj, i),
+					Enum.GetNames(field.FieldType));
+			else
+				AddProperty(field.Name.SplitCamelCase(), () => Enum.GetName(type, field.GetValue(obj)).SplitCamelCase());
+		}
+		else if (type == typeof(string))
+		{
+			if (readWrite)
+				AddField(field.Name.SplitCamelCase(), () => (string) field.GetValue(obj), i => field.SetValue(obj, i));
+			else
+				AddProperty(field.Name.SplitCamelCase(), () => (string) field.GetValue(obj));
+		}
+		//else if (field.FieldType == typeof(Color)) Inspect(field.Name, () => (Color) field.GetValue(obj), c => field.SetValue(obj, c));
+		else if (field.FieldType == typeof(bool)) AddField(field.Name, () => (bool) field.GetValue(obj), b => field.SetValue(obj, b));
+		else if (type.GetCustomAttribute<InspectableAttribute>() != null)
+		{
+			// 	if(!_propertyFields.Any() || !_propertyFields.Last().gameObject.name.ToUpper().Contains("DIVIDER"))
+			// 		_propertyFields.Add(Divider.Instantiate<Prototype>());
+			var list = AddList(field.Name);
+			list.Inspect(field.GetValue(obj), inspectablesOnly, readWrite, false);
+		}
+		else 
+			Debug.Log($"Field \"{field.Name}\" has unknown type {field.FieldType.Name}. No inspector was generated.");
+	}
 
 	public void RefreshValues()
 	{

@@ -210,9 +210,9 @@ float density(float3 pos)
         
         #else
         
-        const float noise1 = pow(triNoise3d(pos / _NebulaNoiseScale), exponent);
-        const float noise2 = pow(triNoise3d(pos / _NebulaNoiseScale * 8), exponent);
-        pos.y += (noise1 - noise2) * heightFade * _NebulaNoiseAmplitude;
+        const float noise1 = pow(triNoise3d(pos / _NebulaNoiseScale), exponent) * _NebulaNoiseAmplitude;
+        const float noise2 = pow(triNoise3d(pos / _NebulaNoiseScale * 8), exponent) * _NebulaNoiseAmplitude / 2;
+        pos.y += (noise1 - noise2) * heightFade;
         
         #endif
         d += cloudDensity(pos, surfaceDisp);

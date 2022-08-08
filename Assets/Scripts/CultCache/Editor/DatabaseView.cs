@@ -113,10 +113,10 @@ public abstract class DatabaseListView : EditorWindow
             margin = new RectOffset(0, 0, 0, 0)
         };
 
-        _jsonStore = new MultiFileJsonBackingStore(FilePath);
+        //_jsonStore = new MultiFileJsonBackingStore(FilePath);
         _msgPackStore = new SingleFileMessagePackBackingStore(Path.Combine(FilePath, "AetherDB.msgpack"));
         cultCache = new CultCache();
-        cultCache.AddBackingStore(_jsonStore);
+        //cultCache.AddBackingStore(_jsonStore);
         cultCache.AddBackingStore(_msgPackStore);
         cultCache.AddBackingStore(new MultiFileMessagePackBackingStore(FilePath), typeof(NameFile));
         cultCache.PullAllBackingStores();

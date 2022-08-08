@@ -19,15 +19,17 @@ public class ClickRaycaster : MonoBehaviour
     void Start()
     {
         _clickCatcher = GetComponent<ClickCatcher>();
-        _clickCatcher.OnClick.Subscribe(pointer =>
+        _clickCatcher.OnDown.Subscribe(pointer =>
         {
             RaycastHit hit;
-            Physics.Raycast(RayCamera.ScreenPointToRay(pointer.position), out hit, 1000, Layers.value);
+            var ray = RayCamera.ScreenPointToRay(pointer.position);
+            Physics.Raycast(ray, out hit, 1000, Layers.value);
             if (hit.collider != null)
             {
+                //Debug.Log($"Clicked on gameobject {hit.collider.gameObject}");
                 var clickable = hit.collider.GetComponent<ClickableCollider>();
                 if (clickable != null)
-                    clickable.Click(pointer);
+                    clickable.Click(pointer, ray, hit);
             }
             else OnClickMiss?.Invoke(pointer);
         });

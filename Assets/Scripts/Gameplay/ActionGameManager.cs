@@ -47,9 +47,10 @@ public class ActionGameManager : MonoBehaviour
             if (_cultCache != null) return _cultCache;
 
             _cultCache = new CultCache();
-            _cultCache.AddBackingStore(new MultiFileJsonBackingStore(GameDataDirectory.FullName));
-            // _cultCache.AddBackingStore(
-            //     new SingleFileMessagePackBackingStore(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack")));
+            //RethinkConnection.RethinkConnect(_cultCache, "gamecult.org:28016", DatabaseName);
+            //_cultCache.AddBackingStore(new MultiFileJsonBackingStore(GameDataDirectory.FullName));
+            _cultCache.AddBackingStore(
+                new SingleFileMessagePackBackingStore(Path.Combine(GameDataDirectory.FullName, "AetherDB.msgpack")));
             
             // Particularly heavy objects should be stored in / retrieved from MsgPack files as it's much tighter than JSON
             // Such as NameFiles, which are just huge collections of geonames used to condition Markov chains
@@ -425,7 +426,7 @@ public class ActionGameManager : MonoBehaviour
 
             slot.PointerEnterTrigger.OnPointerEnterAsObservable().Subscribe(_ =>
             {
-                //Debug.Log($"Pointer entered action bar slot {controlPath}");
+                Debug.Log($"Pointer entered action bar slot {controlPath}");
                 RegisterDragTarget(dragAction =>
                 {
                     //Debug.Log("Registering binding!");
@@ -520,6 +521,8 @@ public class ActionGameManager : MonoBehaviour
                     .5f) : new LoadoutGenerator(
                     ref ItemManager.Random,
                     ItemManager,
+                    CurrentGalaxy, 
+                    Zone.GalaxyZone,
                     nearestFaction,
                     .5f);
 
@@ -730,8 +733,7 @@ public class ActionGameManager : MonoBehaviour
             {
                 SectorMap.QueueZoneReveal(CurrentGalaxy.Entrance.AdjacentZones.Prepend(CurrentGalaxy.Entrance));
                 PopulateLevel(CurrentGalaxy.Entrance);
-                var loadoutGenerator = IsTutorial ? new LoadoutGenerator(ref ItemManager.Random, ItemManager, null, 2) :
-                    new LoadoutGenerator(ref ItemManager.Random, ItemManager, CurrentGalaxy, Zone.GalaxyZone, null, 2);
+                var loadoutGenerator = new LoadoutGenerator(ref ItemManager.Random, ItemManager, CurrentGalaxy, Zone.GalaxyZone, IsTutorial ? CurrentGalaxy.ResolveFaction(Settings.TutorialGenerationSettings.ProtagonistFaction) : null, 2);
                 var ship = EntitySerializer.Unpack(
                     ItemManager, 
                     Zone, 

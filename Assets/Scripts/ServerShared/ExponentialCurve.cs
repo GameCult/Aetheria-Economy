@@ -13,13 +13,13 @@ using static Unity.Mathematics.math;
 [Serializable, MessagePackObject, JsonObject]
 public class ExponentialCurve
 {
-    [JsonProperty("exponent"), Key(0)]
+    [JsonProperty("exponent"), Key(0), Inspectable]
     public float Exponent;
     
-    [JsonProperty("multiplier"), Key(1)]
+    [JsonProperty("multiplier"), Key(1), Inspectable]
     public float Multiplier;
     
-    [JsonProperty("constant"), Key(2)]
+    [JsonProperty("constant"), Key(2), Inspectable]
     public float Constant;
     
     public float Evaluate(float value) => Multiplier * pow(value, Exponent) + Constant;
@@ -28,13 +28,13 @@ public class ExponentialCurve
 [Serializable, MessagePackObject, JsonObject]
 public class ExponentialLerp
 {
-    [JsonProperty("exponent"), Key(0)]
+    [JsonProperty("exponent"), Key(0), Inspectable]
     public float Exponent;
     
-    [JsonProperty("max"), Key(1)]
+    [JsonProperty("max"), Key(1), Inspectable]
     public float Minimum;
     
-    [JsonProperty("min"), Key(2)]
+    [JsonProperty("min"), Key(2), Inspectable]
     public float Maximum;
     
     public float Evaluate(float value) => Minimum + pow(saturate(value), Exponent) * (Maximum - Minimum);

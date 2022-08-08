@@ -27,10 +27,12 @@ public class Galaxy
     public GalaxyZone Exit { get; }
     public Dictionary<Faction, FactionRelationship> FactionRelationships { get; } = new Dictionary<Faction, FactionRelationship>();
     private Action<string> Log { get; }
-
+    public bool IsPrelude { get; }
+    
     private HashSet<Guid> _containedFactions;
     private GalaxyZone[] _exitPath;
     private Dictionary<Faction, MarkovNameGenerator> _nameGenerators = new Dictionary<Faction, MarkovNameGenerator>();
+    private readonly CultCache _cache;
 
     public GalaxyZone[] ExitPath
     {
@@ -44,6 +46,8 @@ public class Galaxy
 
     public Galaxy(CultCache cultCache, SavedGame savedGame, Action<string> log)
     {
+        IsPrelude = savedGame.IsTutorial;
+        _cache = cultCache;
         Log = log;
         Background = savedGame.Background;
         
@@ -94,6 +98,8 @@ public class Galaxy
         Action<string> progressCallback = null,
         uint seed = 0)
     {
+        _cache = cache;
+        IsPrelude = false;
         Background = background;
         Log = log;
         var factions = cache.GetAll<Faction>();
@@ -125,6 +131,11 @@ public class Galaxy
         progressCallback?.Invoke("Done!");
         if(progressCallback!=null) Thread.Sleep(500); // Inserting Delay to make it seem like it's doing more work lmao
     }
+    
+    public Faction ResolveFaction(string name)
+    {
+        return _cache.GetAll<Faction>().FirstOrDefault(f => f.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
+    }
 
     public Galaxy(
         TutorialGenerationSettings settings,
@@ -137,7 +148,8 @@ public class Galaxy
         Action<string> progressCallback = null,
         uint seed = 0)
     {
-        Faction ResolveFaction(string name) => cache.GetAll<Faction>().FirstOrDefault(f => f.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
+        _cache = cache;
+        IsPrelude = true;
 
         Background = background;
         Log = log;
