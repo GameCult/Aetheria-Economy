@@ -4,31 +4,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Mathematics;
-using UnityEngine.Animations;
 using static Unity.Mathematics.math;
 
 public class FieldDriver : MonoBehaviour
 {
+    public Camera Camera;
+    public float2 Push;
+    public float FrontTwist;
+    public float RearTwist;
     [Inspectable]
     public float TestMagnitude;
-    public float2 Throttle;
-    [Inspectable]
-    public float ThrottleDecay = 1;
     [Inspectable]
     public float FlowSpeed;
     [Inspectable]
     public float FlowSpeedThrottleExponent;
     [Inspectable]
-    public float FlowMagnitude;
-    [Inspectable]
-    public float FlowMagnitudeThrottleExponent;
-    [Inspectable]
-    public float FlowOpacityThrottleExponent;
+    public float WaveThrottleExponent;
+    
     public int MaxHits;
     [Inspectable]
     public ExponentialCurve MagnitudeTimeScaling;
-
-    [Inspectable]
+    
+    [Inspectable, InspectorHeader("Melee")]
     public float MeleeRange;
     [Inspectable]
     public float MeleeRangeExponent;
@@ -42,16 +39,60 @@ public class FieldDriver : MonoBehaviour
     public float MeleeAngle;
     [Inspectable]
     public float MeleeAngleExponent;
+    
+    [Inspectable, InspectorHeader("Tendril")]
+    public float TendrilBaseRadius = 3;
     [Inspectable]
-    public Axis RefractionAxis = Axis.X;
+    public float TendrilTipRadius = .1f;
+    [Inspectable]
+    public float TendrilExtensionExponent = .75f;
+    [Inspectable]
+    public float TendrilExtendBaseAnimationExponent = .5f;
+    [Inspectable]
+    public float TendrilBaseDamping = 2;
+    [Inspectable]
+    public float TendrilTipRadiusAnimationExponent = 2f;
+    [Inspectable]
+    public float TendrilFadeExponent = 2;
+    // [Inspectable]
+    // public float GrabScaleAnimationExponent = .5f;
+
+    [Inspectable, InspectorHeader("Grab")]
+    public float GrabExtendTime;
+    [Inspectable]
+    public float GrabEnvelopTime;
+    [Inspectable]
+    public float GrabPullTime;
+    
+    [Inspectable]
+    public RectTransform.Axis RefractionAxis = RectTransform.Axis.Horizontal;
     
     private Material _field;
     private ComputeBuffer _hitBuffer;
     private List<FieldHit> _hits = new List<FieldHit>();
-    private float _pushWaveOffset;
-    private double2 _throttle;
+    private float _waveOffset;
     private float _meleeTime;
     private bool _meleeActive;
+    private MeshCollider _collider;
+    private Transform _grabObject;
+    private Vector3 _grabObjectStartPos;
+    private Vector3 _grabObjectStartTendrilBasePos;
+    private Vector3 _grabObjectEndPos;
+    private Vector3 _grabObjectVelocity;
+    private float _grabObjectScale;
+    private float _grabTime;
+    private GrabPhase _grabPhase;
+    private Vector3 _tendrilBasePos;
+    private Vector3 _tendrilBendTarget;
+    private Vector3 _tendrilTargetPos;
+    private float _fadePoint;
+
+    private enum GrabPhase
+    {
+        Extend,
+        Envelop,
+        Pull
+    }
 
     private struct FieldHit
     {
@@ -63,6 +104,7 @@ public class FieldDriver : MonoBehaviour
     
     void Start()
     {
+        _collider = GetComponent<MeshCollider>();
         _field = GetComponent<MeshRenderer>().material;
         var clickableCollider = GetComponent<ClickableCollider>();
         if(clickableCollider!=null)
@@ -80,12 +122,12 @@ public class FieldDriver : MonoBehaviour
         if (_hits.Count >= MaxHits) return;
         var hit = new FieldHit
         {
-            Position = normalize(transform.InverseTransformPoint(position)),
+            Position = Vector3.Scale(normalize(transform.InverseTransformPoint(position)), transform.localScale),
             Direction = normalize(transform.rotation * direction),
             Magnitude = magnitude,
             Time = 0
         };
-        Debug.Log($"Received hit: Position={hit.Position}, Direction={hit.Direction}");
+        //Debug.Log($"Received hit: Position={hit.Position}, Direction={hit.Direction}");
         _hits.Add(hit);
     }
 
@@ -97,8 +139,39 @@ public class FieldDriver : MonoBehaviour
         _meleeTime = 0;
     }
 
+    public bool CanGrab => _grabObject == null;
+
+    public void GrabObject(Transform t, Vector3 v)
+    {
+        _grabPhase = GrabPhase.Extend;
+        _grabObject = t;
+        _grabObjectStartPos = t.position;
+        _grabObjectVelocity = v;
+        _grabObjectScale = t.localScale.x;
+        _tendrilBasePos = _grabObjectStartTendrilBasePos = _collider.ClosestPoint(_grabObjectStartPos);
+        _fadePoint = .999f;
+    }
+
     void Update()
     {
+
+        var pushMag = min(length(Push), 1);
+
+        _waveOffset = frac(_waveOffset + Time.deltaTime * FlowSpeed * pow(max(pushMag, max(abs(FrontTwist), abs(RearTwist))), FlowSpeedThrottleExponent));
+
+        var refractionRotation = Matrix4x4.Rotate(Camera.transform.rotation).inverse;
+        if (RefractionAxis == RectTransform.Axis.Vertical) refractionRotation = 
+            Matrix4x4.Rotate(Quaternion.Euler(90, 0, 0)) * refractionRotation;
+
+        _field.SetFloat("_WaveOffset", _waveOffset * PI * 2);
+        _field.SetFloat("_Push", pushMag);
+        _field.SetVector("_PushDirection", new Vector4(-Push.x, 0, -Push.y));
+        _field.SetFloat("_TwistFront", FrontTwist);
+        _field.SetFloat("_TwistRear", RearTwist);
+        
+        _field.SetVector("_InverseScale", new Vector4(1/transform.localScale.x,1/transform.localScale.y,1/transform.localScale.z));
+        _field.SetMatrix("_ReflRotate", refractionRotation);
+
         for (int i = 0; i < _hits.Count; i++)
         {
             var hit = _hits[i];
@@ -110,38 +183,123 @@ public class FieldDriver : MonoBehaviour
                 i--;
             }
         }
+        _hitBuffer.SetData(_hits);
+        _field.SetBuffer("_Hits", _hitBuffer);
+        _field.SetInt("_HitCount", _hits.Count);
 
         if (_meleeActive)
         {
             _meleeTime += Time.deltaTime / MeleeDuration;
-            if (_meleeTime > 1)
+            if (_meleeTime < 1)
+            {
+                _field.SetVector("_MeleeDirection", Quaternion.AngleAxis(sign(_meleeTime*2-1) * MeleeAngle * pow(abs(_meleeTime * 2 - 1), MeleeAngleExponent), Vector3.up) * -Vector3.forward);
+                _field.SetFloat("_MeleeDisplacement", pow(1 - 2 * abs(_meleeTime - .5f), MeleeRangeExponent) * MeleeRange);
+                _field.SetFloat("_MeleeShape", MeleeShaping);
+                _field.SetFloat("_MeleeFlattening", MeleeFlatness);
+            }
+            else
             {
                 _meleeActive = false;
+                _field.SetFloat("_MeleeDisplacement", 0);
             }
         }
+        
+        
+        if(_grabObject != null)
+        {
+            _grabTime += Time.deltaTime / _grabPhase switch
+            {
+                GrabPhase.Extend => GrabExtendTime,
+                GrabPhase.Envelop => GrabEnvelopTime,
+                GrabPhase.Pull => GrabPullTime,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            if (_grabTime > 1)
+            {
+                _grabTime = 0;
+                if (_grabPhase == GrabPhase.Envelop)
+                {
+                    _grabObjectEndPos = _grabObject.position;
+                }
+                if (_grabPhase == GrabPhase.Pull)
+                {
+                    Destroy(_grabObject.gameObject);
+                    _grabObject = null;
+                    _field.SetFloat("_TendrilInfluence", 0);
+                }
+                else _grabPhase++;
+            }
 
-        _throttle = AetheriaMath.Damp(_throttle, Throttle, ThrottleDecay, Time.deltaTime);
-        var throttleDir = (float2) normalize(_throttle);
+            if (_grabObject != null)
+            {
+                _tendrilBasePos = AetheriaMath.Damp(_tendrilBasePos, _grabObject.position, TendrilBaseDamping, Time.deltaTime);
+                switch (_grabPhase)
+                {
+                    case GrabPhase.Extend:
+                        _tendrilBendTarget = _grabObjectStartPos;
+                        _grabObject.position += _grabObjectVelocity * Time.deltaTime;
+                        _tendrilTargetPos = lerp(
+                            lerp(_grabObjectStartTendrilBasePos, _grabObjectStartPos, _grabTime), 
+                            lerp(_grabObjectStartPos, _grabObject.position, _grabTime),
+                            pow(_grabTime, TendrilExtensionExponent));
+                        _field.SetFloat("_TendrilInfluence", pow(_grabTime, TendrilExtendBaseAnimationExponent));
+                        _field.SetFloat("_TendrilSize", lerp(TendrilBaseRadius/2,TendrilBaseRadius,pow(_grabTime, TendrilExtendBaseAnimationExponent)));
+                        _field.SetFloat("_TendrilRadius", _grabObjectScale * pow(_grabTime, TendrilTipRadiusAnimationExponent) * TendrilTipRadius);
+                        break;
+                    case GrabPhase.Envelop:
+                        _tendrilBendTarget = _grabObjectStartPos;
+                        _tendrilTargetPos = _grabObject.position += _grabObjectVelocity * Time.deltaTime * (1-_grabTime);
+                        _field.SetFloat("_TendrilInfluence", 1);
+                        _field.SetFloat("_TendrilSize", TendrilBaseRadius);
+                        _field.SetFloat("_TendrilRadius", _grabObjectScale * TendrilTipRadius);
+                        break;
+                    case GrabPhase.Pull:
+                        _tendrilTargetPos = _grabObject.position = lerp(_grabObjectEndPos, transform.position, _grabTime*_grabTime);
+                        _tendrilBendTarget = lerp(_grabObjectStartPos, _grabObjectEndPos, _grabTime*_grabTime);
+                        if (_fadePoint > .99 && transform.InverseTransformPoint(_grabObject.position).sqrMagnitude < 1)
+                            _fadePoint = _grabTime;
+                        _field.SetFloat("_TendrilInfluence", pow(smoothstep(1, _fadePoint, _grabTime), TendrilFadeExponent));
+                        _field.SetFloat("_TendrilSize", TendrilBaseRadius);
+                        _field.SetFloat("_TendrilRadius", _grabObjectScale * TendrilTipRadius);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                _field.SetVector("_TendrilBase", Vector3.Scale(transform.InverseTransformPoint(_tendrilBasePos).normalized, transform.localScale));
+                _field.SetVector("_TendrilBend", Vector3.Scale(transform.InverseTransformPoint(_tendrilBendTarget), transform.localScale));
+                _field.SetVector("_TendrilTarget", Vector3.Scale(transform.InverseTransformPoint(_tendrilTargetPos), transform.localScale));
+            }
+        }
+    }
+    
+    private float almostIdentity( float x )
+    {
+        return x*x*(2.0f-x);
+    }
 
-        var throttleMag = min(length(_throttle), 1);
+    private float smooth(float t)
+    {
+        return t * t * (3.0f - 2.0f * t);
+    }
 
-        _pushWaveOffset = frac(_pushWaveOffset + Time.deltaTime * FlowSpeed * (float) pow(throttleMag, FlowSpeedThrottleExponent));
+    private const int GIZMO_STEPS = 16;
+    private void OnDrawGizmosSelected()
+    {
+        if (_grabObject != null)
+        {
+            Vector3 previous = _tendrilBasePos;
+            for (int i = 1; i <= GIZMO_STEPS; i++)
+            {
+                var l = (float)i / GIZMO_STEPS;
+                var next = AetheriaMath.GetQuadraticSplinePosition(_tendrilBasePos, _tendrilBendTarget, _tendrilTargetPos, l);
+                Gizmos.DrawLine(previous, next);
+                previous = next;
+            }
+        }
+    }
 
-        var refractionRotation = Matrix4x4.Rotate(transform.rotation);
-        if (RefractionAxis == Axis.Y) refractionRotation = Matrix4x4.Rotate(Quaternion.Euler(90, 0, 0)) * refractionRotation;
-        if (RefractionAxis == Axis.X) refractionRotation = Matrix4x4.Rotate(Quaternion.Euler(0, 90, 0)) * refractionRotation;
-        _hitBuffer.SetData(_hits);
-        _field.SetBuffer("_Hits", _hitBuffer);
-        _field.SetInt("_HitCount", _hits.Count);
-        _field.SetFloat("_PushWaveMagnitude", FlowMagnitude * (float) pow(throttleMag, FlowMagnitudeThrottleExponent));
-        _field.SetFloat("_PushOpacity", (float) pow(throttleMag, FlowOpacityThrottleExponent));
-        _field.SetFloat("_PushWaveOffset", _pushWaveOffset);
-        _field.SetVector("_PushDirection", new Vector4(throttleDir.x,0,throttleDir.y));
-        _field.SetVector("_InverseScale", new Vector4(1/transform.localScale.x,1/transform.localScale.y,1/transform.localScale.z));
-        _field.SetMatrix("_ReflRotate", refractionRotation);
-        _field.SetVector("_MeleeDirection", Quaternion.AngleAxis(sign(_meleeTime*2-1) * MeleeAngle * pow(abs(_meleeTime * 2 - 1), MeleeAngleExponent), Vector3.up) * -Vector3.forward);
-        _field.SetFloat("_MeleeDisplacement", pow(1 - 2 * abs(_meleeTime - .5f), MeleeRangeExponent) * MeleeRange);
-        _field.SetFloat("_MeleeShape", MeleeShaping);
-        _field.SetFloat("_MeleeFlattening", MeleeFlatness);
+    private void OnDestroy()
+    {
+        _hitBuffer.Dispose();
     }
 }

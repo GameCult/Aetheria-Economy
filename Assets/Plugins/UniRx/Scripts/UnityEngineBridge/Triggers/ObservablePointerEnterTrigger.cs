@@ -11,6 +11,7 @@ namespace UniRx.Triggers
     public class ObservablePointerEnterTrigger : ObservableTriggerBase, IEventSystemHandler, IPointerEnterHandler
     {
         Subject<PointerEventData> onPointerEnter;
+        public bool SuppressDisable;
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
@@ -24,7 +25,8 @@ namespace UniRx.Triggers
 
         private void OnDisable()
         {
-            onPointerEnter = null;
+            if(!SuppressDisable)
+                onPointerEnter = null;
         }
 
         protected override void RaiseOnCompletedOnDestroy()

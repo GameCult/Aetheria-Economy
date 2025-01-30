@@ -2,14 +2,17 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Grid 1
   m_Shader: {fileID: 4800000, guid: 715b1ce444e57364a9458657be896071, type: 3}
-  m_ShaderKeywords: _RENDERING_CUTOUT _TESSELLATION_EDGE
+  m_ValidKeywords:
+  - _RENDERING_CUTOUT
+  - _TESSELLATION_EDGE
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -21,11 +24,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _AlphaMask:
-        m_Texture: {fileID: 2800000, guid: 314e63bcb8ac19045b9577f68a24bb42, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Background:
-        m_Texture: {fileID: 8900000, guid: b607eb85a346eaf459b28449d909bbe5, type: 3}
+        m_Texture: {fileID: 8900000, guid: 589f8d25c07df474ebf6e5cf31ac21c4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -84,12 +87,13 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AlphaClip: 0.4
-    - _AlphaRange: 80
+    - _AlphaRange: 465.6
     - _AlphaRangeCenter: -100
-    - _AlphaRangeFeather: 10
-    - _AlphaTiling: 0.5
+    - _AlphaRangeFeather: 25
+    - _AlphaTiling: 1
     - _BackgroundBlur: 0.75
     - _BackgroundFresnel: 0.999
     - _BumpScale: 1
@@ -113,7 +117,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ParallaxStrength: 0
-    - _Smoothness: 1
+    - _Smoothness: 0.824
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

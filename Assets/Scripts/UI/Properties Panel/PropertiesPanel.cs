@@ -466,7 +466,7 @@ public class PropertiesPanel : MonoBehaviour
 			Transform dragObject = null;
 			weaponGroups.OnBeginDragAsObservable().Subscribe(x =>
 			{
-				//Debug.Log($"Began dragging weapon group {x.group}");
+				Debug.Log($"Began dragging weapon group {x.group}");
 				GameManager.BeginDrag(new WeaponGroupDragObject(x.group));
 				dragObject = Instantiate(weaponGroups.Groups[x.group], DragParent, true).transform;
 				dragOffset = (Vector2)dragObject.position - x.pointerEventData.position;
@@ -477,7 +477,7 @@ public class PropertiesPanel : MonoBehaviour
 			});
 			weaponGroups.OnEndDragAsObservable().Subscribe(x =>
 			{
-				//Debug.Log($"Ended dragging weapon group {x.group}");
+				Debug.Log($"Ended dragging weapon group {x.group}");
 				GameManager.EndDrag();
 				Destroy(dragObject.gameObject);
 			});

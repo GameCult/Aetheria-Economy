@@ -36,6 +36,6 @@ public class ItemPickup : MonoBehaviour
 
     private void OnDestroy()
     {
-        ZoneRenderer.DestroyLoot(this);
+        ZoneRenderer?.DestroyLoot(this);
     }
 }

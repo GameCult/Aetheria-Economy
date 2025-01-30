@@ -441,7 +441,7 @@ FragmentOutput MyFragmentProgram (Interpolators i) {
         (1 - saturate(max(0, abs(i.worldPos.y - _AlphaRangeCenter) - _AlphaRange) / _AlphaRangeFeather)) * 
         (cells(i.worldPos * _AlphaTiling) + 
         (pow((rim), _FresnelClipPower) + _FresnelClipOffset) * _FresnelClip);// * inclination
-	
+	 
 	#if defined(_RENDERING_CUTOUT)
 		clip(alpha - _AlphaClip);
 	#endif

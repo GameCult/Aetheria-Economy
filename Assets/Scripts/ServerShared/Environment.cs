@@ -12,7 +12,8 @@ public class ZoneEnvironment
     [JsonProperty("nebula"), Key(0)] public NebulaSettings Nebula;
     [JsonProperty("flow"), Key(1)] public FlowSettings Flow;
     [JsonProperty("noise"), Key(2)] public NoiseSettings Noise;
-    [JsonProperty("lighting"), Key(2)] public AmbientLightingSettings Lighting;
+    [JsonProperty("lighting"), Key(3)] public AmbientLightingSettings Lighting;
+    [JsonProperty("grid"), Key(4)] public GridSettings Grid;
 }
 
 [Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -34,6 +35,13 @@ public class NebulaSettings
 }
 
 [Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
+public class GridSettings
+{
+    [JsonProperty("enabled"), Key(0)] public bool Enabled;
+    [JsonProperty("offset"), Key(1)] public float Offset;
+}
+
+[Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
 public class AmbientLightingSettings
 {
     [JsonProperty("dynamicSkyBoost"), Key(0)] public float DynamicSkyBoost;
@@ -50,7 +58,7 @@ public class FlowSettings
     [JsonProperty("scrollSpeed"), Key(2)] public float GlobalScrollSpeed;
     [JsonProperty("period"), Key(3)] public float Period;
     [JsonProperty("amplitudeSlope"), Key(4)] public float SlopeAmplitude;
-    [JsonProperty("amplitudeSwirl"), Key(4)] public float SwirlAmplitude;
+    [JsonProperty("amplitudeSwirl"), Key(5)] public float SwirlAmplitude;
 }
 
 [Serializable, MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -151,4 +159,3 @@ public class RadialWaveBrush : TextureBrush
         return cos((ang + Phase.x) * Frequency.x * PI + (pow(dist, WaveExponent) + Phase.y) * Frequency.y);
     }
 }
-

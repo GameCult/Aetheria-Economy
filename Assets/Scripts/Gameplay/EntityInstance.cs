@@ -337,7 +337,7 @@ public class EntityInstance : MonoBehaviour
                 // U coordinate between 0-1 indicates a hit that didn't land directly on a hardpoint
                 // Find the 2D position of the hit scaled to the schematic
                 float2 hitPos = float2.zero;
-                if (hardpointIndex < 0)
+                if (hardpointIndex < 0 || hardpointIndex >= hullData.Hardpoints.Count)
                 {
                     hitPos = float2(hit.TexCoord.x * hullData.Shape.Width, hit.TexCoord.y * hullData.Shape.Height);
                     // Search all schematic border cells for the cell which is closest to the hit position

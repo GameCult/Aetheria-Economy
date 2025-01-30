@@ -11,36 +11,59 @@ Shader "Aetheria/Field"
 	Properties
 	{
 		_Displacement("Max Displacement", Range(0, 1.0)) = 0.3
-		_SubdivisionAmount("Subivision Amount", Range(1, 10)) = 1
-//		_Color("Color", Color) = (1,1,1,1)
-//		_Metallic("Metallic", Range(0, 1)) = 1
-//		_Gloss("Gloss", Range(0, 1)) = 0.8
-		_Ambient_Multiplier("Ambient Multiplier", Float) = 5
+		_SubdivisionAmount("Subivision Amount", Range(1, 12)) = 1
+		_Color("Color", Color) = (1,1,1,1)
 		
-		_EmissionColor ("Emission Color", Color) = (1,1,1,1)
 		_Emission ("Emission Strength", Float) = 0
         _EmissionFresnel ("Emission Fresnel", Float) = 1.0
 		
 		_Background ("Background", CUBE) = "" {}
         _BackgroundFresnel ("Background Fresnel", Float) = 1.0
 		_BackgroundBlur ("Background Blur", Float) = 2
-		
-		_PushWaveMagnitude ("Push Magnitude", Float) = .5
-		_PushWaveFrequency ("Push Frequency", Float) = 2
-		_PushWaveRangeExponent ("Push Range Exponent", Float) = 2
-		_PushWaveEnvelopeExponent ("Push Envelope Exponent", Float) = 2
-		_PushWaveExponent ("Push Wave Exponent", Float) = 2
-		_PushWaveRange ("Push Range", Range(0,3.141592654)) = 1
-		_PushWaveOffset ("Push Time", Float) = .5
-		_PushDirection ("Push Direction", Vector) = (0,0,1)
-		_PushOpacity ("Push Opacity", Range(0,1)) = 1
-		_PushOpacityRangeMin ("Push Opacity Range Start", Range(0,1)) = .5
-		_PushOpacityRangeMax ("Push Opacity Range End", Range(0,1)) = .25
+		_BlurFresnel ("Blur Fresnel", Float) = 2
 		
 		_FresnelOpacity ("Fresnel Opacity", Range(0,1)) = 1
 		_OpacityFresnel ("Opacity Fresnel", Float) = 1
 		_DisplacementOpacity ("Displacement Opacity", Float) = 1
 		_DeviationOpacityExponent ("Deviation Opacity Exponent", Float) = 8
+		
+		_WaveMagnitude ("Wave Magnitude", Float) = .5
+		_WaveFrequency ("Wave Frequency", Float) = 2
+		_WaveOffset ("Wave Time", Float) = .5
+		_WaveExponent ("Wave Exponent", Float) = 2
+		
+		_Push ("Push", Range(0,1)) = 1
+		_PushDirection ("Push Direction", Vector) = (0,0,1)
+		_PushVerticalExponent ("Push Vertical Exponent", Float) = 1
+		_PushEnvelopeExponent ("Push Envelope Exponent", Float) = 2
+		_PushFrequencyExponent ("Push Frequency Exponent", Float) = 2
+//		_PushOpacity ("Push Opacity", Range(0,1)) = 1
+//		_PushOpacityRangeMin ("Push Opacity Range Start", Range(0,1)) = .5
+//		_PushOpacityRangeMax ("Push Opacity Range End", Range(0,1)) = .25
+		
+		_TwistFront ("Twist Front", Range(-1,1)) = 1
+		_TwistRear ("Twist Back", Range(-1,1)) = 1
+		_TwistVerticalExponent ("Twist Vertical Exponent", Float) = 1
+		_TwistEnvelopeExponent ("Twist Envelope Exponent", Range(1,12)) = 1
+		_TwistFrequencyExponent ("Twist Frequency Exponent", Float) = 2
+		
+		_MeleeDisplacement ("Melee Displacement", Float) = 8
+		_MeleeShape ("Melee Shape", Float) = 8
+		_MeleeFlattening ("Melee Flattening", Float) = 8
+		_MeleeDirection ("Melee Direction", Vector) = (0,0,-1)
+		
+		_TendrilSize ("Tendril Size", Float) = 1
+		_TendrilExponent ("Tendril Exponent", Float) = 1
+		_TendrilRadius ("Tendril Radius", Float) = .1
+		_TendrilInfluence ("Tendril Influence", Float) = .1
+		
+		_InverseScale ("Inverse Scale", Vector) = (1,1,1)
+		
+		_CellSpeed("Cell Speed", Float) = 1
+		_CellTiling("Cell Tiling", Float) = 1
+		_CellExponent("Cell Exponent", Float) = 1
+//		_BulbRadius ("Bulb Radius", Float) = .5
+//		_BulbRange ("Bulf Range", Float) = .1
 	}
 
 	SubShader
@@ -56,6 +79,7 @@ Shader "Aetheria/Field"
 			#pragma domain domain_shader
 			#pragma fragment pixel_shader
 			#pragma multi_compile ___ UNITY_HDR_ON
+			#pragma multi_compile A B C D E F G H
 			//#pragma exclude_renderers nomrt
 			#pragma target 4.6
 			#pragma glsl
@@ -63,52 +87,63 @@ Shader "Aetheria/Field"
 			//#define UNITY_PASS_DEFERRED
 			#include "UnityPBSLighting.cginc"
 			#include "Dither Functions.cginc"
-			
-// #include "UnityShaderVariables.cginc"
-// #include "UnityStandardCore.cginc"
-			//#include "HLSLSupport.cginc"
-			//#include "UnityShaderVariables.cginc"
-			//#include "Lighting.cginc"
-			//#include "AutoLight.cginc"
 
 			//#pragma only_renderers d3d11
-
-			uniform sampler2D _LightBuffer;
 
 			float _SubdivisionAmount;
 			float _Displacement;
 
-			// half4 _Color;
-			// float _Metallic;
-			// float _Gloss;
-			float _Ambient_Multiplier;
+			half4 _Color;
 			
 			samplerCUBE _Background;
 			float _Emission;
-			half4 _EmissionColor;
 			float _EmissionFresnel;
 			float _BackgroundBlur;
+			float _BlurFresnel;
 			float _BackgroundFresnel;
 			float _FresnelOpacity;
 			float _OpacityFresnel;
-
-			float _PushWaveMagnitude;
-			float _PushWaveFrequency;
-			float _PushWaveRangeExponent;
-			float _PushWaveExponent;
-			float _PushWaveEnvelopeExponent;
-			float _PushWaveRange;
-			float _PushWaveOffset;
-			float _PushOpacity;
-			float _PushOpacityRangeMin;
-			float _PushOpacityRangeMax;
-			float _DisplacementOpacity;
 			float _DeviationOpacityExponent;
+			float _DisplacementOpacity;
+
+			float _WaveMagnitude;
+			float _WaveOffset;
+			float _WaveFrequency;
+			float _WaveExponent;
+			
+			float _Push;
+			float3 _PushDirection;
+			float _PushVerticalExponent;
+			float _PushEnvelopeExponent;
+			float _PushFrequencyExponent;
+			// float _PushOpacity;
+			// float _PushOpacityRangeMin;
+			// float _PushOpacityRangeMax;
+
+			float _TwistVerticalExponent;
+			float _TwistEnvelopeExponent;
+			float _TwistFrequencyExponent;
+			float _TwistFront;
+			float _TwistRear;
 
 			float _MeleeDisplacement;
 			float _MeleeShape;
 			float _MeleeFlattening;
 			float3 _MeleeDirection;
+
+			float3 _TendrilBase;
+			float3 _TendrilBend;
+			float3 _TendrilTarget;
+			float _TendrilSize;
+			float _TendrilRadius;
+			float _TendrilExponent;
+			float _TendrilInfluence;
+			// float _BulbRadius;
+			// float _BulbRange;
+			
+			float _CellSpeed;
+			float _CellExponent;
+			float _CellTiling;
 
 			int _HitCount;
 		    struct FieldHit
@@ -120,7 +155,6 @@ Shader "Aetheria/Field"
 		    };
             StructuredBuffer<FieldHit> _Hits;
 			
-			uniform float3 _PushDirection;
 			uniform float3 _InverseScale;
 			uniform float4x4 _ReflRotate;
 
@@ -177,19 +211,28 @@ Shader "Aetheria/Field"
 				//float depthSV : Depth;
 			};
 
-			// q = lerped position according to SV_DomainLocation.
-			// p = patch position, in sequential order [0], [1], etc...
-			// n = patch normal, in sequential order [0], [1], etc...
-			float3 PhongOperator(float3 q, float3 p, float3 n)
+			inline float3 spline(float3 p0, float3 p1, float3 p2, float t)
+		    {
+		        t = saturate(t);
+		        float oneMinusT = 1 - t;
+		        return
+		            oneMinusT * oneMinusT * p0 +
+		            2 * oneMinusT * t * p1 +
+		            t * t * p2;
+		    }
+
+			inline float bulb(float x)
 			{
-				return q - dot(q - p, n) * n;
+				return sqrt(0.25-pow(x-.5, 2));
+			}
+
+			inline float unlerp(float from, float to, float value){
+				return saturate((value - from) / (to - from));
 			}
 			
-			float smootherstep(float edge0, float edge1, float x) {
-				// Scale, and clamp x to 0..1 range
-				x = saturate((x - edge0) / (edge1 - edge0));
-				// Evaluate polynomial
-				return x * x * x * (x * (x * 6 - 15) + 10);
+			inline float almostUnitIdentity( float x )
+			{
+			    return x*x*x*(2.0-x);
 			}
 			
 			struct v2f {
@@ -199,29 +242,87 @@ Shader "Aetheria/Field"
 				float4 screenPos : TEXCOORD1;
 				float3 viewDirection : TEXCOORD2;
 			};
+
+			static const float EPSILON = .001;
 			
 			float3 SampleDisplacement (float3 normal)
 			{
 				float3 disp = 0;
-				float l = smoothstep(UNITY_PI, 0, acos(dot(_PushDirection,normal)));
-				float pushwave = pow((sin(pow(l, _PushWaveRangeExponent)*UNITY_PI*_PushWaveFrequency - _PushWaveOffset * UNITY_TWO_PI)+1)/2, _PushWaveExponent);
-				if(_PushWaveMagnitude<0) pushwave = 1-pushwave;
-				disp += normal * pow(l, _PushWaveEnvelopeExponent) * pushwave * abs(_PushWaveMagnitude);
+
+				float vertical = acos(dot(normal,float3(0,1,0)))/UNITY_PI;
+				float angle = atan2(normal.z,normal.x) / UNITY_PI;
+				
+				if(_Push > EPSILON)
+				{
+					float waveRange = acos(dot(_PushDirection,normal)) / UNITY_PI;
+					float pushwave = pow((sin(pow(waveRange, _PushFrequencyExponent)*_WaveFrequency-_WaveOffset)+1)/2, _WaveExponent);
+					if(_WaveMagnitude<0) pushwave = 1-pushwave;
+					//if(_CellExponent > 0) pushwave *= pow(cells(float2(waveRange * _CellTiling, vertical * _CellTiling)), _CellExponent);
+					float verticalEnvelope = pow( 4.0*vertical*(1.0-vertical), abs(_PushVerticalExponent) );
+					if(_PushVerticalExponent < 0) verticalEnvelope = 1-verticalEnvelope;
+					disp += normal * (
+						pow(waveRange, _PushEnvelopeExponent) *
+						verticalEnvelope *
+						pushwave *
+						abs(_WaveMagnitude) *
+						_Push);
+				}
+
+				float twist = angle < 0 ? _TwistFront : _TwistRear;
+				if(abs(twist) > EPSILON)
+				{
+					angle = frac(angle);
+					if(twist < 0) angle = 1 - angle;
+					float verticalEnvelope = pow( 4.0*vertical*(1.0-vertical), _TwistVerticalExponent );
+					float twistEnvelope = (1-angle) *
+						pow(angle, _TwistEnvelopeExponent) *
+						pow(1/_TwistEnvelopeExponent+1, _TwistEnvelopeExponent) *
+						(_TwistEnvelopeExponent+1);
+					float twistwave = pow((sin(pow(angle, _TwistFrequencyExponent)*_WaveFrequency - _WaveOffset)+1)/2, _WaveExponent);
+					if(_WaveMagnitude<0) twistwave = 1-twistwave;
+					disp += normal * (
+						verticalEnvelope *
+						twistEnvelope *
+						twistwave *
+						abs(_WaveMagnitude) *
+						abs(twist));
+				}
+				
 				float3 scaledNormal = normal/_InverseScale;
 				for(int i=0; i<_HitCount; i++)
 				{
 					FieldHit hit = _Hits[i];
+					float3 toHit = hit.Position-scaledNormal;
+					float envelope = pow(smoothstep(hit.Magnitude + 4, 0, length(toHit)), 8 / hit.Time);
+					if(envelope < EPSILON) continue;
 					float hitroot = sqrt(hit.Magnitude);
-					float invsqtime = pow(1-hit.Time, 4);
-					float3 toHit = hit.Position/_InverseScale-scaledNormal;
-					float envelope = pow(smoothstep(hit.Magnitude + 4, 0, length(toHit)), 8 / (hit.Time));
-					disp += lerp(hit.Direction, normal, hit.Time) * (envelope * pow(cos(envelope*hitroot*hit.Time*6)+1,2) * hitroot * invsqtime * _InverseScale.y);
+					float invsqtime = pow(1-hit.Time, 2);
+					disp += lerp(normal, hit.Direction, invsqtime) * (envelope * pow(cos(envelope*hitroot*hit.Time*6)+1,2) * hitroot * invsqtime * _InverseScale.y);
 				}
-				if(_MeleeDisplacement>.01)
+				
+				if(_MeleeDisplacement > EPSILON)
 				{
-					normal.y /= _MeleeFlattening;
+					normal.y *= _MeleeFlattening;
 					normal = normalize(normal);
-					disp += _MeleeDirection * pow(saturate(1 - acos(dot(normal,_MeleeDirection))/(UNITY_PI/2)),_MeleeShape) * _MeleeDisplacement;
+					disp += _MeleeDirection * (pow(saturate(1 - acos(dot(normal,_MeleeDirection))/(UNITY_PI/2)),_MeleeShape) * _MeleeDisplacement);
+				}
+
+				if(_TendrilInfluence > EPSILON)
+				{
+					float3 toBase = _TendrilBase-scaledNormal;
+					float3 toBend = _TendrilBend-scaledNormal;
+					float3 toTarget = _TendrilTarget-scaledNormal;
+					float tendrilLerp = 1 - saturate(length(toBase)/_TendrilSize);
+					float3 radial = normalize(-toBase) * _TendrilRadius;
+					// if(_BulbRadius > 0)
+					// {
+					// 	float bulbLerp = smoothstep(1-_BulbRange * _BulbRadius, 1, tendrilLerp);
+					// 	radial = normalize(-toBase) * (_TendrilRadius + bulb(bulbLerp) * _BulbRadius);
+					// 	toTarget += normalize(toTarget) * _BulbRadius*.25;
+					// 	toTarget += normalize(toTarget-toBend) * _BulbRadius*.25;
+					// }
+					float3 tendril = spline(toBase, toBend, toTarget, tendrilLerp) + radial;
+					disp = lerp(disp, tendril, almostUnitIdentity(tendrilLerp) * _TendrilInfluence);
 				}
 				return disp;
 				//return texCUBElod(_Offset, float4(normal, 0)).r;
@@ -330,9 +431,8 @@ Shader "Aetheria/Field"
 			    float3 dir = mul(_ReflRotate, refract(input.viewDirection,normal,_BackgroundFresnel));
 				//float lerp = smoothstep(UNITY_PI, 0, pow(acos(dot(_PushDirection,input.normal)), 2));
 				float2 screenUV = input.screenPos.xy / input.screenPos.w;
-				float l = pow(smoothstep(UNITY_PI * _PushOpacityRangeMin, UNITY_PI * _PushOpacityRangeMax, acos(dot(_PushDirection,input.normal))), 4);
-		        ditherClip(screenUV, abs(height) * _DisplacementOpacity + deviation + l * _PushOpacity + pow(1-rim, _OpacityFresnel) * _FresnelOpacity);
-				deferredStruct.emission.rgb += texCUBElod(_Background, float4(dir, _BackgroundBlur)).rgb * _Emission * pow(rim,_EmissionFresnel) * _EmissionColor;
+		        ditherClip(screenUV, abs(height) * _DisplacementOpacity + deviation + pow(1-rim, _OpacityFresnel) * _FresnelOpacity);
+				deferredStruct.emission.rgb += texCUBElod(_Background, float4(dir, _BackgroundBlur*pow(rim, _BlurFresnel))).rgb * _Emission * pow(rim,_EmissionFresnel) * _Color;
 
 				#ifndef UNITY_HDR_ON
 				deferredStruct.emission.rgb = exp2(-deferredStruct.emission.rgb);
@@ -345,5 +445,6 @@ Shader "Aetheria/Field"
 		}
 	}
 	Fallback "Diffuse"
+	CustomEditor "CellBrushEditor"
 
 }

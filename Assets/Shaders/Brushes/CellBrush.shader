@@ -107,7 +107,7 @@ Category {
             //
             // Note that there are no random points at all, no loops, and virtually no setup, yet the 
             // pattern appears random anyway.
-            float m(float2 p){    
+            float cells(float2 p){    
                 
                 // Offset - used for animation. Put in as an afterthought, so probably needs more
                 // tweaking, but it works well enough for the purpose of this demonstration.
@@ -139,7 +139,7 @@ Category {
 			fixed4 frag (v2f i) : SV_Target
 			{
 				float dist = length(i.texcoord - float2(.5,.5));
-				return _Depth * powerPulse(dist * 2,_Power) * m(i.texcoord1.xy*_Frequency);
+				return _Depth * powerPulse(dist * 2,_Power) * cells(i.texcoord1.xy*_Frequency);
 			}
 			ENDCG 
 		}

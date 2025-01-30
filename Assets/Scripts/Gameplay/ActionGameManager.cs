@@ -20,6 +20,7 @@ using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Unity.Mathematics;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine.EventSystems;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
@@ -294,7 +295,7 @@ public class ActionGameManager : MonoBehaviour
         Input.Global.ZoneMap.performed += context =>
         {
             ToggleMenuTab(MenuTab.Map);
-            MenuMap.Position = CurrentEntity.Position.xz;
+                MenuMap.Position = CurrentEntity.Position.xz;
         };
 
         Input.Global.Inventory.performed += context => ToggleMenuTab(MenuTab.Inventory);
@@ -457,13 +458,24 @@ public class ActionGameManager : MonoBehaviour
             return slot;
         }
 
-        foreach (var actionBarInput in PlayerSettings.InputSettings.ActionBarInputs.OrderBy(i=>i)) createBinding(actionBarInput);
+        var bindings = PlayerSettings.InputSettings.ActionBarInputs.OrderBy(i => i)
+            .Select(createBinding).ToList();
 
         #endregion
 
         #endregion
         
         StartGame();
+        
+        //if (!PlayerSettings.InputSettings.ActionBarInputs.Any())
+        {
+            var newbinds = Enumerable.Range(0, 64)//CurrentEntity.WeaponGroups
+                .Zip(
+                    bindings,
+                    (i, slot) =>
+                        slot.Binding = new ActionBarWeaponGroupBinding(CurrentEntity, slot, i)
+                );
+        }
         
         ConsoleController.AddCommand("revealzones",
             _ =>

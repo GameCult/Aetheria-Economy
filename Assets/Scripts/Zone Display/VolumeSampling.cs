@@ -18,6 +18,7 @@ using static Unity.Mathematics.noise;
 [RequireComponent( typeof( Camera ) )]
 public class VolumeSampling : MonoBehaviour
 {
+    public Transform GridMesh;
     public Camera GridCamera;
     public GameSettings Settings;
 
@@ -48,6 +49,13 @@ public class VolumeSampling : MonoBehaviour
             Shader.SetGlobalVector("_GridTransform", new Vector4(_gridTransform.position.x,_gridTransform.position.z,GridCamera.orthographicSize*2));
 
         var environment = ActionGameManager.Instance?.CurrentEnvironment ?? Settings.DefaultEnvironment;
+
+        if (GridMesh != null)
+        {
+            GridMesh.gameObject.SetActive(environment.Grid.Enabled);
+            GridMesh.position = new Vector3(_gridTransform.position.x, environment.Grid.Offset, _gridTransform.position.z);
+            GridMesh.localScale = new Vector3(GridCamera.orthographicSize, 1, GridCamera.orthographicSize);
+        }
         
         // Volumetric sampling parameters are used by several shaders
         Shader.SetGlobalTexture("_NebulaSurfaceHeight", NebulaSurfaceHeight);

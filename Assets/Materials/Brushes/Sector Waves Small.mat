@@ -62,7 +62,7 @@ Material:
     - _BumpScale: 1
     - _Constant: 0
     - _Cutoff: 0.5
-    - _Depth: -8
+    - _Depth: -16.75
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _Frequency: 0.005

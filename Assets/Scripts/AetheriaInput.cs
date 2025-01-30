@@ -143,6 +143,15 @@ public partial class @AetheriaInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Turn"",
+                    ""type"": ""Value"",
+                    ""id"": ""b93a3495-742e-4536-a9c7-57d6ab81d04c"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -160,7 +169,7 @@ public partial class @AetheriaInput : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""WASD"",
                     ""id"": ""00ca640b-d935-4593-8157-c05846ea39b3"",
-                    ""path"": ""Dpad"",
+                    ""path"": ""Dpad(mode=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -376,6 +385,39 @@ public partial class @AetheriaInput : IInputActionCollection2, IDisposable
                     ""action"": ""Tractor Beam"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""0a0e25af-91a6-4e29-ad62-649fdcb137bd"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Turn"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""8536ca60-1fed-4f29-8060-04d46cfffcab"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""19c175bf-d4e6-4626-8bee-91e0c473a94b"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Turn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -1027,6 +1069,7 @@ public partial class @AetheriaInput : IInputActionCollection2, IDisposable
         m_Player_Ping = m_Player.FindAction("Ping", throwIfNotFound: true);
         m_Player_HideUI = m_Player.FindAction("Hide UI", throwIfNotFound: true);
         m_Player_TractorBeam = m_Player.FindAction("Tractor Beam", throwIfNotFound: true);
+        m_Player_Turn = m_Player.FindAction("Turn", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1118,6 +1161,7 @@ public partial class @AetheriaInput : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Ping;
     private readonly InputAction m_Player_HideUI;
     private readonly InputAction m_Player_TractorBeam;
+    private readonly InputAction m_Player_Turn;
     public struct PlayerActions
     {
         private @AetheriaInput m_Wrapper;
@@ -1135,6 +1179,7 @@ public partial class @AetheriaInput : IInputActionCollection2, IDisposable
         public InputAction @Ping => m_Wrapper.m_Player_Ping;
         public InputAction @HideUI => m_Wrapper.m_Player_HideUI;
         public InputAction @TractorBeam => m_Wrapper.m_Player_TractorBeam;
+        public InputAction @Turn => m_Wrapper.m_Player_Turn;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1183,6 +1228,9 @@ public partial class @AetheriaInput : IInputActionCollection2, IDisposable
                 @TractorBeam.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
                 @TractorBeam.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
                 @TractorBeam.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTractorBeam;
+                @Turn.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurn;
+                @Turn.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurn;
+                @Turn.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTurn;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1226,6 +1274,9 @@ public partial class @AetheriaInput : IInputActionCollection2, IDisposable
                 @TractorBeam.started += instance.OnTractorBeam;
                 @TractorBeam.performed += instance.OnTractorBeam;
                 @TractorBeam.canceled += instance.OnTractorBeam;
+                @Turn.started += instance.OnTurn;
+                @Turn.performed += instance.OnTurn;
+                @Turn.canceled += instance.OnTurn;
             }
         }
     }
@@ -1442,6 +1493,7 @@ public partial class @AetheriaInput : IInputActionCollection2, IDisposable
         void OnPing(InputAction.CallbackContext context);
         void OnHideUI(InputAction.CallbackContext context);
         void OnTractorBeam(InputAction.CallbackContext context);
+        void OnTurn(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

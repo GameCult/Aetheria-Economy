@@ -523,7 +523,6 @@ public class Galaxy
     {
         MinHeap<DijkstraVertex> unsearchedNodes = new MinHeap<DijkstraVertex>();
         unsearchedNodes.PushObj(new DijkstraVertex{Zone = source}, 0);
-        //SortedList<float,DijkstraVertex> members = new SortedList<float,DijkstraVertex>{{0, new DijkstraVertex{Zone = source}}};
         var searched = new HashSet<GalaxyZone>();
         while (true)
         {
@@ -543,7 +542,7 @@ public class Galaxy
             foreach (var dijkstraStar in zonesToSearch
                     // Cost is parent cost plus distance squared
                     .Select(zone => new DijkstraVertex {Parent = s, Zone = zone, Cost = s.Cost + lengthsq(s.Zone.Position - zone.Position)}))
-                // Add new member to list, sorted by cost plus optional heuristic
+                // Add new member to list, sorted by cost plus optional heuristic 
                 unsearchedNodes.PushObj(dijkstraStar, bestFirst ? dijkstraStar.Cost + lengthsq(dijkstraStar.Zone.Position - target.Position) : dijkstraStar.Cost);
             searched.Add(s.Zone);
         }

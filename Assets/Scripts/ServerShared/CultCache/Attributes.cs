@@ -136,3 +136,11 @@ public class OrderAttribute : Attribute
         Order = order;
     }
 }
+
+[AttributeUsage(AttributeTargets.Field, AllowMultiple = true, Inherited = true)]
+public class InspectorHeaderAttribute : Attribute
+{
+    public readonly string header;
+
+    public InspectorHeaderAttribute(string header) => this.header = header;
+}

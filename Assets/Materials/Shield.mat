@@ -9,7 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Shield
   m_Shader: {fileID: 4800000, guid: 8cdd48af96eb47745a96bca98f53d5bd, type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - A
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -21,7 +22,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Background:
-        m_Texture: {fileID: 8900000, guid: 3aff5e4f12da60e42b543a55f412144f, type: 3}
+        m_Texture: {fileID: 8900000, guid: 589f8d25c07df474ebf6e5cf31ac21c4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -75,44 +76,80 @@ Material:
     m_Ints: []
     m_Floats:
     - _Ambient_Multiplier: 0
-    - _BackgroundBlur: 0
-    - _BackgroundFresnel: -0.5
+    - _BackgroundBlur: 0.1
+    - _BackgroundFresnel: 0.75
+    - _BlurFresnel: -2
+    - _BulbRadius: 0
+    - _BulbRange: 0.05
     - _BumpScale: 1
+    - _CellExponent: 1
+    - _CellSpeed: 1
+    - _CellTiling: 12
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
+    - _DeviationOpacityExponent: 4
     - _Displacement: 1
+    - _DisplacementOpacity: 0
     - _DstBlend: 0
-    - _Emission: 50
-    - _EmissionFresnel: 0.5
+    - _Emission: 8
+    - _EmissionFresnel: -0.5
     - _FresnelOpacity: 1
     - _Gloss: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _MaxDisplacement: 0.073
+    - _MeleeDisplacement: 0
+    - _MeleeFlattening: 8
+    - _MeleeShape: 4
     - _Metallic: 1
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OpacityFresnel: 3
+    - _OpacityFresnel: 4
     - _Parallax: 0.02
-    - _PushOpacity: 1
+    - _Push: 1
+    - _PushEnvelopeExponent: 2
+    - _PushFrequencyExponent: 2
+    - _PushOpacity: 0
     - _PushOpacityRangeMax: 0.25
     - _PushOpacityRangeMin: 0.75
+    - _PushVerticalExponent: 0
     - _PushWaveEnvelopeExponent: 2
     - _PushWaveExponent: 1
     - _PushWaveFrequency: 8
-    - _PushWaveMagnitude: 2
+    - _PushWaveMagnitude: 0
     - _PushWaveOffset: 0
     - _PushWaveRange: 3.14
     - _PushWaveRangeExponent: 4
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
+    - _Speed: 1
     - _SrcBlend: 1
-    - _SubdivisionAmount: 10
+    - _SubdivisionAmount: 8
+    - _TendrilExponent: 2
+    - _TendrilInfluence: 0.1
+    - _TendrilRadius: 0
+    - _TendrilSize: 0
+    - _TwistAngleExponent: 1
+    - _TwistAngleMax: 1
+    - _TwistAngleMin: 1
+    - _TwistBack: 1
+    - _TwistEnvelopeExponent: 2
+    - _TwistFrequencyExponent: 1.5
+    - _TwistFront: 0
+    - _TwistRear: 0
+    - _TwistVerticalExponent: 8
     - _UVSec: 0
+    - _WaveExponent: 1
+    - _WaveFrequency: 50.24
+    - _WaveMagnitude: 1
+    - _WaveOffset: 0
+    - _WaveRangeExponent: 2
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 1, g: 0.25499997, b: 0.6288488, a: 1}
-    - _PushDirection: {r: 0, g: 0, b: 1, a: 1}
+    - _EmissionColor: {r: 0.25490198, g: 0.7046673, b: 1, a: 1}
+    - _InverseScale: {r: 0.25, g: 0.33333334, b: 0.083333336, a: 1}
+    - _MeleeDirection: {r: -0.00000008742278, g: -0, b: -1, a: 0}
+    - _PushDirection: {r: 0, g: 0, b: -1, a: 0}
   m_BuildTextureStacks: []

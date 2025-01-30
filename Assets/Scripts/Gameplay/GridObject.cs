@@ -26,9 +26,11 @@ public class GridObject : MonoBehaviour
 
     void Update()
     {
+        var t = transform;
+        t.localRotation = Quaternion.Euler(sin(Time.time - _timeOffset * RotationSpeed) * 90, 0, cos(Time.time - _timeOffset * RotationSpeed) * 90);
+        
         if (Zone == null) return;
 
-        var t = transform;
         var position = t.position;
         var gridHeight = Zone.GetHeight(position.Flatland()) + GridOffset;
         Velocity += Vector3.up * (sign(gridHeight - position.y) * GridAttraction * Time.deltaTime);
@@ -44,6 +46,5 @@ public class GridObject : MonoBehaviour
 
         _selfVelocity *= max(0, 1 - Drag * Time.deltaTime);
         t.position = position + (Velocity + new Vector3(_selfVelocity.x, 0, _selfVelocity.y)) * Time.deltaTime;
-        t.localRotation = Quaternion.Euler(sin(Time.time - _timeOffset * RotationSpeed) * 90, 0, cos(Time.time - _timeOffset * RotationSpeed) * 90);
     }
 }
