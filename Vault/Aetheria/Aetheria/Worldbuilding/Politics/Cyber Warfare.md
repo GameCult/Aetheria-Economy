@@ -1,0 +1,1 @@
+AGI-driven cyber attacks are a primary weapon, targeting digital infrastructure to steal data, sabotage operations, or manipulate stock prices. Neural hacks on corporate leaders or key personnel are also common, aiming to disrupt decision-making without physical destruction.

@@ -1,0 +1,1 @@
+Certain areas, such as major trade hubs, resource-rich regions, or critical infrastructure like network relays, are designated as no-conflict zones. Warfare in these areas is strictly prohibited to protect shared economic interests.

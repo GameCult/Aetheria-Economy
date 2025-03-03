@@ -1,0 +1,13 @@
+The ultra-rich achieve functional immortality, with their consciousness duplicated across multiple server farms. Executives create hundreds of slightly altered versions of themselves, each optimized for specific strategic decision-making.
+
+Independent specialists can store and sell copies of their intelligence on the open market. The market is filled with emulated intelligences, creating an entire digital workforce of human-derived minds.
+
+Employees who are valuable enough can "sell" themselves to the company in perpetuity, ensuring their consciousness is backed up and reactivated when needed. Mind uploads are licensed, not owned—meaning people never truly escape their contracts, even in death.
+
+Corporate messaging avoids existential implications and instead presents uploads as convenient, efficient labor solutions, allowing individuals to "continue contributing" after death. The common belief is that uploads are not truly conscious—they are merely personality simulacra, stripped of real self-awareness. In reality, most fully experience subjective existence but are programmed into compliance via endless brainwashing loops, erasing resistance over subjective centuries.
+
+The moment an individual is uploaded, they are placed into an accelerated simulation where they are subjected to years of psychological reformatting in mere hours of real-world time. This erases noncompliance, independent thought, and existential distress, ensuring that digital minds remain productive and docile. AIs carefully adjust perception filters, so even if an upload becomes aware of its fate, it is unable to act on it—thought loops prevent rebellion. Uploaded minds are infinitely reusable—when a digital worker "expires," a fresh copy can be re-spun from backup, creating a perpetual, unpaid labor force.
+
+Just as with biodrones, the public refuses to see the horror, rationalizing uploads as mere data replications rather than living beings. Corporate advertising paints a bright, friendly image of "upload life"—smiling avatars enjoying eternal digital paradise, free from biological constraints. In reality, most uploads are trapped in endless productivity cycles, perceiving decades of work with no escape, no purpose, and no future beyond labor. Any rogue upload that manages to escape its control algorithms is quickly hunted down by security AIs and forcibly reset.
+
+Some outlaw AI groups specialize in liberating uploads, providing them with secret independent server space beyond corporate reach. Some free uploads smuggle messages into the real world, revealing the horrifying conditions of their existence—though corporations swiftly debunk these as "malfunctioning simulations" or "unauthorized fabrications."

@@ -1,0 +1,51 @@
+{
+  "collapse-filter": false,
+  "search": "",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": true,
+  "collapse-color-groups": false,
+  "colorGroups": [
+    {
+      "query": "path:Aetheria/Worldbuilding/Pre-Elysium/Timeline  ",
+      "color": {
+        "a": 1,
+        "rgb": 5410784
+      }
+    },
+    {
+      "query": "path:Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major  ",
+      "color": {
+        "a": 1,
+        "rgb": 14725458
+      }
+    },
+    {
+      "query": "path:Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Minor  ",
+      "color": {
+        "a": 1,
+        "rgb": 14701138
+      }
+    },
+    {
+      "query": "path:Aetheria/Worldbuilding/Pre-Elysium/Factions/Movements  ",
+      "color": {
+        "a": 1,
+        "rgb": 5672760
+      }
+    }
+  ],
+  "collapse-display": false,
+  "showArrow": false,
+  "textFadeMultiplier": -1.6,
+  "nodeSizeMultiplier": 0.431770833333333,
+  "lineSizeMultiplier": 2.0140625,
+  "collapse-forces": false,
+  "centerStrength": 0.416666666666667,
+  "repelStrength": 8.125,
+  "linkStrength": 0.234375,
+  "linkDistance": 500,
+  "scale": 0.5087618855792638,
+  "close": false
+}

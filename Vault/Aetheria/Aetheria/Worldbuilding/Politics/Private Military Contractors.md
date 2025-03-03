@@ -1,0 +1,1 @@
+The [[Pan-Solar Consortium]] contracts neutral mercenary groups to enforce its rules and intervene in unauthorized conflicts. These PMCs are well-armed and operate under strict PSC oversight, acting as a deterrent to rogue actions.

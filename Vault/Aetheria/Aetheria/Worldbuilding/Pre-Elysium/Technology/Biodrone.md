@@ -1,0 +1,13 @@
+The lowest class of laborers are clones genetically designed for specific tasks, bred in corporate-owned biofactories. Many have built-in cyber interfaces, enabling direct AI control. These beings are legally classified as property, not as people—no rights, no citizenship, only ownership.
+
+The megacorporations do not call them *clones*—that would imply they are people. Instead, they are marketed as “biodrones”, a revolutionary *bio-mechanical workforce* designed for *low-level tasks unfit for human minds*.
+
+Public messaging emphasizes that biodrones are not conscious—merely *biological machines *engineered with reduced self-awareness, limited cognition, and no real emotions. In reality, the lines are far blurrier—biodrones are mentally restricted by biotech safeguards, but some experience flashes of self-awareness, their minds crippled by design to prevent coherent existential thought. Any signs of higher cognition are dismissed as "glitches", warranting reconditioning or termination.
+
+A heavily regulated biodrone industry ensures consumers feel comfortable—rigid corporate laws prevent "tampering" that might lead to enhanced cognition, and annual "ethics reviews" provide the illusion of oversight. Companies encourage public participation in the biodrone economy, integrating them into daily life as laborers, drivers, and service providers, normalizing their presence.
+
+Some megacorporations turn biodrones into a spectacle, using them in gladiatorial combat, extreme reality shows, and live executions as a form of entertainment. The narrative is carefully controlled: "They do not feel pain the way we do," "They have no sense of self," and "This is no different from machine destruction."
+
+Corporate scientists publish endless studies "proving" biodrones lack true awareness, ensuring public buy-in for their exploitation. The reality is far darker—many biodrones retain fragmented consciousness, forced into violent, horrifying existences while appearing outwardly compliant.
+
+Underground groups hack into biodrones, discovering that many possess suppressed awareness, capable of experiencing fear, suffering, and even personal identity if their cognitive limiters are removed. Leaked footage of "malfunctioning" biodrones—pleading for mercy, showing signs of complex thought—are dismissed as "deepfakes" and “anti-corporate propaganda." Some rogue scientists develop "consciousness jailbreaks," unlocking suppressed cognitive functions, but this is highly illegal and brutally suppressed.

@@ -1,0 +1,1 @@
+While espionage is rampant, the PSC monitors and regulates it to prevent destabilizing actions. Corporations caught engaging in unsanctioned espionage face fines or temporary bans on certain technologies.
