@@ -1,6 +1,6 @@
 {
-  "collapse-filter": false,
-  "search": "",
+  "collapse-filter": true,
+  "search": "path:Aetheria/Worldbuilding  ",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": false,
@@ -43,9 +43,9 @@
   "lineSizeMultiplier": 2.0140625,
   "collapse-forces": false,
   "centerStrength": 0.416666666666667,
-  "repelStrength": 8.125,
-  "linkStrength": 0.234375,
-  "linkDistance": 500,
-  "scale": 0.5087618855792638,
-  "close": false
+  "repelStrength": 19.1145833333333,
+  "linkStrength": 0.8359375,
+  "linkDistance": 396,
+  "scale": 0.3628873693012158,
+  "close": true
 }

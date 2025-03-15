@@ -2,32 +2,19 @@
 
 #### Development and Early Iterations
 
-Advanced superconductors emerged in 2140 with the founding of [[Cryonix]], a faction born during the _[[Age of Automation]]_ (2100–2250) to meet the escalating demands of AGI and propulsion systems like the [[Soliton Drive]]. Unlike traditional superconductors requiring extreme cold, these metamaterials—constructed from nano-scale lattices of rare earth alloys and carbon composites—offered zero electrical resistance and tunable properties at higher temperatures (up to -50°C initially). Their development stemmed from breakthroughs in nano-engineering, allowing precise structuring of atomic lattices to enhance conductivity and magnetic field tolerance. Early [[Cryonix]] prototypes, used in [[CogniSys]] [[Artificial General Intelligence]] cooling systems by 2145, boosted computational efficiency by 25%, though production was slow—each coil took months to fabricate due to intricate lattice assembly.
+Advanced superconductors emerged in 2055 with the founding of [[Cryonix]] to meet the escalating demands of [[Fusion]] and propulsion systems like the [[Soliton Drive]]. Unlike traditional superconductors requiring extreme cold, these metamaterials—constructed from nano-scale lattices of rare earth alloys and carbon composites—offered zero electrical resistance and tunable properties at higher temperatures (up to -50°C initially). Their development stemmed from breakthroughs in nano-engineering, allowing precise structuring of atomic lattices to enhance conductivity and magnetic field tolerance. [[Cryonix]] prototypes were later used in [[CogniSys]] [[Artificial General Intelligence]] cooling systems by 2145, boosting computational efficiency by 25%, though production was slow—each coil took months to fabricate due to intricate lattice assembly.
 
 By 2180, [[Aeronautics Unlimited]] adapted pirated [[Cryonix]] designs for [[Soliton Drive]] magnetic nozzles, increasing exhaust velocity by 20%. However, manufacturing remained a bottleneck: nanoscale precision demanded costly cleanrooms and [[Biodrone]] labor, limiting output to elite applications.
 
 #### Refinements Over Time
 
-In the _Identity Crisis_ (2250–2500), [[Cryonix]] refined the technology with [[EternaMind]], integrating superconducting neural interfaces for mind uploads that tripled data transfer rates by 2300. They introduced dynamic lattice tuning—adjusting metamaterial structure mid-process—to optimize conductivity for specific uses, raising operating temperatures to -20°C. [[Quantum Dynamics]] adopted these for the [[Soliton Drive]] by 2450, pairing them with [[biodrone]]-synthesized cryogens from [[BioElevate]], cutting energy losses by 60%.
+[[Cryonix]] refined the technology with [[EternaMind]], integrating superconducting neural interfaces for mind uploads that tripled data transfer rates by 2300. They introduced dynamic lattice tuning—adjusting metamaterial structure mid-process—to optimize conductivity for specific uses, raising operating temperatures to -20°C.
 
 [[Rossum & Douglas]] stuck to classical StableCogs, while [[Finch Cybernetics]] pioneered quantum-classical hybrids by 2300, syncing with [[Cryonix]] superconductors for neural-upload integration. [[AstroDyne]]’s ForgeMinds mixed rugged classical cores with pirated quantum modules, cooled by jury-rigged superconductors.
 
-By the *[[Eugenics Abyss]]* (2500–2750), [[GeneSys]] leveraged [[Cryonix]] superconductors in gene-editing arrays, accelerating enhancement precision by 40%. [[Sol Dominion]]’s DominiCores blended quantum precision with classical stability for durability under combat stress, though this doubled production time. [[Cognitum]]’s Overclocked Cores pushed quantum dominance by 2900, risking thermal runaway without [[Cryonix]] tech.
+By 2600, [[GeneSys]] leveraged [[Cryonix]] superconductors in gene-editing arrays, accelerating enhancement precision by 40%. [[Sol Dominion]]’s DominiCores blended quantum precision with classical stability for durability under combat stress, though this doubled production time. [[Cognitum]]’s Overclocked Cores pushed quantum dominance by 2700, risking thermal runaway without [[Cryonix]] tech.
 
-By the _[[Existential Collapse]]_ (2750–3025), [[NeuroPulse]] used [[Cryonix]] tech for wireheading, refining lattice density to handle neural overloads, while [[Raven Collective]] weaponized pirated versions by 2900.
-
-### Future Improvements
-
-Potential advancements by 3025 include:
-
-- **Self-Assembling Lattices**: Nano-bots could automate assembly, slashing production time by 70%, a prospect **Cognitum** explores with experimental AI.
-
-- **Distributed Consciousness**: Quantum entanglement across nodes could enhance resilience, a **Orbital Forge** focus.
-
-- **Room-Temperature Variants**: Doping with exotic isotopes (e.g., from asteroid mines) might eliminate cooling needs, a goal **Finch Cybernetics** pursues for compact implants.
-  
-- **Adaptive Properties**: Real-time lattice reconfiguration could tailor conductivity on-the-fly, ideal for [[Alakrita]]’s luxury drives or [[Lightsail Express]]’s agile ships.  
-    These hinge on overcoming fabrication complexity and sourcing rare materials, areas where [[Rossum & Douglas]] could stabilize supply chains.
+Real-time lattice reconfiguration tailors conductivity on-the-fly, ideal for [[Alakrita]]’s luxury drives and [[Lightsail Express]]’s agile ships. These hinge on overcoming fabrication complexity and sourcing rare materials, areas where [[Rossum & Douglas]] stabilizes supply chains.
 
 ### Cultural and Economic Impact
 
@@ -68,8 +55,8 @@ Economically, superconductors revolutionized energy efficiency, cutting AGI and 
   
 - **[[Finch Cybernetics]]**: "NeuroLattice"  
     - _Specs_: RT: 0.0006 μΩ/cm, Tc: -15°C, CFS: 80 T, CR: 10^8–10^9 S/m, SE: 3 GPa, 7-month fabrication.
-    - _Strengths_: High CR, optimized for implants.
-    - _Weaknesses_: Low Tc and SE, niche focus.
+    - _Strengths_: High Tc and CR, optimized for implants.
+    - _Weaknesses_: Low SE, niche focus.
     - _Market_: Cybernetic enhancements, uploads.
   
 - **[[SolEx]]**: "Legacy Coil"  

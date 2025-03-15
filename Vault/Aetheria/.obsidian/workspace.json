@@ -8,12 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "5c5e6a2e3d9c45cd",
+            "id": "4116336d30dd8c7a",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Aetheria/Worldbuilding/Pre-Elysium/Technology/Soliton Drive.md",
+                "file": "Aetheria/Worldbuilding/Pre-Elysium/Megas.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Soliton Drive"
+              "title": "Megas"
             }
           }
         ]
@@ -88,7 +88,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 299.5
+    "width": 334.5
   },
   "right": {
     "id": "6880be6f002b1a1b",
@@ -104,7 +104,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Aetheria/Worldbuilding/Pre-Elysium/Technology/Soliton Drive.md",
+                "file": "Aetheria/Worldbuilding/Pre-Elysium/Technology/Mind Uploading.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -114,7 +114,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Soliton Drive"
+              "title": "Backlinks for Mind Uploading"
             }
           },
           {
@@ -123,12 +123,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Aetheria/Worldbuilding/Pre-Elysium/Technology/Soliton Drive.md",
+                "file": "Aetheria/Worldbuilding/Pre-Elysium/Technology/Mind Uploading.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Soliton Drive"
+              "title": "Outgoing links from Mind Uploading"
             }
           },
           {
@@ -152,20 +152,31 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Aetheria/Worldbuilding/Pre-Elysium/Technology/Soliton Drive.md",
+                "file": "Aetheria/Worldbuilding/Pre-Elysium/Technology/Mind Uploading.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Soliton Drive"
+              "title": "Outline of Mind Uploading"
+            }
+          },
+          {
+            "id": "de2981dcf97499f7",
+            "type": "leaf",
+            "state": {
+              "type": "copilot-chat-view",
+              "state": {},
+              "icon": "message-square",
+              "title": "Copilot"
             }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 926.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -174,47 +185,48 @@
       "canvas:Create new canvas": false,
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "command-palette:Open command palette": false,
+      "copilot:Open Copilot Chat": false
     }
   },
-  "active": "5c5e6a2e3d9c45cd",
+  "active": "4116336d30dd8c7a",
   "lastOpenFiles": [
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/Sol Dominion.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Soliton Drive.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Mind Uploading.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Genetic Enhancement.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Brain-Computer Interfaces.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Biodrone.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Timeline/Identity Abyss.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Movements/Emancipated.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Megas.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Movements/Enhancement Liberals.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Movements/Free Upload Network.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Movements/Preservationists.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Movements/Awakened Labor Front.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Movements/Gene Commons.md",
     "Aetheria/Worldbuilding/Pre-Elysium/Technology/Artificial General Intelligence.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Algorithmic Social Control.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Advanced Superconductors.md",
-    "Soliton Drives.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Minor/Cryonix.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/BioElevate.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Minor/Lightsail Express.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Timeline/Identity Crisis.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Timeline/Eugenics Abyss.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Biodrone.md",
     "Aetheria/Worldbuilding/Pre-Elysium/Timeline/Existential Collapse.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/Activist Network.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Timeline/Corporate Exodus.md",
     "Aetheria/Worldbuilding/Pre-Elysium/Timeline/Age of Automation.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/Aeronautics Unlimited.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/Baseline League.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/Cetacean Navigators.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/Elephant Enclave.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/Finch Cybernetics.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/Lucent Media.md",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major/Pan-Solar Consortium.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Timeline.md",
+    "copilot-conversations/I_think_there's_a_few_discrepancies_in_the_[[Timeline]]._It@20250313_215236.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Genetic Enhancement.md",
+    "copilot-conversations/I_think_there's_a_few_discrepancies_in_the_[[Timeline]]._It@20250313_215526.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Timeline/Identity Crisis.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Soliton Drive.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Uplift.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Mind Uploading.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Wireheading.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Advanced Superconductors.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Bloom.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Minor/Orbital Forge.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Minor/Cognitum.md",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Fusion.md",
+    "copilot-conversations",
+    "Untitled.canvas",
     "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Minor",
     "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major",
-    "Untitled.canvas",
     "Aetheria/Worldbuilding/Pre-Elysium/Factions/Movements",
     "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers",
     "Aetheria/Worldbuilding/Politics",
     "Aetheria/Worldbuilding/Pre-Elysium/Timeline",
     "Aetheria/Worldbuilding/Post-Elysium",
     "Aetheria/Worldbuilding/Pre-Elysium/Technology",
-    "Aetheria/Worldbuilding/Pre-Elysium/Factions",
-    "Aetheria/Worldbuilding/Politics"
+    "Aetheria/Worldbuilding/Pre-Elysium/Factions"
   ]
 }

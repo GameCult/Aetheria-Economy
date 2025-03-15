@@ -12,7 +12,9 @@ NS’s "Controlled Augs" (loyalists) clash with [[AstroDyne]]’s "Free Augs" (i
 Horizon Ventures and TerraCore Industries pioneer asteroid mining and lunar colonies by 2055, with [[Aeronautics Unlimited]] scaling their operations. [[Ewan Hart Inc]]. supplies durable farming tech for early colonies, binding workers with debt.
 ### Corporate Consolidation
 
-Horizon Ventures and TerraCore Industries merge into [[SolEx]] (2095), absorbing smaller rivals. [[AstroDyne]] and [[Orbital Forge]] persist as outliers, while [[NiteLife Energy]] emerges, powering colonies with “hip, young” energy solutions and Cryonix is supplying superconductors to SolEx and NiteLife Energy..
+Horizon Ventures and TerraCore Industries merge into [[SolEx]] (2095), absorbing smaller rivals. [[AstroDyne]] and [[Orbital Forge]] persist as outliers, while [[NiteLife Energy]] emerges, powering colonies with “hip, young” energy solutions.
 ### Cultural Upheaval
 
-The "Space Exodus" glorifies off-world life, marketed by [[Lucent Media]]’s reality shows, but Earth’s masses—echoed by [[Aya Collective]] protests—see it as servitude. The Earthbound Collective, with covert Framgång backing, attacks corporate hubs.
+The "Space Exodus" glorifies off-world life, marketed by [[Lucent Media]]’s reality shows, but Earth’s masses—echoed by [[Aya Collective]] protests—see it as servitude. The Earthbound Collective, with covert [[Framgång]] backing, attacks corporate hubs.
+
+### Next: [[Age of Automation]]

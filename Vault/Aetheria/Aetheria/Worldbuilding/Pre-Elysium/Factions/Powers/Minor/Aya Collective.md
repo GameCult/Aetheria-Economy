@@ -1,2 +1,3 @@
-An anarchist commune built on mutual aid and justice.
-Provides ethical governance and equality.
+*"Humanity cannot live on credits alone."*
+
+The true anarchist faction, a commune based on mutual aid and the pursuit of justice--a very small commune, it must be noted. They formed a corporation--a name they whole-heartedly reject--in the hope of uplifting the poor and disenfranchised on Earth and establishing a better society away from the systemically entrenched hyper-capitalism of Sol. This...doesn’t go so well.

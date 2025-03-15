@@ -8,7 +8,7 @@ Early prototypes, deployed by 2055, powered Horizon Ventures’ asteroid mining 
 
 In the [[Age of Automation]], [[Aeronautics Unlimited]] inherited and enhanced the Soliton Drive for rapid colony deployment. They introduced pulsed fusion cycles, syncing plasma bursts with magnetic field oscillations, which boosted exhaust velocity by 50% and achieved specific impulses exceeding 100,000 seconds. This allowed ships to reach Mars in days rather than months. [[SolEx]] later integrated [[Artificial General Intelligence]]-driven diagnostics (via [[CogniSys]]) to predict containment breaches, reducing downtime and maintenance costs by 40%.
 
-During the [[Identity Crisis]], [[Quantum Dynamics]] refined the drive for deep-space missions, incorporating [[Cryonix]]’s advanced superconductor. This slashed energy losses, pushing exhaust velocities toward 10% of lightspeed. By the [[Eugenics Abyss]], [[Sol Dominion]] militarized the technology, adding redundant containment systems for reliability in combat zones, though at the cost of increased mass.
+During the [[Identity Crisis]], [[Quantum Dynamics]] refined the drive for deep-space missions, incorporating [[Cryonix]]’s advanced superconductor. This slashed energy losses, pushing exhaust velocities toward 10% of lightspeed. By the [[Identity Abyss]], [[Sol Dominion]] militarized the technology, adding redundant containment systems for reliability in combat zones, though at the cost of increased mass.
 
 ### Future Improvements
 

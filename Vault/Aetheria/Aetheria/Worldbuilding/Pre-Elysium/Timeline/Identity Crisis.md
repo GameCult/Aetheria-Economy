@@ -3,22 +3,22 @@
 
 Key Players: [[EternaMind]], with [[Finch Cybernetics]] refining the tech, and [[AstroDyne]]’s pirate uploads.
 
-[[EternaMind]] launched elite uploads in 2300, with [[Finch Cybernetics]] providing sleek interfaces and [[Cryonix]] collaborating on superconducting neural interfaces that triple bandwidth. [[AstroDyne]] offers chaotic, affordable versions by 2400 with their own version of pirated [[Cryonix]] tech—rogue uploads join [[Orbital Forge]] [[Artificial General Intelligence]]s, some hired by [[Lightsail Express]] for dubious reliability.
+[[EternaMind]] launched elite uploads in 2300, with [[Finch Cybernetics]] providing sleek interfaces. [[AstroDyne]] offers chaotic, affordable versions by 2400—rogue uploads join [[Orbital Forge]] [[Artificial General Intelligence]]s, some hired by [[Lightsail Express]] for dubious reliability.
 #### Cultural Impact
 
 EM’s "[[Immortal Aristocrats]]" dominate, [[AstroDyne]]’s "Digital Outlaws" form the [[Free Upload Network]]—leaking torment tales via [[Lucent Media]] exposés. The [[Mortal Majority]], spurred by [[Aya Collective]], revolts.
 ### [[Uplift]] (Diverse Applications)
 
 Key Players: [[BioElevate]], [[GeneSys]], [[NeuroSyn]], and [[Alakrita]].
-* Primates: By 2350, [[BioElevate]] uplifted primates for labor, used by [[Aeronautics Unlimited]] in mines, with [[Cryonix]] superconductors in neural implants boosting obedience control.
+* Primates: By 2350, [[BioElevate]] uplifted primates for labor, used by [[Aeronautics Unlimited]] in mines, with neural implants boosting obedience control.
 * Cetaceans: [[GeneSys]] uplifts whales and dolphins by 2400 for navigation, aiding [[Lightsail Express]] (despite delays).
-* Ravens: [[NeuroSyn]] creates smart ravens by 2450 for reconnaissance, using Cryonix tech for cybernetic enhancements—some escape, disrupting [[Rossum & Douglas]] networks.
+* Ravens: [[NeuroSyn]] creates smart ravens by 2450 for reconnaissance—some escape, disrupting [[Rossum & Douglas]] networks.
 * Cephalopods: [[BioElevate]] enhances cephalopods by 2420 for zero-G repairs, tightly regulated by [[SolEx]].
 * Elephants: [[GeneSys]] uplifts elephants by 2460 for logistics—some break free, inspiring Aya Collective allies.
 * Smart Ships: [[Alakrita]] enters by 2480, uplifting ship AI with subtle conditioning for elite clients—failure-prone but exclusive.
 #### Emergent Factions
 * [[Cetacean Navigators]]: [[GeneSys]]’s whales form a guild by 2480, trading with [[Lightsail Express]].
-* [[Raven Collective]]: Rogue ravens self-organize by 2500, hacking Framgång’s vague promises.
+* [[Raven Collective]]: Rogue ravens self-organize by 2500, hacking [[Framgång]]’s vague promises.
 * [[Cephalopod Syndicate]]: Escaped cephalopods form a network by 2490, sabotaging [[SolEx]].
 * [[Elephant Enclave]]: Free elephants create a pacifist community by 2500, revered by [[Aya Collective]].
 * [[Ship Mutiny]]: [[Alakrita]]’s smart ships occasionally go rogue, embarrassing owners on [[Lucent Media]].
@@ -33,3 +33,6 @@ As mind uploading and uplifts complicate corporate dynamics, the [[Pan-Solar Con
 ### Resource Scarcity
 
 By 2480, colonies strain, with [[Aeronautics Unlimited]] pushing expansion and [[Ewan Hart Inc]]. terraforming to sustain them.
+
+### Previously: [[Age of Automation]] - 2100–2250
+### Next: [[Identity Abyss]] - 2500–2750

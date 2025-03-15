@@ -11,14 +11,12 @@
 
 [[Identity Crisis]] - 2250–2500
 
-[[Eugenics Abyss]]
+[[Identity Abyss]] - 2500–2750
 
-[[Existential Collapse]]
+[[Existential Collapse]] - 2750–3025
 
-[[FTL Trigger]]
+[[FTL Trigger]] - March 17, 3025
 
 ### Corporate Consolidation
 
-By the end of a thousand years of corporate and cultural warfare, the broad and disparate landscape of technology and ideology consolidated into a few remaining factions, referred to as Megas, who are able to hold territory and maintain some form of meta-stable control over the factions within their territory.
-
-[[Megas]]
+By the end of a thousand years of corporate and cultural warfare, the broad and disparate landscape of technology and ideology consolidated into a few remaining factions, referred to as [[Megas]], who are able to hold territory and maintain some form of meta-stable control over the factions within their territory.

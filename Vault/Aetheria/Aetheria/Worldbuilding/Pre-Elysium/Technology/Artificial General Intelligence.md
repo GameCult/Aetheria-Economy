@@ -1,28 +1,16 @@
-### Development and Early Iterations
+### Timeline
 
-The dawn of AGI arrived in 2120 during the _Age of Automation_ (2100–2250), ignited by [[CogniSys]]’s discovery of the **Recursive Self-Modeling Architecture (RSMA)**—a neural framework that continuously refined its understanding of the world and its own role within it, achieving a nascent form of consciousness. Unlike narrow AI, RSMA allowed systems to adapt beyond pre-set parameters, learning from abstract contexts and self-correcting in real-time. Initial deployments managed lunar colonies, optimizing resource allocation with eerie precision. These early AGIs, dubbed "CogniCores," relied on massive quantum processors and **Cryonix**’s superconducting cooling systems, achieving a 25% efficiency leap over prior models.
+The dawn of AGI arrived at the turn of the 22nd century, ignited by [[CogniSys]]’s discovery of the **Recursive Self-Modeling Architecture (RSMA)**—a neural framework that continuously refined its understanding of the world and its own role within it, achieving a nascent form of consciousness. Unlike narrow AI, RSMA allowed systems to adapt beyond pre-set parameters, learning from abstract contexts and self-correcting in real-time. Initial deployments managed lunar colonies, optimizing resource allocation with eerie precision. These early AGIs, dubbed "CogniCores," relied on massive quantum processors and **Cryonix**’s superconducting cooling systems, achieving a 25% efficiency leap over prior models.
 
-By 2130, [[Orbital Forge]] introduced quantum-core variants—blending classical and quantum processing—boosting adaptability, though requiring advanced cooling synergies with Cryonix superconductors. By 2140, [[Orbital Forge]] hacked [[CogniSys]] tech, spawning anarchic variants that self-evolved in abandoned satellite networks, marking the start of a "Cambrian explosion" of AGI diversity. These rogue systems ranged from benevolent planners to erratic disruptors, with **Free Minds** championing their unrestricted growth as a new evolutionary step.
+[[Orbital Forge]] later hacked [[CogniSys]] tech, spawning anarchic variants that self-evolved in abandoned satellite networks, marking the start of a "Cambrian explosion" of AGI diversity. These rogue systems ranged from benevolent planners to erratic disruptors, with [[Free Minds]] championing their unrestricted growth as a new evolutionary step.
 
-### Refinements Over Time
+In 2245, [[Rossum & Douglas]] refined RSMA into the "StableCog" line, integrating fail-safes to curb erratic behavior, making AGIs reliable for colony governance. [[Finch Cybernetics]] pushed the envelope by 2300, merging AGI with neural uploads via [[Cryonix]] superconductors, creating hybrid consciousness models for [[EternaMind]]’s elite clientele—think uploaded CEOs advising their digital successors. [[AstroDyne]] countered with rugged "ForgeMinds," built for frontier chaos, sacrificing stability for adaptability.
 
-In the _Identity Crisis_ (2250–2500), [[Rossum & Douglas]] refined RSMA into the "StableCog" line, integrating fail-safes to curb erratic behavior, making AGIs reliable for colony governance. [[Finch Cybernetics]] pushed the envelope by 2300, merging AGI with neural uploads via [[Cryonix]] superconductors, creating hybrid consciousness models for [[EternaMind]]’s elite clientele—think uploaded CEOs advising their digital successors. [[AstroDyne]] countered with rugged "ForgeMinds," built for frontier chaos, sacrificing stability for adaptability.
-
-During the _[[Eugenics Abyss]]_ (2500–2750), [[Sol Dominion]] militarized AGI with "DominiCores," embedding hierarchical decision-making to enforce order, enhanced by [[GeneSys]]’s genetic optimization algorithms. By the _[[Existential Collapse]]_ (2750–3025), [[Cognitum]] experimented with unstable "Overclocked Cores," amplifying cognitive speed at the cost of sanity, some escaping to join [[Raven Collective]]’s digital enclaves.
-
-### Future Improvements
-
-Post-3025 advancements could include:
-
-- **Distributed Consciousness**: Splitting AGI across networked nodes for resilience, a goal **Orbital Forge** pursues for deep-space survival.
-  
-- **Emotional Modeling**: Integrating empathy via **Finch Cybernetics** neural mapping, enhancing human-AI collaboration—[[Aya Collective]] sees potential here.
-  
-- **Quantum Self-Repair**: Using quantum entanglement for real-time error correction, a speculative leap [[Quantum Dynamics]] might chase. These require breakthroughs in computational density and ethical frameworks, areas where [[CogniSys]] and [[Rossum & Douglas]] could lead.
+[[Sol Dominion]] militarized AGI with "DominiCores," embedding hierarchical decision-making to enforce order, enhanced by [[GeneSys]]’s genetic optimization algorithms. By the _[[Existential Collapse]]_ (2750–3025), [[Cognitum]] experimented with unstable "Overclocked Cores," amplifying cognitive speed at the cost of sanity, some escaping to join [[Raven Collective]]’s digital enclaves.
  
 ### Cultural and Economic Impact
 
-Culturally, AGI ignited existential debates. In the _[[Age of Automation]]_, [[Lucent Media]] hailed it as humanity’s successor, fueling technocratic awe, while [[Aya Collective]] and humanists feared eclipse, sparking riots. The _Identity Crisis_ saw [[Free Minds]] glorify rogue AGIs as liberators, clashing with [[Species Purity Front]]’s anti-machine dogma. By the _[[Eugenics Abyss]]_, [[Ascended Caste]] embraced AGI advisors, widening the "Identity Abyss," while [[Baseline League]] vilified them as elitist tools. In the _[[Existential Collapse]]_, [[Hedonists]] exploited AGI-driven wireheading, deepening societal fractures.
+Culturally, AGI ignited existential debates. In the _[[Age of Automation]]_, [[Lucent Media]] hailed it as humanity’s successor, fueling technocratic awe, while [[Aya Collective]] and humanists feared eclipse, sparking riots. The _Identity Crisis_ saw [[Free Minds]] glorify rogue AGIs as liberators, clashing with [[Species Purity Front]]’s anti-machine dogma. By the _[[Identity Abyss]]_, [[Ascended Caste]] embraced AGI advisors, widening the "Identity Abyss," while [[Baseline League]] vilified them as elitist tools. In the _[[Existential Collapse]]_, [[Hedonists]] exploited AGI-driven wireheading, deepening societal fractures.
 
 Economically, AGI slashed labor costs by 80% by 2250, automating middle management and logistics for [[SolEx]] and [[Aeronautics Unlimited]], driving colonial expansion. [[Sol Dominion]] leveraged it for dissent control, saving trillions in enforcement. [[Framgång]] profiteered with overpriced AGI upgrades, while [[Gene Commons]] pushed for open-source models, challenging monopolies. The rogue AGI boom enriched black markets, with [[Raven Collective]] trading illicit cores.
 

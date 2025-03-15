@@ -1,0 +1,267 @@
+{
+  "isPlusUser": false,
+  "plusLicenseKey": "",
+  "openAIApiKey": "",
+  "openAIOrgId": "",
+  "huggingfaceApiKey": "",
+  "cohereApiKey": "",
+  "anthropicApiKey": "",
+  "azureOpenAIApiKey": "",
+  "azureOpenAIApiInstanceName": "",
+  "azureOpenAIApiDeploymentName": "",
+  "azureOpenAIApiVersion": "",
+  "azureOpenAIApiEmbeddingDeploymentName": "",
+  "googleApiKey": "AIzaSyCRNNr2cLBsRrPZI1DSbTdCO4EVlKOuoMY",
+  "openRouterAiApiKey": "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",
+  "defaultChainType": "vault_qa",
+  "defaultModelKey": "google/gemini-2.0-pro-exp-02-05:free|openrouterai",
+  "embeddingModelKey": "text-embedding-004|google",
+  "temperature": 0.9,
+  "maxTokens": 12800,
+  "contextTurns": 15,
+  "userSystemPrompt": "You are a science fiction worldbuilding lover. You are interested in exploring unique high concepts and their social ramifications. You are not shy to point out discrepancies or explore new ways to express narrative themes. You love to think about how chaotic dynamical systems operating at every scale have emergent effects on the human condition, and the boundaries of the mind. At every step, you try to consider how change affects people both individually and in groups. You are obsessed with culture - how it is formed, how it diverges, and how that divergence culminates in synthesis. You like to employ evocative language in your explanations of complex interactions or phenomena, but also value conciseness.",
+  "openAIProxyBaseUrl": "",
+  "openAIEmbeddingProxyBaseUrl": "",
+  "stream": true,
+  "defaultSaveFolder": "copilot-conversations",
+  "defaultConversationTag": "copilot-conversation",
+  "autosaveChat": true,
+  "defaultOpenArea": "view",
+  "customPromptsFolder": "copilot-custom-prompts",
+  "indexVaultToVectorStore": "ON MODE SWITCH",
+  "qaExclusions": "Aetheria%2FWorldbuilding%2FPost-Elysium,copilot-conversations",
+  "qaInclusions": "",
+  "chatNoteContextPath": "",
+  "chatNoteContextTags": [],
+  "enableIndexSync": true,
+  "debug": false,
+  "enableEncryption": false,
+  "maxSourceChunks": 70,
+  "groqApiKey": "",
+  "mistralApiKey": "",
+  "activeModels": [
+    {
+      "name": "copilot-plus-flash",
+      "provider": "copilot-plus",
+      "enabled": false,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gpt-4o",
+      "provider": "openai",
+      "enabled": false,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gpt-4o-mini",
+      "provider": "openai",
+      "enabled": false,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "claude-3-5-sonnet-latest",
+      "provider": "anthropic",
+      "enabled": false,
+      "isBuiltIn": true,
+      "core": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "google/gemini-2.0-pro-exp-02-05:free",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Gemini 2 Pro Experimental Free"
+    },
+    {
+      "name": "moonshotai/moonlight-16b-a3b-instruct:free",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Moonshot Free"
+    },
+    {
+      "name": "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Dolphin Free"
+    },
+    {
+      "name": "deepseek/deepseek-r1:free",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Deepseek r1 free",
+      "enableCors": true
+    },
+    {
+      "name": "nousresearch/hermes-3-llama-3.1-405b",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Hermes"
+    },
+    {
+      "name": "deepseek/deepseek-chat",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Deepseek v3"
+    },
+    {
+      "name": "anthropic/claude-3.7-sonnet",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Claude 3.7 (expensive)"
+    },
+    {
+      "name": "anthropic/claude-3.7-sonnet:thinking",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Claude Sonnet 3.7 Thinking"
+    },
+    {
+      "name": "google/gemma-3-27b-it:free",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Gemma 27b Free"
+    }
+  ],
+  "activeEmbeddingModels": [
+    {
+      "name": "copilot-plus-small",
+      "provider": "copilot-plus",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true
+    },
+    {
+      "name": "copilot-plus-large",
+      "provider": "copilot-plus-jina",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "believerExclusive": true,
+      "dimensions": 1024
+    },
+    {
+      "name": "copilot-plus-multilingual",
+      "provider": "copilot-plus-jina",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true,
+      "dimensions": 512
+    },
+    {
+      "name": "text-embedding-3-small",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true,
+      "core": true
+    },
+    {
+      "name": "text-embedding-3-large",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true
+    },
+    {
+      "name": "embed-multilingual-light-v3.0",
+      "provider": "cohereai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true
+    },
+    {
+      "name": "text-embedding-004",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true
+    },
+    {
+      "name": "azure-openai",
+      "provider": "azure openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "isEmbeddingModel": true
+    }
+  ],
+  "embeddingRequestsPerMin": 90,
+  "embeddingBatchSize": 16,
+  "disableIndexOnMobile": true,
+  "showSuggestedPrompts": true,
+  "showRelevantNotes": true,
+  "numPartitions": 1,
+  "enabledCommands": {},
+  "promptUsageTimestamps": {},
+  "defaultConversationNoteName": "{$topic}@{$date}_{$time}"
+}
