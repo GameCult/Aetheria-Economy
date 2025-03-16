@@ -12,7 +12,7 @@
   "azureOpenAIApiVersion": "",
   "azureOpenAIApiEmbeddingDeploymentName": "",
   "googleApiKey": "AIzaSyCRNNr2cLBsRrPZI1DSbTdCO4EVlKOuoMY",
-  "openRouterAiApiKey": "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",
+  "openRouterAiApiKey": "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",
   "defaultChainType": "vault_qa",
   "defaultModelKey": "google/gemini-2.0-pro-exp-02-05:free|openrouterai",
   "embeddingModelKey": "text-embedding-004|google",
@@ -79,18 +79,6 @@
       "capabilities": [
         "vision"
       ]
-    },
-    {
-      "name": "google/gemini-2.0-pro-exp-02-05:free",
-      "provider": "openrouterai",
-      "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "",
-      "apiKey": "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",
-      "isEmbeddingModel": false,
-      "capabilities": [],
-      "stream": true,
-      "displayName": "Gemini 2 Pro Experimental Free"
     },
     {
       "name": "moonshotai/moonlight-16b-a3b-instruct:free",
@@ -188,6 +176,42 @@
       "capabilities": [],
       "stream": true,
       "displayName": "Gemma 27b Free"
+    },
+    {
+      "name": "gemini-2.0-pro-exp-02-05",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "AIzaSyCRNNr2cLBsRrPZI1DSbTdCO4EVlKOuoMY",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Gemini Pro Exp (Google)"
+    },
+    {
+      "name": "gemini-2.0-flash",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "AIzaSyCRNNr2cLBsRrPZI1DSbTdCO4EVlKOuoMY",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Gemini Flash"
+    },
+    {
+      "name": "google/gemini-2.0-pro-exp-02-05:free",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Gemini 2 Pro Free"
     }
   ],
   "activeEmbeddingModels": [
@@ -253,6 +277,17 @@
       "enabled": true,
       "isBuiltIn": true,
       "isEmbeddingModel": true
+    },
+    {
+      "name": "gemini-embedding-exp-03-07",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "AIzaSyCRNNr2cLBsRrPZI1DSbTdCO4EVlKOuoMY",
+      "isEmbeddingModel": true,
+      "capabilities": [],
+      "displayName": "Gemini Embedding"
     }
   ],
   "embeddingRequestsPerMin": 90,
