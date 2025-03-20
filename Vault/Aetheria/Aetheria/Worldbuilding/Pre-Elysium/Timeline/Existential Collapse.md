@@ -20,7 +20,7 @@ Expansionists ([[Sol Dominion]], [[Cetacean Navigators]]) seek escape, [[Preserv
 By 2800, [[Wireheading]] and resource collapse strain the [[Pan-Solar Consortium]]’s control, leading to fortified enclaves on Mars and Earth’s arcologies. Its physical presence peaks with automated defense systems neutralizing threats like unauthorized nuclear launches.
 ### Resource Collapse
 
-By 2950, colonies crumbled, with [[Aeronautics Unlimited]] and [[Ewan Hart Inc]]. struggling to sustain them. Uplifted factions hoard scraps, clashing with humans—[[Corriedales]] turns [[Biodrone]] scraps into “joyful” weapons. The [[Emancipated]] target [[Cognitum]] resource hubs.
+By 2950, colonies crumbled, with [[Aeronautics Unlimited]] and [[Ewan Hart]]. struggling to sustain them. Uplifted factions hoard scraps, clashing with humans—[[Corriedales]] turns [[Biodrone]] scraps into “joyful” weapons. The [[Emancipated]] target [[Cognitum]] resource hubs.
 
 
 ### Previously: [[Identity Abyss]] - 2500–2750

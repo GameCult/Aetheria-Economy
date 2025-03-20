@@ -32,7 +32,7 @@ As mind uploading and uplifts complicate corporate dynamics, the [[Pan-Solar Con
 
 ### Resource Scarcity
 
-By 2480, colonies strain, with [[Aeronautics Unlimited]] pushing expansion and [[Ewan Hart Inc]]. terraforming to sustain them.
+By 2480, colonies strain, with [[Aeronautics Unlimited]] pushing expansion and [[Ewan Hart]]. terraforming to sustain them.
 
 ### Previously: [[Age of Automation]] - 2100–2250
 ### Next: [[Identity Abyss]] - 2500–2750

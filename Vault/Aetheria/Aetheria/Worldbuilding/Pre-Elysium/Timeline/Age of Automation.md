@@ -27,7 +27,7 @@ Key Players: [[VitaForge]], with [[SolEx]] adaptations and [[Corriedales]]’ en
 [[VitaForge]]’s "[[Bio-Purists]]" feud with [[SolEx]]’s "[[Pragmatists]]." The [[Sentience Rebellion]], covertly aided by [[Aya Collective]] hackers, births the "[[Awakened Labor Front]]." [[Lucent Media]] sensationalizes the conflict.
 ### Corporate Consolidation
 
-The [[Pan-Solar Consortium]] formed in 2230 to mediate, with [[NiteLife Energy]], [[Ewan Hart Inc]]., and [[Cryonix]] as key stakeholders. [[AstroDyne]] and [[Orbital Forge]] evade control, thriving on black-market tech.
+The [[Pan-Solar Consortium]] formed in 2230 to mediate, with [[NiteLife Energy]], [[Ewan Hart]]., and [[Cryonix]] as key stakeholders. [[AstroDyne]] and [[Orbital Forge]] evade control, thriving on black-market tech.
 
 The [[Pan-Solar Consortium]] establishes its headquarters on Mars, a neutral hub amidst growing lunar and asteroid colonies. Small outposts emerge in major trade hubs like Luna City and asteroid belt stations, staffed by bureaucrats and detachments of [[Private Military Contractors]]. It begins enforcing conflict permits, with a minimal presence focused on arbitration and surveillance via satellite networks.
 ### Cultural Upheaval

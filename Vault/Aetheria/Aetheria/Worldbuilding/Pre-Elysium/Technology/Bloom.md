@@ -49,7 +49,7 @@ This rapid expansion had profound social and economic consequences:
 - **Uplift Integration**: The [[Elephant Enclave]] and [[Cetacean Navigators]] have designed specialized Bloom sections adapted to their unique physiologies, creating unprecedented spaces for uplift self-governance.
 
 
-By the late 26th century, the Bloom process had matured significantly. [[Orbital Forge]] streamlined their process and developed modular hub sections that could be prefabricated and integrated into the rotating cylinder, providing pre-pressurized living spaces, industrial facilities, and advanced life support systems.
+By the late 26th century, the Bloom process had matured significantly. [[Orbital Forge]] streamlined their process and developed modular hub sections that could be prefabricated and integrated into the spire, providing pre-pressurized living spaces, industrial facilities, and advanced life support systems.
 
 Current Bloom structures can house tens of thousands of inhabitants, self-sufficient and largely independent of external supply chains. They represent a radical vision of space colonization – not as isolated outposts clinging to barren rocks, but as thriving, self-sustaining ecosystems forged from the remnants of asteroids.
 
@@ -94,26 +94,13 @@ The areas immediately surrounding the base of each spoke become bustling hubs of
 
 #### The Polar Paradox: Industry, Slums, and the Agricultural Exception
 
-The Bloom's poles present a unique dichotomy. The region surrounding the docking hub, experiencing near-zero gravity, is ideal for certain types of industry – particularly those involving delicate manufacturing processes or the handling of hazardous materials. This **hub industry zone** is a necessity, but it also becomes a zone of marginalization. The microgravity environment, combined with the dim light and the proximity to industrial waste, makes this area the least desirable for habitation, leading to the formation of the aforementioned hub slums.
+The region surrounding the docking hub, experiencing near-zero gravity, is ideal for certain types of industry – particularly those involving delicate manufacturing processes or the handling of hazardous materials. This **hub industry zone** is a necessity, but it also becomes a zone of marginalization. The microgravity environment, combined with the dim light and the proximity to industrial waste, makes this area the least desirable for habitation, leading to the formation of the aforementioned hub slums.
 
 The opposite pole, farthest from the hub, presents a different scenario depending on the Bloom's purpose. In most Blooms, particularly the highly concentrated **industrial megacity Blooms** favored by most factions, this far pole remains largely undeveloped, often serving as a dumping ground for waste or a location for low-priority infrastructure. The lack of gravity and distance from the hub make it unsuitable for large-scale habitation, reinforcing the social dominance of the equatorial plane.
 
 However, in Blooms aiming for greater autonomy, the far pole takes on a crucial role: **polar farmlands**. In these rare cases, the low-gravity environment is utilized for large-scale agriculture, with vast swathes of tiered farmland rising to the pole. The absence of strong gravity makes it easier to cultivate large, delicate plants and manage complex hydroponic or aeroponic systems.
 
-[[Ewan Hart Inc.]], while maintaining their own megacity Blooms, also specializes in constructing and supplying agricultural Blooms to factions seeking greater independence, adding a layer of complexity to the solar economy. Their farmlands follow a specific plan, with processing facilities  located at the bases of the spokes allowing refined materials to be more easily transferred to the hub.
-
-#### Factional Ideologies and Bloom Geography
-
-The specific layout and social organization of a Bloom are deeply influenced by the controlling faction's ideology:
-
-*   **[[Zhestokost]] Blooms:** Characterized by rigid, hierarchical organization. The equatorial plane is dominated by military barracks and training facilities, with a stark emphasis on functionality and discipline. Hub slums are heavily policed, and any deviation from the prescribed order is swiftly punished. Light distribution is uniform but harsh, reflecting their collectivist ethos. Polar Farmlands are rare, as Zhestokost prefers military-grade Blooms.
-*   **[[Lucent Media]] Blooms:** A riot of color and light, with the equatorial plane transformed into a dazzling spectacle of entertainment venues and luxury residences. Social status is determined by visibility and "Clout," with the most prominent citizens occupying brightly lit, highly visible locations. Hub slums are hidden behind holographic projections, their existence denied or minimized. Polar Farmlands are practically non-existent, as Lucent prefers dazzling megacity-type Blooms.
-*   **[[Aeronautics Unlimited]] Blooms:** Emphasize expansion and resource extraction. The equatorial plane is dominated by industrial facilities and rapidly constructed housing for workers. Social mobility is theoretically possible, but the reality is often a brutal competition for resources and advancement. The hub industry zone is extensive, reflecting their focus on manufacturing and logistics.
-*   **[[Sol Dominion]] Blooms:** Structured around control and surveillance. The equatorial plane features imposing government buildings and heavily monitored residential zones. Light distribution is carefully managed to reinforce the social hierarchy, with the elite occupying brightly lit areas and the lower classes relegated to dimmer zones.
-*   **[[BioElevate]] Blooms:** Reflect their obsession with genetic control. "Desirable" genetic traits are rewarded with access to better living conditions and brighter light, while "undesirables" are relegated to the hub slums or the far pole. The equatorial plane might feature specialized clinics and research facilities dedicated to genetic enhancement.
-*   **[[Elephant Enclave]] Blooms:** A stark contrast to most other Blooms, emphasizing sustainability and communal living. The equatorial plane features extensive parkland and shared living spaces, with a focus on minimizing social hierarchy. The far pole is likely to be dedicated to agriculture, reflecting their commitment to self-sufficiency.
-
-In essence, the internal geography of a Bloom habitat is not merely a matter of physical layout, but a concrete manifestation of social power, economic inequality, and the prevailing ideology of the controlling faction. It is a microcosm of the broader solar system, a testament to how even the most ostensibly democratic designs can be manipulated to reinforce existing power structures.
+[[Ewan Hart]], while maintaining their own megacity Blooms, also specializes in constructing and supplying agricultural Blooms to factions seeking greater independence, adding a layer of complexity to the solar economy. Their farmlands follow a specific plan, with processing facilities  located at the bases of the spokes allowing refined materials to be more easily transferred to the hub.
 
 ### Economic Cascade Effects
 

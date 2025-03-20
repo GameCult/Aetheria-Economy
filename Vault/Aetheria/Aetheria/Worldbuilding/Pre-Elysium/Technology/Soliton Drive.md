@@ -18,7 +18,7 @@ Looking toward 3025 and beyond, potential enhancements include:
 
 - **Antimatter Catalysis**: Trace antimatter injections could ignite denser plasma, potentially doubling specific impulse, though containment risks remain a hurdle—[[Cognitum]] and [[Cryonix]] are rumored to be experimenting here.
 
-- **Plasma Recycling**: Recapturing and reusing expelled plasma could cut fuel needs by half, a prospect [[Ewan Hart Inc]]. explores for sustainable colony ships. These advancements hinge on breakthroughs in materials science and energy storage, areas where [[Finch Cybernetics]] and [[Rossum & Douglas]] could play future roles.
+- **Plasma Recycling**: Recapturing and reusing expelled plasma could cut fuel needs by half, a prospect [[Ewan Hart]]. explores for sustainable colony ships. These advancements hinge on breakthroughs in materials science and energy storage, areas where [[Finch Cybernetics]] and [[Rossum & Douglas]] could play future roles.
 
 #### Cultural and Economic Impact
 

@@ -63,7 +63,7 @@ Supplies strategic intelligence and control mechanisms
 #### Sub-Factions
 [[Aya Collective]] - An anarchist commune built on mutual aid and justice.
 Provides ethical governance and equality
-[[Ewan Hart Inc]] - Suppliers of durable farming and terraforming equipment. Ensures sustainable practices and resource stability
+[[Ewan Hart]] - Suppliers of durable farming and terraforming equipment. Ensures sustainable practices and resource stability
 #### Demographics
 [[Free Upload Network]] - Fights for autonomy, resonating with cetacean cooperation
 [[Enhancement Liberals]] - Advocates uplift rights, fitting the coalition’s ethos

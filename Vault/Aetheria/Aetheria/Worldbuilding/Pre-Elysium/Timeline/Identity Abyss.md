@@ -17,17 +17,14 @@ Emerging around 2550, the [[Cognitum]]—a secretive faction of scientists and e
 
 The [[Cognitum]]’s actions spark ethical debates—[[Lucent Media]] spins them as "innovative pioneers," while [[Aya Collective]] decries them as torturers. Rogue uploads leak torment tales, amplifying unrest.
 ###### Opposing Factions
-* [[Preservationists]] (2720): Backed by [[Aya Collective]], they view uploads as sentient, rescuing them with [[Rossum & Douglas]] tech and advocating via [[Lucent Media]] leaks.
-* [[Pragmatists]] (2740): Led by [[Rossum & Douglas]], they fear rogue superintelligences, sabotaging [[Cognitum]] hubs with [[Raven Collective]] aid.
-* [[Emancipated]] (2760): Escaped uploads, allied with [[AstroDyne]]’s Digital Outlaws, infiltrate [[Cognitum]] systems, leaking secrets via [[Raven Collective]] networks.
+* [[Emancipated]] (2570): Escaped uploads, allied with [[Free Upload Network]], infiltrate [[Cognitum]] systems, leaking secrets via [[Raven Collective]] networks.
+* [[Pragmatists]] (2610): Led by [[Rossum & Douglas]], they fear rogue superintelligences, sabotaging [[Cognitum]] hubs with [[Raven Collective]] aid and advocating via [[Lucent Media]] leaks.
+* [[Preservationists]] (2630): Backed by [[Aya Collective]], they view uploads as sentient, rescuing them with [[Rossum & Douglas]] tech.
 ### Corporate Consolidation
 
-Sol Dominion ([[SolEx]], [[CogniSys]], [[GeneSys]]) formed by 2740, bolstered by [[Zhestokost]]’s arsenal, [[NiteLife Energy]]’s power grid, and [[Cognitum]] research. [[AstroDyne]], [[Orbital Forge]], and uplifted factions (e.g., [[Cephalopod Syndicate]]) defy [[Pan-Solar Consortium]] authority, with [[Framgång]] selling overpriced gear to all sides.
+Sol Dominion ([[SolEx]], [[CogniSys]], [[GeneSys]]) formed by 2740, bolstered by [[Zhestokost]]’s arsenal, [[NiteLife Energy]]’s power grid, and [[Cognitum]] research. [[AstroDyne]], [[Orbital Forge]], and uplifted factions (e.g., [[Cephalopod Syndicate]]) defy [[Pan-Solar Consortium]] authority.
 
 The [[Pan-Solar Consortium]]’s presence solidifies with the formation of the Sol Dominion, which it struggles to regulate. Massive orbital stations—like the PSC Arbitration Spire—become symbols of its authority, bristling with surveillance tech and [[Private Military Contractors]] garrisons. The [[PSCC]] emerges as the universal reserve currency, backed by corporate scrip monopolies and enforced through economic sanctions, cementing the PSC’s economic clout.
-### Cultural Upheaval
-
-The "Identity Abyss" deepens—eugenics elevates elites, uplifts fragment society, [[Cognitum]] warps minds, and [[Lucent Media]] distorts reality, leaving humanity’s essence in tatters.
 
 
 ### Previously: [[Identity Crisis]] - 2250–2500

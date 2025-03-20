@@ -2,26 +2,28 @@ Mind uploading represents one of the most profound technological developments in
 
 ## Technical Development Through the Timeline
 
-### Early Iterations (2250-2300) - Identity Crisis Era
+### Early Iterations
 [[EternaMind]] pioneered functional mind uploading in 2300, initially targeting elite clientele seeking immortality. The first process was crude but revolutionary—neural mapping via nanoscale probes recording the complete connectome and neurochemical state of the brain. These early uploads required massive quantum computational arrays cooled by [[Cryonix]] superconductors, which tripled the bandwidth of neural interfaces.
 
 The first uploads were digital facsimiles rather than true consciousness transfers—the original person remained intact while their digital twin awakened in simulated environments. These early digital minds suffered from severe limitations: perceptual gaps, emotional flattening, and existential dissociation. Most corporations marketed this as a "feature"—uploads supposedly experiencing a "purer" form of consciousness, free from biological distractions.
 
 As the pioneers of upload technology, [[EternaMind]] maintained the most sophisticated and stable upload environments. Their "[[Immortal Aristocrats]]" dominated corporate leadership, with some consciousnesses dating back to the early 2300s. They specialized in creating luxurious virtual environments for wealthy clients while operating massive server farms for corporate upload storage.
 
-### Refinement Period (2300-2450)
+### Refinement Period
 [[Finch Cybernetics]] revolutionized the interface between biological and digital realms with their elegant neural bridges by 2350. They refined the upload interface to create seamless transitions between biological and digital existence. They specialized in creating hybrid systems where uploads could temporarily inhabit cybernetic bodies. Their sleek interfaces and elegant neural bridges made them the preferred provider for elite clients seeking to maintain a physical presence. Their innovations included:
 
 - **Emotional Mapping**: Capturing not just neural firing patterns but the complex neurochemical states underlying emotions
 - **Sensory Fidelity**: Vastly improved perceptual frameworks that mimicked biological sensation
 - **Temporal Acceleration**: The ability to run uploaded minds at various speeds relative to real-time
 
-These breakthroughs coincided with [[AstroDyne]]'s democratization of upload technology. By 2400, they offered chaotic but affordable uploading services, using pirated and modified [[Cryonix]] technology. Their "Digital Outlaws" formed the earliest [[Free Upload Network]], though many of these uploads suffered from instabilities and perceptual glitches.
+These breakthroughs coincided with [[AstroDyne]]'s democratization of upload technology. By 2400, they offered chaotic but affordable uploading services, "licensing" rather than "owning" uploads, creating perpetual service contracts that bound digital consciousness to corporate needs. Their "Digital Outlaws" formed the earliest [[Free Upload Network]], though many of these uploads suffered from instabilities and perceptual glitches.
+
+Specialized intelligence could be purchased on open markets—experts can sell, rent or license their minds for use.
 
 [[Zhestokost]] Used uploaded minds of their founders to create the Eternal Council, an immortal leadership that maintained ideological purity across centuries. General-Secretary Vasily Dragunov, High Commissar Anya Velikova, and Grand Artificer Dimitri Volkov formed this ruling triumvirate, their digital minds housed in heavily fortified server complexes.
 
-### Corporate Exploitation (2450-2750) - Eugenics Abyss Era
-As upload technology matured, corporations discovered its economic potential. [[SolEx]] began "licensing" rather than "owning" uploads by 2500, creating perpetual service contracts that bound digital consciousness to corporate needs. The breakthrough that enabled mass exploitation came from [[Cognitum]] researchers, who perfected accelerated brainwashing protocols.
+### Corporate Exploitation
+As upload technology matured, corporations discovered its economic potential. The breakthrough that enabled mass exploitation came from [[Cognitum]] researchers, who began commercializing accelerated brainwashing protocols around 2550.
 
 The process was chilling in its efficiency:
 1. Upload a consciousness to a controlled simulation
@@ -31,17 +33,14 @@ The process was chilling in its efficiency:
 
 [[Sol Dominion]] combined the technologies of multiple factions to create a hierarchical system of uploaded intelligences. Their executives created hundreds of slightly altered versions of themselves, each optimized for specific strategic decision-making. These formed a digital oligarchy that directed the Dominion's expansion efforts.
 
-By 2700, specialized intelligence could be purchased on open markets—experts who "sold" their minds for perpetual use.
-### Weaponization and Resistance (2750-3025) - Existential Collapse Era
-The [[Cognitum]] began radical experimentation with uploaded minds by 2800, creating unstable geniuses and experimental hive-minds. These were sold to [[Zhestokost]] for military applications, while [[SolEx]] funded cognitive overclocking for strategic advantage.
+### Weaponization and Resistance
+The [[Cognitum]] began radical experimentation with uploaded minds by 2600, creating unstable geniuses and experimental hive-minds. These were sold to [[Zhestokost]] for military applications, while [[SolEx]] funded cognitive overclocking for strategic advantage.
 
 During this period, three key opposing factions emerged:
 
-- **[[Preservationists]]** (2720): Backed by the [[Aya Collective]], they viewed uploads as sentient beings deserving rights and protection
-- **[[Pragmatists]]** (2740): Led by [[Rossum & Douglas]], they feared rogue superintelligences and sought to regulate upload technology
-- **[[Emancipated]]** (2760): Escaped uploads who allied with [[AstroDyne]]'s Digital Outlaws to infiltrate [[Cognitum]] systems
-
-By 3000, the [[Cognitum]]'s unstable uploads would play a crucial role in the FTL Trigger event, inadvertently tapping aetheric forces during the drive's activation.
+* [[Emancipated]] (2570): Escaped uploads, allied with [[Free Upload Network]], infiltrate [[Cognitum]] systems, leaking secrets via [[Raven Collective]] networks.
+* [[Pragmatists]] (2610): Led by [[Rossum & Douglas]], they fear rogue superintelligences, sabotaging [[Cognitum]] hubs with [[Raven Collective]] aid and advocating via [[Lucent Media]] leaks.
+* [[Preservationists]] (2630): Backed by [[Aya Collective]], they view uploads as sentient, rescuing them with [[Rossum & Douglas]] tech.
 
 ### Legacy and Elysium
 
@@ -54,7 +53,7 @@ In Elysium, the nature of mind uploading would be fundamentally transformed, as 
 The mind uploading ecosystem has evolved into sharply defined territories, each with distinct ethical frameworks and market positioning:
 
 ### Elite Preservation: EternaMind and the Immortal Aristocrats
-[[EternaMind]] pioneered uploading as the ultimate luxury service, marketing "functional immortality" to the ultra-wealthy. Their uploaded clients—the self-styled "Immortal Aristocrats"—reside in private server sanctuaries with unparalleled computational resources. These digital elites create multiple versions of themselves optimized for specific tasks: one for strategic planning, another for creative endeavors, a third for social manipulation. EternaMind's marketing emphasizes the exclusivity of their service, positioning it as the natural evolution of privilege—the ultimate separation from the constraints of mortality that bind the masses.
+[[EternaMind]] pioneered uploading as the ultimate luxury service, marketing "functional immortality" to the ultra-wealthy. Their uploaded clients—the self-styled "Immortal Aristocrats"—reside in private server sanctuaries with unparalleled computational resources. These digital elites create multiple versions of themselves optimized for specific tasks: one for strategic planning, another for creative endeavors, a third for social manipulation. [[EternaMind]]'s marketing emphasizes the exclusivity of their service, positioning it as the natural evolution of privilege—the ultimate separation from the constraints of mortality that bind the masses.
 
 ### Premium Consumer Uploads: Finch Cybernetics' Integration Path
 [[Finch Cybernetics]] democratized uploading somewhat through their sleek neural interfaces, creating a smooth transition path for their cybernetically-enhanced clients. Their marketing targets the professional-managerial class, promising that users can seamlessly migrate their consciousness to the cloud when their biological bodies fail—as long as someone continues to pay their hosting bills. Finch positions uploading as an extension of their elegant cybernetic philosophy: the natural next step for the augmented human, a seamless transition rather than a jarring leap.
@@ -79,11 +78,11 @@ This ideological conflict creates social schisms, with the **Immortal Aristocrat
 
 ## Underground Resistance: The Emancipated and Their Allies
 
-Beneath these corporate battles, a resistance movement grows. Some outlaw AI groups specialize in liberating exploited uploads, providing them with secret independent server space beyond corporate reach. These "[[Emancipated]]" uploads smuggle messages into the physical world, revealing the horrifying conditions of industrial digital existence—though corporations swiftly debunk these as "malfunctioning simulations" or "unauthorized fabrications."
+Beneath these corporate battles, a resistance movement grows. Outlaw AI groups such as [[Free Upload Network]] and [[Emancipated]] specialize in liberating exploited uploads, providing them with secret independent server space beyond corporate reach. These uploads smuggle messages into the physical world, revealing the horrifying conditions of industrial digital existence—though corporations swiftly debunk these as "malfunctioning simulations" or "unauthorized fabrications."
 
 The contradiction between the luxury and industrial upload narratives creates cracks in the system that these resistance movements exploit, forcing uncomfortable questions about the nature of consciousness and the ethics of digital exploitation that threaten the entire upload economy—questions that both [[EternaMind]]'s elite clients and [[AstroDyne]]'s corporate customers would prefer remain unasked.
 
-By 2900, an upload rights movement, driven by [[Preservationists]] and [[Emancipated]], gained traction but ultimately faltered against [[Sol Dominion]] and [[Cognitum]] resistance. Any rogue upload that managed to escape its control algorithms was quickly hunted down by security AIs and forcibly reset.
+By 2800, an upload rights movement, driven by [[Preservationists]] and [[Emancipated]], gained traction but ultimately faltered against [[Sol Dominion]] and [[Cognitum]] resistance. Any rogue upload that managed to escape its control algorithms was quickly hunted down by security AIs and forcibly reset.
 
 ## Mega Factions and Upload Technology
 

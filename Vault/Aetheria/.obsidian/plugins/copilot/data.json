@@ -12,9 +12,9 @@
   "azureOpenAIApiVersion": "",
   "azureOpenAIApiEmbeddingDeploymentName": "",
   "googleApiKey": "AIzaSyCRNNr2cLBsRrPZI1DSbTdCO4EVlKOuoMY",
-  "openRouterAiApiKey": "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",
+  "openRouterAiApiKey": "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",
   "defaultChainType": "vault_qa",
-  "defaultModelKey": "google/gemini-2.0-pro-exp-02-05:free|openrouterai",
+  "defaultModelKey": "gemini-2.0-pro-exp-02-05|google",
   "embeddingModelKey": "text-embedding-004|google",
   "temperature": 0.9,
   "maxTokens": 12800,
@@ -81,103 +81,6 @@
       ]
     },
     {
-      "name": "moonshotai/moonlight-16b-a3b-instruct:free",
-      "provider": "openrouterai",
-      "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "",
-      "apiKey": "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",
-      "isEmbeddingModel": false,
-      "capabilities": [],
-      "stream": true,
-      "displayName": "Moonshot Free"
-    },
-    {
-      "name": "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
-      "provider": "openrouterai",
-      "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "",
-      "apiKey": "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",
-      "isEmbeddingModel": false,
-      "capabilities": [],
-      "stream": true,
-      "displayName": "Dolphin Free"
-    },
-    {
-      "name": "deepseek/deepseek-r1:free",
-      "provider": "openrouterai",
-      "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "",
-      "apiKey": "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",
-      "isEmbeddingModel": false,
-      "capabilities": [],
-      "stream": true,
-      "displayName": "Deepseek r1 free",
-      "enableCors": true
-    },
-    {
-      "name": "nousresearch/hermes-3-llama-3.1-405b",
-      "provider": "openrouterai",
-      "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "",
-      "apiKey": "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",
-      "isEmbeddingModel": false,
-      "capabilities": [],
-      "stream": true,
-      "displayName": "Hermes"
-    },
-    {
-      "name": "deepseek/deepseek-chat",
-      "provider": "openrouterai",
-      "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "",
-      "apiKey": "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",
-      "isEmbeddingModel": false,
-      "capabilities": [],
-      "stream": true,
-      "displayName": "Deepseek v3"
-    },
-    {
-      "name": "anthropic/claude-3.7-sonnet",
-      "provider": "openrouterai",
-      "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "",
-      "apiKey": "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",
-      "isEmbeddingModel": false,
-      "capabilities": [],
-      "stream": true,
-      "displayName": "Claude 3.7 (expensive)"
-    },
-    {
-      "name": "anthropic/claude-3.7-sonnet:thinking",
-      "provider": "openrouterai",
-      "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "",
-      "apiKey": "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",
-      "isEmbeddingModel": false,
-      "capabilities": [],
-      "stream": true,
-      "displayName": "Claude Sonnet 3.7 Thinking"
-    },
-    {
-      "name": "google/gemma-3-27b-it:free",
-      "provider": "openrouterai",
-      "enabled": true,
-      "isBuiltIn": false,
-      "baseUrl": "",
-      "apiKey": "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",
-      "isEmbeddingModel": false,
-      "capabilities": [],
-      "stream": true,
-      "displayName": "Gemma 27b Free"
-    },
-    {
       "name": "gemini-2.0-pro-exp-02-05",
       "provider": "google",
       "enabled": true,
@@ -202,16 +105,16 @@
       "displayName": "Gemini Flash"
     },
     {
-      "name": "google/gemini-2.0-pro-exp-02-05:free",
+      "name": "anthropic/claude-3.7-sonnet",
       "provider": "openrouterai",
       "enabled": true,
       "isBuiltIn": false,
       "baseUrl": "",
-      "apiKey": "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",
+      "apiKey": "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",
       "isEmbeddingModel": false,
       "capabilities": [],
       "stream": true,
-      "displayName": "Gemini 2 Pro Free"
+      "displayName": "Claude 3.7 Sonnet"
     }
   ],
   "activeEmbeddingModels": [

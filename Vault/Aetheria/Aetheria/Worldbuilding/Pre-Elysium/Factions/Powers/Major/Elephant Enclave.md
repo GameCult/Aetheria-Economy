@@ -6,7 +6,7 @@ The Elephant Enclave leads with moral authority and communal decision-making, ba
 
 ### Sub-Factions
 [[Aya Collective]]
-[[Ewan Hart Inc]]
+[[Ewan Hart]]
 ### Alliances
 [[Preservationists]]
 [[Awakened Labor Front]]
