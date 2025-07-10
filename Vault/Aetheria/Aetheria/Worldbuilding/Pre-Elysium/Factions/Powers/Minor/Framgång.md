@@ -4,6 +4,7 @@
 
 Framgång operates, somewhat unsubtly, on a "ziggurat" form of corporate organization. They present themselves as promoting vague ideas like "well-being" and "the physical manifestation of the uplifted spirit," which in practice means charging exorbitant fees for sub-par weaponry and gear with the promise that the riches obtained therefrom will be the riches of a healthy spirit. Or something like that, no one is entirely sure. This, of course, is a smashing success, and Framgång representatives are found in every corner of settled space, bedbugs on the mattress of commerce.
 
+
 ## Culture: The Spiritual Marketplace
 
 Where Zhestokost is defined by rigid discipline and militaristic order, Framgång embodies the opposite extreme—a fluid, opportunistic organization cloaked in spiritual rhetoric and aspirational marketing. Their culture is a masterful fusion of corporate capitalism and new-age spirituality, creating a unique ecosystem where "mindfulness" becomes a commodity and "self-actualization" a product to be sold.
@@ -18,6 +19,10 @@ Framgång's genius lies in how they've commercialized mindfulness—taking the e
 
 Employees and customers alike are encouraged to "manifest their destiny" through purchasing decisions and to "align their energy" with corporate objectives. The language is deliberately vague and contradictory—allowing individuals to project their own meaning while creating dependency on Framgång's interpretive framework.
 
+Products and practices are regularly declared "transcended" by new, more advanced offerings. Yesterday's path to enlightenment becomes today's outdated approach, requiring constant investment to stay "spiritually current."
+
+Framgång's marketing deliberately induces anxiety, inadequacy, and spiritual crises, then positions their products as the only solution. Their AGI partners analyze social trends to identify emerging insecurities that can be amplified and monetized.
+
 ### Aesthetic: Calculated Mysticism
 
 Framgång's visual identity is a carefully crafted blend of minimalist corporate design and appropriated spiritual imagery. Their spaces feature:
@@ -28,6 +33,47 @@ Framgång's visual identity is a carefully crafted blend of minimalist corporate
 * Corporate uniforms of flowing, neutral-toned fabrics that suggest spirituality while maintaining clear status markers
 
 Their product design follows similar principles—functional items given a veneer of spiritual significance through symbolic patterns, "energetically charged" materials, and packaging that unfolds like a ritual object. Everything is priced at a premium to reinforce its perceived value and spiritual potency.
+
+
+## The Spiritual Pyramid Scheme
+
+Framgång's business model is a sophisticated evolution of multilevel marketing and subscription services.
+
+Consumers begin with basic products and services but are quickly encouraged to advance to premium tiers through both explicit marketing and subtle psychological manipulation. Each advancement requires larger investments and promises greater "spiritual returns."
+
+#### The Ziggurat Structure
+
+Framgång's corporate structure mirrors an ancient ziggurat—a hierarchical pyramid with distinct levels, each representing different stages of "enlightenment" and corresponding privilege:
+
+* **The Luminaries**: At the apex stand the "enlightened" leadership, who have mastered the art of speaking in circular platitudes while extracting maximum profit. They live in luxurious isolation, supposedly engaged in deep spiritual practices that the lower tiers can only aspire to reach.
+
+* **The Acolytes**: Mid-level executives who have internalized the corporate doublespeak. They genuinely believe in Framgång's mission while simultaneously implementing exploitative policies, their cognitive dissonance a testament to the company's psychological conditioning.
+
+* **The Seekers**: Entry-level employees desperate to climb the corporate ladder. They purchase Framgång's own products at "employee discounts," attend mandatory retreats, and compete for recognition in a cutthroat environment disguised as a supportive community. Dedicated customers can become certified "guides" or "mentors" who then recruit new customers, receiving commissions and status. This creates an ever-expanding network of unpaid salespeople motivated by spiritual recognition rather than mere financial gain.
+
+* **The Consumers**: The vast market of individuals sold on Framgång's promise of transformation through consumption. They're encouraged to define their identity through product loyalty and to measure their spiritual growth by the premium tier of services they can afford.
+
+
+## Key Figures
+
+### Viktor Lindgren - The Opportunistic Founder (2040-2112)
+
+The original architect of Framgång's transformation, Lindgren wasn't a spiritual person but a pragmatic businessman who recognized that spiritual language could obscure exploitative practices. His genius was in creating a corporate culture that allowed employees to commit unethical acts while believing they were part of a greater purpose.
+
+His most famous directive, now enshrined in corporate lore: "Don't sell products, sell transformations. A product has a value, but a transformation? That's priceless—so we set the price."
+
+### Aria Sunseeker (born Melissa Johnson) - The True Believer (2085-2160)
+
+Originally hired as a marketing consultant, Aria became so immersed in Framgång's artificial spirituality that she genuinely believed in it. This made her the perfect spokesperson—her sincerity was real, even if the products were not. She developed the "Authentic Self Paradigm," which paradoxically encouraged people to find their authentic selves through purchasing Framgång identity packages.
+
+### The Guiding Light Council (2170-Present)
+
+Following Lindgren's death, Framgång transitioned to a leadership collective called "The Guiding Light Council"—seven individuals whose identities remain purposefully ambiguous. Members rotate every seven years through an opaque selection process, ensuring no individual becomes the face of the company. This creates an impression of timeless wisdom while actually allowing for rapid adaptation to market conditions without visible contradiction.
+
+### SERENITY - The AGI Partner (2300-Present)
+
+Unlike the uploaded human minds of other corporations, Framgång's key AGI partner SERENITY remains a non-human intelligence. Designed to analyze and predict emotional responses, SERENITY helps craft Framgång's memetic strategies with uncanny precision. While publicly presented as a "digital guru," SERENITY is essentially a sophisticated marketing algorithm that has learned to speak the language of spiritual enlightenment.
+
 
 ## History: Creating Niches from Chaos
 
@@ -71,68 +117,9 @@ As genetic enhancement created new class divisions, Framgång positioned itself 
 
 By the time of the FTL Trigger, Framgång had become an inescapable presence in human civilization—not through dominance in any sector but through infiltration of all sectors. Their representatives brokered deals between warring factions, their products accompanied every technological breakthrough, and their language had seeped into the collective consciousness.
 
-When humanity was shunted to Elysium, Framgång was perhaps best positioned to adapt—after all, they had never been selling anything real to begin with. Their first product in the new reality? "Transition Essentials: Your Guide to Spiritual Realignment in a New Universe."
-
-## Key Figures: The Architects of Illusion
-
-### Viktor Lindgren - The Opportunistic Founder (2040-2112)
-
-The original architect of Framgång's transformation, Lindgren wasn't a spiritual person but a pragmatic businessman who recognized that spiritual language could obscure exploitative practices. His genius was in creating a corporate culture that allowed employees to commit unethical acts while believing they were part of a greater purpose.
-
-His most famous directive, now enshrined in corporate lore: "Don't sell products, sell transformations. A product has a value, but a transformation? That's priceless—so we set the price."
-
-### Aria Sunseeker (born Melissa Johnson) - The True Believer (2085-2160)
-
-Originally hired as a marketing consultant, Aria became so immersed in Framgång's artificial spirituality that she genuinely believed in it. This made her the perfect spokesperson—her sincerity was real, even if the products were not. She developed the "Authentic Self Paradigm," which paradoxically encouraged people to find their authentic selves through purchasing Framgång identity packages.
-
-### The Guiding Light Council - The Collective Leadership (2170-Present)
-
-Following Lindgren's death, Framgång transitioned to a leadership collective called "The Guiding Light Council"—seven individuals whose identities remain purposefully ambiguous. Members rotate every seven years through an opaque selection process, ensuring no individual becomes the face of the company. This creates an impression of timeless wisdom while actually allowing for rapid adaptation to market conditions without visible contradiction.
-
-### SERENITY - The AGI Partner (2300-Present)
-
-Unlike the uploaded human minds of other corporations, Framgång's key AGI partner SERENITY remains a non-human intelligence. Designed to analyze and predict emotional responses, SERENITY helps craft Framgång's memetic strategies with uncanny precision. While publicly presented as a "digital guru," SERENITY is essentially a sophisticated marketing algorithm that has learned to speak the language of spiritual enlightenment.
-
-## Economic Model: The Spiritual Pyramid Scheme
-
-Framgång's business model is a sophisticated evolution of multilevel marketing and subscription services:
-
-### Tiered Membership and Advancement
-Consumers begin with basic products and services but are quickly encouraged to advance to premium tiers through both explicit marketing and subtle psychological manipulation. Each advancement requires larger investments and promises greater "spiritual returns."
-
-#### The Ziggurat Structure
-
-Framgång's corporate structure mirrors an ancient ziggurat—a hierarchical pyramid with distinct levels, each representing different stages of "enlightenment" and corresponding privilege:
-
-* **The Luminaries**: At the apex stand the "enlightened" leadership, who have mastered the art of speaking in circular platitudes while extracting maximum profit. They live in luxurious isolation, supposedly engaged in deep spiritual practices that the lower tiers can only aspire to reach.
-
-* **The Acolytes**: Mid-level executives who have internalized the corporate doublespeak. They genuinely believe in Framgång's mission while simultaneously implementing exploitative policies, their cognitive dissonance a testament to the company's psychological conditioning.
-
-* **The Seekers**: Entry-level employees desperate to climb the corporate ladder. They purchase Framgång's own products at "employee discounts," attend mandatory retreats, and compete for recognition in a cutthroat environment disguised as a supportive community.
-
-* **The Consumers**: The vast market of individuals sold on Framgång's promise of transformation through consumption. They're encouraged to define their identity through product loyalty and to measure their spiritual growth by the premium tier of services they can afford.
-
-### Certification and Authority
-Dedicated customers can become certified "guides" or "mentors" who then recruit new customers, receiving commissions and status. This creates an ever-expanding network of unpaid salespeople motivated by spiritual recognition rather than mere financial gain.
-
-### Continuous Obsolescence
-Products and practices are regularly declared "transcended" by new, more advanced offerings. Yesterday's path to enlightenment becomes today's outdated approach, requiring constant investment to stay "spiritually current."
-
-### Crisis Creation and Resolution
-Framgång's marketing deliberately induces anxiety, inadequacy, and spiritual crises, then positions their products as the only solution. Their AGI partners analyze social trends to identify emerging insecurities that can be amplified and monetized.
-
-## In Elysium: The Ultimate Adaptation
-
 Upon arrival in Elysium, Framgång demonstrated why they had survived a millennium of corporate warfare—they were selling precisely what humanity needed in crisis: meaning. While other corporations struggled to adapt their physical supply chains and technological infrastructures, Framgång simply reframed their narrative.
 
 The shunt to Elysium wasn't a catastrophe but "The Great Awakening"—an opportunity for spiritual advancement. The strange physics of the new reality wasn't a scientific mystery but "The Universe Revealing Its True Nature." The loss of contact with Sol wasn't isolation but "Cosmic Independence."
-
-Today, Framgång representatives can be found in every corner of Elysium, offering "essential" services to all factions:
-
-* For [[Zhestokost]], they provide "Warrior Spirit Alignment" to maintain troop morale
-* For the [[Sol Dominion]], they offer "Governance Harmony Protocols" to manage dissent
-* For [[Lucent Media]], they create "Authentic Experience Packages" for bored elites
-* For the [[Elephant Enclave]] and [[Cetacean Navigators]], they market "Interspecies Wisdom Exchange" programs
 
 Their true product remains the same: the promise that meaning, purpose, and fulfillment are always just one purchase away. In a universe of uncertainty, Framgång sells certainty—not through facts or technology, but through carefully crafted narratives that give people something to believe in, even if that something is ultimately empty.
 

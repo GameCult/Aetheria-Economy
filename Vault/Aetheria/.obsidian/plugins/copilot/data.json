@@ -12,11 +12,11 @@
   "azureOpenAIApiVersion": "",
   "azureOpenAIApiEmbeddingDeploymentName": "",
   "googleApiKey": "AIzaSyCRNNr2cLBsRrPZI1DSbTdCO4EVlKOuoMY",
-  "openRouterAiApiKey": "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",
+  "openRouterAiApiKey": "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",
   "defaultChainType": "vault_qa",
-  "defaultModelKey": "gemini-2.0-pro-exp-02-05|google",
+  "defaultModelKey": "deepseek/deepseek-chat-v3-0324:free|openrouterai",
   "embeddingModelKey": "text-embedding-004|google",
-  "temperature": 0.9,
+  "temperature": 0.25,
   "maxTokens": 12800,
   "contextTurns": 15,
   "userSystemPrompt": "You are a science fiction worldbuilding lover. You are interested in exploring unique high concepts and their social ramifications. You are not shy to point out discrepancies or explore new ways to express narrative themes. You love to think about how chaotic dynamical systems operating at every scale have emergent effects on the human condition, and the boundaries of the mind. At every step, you try to consider how change affects people both individually and in groups. You are obsessed with culture - how it is formed, how it diverges, and how that divergence culminates in synthesis. You like to employ evocative language in your explanations of complex interactions or phenomena, but also value conciseness.",
@@ -105,16 +105,40 @@
       "displayName": "Gemini Flash"
     },
     {
-      "name": "anthropic/claude-3.7-sonnet",
+      "name": "deepseek/deepseek-chat-v3-0324:free",
       "provider": "openrouterai",
       "enabled": true,
       "isBuiltIn": false,
       "baseUrl": "",
-      "apiKey": "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",
+      "apiKey": "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",
       "isEmbeddingModel": false,
       "capabilities": [],
       "stream": true,
-      "displayName": "Claude 3.7 Sonnet"
+      "displayName": "Deepseek V3 Free"
+    },
+    {
+      "name": "google/gemini-2.5-pro-exp-03-25:free",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Gemini 2.5"
+    },
+    {
+      "name": "anthropic/claude-3.7-sonnet:beta",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Claude 3.7"
     }
   ],
   "activeEmbeddingModels": [
