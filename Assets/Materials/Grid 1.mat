@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: Grid 1
   m_Shader: {fileID: 4800000, guid: 715b1ce444e57364a9458657be896071, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _RENDERING_CUTOUT
   - _TESSELLATION_EDGE
@@ -20,6 +22,7 @@ Material:
   stringTagMap:
     RenderType: TransparentCutout
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -117,7 +120,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ParallaxStrength: 0
-    - _Smoothness: 0.824
+    - _Smoothness: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -130,3 +133,4 @@ Material:
     - _Emission: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0.46091864, g: 0.21568628, b: 0.4627451, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

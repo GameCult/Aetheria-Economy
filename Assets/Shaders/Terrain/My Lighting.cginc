@@ -23,6 +23,8 @@ float3 CreateBinormal (float3 normal, float3 tangent, float binormalSign) {
 		(binormalSign * unity_WorldTransformParams.w);
 }
 
+uniform float3 _GridTransform;
+
 InterpolatorsVertex MyVertexProgram (VertexData v) {
 	InterpolatorsVertex i;
 	UNITY_INITIALIZE_OUTPUT(InterpolatorsVertex, i);
@@ -36,9 +38,11 @@ InterpolatorsVertex MyVertexProgram (VertexData v) {
     //v.normal = normalize(v.normal);
     //v.vertex.xyz += v.normal * displacement;
     v.vertex.y += displacement;
+	v.vertex.xz = v.vertex.xz * _GridTransform.z / 2 + _GridTransform.xy;
 
 	i.pos = UnityObjectToClipPos(v.vertex);
-	i.worldPos.xyz = mul(unity_ObjectToWorld, v.vertex);
+	//i.worldPos.xyz = mul(unity_ObjectToWorld, v.vertex);
+	i.worldPos.xyz = v.vertex.xyz;
 	#if FOG_DEPTH
 		i.worldPos.w = i.pos.z;
 	#endif
@@ -259,11 +263,11 @@ float3 calcNormal (float3 pos, float2 uv)
 {
     float3 n = float3(pos.x, 
                       tex2D(_DisplacementMap, float2(uv.x, uv.y + _DisplacementMap_TexelSize.y * _DisplacementStep)).x * -_DisplacementStrength, 
-                      pos.z + _DisplacementMap_TexelSize.y * unity_ObjectToWorld._m00 * _DisplacementStep);
+                      pos.z + _DisplacementMap_TexelSize.y * _GridTransform.z * _DisplacementStep / 2);
     float3 me = float3(pos.x, 
                      tex2D(_DisplacementMap, float2(uv.x, uv.y)).x * -_DisplacementStrength, 
                      pos.z);
-    float3 e = float3(pos.x + _DisplacementMap_TexelSize.x * unity_ObjectToWorld._m00 * _DisplacementStep, 
+    float3 e = float3(pos.x + _DisplacementMap_TexelSize.x * _GridTransform.z * _DisplacementStep / 2, 
                      tex2D(_DisplacementMap, float2(uv.x + _DisplacementMap_TexelSize.x * _DisplacementStep, uv.y)).x * -_DisplacementStrength, 
                      pos.z);
     float3 norm = cross(normalize(n-me),normalize(e-me));

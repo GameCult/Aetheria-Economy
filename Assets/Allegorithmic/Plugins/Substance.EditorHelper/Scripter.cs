@@ -30,7 +30,7 @@ namespace Substance.EditorHelper
             bool bActive = false;
 
             UnityEngine.Rendering.RenderPipelineAsset asset;
-            asset = UnityEngine.Rendering.GraphicsSettings.renderPipelineAsset;
+            asset = UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline;
 
             if ((asset != null) &&
                 (asset.GetType().ToString().EndsWith(".HDRenderPipelineAsset")))
@@ -50,7 +50,7 @@ namespace Substance.EditorHelper
                 bool bActive = false;
 
                 UnityEngine.Rendering.RenderPipelineAsset asset;
-                asset = UnityEngine.Rendering.GraphicsSettings.renderPipelineAsset;
+                asset = UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline;
 
                 if ((asset != null) &&
                     (asset.GetType().ToString().EndsWith("UniversalRenderPipelineAsset")))

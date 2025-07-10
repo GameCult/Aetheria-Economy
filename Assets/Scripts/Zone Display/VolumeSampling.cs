@@ -26,7 +26,8 @@ public class VolumeSampling : MonoBehaviour
     public RenderTexture NebulaPatchHeight;
     public RenderTexture NebulaPatch;
     public RenderTexture NebulaTint;
-    
+
+    private MeshRenderer _gridMeshRenderer;
     private float _flowScroll;
     private Transform _gridTransform;
     private GlobalKeyword _keywordFlowGlobal;
@@ -38,6 +39,9 @@ public class VolumeSampling : MonoBehaviour
         _keywordFlowGlobal = GlobalKeyword.Create("FLOW_GLOBAL");
         _keywordFlowSlope = GlobalKeyword.Create("FLOW_SLOPE");
         _keywordNoiseSlope = GlobalKeyword.Create("NOISE_SLOPE");
+
+        if (GridMesh != null)
+            _gridMeshRenderer = GridMesh.GetComponent<MeshRenderer>();
     }
 
     void Update()
@@ -53,8 +57,11 @@ public class VolumeSampling : MonoBehaviour
         if (GridMesh != null)
         {
             GridMesh.gameObject.SetActive(environment.Grid.Enabled);
-            GridMesh.position = new Vector3(_gridTransform.position.x, environment.Grid.Offset, _gridTransform.position.z);
-            GridMesh.localScale = new Vector3(GridCamera.orthographicSize, 1, GridCamera.orthographicSize);
+            _gridMeshRenderer.bounds = new Bounds(
+                new Vector3(_gridTransform.position.x, environment.Grid.Offset, _gridTransform.position.z),
+                new Vector3(GridCamera.orthographicSize * 2, 1000, GridCamera.orthographicSize * 2));
+            // GridMesh.position = new Vector3(_gridTransform.position.x, environment.Grid.Offset, _gridTransform.position.z);
+            // GridMesh.localScale = new Vector3(GridCamera.orthographicSize, 1, GridCamera.orthographicSize);
         }
         
         // Volumetric sampling parameters are used by several shaders

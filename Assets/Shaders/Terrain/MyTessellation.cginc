@@ -73,20 +73,41 @@ float TessellationEdgeFactor (float3 p0, float3 p1) {
 	#endif
 }
 
+#if !defined(MY_LIGHTING_INCLUDED)
+uniform float3 _GridTransform;
+#endif
+
+float TessellationEdgeFactor (float2 p0, float2 p1) {
+	#if defined(_TESSELLATION_EDGE)
+		float edgeLength = distance(p0, p1);
+
+		float2 edgeCenter = (p0 + p1) * 0.5;
+		float viewDistance = distance(edgeCenter, _WorldSpaceCameraPos.xz);
+
+		return edgeLength * _ScreenParams.y /
+			(_TessellationEdgeLength * viewDistance);
+	#else
+		return _TessellationUniform;
+	#endif
+}
+
 TessellationFactors MyPatchConstantFunction (
 	InputPatch<TessellationControlPoint, 3> patch
 ) {
-	float3 p0 = mul(unity_ObjectToWorld, patch[0].vertex).xyz;
-	float3 p1 = mul(unity_ObjectToWorld, patch[1].vertex).xyz;
-	float3 p2 = mul(unity_ObjectToWorld, patch[2].vertex).xyz;
+	//float3 p0 = mul(unity_ObjectToWorld, patch[0].vertex).xyz;
+	//float3 p1 = mul(unity_ObjectToWorld, patch[1].vertex).xyz;
+	//float3 p2 = mul(unity_ObjectToWorld, patch[2].vertex).xyz;
+	float2 p0 = patch[0].vertex.xz * _GridTransform.z / 2 + _GridTransform.xy;
+	float2 p1 = patch[1].vertex.xz * _GridTransform.z / 2 + _GridTransform.xy;
+	float2 p2 = patch[2].vertex.xz * _GridTransform.z / 2 + _GridTransform.xy;
 	TessellationFactors f;
 
 	float bias = 500 * _DisplacementStrength;
 
-	if (TriangleIsCulled(p0, p1, p2, bias)) {
-		f.edge[0] = f.edge[1] = f.edge[2] = f.inside = 0;
-	}
-	else {
+	// if (TriangleIsCulled(p0, p1, p2, bias)) {
+	// 	f.edge[0] = f.edge[1] = f.edge[2] = f.inside = 0;
+	// }
+	// else {
 	    f.edge[0] = TessellationEdgeFactor(p1, p2);
 	    f.edge[1] = TessellationEdgeFactor(p2, p0);
 	    f.edge[2] = TessellationEdgeFactor(p0, p1);
@@ -94,7 +115,7 @@ TessellationFactors MyPatchConstantFunction (
 			(TessellationEdgeFactor(p1, p2) +
 			TessellationEdgeFactor(p2, p0) +
 			TessellationEdgeFactor(p0, p1)) * (1 / 3.0);
-	}
+	// }
 	return f;
 }
 
