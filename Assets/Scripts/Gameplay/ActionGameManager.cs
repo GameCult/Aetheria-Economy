@@ -20,7 +20,6 @@ using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Unity.Mathematics;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine.EventSystems;
 using static Unity.Mathematics.math;
 using float2 = Unity.Mathematics.float2;
@@ -326,7 +325,13 @@ public class ActionGameManager : MonoBehaviour
             else Undock();
         };
 
-        Input.Global.MainMenu.performed += context => ToggleFullscreenMenu(MainMenu.gameObject);
+        Input.Global.MainMenu.performed += context =>
+        {
+            if(Menu.gameObject.activeSelf)
+                ToggleMenuTab(Menu.CurrentTab);
+            else
+                ToggleFullscreenMenu(MainMenu.gameObject);
+        };
         
         Input.Global.InputScreen.performed += context => ToggleFullscreenMenu(HelpScreen);
 
@@ -427,7 +432,7 @@ public class ActionGameManager : MonoBehaviour
 
             slot.PointerEnterTrigger.OnPointerEnterAsObservable().Subscribe(_ =>
             {
-                Debug.Log($"Pointer entered action bar slot {controlPath}");
+                //Debug.Log($"Pointer entered action bar slot {controlPath}");
                 RegisterDragTarget(dragAction =>
                 {
                     //Debug.Log("Registering binding!");
@@ -504,7 +509,7 @@ public class ActionGameManager : MonoBehaviour
         ConsoleController.AddCommand("trackmissile",
             _ =>
             {
-                foreach (var missileManager in FindObjectsOfType<GuidedProjectileManager>())
+                foreach (var missileManager in FindObjectsByType<GuidedProjectileManager>(FindObjectsSortMode.None))
                 {
                     missileManager.OnFireGuided.Where(x => x.source == _currentEntity).Take(1).Subscribe(x =>
                     {

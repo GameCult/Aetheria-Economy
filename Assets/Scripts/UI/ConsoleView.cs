@@ -115,10 +115,10 @@ public class ConsoleView : MonoBehaviour {
 		if(visible)
 		{
 			_playerInputPreviouslyEnabled = GameManager.Input.Player.enabled;
+			_previousCursorLockMode = Cursor.lockState;
 			GameManager.Input.Global.Disable();
 			GameManager.DisablePlayerInput();
 			GameManager.Input.UI.Disable();
-			_previousCursorLockMode = Cursor.lockState;
 			Cursor.lockState = CursorLockMode.None;
 		}
 		else

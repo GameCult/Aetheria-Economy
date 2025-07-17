@@ -23,6 +23,7 @@ public class TradeMenu : MonoBehaviour
     public Spreadsheet Spreadsheet;
     public TextMeshProUGUI TargetCargoLabel;
     public Button FoldoutButton;
+    public TextMeshProUGUI CreditsLabel;
 
     private EquippedCargoBay _targetCargo;
     private (ItemFilter filter, HardpointType type) _hardpointFilter;
@@ -38,6 +39,7 @@ public class TradeMenu : MonoBehaviour
         _targetCargo = GameManager.DockingBay;
         TargetCargoLabel.text = "Docking Bay";
         Properties.GameManager = GameManager;
+        UpdateCreditsLabel();
         
         MinimumSizeFilter.Width.onEndEdit.RemoveAllListeners();
         MinimumSizeFilter.Width.onEndEdit.AddListener(_ => Populate());
@@ -353,6 +355,14 @@ public class TradeMenu : MonoBehaviour
                 }
             }));
     }
+    
+    private void UpdateCreditsLabel()
+    {
+        if (CreditsLabel != null)
+        {
+            CreditsLabel.text = GameManager.Credits.ToString("N0");
+        }
+    }
 
     private void Buy(CraftedItemInstance item)
     {
@@ -363,15 +373,17 @@ public class TradeMenu : MonoBehaviour
             if (data is HullData hullData)
             {
                 if (hullData.HullType != HullType.Ship) throw new ArgumentException("Attempted to buy non-ship hull from station, WTF are you doing?!");
-                
-                var ship = new Ship(GameManager.ItemManager, GameManager.Zone, item as EquippableItem, GameManager.NewEntitySettings) {IsPlayerShip = true};
+
+                var ship = new Ship(GameManager.ItemManager, GameManager.Zone, item as EquippableItem, GameManager.NewEntitySettings) { IsPlayerShip = true };
                 ship.SetParent(GameManager.DockedEntity);
-            
+
                 GameManager.Credits -= data.Price;
+                UpdateCreditsLabel();
             }
             else if (Inventory.TryTransferItem(_targetCargo, item))
             {
                 GameManager.Credits -= price;
+                UpdateCreditsLabel();
             }
             else
             {
@@ -406,6 +418,7 @@ public class TradeMenu : MonoBehaviour
                 if (Inventory.TryTransferItem(_targetCargo, simpleCommodity, quantity))
                 {
                     GameManager.Credits -= q * data.Price;
+                    UpdateCreditsLabel();
                     remaining -= q;
                 }
                 else

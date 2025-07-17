@@ -716,7 +716,7 @@ public abstract class Entity
 
     public EquippedDockingBay TryDock(Ship ship)
     {
-        if (!IsDockingPermitted(ship.GetFactionRelationship(Faction), CurrentSecurityLevel.Value)) return null;
+        //if (!IsDockingPermitted(ship.GetFactionRelationship(Faction), CurrentSecurityLevel.Value)) return null;
         
         var bay = DockingBays.FirstOrDefault(x => x.DockedShip == null);
         if (bay != null)
@@ -1368,7 +1368,7 @@ public class EquippedCargoBay : EquippedItem
 
     public readonly Dictionary<Guid, List<ItemInstance>> ItemsOfType = new Dictionary<Guid, List<ItemInstance>>();
 
-    public readonly CargoBayData Data;
+    public new readonly CargoBayData Data;
     
     public float Mass { get; private set; }
     public float ThermalMass { get; private set; }

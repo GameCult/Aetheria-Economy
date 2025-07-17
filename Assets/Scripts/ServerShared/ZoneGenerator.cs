@@ -102,7 +102,7 @@ public static class ZoneGenerator
             var data = new OrbitData
             {
 	            FixedPosition = planet.FixedPosition,
-                Distance = new ReactiveProperty<float>(planet.Distance),
+                Distance = planet.Distance,
                 //Period = planet.Period,
                 Phase = planet.Phase
             };
@@ -158,17 +158,17 @@ public static class ZoneGenerator
 			        throw new ArgumentOutOfRangeException();
 	        }
 
-	        planetData.Mass.Value = planet.Mass;
+	        planetData.Mass = planet.Mass;
 	        planetData.Orbit = orbitMap[planet].ID;
 	        // planetData.Resources = planetResources;
-            planetData.Name.Value = planetData.ID.ToString().Substring(0, 8);
+            planetData.Name = planetData.ID.ToString().Substring(0, 8);
             if (planetData is AsteroidBeltData beltData)
             {
 	            beltData.Asteroids = 
-		            Enumerable.Range(0, (int) (zoneSettings.AsteroidCount.Evaluate(beltData.Mass.Value * orbitMap[planet].Distance.Value)))
+		            Enumerable.Range(0, (int) zoneSettings.AsteroidCount.Evaluate(beltData.Mass * orbitMap[planet].Distance))
 			            .Select(_ => new Asteroid
 			            {
-				            Distance = orbitMap[planet].Distance.Value + random.NextFloat()*(random.NextFloat()-.5f)*zoneSettings.AsteroidBeltWidth.Evaluate(orbitMap[planet].Distance.Value),
+				            Distance = orbitMap[planet].Distance + random.NextFloat()*(random.NextFloat()-.5f)*zoneSettings.AsteroidBeltWidth.Evaluate(orbitMap[planet].Distance),
 				            Phase = random.NextFloat(),
 				            Size = random.NextFloat(),
 				            RotationSpeed = zoneSettings.AsteroidRotationSpeed.Evaluate(random.NextFloat())
@@ -182,14 +182,14 @@ public static class ZoneGenerator
 	            {
 		            float primary = random.NextFloat();
 		            float secondary = frac(primary + 1 + zoneSettings.SunSecondaryColorDistance * (random.NextFloat() > .5 ? 1 : -1));
-		            gas.Colors.Value = new []
+		            gas.Colors = new []
 		            {
 			            float4(ColorMath.HsvToRgb(float3(primary, zoneSettings.SunColorSaturation, .5f)), 0),
 			            float4(ColorMath.HsvToRgb(float3(secondary, zoneSettings.SunColorSaturation, 1)), 1)
 		            };
-		            sun.FogTintColor.Value = ColorMath.HsvToRgb(float3(primary, zoneSettings.SunFogTintSaturation, 1));
-			        sun.LightColor.Value = ColorMath.HsvToRgb(float3(primary, zoneSettings.SunLightSaturation, 1));
-		            gas.FirstOffsetDomainRotationSpeed.Value = 5;
+		            sun.FogTintColor = ColorMath.HsvToRgb(float3(primary, zoneSettings.SunFogTintSaturation, 1));
+			        sun.LightColor = ColorMath.HsvToRgb(float3(primary, zoneSettings.SunLightSaturation, 1));
+		            gas.FirstOffsetDomainRotationSpeed = 5;
 	            }
 	            else
 	            {
@@ -205,19 +205,19 @@ public static class ZoneGenerator
 		            
 		            // Each band has a chance of being either the primary or one of the adjacent hues
 		            // Saturation and Value are random with curves applied
-		            gas.Colors.Value = times
+		            gas.Colors = times
 			            .Select(time => float4(ColorMath.HsvToRgb(float3(
 				            random.NextFloat() > zoneSettings.GasGiantBandAltColorChance ? primary : (random.NextFloat() > .5f ? right : left),
 				            zoneSettings.GasGiantBandSaturation.Evaluate(random.NextFloat()),
 				            zoneSettings.GasGiantBandSaturation.Evaluate(random.NextFloat()))),time))
 			            .ToArray();
 		            
-		            gas.FirstOffsetDomainRotationSpeed.Value = 0;
+		            gas.FirstOffsetDomainRotationSpeed = 0;
 	            }
-	            gas.AlbedoRotationSpeed.Value = -3;
-	            gas.FirstOffsetRotationSpeed.Value = 5;
-	            gas.SecondOffsetRotationSpeed.Value = 10;
-	            gas.SecondOffsetDomainRotationSpeed.Value = -25;
+	            gas.AlbedoRotationSpeed = -3;
+	            gas.FirstOffsetRotationSpeed = 5;
+	            gas.SecondOffsetRotationSpeed = 10;
+	            gas.SecondOffsetDomainRotationSpeed = -25;
             }
             return planetData;
         }).ToList();
@@ -255,7 +255,7 @@ public static class ZoneGenerator
 	        {
 		        ID = Guid.NewGuid(),
 		        Parent = baseOrbit.Parent,
-		        Distance = new ReactiveProperty<float>(baseOrbit.Distance.Value),
+		        Distance = baseOrbit.Distance,
 		        Phase = baseOrbit.Phase + PI / 3 * sign(random.NextFloat() - .5f)
 	        };
 	        pack.Orbits.Add(lagrangeOrbit);
@@ -264,13 +264,13 @@ public static class ZoneGenerator
 
         void PlaceTurret(OrbitData orbit, LoadoutGenerator loadoutGenerator, int distanceMultiplier)
         {
-	        var phase = 20f * distanceMultiplier / orbit.Distance.Value;
+	        var phase = 20f * distanceMultiplier / orbit.Distance;
 	        
 	        var turretOrbit = new OrbitData
 	        {
 		        ID = Guid.NewGuid(),
 		        Parent = orbit.Parent,
-		        Distance = new ReactiveProperty<float>(orbit.Distance.Value),
+		        Distance = orbit.Distance,
 		        Phase = orbit.Phase + phase
 	        };
 	        pack.Orbits.Add(turretOrbit);

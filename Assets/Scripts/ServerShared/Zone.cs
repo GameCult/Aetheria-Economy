@@ -1,4 +1,4 @@
-﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+/* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
@@ -165,10 +165,10 @@ public class Zone
         {
             var orbit = Orbits[orbitID];
             float2 pos = float2.zero;
-            if (orbit.Period.Value > .01f)
+            if (orbit.Period > .01f)
             {
-                var phase = (float) frac(_time / orbit.Period.Value);
-                pos = OrbitData.Evaluate(frac(phase + orbit.Data.Phase)) * orbit.Data.Distance.Value;
+                var phase = (float) frac(_time / orbit.Period);
+                pos = OrbitData.Evaluate(frac(phase + orbit.Data.Phase)) * orbit.Data.Distance;
                 
                 if (float.IsNaN(pos.x))
                 {
@@ -258,7 +258,7 @@ public class Zone
         var orbit = new OrbitData
         {
             ID = Guid.NewGuid(),
-            Distance = new ReactiveProperty<float>(distance),
+            Distance = distance,
             Parent = parent,
             Phase = storedPhase
         };
@@ -330,21 +330,21 @@ public class Zone
         {
             var p = position - body.Orbit.Position; //GetOrbitPosition(body.BodyData.Orbit)
             var distSqr = lengthsq(p);
-            var gravityRadius = body.GravityWellRadius.Value;
+            var gravityRadius = body.GravityWellRadius;
             if (distSqr < gravityRadius*gravityRadius)
             {
-                var depth = body.GravityWellDepth.Value;
-                result -= PowerPulse(sqrt(distSqr) / gravityRadius, body.BodyData.GravityDepthExponent.Value) * depth;
+                var depth = body.GravityWellDepth;
+                result -= PowerPulse(sqrt(distSqr) / gravityRadius, body.BodyData.GravityDepthExponent) * depth;
             }
 
             if (body is GasGiant gas)
             {
-                var waveRadius = gas.GravityWavesRadius.Value;
+                var waveRadius = gas.GravityWavesRadius;
                 if(distSqr < waveRadius*waveRadius)
                 {
-                    var depth = gas.GravityWavesDepth.Value;
-                    var frequency = Settings.WaveFrequency.Evaluate(body.BodyData.Mass.Value);
-                    var speed = gas.GravityWavesSpeed.Value;
+                    var depth = gas.GravityWavesDepth;
+                    var frequency = Settings.WaveFrequency.Evaluate(body.BodyData.Mass);
+                    var speed = gas.GravityWavesSpeed;
                     result -= RadialWaves(sqrt(distSqr) / waveRadius, 8, 1.25f, frequency, (float) (_time * speed)) * depth;
                 }
             }
@@ -362,7 +362,7 @@ public class Zone
             {
                 var p = position - body.Orbit.Position;
                 var distSqr = lengthsq(p);
-                var lightRadius = sun.LightRadius.Value;
+                var lightRadius = sun.LightRadius;
                 if (distSqr < lightRadius * lightRadius)
                 {
                     light += PowerPulse(sqrt(distSqr) / lightRadius, 8);
@@ -377,7 +377,7 @@ public class Zone
     {
         var normal = GetNormal(position);
         var f = new float2(normal.x, normal.z);
-        return f * Settings.GravityStrength * lengthsq(f);// * Mathf.Abs(GetHeight(position));
+        return f * Settings.GravityStrength * lengthsq(f);
     }
 
     public static float PowerPulse(float x, float exponent)
@@ -409,58 +409,65 @@ public class Zone
 public class Planet
 {
     public Orbit Orbit;
+    protected readonly PlanetSettings Settings;
     public BodyData BodyData;
-    public ReadOnlyReactiveProperty<float> GravityWellDepth;
-    public ReadOnlyReactiveProperty<float> GravityWellRadius;
-    public ReadOnlyReactiveProperty<float> BodyRadius;
+    public float GravityWellDepth;
+    public float GravityWellRadius;
+    public float BodyRadius;
 
     public Planet(PlanetSettings settings, BodyData data, Orbit orbit)
     {
+        Settings = settings;
         Orbit = orbit;
         BodyData = data;
-        BodyRadius = new ReadOnlyReactiveProperty<float>(
-            data.Mass.CombineLatest(data.BodyRadiusMultiplier,
-                (mass, radius) => settings.BodyRadius.Evaluate(mass) * radius));
-        GravityWellRadius = new ReadOnlyReactiveProperty<float>(
-            data.Mass.CombineLatest(data.GravityRadiusMultiplier,
-                (mass, radius) => settings.GravityRadius.Evaluate(mass) * radius));
-        GravityWellDepth = new ReadOnlyReactiveProperty<float>(
-            data.Mass.CombineLatest(data.GravityDepthMultiplier,
-                (mass, depth) => settings.GravityDepth.Evaluate(mass) * depth));
+        CalculateProperties();
+    }
+
+    public void CalculateProperties()
+    {
+        BodyRadius = Settings.BodyRadius.Evaluate(BodyData.Mass) * BodyData.BodyRadiusMultiplier;
+        GravityWellRadius = Settings.GravityRadius.Evaluate(BodyData.Mass) * BodyData.GravityRadiusMultiplier;
+        GravityWellDepth = Settings.GravityDepth.Evaluate(BodyData.Mass) * BodyData.GravityDepthMultiplier;
     }
 }
 
 public class GasGiant : Planet
 {
     public GasGiantData GasGiantData;
-    public ReadOnlyReactiveProperty<float> GravityWavesDepth;
-    public ReadOnlyReactiveProperty<float> GravityWavesRadius;
-    public ReadOnlyReactiveProperty<float> GravityWavesSpeed;
+    public float GravityWavesDepth;
+    public float GravityWavesRadius;
+    public float GravityWavesSpeed;
 
     public GasGiant(PlanetSettings settings, GasGiantData data, Orbit orbit) : base(settings, data, orbit)
     {
         GasGiantData = data;
-        GravityWavesDepth = new ReadOnlyReactiveProperty<float>(
-            data.Mass.CombineLatest(data.WaveDepthMultiplier,
-                (mass, depth) => settings.WaveDepth.Evaluate(mass) * depth));
-        GravityWavesRadius = new ReadOnlyReactiveProperty<float>(
-            data.Mass.CombineLatest(data.WaveRadiusMultiplier,
-                (mass, radius) => settings.WaveRadius.Evaluate(mass) * radius));
-        GravityWavesSpeed = new ReadOnlyReactiveProperty<float>(
-            data.Mass.CombineLatest(data.WaveSpeedMultiplier,
-                (mass, speed) => settings.WaveSpeed.Evaluate(mass) * speed));
+        CalculateProperties();
+    }
+
+    public new void CalculateProperties()
+    {
+        base.CalculateProperties();
+        GravityWavesDepth = Settings.WaveDepth.Evaluate(BodyData.Mass) * GasGiantData.WaveDepthMultiplier;
+        GravityWavesRadius = Settings.WaveRadius.Evaluate(BodyData.Mass) * GasGiantData.WaveRadiusMultiplier;
+        GravityWavesSpeed = Settings.WaveSpeed.Evaluate(BodyData.Mass) * GasGiantData.WaveSpeedMultiplier;
     }
 }
 
 public class Sun : GasGiant
 {
-    public ReadOnlyReactiveProperty<float> LightRadius;
-    
+    public SunData SunData;
+    public float LightRadius;
+
     public Sun(PlanetSettings settings, SunData data, Orbit orbit) : base(settings, data, orbit)
     {
-        LightRadius = new ReadOnlyReactiveProperty<float>(
-            data.Mass.CombineLatest(data.LightRadiusMultiplier,
-                (mass, radius) => settings.LightRadius.Evaluate(mass) * radius));
+        SunData = data;
+        CalculateProperties();
+    }
+
+    public new void CalculateProperties()
+    {
+        base.CalculateProperties();
+        LightRadius = Settings.LightRadius.Evaluate(BodyData.Mass) * SunData.LightRadiusMultiplier;
     }
 }
 
@@ -491,11 +498,11 @@ public class Orbit
     public float2 Velocity = float2.zero;
     public float2 Position = float2.zero;
     public float2 PreviousPosition = float2.zero;
-    public ReadOnlyReactiveProperty<float> Period;
+    public float Period;
 
     public Orbit(PlanetSettings settings, OrbitData data)
     {
         Data = data;
-        Period = new ReadOnlyReactiveProperty<float>(data.Distance.Select(f => settings.OrbitPeriod.Evaluate(f)));
+        Period = settings.OrbitPeriod.Evaluate(data.Distance);
     }
 }

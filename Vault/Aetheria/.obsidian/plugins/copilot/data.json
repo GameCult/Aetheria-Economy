@@ -12,7 +12,7 @@
   "azureOpenAIApiVersion": "",
   "azureOpenAIApiEmbeddingDeploymentName": "",
   "googleApiKey": "AIzaSyCRNNr2cLBsRrPZI1DSbTdCO4EVlKOuoMY",
-  "openRouterAiApiKey": "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",
+  "openRouterAiApiKey": "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",
   "defaultChainType": "vault_qa",
   "defaultModelKey": "deepseek/deepseek-chat-v3-0324:free|openrouterai",
   "embeddingModelKey": "text-embedding-004|google",
@@ -43,7 +43,74 @@
     {
       "name": "copilot-plus-flash",
       "provider": "copilot-plus",
-      "enabled": false,
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "plusExclusive": true,
+      "projectEnabled": false,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "google/gemini-2.5-flash-lite-preview-06-17",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "google/gemini-2.5-flash",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "google/gemini-2.5-pro",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gpt-4.1",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gpt-4.1-mini",
+      "provider": "openai",
+      "enabled": true,
+      "isBuiltIn": true,
+      "core": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gpt-4.1-nano",
+      "provider": "openai",
+      "enabled": true,
       "isBuiltIn": true,
       "core": true,
       "capabilities": [
@@ -51,33 +118,114 @@
       ]
     },
     {
-      "name": "gpt-4o",
+      "name": "o4-mini",
       "provider": "openai",
-      "enabled": false,
+      "enabled": true,
       "isBuiltIn": true,
       "core": true,
       "capabilities": [
-        "vision"
-      ]
-    },
-    {
-      "name": "gpt-4o-mini",
-      "provider": "openai",
-      "enabled": false,
-      "isBuiltIn": true,
-      "core": true,
-      "capabilities": [
-        "vision"
+        "reasoning"
       ]
     },
     {
       "name": "claude-3-5-sonnet-latest",
       "provider": "anthropic",
-      "enabled": false,
+      "enabled": true,
       "isBuiltIn": true,
       "core": true,
       "capabilities": [
         "vision"
+      ]
+    },
+    {
+      "name": "claude-sonnet-4-20250514",
+      "provider": "anthropic",
+      "enabled": true,
+      "isBuiltIn": true,
+      "capabilities": [
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "name": "claude-3-7-sonnet-latest",
+      "provider": "anthropic",
+      "enabled": true,
+      "isBuiltIn": true,
+      "capabilities": [
+        "reasoning",
+        "vision"
+      ]
+    },
+    {
+      "name": "claude-3-5-haiku-latest",
+      "provider": "anthropic",
+      "enabled": true,
+      "isBuiltIn": true
+    },
+    {
+      "name": "grok-3-beta",
+      "provider": "xai",
+      "enabled": true,
+      "isBuiltIn": true
+    },
+    {
+      "name": "grok-3-mini-beta",
+      "provider": "xai",
+      "enabled": true,
+      "isBuiltIn": true
+    },
+    {
+      "name": "gemini-2.5-flash",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "gemini-2.5-pro",
+      "provider": "google",
+      "enabled": true,
+      "isBuiltIn": true,
+      "projectEnabled": true,
+      "capabilities": [
+        "vision"
+      ]
+    },
+    {
+      "name": "command-r",
+      "provider": "cohereai",
+      "enabled": true,
+      "isBuiltIn": true
+    },
+    {
+      "name": "command-r-plus",
+      "provider": "cohereai",
+      "enabled": true,
+      "isBuiltIn": true
+    },
+    {
+      "name": "azure-openai",
+      "provider": "azure openai",
+      "enabled": true,
+      "isBuiltIn": true
+    },
+    {
+      "name": "deepseek-chat",
+      "provider": "deepseek",
+      "enabled": true,
+      "isBuiltIn": true
+    },
+    {
+      "name": "deepseek-reasoner",
+      "provider": "deepseek",
+      "enabled": true,
+      "isBuiltIn": true,
+      "capabilities": [
+        "reasoning"
       ]
     },
     {
@@ -139,6 +287,18 @@
       "capabilities": [],
       "stream": true,
       "displayName": "Claude 3.7"
+    },
+    {
+      "name": "moonshotai/kimi-k2:free",
+      "provider": "openrouterai",
+      "enabled": true,
+      "isBuiltIn": false,
+      "baseUrl": "",
+      "apiKey": "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",
+      "isEmbeddingModel": false,
+      "capabilities": [],
+      "stream": true,
+      "displayName": "Kimi K2 Free"
     }
   ],
   "activeEmbeddingModels": [
@@ -148,7 +308,8 @@
       "enabled": true,
       "isBuiltIn": true,
       "isEmbeddingModel": true,
-      "core": true
+      "core": true,
+      "plusExclusive": true
     },
     {
       "name": "copilot-plus-large",
@@ -157,6 +318,7 @@
       "isBuiltIn": true,
       "isEmbeddingModel": true,
       "core": true,
+      "plusExclusive": true,
       "believerExclusive": true,
       "dimensions": 1024
     },
@@ -167,6 +329,7 @@
       "isBuiltIn": true,
       "isEmbeddingModel": true,
       "core": true,
+      "plusExclusive": true,
       "dimensions": 512
     },
     {
@@ -225,5 +388,12 @@
   "numPartitions": 1,
   "enabledCommands": {},
   "promptUsageTimestamps": {},
-  "defaultConversationNoteName": "{$topic}@{$date}_{$time}"
+  "defaultConversationNoteName": "{$topic}@{$date}_{$time}",
+  "userId": "a49ac140-b1c0-460e-a445-ef241a2c46bc",
+  "includeActiveNoteAsContext": true,
+  "passMarkdownImages": true,
+  "enableCustomPromptTemplating": true,
+  "allowAdditionalContext": true,
+  "enableWordCompletion": false,
+  "suggestedDefaultCommands": true
 }

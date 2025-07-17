@@ -71,7 +71,7 @@ public class ZoneRenderer : MonoBehaviour
     private Dictionary<Guid, InstancedMesh[]> _beltMeshes = new Dictionary<Guid, InstancedMesh[]>();
     private Dictionary<Guid, Matrix4x4[][]> _beltMatrices = new Dictionary<Guid, Matrix4x4[][]>();
     private float _viewDistance;
-    private float _maxDepth;
+    //private float _maxDepth;
     private float _minimapDistance;
 
     private int _tourIndex = -1;
@@ -183,7 +183,6 @@ public class ZoneRenderer : MonoBehaviour
     public void LoadZone(Zone zone)
     {
         ClearZone();
-        _maxDepth = 0;
         Zone = zone;
         SectorBrushes.localScale = zone.Pack.Radius * 2 * Vector3.one;
         SlimeGravityCamera.orthographicSize = zone.Pack.Radius;
@@ -370,34 +369,31 @@ public class ZoneRenderer : MonoBehaviour
                     planet = Instantiate(Sun, ZoneRoot);
                     var sunObject = (SunObject) planet;
                     var sun = Zone.PlanetInstances[planetData.ID] as Sun;
-                    sunData.LightColor.Subscribe(c => sunObject.Light.color = c.ToColor());
-                    sun.LightRadius.Subscribe(r =>
-                    {
-                        sunObject.Light.range = r;
-                        sunObject.FogTint.transform.localScale = r * Vector3.one;
-                    });
-                    sunData.FogTintColor.Subscribe(c => sunObject.FogTint.material.SetColor("_Color", c.ToColor()));
+                    sunObject.Light.color = sunData.LightColor.ToColor();
+                    sunObject.Light.range = sun.LightRadius;
+                    sunObject.FogTint.transform.localScale = sun.LightRadius * Vector3.one;
+                    sunObject.FogTint.material.SetColor("_Color", sunData.FogTintColor.ToColor());
                 }
                 else planet = Instantiate(GasGiant, ZoneRoot);
 
                 var gas = (GasGiantObject) planet;
                 var gasGiant = Zone.PlanetInstances[planetData.ID] as GasGiant;
-                gasGiantData.Colors.Subscribe(c => gas.Body.material.SetTexture("_ColorRamp", c.ToGradient(!(planetData is SunData)).ToTexture()));
+                gas.Body.material.SetTexture("_ColorRamp", gasGiantData.Colors.ToGradient(!(planetData is SunData)).ToTexture());
                 // gasGiantData.AlbedoRotationSpeed.Subscribe(f => gas.SunMaterial.AlbedoRotationSpeed = f);
                 // gasGiantData.FirstOffsetRotationSpeed.Subscribe(f => gas.SunMaterial.FirstOffsetRotationSpeed = f);
                 // gasGiantData.SecondOffsetRotationSpeed.Subscribe(f => gas.SunMaterial.SecondOffsetRotationSpeed = f);
                 // gasGiantData.FirstOffsetDomainRotationSpeed.Subscribe(f => gas.SunMaterial.FirstOffsetDomainRotationSpeed = f);
                 // gasGiantData.SecondOffsetDomainRotationSpeed.Subscribe(f => gas.SunMaterial.SecondOffsetDomainRotationSpeed = f);
-                gasGiant.GravityWavesRadius.Subscribe(f => gas.GravityWaves.transform.localScale = f * Vector3.one);
-                gasGiant.GravityWavesDepth.Subscribe(f => gas.GravityWaves.material.SetFloat("_Depth", f));
-                planetData.Mass.Subscribe(f => gas.GravityWaves.material.SetFloat("_Frequency", Settings.PlanetSettings.WaveFrequency.Evaluate(f)));
+                gas.GravityWaves.transform.localScale = gasGiant.GravityWavesRadius * Vector3.one;
+                gas.GravityWaves.material.SetFloat("_Depth", gasGiant.GravityWavesDepth);
+                gas.GravityWaves.material.SetFloat("_Frequency", Settings.PlanetSettings.WaveFrequency.Evaluate(planetData.Mass));
                 //gas.WaveScroll.Speed = Properties.GravitySettings.WaveSpeed.Evaluate(f);
             }
             else
             {
                 planet = Instantiate(Planet, ZoneRoot);
                 var possibleSettings = Settings.BodySettingsCollections
-                    .Where(p => p.MinimumMass < planetData.Mass.Value)
+                    .Where(p => p.MinimumMass < planetData.Mass)
                     .MaxBy(p => p.MinimumMass).BodySettings;
                 planet.Generator.body = possibleSettings[Random.Range(0, possibleSettings.Length)];
                 //Debug.Log($"Generating planet with {planetData.Mass} mass! Choosing {planet.Generator.body.name} settings!");
@@ -405,15 +401,13 @@ public class ZoneRenderer : MonoBehaviour
             }
 
             var planetInstance = Zone.PlanetInstances[planetData.ID];
-            planetInstance.BodyRadius.Subscribe(f => { planet.Body.transform.localScale = f * Vector3.one; });
-            planetInstance.GravityWellRadius.Subscribe(f => planet.GravityWell.transform.localScale = f * Vector3.one);
-            planetInstance.GravityWellDepth.Subscribe(f =>
-            {
-                if (f > _maxDepth) _maxDepth = f;
-                planet.GravityWell.material.SetFloat("_Depth", f);
-                planet.Icon.transform.position = new Vector3(0, -f, 0);
-            });
-            planetInstance.BodyData.Mass.Subscribe(f => planet.Icon.transform.localScale = Settings.IconSize.Evaluate(f) * Vector3.one);
+            planet.Body.transform.localScale = planetInstance.BodyRadius * Vector3.one;
+            planet.GravityWell.transform.localScale = planetInstance.GravityWellRadius * Vector3.one;
+            // var depth = planetInstance.GravityWellDepth;
+            // if (depth > _maxDepth) _maxDepth = depth;
+            planet.GravityWell.material.SetFloat("_Depth", planetInstance.GravityWellDepth);
+            planet.Icon.transform.position = new Vector3(0, -planetInstance.GravityWellDepth, 0);
+            planet.Icon.transform.localScale = Settings.IconSize.Evaluate(planetInstance.BodyData.Mass) * Vector3.one;
 
 
             Planets[planetData.ID] = planet;
@@ -454,6 +448,7 @@ public class ZoneRenderer : MonoBehaviour
 
     void Update()
     {
+        var maxDepth = 0f;
         foreach (var loot in _loot)
         {
             loot.ViewOrigin = PerspectiveEntity.Position;
@@ -508,12 +503,14 @@ public class ZoneRenderer : MonoBehaviour
         {
             var planetInstance = Zone.PlanetInstances[planet.Key];
             var p = Zone.GetOrbitPosition(planetInstance.BodyData.Orbit);
+            var height = Zone.GetHeight(p);
+            if (-height > maxDepth) maxDepth = -height;
             planet.Value.transform.position = new Vector3(p.x, 0, p.y);
-            planet.Value.Body.transform.localPosition = new Vector3(0, Zone.GetHeight(p) + planetInstance.BodyRadius.Value * 2, 0);
+            planet.Value.Body.transform.localPosition = new Vector3(0, height + planetInstance.BodyRadius * 2, 0);
             if (planet.Value is GasGiantObject gasGiantObject)
             {
                 gasGiantObject.GravityWaves.material.SetFloat("_Phase",
-                    Zone.Time * ((GasGiant) Zone.PlanetInstances[planet.Key]).GravityWavesSpeed.Value);
+                    Zone.Time * ((GasGiant) Zone.PlanetInstances[planet.Key]).GravityWavesSpeed);
                 if (!(planet.Value is SunObject))
                 {
                     var toParent = normalize(Zone.GetOrbitPosition(Zone.Orbits[planetInstance.BodyData.Orbit].Data.Parent) - p);
@@ -551,7 +548,7 @@ public class ZoneRenderer : MonoBehaviour
         SectorBoundaryBrush.material.SetFloat("_Depth", Settings.PlanetSettings.ZoneDepth + Settings.PlanetSettings.ZoneBoundaryFog);
         var startDepth = Zone.PowerPulse(Settings.MinimapZoneGravityRange, Settings.PlanetSettings.ZoneDepthExponent) *
                           Settings.PlanetSettings.ZoneDepth;
-        var depthRange = Settings.PlanetSettings.ZoneDepth - startDepth + _maxDepth;
+        var depthRange = Settings.PlanetSettings.ZoneDepth - startDepth + maxDepth;
         foreach (var mat in MapGravityMaterials)
         {
             mat.SetFloat("_StartDepth", startDepth);
@@ -576,7 +573,8 @@ public class ZoneRenderer : MonoBehaviour
             SimpleCommodity _ => Instantiate(SimpleCommodityPickup),
             CompoundCommodity _ => Instantiate(CompoundCommodityPickup),
             EquippableItem equippableItem when ItemManager.GetData(equippableItem) is WeaponItemData => Instantiate(WeaponPickup),
-            EquippableItem _ => Instantiate(GearPickup)
+            EquippableItem _ => Instantiate(GearPickup),
+            _ => throw new NotImplementedException()
         };
         var t = gridObject.transform;
         t.parent = ZoneRoot;

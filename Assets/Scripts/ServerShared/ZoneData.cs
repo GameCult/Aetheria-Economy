@@ -78,33 +78,33 @@ public class ZonePack
 public abstract class BodyData : DatabaseEntry, INamedEntry
 {
     [JsonProperty("name"), Key(1)]
-    public ReactiveProperty<string> Name = new ReactiveProperty<string>("");
+    public string Name = "";
 
     [JsonProperty("orbit"), Key(2)]
     public Guid Orbit;
 
     [JsonProperty("mass"), Key(3)]
-    public ReactiveProperty<float> Mass = new ReactiveProperty<float>(0);
+    public float Mass = 0;
 
     [JsonProperty("resources"), Key(4)]
     public Dictionary<Guid, float> Resources = new Dictionary<Guid, float>();
 
     [JsonProperty("bodyRadiusMul")] [Key(5)]
-    public ReactiveProperty<float> BodyRadiusMultiplier = new ReactiveProperty<float>(1);
+    public float BodyRadiusMultiplier = 1;
 
     [JsonProperty("gravRadiusMul")] [Key(6)]
-    public ReactiveProperty<float> GravityRadiusMultiplier = new ReactiveProperty<float>(1);
+    public float GravityRadiusMultiplier = 1;
 
     [JsonProperty("depthMul")] [Key(7)]
-    public ReactiveProperty<float> GravityDepthMultiplier = new ReactiveProperty<float>(1);
+    public float GravityDepthMultiplier = 1;
 
     [JsonProperty("depthExp")] [Key(8)]
-    public ReactiveProperty<float> GravityDepthExponent = new ReactiveProperty<float>(16);
+    public float GravityDepthExponent = 16;
     
     [IgnoreMember] public string EntryName
     {
-        get => Name.Value;
-        set => Name.Value = value;
+        get => Name;
+        set => Name = value;
     }
 }
 
@@ -125,49 +125,49 @@ public class AsteroidBeltData : BodyData
 public class GasGiantData : BodyData
 {
     [JsonProperty("firstOffsetDomainRotationSpeed"), Key(9)]
-    public ReactiveProperty<float> FirstOffsetDomainRotationSpeed = new ReactiveProperty<float>(1);
+    public float FirstOffsetDomainRotationSpeed = 1;
     
     [JsonProperty("firstOffsetRotationSpeed"), Key(10)]
-    public ReactiveProperty<float> FirstOffsetRotationSpeed = new ReactiveProperty<float>(1);
+    public float FirstOffsetRotationSpeed = 1;
     
     [JsonProperty("secondOffsetDomainRotationSpeed"), Key(11)]
-    public ReactiveProperty<float> SecondOffsetDomainRotationSpeed = new ReactiveProperty<float>(1);
+    public float SecondOffsetDomainRotationSpeed = 1;
     
     [JsonProperty("secondOffsetRotationSpeed"), Key(12)]
-    public ReactiveProperty<float> SecondOffsetRotationSpeed = new ReactiveProperty<float>(1);
+    public float SecondOffsetRotationSpeed = 1;
     
     [JsonProperty("albedoRotationSpeed"), Key(13)]
-    public ReactiveProperty<float> AlbedoRotationSpeed = new ReactiveProperty<float>(1);
+    public float AlbedoRotationSpeed = 1;
 
     [JsonProperty("gravRadiusMul")] [Key(14)]
-    public ReactiveProperty<float> WaveRadiusMultiplier = new ReactiveProperty<float>(1);
+    public float WaveRadiusMultiplier = 1;
 
     [JsonProperty("depthMul")] [Key(15)]
-    public ReactiveProperty<float> WaveDepthMultiplier = new ReactiveProperty<float>(1);
+    public float WaveDepthMultiplier = 1;
 
     [JsonProperty("depthExp")] [Key(16)]
-    public ReactiveProperty<float> WaveDepthExponent = new ReactiveProperty<float>(8);
+    public float WaveDepthExponent = 8;
 
     [JsonProperty("depthExp")] [Key(17)]
-    public ReactiveProperty<float> WaveSpeedMultiplier = new ReactiveProperty<float>(8);
+    public float WaveSpeedMultiplier = 8;
     
     [JsonProperty("materialOverrides"), Key(18)]
     public List<string> MaterialOverrides = new List<string>();
     
     [JsonProperty("colors"), Key(19)]
-    public ReactiveProperty<float4[]> Colors = new ReactiveProperty<float4[]>();
+    public float4[] Colors = new float4[0];
 }
 
 public class SunData : GasGiantData
 {
     [JsonProperty("lightColor"), Key(20)]
-    public ReactiveProperty<float3> LightColor = new ReactiveProperty<float3>(float3.zero);
+    public float3 LightColor = float3.zero;
     
     [JsonProperty("fogTintColor"), Key(21)]
-    public ReactiveProperty<float3> FogTintColor = new ReactiveProperty<float3>(float3.zero);
+    public float3 FogTintColor = float3.zero;
 
     [JsonProperty("lightRadiusMul")] [Key(22)]
-    public ReactiveProperty<float> LightRadiusMultiplier = new ReactiveProperty<float>(1);
+    public float LightRadiusMultiplier = 1;
 }
 
 [MessagePackObject, JsonObject(MemberSerialization.OptIn)]
@@ -193,7 +193,7 @@ public class OrbitData : DatabaseEntry
     public Guid Parent;
 
     [JsonProperty("distance"), Key(2)]
-    public ReactiveProperty<float> Distance;
+    public float Distance;
 
     [JsonProperty("phase"), Key(3)]
     public float Phase;

@@ -442,10 +442,10 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                                             itemInstanceDragObject.OriginInventory.Remove(itemInstanceDragObject.Item);
 
                                         FakeOccupancy = null;
-                                        entity.TryEquip(equippableItem, placementPosition);
+                                        var success = entity.TryEquip(equippableItem, placementPosition);
                                         RefreshCells();
                                         // TODO: SFX: Equip
-                                        return false;
+                                        return success;
                                     });
                                 }
                             });
@@ -625,6 +625,7 @@ public class InventoryPanel : MonoBehaviour, IPointerClickHandler
                         foreach(var dragObject in _dragCells)
                             Destroy(dragObject.gameObject);
                         _dragCells = null;
+                        RefreshCells();
                     });
                 cell.PointerEnterTrigger.OnPointerEnterAsObservable()
                     .Subscribe(data =>

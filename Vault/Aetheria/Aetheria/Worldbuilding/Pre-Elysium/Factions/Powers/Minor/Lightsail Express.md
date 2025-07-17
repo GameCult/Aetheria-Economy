@@ -2,4 +2,4 @@
 
 A logistics firm that market themselves on speed and reliability. They are, in actual fact, neither, but Elysium doesn’t have a Postal Service and Lightsail holds all major contracts in a titanium grip.
 
-Manages interstellar trade and transport and builds most of the ships for the [[Cetacean Navigators]].
+Manages interplanetary trade and transport and builds most of the ships for the [[Cetacean Navigators]].

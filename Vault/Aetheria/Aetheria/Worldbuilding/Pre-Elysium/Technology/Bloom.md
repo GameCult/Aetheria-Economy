@@ -51,12 +51,12 @@ This rapid expansion had profound social and economic consequences:
 
 By the late 26th century, the Bloom process had matured significantly. [[Orbital Forge]] streamlined their process and developed modular hub sections that could be prefabricated and integrated into the spire, providing pre-pressurized living spaces, industrial facilities, and advanced life support systems.
 
-Current Bloom structures can house tens of thousands of inhabitants, self-sufficient and largely independent of external supply chains. They represent a radical vision of space colonization – not as isolated outposts clinging to barren rocks, but as thriving, self-sustaining ecosystems forged from the remnants of asteroids.
+Current Bloom structures can house hundreds of thousands of inhabitants, self-sufficient and largely independent of external supply chains, up to tens of millions in dedicated megacity habitats. They represent a radical vision of space colonization – not as isolated outposts clinging to barren rocks, but as thriving, self-sustaining ecosystems forged from the remnants of asteroids.
 
 ### Intercolony Travel and Transportation
 
 #### Physical Transit Systems
-- **Hub-Network Structure**: Major Bloom clusters are connected via regular [[Soliton Drive]] transport routes, with [[Aeronautics Unlimited]] operating the majority of civilian transports.
+- **Hub-Network Structure**: Major Bloom clusters are connected via regular [[Soliton Drive]] transport routes, with [[Aeronautics Unlimited]] operating the majority of civilian transports and [[Lightsail Express]] largely monopolizing bulk cargo transport.
 - **Class-Based Access**: Transit between Blooms reflects the socioeconomic divide—elite passengers travel on [[Alakrita]]'s luxury vessels with private quarters, while workers are transported in [[SolEx]] bulk carriers, often in suspended animation to reduce life support costs.
 - **Customs and Control**: Border crossings between Mega-controlled Bloom clusters involve extensive screening. [[Sol Dominion]] territories require DNA verification and loyalty assessments, while [[Orbital Forge]] zones have intentionally chaotic entry procedures to confuse corporate tracking systems.
 - **Illegal Transit**: The [[Pirate Coalition]] operates "ghost routes" between Blooms, using modified ships with [[Orbital Forge]]-designed countermeasures to avoid detection by [[Pan-Solar Consortium]] monitoring systems.
