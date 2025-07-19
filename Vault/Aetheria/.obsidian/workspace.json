@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Aetheria/Worldbuilding/Pre-Elysium/Technology/Advanced Superconductors.md",
+                "file": "Aetheria/Worldbuilding/Post-Elysium/Technology/Aetheric Drive.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,10 +28,35 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Advanced Superconductors"
+              "title": "Aetheric Drive"
+            }
+          },
+          {
+            "id": "4b777a3c9c524d60",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Aetheria/Worldbuilding/Post-Elysium/Species/Ratfolk.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Ratfolk"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -189,8 +214,15 @@
       "copilot:Open Copilot Chat": false
     }
   },
-  "active": "4116336d30dd8c7a",
+  "active": "4b777a3c9c524d60",
   "lastOpenFiles": [
+    "Aetheria/Worldbuilding/Post-Elysium/Technology/Aethernet.md",
+    "Aetheria/Worldbuilding/Post-Elysium/Species",
+    "Aetheria/Worldbuilding/Post-Elysium/Concepts",
+    "Aetheria/Worldbuilding/Post-Elysium/Technology/Aetheric Drive.md",
+    "Aetheria/Worldbuilding/Post-Elysium/Species/Ratfolk.md",
+    "Aetheria/Worldbuilding/Post-Elysium/Technology",
+    "Aetheria/Worldbuilding/Pre-Elysium/Technology/Advanced Superconductors.md",
     "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Minor/Cryonix.md",
     "copilot-conversations/I_think_there's_a_few_discrepancies_in_the_[[Timeline]]._It@20250313_215236.md",
     "Aetheria/Worldbuilding/Pre-Elysium/Technology/Genetic Enhancement.md",
@@ -213,10 +245,6 @@
     "Aetheria/Worldbuilding/Politics/Public Image.md",
     "Aetheria/Worldbuilding/Politics/Why Zhestokost Can't Simply Nuke Its Adversaries.md",
     "copilot-custom-prompts/Simplify.md",
-    "copilot-custom-prompts/Make shorter.md",
-    "copilot-custom-prompts/Rewrite as tweet thread.md",
-    "copilot-custom-prompts/Rewrite as tweet.md",
-    "copilot-custom-prompts/Remove URLs.md",
     "copilot-custom-prompts",
     "copilot-conversations",
     "Untitled.canvas",
@@ -224,9 +252,6 @@
     "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Major",
     "Aetheria/Worldbuilding/Pre-Elysium/Factions/Movements",
     "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers",
-    "Aetheria/Worldbuilding/Politics",
-    "Aetheria/Worldbuilding/Pre-Elysium/Timeline",
-    "Aetheria/Worldbuilding/Post-Elysium",
-    "Aetheria/Worldbuilding/Pre-Elysium/Technology"
+    "Aetheria/Worldbuilding/Politics"
   ]
 }
