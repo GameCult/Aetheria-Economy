@@ -1,11 +1,15 @@
 # Aetheria
-This repository is the home of Aetheria, a futuristic space game with a surreal story and visual style. We're planning two distinct gameplay modes, which we are initially releasing as individual titles and later combining into a single persistent world.
+Aetheria is an ambitious (AA quality) open source tactical action role-playing game with a sprawling sci-fi setting that combines stunning visuals with unprecedented simulation depth while maintaining accessibility.
 
-In the ARPG mode you control a single ship, engaging in combat, mining, trade and participating in a branching interactive storyline. The game loop for our initial ARPG release is structured as an open world rogue-lite, with a new procedurally generated universe to explore during every run.
+All mechanics are developed to be engine-agnostic, while Unity was chosen as a renderer and editor environment for its accessibility and extensibility. Many custom features have been developed, such as a database frontend with configurable backing store for managing game content, a novel visual input rebinding system, and a volumetric cloud renderer with groundbreaking fidelity, any of which can easily add value to other open source gamedev projects. We'd love to see other teams building on our foundation to deliver their own vision and contribute to the ecosystem we're creating.
 
-In the RTS mode you control the production, research, supply chains and actions of a corporation tasked with colonizing an alien galaxy. Control over your minions is indirect, like in Rimworld, and gameplay takes place over months as your production and tasks continue acting on the world even when you're offline.
+It is our ambition to forge a new paradigm of open source game development, as to our knowledge there are no other open source projects of this scope building up a foundation from scratch. Game development is notoriously averse to this model and nobody wants to share their shiny toys for fear of losing their competitive advantage. By building and sharing immersive and compelling experiences like this, we hope to change that.
 
-### Trailer
+## Contact Us
+
+If you want to chat, please join [our Discord server](https://discord.gg/trbteNj) for detailed development updates and discussions about the game design, narrative, art direction, and general topics. Shitposting welcome!
+
+### Trailer (outdated)
 [![Trailer](https://img.youtube.com/vi/6hg1w2vcwDc/0.jpg)](https://www.youtube.com/watch?v=6hg1w2vcwDc)
 ### Screenshots
 <img src="https://i.ibb.co/3h1xrRw/main.png" style="zoom:50%;" />
@@ -151,7 +155,3 @@ After generating stars, you can generate the links between them, which performs 
 ## License
 
 The majority of this repository is under the Mozilla Public License and therefore available for anyone to use. Note that the MPL is per-file and therefore the license only applies to files which contain the MPL header. If you believe a file has been created by us and is missing the header, please let us know (we do forget sometimes).
-
-## Contact Us
-
-If you want to chat, please join [our Discord server](https://discord.gg/trbteNj). You can also join me as I stream development daily on [Mixer](https://mixer.com/PixelBro).

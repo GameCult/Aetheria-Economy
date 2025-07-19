@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Aetheria/Worldbuilding/Post-Elysium/Species/Ratfolk.md",
+                "file": "Aetheria/Introduction.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -52,7 +52,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "Ratfolk"
+              "title": "Introduction"
             }
           }
         ],
@@ -216,11 +216,11 @@
   },
   "active": "4b777a3c9c524d60",
   "lastOpenFiles": [
+    "Aetheria/Worldbuilding/Post-Elysium/Species/Ratfolk.md",
     "Aetheria/Worldbuilding/Post-Elysium/Technology/Aethernet.md",
     "Aetheria/Worldbuilding/Post-Elysium/Species",
     "Aetheria/Worldbuilding/Post-Elysium/Concepts",
     "Aetheria/Worldbuilding/Post-Elysium/Technology/Aetheric Drive.md",
-    "Aetheria/Worldbuilding/Post-Elysium/Species/Ratfolk.md",
     "Aetheria/Worldbuilding/Post-Elysium/Technology",
     "Aetheria/Worldbuilding/Pre-Elysium/Technology/Advanced Superconductors.md",
     "Aetheria/Worldbuilding/Pre-Elysium/Factions/Powers/Minor/Cryonix.md",

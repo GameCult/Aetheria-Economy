@@ -90,12 +90,12 @@ public class SectorRenderer : MonoBehaviour, IBeginDragHandler, IDragHandler, IS
                 Properties.AddProperty("Stars", () => starCount);
                 
                 var stationCount = zone.PackedContents.Entities
-                    .Count(entity => ((HullData) entity.Hull.Data.Value).HullType == HullType.Ship)
+                    .Count(entity => ((HullData) entity.Hull.Data.Value).HullType == HullType.Station)
                     .ToString();
                 Properties.AddProperty("Stations", () => stationCount);
                 
                 var turretCount = zone.PackedContents.Entities
-                    .Count(entity => ((HullData) entity.Hull.Data.Value).HullType == HullType.Ship)
+                    .Count(entity => ((HullData) entity.Hull.Data.Value).HullType == HullType.Turret)
                     .ToString();
                 Properties.AddProperty("Turrets", () => turretCount);
                 
